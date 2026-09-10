@@ -101,7 +101,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";

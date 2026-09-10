@@ -126,6 +126,6 @@
                 quillEditor('public_abstract_de');
             </script>
         </div>
-        <button type="submit" class="btn secondary"><?= lang('common.save') ?></button>
+        <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
     </form>
 </div>

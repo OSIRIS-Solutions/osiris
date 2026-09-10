@@ -282,7 +282,7 @@ if (
             include BASEPATH . "/pages/profile.php";
         } else {
             $breadcrumb = [
-                ['name' => lang('common.home')]
+                ['name' => lang('navigation.home')]
             ];
             include BASEPATH . "/header.php";
             include BASEPATH . "/pages/home.php";

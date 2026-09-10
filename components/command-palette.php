@@ -20,7 +20,7 @@
             <div class="cp-hint">
                 <span class="os-kbd">↑↓</span> <?= lang('Navigate', 'Navigieren') ?>
                 <span class="os-kbd">↵</span> <?= lang('Go', 'Los') ?>
-                <span class="os-kbd">Esc</span> <?= lang('common.close') ?>
+                <span class="os-kbd">Esc</span> <?= lang('action.close') ?>
             </div>
         </div>
 

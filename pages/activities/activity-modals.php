@@ -112,7 +112,7 @@
           <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
           <label for="description"><?= lang('common.description') ?></label>
         </div>
-        <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
+        <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
       </form>
 
       <script>
@@ -127,7 +127,7 @@
       </script>
 
       <div class="text-right mt-20">
-        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
+        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
       </div>
     </div>
   </div>
@@ -162,7 +162,7 @@
 
           <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
           </button>
         </form>
       <?php } ?>
@@ -227,7 +227,7 @@
                         <li>
                           <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                             <i class="ph ph-trash"></i>
-                            <?= lang('common.remove') ?>
+                            <?= lang('action.remove') ?>
                           </button>
                         </li>
                       </ul>
@@ -251,9 +251,9 @@
           <div class="modal-footer">
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
-              <?= lang('common.save') ?>
+              <?= lang('action.save') ?>
             </button>
-            <a href="#close-modal" class="btn" role="button"><?= lang('common.cancel') ?></a>
+            <a href="#close-modal" class="btn" role="button"><?= lang('action.cancel') ?></a>
           </div>
         </form>
 
@@ -331,7 +331,7 @@
               <h5 class="mt-0">${topicName}</h5>
               <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                 <i class="ph ph-trash"></i>
-                <?= lang('common.remove') ?>
+                <?= lang('action.remove') ?>
               </button>
             </div>
           </div>

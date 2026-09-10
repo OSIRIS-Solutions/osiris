@@ -90,7 +90,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                 <?= lang('Matched author', 'Übereinstimmende:r Autor:in') ?>
             </th>
             <th>
-                <?= lang('common.claim') ?>
+                <?= lang('action.claim') ?>
                 <div class="custom-checkbox">
                     <input type="checkbox" id="claim-all" onclick="$('.claim-checkbox').attr('checked', $(this).is(':checked'))">
                     <label for="claim-all" class="empty"></label>
@@ -124,7 +124,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                         <!-- checkbox -->
                         <div class="custom-checkbox">
                             <input type="checkbox" name="activity[]" value="<?= $activity['_id'] ?>" id="claim-<?= $activity['_id'] ?>" class="claim-checkbox">
-                            <label for="claim-<?= $activity['_id'] ?>"><?= lang('common.claim') ?></label>
+                            <label for="claim-<?= $activity['_id'] ?>"><?= lang('action.claim') ?></label>
                         </div>
                     </td>
                 </tr>

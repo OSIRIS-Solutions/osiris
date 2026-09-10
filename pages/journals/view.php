@@ -189,7 +189,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     </div>
                     <button type="button" class="btn" id="add-category" onclick="addCategory()"><i class="ph ph-plus"></i></button>
                     <br><br>
-                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('common.save') ?></button>
+                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('action.save') ?></button>
                 </form>
                 <datalist id="categories-list">
                     <?php foreach ($osiris->journals->distinct('categories.name') as $cat) { ?>

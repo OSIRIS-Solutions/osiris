@@ -216,7 +216,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         </table>
         <button class="btn secondary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('common.submit') ?>
+            <?= lang('action.submit') ?>
         </button>
 
 

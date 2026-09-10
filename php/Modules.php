@@ -3739,8 +3739,8 @@ class Modules
                                         <?= lang('Connect a project', 'Verknüpfe ein Projekt') ?>:
                                     </b>
                                     <div class="input-group">
-                                        <select id="project-select" class="form-control" placeholder="<?= lang('common.project_select') ?>">
-                                            <option value=""><?= lang('common.project_select') ?></option>
+                                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
+                                            <option value=""><?= lang('forms.project_select') ?></option>
                                             <?php
                                             foreach ($project_list as $s) { ?>
                                                 <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -3772,7 +3772,7 @@ class Modules
                             if (!projectName) projectName = $('#project-select option:selected').text();
 
                             if (!projectId) {
-                                alert('<?= lang('common.project_select') ?>');
+                                alert('<?= lang('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists

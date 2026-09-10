@@ -56,7 +56,7 @@ $fields = $osiris->adminFields->find()->toArray();
                     </td>
                     <td>
                         <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>" class="">
-                            <i class="ph ph-pencil" aria-label="<?= lang('common.edit') ?>"></i>   
+                            <i class="ph ph-pencil" aria-label="<?= lang('action.edit') ?>"></i>   
                         </a>
                     </td>
                 </tr>

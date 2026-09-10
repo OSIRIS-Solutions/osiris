@@ -61,7 +61,7 @@ Route::get('/user/edit/(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -1123,7 +1123,7 @@ Route::get('/claim/?(.*)', function ($user) {
     $breadcrumb = [
         ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
-        ['name' => lang('common.claim')]
+        ['name' => lang('action.claim')]
     ];
 
     include BASEPATH . "/header.php";

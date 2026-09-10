@@ -25,7 +25,7 @@ $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id'])) {
     $id = $form['id'];
     $formaction .= "/crud/types/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/types/" . $form['id'];
     $title = $name;
     $new = false;
@@ -34,7 +34,7 @@ if (!empty($form) && isset($form['_id'])) {
 } else {
     $new = true;
     $formaction .= "/crud/types/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/types/*";
     $title = lang('New category', 'Neue Kategorie');
     $member = 0;
@@ -230,7 +230,7 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
-                    <?= lang('common.edit') ?>
+                    <?= lang('action.edit') ?>
                 </a>
             <?php } ?>
 

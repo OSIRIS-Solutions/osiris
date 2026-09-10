@@ -500,5 +500,5 @@ $active = function ($field) use ($data_fields) {
     <?php } ?>
     
 
-    <button type="submit" class="btn secondary"><?= lang('common.save') ?></button>
+    <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
 </form>

@@ -19,12 +19,12 @@
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/fields/" . $form['id'];
     $title = $name;
 } else {
     $formaction .= "/crud/fields/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/fields";
     $title = lang('New field', 'Neues Feld');
 }

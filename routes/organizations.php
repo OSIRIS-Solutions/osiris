@@ -94,7 +94,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => $form['name'], 'path' => "/organizations/view/$id"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";

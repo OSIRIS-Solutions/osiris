@@ -93,7 +93,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "orcid",
-                'label' => lang('ORCID', 'ORCID'),
+                'label' => lang('common.orcid'),
                 'module_of' => $typeModules['orcid'] ?? [],
                 'usage' => [
                     'filter',

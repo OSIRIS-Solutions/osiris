@@ -93,12 +93,12 @@ foreach ($osiris->adminRights->find([]) as $row) {
                                         <?php if (!in_array($role, ['user', 'scientist', 'admin', 'editor'])) { ?>
                                             <button class="btn danger" role="button" onclick="$(this).closest('tr').remove()">
                                                 <i class="ph ph-x"></i>
-                                                <?= lang('common.remove') ?>
+                                                <?= lang('action.remove') ?>
                                             </button>
                                         <?php } else { ?>
                                             <button class="btn disabled" role="button" disabled>
                                                 <i class="ph ph-x"></i>
-                                                <?= lang('common.remove') ?>
+                                                <?= lang('action.remove') ?>
                                             </button>
                                         <?php } ?>
 
@@ -123,7 +123,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
                     <button class="btn success">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('common.save') ?>
+                        <?= lang('action.save') ?>
                     </button>
                 </form>
                 <script>
@@ -138,7 +138,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                                 <td>
                                     <button class="btn danger" role="button" onclick="$(this).closest('tr').remove()">
                                         <i class="ph ph-x"></i>
-                                        <?= lang('common.remove') ?>
+                                        <?= lang('action.remove') ?>
                                     </button>
                                 </td>
                             </tr>`);
@@ -195,7 +195,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
     <!-- search -->
     <div class="form-group with-icon">
-        <input type="text" class="form-control" placeholder="<?= lang('common.search') ?>" id="search-role" onkeyup="filterRoles()">
+        <input type="text" class="form-control" placeholder="<?= lang('action.search') ?>" id="search-role" onkeyup="filterRoles()">
         <i class="ph ph-x" onclick="$('#search-role').val('').trigger('keyup')"></i>
     </div>
 
@@ -256,7 +256,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
         <button class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
     </form>
 

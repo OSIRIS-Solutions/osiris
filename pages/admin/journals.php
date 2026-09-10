@@ -138,7 +138,7 @@
                                     <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
                                     <code class="code mx-10"><?= e($field['format']) ?></code>
                                     <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
-                                        <i class="ph ph-pencil" title="<?= lang('common.edit') ?>"></i>
+                                        <i class="ph ph-pencil" title="<?= lang('action.edit') ?>"></i>
                                     </a>
                                 </td>
 
@@ -162,7 +162,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
 
     </form>

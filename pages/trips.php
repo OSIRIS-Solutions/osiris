@@ -237,7 +237,7 @@ foreach ($countries as $iso => $data) {
         <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
             <h6 class="mb-0 mt-5 w-200"><?= lang('Select year', 'Jahr auswählen') ?>:</h6>
             <input type="number" name="year" class="form-control" value="<?= $year ?>" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" required>
-            <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
+            <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
         </form>
     </div>
 

@@ -23,7 +23,7 @@ $level = 0;
 
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
-$btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
+$btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
 $url = ROOTPATH . "/groups/public/" . $form['id'];
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
@@ -117,7 +117,7 @@ function sel($index, $value)
                 <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (EN)
+                        <?= lang('forms.full_name') ?> (EN)
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= val('name') ?>">
                 </div>
@@ -138,7 +138,7 @@ function sel($index, $value)
                 <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (DE)
+                        <?= lang('forms.full_name') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" required value="<?= val('name_de') ?>">
                 </div>
@@ -225,7 +225,7 @@ function sel($index, $value)
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search for Activity">
                             <div class="input-group-append">
-                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('common.search') ?></button>
+                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('action.search') ?></button>
                             </div>
                         </div>
 
@@ -330,7 +330,7 @@ function sel($index, $value)
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang('common.save') ?>
+        <i class="ph ph-check"></i> <?= lang('action.save') ?>
     </button>
 
 </form>

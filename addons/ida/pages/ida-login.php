@@ -9,7 +9,7 @@
         <input class="form-control" id="email" type="text" name="email" placeholder="abc21" required />
     </div>
     <div class="form-group">
-        <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
+        <label for="password"><?= lang('common.password') ?>: </label>
         <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
     </div>
 

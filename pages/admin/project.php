@@ -544,7 +544,7 @@ if ($process == 'project') {
             <?= lang('Next', 'Weiter') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button> -->
-        <button type="submit" class="btn success" id="submitBtn"><?= lang('common.save') ?></button>
+        <button type="submit" class="btn success" id="submitBtn"><?= lang('action.save') ?></button>
 
     <?php } ?>
 

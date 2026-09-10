@@ -35,7 +35,7 @@
 
         <button class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
     </div>
 </form>

@@ -293,10 +293,10 @@ $pageactive = function ($p) use ($page) {
             <?php } else { ?>
                 <!-- fake search input for command palette -->
                 <div id="navbar-cp-trigger" class="d-none d-md-block">
-                    <button type="button" class="cp-trigger" aria-label="<?= lang('common.open_search') ?>">
+                    <button type="button" class="cp-trigger" aria-label="<?= lang('action.open_search') ?>">
                         <i class="ph ph-magnifying-glass cp-trigger__icon" aria-hidden="true"></i>
                         <span class="cp-trigger__placeholder">
-                            <?= lang('common.search_in_osiris') ?>
+                            <?= lang('action.search_in_osiris') ?>
                         </span>
                         <span class="cp-trigger__kbd" aria-hidden="true">
                             <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('common.ctrl') ?></span>

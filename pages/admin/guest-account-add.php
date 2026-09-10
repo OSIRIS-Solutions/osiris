@@ -34,7 +34,7 @@ include_once BASEPATH . '/header-editor.php';
 
         <div class="col floating-form">
             <input class="form-control" type="password" id="password" name="password" required placeholder="password">
-            <label class="required" for="password"><?= lang('Password', 'Passwort') ?></label>
+            <label class="required" for="password"><?= lang('common.password') ?></label>
         </div>
     </div>
 

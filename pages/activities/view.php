@@ -137,7 +137,7 @@
                 <?php if ($canEdit) { ?>
                     <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary filled">
                         <i class="ph ph-pencil-simple-line mr-5"></i>
-                        <?= lang('common.edit') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 <?php } ?>
                 <?php if ($user_activity && $locked && empty($doc['end'] ?? null) && $ongoing) { ?>
@@ -153,7 +153,7 @@
                                     <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                 </div>
-                                <button class="btn btn-block" type="submit"><?= lang('common.save') ?></button>
+                                <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -549,7 +549,7 @@
                                         <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                             <a href="#edit-tags" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang('common.edit') ?></span>
+                                                <span class="sr-only"><?= lang('action.edit') ?></span>
                                             </a>
                                         <?php } ?>
                                     </h3>
@@ -581,7 +581,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="#edit-files" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang('common.edit') ?></span>
+                                                <span class="sr-only"><?= lang('action.edit') ?></span>
                                             </a>
                                         <?php endif; ?>
                                     </h3>
@@ -646,7 +646,7 @@
                                     <?php if ($edit_perm) { ?>
                                         <a href="<?= ROOTPATH ?>/activities/edit-connections/<?= $id ?>" class="ml-10">
                                             <i class="ph ph-edit"></i>
-                                            <span class="sr-only"><?= lang('common.edit') ?></span>
+                                            <span class="sr-only"><?= lang('action.edit') ?></span>
                                         </a>
                                     <?php } ?>
                                 </h3>
@@ -1202,7 +1202,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn primary small">
                                                 <i class="ph ph-edit"></i>
-                                                <?= lang('common.edit') ?>
+                                                <?= lang('action.edit') ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -1337,7 +1337,7 @@
                                                                 <div class="dropdown d-inline-block">
                                                                     <button class="btn small" data-toggle="dropdown" type="button"
                                                                         id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                                        <?= lang('common.claim') ?>
+                                                                        <?= lang('action.claim') ?>
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                                         <div class="content font-size-12 text-danger mb-10" style="white-space: normal;">
@@ -1350,7 +1350,7 @@
                                                                                 <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                                 <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                                 <button class="btn block small" type="submit">
-                                                                                    <?= lang('common.claim') ?>
+                                                                                    <?= lang('action.claim') ?>
                                                                                 </button>
                                                                             </form>
                                                                         </div>

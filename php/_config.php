@@ -1096,7 +1096,7 @@ function lockedPage($id)
     $html .= lang('This activity is locked and cannot be edited or deleted due to our reporting rules. Please contact the OSIRIS editors if there are any issues.', 'Diese Aktivität ist aufgrund unserer Report-Richtlinien gesperrt und kann nicht bearbeitet oder gelöscht werden. Bitte kontaktiere die OSIRIS-Redaktion, falls dadurch irgendwelche Probleme entstehen.');
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
-    $html .= lang('common.go_back_activity');
+    $html .= lang('navigation.go_back_to_activity');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';
@@ -1128,7 +1128,7 @@ function abortwith($code, $item = '', $link = '', $linkMsg = '')
     include BASEPATH . "/header.php";
     if ($link == '') {
         $link = $_SERVER['HTTP_REFERER'] ?? '/activities';
-        $linkMsg = lang('Go back', 'Geh zurück');
+        $linkMsg = lang('navigation.go_back');
     }
     switch ($code) {
         case 403:

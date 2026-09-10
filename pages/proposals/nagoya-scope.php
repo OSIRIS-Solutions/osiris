@@ -410,7 +410,7 @@ $utilizationOptions = [
     <div class="mt-20">
         <button type="submit" name="action" value="save" class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
 
         <button type="submit" name="action" value="submit" class="btn success">

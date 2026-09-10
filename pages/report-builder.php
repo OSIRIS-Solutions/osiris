@@ -446,9 +446,9 @@ if ($Settings->featureEnabled('projects')) {
 
                     <div class="modal-footer">
                         <!-- save -->
-                        <button type="submit" class="btn success"><?= lang('common.save') ?></button>
+                        <button type="submit" class="btn success"><?= lang('action.save') ?></button>
 
-                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('common.close') ?></a>
+                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
                     </div>
                 </div>
             </div>
@@ -495,7 +495,7 @@ if ($Settings->featureEnabled('projects')) {
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
 
         <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">

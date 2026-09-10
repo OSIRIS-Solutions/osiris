@@ -586,7 +586,7 @@ foreach ($oa_distribution as $name => $counts) {
             <form action="<?= ROOTPATH ?>/journals/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
                 <h6 class="m-0"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" required>
-                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
@@ -597,7 +597,7 @@ foreach ($oa_distribution as $name => $counts) {
                 <h6 class="m-0"><?= lang('Change Reporting Period', 'Reportzeitraum ändern') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required>
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required>
-                <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
     </div>

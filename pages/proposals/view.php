@@ -676,7 +676,7 @@ if ($nagoyaRelevant) {
                                     <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
                                     <label for="description"><?= lang('common.description') ?></label>
                                 </div>
-                                <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
+                                <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
                             </form>
                         <?php } ?>
                     </div>
@@ -717,7 +717,7 @@ if ($nagoyaRelevant) {
                     <div class="btn-toolbar mb-10">
                         <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                            <?= lang('common.edit') ?>
+                            <?= lang('action.edit') ?>
                         </a>
                     </div>
                 <?php } ?>

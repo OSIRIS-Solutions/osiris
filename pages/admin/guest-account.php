@@ -99,7 +99,7 @@ if (empty($accounts)) {
                                     </div>
                                     <button type="submit" class="btn primary mt-10">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('common.save') ?>
+                                        <?= lang('action.save') ?>
                                     </button>
                                 </form>
                             </div>

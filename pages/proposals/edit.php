@@ -1306,7 +1306,7 @@ if ($is_subproject) {
                                 <td><?= $DB->getCountry($iso, lang('common.field_name_language')) ?></td>
                                 <td><?= $role ?></td>
                                 <td>
-                                    <a onclick="$(this).closest('tr').remove()"><?= lang('common.remove') ?></a>
+                                    <a onclick="$(this).closest('tr').remove()"><?= lang('action.remove') ?></a>
                                     <input type="text" name="values[research-countries][]" value="<?= $iso ?>;<?= $role ?>" hidden>
                                 </td>
                             </tr>
@@ -1350,7 +1350,7 @@ if ($is_subproject) {
                                 let tr = $('<tr>')
                                 tr.append('<td>' + el.find('option:selected').text() + '</td>')
                                 tr.append('<td>' + type + '</td>')
-                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('common.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('action.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
                                 $('#country-list').append(tr)
                             }
                             $(el).val('')
@@ -1618,7 +1618,7 @@ if ($is_subproject) {
 
             <br>
             <button class="btn secondary" type="button" id="submit-btn">
-                <i class="ph ph-check"></i> <?= lang('common.save') ?>
+                <i class="ph ph-check"></i> <?= lang('action.save') ?>
             </button>
 
             <script>

@@ -415,7 +415,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($doc, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $Format = new Document;
@@ -483,7 +483,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
@@ -493,7 +493,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -622,7 +622,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
@@ -982,11 +982,11 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     }
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     if (!$user_activity && !$Settings->hasPermission('activities.delete')) {
-        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     // check if locked
     if (($doc['locked'] ?? false) && !$Settings->hasPermission('activities.delete-locked')) {
-        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $updateResult = $osiris->activities->deleteOne(

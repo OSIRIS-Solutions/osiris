@@ -32,6 +32,6 @@
     </div>
 
     <button type="submit" class="btn primary">
-        <?= lang('common.continue') ?>
+        <?= lang('action.continue') ?>
     </button>
 </form>

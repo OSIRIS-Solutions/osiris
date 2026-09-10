@@ -362,7 +362,7 @@ $tagLabels = [
             </button>
             <div id="field-preview"></div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -397,7 +397,7 @@ $tagLabels = [
             </p>
 
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -415,7 +415,7 @@ $tagLabels = [
             <div id="data-modules" class="row row-eq-spacing">
             </div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -458,7 +458,7 @@ $tagLabels = [
                 </button>
             </form>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('common.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -472,7 +472,7 @@ $tagLabels = [
     </a>
     <a class="btn" href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
         <i class="ph ph-x"></i>
-        <?= lang('common.cancel') ?>
+        <?= lang('action.cancel') ?>
     </a>
 </div>
 
@@ -896,7 +896,7 @@ $tagLabels = [
                 <div class="sticky-footer text-end">
                     <button class="btn primary" type="submit" id="saveBtn">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('common.save') ?>
+                        <?= lang('action.save') ?>
                     </button>
                     <button class="btn" type="button" id="preview-button">
                         <i class="ph ph-eye"></i>

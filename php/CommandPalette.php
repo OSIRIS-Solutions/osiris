@@ -138,7 +138,7 @@ class CommandPalette
             ],
             [
                 "url" => "/activities/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search activities", "Aktivitäten durchsuchen"),
                 "keywords" => ["search activities", "find activities", "aktivitäten durchsuchen", "aktivitäten finden"],
@@ -154,7 +154,7 @@ class CommandPalette
             ],
             [
                 "url" => "/proposals/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search proposals", "Anträge durchsuchen"),
                 "keywords" => ["search proposals", "find proposals", "anträge durchsuchen", "anträge finden"],
@@ -171,7 +171,7 @@ class CommandPalette
             ],
             [
                 "url" => "/projects/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search projects", "Projekte durchsuchen"),
                 "keywords" => ["search projects", "find projects", "projekte durchsuchen", "projekte finden"],
@@ -198,7 +198,7 @@ class CommandPalette
             ],
             [
                 "url" => "/journals/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search journals", "Zeitschriften durchsuchen"),
                 "keywords" => ["search journals", "find journals", "zeitschriften durchsuchen", "zeitschriften finden"],
@@ -214,7 +214,7 @@ class CommandPalette
             ],
             [
                 "url" => "/conferences/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search events", "Veranstaltungen durchsuchen"),
                 "feature" => "events",
@@ -295,7 +295,7 @@ class CommandPalette
             ],
             [
                 "url" => "/persons/search",
-                "type" => lang('common.search'),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search persons", "Personen durchsuchen"),
                 "keywords" => ["search persons", "find persons", "personen durchsuchen", "personen finden"],

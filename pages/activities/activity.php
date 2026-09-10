@@ -132,7 +132,7 @@ if ($edit_perm) {
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
-                    <?= lang('common.edit') ?>
+                    <?= lang('action.edit') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
@@ -697,7 +697,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
-                            <?= lang('common.edit') ?>
+                            <?= lang('action.edit') ?>
                         </a>
                     <?php } ?>
 
@@ -724,7 +724,7 @@ if ($edit_perm) {
                                         <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
-                                    <button class="btn btn-block" type="submit"><?= lang('common.save') ?></button>
+                                    <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -926,7 +926,7 @@ if ($edit_perm) {
                                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                     <a href="#add-tags" class="btn small float-right">
                                         <i class="ph ph-edit"></i>
-                                        <?= lang('common.edit') ?>
+                                        <?= lang('action.edit') ?>
                                     </a>
                                 <?php } ?>
                                 <span class="key"><?= $tagLabel ?></span>
@@ -1164,7 +1164,7 @@ if ($edit_perm) {
                         <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                <?= lang('common.edit') ?>
+                                <?= lang('action.edit') ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -1249,7 +1249,7 @@ if ($edit_perm) {
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn small" data-toggle="dropdown" type="button"
                                                             id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                            <?= lang('common.claim') ?>
+                                                            <?= lang('action.claim') ?>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                             <div class="content font-size-12">
@@ -1264,7 +1264,7 @@ if ($edit_perm) {
                                                                     <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                     <button class="btn block small" type="submit">
-                                                                        <?= lang('common.claim') ?>
+                                                                        <?= lang('action.claim') ?>
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -1854,7 +1854,7 @@ if ($edit_perm) {
                         <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
                         <label for="description"><?= lang('common.description') ?></label>
                     </div>
-                    <button class="btn primary" type="submit"><?= lang('common.upload') ?></button>
+                    <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
                 </form>
 
                 <script>
@@ -1903,7 +1903,7 @@ if ($edit_perm) {
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>
-                            <?= lang('common.save') ?>
+                            <?= lang('action.save') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -1960,7 +1960,7 @@ if ($edit_perm) {
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
-            <?= lang('common.edit') ?>
+            <?= lang('action.edit') ?>
         </a>
         <div class="row row-eq-spacing">
             <div class="col-md-6 flex-grow-0" style="max-width: 40rem">

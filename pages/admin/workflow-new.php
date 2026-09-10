@@ -72,7 +72,7 @@
         </p>
 
         <button type="submit" class="btn success" id="submitBtn">
-            <i class="ph ph-check"></i> <?= lang('common.save') ?>
+            <i class="ph ph-check"></i> <?= lang('action.save') ?>
         </button>
 
     </div>

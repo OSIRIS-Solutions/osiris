@@ -263,7 +263,7 @@
 
             <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
                 <i class="ph-duotone ph-student" aria-hidden="true"></i>
-                <b><?= lang('ORCID', 'ORCID') ?></b>
+                <b><?= lang('common.orcid') ?></b>
                 <p><?= lang('Settings for managing ORCID integration', 'Einstellungen zur Verwaltung der ORCID-Integration') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/doi-mappings">

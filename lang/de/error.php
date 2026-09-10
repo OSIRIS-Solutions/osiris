@@ -20,5 +20,6 @@ return [
     'something_went_wrong' => 'Etwas ist schiefgelaufen.',
     'user_not_found' => 'Benutzer nicht gefunden.',
     'username_already_taken' => 'Der Nutzername ist bereits vergeben. Versuche es erneut.',
-    'news_not_enabled' => 'News sind nicht aktiviert.'
+    'news_not_enabled' => 'News sind nicht aktiviert.',
+    'infrastructure_no_edit_permission' => 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'
 ];

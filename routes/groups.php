@@ -136,7 +136,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         ['name' =>  $group['id'], 'path' => "/groups/view/$id"],
     ];
     if ($page == 'edit') {
-        $breadcrumb[] = ['name' => lang('common.edit')];
+        $breadcrumb[] = ['name' => lang('action.edit')];
     }
 
     global $form;

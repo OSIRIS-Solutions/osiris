@@ -32,7 +32,7 @@
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/add-activity?draft=<?= $draft['_id'] ?>" class="btn primary">
         <i class="ph ph-pencil"></i>
-        <?= lang('common.edit') ?>
+        <?= lang('action.edit') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">

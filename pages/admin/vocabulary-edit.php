@@ -111,7 +111,7 @@
 
         <button type="submit" class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save') ?>
+            <?= lang('action.save') ?>
         </button>
     </form>
 </div>
@@ -146,7 +146,7 @@
         </td>
         <td>
             <button type="button" class="btn small outline" onclick="this.closest('tr').remove()">
-                <i class="ph ph-trash" title="<?= lang('common.remove') ?>"></i>
+                <i class="ph ph-trash" title="<?= lang('action.remove') ?>"></i>
             </button>
         </td>
     `;

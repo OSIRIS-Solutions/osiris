@@ -139,7 +139,7 @@ Route::post('/crud/activities/update-spectrum/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('common.go_back_activity'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $openalex = DB::doc2Arr($doc['openalex'] ?? []);

@@ -129,7 +129,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </p>
 
             <button type="submit" class="btn success" id="submitBtn">
-                <i class="ph ph-check"></i> <?= lang('common.update') ?>
+                <i class="ph ph-check"></i> <?= lang('action.update') ?>
             </button>
         </div>
     </div>
@@ -267,7 +267,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     </label>
                 </div>
                 <div>
-                    <button class="btn" id="btn-mig-cancel"><?= lang('common.close') ?></button>
+                    <button class="btn" id="btn-mig-cancel"><?= lang('action.close') ?></button>
                     <button class="btn primary" id="btn-mig-apply">
                         <i class="ph ph-play"></i> <?= lang('Run', 'Ausführen') ?>
                     </button>

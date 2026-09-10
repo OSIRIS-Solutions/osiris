@@ -170,7 +170,7 @@ $user_in_project = false;
 
         <button class="btn primary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('common.submit') ?>
+            <?= lang('action.submit') ?>
         </button>
     </form>
 </div>

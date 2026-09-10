@@ -101,7 +101,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
     global $form;
 
@@ -125,13 +125,13 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -145,7 +145,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
 
     global $form;
@@ -168,7 +168,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
     $breadcrumb = [
@@ -271,7 +271,7 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
@@ -486,7 +486,7 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
 

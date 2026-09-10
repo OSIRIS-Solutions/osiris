@@ -43,7 +43,7 @@ $reports = $osiris->adminReports->find();
             </a>
             <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn">
                 <i class="ph ph-edit"></i>
-                <?= lang('common.edit') ?>
+                <?= lang('action.edit') ?>
             </a>
 
             <!-- dropdown for deleting -->

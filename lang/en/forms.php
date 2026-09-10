@@ -6,4 +6,7 @@ return [
     'organization_not_found_contact' => 'Organisation not found? Please contact {{link}}',
     'organization_not_found_contact_link' => 'someone who can add it manually',
     'select_infrastructure' => 'Please select an infrastructure',
+    'full_name' => 'Full Name',
+    'project_select' => 'Please select a project',
+
 ];

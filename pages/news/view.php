@@ -266,7 +266,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('common.upload') ?>
+                        <?= lang('action.upload') ?>
                     </button>
                 </form>
 
@@ -292,7 +292,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if ($Settings->hasPermission('news.edit')) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
-                <?= lang('common.edit') ?>
+                <?= lang('action.edit') ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>

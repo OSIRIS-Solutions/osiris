@@ -22,7 +22,7 @@ if (!$Settings->hasPermission('units.add')) {
 }
 
 $formaction = ROOTPATH . "/crud/groups/create";
-$btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
+$btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
 $url = ROOTPATH . "/groups/edit/*";
 $title = lang('New group', 'Neue Gruppe');
 
@@ -94,7 +94,7 @@ $title = lang('New group', 'Neue Gruppe');
                 <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (EN)
+                        <?= lang('forms.full_name') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[name]" id="name" required>
                 </div>
@@ -105,7 +105,7 @@ $title = lang('New group', 'Neue Gruppe');
                 <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (DE)
+                        <?= lang('forms.full_name') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[name_de]" id="name_de" required>
                 </div>
@@ -161,7 +161,7 @@ $title = lang('New group', 'Neue Gruppe');
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang('common.save') ?>
+        <i class="ph ph-check"></i> <?= lang('action.save') ?>
     </button>
 
     <datalist id="unit-list">

@@ -27,14 +27,14 @@ $id = $form['id'] ?? null;
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/categories/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/categories/" . $id;
     $title = $name;
 
     $member = $osiris->activities->count(['type' => $id]);
 } else {
     $formaction .= "/crud/categories/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/categories/*";
     $title = lang('New category', 'Neue Kategorie');
 }
@@ -103,7 +103,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('common.submit') ?>
+                    <?= lang('action.submit') ?>
                 </button>
             </form>
             <script>

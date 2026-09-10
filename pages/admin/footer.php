@@ -139,7 +139,7 @@
         <div class="bottom-buttons">
             <button class="btn success large">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('common.save') ?>
+                <?= lang('action.save') ?>
             </button>
         </div>
     </div>

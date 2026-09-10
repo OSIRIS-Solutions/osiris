@@ -120,8 +120,8 @@
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('common.project_select') ?>">
-                            <option value=""><?= lang('common.project_select') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
+                            <option value=""><?= lang('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -179,7 +179,7 @@
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('common.project_select') ?>');
+                                alert('<?= lang('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists
@@ -358,11 +358,11 @@
         <div class="bottom-buttons">
             <button id="save-button" type="submit" class="btn large success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('common.save') ?>
+                <?= lang('action.save') ?>
             </button>
             <a id="cancel-button" type="button" class="btn large light ml-5" href="<?= ROOTPATH ?>/activities/view/<?= $id ?>#edit-activities">
                 <i class="ph ph-x"></i>
-                <?= lang('common.cancel') ?>
+                <?= lang('action.cancel') ?>
             </a>
         </div>
 

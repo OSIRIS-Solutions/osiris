@@ -50,11 +50,11 @@ if ($copy && isset($form['subtype'])) {
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id']) && !$copy) {
     $formaction .= "/crud/activities/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.update');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('common.save');
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $redirect = ROOTPATH . "/activities/view/*";
 }
 if (isset($_GET['redirect']) && !empty($_GET['redirect']) && str_starts_with($_GET['redirect'], ROOTPATH)) {

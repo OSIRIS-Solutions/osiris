@@ -52,7 +52,7 @@ $UM = strtoupper(USER_MANAGEMENT);
             <input class="form-control" id="username" type="text" name="username" placeholder="abc21" required />
         </div>
         <div class="form-group">
-            <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
+            <label for="password"><?= lang('common.password') ?>: </label>
             <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
         </div>
 
@@ -95,7 +95,7 @@ $UM = strtoupper(USER_MANAGEMENT);
             <input class="form-control" id="username" type="text" name="username" placeholder="abc21" required />
         </div>
         <div class="form-group">
-            <label for="password"><?= lang('Password', 'Passwort') ?>: </label>
+            <label for="password"><?= lang('common.password') ?>: </label>
             <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
         </div>
 

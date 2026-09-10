@@ -236,7 +236,7 @@ if (array_sum($a) === 0) { ?>
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                             <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
-                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('common.cancel') ?></button>
+                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('action.cancel') ?></button>
                         </form>
                     </div>
                 </div>
@@ -532,7 +532,7 @@ if (array_sum($a) === 0) { ?>
                                         <label for="status-aborted-<?= $id ?>"><?= lang('Aborted', 'Abgebrochen') ?></label>
                                     </div>
                                 </div>
-                                <button class="btn" type="submit"><?= lang('common.submit') ?></button>
+                                <button class="btn" type="submit"><?= lang('action.submit') ?></button>
                             </form>
                         </div>
                     </td>
@@ -658,7 +658,7 @@ if (array_sum($a) === 0) { ?>
                                             <option value="finished"><?= lang('projects.finished') ?></option>
                                         </select>
                                     </div>
-                                    <button class="btn ml-10" type="submit"><?= lang('common.submit') ?></button>
+                                    <button class="btn ml-10" type="submit"><?= lang('action.submit') ?></button>
                                 </form>
 
                             </div>

@@ -62,7 +62,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('common.submit') ?>
+                    <?= lang('action.submit') ?>
                 </button>
             </form>
             <?php include_once BASEPATH . '/header-editor.php'; ?>

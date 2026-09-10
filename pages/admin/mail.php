@@ -69,7 +69,7 @@ $mail = $Settings->get('mail');
             </div>
 
             <div class="col-sm">
-                <label for="email"><?= lang('Password', 'Passwort') ?></label>
+                <label for="email"><?= lang('common.password') ?></label>
                 <input type="password" class="form-control" name="mail[smtp_password]" value="<?= $mail['smtp_password'] ?? '' ?>">
             </div>
         </div>
@@ -141,7 +141,7 @@ $mail = $Settings->get('mail');
         <div class="bottom-buttons mb-20">
             <button class="btn success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('common.save') ?>
+                <?= lang('action.save') ?>
             </button>
         </div>
 

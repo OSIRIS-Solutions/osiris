@@ -112,7 +112,7 @@ foreach ($groupImages as $image) {
         <div class="modal modal-full" id="group-image-modal" tabindex="-1" role="dialog" aria-modal="true" aria-label="<?= lang('Image gallery', 'Bildergalerie') ?>">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('common.close') ?>" href="#close-modal">
+                    <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <img id="group-image-full" class="group-image-full" src="" alt="">
@@ -167,7 +167,7 @@ foreach ($groupImages as $image) {
     <div class="modal" id="manage-group-images" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="manage-group-images-title">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('common.close') ?>" href="#close-modal">
+                <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h2 id="manage-group-images-title" class="title"><?= lang('Manage images', 'Bilder verwalten') ?></h2>
@@ -277,7 +277,7 @@ foreach ($groupImages as $image) {
                                     </div>
                                     <button type="submit" class="btn secondary small">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('common.save') ?>
+                                        <?= lang('action.save') ?>
                                     </button>
                                 </form>
 

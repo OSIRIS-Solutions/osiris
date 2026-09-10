@@ -73,7 +73,7 @@ if ($active('keywords')) {
                 <th><?= lang('Email', 'E-Mail') ?></th>
                 <th><?= lang('common.telephone') ?></th>
                 <th><?= lang('common.position') ?></th>
-                <th><?= lang('ORCID', 'ORCID') ?></th>
+                <th><?= lang('common.orcid') ?></th>
                 <th><?= lang('Username', 'Kürzel') ?></th>
                 <th><?= $keyword_name ?></th>
             </thead>
@@ -240,7 +240,7 @@ if ($active('keywords')) {
             'key': 'position'
         },
         {
-            title: lang('ORCID', 'ORCID'),
+            title: lang('common.orcid'),
             'key': 'orcid'
         },
         {
@@ -407,7 +407,7 @@ if ($active('keywords')) {
                 {
                     target: 12,
                     data: 'orcid',
-                    title: lang('ORCID', 'ORCID'),
+                    title: lang('common.orcid'),
                     visible: false,
                     defaultContent: ''
                 },

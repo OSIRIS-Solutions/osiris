@@ -22,7 +22,7 @@ Route::get('/reports', function () {
         ['name' => lang('common.reports')]
     ];
     if (!$Settings->hasPermission('report.generate')) {
-        abortwith(403, lang('You do not have permission to generate reports.', 'Du hast keine Berechtigung, Berichte zu erstellen.'), "/", lang('Go back', 'Zurück'));
+        abortwith(403, lang('You do not have permission to generate reports.', 'Du hast keine Berechtigung, Berichte zu erstellen.'), "/", lang('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports.php";
@@ -37,7 +37,7 @@ Route::get('/admin/reports', function () {
         ['name' => lang('Templates', 'Vorlagen')],
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/reports", lang('Go back', 'Zurück'));
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/reports", lang('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
@@ -52,7 +52,7 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
         ['name' => lang("Builder", "Editor")]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('Go back', 'Zurück'));
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('navigation.go_back'));
     }
 
     $report = [];
@@ -80,7 +80,7 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
         ['name' => lang('common.preview')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('Go back', 'Zurück'));
+        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('navigation.go_back'));
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($report)) {

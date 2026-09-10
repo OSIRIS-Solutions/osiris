@@ -147,7 +147,7 @@ include_once BASEPATH . "/header-editor.php";
         </div>
 
 
-        <button type="submit" class="btn secondary" id="submit"><?= lang('common.save') ?></button>
+        <button type="submit" class="btn secondary" id="submit"><?= lang('action.save') ?></button>
     </form>
 
 

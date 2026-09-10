@@ -142,7 +142,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
             $name = lang('common.persons');
             break;
         default:
-            $name = lang('common.edit');
+            $name = lang('action.edit');
             break;
     }
 

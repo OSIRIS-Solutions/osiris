@@ -183,7 +183,7 @@ if ($Settings->featureEnabled('spectrum')) {
                     <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
                     <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
                 </div>
-                <button type="submit" class="btn"><?= lang('common.upload') ?></button>
+                <button type="submit" class="btn"><?= lang('action.upload') ?></button>
             </form>
         </div>
     </div>
@@ -227,7 +227,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
             <i class="ph ph-edit"></i>
-            <?= lang('common.edit') ?>
+            <?= lang('action.edit') ?>
         </a>
     <?php } ?>
 </div>

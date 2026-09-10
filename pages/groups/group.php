@@ -162,7 +162,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <div class="btn-group">
                 <a class="btn" href="<?= ROOTPATH ?>/groups/edit/<?= $id ?>">
                     <i class="ph ph-note-pencil ph-fw"></i>
-                    <?= lang('common.edit') ?>
+                    <?= lang('action.edit') ?>
                 </a>
                 <!-- <a class="btn" href="#add-person-modal">
                     <i class="ph ph-user-plus ph-fw"></i>
@@ -299,7 +299,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                                     </li>
                                 <?php } ?>
                             </ul>
-                            <button type="submit" class="btn"><?= lang('common.save') ?></button>
+                            <button type="submit" class="btn"><?= lang('action.save') ?></button>
                         </form>
                         <script>
                             $('#reorder-list').sortable({
@@ -450,7 +450,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <?php if ($edit_perm) { ?>
                             <a class="font-size-16" href="<?= ROOTPATH ?>/groups/public/<?= $id ?>#section-research-interest">
                                 <i class="ph ph-note-pencil ph-fw"></i>
-                                <span class="sr-only"><?= lang('common.edit') ?></span>
+                                <span class="sr-only"><?= lang('action.edit') ?></span>
                             </a>
                         <?php } ?>
                     </h3>

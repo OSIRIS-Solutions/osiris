@@ -87,7 +87,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $form['name'], 'path' => "/topics/view/$id"],
-        ['name' => lang('common.edit')]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";

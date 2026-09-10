@@ -6,4 +6,6 @@ return [
     'organization_not_found_contact' => 'Organisation nicht gefunden? Bitte kontaktiere {{link}}',
     'organization_not_found_contact_link' => 'jemanden, der sie manuell anlegen kann',
     'select_infrastructure' => 'Bitte wähle eine Infrastruktur aus',
+    'full_name' => 'Voller Name',
+    'project_select' => 'Bitte wähle ein Projekt aus',
 ];

@@ -164,7 +164,7 @@ if ($edit_perm) { ?>
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('common.upload') ?>
+                        <?= lang('action.upload') ?>
                     </button>
                 </form>
 
@@ -225,7 +225,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <span><?= lang('common.edit') ?></span>
+                <span><?= lang('action.edit') ?></span>
             </a>
         <?php } ?>
     </div>
@@ -371,7 +371,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/persons/<?= $id ?>" class="font-size-16">
                 <i class="ph ph-edit"></i>
-                <span class="sr-only"><?= lang('common.edit') ?></span>
+                <span class="sr-only"><?= lang('action.edit') ?></span>
             </a>
         <?php } ?>
     </h2>
@@ -587,7 +587,7 @@ if ($edit_perm) { ?>
 
                 <button class="btn btn-primary">
                     <i class="ph ph-save"></i>
-                    <?= lang('common.save') ?>
+                    <?= lang('action.save') ?>
                 </button>
             </form>
         </div>

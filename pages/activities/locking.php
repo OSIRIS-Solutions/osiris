@@ -43,7 +43,7 @@
     <p>
         <?=lang('The following roles can still edit or delete locked activities:', 'Die folgenden Rollen können weiterhin gesperrte Aktivitäten bearbeiten oder löschen:')?>
         <br>
-        <b><?=lang('common.edit')?>:</b>
+        <b><?=lang('action.edit')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.edit-locked',
@@ -97,7 +97,7 @@
                     <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
                 </div>
             </div>
-            <button class="btn" type="submit"><?= lang('common.submit') ?></button>
+            <button class="btn" type="submit"><?= lang('action.submit') ?></button>
 
         </form>
     </div>

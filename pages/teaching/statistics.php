@@ -111,7 +111,7 @@ $all = $osiris->activities->count(
                 <option value="<?= $s ?>" <?= $s === $selectedSemester ? 'selected' : '' ?>><?= $s ?></option>
             <?php endforeach ?>
         </select>
-        <button class="btn signal filled" type="submit"><?= lang('common.update') ?></button>
+        <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
     </form>
 </div>
 

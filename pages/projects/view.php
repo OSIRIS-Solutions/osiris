@@ -350,7 +350,7 @@ if ($topicsEnabled) {
                 <?php if ($edit_perm) { ?>
                     <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('common.edit') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 <?php } ?>
 
@@ -451,7 +451,7 @@ if ($topicsEnabled) {
                                     <br>
                                     <a href="#edit-image" data-toggle="modal">
                                         <i class="ph ph-image"></i>
-                                        <?= lang('common.edit') ?>
+                                        <?= lang('action.edit') ?>
                                     </a>
                                 <?php }
                                 ?>
@@ -486,7 +486,7 @@ if ($topicsEnabled) {
                 <div class="btn-toolbar mb-10">
                     <a href="<?= ROOTPATH ?>/projects/persons/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('common.edit') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -578,7 +578,7 @@ if ($topicsEnabled) {
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('common.edit') ?>
+                <?= lang('action.edit') ?>
             </a>
         </div>
     <?php } ?>
@@ -880,7 +880,7 @@ if ($topicsEnabled) {
                         </div>
                         <button class="btn primary mt-20">
                             <i class="ph ph-check"></i>
-                            <?= lang('common.submit') ?>
+                            <?= lang('action.submit') ?>
                         </button>
                     </form>
                 </div>
@@ -918,7 +918,7 @@ if ($topicsEnabled) {
 
                     <button class="btn primary">
                         <i class="ph ph-check"></i>
-                        <?= lang('common.submit') ?>
+                        <?= lang('action.submit') ?>
                     </button>
                 </form>
 
