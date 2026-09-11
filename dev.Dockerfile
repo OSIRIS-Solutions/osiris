@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure ldap \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install ldap zip gd \
-    && pecl install mongodb-1.21.0 \
+    && pecl install mongodb-2.4.1 \
     && docker-php-ext-enable mongodb \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
