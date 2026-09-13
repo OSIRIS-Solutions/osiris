@@ -56,7 +56,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
     .central-document-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr)); }
     .central-document-card { background: var(--box-bg-color); border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); display: flex; flex-direction: column; min-width: 0; overflow: hidden; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
     .central-document-card:hover { border-color: var(--primary-color); box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .08); transform: translateY(-.2rem); }
-    .central-document-preview { align-items: center; background: var(--muted-color-very-light); display: flex; height: 15rem; justify-content: center; overflow: hidden; position: relative; }
+    .central-document-preview { align-items: center; background: var(--muted-color-20); display: flex; height: 15rem; justify-content: center; overflow: hidden; position: relative; }
     .central-document-preview img, .central-document-preview iframe { border: 0; height: 100%; object-fit: cover; pointer-events: none; width: 100%; }
     .central-document-preview iframe { background: white; object-fit: initial; position: absolute; inset: 0; }
     .central-document-pdf-preview { inset: 0; position: absolute; }
@@ -65,7 +65,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
     .central-document-file-fallback { align-items: center; color: var(--muted-color); display: flex; flex-direction: column; gap: .5rem; justify-content: center; }
     .central-document-file-fallback i { font-size: 5rem; }
     .central-document-extension { background: var(--box-bg-color); border-radius: var(--border-radius); color: var(--primary-color); font-size: 1.1rem; font-weight: 700; letter-spacing: .08em; padding: .25rem .6rem; }
-    .central-document-category { align-self: flex-start; background: var(--primary-color-very-light); border-radius: 10rem; color: var(--primary-color-dark); display: inline-block; font-size: 1.1rem; font-weight: 600; margin-bottom: .8rem; max-width: 100%; overflow: hidden; padding: .3rem .8rem; text-overflow: ellipsis; white-space: nowrap; }
+    .central-document-category { align-self: flex-start; background: var(--primary-color-20); border-radius: 10rem; color: var(--primary-color-dark); display: inline-block; font-size: 1.1rem; font-weight: 600; margin-bottom: .8rem; max-width: 100%; overflow: hidden; padding: .3rem .8rem; text-overflow: ellipsis; white-space: nowrap; }
     .central-document-body { display: flex; flex: 1; flex-direction: column; padding: 1.5rem; }
     .central-document-title { font-size: 1.8rem; line-height: 1.25; margin: 0 0 .75rem; overflow-wrap: anywhere; }
     .central-document-description { color: var(--muted-color); display: -webkit-box; font-size: 1.3rem; line-height: 1.45; margin: 0 0 1rem; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
@@ -78,9 +78,6 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
     .central-document-empty { padding: 5rem 2rem; text-align: center; }
     .central-document-empty > i { color: var(--muted-color); display: block; font-size: 5rem; margin-bottom: 1rem; }
     .central-document-filter-clear { font-size: 1.2rem; }
-    .central-document-filter-table .active { background: var(--primary-color-very-light); }
-    .central-document-filter-table a { align-items: center; display: flex; justify-content: space-between; }
-    .central-document-filter-table .index { flex-shrink: 0; margin-left: 1rem; }
     @media (max-width: 767px) {
         .central-document-toolbar { align-items: stretch; flex-direction: column; }
         .central-document-sort { flex-basis: auto; }
@@ -265,6 +262,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                 'manyResults' => lang('%s documents', '%s Dokumente'),
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
             const state = { category: '', fileType: '', tag: '', query: '' };
+            const hash = readHash()
 
             function normalize(value) {
                 return String(value || '').trim().toLocaleLowerCase();
@@ -345,7 +343,10 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
                     const kind = button.dataset.filterKind;
-                    state[kind] = state[kind] === button.dataset.filterValue ? '' : button.dataset.filterValue;
+                    const value = state[kind] === button.dataset.filterValue ? '' : button.dataset.filterValue;
+                    state[kind] = value;
+                    hash[kind] = value === '' ? null : value;
+                    writeHash(hash);
                     updateFilterButtons();
                     filterCards();
                 });
@@ -382,6 +383,15 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             // } else {
             //     pdfPreviews.forEach(loadPdfPreview);
             // }
+
+            console.log(hash);
+            for (const key in hash) {
+                if (!Object.hasOwn(hash, key)) continue;
+                const value = hash[key];
+                state[key] = value;
+                 updateFilterButtons();
+            }
+
 
             sortCards();
             filterCards();
