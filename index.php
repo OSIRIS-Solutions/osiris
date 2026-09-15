@@ -257,6 +257,7 @@ if (
 include_once BASEPATH . "/routes/migrate.php";
 
 include_once BASEPATH . "/routes/api/api.php";
+include_once BASEPATH . "/routes/api/mcp.php";
 include_once BASEPATH . "/routes/api/dashboard.php";
 include_once BASEPATH . "/routes/api/portfolio.php";
 
