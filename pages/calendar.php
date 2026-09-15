@@ -27,13 +27,8 @@ $person = $osiris->persons->findOne(['username' => $user]);
 // get persons unit hierarchy
 $units = [];
 $tree = [];
-if (isset($person['units'])) {
-    $units = DB::doc2Arr($person['units'] ?? []);
-    // filter units from the past
-    $units = array_filter($units, function ($unit) {
-        return !isset($unit['end']) || strtotime($unit['end']) > time();
-    });
-    $unit_ids = array_column($units, 'unit');
+if (!empty($person['current_units'])) {
+    $unit_ids = DB::doc2Arr($person['current_units']);
 
     $hierarchy = $Groups->getPersonHierarchyTree($unit_ids);
     $tree = $Groups->readableHierarchy($hierarchy);

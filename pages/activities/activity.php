@@ -19,10 +19,7 @@
 use chillerlan\QRCode\{QRCode, QROptions};
 
 // User context
-$user_units = DB::doc2Arr($USER['units'] ?? []);
-if (!empty($user_units)) {
-    $user_units = array_column($user_units, 'unit');
-}
+$user_units = DB::doc2Arr($USER['current_units'] ?? []);
 
 if ($edit_perm) {
     include_once BASEPATH . '/pages/activities/activity-modals.php';

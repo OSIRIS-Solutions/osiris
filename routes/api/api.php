@@ -517,21 +517,8 @@ Route::get('/api/users', function () {
         $filter = json_decode($_GET['json'], true);
     }
     if (isset($filter['units'])) {
-        $filter['units'] = [
-            '$elemMatch' => [
-                'unit' => ['$in' => $filter['units']],
-                '$and' => [
-                    ['$or' => [
-                        ['start' => null],
-                        ['start' => ['$lte' => date('Y-m-d')]]
-                    ]],
-                    ['$or' => [
-                        ['end' => null],
-                        ['end' => ['$gte' => date('Y-m-d')]]
-                    ]]
-                ]
-            ]
-        ];
+        $filter['current_units'] = ['$in' => (array) $filter['units']];
+        unset($filter['units']);
     }
     $result = $osiris->persons->find($filter)->toArray();
 
@@ -571,7 +558,7 @@ Route::get('/api/users', function () {
             $topics .= '</span>';
         }
         // dump($Groups->deptHierarchy($user['units'] ?? [], 1)['id'], true);
-        $units = $Groups->getPersonDept($user['units'] ?? []);
+        $units = $Groups->getPersonDept($user['current_units'] ?? []);
         if (empty(trim($user['last'])) && empty(trim($user['first']))) {
             if (empty($user['username'])) {
                 // this should not happen, but if it does, we set a default name

@@ -572,6 +572,10 @@ class LDAPInterface
                 ['$set' => $userData],
                 // ['upsert' => true]
             );
+            if (array_key_exists('units', $userData)) {
+                include_once BASEPATH . '/php/Render.php';
+                renderCurrentUnits(['username' => $username]);
+            }
             echo "<br>";
         }
 

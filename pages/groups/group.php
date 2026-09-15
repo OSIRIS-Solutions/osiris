@@ -22,7 +22,7 @@ $level = $Groups->getLevel($id);
 
 $children = $Groups->getChildren($group['id']);
 
-$persons = $Groups->getAllPersons($children);
+$persons = $Groups->getAllPersons($group['id'], null, true);
 
 if (isset($group['head'])) {
     $head = $group['head'];

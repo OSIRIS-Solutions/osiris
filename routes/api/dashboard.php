@@ -407,8 +407,7 @@ Route::get('/api/dashboard/collaborators', function () {
             // only for portal
             $dept = $_GET['dept'];
 
-            $child_ids = $Groups->getChildren($dept);
-            $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
+            $persons = $osiris->persons->find(['current_units' => $dept, 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
             $users = array_column($persons, 'username');
             $filter = [
                 'persons.user' => ['$in' => $users],
@@ -1106,7 +1105,7 @@ Route::get('/api/dashboard/author-network', function () {
 
     $scientist = $_GET['user'] ?? $_SESSION['username'] ?? '';
     $selectedUser = $osiris->persons->findone(['username' => $scientist]);
-    $userUnits = array_column(DB::doc2Arr($selectedUser['units']), 'unit');
+    $userUnits = DB::doc2Arr($selectedUser['current_units'] ?? []);
     // generate graph json
     $labels = [];
     $combinations = [];
@@ -1344,7 +1343,7 @@ Route::get('/api/dashboard/department-graph', function () {
     }
     $group = $Groups->getGroup($_GET['dept']);
     $children = $Groups->getChildren($group['id']);
-    $persons = $Groups->getAllPersons($children);
+    $persons = $Groups->getAllPersons($group['id'], null, true);
     $users = array_column($persons, 'username');
     $nodes = [];
     $links = [];
@@ -1607,8 +1606,7 @@ Route::get('/api/calendar', function () {
     $users = [$_SESSION['username']];
     if (isset($_GET['unit'])) {
         // get all people associated with this unit rn
-        $units = $Groups->getChildren($_GET['unit']);
-        $users = $Groups->getAllPersons($units);
+        $users = $Groups->getAllPersons($_GET['unit'], null, true);
         $users = array_column($users, 'username');
     }
     $filter['participants'] = ['$in' => $users];

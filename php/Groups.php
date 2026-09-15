@@ -559,10 +559,15 @@ class Groups
     {
         if (is_string($units)) {
             $units = [$units];
-            if ($include_children) {
-                $children = $this->getChildren($units[0]);
-                $units = array_merge($units, $children);
-            }
+        }
+        if ($date === null && $include_children && !$only_scientific) {
+            return $this->DB->db->persons->find([
+                'current_units' => ['$in' => array_values(array_unique($units))],
+                'is_active' => ['$ne' => false]
+            ])->toArray();
+        }
+        if ($include_children && count($units) === 1) {
+            $units = array_merge($units, $this->getChildren($units[0]));
         }
         if (empty($date)) $date = date('Y-m-d');
 
@@ -605,10 +610,15 @@ class Groups
         if (empty($units)) return [];
         $depts = [];
         foreach ($units as $unit) {
-            // if in past or future, skip
-            if (isset($unit['end']) && !empty($unit['end']) && strtotime($unit['end']) < time()) continue;
-            if (isset($unit['start']) && !empty($unit['start']) && strtotime($unit['start']) > time()) continue;
-            $unit = $this->getUnitParent($unit['unit'], 1);
+            if (is_string($unit)) {
+                $unitId = $unit;
+            } else {
+                // Backwards compatibility for callers passing historical assignments.
+                if (isset($unit['end']) && !empty($unit['end']) && strtotime($unit['end']) < time()) continue;
+                if (isset($unit['start']) && !empty($unit['start']) && strtotime($unit['start']) > time()) continue;
+                $unitId = $unit['unit'];
+            }
+            $unit = $this->getUnitParent($unitId, 1);
             if (empty($unit['id']) || in_array($unit['id'], $depts)) continue;
             $depts[] = $unit['id'];
         }

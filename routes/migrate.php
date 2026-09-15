@@ -159,6 +159,7 @@ Route::get('/migrate/index', function () {
     /* persons */
     ensureIndex($osiris->persons, ['search_text' => 1]);
     ensureIndex($osiris->persons, ['username' => 1]); // optional but usually helpful
+    ensureIndex($osiris->persons, ['current_units' => 1]);
 
     /* projects */
     ensureIndex($osiris->projects, ['acronym' => 1]);

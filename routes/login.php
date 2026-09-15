@@ -164,6 +164,8 @@ Route::get('/user/oauth-callback', function () {
 
     if (empty($USER)) {
         $osiris->persons->insertOne($new_user);
+        include_once BASEPATH . "/php/Render.php";
+        renderCurrentUnits(['username' => $username]);
         $USER = $DB->getPerson($username);
     } else {
         $osiris->persons->updateOne(
@@ -240,6 +242,8 @@ Route::post('/user/login', function () {
                 }
                 $osiris->persons->insertOne($new_user);
                 $user = $new_user['username'];
+                include_once BASEPATH . "/php/Render.php";
+                renderCurrentUnits(['username' => $user]);
                 $USER = $DB->getPerson($user);
             } else {
                 // user exists in our database

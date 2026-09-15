@@ -1241,6 +1241,8 @@ Route::post('/crud/admin/add-user', function () {
     $person['is_active'] = true;
 
     $osiris->persons->insertOne($person);
+    include_once BASEPATH . "/php/Render.php";
+    renderCurrentUnits(['username' => $username]);
 
     if (isset($_POST['guestaccount'])) {
         $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> successfully created.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> erfolgreich erstellt.");

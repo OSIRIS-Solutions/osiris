@@ -1,5 +1,6 @@
 <?php
 include_once BASEPATH . "/php/Render.php";
+$osiris->persons->createIndex(['current_units' => 1]);
 $updated = renderCurrentUnits();
 
 migrationCard(
