@@ -606,6 +606,12 @@ Route::get('/migrate', function () {
         ob_flush();
         $rerender = true;
     }
+    if (version_compare($DBversion, '2.2.0', '<')) {
+        include BASEPATH . "/routes/migration/v2.2.0.php";
+        flush();
+        ob_flush();
+        $rerender = false;
+    }
 
     if ($rerender) {
         echo "<p>Rerender activities, please wait ...</p>";

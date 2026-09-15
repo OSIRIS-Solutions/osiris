@@ -137,3 +137,26 @@ Route::get('/smart-render', function () {
     $updated = renderActivities(['rendered' => ['$exists' => false]], true);
     return JSON::ok(['status' => 'ok', 'message' => 'Done.', 'updated' => $updated]);
 });
+
+
+/**
+ * Rerender elements that have not rendered yet
+ */
+Route::get('/cron/maintenance', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!defined('CRON_SECRET') || CRON_SECRET === 'please-change-this-secret') {
+        return JSON::error('CRON_SECRET is not set properly in CONFIG.php', 500);
+    }
+    $secret = $_GET['key'] ?? '';
+    if ($secret !== CRON_SECRET) return JSON::error('Unauthorized', 401);
+    set_time_limit(6000);
+    $message = [];
+    include_once BASEPATH . "/php/Render.php";
+    $updated = renderActivities(['rendered' => ['$exists' => false]], true);
+    $message[] = $updated . ' Activities were rendered.';
+
+    $updated = renderCurrentUnits();
+    $message[] = $updated . ' current units of users have been updated.';
+
+    return JSON::ok(['status' => 'ok', 'message' => 'Done.', 'updated' => $updated]);
+});
