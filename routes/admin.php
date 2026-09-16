@@ -600,6 +600,9 @@ Route::get('/admin/(.*)', function ($path) {
     if (!file_exists(BASEPATH . "/pages/admin/$path.php")) {
         abortwith(404, lang("Settings", "Einstellungen"), "/admin");
     }
+    if ($path === 'api-clients') {
+        header('Cache-Control: no-store');
+    }
     include BASEPATH . "/header.php";
     $affiliation = $Settings->get('affiliation_details');
     include_once BASEPATH . '/header-editor.php';
@@ -613,6 +616,154 @@ Route::get('/admin/(.*)', function ($path) {
 /**
  * CRUD routes
  */
+
+Route::post('/crud/admin/api-clients/create', function () {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/ApiClient.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
+    $description = trim(strip_tags((string) ($_POST['description'] ?? '')));
+    $surfaces = ApiClient::filterSurfaces($_POST['surfaces'] ?? []);
+    $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
+    $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
+    if ($name === '' || mb_strlen($name) > 200 || empty($surfaces) || empty($scopes)) {
+        $_SESSION['msg'] = lang(
+            'Please provide a name and select at least one API area and permission.',
+            'Bitte gib einen Namen an und wähle mindestens einen API-Bereich und eine Berechtigung aus.'
+        );
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/api-clients');
+        die();
+    }
+    if ($expiresAt !== null) {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
+        if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
+            $_SESSION['msg'] = lang('The expiration date is invalid.', 'Das Ablaufdatum ist ungültig.');
+            $_SESSION['msg_type'] = 'error';
+            header('Location: ' . ROOTPATH . '/admin/api-clients');
+            die();
+        }
+    }
+
+    $clients = new ApiClient($osiris);
+    $credentials = $clients->create(
+        mb_substr($name, 0, 200),
+        mb_substr($description, 0, 1000),
+        $surfaces,
+        $scopes,
+        $expiresAt,
+        $_SESSION['username'] ?? ''
+    );
+    $_SESSION['api_client_credentials'] = $credentials;
+    $_SESSION['msg'] = lang(
+        'API client created. Copy the secret now; it will not be shown again.',
+        'API-Client angelegt. Kopiere das Secret jetzt; es wird nicht erneut angezeigt.'
+    );
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/api-clients');
+    die();
+}, 'login');
+
+Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/ApiClient.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
+    $surfaces = ApiClient::filterSurfaces($_POST['surfaces'] ?? []);
+    $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
+    $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
+    if ($name === '' || empty($surfaces) || empty($scopes)) {
+        $_SESSION['msg'] = lang('Name, API area, and permissions are required.', 'Name, API-Bereich und Berechtigungen sind erforderlich.');
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/api-clients');
+        die();
+    }
+    if ($expiresAt !== null) {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
+        if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
+            $_SESSION['msg'] = lang('The expiration date is invalid.', 'Das Ablaufdatum ist ungültig.');
+            $_SESSION['msg_type'] = 'error';
+            header('Location: ' . ROOTPATH . '/admin/api-clients');
+            die();
+        }
+    }
+    $osiris->apiClients->updateOne(
+        ['client_id' => $clientId],
+        ['$set' => [
+            'name' => mb_substr($name, 0, 200),
+            'description' => mb_substr(trim(strip_tags((string) ($_POST['description'] ?? ''))), 0, 1000) ?: null,
+            'surfaces' => $surfaces,
+            'scopes' => $scopes,
+            'expires_at' => $expiresAt,
+            'updated_at' => date('Y-m-d H:i:s'),
+            'updated_by' => $_SESSION['username'] ?? null,
+        ]]
+    );
+    $_SESSION['msg'] = lang('API client updated.', 'API-Client aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/api-clients');
+    die();
+}, 'login');
+
+Route::post('/crud/admin/api-clients/toggle/([a-z0-9_]+)', function ($clientId) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $enabled = filter_var($_POST['enabled'] ?? false, FILTER_VALIDATE_BOOLEAN);
+    $osiris->apiClients->updateOne(
+        ['client_id' => $clientId],
+        ['$set' => [
+            'enabled' => $enabled,
+            'updated_at' => date('Y-m-d H:i:s'),
+            'updated_by' => $_SESSION['username'] ?? null,
+        ]]
+    );
+    $_SESSION['msg'] = $enabled
+        ? lang('API client enabled.', 'API-Client aktiviert.')
+        : lang('API client disabled.', 'API-Client deaktiviert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/api-clients');
+    die();
+}, 'login');
+
+Route::post('/crud/admin/api-clients/rotate/([a-z0-9_]+)', function ($clientId) {
+    include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/ApiClient.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $clients = new ApiClient($osiris);
+    $secret = $clients->rotate($clientId);
+    if ($secret === null) {
+        abortwith(404, lang('API client', 'API-Client'), '/admin/api-clients');
+    }
+    $_SESSION['api_client_credentials'] = ['client_id' => $clientId, 'secret' => $secret];
+    $_SESSION['msg'] = lang(
+        'The API secret was rotated. The previous secret is no longer valid.',
+        'Das API-Secret wurde rotiert. Das vorherige Secret ist nicht mehr gültig.'
+    );
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/api-clients');
+    die();
+}, 'login');
+
+Route::post('/crud/admin/api-clients/delete/([a-z0-9_]+)', function ($clientId) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $osiris->apiClients->deleteOne(['client_id' => $clientId]);
+    $_SESSION['msg'] = lang('API client deleted.', 'API-Client gelöscht.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/api-clients');
+    die();
+}, 'login');
 
 Route::post('/crud/admin/general', function () {
     include_once BASEPATH . "/php/init.php";

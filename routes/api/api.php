@@ -14,7 +14,9 @@
  * @license     MIT
  */
 
-function apikey_check($key = null)
+include_once BASEPATH . '/php/ApiClient.php';
+
+function apikey_check($key = null, $scope = null)
 {
     $Settings = new Settings();
     $APIKEY = $Settings->get('apikey');
@@ -37,28 +39,24 @@ function apikey_check($key = null)
         }
     }
 
-    // 2) If no API key is configured, nothing to check
-    if (empty($APIKEY)) {
+    // 2) Keep the configured global API key as an unrestricted legacy key.
+    $provided = ApiClient::requestSecret($key);
+    if (!empty($APIKEY) && $provided !== '' && hash_equals((string) $APIKEY, $provided)) {
         return true;
     }
 
-    // 3) Check query param ?apikey=...
-    if ($APIKEY === $key) {
-        return true;
-    }
-
-    // 4) Optional: allow header X-API-Key
-    if (isset($_SERVER['HTTP_X_API_KEY']) && $_SERVER['HTTP_X_API_KEY'] === $APIKEY) {
-        return true;
-    }
-
-    // 5) Everything else: no access
-    return false;
+    // 3) A missing global key means external access is closed unless a
+    // specifically authorized API client is supplied.
+    $requiredScopes = $scope === null ? [] : [(string) $scope];
+    $clients = new ApiClient();
+    return $clients->authenticate('api', $requiredScopes);
 }
 
 function return_permission_denied()
 {
+    http_response_code(403);
     header("Content-Type: application/json");
+    header("Cache-Control: no-store");
     header("Pragma: no-cache");
     header("Expires: 0");
     return json_encode(array(
@@ -134,7 +132,7 @@ Route::get('/api/activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
         die;
     }
@@ -245,7 +243,7 @@ Route::get('/api/html', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
         die;
     }
@@ -300,7 +298,7 @@ Route::get('/api/all-activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
         die;
     }
@@ -421,7 +419,7 @@ Route::get('/api/spectrum-activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
         die;
     }
@@ -456,7 +454,7 @@ Route::get('/api/(conferences|events|deadlines)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'events.read')) {
         echo return_permission_denied();
         die;
     }
@@ -490,7 +488,7 @@ Route::get('/api/users', function () {
     }
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'persons.read')) {
         echo return_permission_denied();
         die;
     }
@@ -626,7 +624,7 @@ Route::get('/api/users/(.*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'persons.read')) {
         echo return_permission_denied();
         die;
     }
@@ -659,7 +657,7 @@ Route::get('/api/user-units/(.*)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'persons.read')) {
         echo return_permission_denied();
         die;
     }
@@ -700,87 +698,12 @@ Route::get('/api/user-units/(.*)', function ($id) {
     ], 1);
 });
 
-Route::get('/api/reviews', function () {
-    error_reporting(E_ERROR | E_PARSE);
-    include_once BASEPATH . "/php/init.php";
-
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
-
-    $filter = [];
-    if (isset($_GET['filter'])) {
-        $filter = $_GET['filter'];
-    }
-    $filter['type'] = 'review';
-    $result = $osiris->activities->find($filter)->toArray();
-
-    $reviews = [];
-    foreach ($result as $doc) {
-        $authors = DB::doc2Arr($doc['authors'] ?? []);
-        $user = $authors[0]['user'] ?? null;
-        if (empty($user) && isset($doc['user'])) {
-            $user = $doc['user'];
-        }
-        if (!array_key_exists($user, $reviews)) {
-            $u = $DB->getNameFromId($user);
-            $reviews[$user] = [
-                'User' => $user,
-                'Name' => $u,
-                'Editor' => 0,
-                'Editorials' => [],
-                'Reviewer' => 0,
-                "Reviews" => []
-            ];
-        }
-        switch (strtolower($doc['subtype'] ?? $doc['role'] ?? 'review')) {
-            case 'editor':
-            case 'editorial':
-                $reviews[$user]['Editor']++;
-                $date = format_date($doc['start'] ?? $doc);
-                if (isset($doc['end']) && !empty($doc['end'])) {
-                    $date .= " - " . format_date($doc['end']);
-                } else {
-                    $date .= " - today";
-                }
-
-                $reviews[$user]['Editorials'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => $date,
-                    'details' => $doc['editor_type'] ?? ''
-                ];
-                break;
-
-            case 'reviewer':
-            case 'review':
-                $reviews[$user]['Reviewer']++;
-                $reviews[$user]['Reviews'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => format_date($doc)
-                ];
-                break;
-            default:
-                $reviews[$user]['Reviewer']++;
-                $reviews[$user]['Reviews'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => format_date($doc)
-                ];
-                break;
-        }
-    }
-
-    $table = array_values($reviews);
-
-    echo return_rest($table, count($result));
-});
-
 
 Route::get('/api/teaching', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'teaching.read')) {
         echo return_permission_denied();
         die;
     }
@@ -822,7 +745,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
     include_once BASEPATH . "/php/Project.php";
     $Project = new Project();
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'projects.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1011,7 +934,15 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    $scopeByType = [
+        'projects' => 'projects.read',
+        'proposals' => 'projects.read',
+        'activities' => 'activities.read',
+        'conferences' => 'events.read',
+        'journals' => 'journals.read',
+        'persons' => 'persons.read',
+    ];
+    if (!apikey_check($_GET['apikey'] ?? null, $scopeByType[$type])) {
         echo return_permission_denied();
         die;
     }
@@ -1304,7 +1235,7 @@ Route::get('/api/projects-by-funding-number', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'projects.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1329,7 +1260,7 @@ Route::get('/api/journal', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'journals.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1349,7 +1280,7 @@ Route::get('/api/journals', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'journals.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1472,6 +1403,11 @@ Route::get('/api/journals', function () {
 
 Route::get('/api/google', function () {
     error_reporting(E_ERROR | E_PARSE);
+    include_once BASEPATH . "/php/init.php";
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
+        echo return_permission_denied();
+        die;
+    }
     header("Content-Type: application/json");
     header("Pragma: no-cache");
     header("Expires: 0");
@@ -1498,7 +1434,7 @@ Route::get('/api/levenshtein', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'persons.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1555,7 +1491,7 @@ Route::get('/api/infrastructures', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'infrastructures.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1575,7 +1511,7 @@ Route::get('/api/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'organizations.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1624,6 +1560,11 @@ Route::get('/api/organizations', function () {
 Route::post('/api/openalex/enrich', function () {
     include_once BASEPATH . "/php/init.php";
     header('Content-Type: application/json; charset=utf-8');
+
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.write')) {
+        echo return_permission_denied();
+        die;
+    }
 
     if (empty($_POST['doi'])) {
         http_response_code(400);
@@ -1734,10 +1675,10 @@ Route::get('/api/openalex/topics', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null, 'catalogs.read')) {
+        echo return_permission_denied();
+        die;
+    }
     if (!file_exists(BASEPATH . '/data/openalex-topics.json')) {
         echo return_rest('OpenAlex topics data not found', 0, 404);
         die;

@@ -61,6 +61,11 @@
                 <b><?= lang('Features', 'Funktionen') ?></b>
                 <p><?= lang('Enable, disable or configure features', 'Funktionen aktivieren, deaktivieren oder konfigurieren') ?></p>
             </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/api-clients">
+                <i class="ph-duotone ph-key"></i>
+                <b><?= lang('API Clients', 'API-Clients') ?></b>
+                <p><?= lang('Manage API clients and their access', 'Verwalte API-Clients und deren Zugriff') ?></p>
+            </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/announcements">
                 <i class="ph-duotone ph-megaphone"></i>
                 <b><?= lang('Announcements', 'Ankündigungen') ?></b>

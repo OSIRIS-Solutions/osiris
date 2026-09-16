@@ -636,7 +636,7 @@ Route::get('/api/workflow-reviews/count', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'reviews.read')) {
         echo return_permission_denied();
         die;
     }
@@ -720,7 +720,7 @@ Route::get('/api/workflow-reviews/list', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'reviews.read')) {
         echo return_permission_denied();
         die;
     }
