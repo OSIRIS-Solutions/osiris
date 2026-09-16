@@ -7,17 +7,20 @@
  * accept raw MongoDB queries or arbitrary field selections from the caller.
  */
 
-function mcp_api_key_check(): bool
+include_once BASEPATH . '/php/ApiClient.php';
+
+function mcp_api_key_check(string $scope): bool
 {
     $Settings = new Settings();
     $configured = $Settings->get('apikey');
-    $provided = $_SERVER['HTTP_X_API_KEY'] ?? '';
+    $provided = ApiClient::requestSecret();
 
-    if (empty($configured) || empty($provided)) {
-        return false;
+    if (!empty($configured) && $provided !== '' && hash_equals((string) $configured, $provided)) {
+        return true;
     }
 
-    return hash_equals((string) $configured, (string) $provided);
+    $clients = new ApiClient();
+    return $clients->authenticate('mcp', [$scope]);
 }
 
 function mcp_return_json(array $payload, int $status = 200): void
@@ -27,7 +30,7 @@ function mcp_return_json(array $payload, int $status = 200): void
     header('Cache-Control: no-store');
     echo json_encode(
         $payload,
-        JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
     );
 }
 
@@ -90,6 +93,29 @@ function mcp_catalog_limit(): int
     return $limit === false ? 0 : $limit;
 }
 
+function mcp_offset(): int
+{
+    $offset = filter_var(
+        $_GET['offset'] ?? 0,
+        FILTER_VALIDATE_INT,
+        ['options' => ['min_range' => 0, 'max_range' => 1000000]]
+    );
+    return $offset === false ? -1 : $offset;
+}
+
+function mcp_pagination(int $total, int $offset, int $limit, int $count): array
+{
+    $hasMore = $offset + $count < $total;
+    return [
+        'count' => $count,
+        'total' => $total,
+        'offset' => $offset,
+        'limit' => $limit,
+        'has_more' => $hasMore,
+        'next_offset' => $hasMore ? $offset + $count : null,
+    ];
+}
+
 function mcp_activity_projection(): array
 {
     return [
@@ -107,6 +133,16 @@ function mcp_activity_projection(): array
         'citation' => '$rendered.plain',
         'doi' => 1,
         'pubmed' => 1,
+        'affiliated' => ['$ifNull' => ['$affiliated', null]],
+        'online_ahead_of_print' => ['$ifNull' => ['$epub', false]],
+        'metrics' => [
+            'impact_factor' => '$impact',
+            'citation_count' => '$openalex.cited_by_count',
+            'sjr' => '$metrics.sjr',
+            'quartile' => '$quartile',
+            'metrics_year' => '$metrics.year',
+            'citation_count_updated_at' => '$openalex.fetched_at',
+        ],
     ];
 }
 
@@ -149,6 +185,24 @@ function mcp_activity_result($document, $DB, $Groups, array &$personCache, array
         }
     }
 
+    $rawMetrics = DB::doc2Arr($document['metrics'] ?? []);
+    $metrics = [];
+    foreach (['impact_factor', 'sjr'] as $metric) {
+        if (array_key_exists($metric, $rawMetrics) && is_numeric($rawMetrics[$metric])) {
+            $metrics[$metric] = (float) $rawMetrics[$metric];
+        }
+    }
+    foreach (['citation_count', 'metrics_year'] as $metric) {
+        if (array_key_exists($metric, $rawMetrics) && is_numeric($rawMetrics[$metric])) {
+            $metrics[$metric] = (int) $rawMetrics[$metric];
+        }
+    }
+    foreach (['quartile', 'citation_count_updated_at'] as $metric) {
+        if (array_key_exists($metric, $rawMetrics) && $rawMetrics[$metric] !== null && $rawMetrics[$metric] !== '') {
+            $metrics[$metric] = mcp_text($rawMetrics[$metric], 100);
+        }
+    }
+
     return [
         'id' => $document['id'],
         'type' => [
@@ -166,6 +220,11 @@ function mcp_activity_result($document, $DB, $Groups, array &$personCache, array
         'units' => $units,
         'citation' => mcp_text($document['citation'] ?? '', 4000),
         'identifiers' => (object) $identifiers,
+        'affiliated' => isset($document['affiliated'])
+            ? (bool) $document['affiliated']
+            : null,
+        'online_ahead_of_print' => (bool) ($document['online_ahead_of_print'] ?? false),
+        'metrics' => empty($metrics) ? null : $metrics,
     ];
 }
 
@@ -269,7 +328,7 @@ Route::get('/api/mcp/instance', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('catalogs.read')) {
         mcp_return_json([
             'status' => 403,
             'error' => 'PermissionDenied',
@@ -343,6 +402,7 @@ Route::get('/api/mcp/instance', function () {
                 $topicsAvailable ? 'topic' : null,
                 'unit',
                 'limit',
+                'offset',
             ])),
             'supported_activity_filters' => array_values(array_filter([
                 'query',
@@ -353,11 +413,19 @@ Route::get('/api/mcp/instance', function () {
                 'person',
                 'unit',
                 $topicsAvailable ? 'topic' : null,
+                'include_unaffiliated',
+                'include_online_ahead_of_print',
                 'limit',
+                'offset',
             ])),
             'supported_person_searches' => [
                 'identity',
                 'expertise',
+            ],
+            'pagination' => [
+                'parameter' => 'offset',
+                'max_page_size' => 50,
+                'max_catalog_page_size' => 200,
             ],
         ],
     ]);
@@ -367,7 +435,7 @@ Route::get('/api/mcp/units', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('catalogs.read')) {
         mcp_return_json([
             'status' => 403,
             'error' => 'PermissionDenied',
@@ -382,6 +450,15 @@ Route::get('/api/mcp/units', function () {
             'status' => 400,
             'error' => 'InvalidParameter',
             'msg' => 'limit must be an integer between 1 and 200.',
+        ], 400);
+        return;
+    }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
         ], 400);
         return;
     }
@@ -409,7 +486,8 @@ Route::get('/api/mcp/units', function () {
     $groups = $osiris->groups->find(
         $filter,
         [
-            'sort' => ['level' => 1, 'order' => 1, 'name' => 1],
+            'sort' => ['level' => 1, 'order' => 1, 'name' => 1, 'id' => 1],
+            'skip' => $offset,
             'limit' => $limit,
             'projection' => [
                 '_id' => 0,
@@ -449,18 +527,18 @@ Route::get('/api/mcp/units', function () {
         ];
     }
 
-    mcp_return_json([
+    $response = [
         'status' => 200,
-        'count' => count($units),
         'data' => $units,
-    ]);
+    ] + mcp_pagination($osiris->groups->countDocuments($filter), $offset, $limit, count($units));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/topics', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('catalogs.read')) {
         mcp_return_json([
             'status' => 403,
             'error' => 'PermissionDenied',
@@ -474,6 +552,12 @@ Route::get('/api/mcp/topics', function () {
     if (!$available) {
         mcp_return_json([
             'status' => 200,
+            'count' => 0,
+            'total' => 0,
+            'offset' => 0,
+            'limit' => 0,
+            'has_more' => false,
+            'next_offset' => null,
             'data' => [
                 'available' => false,
                 'reason' => 'The topics feature is not enabled for this OSIRIS instance.',
@@ -489,6 +573,15 @@ Route::get('/api/mcp/topics', function () {
             'status' => 400,
             'error' => 'InvalidParameter',
             'msg' => 'limit must be an integer between 1 and 200.',
+        ], 400);
+        return;
+    }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
         ], 400);
         return;
     }
@@ -520,7 +613,8 @@ Route::get('/api/mcp/topics', function () {
     $documents = $osiris->topics->find(
         $filter,
         [
-            'sort' => ['order' => 1, 'name' => 1],
+            'sort' => ['order' => 1, 'name' => 1, 'id' => 1],
+            'skip' => $offset,
             'limit' => $limit,
             'projection' => [
                 '_id' => 0,
@@ -547,21 +641,22 @@ Route::get('/api/mcp/topics', function () {
         ];
     }
 
-    mcp_return_json([
+    $response = [
         'status' => 200,
         'data' => [
             'available' => true,
             'reason' => null,
             'topics' => $topics,
         ],
-    ]);
+    ] + mcp_pagination($osiris->topics->countDocuments($filter), $offset, $limit, count($topics));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/activity-types', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('catalogs.read')) {
         mcp_return_json([
             'status' => 403,
             'error' => 'PermissionDenied',
@@ -621,7 +716,7 @@ Route::get('/api/mcp/persons', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('persons.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
@@ -655,6 +750,16 @@ Route::get('/api/mcp/persons', function () {
         ], 400);
         return;
     }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
+        ], 400);
+        return;
+    }
 
     $activeOnly = filter_var(
         $_GET['active_only'] ?? true,
@@ -674,6 +779,7 @@ Route::get('/api/mcp/persons', function () {
     $regex = new \MongoDB\BSON\Regex(preg_quote(mb_strtolower($query), '/'), 'i');
     $filter = [
         // 'hide' => ['$ne' => true],
+        'username' => ['$exists' => true, '$ne' => ''],
         'search_text' => ['$regex' => $regex],
     ];
     if ($activeOnly) {
@@ -687,7 +793,8 @@ Route::get('/api/mcp/persons', function () {
     $documents = $osiris->persons->find(
         $filter,
         [
-            'sort' => ['displayname' => 1, 'last' => 1, 'first' => 1],
+            'sort' => ['displayname' => 1, 'last' => 1, 'first' => 1, 'username' => 1],
+            'skip' => $offset,
             'limit' => $limit,
             'projection' => [
                 '_id' => 0,
@@ -710,18 +817,18 @@ Route::get('/api/mcp/persons', function () {
             $persons[] = mcp_person_summary($person, $Groups);
         }
     }
-    mcp_return_json([
+    $response = [
         'status' => 200,
-        'count' => count($persons),
         'data' => $persons,
-    ]);
+    ] + mcp_pagination($osiris->persons->countDocuments($filter), $offset, $limit, count($persons));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/experts', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('persons.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
@@ -752,6 +859,16 @@ Route::get('/api/mcp/experts', function () {
             'count' => 0,
             'error' => 'InvalidParameter',
             'msg' => 'limit must be an integer between 1 and 25.',
+        ], 400);
+        return;
+    }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
         ], 400);
         return;
     }
@@ -818,7 +935,6 @@ Route::get('/api/mcp/experts', function () {
                 'max_score' => ['$max' => '$openalex.topics.score'],
             ]],
             ['$sort' => ['count' => -1, 'max_score' => -1]],
-            ['$limit' => 500],
         ])->toArray();
         foreach ($rows as $row) {
             $username = $row['_id']['username'] ?? null;
@@ -865,8 +981,7 @@ Route::get('/api/mcp/experts', function () {
     $documents = $osiris->persons->find(
         $filter,
         [
-            'sort' => ['displayname' => 1, 'last' => 1, 'first' => 1],
-            'limit' => 250,
+            'sort' => ['displayname' => 1, 'last' => 1, 'first' => 1, 'username' => 1],
             'projection' => [
                 '_id' => 0,
                 'username' => 1,
@@ -925,28 +1040,33 @@ Route::get('/api/mcp/experts', function () {
     }
     usort($experts, function ($a, $b) {
         $score = ($b['_relevance'] ?? 0) <=> ($a['_relevance'] ?? 0);
-        return $score !== 0 ? $score : strcasecmp($a['name'], $b['name']);
+        if ($score !== 0) {
+            return $score;
+        }
+        $name = strcasecmp($a['name'], $b['name']);
+        return $name !== 0 ? $name : strcmp($a['id'], $b['id']);
     });
-    $experts = array_slice($experts, 0, $limit);
+    $total = count($experts);
+    $experts = array_slice($experts, $offset, $limit);
     foreach ($experts as &$expert) {
         unset($expert['_relevance']);
     }
     unset($expert);
-    mcp_return_json([
+    $response = [
         'status' => 200,
-        'count' => count($experts),
         'data' => [
             'openalex_enabled' => $openAlexEnabled,
             'experts' => $experts,
         ],
-    ]);
+    ] + mcp_pagination($total, $offset, $limit, count($experts));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/persons/([^/]+)', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('persons.read')) {
         mcp_return_json([
             'status' => 403,
             'error' => 'PermissionDenied',
@@ -1009,7 +1129,7 @@ Route::get('/api/mcp/activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('activities.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
@@ -1033,10 +1153,44 @@ Route::get('/api/mcp/activities', function () {
         ], 400);
         return;
     }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
+        ], 400);
+        return;
+    }
 
-    $clauses = [
-        ['hide' => ['$ne' => true]],
-    ];
+    $booleanFilters = [];
+    foreach (['include_unaffiliated', 'include_online_ahead_of_print'] as $parameter) {
+        $value = filter_var(
+            $_GET[$parameter] ?? false,
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE
+        );
+        if ($value === null) {
+            mcp_return_json([
+                'status' => 400,
+                'count' => 0,
+                'error' => 'InvalidParameter',
+                'msg' => $parameter . ' must be true or false.',
+            ], 400);
+            return;
+        }
+        $booleanFilters[$parameter] = $value;
+    }
+
+    $clauses = [];
+    if (!$booleanFilters['include_unaffiliated']) {
+        $clauses[] = ['affiliated' => true];
+    }
+    if (!$booleanFilters['include_online_ahead_of_print']) {
+        // $ne also matches documents where epub is null or not present.
+        $clauses[] = ['epub' => ['$ne' => true]];
+    }
     $query = trim((string) ($_GET['q'] ?? ''));
     if (mb_strlen($query) > 200) {
         mcp_return_json([
@@ -1071,15 +1225,11 @@ Route::get('/api/mcp/activities', function () {
             ], 400);
             return;
         }
-        if ($parameter === 'from_date') {
-            $clauses[] = ['$or' => [
-                ['end_date' => ['$gte' => $date]],
-                ['end_date' => null],
-                ['end_date' => ['$exists' => false]],
-            ]];
-        } else {
-            $clauses[] = ['start_date' => ['$lte' => $date]];
-        }
+        // MCP date ranges describe when an activity starts. Treating a missing
+        // end date as open-ended would otherwise make old publications match
+        // every later reporting period.
+        $operator = $parameter === 'from_date' ? '$gte' : '$lte';
+        $clauses[] = ['start_date' => [$operator => $date]];
     }
 
     $exactFilters = [
@@ -1115,12 +1265,15 @@ Route::get('/api/mcp/activities', function () {
         $clauses[] = [$field => $value];
     }
 
-    $pipeline = [
-        ['$match' => ['$and' => $clauses]],
-        ['$sort' => ['start_date' => -1, '_id' => -1]],
-        ['$limit' => $limit],
-        ['$project' => mcp_activity_projection()],
-    ];
+    $filter = empty($clauses) ? [] : ['$and' => $clauses];
+    $pipeline = [];
+    if (!empty($filter)) {
+        $pipeline[] = ['$match' => $filter];
+    }
+    $pipeline[] = ['$sort' => ['start_date' => -1, '_id' => -1]];
+    $pipeline[] = ['$skip' => $offset];
+    $pipeline[] = ['$limit' => $limit];
+    $pipeline[] = ['$project' => mcp_activity_projection()];
     $documents = $osiris->activities->aggregate($pipeline)->toArray();
     $personCache = [];
     $unitCache = [];
@@ -1129,18 +1282,18 @@ Route::get('/api/mcp/activities', function () {
         $activities[] = mcp_activity_result($document, $DB, $Groups, $personCache, $unitCache);
     }
 
-    mcp_return_json([
+    $response = [
         'status' => 200,
-        'count' => count($activities),
         'data' => $activities,
-    ]);
+    ] + mcp_pagination($osiris->activities->countDocuments($filter), $offset, $limit, count($activities));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/activities/([a-fA-F0-9]{24})', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('activities.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
@@ -1153,7 +1306,6 @@ Route::get('/api/mcp/activities/([a-fA-F0-9]{24})', function ($id) {
     $documents = $osiris->activities->aggregate([
         ['$match' => [
             '_id' => DB::to_ObjectID($id),
-            'hide' => ['$ne' => true],
         ]],
         ['$limit' => 1],
         ['$project' => mcp_activity_projection()],
@@ -1182,7 +1334,7 @@ Route::get('/api/mcp/projects', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('projects.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
@@ -1203,6 +1355,16 @@ Route::get('/api/mcp/projects', function () {
             'count' => 0,
             'error' => 'InvalidParameter',
             'msg' => 'limit must be an integer between 1 and 50.',
+        ], 400);
+        return;
+    }
+    $offset = mcp_offset();
+    if ($offset < 0) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'offset must be an integer between 0 and 1000000.',
         ], 400);
         return;
     }
@@ -1287,22 +1449,23 @@ Route::get('/api/mcp/projects', function () {
         $pipeline[] = ['$match' => $filter];
     }
     $pipeline[] = ['$sort' => ['start_date' => -1, '_id' => -1]];
+    $pipeline[] = ['$skip' => $offset];
     $pipeline[] = ['$limit' => $limit];
     $pipeline[] = ['$project' => mcp_project_projection()];
 
     $projects = $osiris->projects->aggregate($pipeline)->toArray();
-    mcp_return_json([
+    $response = [
         'status' => 200,
-        'count' => count($projects),
         'data' => $projects,
-    ]);
+    ] + mcp_pagination($osiris->projects->countDocuments($filter), $offset, $limit, count($projects));
+    mcp_return_json($response);
 });
 
 Route::get('/api/mcp/projects/([a-fA-F0-9]{24})', function ($id) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . '/php/init.php';
 
-    if (!mcp_api_key_check()) {
+    if (!mcp_api_key_check('projects.read')) {
         mcp_return_json([
             'status' => 403,
             'count' => 0,
