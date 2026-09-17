@@ -396,7 +396,9 @@ function osirisJSOnDOMContentLoaded() {
                 }
                 var dismissedModal = target.closest(".modal");
                 dismissedModal.classList.remove("show");
-                window.location.hash = "#close-modal";
+                if (window.location.hash === "#" + dismissedModal.id) {
+                    window.location.hash = "#close-modal";
+                }
             }
 
             // Handle clicks on modal overlays
