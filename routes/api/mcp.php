@@ -9,6 +9,102 @@
 
 include_once BASEPATH . '/php/ApiClient.php';
 
+function mcp_request_id(): string
+{
+    if (empty($GLOBALS['MCP_REQUEST_ID'])) {
+        $GLOBALS['MCP_REQUEST_ID'] = 'req_' . bin2hex(random_bytes(16));
+    }
+    return $GLOBALS['MCP_REQUEST_ID'];
+}
+
+function mcp_log_unexpected_error(\Throwable $error): void
+{
+    $message = preg_replace('/\s+/u', ' ', $error->getMessage());
+    $entry = json_encode([
+        'channel' => 'mcp',
+        'request_id' => mcp_request_id(),
+        'endpoint' => $GLOBALS['MCP_ENDPOINT'] ?? 'unknown',
+        'client_id' => $GLOBALS['API_CLIENT']['client_id'] ?? null,
+        'error_type' => get_class($error),
+        'message' => substr($message ?? '', 0, 1000),
+        'file' => $error->getFile(),
+        'line' => $error->getLine(),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+    error_log($entry !== false ? $entry : '[mcp] Failed to encode error log entry.');
+}
+
+function mcp_clear_response_buffer(): void
+{
+    $baseLevel = $GLOBALS['MCP_BUFFER_BASE_LEVEL'] ?? null;
+    if (!is_int($baseLevel)) {
+        return;
+    }
+    while (ob_get_level() > $baseLevel) {
+        ob_end_clean();
+    }
+}
+
+function mcp_return_unexpected_error(\Throwable $error): void
+{
+    mcp_log_unexpected_error($error);
+    if (($GLOBALS['MCP_RESPONSE_SENT'] ?? false) === true) {
+        return;
+    }
+    mcp_return_json([
+        'status' => 500,
+        'error' => 'InternalServerError',
+        'msg' => 'The request could not be completed.',
+    ], 500);
+}
+
+function mcp_begin_request(string $endpoint): void
+{
+    ini_set('display_errors', '0');
+    ini_set('display_startup_errors', '0');
+    ini_set('log_errors', '1');
+    error_reporting(
+        E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR |
+        E_WARNING | E_USER_WARNING | E_RECOVERABLE_ERROR
+    );
+
+    $GLOBALS['MCP_ENDPOINT'] = $endpoint;
+    $GLOBALS['MCP_RESPONSE_SENT'] = false;
+    $GLOBALS['MCP_BUFFER_BASE_LEVEL'] = ob_get_level();
+    ob_start();
+
+    header('X-Request-ID: ' . mcp_request_id());
+    header('X-Content-Type-Options: nosniff');
+
+    set_error_handler(function ($severity, $message, $file, $line) {
+        if (!(error_reporting() & $severity)) {
+            return false;
+        }
+        if (!in_array($severity, [E_WARNING, E_USER_WARNING, E_RECOVERABLE_ERROR], true)) {
+            return false;
+        }
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+    });
+    set_exception_handler(function (\Throwable $error) {
+        mcp_return_unexpected_error($error);
+    });
+    register_shutdown_function(function () {
+        if (($GLOBALS['MCP_RESPONSE_SENT'] ?? false) === true) {
+            return;
+        }
+        $error = error_get_last();
+        if ($error === null || !in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR], true)) {
+            return;
+        }
+        mcp_return_unexpected_error(new \ErrorException(
+            $error['message'],
+            0,
+            $error['type'],
+            $error['file'],
+            $error['line']
+        ));
+    });
+}
+
 function mcp_api_key_check(string $scope): bool
 {
     $Settings = new Settings();
@@ -25,13 +121,24 @@ function mcp_api_key_check(string $scope): bool
 
 function mcp_return_json(array $payload, int $status = 200): void
 {
+    $requestId = mcp_request_id();
+    if ($status >= 400 && empty($payload['request_id'])) {
+        $payload['request_id'] = $requestId;
+    }
+
+    $json = json_encode(
+        $payload,
+        JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    );
+    mcp_clear_response_buffer();
+    $GLOBALS['MCP_RESPONSE_SENT'] = true;
+
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
-    echo json_encode(
-        $payload,
-        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    );
+    header('X-Request-ID: ' . $requestId);
+    header('X-Content-Type-Options: nosniff');
+    echo $json;
 }
 
 function mcp_project_projection(): array
@@ -325,7 +432,7 @@ function mcp_strings($value): array
 }
 
 Route::get('/api/mcp/instance', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('instance.get');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('catalogs.read')) {
@@ -432,7 +539,7 @@ Route::get('/api/mcp/instance', function () {
 });
 
 Route::get('/api/mcp/units', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('units.list');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('catalogs.read')) {
@@ -535,7 +642,7 @@ Route::get('/api/mcp/units', function () {
 });
 
 Route::get('/api/mcp/topics', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('topics.list');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('catalogs.read')) {
@@ -653,7 +760,7 @@ Route::get('/api/mcp/topics', function () {
 });
 
 Route::get('/api/mcp/activity-types', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('activity_types.list');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('catalogs.read')) {
@@ -713,7 +820,7 @@ Route::get('/api/mcp/activity-types', function () {
 });
 
 Route::get('/api/mcp/persons', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('persons.search');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('persons.read')) {
@@ -825,7 +932,7 @@ Route::get('/api/mcp/persons', function () {
 });
 
 Route::get('/api/mcp/experts', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('experts.search');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('persons.read')) {
@@ -1063,7 +1170,7 @@ Route::get('/api/mcp/experts', function () {
 });
 
 Route::get('/api/mcp/persons/([^/]+)', function ($id) {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('persons.get');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('persons.read')) {
@@ -1126,7 +1233,7 @@ Route::get('/api/mcp/persons/([^/]+)', function ($id) {
 });
 
 Route::get('/api/mcp/activities', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('activities.search');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('activities.read')) {
@@ -1290,7 +1397,7 @@ Route::get('/api/mcp/activities', function () {
 });
 
 Route::get('/api/mcp/activities/([a-fA-F0-9]{24})', function ($id) {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('activities.get');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('activities.read')) {
@@ -1331,7 +1438,7 @@ Route::get('/api/mcp/activities/([a-fA-F0-9]{24})', function ($id) {
 });
 
 Route::get('/api/mcp/projects', function () {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('projects.search');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('projects.read')) {
@@ -1462,7 +1569,7 @@ Route::get('/api/mcp/projects', function () {
 });
 
 Route::get('/api/mcp/projects/([a-fA-F0-9]{24})', function ($id) {
-    error_reporting(E_ERROR | E_PARSE);
+    mcp_begin_request('projects.get');
     include_once BASEPATH . '/php/init.php';
 
     if (!mcp_api_key_check('projects.read')) {
