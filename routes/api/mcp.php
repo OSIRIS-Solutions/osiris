@@ -515,6 +515,7 @@ Route::get('/api/mcp/instance', function () {
                 'query',
                 'from_date',
                 'to_date',
+                'date_field',
                 'type',
                 'subtype',
                 'person',
@@ -1317,6 +1318,18 @@ Route::get('/api/mcp/activities', function () {
         ]];
     }
 
+    $dateFieldParameter = trim((string) ($_GET['date_field'] ?? 'start'));
+    if (!in_array($dateFieldParameter, ['start', 'end'], true)) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'date_field must be start or end.',
+        ], 400);
+        return;
+    }
+    $dateField = $dateFieldParameter . '_date';
+
     foreach (['from_date', 'to_date'] as $parameter) {
         $value = trim((string) ($_GET[$parameter] ?? ''));
         if ($value === '') {
@@ -1332,11 +1345,8 @@ Route::get('/api/mcp/activities', function () {
             ], 400);
             return;
         }
-        // MCP date ranges describe when an activity starts. Treating a missing
-        // end date as open-ended would otherwise make old publications match
-        // every later reporting period.
         $operator = $parameter === 'from_date' ? '$gte' : '$lte';
-        $clauses[] = ['start_date' => [$operator => $date]];
+        $clauses[] = [$dateField => [$operator => $date]];
     }
 
     $exactFilters = [
@@ -1377,7 +1387,7 @@ Route::get('/api/mcp/activities', function () {
     if (!empty($filter)) {
         $pipeline[] = ['$match' => $filter];
     }
-    $pipeline[] = ['$sort' => ['start_date' => -1, '_id' => -1]];
+    $pipeline[] = ['$sort' => [$dateField => -1, '_id' => -1]];
     $pipeline[] = ['$skip' => $offset];
     $pipeline[] = ['$limit' => $limit];
     $pipeline[] = ['$project' => mcp_activity_projection()];
