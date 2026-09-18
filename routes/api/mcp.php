@@ -1319,17 +1319,17 @@ Route::get('/api/mcp/activities', function () {
     }
 
     $dateFieldParameter = trim((string) ($_GET['date_field'] ?? 'start'));
-    if (!in_array($dateFieldParameter, ['start', 'end'], true)) {
+    if (!in_array($dateFieldParameter, ['start', 'end', 'active'], true)) {
         mcp_return_json([
             'status' => 400,
             'count' => 0,
             'error' => 'InvalidParameter',
-            'msg' => 'date_field must be start or end.',
+            'msg' => 'date_field must be start, end, or active.',
         ], 400);
         return;
     }
-    $dateField = $dateFieldParameter . '_date';
 
+    $dates = [];
     foreach (['from_date', 'to_date'] as $parameter) {
         $value = trim((string) ($_GET[$parameter] ?? ''));
         if ($value === '') {
@@ -1345,8 +1345,47 @@ Route::get('/api/mcp/activities', function () {
             ], 400);
             return;
         }
-        $operator = $parameter === 'from_date' ? '$gte' : '$lte';
-        $clauses[] = [$dateField => [$operator => $date]];
+        $dates[$parameter] = $date;
+    }
+    if (
+        isset($dates['from_date'], $dates['to_date'])
+        && $dates['from_date'] > $dates['to_date']
+    ) {
+        mcp_return_json([
+            'status' => 400,
+            'count' => 0,
+            'error' => 'InvalidParameter',
+            'msg' => 'from_date must not be after to_date.',
+        ], 400);
+        return;
+    }
+
+    if ($dateFieldParameter === 'active') {
+        if (!isset($dates['from_date'], $dates['to_date'])) {
+            mcp_return_json([
+                'status' => 400,
+                'count' => 0,
+                'error' => 'InvalidParameter',
+                'msg' => 'date_field=active requires both from_date and to_date.',
+            ], 400);
+            return;
+        }
+        // Two closed intervals overlap when the activity starts no later than
+        // the requested end and has not ended before the requested start.
+        // A null or missing end date represents an ongoing activity.
+        $clauses[] = ['start_date' => ['$lte' => $dates['to_date']]];
+        $clauses[] = ['$or' => [
+            ['end_date' => ['$gte' => $dates['from_date']]],
+            ['end_date' => null],
+            ['end_date' => ['$exists' => false]],
+        ]];
+        $dateField = 'start_date';
+    } else {
+        $dateField = $dateFieldParameter . '_date';
+        foreach ($dates as $parameter => $date) {
+            $operator = $parameter === 'from_date' ? '$gte' : '$lte';
+            $clauses[] = [$dateField => [$operator => $date]];
+        }
     }
 
     $exactFilters = [
