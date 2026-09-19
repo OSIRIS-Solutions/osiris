@@ -14,6 +14,104 @@
  * @license     MIT
  */
 
+Route::get('/uploads/(.*)', function ($requestedPath) {
+    include_once BASEPATH . '/php/init.php';
+
+    if ($requestedPath === '') {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+
+    // Resolve the requested file and make sure it really is inside /uploads.
+    $uploadsDirectory = realpath(BASEPATH . '/uploads');
+    $filePath = realpath(BASEPATH . '/uploads/' . $requestedPath);
+    if ($uploadsDirectory === false || $filePath === false) {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+    if ($filePath !== $uploadsDirectory && !str_starts_with($filePath, $uploadsDirectory . DIRECTORY_SEPARATOR)) {
+        return abortwith(403, lang('Access denied', 'Zugriff verweigert'));
+    }
+
+    if (!is_file($filePath)) {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+    if (!is_readable($filePath)) {
+        return abortwith(403, lang('File is not readable.', 'Datei ist nicht lesbar.'));
+    }
+    $downloadFilename = basename($filePath);
+
+    // Files created by the generic upload are named after their MongoDB ID.
+    // Apply the same permissions that are used in the corresponding views.
+    if (preg_match('/^([a-f0-9]{24})\.[a-z0-9]+$/i', $requestedPath, $matches)) {
+        $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($matches[1])]);
+        if (empty($document)) {
+            return abortwith(404, lang('File', 'Datei'));
+        }
+        $downloadFilename = basename((string) ($document['filename'] ?? $downloadFilename));
+
+        $type = (string) ($document['type'] ?? '');
+        $allowed = false;
+
+        if ($type === 'central') {
+            $allowed = $Settings->hasPermission('documents.central')
+                || $Settings->hasPermission('documents.manage');
+        } elseif ($type === 'activities') {
+            // Activities and their documents are visible to logged-in users.
+            $activityId = (string) ($document['id'] ?? '');
+            $allowed = DB::is_ObjectID($activityId)
+                && $osiris->activities->count(['_id' => DB::to_ObjectID($activityId)]) > 0;
+        } elseif ($type === 'proposals' || $type === 'nagoya-permit') {
+            $allowed = $Settings->hasPermission('documents')
+                || $Settings->hasPermission('proposals.view-documents')
+                || ($type === 'nagoya-permit' && $Settings->hasPermission('nagoya.view'));
+
+            if (!$allowed && DB::is_ObjectID((string) ($document['id'] ?? ''))) {
+                $proposal = $osiris->proposals->findOne(['_id' => DB::to_ObjectID((string) $document['id'])]);
+                if (!empty($proposal)) {
+                    $persons = DB::doc2Arr($proposal['persons'] ?? []);
+                    $personIds = array_map('strval', array_column($persons, 'user'));
+                    $allowed = in_array($_SESSION['username'], $personIds, true)
+                        || ($proposal['created_by'] ?? null) === $_SESSION['username'];
+                }
+            }
+        }
+
+        if (!$allowed) {
+            return abortwith(403, lang('You do not have permission to view this file.', 'Du hast keine Berechtigung, diese Datei anzusehen.'));
+        }
+    } else {
+        // Legacy guest documents are stored in /uploads/{guest-id}/{filename}.
+        // Other subfolders contain internal images or legacy activity files and
+        // are protected by the login requirement of this route.
+        $pathParts = explode('/', $requestedPath, 2);
+        if (count($pathParts) === 2) {
+            $guest = $osiris->guests->findOne([
+                'id' => $pathParts[0],
+                'files.filename' => basename($pathParts[1]),
+            ]);
+            if (
+                !empty($guest)
+                && !$Settings->hasPermission('guests.see.documents')
+                && !$Settings->hasPermission('guests.edit.documents')
+            ) {
+                return abortwith(403, lang('You do not have permission to view this file.', 'Du hast keine Berechtigung, diese Datei anzusehen.'));
+            }
+        }
+    }
+
+    // Deliver file
+    $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+    $inlineMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $disposition = in_array($mimeType, $inlineMimeTypes, true) ? 'inline' : 'attachment';
+
+    header('Content-Type: ' . $mimeType);
+    header('Content-Length: ' . filesize($filePath));
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: private, max-age=3600');
+    header("Content-Disposition: $disposition; filename=\"file\"; filename*=UTF-8''" . rawurlencode($downloadFilename));
+    readfile($filePath);
+    die;
+}, 'login');
+
 
 Route::get('/rerender', function () {
     set_time_limit(6000);
@@ -182,22 +280,382 @@ Route::get('/settings', function () {
 });
 
 
-Route::get('/documents', function () {
+Route::get('/documents/?(central|connected)?', function ($type = null) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->hasPermission('documents')) {
-        die(lang('You do not have permission to view documents.', 'Du hast keine Berechtigung, Dokumente anzusehen.'));
+    if (!$Settings->hasPermission('documents') && !$Settings->hasPermission('documents.manage') && !$Settings->hasPermission('documents.central')) {
+        return abortwith(403, lang('You do not have permission to view documents.', 'Du hast keine Berechtigung, Dokumente anzusehen.'), '/');
     }
+    $centralPerm = $Settings->hasPermission('documents.central');
+    $connectPerm = $Settings->hasPermission('documents');
+    $managePerm = $Settings->hasPermission('documents.manage');
+
+    if (empty($type)) {
+        $type = ($centralPerm || $managePerm) ? 'central' : 'connected';
+    }
+
     include_once BASEPATH . "/php/Vocabulary.php";
     $Vocabulary = new Vocabulary();
-    $documents = $osiris->uploads->find([], ['sort' => ['uploaded' => -1]])->toArray();
+
+    if ($type === 'central' && ($centralPerm || $managePerm)) {
+        $filter = ['type' => 'central'];
+    } elseif ($type === 'connected' && ($connectPerm)) {
+        $filter = [
+            'type' => ['$ne' => 'central']
+        ];
+    } else {
+        return abortwith(403, lang('You do not have permission to view this type of documents.', 'Du hast keine Berechtigung, diese Art von Dokumenten anzusehen.'), '/');
+    }
+    $documents = $osiris->uploads->find($filter, ['sort' => ['uploaded' => -1]])->toArray();
     $breadcrumb = [
         ['name' => lang('Documents', 'Dokumente')]
     ];
     include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/documents.php";
+    if ($type === 'central') {
+        include BASEPATH . "/pages/documents-central.php";
+    } else {
+        include BASEPATH . "/pages/documents.php";
+    }
     include BASEPATH . "/footer.php";
 });
 
+
+
+function redirectFromCentralDocuments(string $message, string $type = 'error'): void
+{
+    $_SESSION['msg'] = $message;
+    $_SESSION['msg_type'] = $type;
+    header('Location: ' . ROOTPATH . '/documents/manage');
+    die;
+}
+
+function requireCentralDocumentManagement($Settings): void
+{
+    if (!$Settings->hasPermission('documents.manage')) {
+        abortwith(
+            403,
+            lang(
+                'You do not have permission to manage central documents.',
+                'Du hast keine Berechtigung, zentrale Dokumente zu verwalten.'
+            ),
+            '/documents',
+            lang('Back to documents', 'Zurück zu den Dokumenten')
+        );
+    }
+}
+
+function centralDocumentTags($value): array
+{
+    if (is_array($value)) {
+        $parts = $value;
+    } else {
+        $parts = preg_split('/[,;\r\n]+/u', (string) $value) ?: [];
+    }
+
+    $tags = [];
+    foreach ($parts as $part) {
+        $tag = trim(strip_tags((string) $part));
+        if ($tag === '') continue;
+        $tag = mb_substr($tag, 0, 50);
+        $tags[mb_strtolower($tag)] = $tag;
+        if (count($tags) >= 20) break;
+    }
+    return array_values($tags);
+}
+
+function centralDocumentMetadata(array $values): array
+{
+    $name = trim(strip_tags((string) ($values['name'] ?? '')));
+    if ($name === '') {
+        redirectFromCentralDocuments(lang('Please enter a title.', 'Bitte gib einen Titel ein.'));
+    }
+
+    return [
+        'name' => mb_substr($name, 0, 200),
+        'description' => mb_substr(trim(strip_tags((string) ($values['description'] ?? ''))), 0, 500),
+        'category' => mb_substr(trim(strip_tags((string) ($values['category'] ?? ''))), 0, 100),
+        'tags' => centralDocumentTags($values['tags'] ?? []),
+    ];
+}
+
+function centralDocumentUpload(): array
+{
+    $fileSizeLimit = Settings::getMaxFileSize('25M');
+    $postSizeLimit = Settings::convertToBytes(ini_get('post_max_size'));
+    $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+    if ($postSizeLimit > 0 && $contentLength > $postSizeLimit) {
+        redirectFromCentralDocuments(lang(
+            'Files may be up to ' . $fileSizeLimit['human'] . ' in size.',
+            'Dateien dürfen maximal ' . $fileSizeLimit['human'] . ' groß sein.'
+        ));
+    }
+
+    if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
+        redirectFromCentralDocuments(lang('Please select a file.', 'Bitte wähle eine Datei aus.'));
+    }
+
+    $file = $_FILES['file'];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $message = match ($file['error']) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('The file is too large.', 'Die Datei ist zu groß.'),
+            UPLOAD_ERR_PARTIAL => lang('The file was only partially uploaded.', 'Die Datei wurde nur teilweise hochgeladen.'),
+            UPLOAD_ERR_NO_TMP_DIR => lang('The temporary upload directory is missing.', 'Der temporäre Upload-Ordner fehlt.'),
+            UPLOAD_ERR_CANT_WRITE => lang('The file could not be written to disk.', 'Die Datei konnte nicht auf die Festplatte geschrieben werden.'),
+            UPLOAD_ERR_EXTENSION => lang('A PHP extension stopped the upload.', 'Eine PHP-Erweiterung hat den Upload gestoppt.'),
+            default => lang('The file could not be uploaded.', 'Die Datei konnte nicht hochgeladen werden.'),
+        };
+        redirectFromCentralDocuments($message);
+    }
+
+    if ((int) $file['size'] <= 0 || ($fileSizeLimit['bytes'] > 0 && (int) $file['size'] > $fileSizeLimit['bytes'])) {
+        redirectFromCentralDocuments(lang(
+            'Files may be up to ' . $fileSizeLimit['human'] . ' in size.',
+            'Dateien dürfen maximal ' . $fileSizeLimit['human'] . ' groß sein.'
+        ));
+    }
+
+    $filename = trim(basename((string) $file['name']));
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $allowedExtensions = [
+        'pdf',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx',
+        'ppt',
+        'pptx',
+        'odt',
+        'ods',
+        'odp',
+        'rtf',
+        'txt',
+        'csv',
+        'zip',
+        'jpg',
+        'jpeg',
+        'png',
+    ];
+    if ($filename === '' || !in_array($extension, $allowedExtensions, true)) {
+        redirectFromCentralDocuments(lang(
+            'This file type is not supported. Please upload a common document, spreadsheet, presentation, text file, PDF or image.',
+            'Dieser Dateityp wird nicht unterstützt. Bitte lade ein gängiges Dokument, eine Tabelle, Präsentation, Textdatei, PDF oder ein Bild hoch.'
+        ));
+    }
+
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']) ?: 'application/octet-stream';
+    $blockedMimes = ['text/html', 'application/x-httpd-php', 'application/x-php', 'application/x-executable'];
+    if (in_array($mime, $blockedMimes, true)) {
+        redirectFromCentralDocuments(lang('This file type is not supported.', 'Dieser Dateityp wird nicht unterstützt.'));
+    }
+
+    if (in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+        $expectedMime = $extension === 'png' ? 'image/png' : 'image/jpeg';
+        $image = @getimagesize($file['tmp_name']);
+        if ($image === false || $mime !== $expectedMime || ($image['mime'] ?? null) !== $expectedMime) {
+            redirectFromCentralDocuments(lang(
+                'The selected image is invalid or does not match its file extension.',
+                'Das ausgewählte Bild ist ungültig oder entspricht nicht seiner Dateiendung.'
+            ));
+        }
+    }
+
+    return [$file, $filename, $extension, $mime];
+}
+
+function centralDocumentById($osiris, string $id)
+{
+    return $osiris->uploads->findOne([
+        '_id' => DB::to_ObjectID($id),
+        'type' => 'central',
+    ]);
+}
+
+
+Route::get('/documents/manage', function () {
+    include_once BASEPATH . "/php/init.php";
+    requireCentralDocumentManagement($Settings);
+
+    $documents = $osiris->uploads->find(
+        ['type' => 'central'],
+        ['sort' => ['updated' => -1, 'uploaded' => -1]]
+    )->toArray();
+    $breadcrumb = [
+        ['name' => lang('Documents', 'Dokumente'), 'path' => '/documents'],
+        ['name' => lang('Manage central documents', 'Zentrale Dokumente verwalten')],
+    ];
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/documents-manage.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/documents/central/file/([a-f0-9]{24})', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('documents.central') && !$Settings->hasPermission('documents.manage')) {
+        abortwith(403, lang('You do not have permission to view central documents.', 'Du hast keine Berechtigung, zentrale Dokumente anzusehen.'), '/documents');
+    }
+
+    $document = centralDocumentById($osiris, $id);
+    if (empty($document)) abortwith(404, lang('Document not found.', 'Dokument nicht gefunden.'), '/documents');
+
+    $extension = strtolower((string) ($document['extension'] ?? ''));
+    $path = BASEPATH . '/uploads/' . $id . '.' . $extension;
+    if (!is_file($path)) abortwith(404, lang('File not found.', 'Datei nicht gefunden.'), '/documents');
+
+    $filename = basename((string) ($document['filename'] ?? ('document.' . $extension)));
+    $disposition = isset($_GET['download']) ? 'attachment' : 'inline';
+    header('Content-Type: ' . ($document['mimetype'] ?? 'application/octet-stream'));
+    header('Content-Length: ' . filesize($path));
+    header('X-Content-Type-Options: nosniff');
+    header("Content-Disposition: $disposition; filename=\"document.$extension\"; filename*=UTF-8''" . rawurlencode($filename));
+    readfile($path);
+    die;
+}, 'login');
+
+
+Route::post('/crud/documents/central/upload', function () {
+    include_once BASEPATH . "/php/init.php";
+    requireCentralDocumentManagement($Settings);
+
+    [$file, $filename, $extension, $mime] = centralDocumentUpload();
+    $values = $_POST['values'] ?? [];
+    $metadata = centralDocumentMetadata(is_array($values) ? $values : []);
+    $now = date('Y-m-d H:i:s');
+    $document = array_merge($metadata, [
+        'filename' => $filename,
+        'mimetype' => $mime,
+        'extension' => $extension,
+        'size' => (int) $file['size'],
+        'type' => 'central',
+        'uploaded' => $now,
+        'uploaded_by' => $_SESSION['username'] ?? null,
+        'created' => $now,
+        'created_by' => $_SESSION['username'] ?? null,
+        'updated' => $now,
+        'updated_by' => $_SESSION['username'] ?? null,
+    ]);
+
+    try {
+        $result = $osiris->uploads->insertOne($document);
+        $documentId = $result->getInsertedId();
+        $target = BASEPATH . '/uploads/' . $documentId . '.' . $extension;
+        if (!move_uploaded_file($file['tmp_name'], $target)) {
+            $osiris->uploads->deleteOne(['_id' => $documentId]);
+            redirectFromCentralDocuments(lang('The file could not be saved.', 'Die Datei konnte nicht gespeichert werden.'));
+        }
+    } catch (Throwable $exception) {
+        redirectFromCentralDocuments(lang('The document could not be saved.', 'Das Dokument konnte nicht gespeichert werden.'));
+    }
+
+    redirectFromCentralDocuments(lang('The document was uploaded successfully.', 'Das Dokument wurde erfolgreich hochgeladen.'), 'success');
+}, 'login');
+
+
+Route::post('/crud/documents/central/update/([a-f0-9]{24})', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    requireCentralDocumentManagement($Settings);
+    if (empty(centralDocumentById($osiris, $id))) {
+        abortwith(404, lang('Document not found.', 'Dokument nicht gefunden.'), '/documents/manage');
+    }
+
+    $values = $_POST['values'] ?? [];
+    $metadata = centralDocumentMetadata(is_array($values) ? $values : []);
+    $metadata['updated'] = date('Y-m-d H:i:s');
+    $metadata['updated_by'] = $_SESSION['username'] ?? null;
+    try {
+        $osiris->uploads->updateOne(
+            ['_id' => DB::to_ObjectID($id), 'type' => 'central'],
+            ['$set' => $metadata]
+        );
+    } catch (Throwable $exception) {
+        redirectFromCentralDocuments(lang('The document could not be updated.', 'Das Dokument konnte nicht aktualisiert werden.'));
+    }
+
+    redirectFromCentralDocuments(lang('The document was updated successfully.', 'Das Dokument wurde erfolgreich aktualisiert.'), 'success');
+}, 'login');
+
+
+Route::post('/crud/documents/central/replace/([a-f0-9]{24})', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    requireCentralDocumentManagement($Settings);
+    $document = centralDocumentById($osiris, $id);
+    if (empty($document)) abortwith(404, lang('Document not found.', 'Dokument nicht gefunden.'), '/documents/manage');
+
+    [$file, $filename, $extension, $mime] = centralDocumentUpload();
+    $oldExtension = strtolower((string) ($document['extension'] ?? ''));
+    $oldPath = BASEPATH . '/uploads/' . $id . '.' . $oldExtension;
+    $targetPath = BASEPATH . '/uploads/' . $id . '.' . $extension;
+    $temporaryPath = BASEPATH . '/uploads/' . $id . '.replacement-' . bin2hex(random_bytes(6)) . '.' . $extension;
+    $backupPath = $oldPath . '.backup-' . bin2hex(random_bytes(6));
+
+    if (!move_uploaded_file($file['tmp_name'], $temporaryPath)) {
+        redirectFromCentralDocuments(lang('The replacement file could not be saved.', 'Die Ersatzdatei konnte nicht gespeichert werden.'));
+    }
+
+    $hadOldFile = is_file($oldPath);
+    $hasBackup = $hadOldFile && rename($oldPath, $backupPath);
+    if ($hadOldFile && !$hasBackup) {
+        @unlink($temporaryPath);
+        redirectFromCentralDocuments(lang('The existing file could not be prepared for replacement.', 'Die vorhandene Datei konnte nicht für das Ersetzen vorbereitet werden.'));
+    }
+    if (!rename($temporaryPath, $targetPath)) {
+        @unlink($temporaryPath);
+        if ($hasBackup) @rename($backupPath, $oldPath);
+        redirectFromCentralDocuments(lang('The replacement file could not be saved.', 'Die Ersatzdatei konnte nicht gespeichert werden.'));
+    }
+
+    $now = date('Y-m-d H:i:s');
+    try {
+        $osiris->uploads->updateOne(
+            ['_id' => DB::to_ObjectID($id), 'type' => 'central'],
+            ['$set' => [
+                'filename' => $filename,
+                'mimetype' => $mime,
+                'extension' => $extension,
+                'size' => (int) $file['size'],
+                'uploaded' => $now,
+                'uploaded_by' => $_SESSION['username'] ?? null,
+                'updated' => $now,
+                'updated_by' => $_SESSION['username'] ?? null,
+            ]]
+        );
+    } catch (Throwable $exception) {
+        @unlink($targetPath);
+        if ($hasBackup) @rename($backupPath, $oldPath);
+        redirectFromCentralDocuments(lang('The document could not be replaced.', 'Das Dokument konnte nicht ersetzt werden.'));
+    }
+
+    if ($hasBackup) @unlink($backupPath);
+    if ($oldPath !== $targetPath && is_file($oldPath)) @unlink($oldPath);
+    redirectFromCentralDocuments(lang('The file was replaced successfully. Existing links remain valid.', 'Die Datei wurde erfolgreich ersetzt. Bestehende Links bleiben gültig.'), 'success');
+}, 'login');
+
+
+Route::post('/crud/documents/central/delete/([a-f0-9]{24})', function ($id) {
+    include_once BASEPATH . "/php/init.php";
+    requireCentralDocumentManagement($Settings);
+    $document = centralDocumentById($osiris, $id);
+    if (empty($document)) abortwith(404, lang('Document not found.', 'Dokument nicht gefunden.'), '/documents/manage');
+
+    $path = BASEPATH . '/uploads/' . $id . '.' . strtolower((string) ($document['extension'] ?? ''));
+    $temporaryPath = $path . '.deleting-' . bin2hex(random_bytes(6));
+    $hadFile = is_file($path);
+    $fileMoved = $hadFile && rename($path, $temporaryPath);
+    if ($hadFile && !$fileMoved) {
+        redirectFromCentralDocuments(lang('The file could not be prepared for deletion.', 'Die Datei konnte nicht für das Löschen vorbereitet werden.'));
+    }
+
+    try {
+        $result = $osiris->uploads->deleteOne(['_id' => DB::to_ObjectID($id), 'type' => 'central']);
+        if ($result->getDeletedCount() !== 1) throw new RuntimeException('Document was not deleted.');
+    } catch (Throwable $exception) {
+        if ($fileMoved) @rename($temporaryPath, $path);
+        redirectFromCentralDocuments(lang('The document could not be deleted.', 'Das Dokument konnte nicht gelöscht werden.'));
+    }
+
+    if ($fileMoved) @unlink($temporaryPath);
+    redirectFromCentralDocuments(lang('The document was deleted successfully.', 'Das Dokument wurde erfolgreich gelöscht.'), 'success');
+}, 'login');
 
 
 // central upload of documents

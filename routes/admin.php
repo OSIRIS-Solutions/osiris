@@ -543,6 +543,52 @@ Route::get('/admin/projects/new', function () {
 
 
 
+Route::get('/admin/resource-hub-image-map', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $breadcrumb = [
+        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('Resource Hub', 'Ressourcen-Hub'), 'path' => '/admin/resource-hub'],
+        ['name' => lang('Arrange image map', 'Image-Map anordnen')],
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/resource-hub-image-map.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
+Route::get('/admin/phpinfo', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    function getPhpinfo()
+    {
+        ob_start();
+        phpinfo();
+        $data = ob_get_contents();
+        ob_end_clean();
+        // remove the style and script tags from the output
+        $data = preg_replace('#<style[^>]*>.*?</style>#is', '', $data);
+        // add "table" class to all tables
+        $data = preg_replace('#<table#', '<table class="table"', $data);
+        return $data;
+    }
+
+    $breadcrumb = [
+        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('PHP Info', 'PHP Info')]
+    ];
+    $phpinfo = getPhpinfo();
+    include BASEPATH . "/header.php";
+    echo "<link rel='stylesheet' href='" . ROOTPATH . "/css/phpinfo.css'>";
+    echo "<div class='phpinfo-container'>$phpinfo</div>";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -569,6 +615,194 @@ Route::get('/admin/(.*)', function ($path) {
  * CRUD routes
  */
 
+function redirectFromResourceHubImage(string $message, string $type = 'error'): void
+{
+    $_SESSION['msg'] = $message;
+    $_SESSION['msg_type'] = $type;
+    header('Location: ' . ROOTPATH . '/admin/resource-hub#image-map-configuration');
+    die;
+}
+
+Route::post('/crud/admin/resource-hub/image', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $file = $_FILES['image'] ?? null;
+    if ($file === null || $file['error'] !== UPLOAD_ERR_OK) {
+        $error = $file['error'] ?? UPLOAD_ERR_NO_FILE;
+        $message = match ($error) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('The image is too large. A maximum of 10 MB is allowed.', 'Das Bild ist zu groß. Maximal 10 MB sind erlaubt.'),
+            UPLOAD_ERR_PARTIAL => lang('The image was only partially uploaded.', 'Das Bild wurde nur teilweise hochgeladen.'),
+            UPLOAD_ERR_NO_TMP_DIR => lang('The temporary upload directory is missing.', 'Der temporäre Upload-Ordner fehlt.'),
+            UPLOAD_ERR_CANT_WRITE => lang('The image could not be written to disk.', 'Das Bild konnte nicht auf die Festplatte geschrieben werden.'),
+            UPLOAD_ERR_EXTENSION => lang('A PHP extension stopped the upload.', 'Eine PHP-Erweiterung hat den Upload gestoppt.'),
+            default => lang('Please select an image to upload.', 'Bitte wähle ein Bild zum Hochladen aus.'),
+        };
+        redirectFromResourceHubImage($message);
+    }
+
+    if ((int) $file['size'] > 10 * 1024 * 1024) {
+        redirectFromResourceHubImage(lang('The image is too large. A maximum of 10 MB is allowed.', 'Das Bild ist zu groß. Maximal 10 MB sind erlaubt.'));
+    }
+
+    $allowedMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    $dimensions = @getimagesize($file['tmp_name']);
+    if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
+        redirectFromResourceHubImage(lang('Only JPEG, PNG and WebP images are allowed.', 'Es sind nur JPEG-, PNG- und WebP-Bilder erlaubt.'));
+    }
+
+    [$width, $height] = $dimensions;
+    if ($width < 1200 || $height < 600) {
+        redirectFromResourceHubImage(lang('The image is too small. It must be at least 1200 × 600 pixels.', 'Das Bild ist zu klein. Es muss mindestens 1200 × 600 Pixel groß sein.'));
+    }
+    if ($width > 5000 || $height > 3000 || $width * $height > 15000000) {
+        redirectFromResourceHubImage(lang('The image is too large. It may be no larger than 5000 × 3000 pixels or 15 megapixels.', 'Das Bild ist zu groß. Es darf höchstens 5000 × 3000 Pixel beziehungsweise 15 Megapixel haben.'));
+    }
+    if ($width <= $height) {
+        redirectFromResourceHubImage(lang('Please use a landscape image.', 'Bitte verwende ein Bild im Querformat.'));
+    }
+
+    $targetDirectory = BASEPATH . '/uploads/resource-hub';
+    if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
+        redirectFromResourceHubImage(lang('The upload directory could not be created.', 'Der Upload-Ordner konnte nicht erstellt werden.'));
+    }
+
+    $extension = $allowedMimeTypes[$mime];
+    $filename = bin2hex(random_bytes(12)) . '.' . $extension;
+    $targetPath = $targetDirectory . '/' . $filename;
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        redirectFromResourceHubImage(lang('The image could not be saved.', 'Das Bild konnte nicht gespeichert werden.'));
+    }
+
+    $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+    $settingsValue = DB::doc2Arr($settingsDocument['value'] ?? []);
+    $imageMap = DB::doc2Arr($settingsValue['image-map'] ?? []);
+    $oldImage = DB::doc2Arr($imageMap['image'] ?? []);
+
+    $image = [
+        'file' => 'resource-hub/' . $filename,
+        'mime' => $mime,
+        'width' => (int) $width,
+        'height' => (int) $height,
+        'size' => (int) $file['size'],
+        'uploaded' => date('Y-m-d H:i:s'),
+        'uploaded_by' => $_SESSION['username'] ?? null,
+    ];
+
+    try {
+        $osiris->adminGeneral->updateOne(
+            ['key' => 'resource-hub'],
+            ['$set' => ['value.image-map.image' => $image]],
+            ['upsert' => true]
+        );
+    } catch (Throwable $exception) {
+        @unlink($targetPath);
+        redirectFromResourceHubImage(lang('The image configuration could not be saved.', 'Die Bildkonfiguration konnte nicht gespeichert werden.'));
+    }
+
+    $oldFile = (string) ($oldImage['file'] ?? '');
+    if (preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#', $oldFile)) {
+        $oldPath = BASEPATH . '/uploads/' . $oldFile;
+        if ($oldPath !== $targetPath && is_file($oldPath)) @unlink($oldPath);
+    }
+
+    redirectFromResourceHubImage(lang('The background image was uploaded successfully.', 'Das Hintergrundbild wurde erfolgreich hochgeladen.'), 'success');
+}, 'login');
+
+Route::post('/crud/admin/resource-hub/image/delete', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+    $settingsValue = DB::doc2Arr($settingsDocument['value'] ?? []);
+    $imageMap = DB::doc2Arr($settingsValue['image-map'] ?? []);
+    $image = DB::doc2Arr($imageMap['image'] ?? []);
+
+    try {
+        $osiris->adminGeneral->updateOne(
+            ['key' => 'resource-hub'],
+            ['$unset' => ['value.image-map.image' => true]]
+        );
+    } catch (Throwable $exception) {
+        redirectFromResourceHubImage(lang('The image configuration could not be removed.', 'Die Bildkonfiguration konnte nicht entfernt werden.'));
+    }
+
+    $file = (string) ($image['file'] ?? '');
+    if (preg_match('#^resource-hub/[a-f0-9]{24}\.(jpg|png|webp)$#', $file)) {
+        $path = BASEPATH . '/uploads/' . $file;
+        if (is_file($path)) @unlink($path);
+    }
+
+    redirectFromResourceHubImage(lang('The background image was removed.', 'Das Hintergrundbild wurde entfernt.'), 'success');
+}, 'login');
+
+Route::post('/crud/admin/resource-hub/image-map', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+    $settingsValue = DB::doc2Arr($settingsDocument['value'] ?? []);
+    $cards = DB::doc2Arr($settingsValue['cards'] ?? []);
+    $imageMap = DB::doc2Arr($settingsValue['image-map'] ?? []);
+    $image = DB::doc2Arr($imageMap['image'] ?? []);
+
+    if (empty($cards) || empty($image['file'])) {
+        $_SESSION['msg'] = lang('Upload a background image and create at least one card first.', 'Lade zuerst ein Hintergrundbild hoch und erstelle mindestens eine Karte.');
+        $_SESSION['msg_type'] = 'warning';
+        header('Location: ' . ROOTPATH . '/admin/resource-hub#image-map-configuration');
+        die;
+    }
+
+    $validCardIds = [];
+    foreach ($cards as $card) {
+        $card = DB::doc2Arr($card);
+        $cardId = (string) ($card['id'] ?? '');
+        if ($cardId !== '') $validCardIds[$cardId] = true;
+    }
+
+    $placements = [];
+    foreach (DB::doc2Arr($_POST['placements'] ?? []) as $cardId => $placement) {
+        if (!isset($validCardIds[$cardId])) continue;
+        $placement = DB::doc2Arr($placement);
+        if (!isset($placement['x'], $placement['y']) || !is_numeric($placement['x']) || !is_numeric($placement['y'])) continue;
+
+        $x = round((float) $placement['x'], 2);
+        $y = round((float) $placement['y'], 2);
+        if ($x < 0 || $x > 100 || $y < 0 || $y > 100) continue;
+
+        $placements[$cardId] = ['x' => $x, 'y' => $y];
+    }
+
+    try {
+        $osiris->adminGeneral->updateOne(
+            ['key' => 'resource-hub'],
+            ['$set' => ['value.image-map.placements' => $placements]],
+            ['upsert' => true]
+        );
+    } catch (Throwable $exception) {
+        $_SESSION['msg'] = lang('The card positions could not be saved.', 'Die Kartenpositionen konnten nicht gespeichert werden.');
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
+        die;
+    }
+
+    $_SESSION['msg'] = lang('The card positions were saved.', 'Die Kartenpositionen wurden gespeichert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
+    die;
+}, 'login');
+
 Route::post('/crud/admin/general', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -582,6 +816,38 @@ Route::post('/crud/admin/general', function () {
             if (str_contains($key, 'keywords') || $key == 'tags') {
                 $value = array_map('trim', explode(PHP_EOL, $value));
                 $value = array_filter($value);
+            }
+            if ($key === 'resource-hub' && is_array($value)) {
+                $icon = trim((string) ($value['icon'] ?? 'link'));
+                $value['icon'] = preg_match('/^[a-z0-9-]+$/', $icon) ? $icon : 'link';
+
+                $description = [];
+                foreach (['en', 'de'] as $language) {
+                    $text = trim(strip_tags((string) ($value['description'][$language] ?? '')));
+                    $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+                    $description[$language] = function_exists('mb_substr')
+                        ? mb_substr($text, 0, 200)
+                        : substr($text, 0, 200);
+                }
+                $value['description'] = $description;
+            }
+            if ($key === 'resource-hub' && is_array($value) && !array_key_exists('image-map', $value)) {
+                $current = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
+                $currentValue = DB::doc2Arr($current['value'] ?? []);
+                if (isset($currentValue['image-map'])) {
+                    $imageMap = DB::doc2Arr($currentValue['image-map']);
+                    $validCardIds = [];
+                    foreach (DB::doc2Arr($value['cards'] ?? []) as $card) {
+                        $card = DB::doc2Arr($card);
+                        if (!empty($card['id'])) $validCardIds[(string) $card['id']] = true;
+                    }
+                    $imageMap['placements'] = array_filter(
+                        DB::doc2Arr($imageMap['placements'] ?? []),
+                        fn($cardId) => isset($validCardIds[$cardId]),
+                        ARRAY_FILTER_USE_KEY
+                    );
+                    $value['image-map'] = $imageMap;
+                }
             }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
@@ -1085,7 +1351,7 @@ Route::post('/crud/admin/mail-test', function () {
     $to = $_POST['email'];
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
-    if ($msg === null){
+    if ($msg === null) {
         $msg = lang('Test mail sent successfully.', 'Testmail erfolgreich versendet.');
     }
     $_SESSION['msg'] = $msg;

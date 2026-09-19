@@ -23,9 +23,29 @@ Route::get('/user/login', function () {
         header("Location: " . ROOTPATH . "/home");
         die;
     }
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/userlogin.php";
-    include BASEPATH . "/footer.php";
+    if (!defined('USER_MANAGEMENT')) {
+        die('USER_MANAGEMENT not defined in CONFIG.php');
+    }
+    $userManagement = strtoupper(USER_MANAGEMENT);
+    if ($userManagement === 'OAUTH' && (
+        !defined('OAUTH') || !defined('AUTHORITY') || !defined('CLIENT_ID') ||
+        !defined('REDIRECT_URI') || !defined('SCOPES')
+    )) {
+        die('OAUTH not correctly defined in CONFIG.php');
+    }
+    $page = 'login';
+    $redirectTarget = $_GET['redirect'] ?? $_SERVER['REQUEST_URI'];
+    $authMessages = [];
+    if (isset($_GET['redirect'])) {
+        $authMessages[] = [
+            'text' => lang(
+                'Please log in to access the requested page.',
+                'Bitte melde dich an, um auf die gewünschte Seite zuzugreifen.'
+            ),
+            'type' => 'error',
+        ];
+    }
+    include BASEPATH . "/pages/user/auth-page.php";
 });
 
 Route::get('/user/oauth', function () {
@@ -287,21 +307,17 @@ Route::post('/user/login', function () {
             die();
         }
     }
-    $breadcrumb = [
-        ['name' => lang('User Login', 'Login')]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/userlogin.php";
-    if (isset($auth)) {
-        printMsg($auth["msg"] ?? lang('Something went wrong', 'Etwas ist schief gelaufen'), "error", "");
-    }
+    $page = 'login';
+    $userManagement = strtoupper(USER_MANAGEMENT);
+    $redirectTarget = $_POST['redirect'] ?? $_SERVER['REQUEST_URI'];
+    $authMessages = [];
     if (empty($_POST['username'])) {
-        printMsg(lang("Username is required!", "Benutzername ist erforderlich!"), "error", "");
+        $authMessages[] = ['text' => lang('Username is required.', 'Bitte gib deinen Nutzernamen ein.'), 'type' => 'error'];
     }
     if (empty($_POST['password'])) {
-        printMsg(lang("Password is required!", "Passwort ist erforderlich!"), "error", "");
+        $authMessages[] = ['text' => lang('Password is required.', 'Bitte gib dein Passwort ein.'), 'type' => 'error'];
     }
-    include BASEPATH . "/footer.php";
+    include BASEPATH . "/pages/user/auth-page.php";
 });
 
 
