@@ -780,6 +780,8 @@ Route::post('/crud/admin/api-clients/delete/([a-z0-9_]+)', function ($clientId) 
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
+}, 'login');
+
 function redirectFromResourceHubImage(string $message, string $type = 'error'): void
 {
     $_SESSION['msg'] = $message;
