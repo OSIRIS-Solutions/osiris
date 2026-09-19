@@ -13,7 +13,7 @@ class ProjectFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $adminCategories = $osiris->adminProjects->find()->toArray();
-        $types = array_column($adminCategories, lang('name', 'name_de'), 'id');
+        $types = array_column($adminCategories, lang('common.field_name_language'), 'id');
 
         $proposalTypes = [];
 
@@ -65,7 +65,7 @@ class ProjectFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -85,7 +85,7 @@ class ProjectFields extends Fields
             [
                 "id" => "type",
                 "module_of" => $typeModules["type"] ?? [],
-                "label" => lang("Type", "Typ"),
+                "label" => lang('common.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -194,14 +194,14 @@ class ProjectFields extends Fields
             [
                 "id" => "status",
                 "module_of" => $typeModules["status"] ?? [],
-                "label" => lang("Status", "Status"),
+                "label" => lang('common.status'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'proposed' => lang('Proposed', 'Beantragt'),
-                    'approved' => lang('Approved', 'Bewilligt'),
-                    'rejected' => lang('Rejected', 'Abgelehnt'),
-                    'withdrawn' => lang('Withdrawn', 'Zurückgezogen'),
+                    'proposed' => lang('projects.proposed'),
+                    'approved' => lang('projects.approved'),
+                    'rejected' => lang('projects.rejected'),
+                    'withdrawn' => lang('projects.withdrawn'),
                 ],
                 'usage' => [
                     'aggregate',
@@ -348,7 +348,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_organization",
                 "module_of" => $typeModules["funding_organization"] ?? [],
-                "label" => lang("Funding organization", "Förderorganisation"),
+                "label" => lang('common.funding_organizations'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -612,7 +612,7 @@ class ProjectFields extends Fields
             [
                 "id" => "internal_number",
                 "module_of" => $typeModules["internal_number"] ?? [],
-                "label" => lang("Internal ID", "Interne ID"),
+                "label" => lang('common.internal_id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -737,7 +737,7 @@ class ProjectFields extends Fields
             [
                 "id" => "comment",
                 "module_of" => $typeModules["comment"] ?? [],
-                "label" => lang("Comment", "Kommentar"),
+                "label" => lang('common.comment'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -934,8 +934,8 @@ class ProjectFields extends Fields
             });
         }
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1]])->toArray();
-        $units = array_column($units, lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('common.field_name_language') => 1]])->toArray();
+        $units = array_column($units, lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units',
             'module_of' => ['general'],

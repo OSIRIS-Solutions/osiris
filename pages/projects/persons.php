@@ -40,33 +40,33 @@ $user_in_project = false;
                 <tr>
                     <th></th>
                     <th>
-                        <?= lang('Person', 'Person') ?><br>
+                        <?= lang('common.person') ?><br>
                         <span class="badge kdsf m-0">
                             KDSF-B-2-15-A
                         </span>
                     </th>
                     <th>
-                        <?= lang('Role', 'Rolle') ?><br>
+                        <?= lang('common.role') ?><br>
                         <span class="badge kdsf m-0">
                             KDSF-B-2-15-B
                         </span>
                     </th>
                     <?php if ($collection == 'projects') { ?>
                         <th>
-                            <?= lang('Start', 'Start') ?><br>
+                            <?= lang('common.start') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-C
                             </span>
                         </th>
                         <th>
-                            <?= lang('End', 'Ende') ?><br>
+                            <?= lang('common.end') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-D
                             </span>
                         </th>
                     <?php } ?>
                     <th>
-                        <?= lang('Units', 'Einheiten') ?>
+                        <?= lang('common.units') ?>
                     </th>
                     <th></th>
                 </tr>
@@ -170,7 +170,7 @@ $user_in_project = false;
 
         <button class="btn primary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('Submit', 'Bestätigen') ?>
+            <?= lang('action.submit') ?>
         </button>
     </form>
 </div>

@@ -14,7 +14,7 @@ class EventFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -24,7 +24,7 @@ class EventFields extends Fields
             [
                 "id" => "title",
                 "module_of" => ['general'],
-                "label" => lang("Title", "Titel"),
+                "label" => lang('common.title'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -46,7 +46,7 @@ class EventFields extends Fields
             [
                 "id" => "type",
                 "module_of" => ['general'],
-                "label" => lang("Type", "Typ"),
+                "label" => lang('common.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -59,7 +59,7 @@ class EventFields extends Fields
             [
                 "id" => "description",
                 "module_of" => ['general'],
-                "label" => lang("Description", "Beschreibung"),
+                "label" => lang('common.description'),
                 'type' => 'string',
                 'usage' => [
                     'columns'
@@ -68,7 +68,7 @@ class EventFields extends Fields
             [
                 "id" => "start",
                 "module_of" => ['general'],
-                "label" => lang("Start date", "Anfangsdatum"),
+                "label" => lang('common.start_date'),
                 'type' => 'date',
                 'usage' => [
                     'aggregate',
@@ -79,7 +79,7 @@ class EventFields extends Fields
             [
                 "id" => "end",
                 "module_of" => ['general'],
-                "label" => lang("End date", "Enddatum"),
+                "label" => lang('common.end_date'),
                 'type' => 'date',
                 'usage' => [
                     'aggregate',
@@ -90,7 +90,7 @@ class EventFields extends Fields
             [
                 "id" => "location",
                 "module_of" => ['general'],
-                "label" => lang("Location", "Ort"),
+                "label" => lang('common.location'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -112,7 +112,7 @@ class EventFields extends Fields
             [
                 "id" => "url",
                 "module_of" => ['general'],
-                "label" => lang("URL", "URL"),
+                "label" => lang('common.url'),
                 'type' => 'string',
                 'usage' => [
                     'columns'

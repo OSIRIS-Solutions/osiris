@@ -211,7 +211,7 @@ $fields = [
                         </td>
                         <td>
                             <select name="general[doi_mappings][<?= $key ?>]" class="form-control">
-                                <option value=""><?= lang('None', 'Keine') ?></option>
+                                <option value=""><?= lang('common.none') ?></option>
                                 <?php
                                 foreach ($type_options as $type_id => $type_name) {
                                     $selected = (isset($mappings[$key]) && $mappings[$key] === $type_id) ? 'selected' : '';
@@ -231,7 +231,7 @@ $fields = [
 
     <button type="submit" class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('Save', 'Speichern') ?>
+        <?= lang('action.save') ?>
     </button>
 </form>
 

@@ -32,7 +32,7 @@ Route::get('/topics/new', function () {
     }
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/topics/edit.php";
@@ -87,7 +87,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $form['name'], 'path' => "/topics/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -106,7 +106,7 @@ Route::post('/crud/topics/create', function () {
         abortwith(403, lang("You do not have permission to create a new topics.", "Du hast keine Berechtigung, Themen zu erstellen."), "/topics", lang('Go back to topics', 'Zurück zu Themen'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);
@@ -170,19 +170,19 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 2000000) {
-            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
             $osiris->topics->updateOne(
@@ -192,7 +192,7 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
             $_SESSION['msg_type'] = "success";
         } else {
-            $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
+            $_SESSION['msg'] = lang('error.file_upload_generic');
             $_SESSION['msg_type'] = "error";
         }
     } else if (isset($_POST['delete'])) {
@@ -218,7 +218,7 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     if (!$Settings->hasPermission('topics.edit')) {
         abortwith(403, lang("You do not have permission to edit topics.", "Du hast keine Berechtigung, Themen zu bearbeiten."), "/topics/view/$id", lang('Go back to topic', 'Zurück zu dem Thema'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);

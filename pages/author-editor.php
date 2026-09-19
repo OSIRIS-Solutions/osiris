@@ -76,17 +76,17 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                 <tr>
                     <th></th>
                     <th>Username</th>
-                    <th><?= lang('Last name', 'Nachname') ?> <span class="text-danger">*</span></th>
-                    <th><?= lang('First name', 'Vorname') ?></th>
+                    <th><?= lang('common.name_last') ?> <span class="text-danger">*</span></th>
+                    <th><?= lang('common.name_first') ?></th>
                     <?php if ($sws) : ?>
                         <th>SWS</th>
                     <?php elseif ($supervisorThesis) : ?>
-                        <th><?= lang('Role', 'Rolle') ?></th>
+                        <th><?= lang('common.role') ?></th>
                     <?php elseif ($role == 'authors') : ?>
                         <th>Position</th>
                     <?php endif; ?>
                     <th><?= $Settings->get('affiliation') ?></th>
-                    <th><?= lang('Units', 'Einheiten') ?> *</th>
+                    <th><?= lang('common.units') ?> *</th>
                     <th></th>
                 </tr>
             </thead>
@@ -122,7 +122,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                     <option value="committee-member" <?= ($thesisRole == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
                                     <option value="chair" <?= ($thesisRole == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
                                     <option value="mentor" <?= ($thesisRole == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
-                                    <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                    <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                 </select>
                             </td>
                         <?php elseif ($role == 'authors') :
@@ -186,7 +186,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                 }
                             } else { ?>
                                 <small>
-                                    <?= lang('Not applicable', 'Nicht zutreffend') ?>
+                                    <?= lang('common.not_applicable') ?>
                                 </small>
                             <?php } ?>
                             <div class="unit-override mt-5 font-size-12">
@@ -216,7 +216,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         </table>
         <button class="btn secondary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('Submit', 'Bestätigen') ?>
+            <?= lang('action.submit') ?>
         </button>
 
 
@@ -256,12 +256,12 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         <?php if ($sws) : ?>
             tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
-            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('Other', 'Sonstiges') ?></option></select></td>')
+            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('common.other') ?></option></select></td>')
         <?php elseif ($role == 'authors') : ?>
             tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         <?php endif; ?>
         tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="authors[' + counter + '][aoi]" value="1" class="aoi-checkbox"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-        tr.append('<td class="units"><small>' + <?= json_encode(lang('Not applicable', 'Nicht zutreffend')) ?> + '</small></td>')
+        tr.append('<td class="units"><small>' + <?= json_encode(lang('common.not_applicable')) ?> + '</small></td>')
         var btn = $('<button class="btn" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
             $(this).closest('tr').remove();
         });
@@ -297,12 +297,12 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         let counter = tr.data('attr');
         td.html('<i class="ph ph-spinner ph-spin"></i>');
         if (!username) {
-            td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+            td.html('<small class="text-muted"><?= lang('common.not_applicable') ?></small>');
             return;
         }
         $.getJSON(`${ROOTPATH}/api/user-units/${username}`, function(resp) {
             if (resp.status !== 200) {
-                td.html('<small class="text-muted"><?= lang('Not applicable', 'Nicht zutreffend') ?></small>');
+                td.html('<small class="text-muted"><?= lang('common.not_applicable') ?></small>');
                 toastError(resp.msg || 'Error fetching user units');
                 $(el).val('');
                 return;

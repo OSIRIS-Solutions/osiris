@@ -463,7 +463,7 @@ if (!$Settings->featureEnabled('coins')) {
                             if ($col == "publication") $t = "article";
                         ?>
                             <a href="<?= ROOTPATH ?>/my-activities?type=<?= $col ?>" class="btn text-<?= $Settings->getActivities($col)['color'] ?>">
-                                <i class="ph ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i> <?= lang('My ', 'Meine ') ?><?= $Settings->getActivities($col)[lang('name', 'name_de')] ?>
+                                <i class="ph ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i> <?= lang('My ', 'Meine ') ?><?= $Settings->getActivities($col)[lang('common.field_name_language')] ?>
                             </a>
                             <a href="<?= ROOTPATH . "/add-activity?type=" . $t ?>" class="btn"><i class="ph ph-plus"></i></a>
                             <?php if ($col == 'publication') { ?>
@@ -485,7 +485,7 @@ if (!$Settings->featureEnabled('coins')) {
         <div class="col-lg-3 d-none d-lg-block">
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <div class="title"><?= lang('Activities', 'Aktivitäten') ?></div>
+                    <div class="title"><?= lang('common.activities') ?></div>
                     <?php foreach ($groups as $col => $data) {
                         $type = $Settings->getActivities($col);
                     ?>

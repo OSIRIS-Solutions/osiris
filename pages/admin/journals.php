@@ -23,11 +23,11 @@
             </h2>
             <div class="row row-eq-spacing">
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="journals_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <label for="journals_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[journals_label][en]" id="journals_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Journals') ?>">
                 </div>
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="journals_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <label for="journals_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[journals_label][de]" id="journals_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Journale') ?>">
                 </div>
             </div>
@@ -47,13 +47,13 @@
             <div class="custom-radio d-inline-block mr-20">
                 <input type="radio" id="no-journal-metrics-true" value="1" name="features[no-journal-metrics]" <?= $enabled ? 'checked' : '' ?>>
                 <label for="no-journal-metrics-true">
-                    <?= lang('Yes', 'Ja') ?>
+                    <?= lang('common.yes') ?>
                 </label>
             </div>
             <div class="custom-radio d-inline-block">
                 <input type="radio" id="no-journal-metrics-false" value="0" name="features[no-journal-metrics]" <?= $enabled ? '' : 'checked' ?>>
                 <label for="no-journal-metrics-false">
-                    <?= lang('No', 'Nein') ?>
+                    <?= lang('common.no') ?>
                 </label>
             </div>
             <p class="description">
@@ -70,11 +70,11 @@
         ?>
             <div class="row row-eq-spacing">
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="impact_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <label for="impact_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[impact_label][en]" id="impact_label" type="text" class="form-control" value="<?= e($impact_label['en'] ?? 'Cite factor') ?>">
                 </div>
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="impact_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <label for="impact_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[impact_label][de]" id="impact_label_de" type="text" class="form-control" value="<?= e($impact_label['de'] ?? 'Cite Factor') ?>">
                 </div>
             </div>
@@ -95,7 +95,7 @@
         <div class="box padded">
             <h2 class="title" id="datafields">
                 <i class="ph-duotone ph-database" aria-hidden="true"></i>
-                <?= lang('Data fields', 'Datenfelder') ?>
+                <?= lang('common.data_fields') ?>
             </h2>
 
             <p class="text-muted">
@@ -106,7 +106,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th><?= lang('Active', 'Aktiv') ?></th>
+                        <th><?= lang('common.active') ?></th>
                         <th><?= lang('Field name', 'Feldname') ?></th>
                     </tr>
                 </thead>
@@ -138,7 +138,7 @@
                                     <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
                                     <code class="code mx-10"><?= e($field['format']) ?></code>
                                     <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
-                                        <i class="ph ph-pencil" title="<?= lang('edit', 'bearbeiten') ?>"></i>
+                                        <i class="ph ph-pencil" title="<?= lang('action.edit') ?>"></i>
                                     </a>
                                 </td>
 
@@ -162,7 +162,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
 
     </form>

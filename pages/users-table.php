@@ -45,7 +45,7 @@ if ($active('keywords')) {
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
-    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
+    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('common.preview') ?></a>
 <?php } ?>
 <?php if ($Settings->hasPermission('user.synchronize') && strtoupper(USER_MANAGEMENT) === 'LDAP') { ?>
     <a href="<?= ROOTPATH ?>/synchronize-users" class="btn float-right"><i class="ph ph-sync"></i> <?= lang('Synchronize users', 'Nutzende synchronisieren') ?></a>
@@ -53,7 +53,7 @@ if ($active('keywords')) {
 
 <h1>
     <i class="ph-duotone ph-student"></i>
-    <?= lang('Users', 'Personen') ?>
+    <?= lang('common.users') ?>
 </h1>
 
 <div class="row row-eq-spacing">
@@ -61,19 +61,19 @@ if ($active('keywords')) {
 
         <table class="table cards w-full" id="user-table">
             <thead>
-                <th><?= lang('Image', 'Bild') ?></th>
+                <th><?= lang('common.image') ?></th>
                 <th></th>
-                <th><?= lang('Units', 'Einheiten') ?></th>
-                <th><?= lang('Active', 'Aktiv') ?></th>
+                <th><?= lang('common.units') ?></th>
+                <th><?= lang('common.active') ?></th>
                 <th><?= lang('Names', 'Namen') ?></th>
                 <th><?= lang('Research topics', 'Forschungsbereiche') ?></th>
-                <th><?= lang('First name', 'Vorname') ?></th>
-                <th><?= lang('Last name', 'Nachname') ?></th>
+                <th><?= lang('common.name_first') ?></th>
+                <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Academic title', 'Akad. Titel') ?></th>
                 <th><?= lang('Email', 'E-Mail') ?></th>
-                <th><?= lang('Telephone', 'Telefon') ?></th>
-                <th><?= lang('Position', 'Position') ?></th>
-                <th><?= lang('ORCID', 'ORCID') ?></th>
+                <th><?= lang('common.telephone') ?></th>
+                <th><?= lang('common.position') ?></th>
+                <th><?= lang('common.orcid') ?></th>
                 <th><?= lang('Username', 'Kürzel') ?></th>
                 <th><?= $keyword_name ?></th>
             </thead>
@@ -192,7 +192,7 @@ if ($active('keywords')) {
 
 <script>
     const headers = [{
-            title: lang('Image', 'Bild'),
+            title: lang('common.image'),
             'key': 'img'
         },
         {
@@ -200,11 +200,11 @@ if ($active('keywords')) {
             'key': 'html'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             'key': 'dept'
         },
         {
-            title: lang('Active', 'Aktiv'),
+            title: lang('common.active'),
             'key': 'active'
         },
         {
@@ -216,11 +216,11 @@ if ($active('keywords')) {
             'key': 'topics'
         },
         {
-            title: lang('First name', 'Vorname'),
+            title: lang('common.name_first'),
             'key': 'first'
         },
         {
-            title: lang('Last name', 'Nachname'),
+            title: lang('common.name_last'),
             'key': 'last'
         },
         {
@@ -232,15 +232,15 @@ if ($active('keywords')) {
             'key': 'mail'
         },
         {
-            title: lang('Telephone', 'Telefon'),
+            title: lang('common.telephone'),
             'key': 'telephone'
         },
         {
-            title: lang('Position', 'Position'),
+            title: lang('common.position'),
             'key': 'position'
         },
         {
-            title: lang('ORCID', 'ORCID'),
+            title: lang('common.orcid'),
             'key': 'orcid'
         },
         {
@@ -252,7 +252,7 @@ if ($active('keywords')) {
             'key': 'keywords'
         },
         {
-            title: lang('Roles', 'Rollen'),
+            title: lang('common.roles'),
             'key': 'roles'
         }
     ]
@@ -321,7 +321,7 @@ if ($active('keywords')) {
             columnDefs: [{
                     targets: 0,
                     data: 'img',
-                    title: lang('Image', 'Bild'),
+                    title: lang('common.image'),
                     searchable: false,
                     sortable: false,
                     visible: true
@@ -343,7 +343,7 @@ if ($active('keywords')) {
                 {
                     targets: 3,
                     data: 'active',
-                    title: lang('Active', 'Aktiv'),
+                    title: lang('common.active'),
                     searchable: true,
                     sortable: false,
                     visible: false
@@ -365,14 +365,14 @@ if ($active('keywords')) {
                 {
                     target: 6,
                     data: 'first',
-                    title: lang('First name', 'Vorname'),
+                    title: lang('common.name_first'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 7,
                     data: 'last',
-                    title: lang('Last name', 'Nachname'),
+                    title: lang('common.name_last'),
                     visible: false,
                     defaultContent: ''
                 },
@@ -393,21 +393,21 @@ if ($active('keywords')) {
                 {
                     target: 10,
                     data: 'telephone',
-                    title: lang('Telephone', 'Telefon'),
+                    title: lang('common.telephone'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 11,
                     data: 'position',
-                    title: lang('Position', 'Position'),
+                    title: lang('common.position'),
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 12,
                     data: 'orcid',
-                    title: lang('ORCID', 'ORCID'),
+                    title: lang('common.orcid'),
                     visible: false,
                     defaultContent: ''
                 },
@@ -428,7 +428,7 @@ if ($active('keywords')) {
                 {
                     target: 15,
                     data: 'roles',
-                    title: '<?= lang('Roles', 'Rollen') ?>',
+                    title: '<?= lang('common.roles') ?>',
                     visible: false,
                     defaultContent: ''
                 }

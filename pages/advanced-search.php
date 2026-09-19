@@ -61,7 +61,7 @@ if ($collection == 'projects' || $collection == 'proposals') {
 
 $field_by_id = array_column($FIELDS->fields, null, 'id');
 $aggregation_function_labels = [
-    'count' => lang('Count', 'Anzahl'),
+    'count' => lang('common.count'),
     'sum' => lang('Sum', 'Summe'),
     'mean' => lang('Mean', 'Mittelwert'),
     'median' => lang('Median', 'Median')
@@ -78,7 +78,7 @@ $filters = array_map(function ($f) {
     }
     if ($f['type'] == 'boolean') {
         $f['input'] = 'radio';
-        $f['values'] = ['true' => lang('Yes', 'Ja'), 'false' => lang('No', 'Nein')];
+        $f['values'] = ['true' => lang('common.yes'), 'false' => lang('common.no')];
     }
     if ($f['type'] == 'list') {
         $f['type'] = 'string';
@@ -375,7 +375,7 @@ function printRules($rules)
             </script>
 
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
             </div>
         </div>
     </div>
@@ -407,7 +407,7 @@ function printRules($rules)
                 <pre id="result" class="code p-20"></pre>
             </div>
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
             </div>
         </div>
     </div>
@@ -497,7 +497,7 @@ function printRules($rules)
                 <?php } ?>
             </div>
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
                 <a class="btn secondary" role="button" onclick="getResult()"><?= lang('Apply', 'Anwenden') ?></a>
             </div>
             <script>
@@ -527,7 +527,7 @@ function printRules($rules)
     <a href="https://wiki.osiris-app.de/users/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
         <?= lang('in', 'in') ?> <?= $colName ?? $collection ?>
     </h1>
 
@@ -663,7 +663,7 @@ function printRules($rules)
 
         var mongoQuery = $('#builder').queryBuilder({
             filters: filters,
-            'lang_code': lang('en', 'de'),
+            'lang_code': lang('common.this_language'),
             'icons': {
                 add_group: 'ph ph-plus-circle text-success',
                 add_rule: 'ph ph-plus text-success',
@@ -740,7 +740,7 @@ function printRules($rules)
 
         function aggregationResultLabel() {
             const functionLabels = {
-                count: lang('Count', 'Anzahl'),
+                count: lang('common.count'),
                 sum: lang('Sum', 'Summe'),
                 mean: lang('Mean', 'Mittelwert'),
                 median: lang('Median', 'Median')
@@ -792,7 +792,7 @@ function printRules($rules)
 
                 columns = [{
                         data: 'value',
-                        title: lang('Value', 'Wert')
+                        title: lang('common.value')
                     },
                     {
                         data: 'result',

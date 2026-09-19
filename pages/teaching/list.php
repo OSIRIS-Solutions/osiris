@@ -34,7 +34,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     <!-- Statistics -->
     <a href="<?= ROOTPATH ?>/teaching/statistics" class="mr-20">
         <i class="ph ph-chart-bar"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
 
     <?php if ($Settings->hasPermission('teaching.edit')) { ?>
@@ -72,7 +72,7 @@ $teaching = $osiris->teaching->aggregate([
         <thead>
             <tr>
                 <th><?= lang('Module No.', 'Modulnummer') ?></th>
-                <th><?= lang('Title', 'Titel') ?></th>
+                <th><?= lang('common.title') ?></th>
                 <th><?= lang('Teaching venue / University', 'Lehrort / Hochschule') ?></th>
                 <th><?= lang('Number of Activities', 'Anzahl der Aktivitäten') ?></th>
             </tr>

@@ -250,13 +250,13 @@ $persons = $osiris->adminPersons->find();
             <div class="box padded">
                 <h2 class="title" id="datafields">
                     <i class="ph-duotone ph-database" aria-hidden="true"></i>
-                    <?= lang('Data fields', 'Datenfelder') ?>
+                    <?= lang('common.data_fields') ?>
                 </h2>
 
                 <table class="table simple w-auto small mb-10">
                     <thead>
                         <tr>
-                            <th><?= lang('Active', 'Aktiv') ?></th>
+                            <th><?= lang('common.active') ?></th>
                             <th><?= lang('Field name', 'Feldname') ?></th>
                         </tr>
                     </thead>
@@ -281,7 +281,7 @@ $persons = $osiris->adminPersons->find();
                             <tr>
                                 <td colspan="2">
                                     <h5>
-                                        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+                                        <?= lang('common.custom_fields') ?>
                                     </h5>
                                 </td>
                             </tr>
@@ -298,7 +298,7 @@ $persons = $osiris->adminPersons->find();
                                         <b><?= e(lang($field['name'], $field['name_de'] ?? null)) ?></b>
                                         <code class="code mx-10"><?= e($field['format']) ?></code>
                                         <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>">
-                                            <i class="ph ph-pencil" title="<?= lang('edit', 'bearbeiten') ?>"></i>
+                                            <i class="ph ph-pencil" title="<?= lang('action.edit') ?>"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -450,12 +450,12 @@ $persons = $osiris->adminPersons->find();
 
                 <button class="btn success large">
                     <i class="ph ph-floppy-disk"></i>
-                    <?= lang('Save', 'Speichern') ?>
+                    <?= lang('action.save') ?>
                 </button>
 
                 <a class="btn light large" href="<?= ROOTPATH ?>/admin/persons">
                     <i class="ph ph-x"></i>
-                    <?= lang('Cancel', 'Abbrechen') ?>
+                    <?= lang('action.cancel') ?>
                 </a>
 
             </div>
@@ -469,7 +469,7 @@ $persons = $osiris->adminPersons->find();
                 <div class="title"><?= lang('Features', 'Funktionen') ?></div>
 
                 <a href="#general"><?= lang('General settings', 'Allgemeine Einstellungen') ?></a>
-                <a href="#datafields"><?= lang('Data fields', 'Datenfelder') ?></a>
+                <a href="#datafields"><?= lang('common.data_fields') ?></a>
                 <a href="#positions"><?= lang('Possible Positions', 'Mögliche Positionen') ?></a>
                 <a href="#keywords"><?= lang('Keywords', 'Schlagwörter') ?></a>
             </div>

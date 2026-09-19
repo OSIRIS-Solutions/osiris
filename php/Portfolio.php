@@ -34,7 +34,7 @@ class Portfolio extends Settings
         // basepath for links depends on portfolio settings
         if ($this->preview) {
             $this->basepath = ROOTPATH . '/preview';
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         } else {
             $this->basepath = $this->get('portfolio_url', ROOTPATH . '/');
             if (substr($this->basepath, -1) === '/') {
@@ -316,7 +316,7 @@ class Portfolio extends Settings
         // Home
         if ($usecase === 'portfolio') {
             $items[] = [
-                'name' => lang('Research', 'Forschung'),
+                'name' => lang('common.research'),
                 'path' => $base . '/',
             ];
         } else if ($usecase === 'portal') {
@@ -328,7 +328,7 @@ class Portfolio extends Settings
             switch ($type) {
                 case 'activity':
                     $breadcrumb = [
-                        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+                        ['name' => lang('common.activities'), 'path' => "/activities"],
                         ['name' => $name, 'path' => "/activities/view/$id"],
                     ];
                     break;
@@ -342,27 +342,27 @@ class Portfolio extends Settings
 
                 case 'project':
                     $breadcrumb = [
-                        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+                        ['name' => lang('common.projects'), 'path' => "/projects"],
                         ['name' => $name, 'path' => "/projects/view/$id"],
                     ];
                     break;
 
                 case 'unit':
                     $breadcrumb = [
-                        ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
+                        ['name' => lang('common.units'), 'path' => "/groups"],
                         ['name' => $name, 'path' => "/groups/view/$id"],
                     ];
                     break;
                 case 'infrastructure':
                     $breadcrumb = [
-                        ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/infrastructures"],
+                        ['name' => lang('common.infrastructures'), 'path' => "/infrastructures"],
                         ['name' => $name, 'path' => "/infrastructures/view/$id"],
                     ];
                     break;
                 default:
                     break;
             }
-            $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
+            $breadcrumb[] = ['name' => lang('common.preview')];
             return $breadcrumb;
         }
         // Type-specific
@@ -371,7 +371,7 @@ class Portfolio extends Settings
                 if ($data['type'] == 'publication') {
                     $items[] = ['name' => lang('All Publications', "Alle Publikationen"), 'path' => $base . "/publications"];
                 } else {
-                    $items[] = ['name' => lang('All Activities', "Alle Aktivitäten"), 'path' => $base . "/activities"];
+                    $items[] = ['name' => lang('common.all_activities'), 'path' => $base . "/activities"];
                 }
                 $items[] = ['name' => $name, 'path' => $base . "/activities/view/$id"];
                 break;
@@ -387,7 +387,7 @@ class Portfolio extends Settings
                 break;
 
             case 'unit':
-                // $items[] = ['name' => lang('Units', 'Einheiten'), 'path' => $base."/groups"];
+                // $items[] = ['name' => lang('common.units'), 'path' => $base."/groups"];
                 $items[] = ['name' => $name, 'path' => $base . "/groups/view/$id"];
                 break;
 

@@ -30,7 +30,7 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     }
 
     // Call Portfolio API to get entity details
-    $data = $Portfolio->fetch_entity($type, $id, '', lang('en', 'de'));
+    $data = $Portfolio->fetch_entity($type, $id, '', lang('common.this_language'));
 
     // display correct breadcrumb
     $breadcrumb = $Portfolio->getBreadCrumb($type, $data, $base, $section);
@@ -95,11 +95,11 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
     ];
     switch ($pagename) {
         case 'activities':
-            $breadcrumb[] = ['name' => lang('Activities', "Aktivitäten"), 'path' => "/$section/activities"];
+            $breadcrumb[] = ['name' => lang('common.activities'), 'path' => "/$section/activities"];
             break;
 
         case 'publications':
-            $breadcrumb[] = ['name' => lang('Publications', 'Publikationen'), 'path' => "/$section/publications"];
+            $breadcrumb[] = ['name' => lang('common.publications'), 'path' => "/$section/publications"];
             break;
 
         case 'persons':
@@ -107,15 +107,15 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
             break;
 
         case 'projects':
-            $breadcrumb[] = ['name' => lang('Projects', 'Projekte'), 'path' => "/$section/projects"];
+            $breadcrumb[] = ['name' => lang('common.projects'), 'path' => "/$section/projects"];
             break;
 
         case 'units':
-            $breadcrumb[] = ['name' => lang('Units', 'Einheiten'), 'path' => "/$section/groups"];
+            $breadcrumb[] = ['name' => lang('common.units'), 'path' => "/$section/groups"];
             break;
 
         case 'infrastructures':
-            $breadcrumb[] = ['name' => lang('Infrastructures', 'Infrastrukturen'), 'path' => "/$section/infrastructures"];
+            $breadcrumb[] = ['name' => lang('common.infrastructures'), 'path' => "/$section/infrastructures"];
             break;
     }
 
@@ -308,7 +308,7 @@ Route::get('/portfolio-index', function () {
 //     switch ($type) {
 //         case 'activities':
 //             $breadcrumb = [
-//                 ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+//                 ['name' => lang('common.activities'), 'path' => "/activities"],
 //             ];
 //             break;
 
@@ -320,20 +320,20 @@ Route::get('/portfolio-index', function () {
 
 //         case 'projects':
 //             $breadcrumb = [
-//                 ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+//                 ['name' => lang('common.projects'), 'path' => "/projects"],
 //             ];
 //             break;
 
 //         case 'groups':
 //             $breadcrumb = [
-//                 ['name' => lang('Units', 'Einheiten'), 'path' => "/groups"],
+//                 ['name' => lang('common.units'), 'path' => "/groups"],
 //             ];
 //             break;
 //         default:
 //             # code...
 //             break;
 //     }
-//     $breadcrumb[] = ['name' => lang("Preview", "Vorschau")];
+//     $breadcrumb[] = ['name' => lang('common.preview')];
 
 //     // important: NO database connection
 //     include BASEPATH . "/header.php";

@@ -29,7 +29,7 @@ Route::get('/journals?/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journals"],
-        ['name' => lang('Statistics', 'Statistiken')]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/statistics.php";
@@ -80,7 +80,7 @@ Route::get('/journal/add', function () {
     $data = [];
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
-        ['name' => lang("Add", "Hinzufügen")]
+        ['name' => lang('action.add')]
     ];
 
     include BASEPATH . "/header.php";
@@ -101,7 +101,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -341,7 +341,7 @@ Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
 
 Route::post('/crud/journal/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->journals;
 
     $values = validateValues($_POST['values'], $DB);

@@ -53,10 +53,10 @@
                         <?= lang('ID') ?>
                     </th>
                     <th>
-                        <?= lang('Value', "Wert") ?> (EN)
+                        <?= lang('common.value') ?> (EN)
                     </th>
                     <th>
-                        <?= lang('Value', "Wert") ?> (DE)
+                        <?= lang('common.value') ?> (DE)
                     </th>
                     <th>
                         <?= lang('Inactive', 'Inaktiv') ?>
@@ -111,7 +111,7 @@
 
         <button type="submit" class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
     </form>
 </div>
@@ -146,7 +146,7 @@
         </td>
         <td>
             <button type="button" class="btn small outline" onclick="this.closest('tr').remove()">
-                <i class="ph ph-trash" title="<?= lang('Remove', 'Entfernen') ?>"></i>
+                <i class="ph ph-trash" title="<?= lang('action.remove') ?>"></i>
             </button>
         </td>
     `;

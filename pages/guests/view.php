@@ -32,7 +32,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             <a href="<?= ROOTPATH ?>/profile/<?= $form['cancelled_by'] ?? '' ?>">
                 <?= $DB->getNameFromId($form['cancelled_by'] ?? '') ?>
             </a>
-            <?= lang('on', 'am') ?>
+            <?= lang('common.on') ?>
             <?= format_date($form['cancelled_date' ?? '']) ?>.
         </p>
     </div>
@@ -85,7 +85,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             <div class="dropdown-menu p-10" aria-labelledby="dropdownMenuButton">
                 <form action="<?= ROOTPATH ?>/guests/update/<?= $id ?>" method="post">
                 <div class="form-group">
-                <label for="end"><?=lang('End date', 'Neues End-Datum')?></label>
+                <label for="end"><?=lang('New end date', 'Neues End-Datum')?></label>
                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($form['end'] ?? null) ?>" required>
                 </div>
                     <button class="btn secondary small" type="submit">
@@ -162,19 +162,19 @@ require_once BASEPATH . "/vendor/autoload.php";
             <table class="table simple">
 
                 <tr>
-                    <th class="w-300"><?= lang('Title', 'Titel') ?></th>
+                    <th class="w-300"><?= lang('common.title') ?></th>
                     <td>
                         <?= $form['guest']['academic_title'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('First name', 'Vorname') ?></th>
+                    <th class="w-300"><?= lang('common.name_first') ?></th>
                     <td>
                         <?= $form['guest']['first'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Last name', 'Nachname') ?></th>
+                    <th class="w-300"><?= lang('common.name_last') ?></th>
                     <td>
                         <?= $form['guest']['last'] ?? '-' ?>
                     </td>
@@ -186,7 +186,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Telephone', 'Telefon') ?></th>
+                    <th class="w-300"><?= lang('common.telephone') ?></th>
                     <td>
                         <?= $form['guest']['phone'] ?? '-' ?>
                     </td>
@@ -216,7 +216,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Country', 'Land') ?></th>
+                    <th class="w-300"><?= lang('common.country') ?></th>
                     <td>
                         <?= $form['affiliation']['country'] ?? '-' ?>
                     </td>
@@ -238,7 +238,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Title', 'Titel') ?></th>
+                    <th class="w-300"><?= lang('common.title') ?></th>
                     <td>
                         <?= $form['title'] ?? '-' ?>
                     </td>
@@ -389,7 +389,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     <form action="<?= ROOTPATH ?>/guests/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                         <div class="custom-file mb-20" id="file-input-div" >
-                            <input type="file" id="file-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                            <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
                             <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
                             <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
@@ -491,7 +491,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                             </label>
                             <input type="date" class="form-control" id="registered" name="values[chip][end]" autocomplete="off" value="<?= $chip['end'] ?? '' ?>">
                         </div>
-                        <button type="submit" class="btn secondary"><?= lang('Register', 'Registrieren') ?></button>
+                        <button type="submit" class="btn secondary"><?= lang('common.register') ?></button>
                     </form>
                 </div>
             </div>

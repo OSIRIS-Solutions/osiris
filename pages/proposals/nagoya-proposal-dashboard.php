@@ -284,7 +284,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
             <?php foreach ($openCountries as $c): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
                     </div>
                     <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                 </li>
@@ -318,7 +318,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
             ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
                         <div class="small text-muted">
                             <?= $numGroups ?>
                             <?= lang('Sample collection(s)', 'Probensammlung(en)') ?>
@@ -367,7 +367,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
             <?php foreach ($nonAbsCountries as $c): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
                     </div>
                     <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                 </li>

@@ -11,7 +11,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
 <h2>
     <i class="ph-duotone ph-handshake"></i>
-    <?= lang('Collaborators', 'Kooperationspartner') ?>
+    <?= lang('common.collaborators') ?>
 </h2>
 
 
@@ -54,7 +54,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         <option value="nonprofit"><?= lang('Non-profit', 'Gemeinnützig') ?></option>
                         <option value="government"><?= lang('Government', 'Regierung') ?></option>
                         <option value="facility"><?= lang('Facility', 'Einrichtung') ?></option>
-                        <option value="other"><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other"><?= lang('common.other') ?></option>
                     </select>
                 </div>
 
@@ -70,11 +70,11 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
                     <div class="col-sm">
                         <label for="country" class="required">
-                            <?= lang('Country', 'Land') ?>
+                            <?= lang('common.country') ?>
                         </label>
                         <select id="org-country" class="form-control" required>
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
-                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                            <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
                             <?php } ?>
                         </select>
@@ -108,7 +108,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                     </small>
                 </fieldset>
                 <br><br>
-                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('Save', 'Speichern') ?></button>
+                <button type="button" class="btn secondary" onclick="addOrganization()"><?= lang('action.save') ?></button>
 
             </div>
         </div>
@@ -217,8 +217,8 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
     <table class="table">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
-                <th><label class="required" for="lead"><?= lang('Role', 'Rolle') ?></label></th>
+                <th><?= lang('common.name') ?></th>
+                <th><label class="required" for="lead"><?= lang('common.role') ?></label></th>
                 <th></th>
             </tr>
         </thead>

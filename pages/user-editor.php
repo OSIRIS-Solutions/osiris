@@ -97,12 +97,12 @@ $active = function ($field) use ($data_fields) {
 
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
-        <?= lang('Organisation', 'Organisation') ?>
+        <?= lang('common.organization') ?>
     </a>
 
     <a onclick="navigate('research')" id="btn-research" class="btn">
         <i class="ph ph-flask" aria-hidden="true"></i>
-        <?= lang('Research', 'Forschung') ?>
+        <?= lang('common.research') ?>
     </a>
 
     <a onclick="navigate('biography')" id="btn-biography" class="btn">
@@ -151,14 +151,14 @@ $active = function ($field) use ($data_fields) {
                 } ?>
             </div>
             <div class="col-sm">
-                <label for="first"><?= lang('First name', 'Vorname') ?></label>
+                <label for="first"><?= lang('common.name_first') ?></label>
                 <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('first', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
             </div>
             <div class="col-sm">
-                <label for="last"><?= lang('Last name', 'Nachname') ?></label>
+                <label for="last"><?= lang('common.name_last') ?></label>
                 <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('last', $ldap_fields)) {
                     echo $ldap_msg;
@@ -200,26 +200,26 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('gender')) { ?>
             <div class="form-group">
-                <span><?= lang('Gender', 'Geschlecht') ?>:</span><br>
+                <span><?= lang('common.gender') ?>:</span><br>
                 <?php
                 $gender = $data['gender'] ?? 'n';
                 ?>
 
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                    <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+                    <label for="gender-m"><?= lang('common.gender_male') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                    <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+                    <label for="gender-f"><?= lang('common.gender_female') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                    <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+                    <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                    <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+                    <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
                 </div>
 
             </div>
@@ -245,7 +245,7 @@ $active = function ($field) use ($data_fields) {
         <!-- internal_id -->
         <?php if ($active('internal_id')) { ?>
             <div class="form-group">
-                <label for="internal_id"><?= lang('Internal ID', 'Interne ID') ?></label>
+                <label for="internal_id"><?= lang('common.internal_id') ?></label>
                 <input type="text" name="values[internal_id]" id="internal_id" class="form-control w-auto" value="<?= $data['internal_id'] ?? '' ?>" <?= in_array('internal_id', $ldap_fields) ? 'disabled' : '' ?>>
                 <?php if (in_array('internal_id', $ldap_fields)) {
                     echo $ldap_msg;
@@ -358,13 +358,13 @@ $active = function ($field) use ($data_fields) {
                 <thead>
                     <tr>
                         <th>
-                            <?= lang('Unit', 'Einheit') ?>
+                            <?= lang('common.unit') ?>
                         </th>
                         <th>
-                            <?= lang('Start', 'Start') ?>
+                            <?= lang('common.start') ?>
                         </th>
                         <th>
-                            <?= lang('End', 'Ende') ?>
+                            <?= lang('common.end') ?>
                         </th>
                     </tr>
                 </thead>
@@ -374,7 +374,7 @@ $active = function ($field) use ($data_fields) {
                     ?>
                         <tr data-id="<?= $dept['id'] ?>">
                             <td><?= $d ?></td>
-                            <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('unknown', 'unbekannt') . '</em>' ?></td>
+                            <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('common.unknown') . '</em>' ?></td>
                             <td><?= $dept['end'] ?? '<em class="text-success">' . lang('current', 'laufend') . '</em>' ?></td>
                         </tr>
                     <?php } ?>
@@ -506,7 +506,7 @@ $active = function ($field) use ($data_fields) {
         <div class="form-row row-eq-spacing">
             <?php if ($active('telephone')) { ?>
                 <div class="col-sm-6">
-                    <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+                    <label for="telephone"><?= lang('common.telephone') ?></label>
                     <input type="tel" name="values[telephone]" id="telephone" class="form-control need-validation" data-validator="telephone" value="<?= $data['telephone'] ?? '' ?>" <?= in_array('telephone', $ldap_fields) ? 'disabled' : '' ?> onblur="validateTelephone(this)">
                     <?php if (in_array('telephone', $ldap_fields)) {
                         echo $ldap_msg;
@@ -638,7 +638,7 @@ $active = function ($field) use ($data_fields) {
                                     <?= ucfirst($t) ?>
                                 </span>
                             </div>
-                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('common.url') ?>">
                             <div class="input-group-append">
                                 <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
                             </div>
@@ -864,7 +864,7 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($Settings->hasPermission('user.roles')) { ?>
 
-            <h5><?= lang('Roles', 'Rollen') ?></h5>
+            <h5><?= lang('common.roles') ?></h5>
             <!-- ensure that empty roles are saved too -->
             <input type="hidden" name="values[roles][]" value="">
             <?php
@@ -1283,7 +1283,7 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('research')) { ?>
             <h2 class="title">
-                <?= lang('Research interest', 'Forschungsinteressen') ?>
+                <?= lang('common.research_interests') ?>
             </h2>
 
             <!-- ensure to save empty research interests -->
@@ -1406,7 +1406,7 @@ $active = function ($field) use ($data_fields) {
                         <div class="alert mb-10">
                             <div class="input-group my-10">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('From', 'Von') ?>*</span>
+                                    <span class="input-group-text"><?= lang('common.from') ?>*</span>
                                 </div>
                                 <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                                 <div class="input-group-prepend">
@@ -1452,7 +1452,7 @@ $active = function ($field) use ($data_fields) {
             <div class="alert mb-10">
                     <div class="input-group my-10">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">${lang('From', 'Von')}*</span>
+                            <span class="input-group-text">${lang('common.from')}*</span>
                         </div>
                         <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
                         <div class="input-group-prepend">

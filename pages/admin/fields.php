@@ -23,7 +23,7 @@ $fields = $osiris->adminFields->find()->toArray();
 
     <h1>
         <i class="ph-duotone ph-textbox"></i>
-        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+        <?= lang('common.custom_fields') ?>
     </h1>
 
     <div class="btn-toolbar">
@@ -56,7 +56,7 @@ $fields = $osiris->adminFields->find()->toArray();
                     </td>
                     <td>
                         <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>" class="">
-                            <i class="ph ph-pencil" aria-label="<?= lang('Edit', 'Bearbeiten') ?>"></i>   
+                            <i class="ph ph-pencil" aria-label="<?= lang('action.edit') ?>"></i>   
                         </a>
                     </td>
                 </tr>

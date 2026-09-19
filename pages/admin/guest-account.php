@@ -58,11 +58,11 @@ if (empty($accounts)) {
         <thead>
             <tr>
                 <th><?= lang('Username', 'Benutzername') ?></th>
-                <th><?= lang('First name', 'Vorname') ?></th>
-                <th><?= lang('Last name', 'Nachname') ?></th>
+                <th><?= lang('common.name_first') ?></th>
+                <th><?= lang('common.name_last') ?></th>
                 <th><?= lang('Mail', 'E-Mail') ?></th>
                 <th><?= lang('Valid until', 'Gültig bis') ?></th>
-                <th class="w-100"><?= lang('Actions', 'Aktionen') ?></th>
+                <th class="w-100"><?= lang('common.actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -99,7 +99,7 @@ if (empty($accounts)) {
                                     </div>
                                     <button type="submit" class="btn primary mt-10">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('Save', 'Speichern') ?>
+                                        <?= lang('action.save') ?>
                                     </button>
                                 </form>
                             </div>
@@ -134,7 +134,7 @@ if (empty($accounts)) {
                                         <b><?= lang('Note:', 'Anmerkung:') ?></b>
                                         <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP. Otherwise, it will appear as removed in the LDAP synchronization, thus being deactivated by default. The "guest account" flag will also be removed.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden. Andernfalls erscheint er bei der LDAP-Synchronisation als entfernt und wird somit standardmäßig deaktiviert. Der Flag "Gästeaccount" wird ebenfalls entfern.') ?>
                                     </small><br>
-                                    <button type="submit" class="btn danger" title="<?= lang('Delete', 'Löschen') ?>">
+                                    <button type="submit" class="btn danger" title="<?= lang('action.delete') ?>">
                                         <i class="ph ph-trash"></i>
                                         <?= lang('Delete account', 'Account löschen') ?>
                                     </button>

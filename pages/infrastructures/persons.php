@@ -38,13 +38,13 @@ $end = $form['end_date'] ?? '';
         <thead>
             <tr>
                 <th>
-                    <?= lang('Person', 'Person') ?><br>
+                    <?= lang('common.person') ?><br>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-A
                     </span>
                 </th>
                 <th>
-                    <?= lang('Role', 'Rolle') ?>
+                    <?= lang('common.role') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-E
                     </span>
@@ -56,13 +56,13 @@ $end = $form['end_date'] ?? '';
                     </span>
                 </th>
                 <th>
-                    <?= lang('Start', 'Start') ?>
+                    <?= lang('common.start') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-B
                     </span>
                 </th>
                 <th>
-                    <?= lang('End', 'Ende') ?>
+                    <?= lang('common.end') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-C
                     </span>
@@ -109,8 +109,8 @@ $end = $form['end_date'] ?? '';
                         $reporter = $con['reporter'] ?? 0;
                         ?>
                         <select name="persons[<?= $i ?>][reporter]" id="persons-<?= $i ?>-reporter" class="form-control" required>
-                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('No', 'Nein') ?></option>
-                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('Yes', 'Ja') ?></option>
+                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('common.no') ?></option>
+                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('common.yes') ?></option>
                         </select>
                     </td>
                     <td>
@@ -135,7 +135,7 @@ $end = $form['end_date'] ?? '';
     <br>
     <button class="btn primary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('Submit', 'Bestätigen') ?>
+        <?= lang('action.submit') ?>
     </button>
 </form>
 

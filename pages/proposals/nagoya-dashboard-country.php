@@ -29,7 +29,7 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-clipboard-text"></i>
-                <?= lang('Projects', 'Projekte') ?>
+                <?= lang('common.projects') ?>
             </h3>
             <p class="mb-5">
                 <span class="badge"><?= $projectCount ?></span>
@@ -123,7 +123,7 @@ $projectCount = count($projectsForCountry);
                 <table class="table" id="nagoya-projects-overview-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Project', 'Projekt') ?></th>
+                            <th><?= lang('common.project') ?></th>
                             <th><?= lang('Label', 'Label') ?></th>
                             <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
                             <th><?= lang('Permits', 'Genehmigungen') ?></th>
@@ -209,9 +209,9 @@ $projectCount = count($projectsForCountry);
             <table class="table table-sm font-size-12" id="nagoya-permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Project', 'Projekt') ?></th>
+                        <th><?= lang('common.project') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
-                        <th><?= lang('Status', 'Status') ?></th>
+                        <th><?= lang('common.status') ?></th>
                         <th><?= lang('Docs', 'Dokumente') ?></th>
                         <th><?= lang('ABS check', 'ABS-Prüfung') ?></th>
                     </tr>
@@ -241,10 +241,10 @@ $projectCount = count($projectsForCountry);
                                 $statusLabel = lang('Granted', 'Erteilt');
                                 $statusClass = 'badge tiny success';
                             } elseif ($status === 'not-applicable') {
-                                $statusLabel = lang('Not applicable', 'Nicht zutreffend');
+                                $statusLabel = lang('common.not_applicable');
                                 $statusClass = 'badge tiny muted';
                             } else {
-                                $statusLabel = lang('Unknown', 'Unbekannt');
+                                $statusLabel = lang('common.unknown');
                                 $statusClass = 'badge tiny muted';
                             }
                     ?>

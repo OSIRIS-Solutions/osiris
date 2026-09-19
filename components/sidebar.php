@@ -15,14 +15,14 @@ $cart = readCart();
         <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && $Settings->get('auth-self-registration', true)) { ?>
             <a href="<?= ROOTPATH ?>/auth/new-user" class="with-icon <?= $pageactive('auth/new-user') ?>">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('Register', 'Registrieren') ?>
+                <?= lang('common.register') ?>
             </a>
         <?php } ?>
 
         <?php if ($Settings->featureEnabled('portal-public')) { ?>
             <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
                 <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
-                <?= lang('Go to portal', 'Zum Portal') ?>
+                <?= lang('navigation.go_to_portal') ?>
             </a>
         <?php } ?>
 
@@ -131,7 +131,7 @@ $cart = readCart();
                 <?php if ($Settings->hasPermission('conferences.edit') && $Settings->featureEnabled('events', true)) { ?>
                     <a href="<?= ROOTPATH ?>/conferences/new">
                         <i class="ph ph-calendar-plus"></i>
-                        <?= lang('Add event', 'Event hinzufügen') ?>
+                        <?= lang('action.add_event') ?>
                     </a>
                 <?php } ?>
                 <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) {

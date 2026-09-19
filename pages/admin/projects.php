@@ -29,7 +29,7 @@
 
     <a class="btn" href="<?= ROOTPATH ?>/admin/vocabulary">
         <i class="ph ph-list"></i>
-        <?= lang('Vocabulary', 'Vokabular') ?>
+        <?= lang('common.vocabulary') ?>
     </a>
 </div>
 

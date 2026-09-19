@@ -45,7 +45,7 @@ var gantt = new Gantt("#gantt", tasks, {
     padding: 18,
     view_mode: 'Day',
     date_format: 'YYYY-MM-DD',
-    language: lang('en', 'de'), // or 'es', 'it', 'ru', 'ptBr', 'fr', 'tr', 'zh', 'de', 'hu'
+    language: lang('common.this_language'), // or 'es', 'it', 'ru', 'ptBr', 'fr', 'tr', 'zh', 'de', 'hu'
     popup: null,
 });
 gantt.change_view_mode('Week')

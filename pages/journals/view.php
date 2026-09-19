@@ -91,11 +91,11 @@ $if_label = $Settings->impactLabel();
         <td>
             <?php
             if (!($data['oa'] ?? false)) {
-                echo lang('No', 'Nein');
+                echo lang('common.no');
             } elseif ($data['oa'] > 1900) {
                 echo lang('since ', 'seit ') . $data['oa'];
             } else {
-                echo lang('Yes', 'Ja');
+                echo lang('common.yes');
             }
             ?>
         </td>
@@ -175,11 +175,11 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
                     <div id="category-form">
                         <?php if (empty($categories)) { ?>
-                            <input type="text" class="form-control" name="values[categories][]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list">
+                            <input type="text" class="form-control" name="values[categories][]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list">
                         <?php } else { ?>
                             <?php foreach ($categories as $cat) { ?>
                                 <div class="input-group mb-10">
-                                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list" value="<?= $cat['name'] ?? $cat ?>">
+                                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list" value="<?= $cat['name'] ?? $cat ?>">
                                     <div class="input-group-append">
                                         <button type="button" class="btn" onclick="$(this).closest('.input-group').remove()"><i class="ph ph-trash"></i></button>
                                     </div>
@@ -189,7 +189,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                     </div>
                     <button type="button" class="btn" id="add-category" onclick="addCategory()"><i class="ph ph-plus"></i></button>
                     <br><br>
-                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('Save', 'Speichern') ?></button>
+                    <button class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('action.save') ?></button>
                 </form>
                 <datalist id="categories-list">
                     <?php foreach ($osiris->journals->distinct('categories.name') as $cat) { ?>
@@ -200,7 +200,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 <script>
                     function addCategory() {
                         var input = `<div class="input-group mb-10">
-                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('Category', 'Kategorie') ?>" required list="categories-list">
+                    <input type="text" class="form-control" name="values[categories][][name]" id="categories" placeholder="<?= lang('common.category') ?>" required list="categories-list">
                     <div class="input-group-append">
                         <button type="button" class="btn" onclick="$(this).closest('.input-group').remove()"><i class="ph ph-trash"></i></button>
                     </div>
@@ -224,7 +224,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="publication-table">
     <thead>
-        <th><?= lang('Year', 'Jahr') ?></th>
+        <th><?= lang('common.year') ?></th>
         <th><?= lang('Publication', 'Publikation') ?></th>
         <th>Link</th>
     </thead>
@@ -283,7 +283,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 <table class="table" id="activity-table">
     <thead>
-        <th><?= lang('Activity', 'Aktivität') ?></th
+        <th><?= lang('common.activity') ?></th
             </thead>
     <tbody>
     </tbody>
@@ -368,7 +368,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <div class="form-row">
-                                <label for="year"><?= lang('Year', 'Jahr') ?></label>
+                                <label for="year"><?= lang('common.year') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
@@ -481,7 +481,7 @@ foreach ($metrics as $metric) {
                         <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <div class="form-row">
-                                <label for="year"><?= lang('Year', 'Jahr') ?></label>
+                                <label for="year"><?= lang('common.year') ?></label>
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
@@ -604,7 +604,7 @@ foreach ($metrics as $metric) {
     } else { ?>
         <table class="table small">
             <thead>
-                <th><?= lang('Year', 'Jahr') ?></th>
+                <th><?= lang('common.year') ?></th>
                 <th>SJR</th>
                 <th>IF (2Y)</th>
                 <th>IF (3Y)</th>

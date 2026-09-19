@@ -58,7 +58,7 @@ if (!$new_project) {
             }
             if (isset($form['end_proposed'])) {
                 $form['end'] = $form['end_proposed'];
-                $prefilled[] = lang('End', 'Ende');
+                $prefilled[] = lang('common.end');
             }
             if (isset($form['grant_sum_proposed'])) {
                 $form['grant_sum'] = $form['grant_sum_proposed'];
@@ -252,9 +252,9 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <span class="badge signal"><?= lang('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
-            <span class="badge success"><?= lang('Approved', 'Bewilligt') ?></span>
+            <span class="badge success"><?= lang('projects.approved') ?></span>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
                 <?= lang('After saving, you will no longer be able to change the status or update the original application information.', 'Nach dem Speichern wirst du nicht mehr in der Lage sein, den Status zu ändern oder die Antragsinformationen des vorherigen Status zu aktualisieren.') ?>
@@ -267,12 +267,12 @@ if ($is_subproject) {
             }
         ?>
             <?= lang('Status change', 'Statusänderung') ?>:
-            <span class="badge signal"><?= lang('Proposed', 'Beantragt') ?></span>
+            <span class="badge signal"><?= lang('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
             <?php if ($phase == 'rejected') { ?>
-                <span class="badge danger"><?= lang('Rejected', 'Abgelehnt') ?></span>
+                <span class="badge danger"><?= lang('projects.rejected') ?></span>
             <?php } else if ($phase == 'withdrawn') { ?>
-                <span class="badge muted"><?= lang('Withdrawn', 'Zurückgezogen') ?></span>
+                <span class="badge muted"><?= lang('projects.withdrawn') ?></span>
             <?php } ?>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
@@ -365,7 +365,7 @@ if ($is_subproject) {
                 <div class="form-group floating-form">
                     <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment" <?= $req('comment') ?>><?= val('comment') ?></textarea>
                     <label for="comment <?= $req('comment') ?>">
-                        <?= lang('Comment', 'Kommentar') ?>
+                        <?= lang('common.comment') ?>
                     </label>
                 </div>
             <?php } ?>
@@ -413,7 +413,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('title', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="title" class="required floating-title">
                                 <?= lang('Full title of the project', 'Voller Titel des Projekts') ?>
                             </label>
@@ -433,7 +433,7 @@ if ($is_subproject) {
                 <?php } ?>
                 <?php if (array_key_exists('title_de', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="title_de" class="floating-title <?= $req('title_de') ?>">
                                 <?= lang('Full title of the project (German)', 'Voller Titel des Projekts (Deutsch)') ?>
                             </label>
@@ -581,7 +581,7 @@ if ($is_subproject) {
                         <input type="text" class="form-control" name="values[internal_number]" id="internal_number" value="<?= val('internal_number') ?>" placeholder="1234" <?= $req('internal_number') ?>>
 
                         <label for="internal_number" class="<?= $req('internal_number') ?>">
-                            <?= lang('Internal ID', 'Interne ID') ?>
+                            <?= lang('common.internal_id') ?>
                         </label>
                     </div>
                 <?php } ?>
@@ -593,7 +593,7 @@ if ($is_subproject) {
 
             <?php if (array_intersect(['scholar', 'supervisor', 'applicants'], $field_keys)) { ?>
                 <h5>
-                    <?= lang('Persons', 'Personen') ?>
+                    <?= lang('common.persons') ?>
                 </h5>
 
                 <?php if (array_key_exists('applicants', $fields)) { ?>
@@ -717,7 +717,7 @@ if ($is_subproject) {
 
                         <div id="scholarship-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
@@ -740,7 +740,7 @@ if ($is_subproject) {
                                 </a>
                                 <label for="scholarship-search"><?= lang('Search scholarship institutions', 'Suche nach Stipediengeber') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="scholarship-search" onkeydown="selectOrgEvent(event, 'scholarship')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="scholarship-search" onkeydown="selectOrgEvent(event, 'scholarship')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'scholarship')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -752,15 +752,17 @@ if ($is_subproject) {
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                 <p>
-                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                    <?php } else { ?>
-                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                        </a>
-                                    <?php } ?>
+                                    <?php 
+                                    if ($Settings->hasPermission('organizations.edit')) {
+                                        lang('forms.organization_not_found_add_new', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                        ]);
+                                    } else { 
+                                        lang('forms.organization_not_found_contact', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                        ]);
+                                    } 
+                                    ?>
                                 </p>
                             </div>
                         </div>
@@ -778,14 +780,14 @@ if ($is_subproject) {
 
                         <div id="university-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
@@ -801,7 +803,7 @@ if ($is_subproject) {
                                 </a>
                                 <label for="university-search"><?= lang('Search for Partner University', 'Suche nach Partner-Universität') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="university-search" onkeydown="selectOrgEvent(event, 'university')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="university-search" onkeydown="selectOrgEvent(event, 'university')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'university')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -813,15 +815,17 @@ if ($is_subproject) {
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                  <p>
-                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                    <?php } else { ?>
-                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                            <?=lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann')?>
-                                        </a>
-                                    <?php } ?>
+                                    <?php 
+                                    if ($Settings->hasPermission('organizations.edit')) {
+                                        lang('forms.organization_not_found_add_new', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                        ]);
+                                    } else { 
+                                        lang('forms.organization_not_found_contact', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                        ]);
+                                    } 
+                                    ?>
                                 </p>
                             </div>
                         </div>
@@ -856,21 +860,21 @@ if ($is_subproject) {
                 ?>
                     <a id="funding" class="box py-5 px-10 mt-0 d-block colorless" href="#funding-org-modal">
                         <label for="funding_organization" class="floating-title <?= $req('funding_organization') ?>">
-                            <?= lang('Funding organization', 'Förderorganisation') ?>
+                            <?= lang('common.funding_organizations') ?>
                         </label>
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[funding_organization]" value="<?= $org_id ?>" <?= $req('funding_organization') ?> readonly />
 
                         <div id="funding-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
@@ -886,7 +890,7 @@ if ($is_subproject) {
                                 </a>
                                 <label for="funding-search"><?= lang('Search funding organization', 'Suche nach Förderorganisation') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="funding-search" onkeydown="selectOrgEvent(event, 'funding')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="funding-search" onkeydown="selectOrgEvent(event, 'funding')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'funding')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -898,15 +902,16 @@ if ($is_subproject) {
                                 </table>
                                 <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                  <p>
-                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                    <?php } else { ?>
-                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                            <?=lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann')?>
-                                        </a>
-                                    <?php } ?>
+                                    <?php 
+                                    if ($Settings->hasPermission('organizations.edit')) {
+                                        lang('forms.organization_not_found_add_new', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                        ]);
+                                    } else { 
+                                        lang('forms.organization_not_found_contact', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                        ]);
+                                    } ?>
                                 </p>
                             </div>
                         </div>
@@ -966,13 +971,13 @@ if ($is_subproject) {
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_yes" name="values[joint_project]" value="true" <?= val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_yes">
-                                <?= lang('Yes', 'Ja') ?>
+                                <?= lang('common.yes') ?>
                             </label>
                         </div>
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_no" name="values[joint_project]" value="false" <?= !val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_no">
-                                <?= lang('No', 'Nein') ?>
+                                <?= lang('common.no') ?>
                             </label>
                         </div>
 
@@ -1087,7 +1092,7 @@ if ($is_subproject) {
                         <div class="col floating-form">
                             <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= val('grant_sum_proposed') ?>" placeholder="112345">
                             <label for="grant_sum_proposed" class="<?= $req('grant_sum_proposed') ?>">
-                                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
+                                <?= lang('Proposed grant', 'Beantragte Fördersumme') ?> (<?= lang('common.total') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -1116,7 +1121,7 @@ if ($is_subproject) {
                         <div class="col floating-form">
                             <input type="text" step="1" class="form-control money-input" <?= $req('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= val('grant_sum') ?>" placeholder="1234">
                             <label for="grant_sum" class="<?= $req('grant_sum') ?>">
-                                <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('total', 'gesamt') ?>)
+                                <?= lang('Grant sum', 'Fördersumme') ?> (<?= lang('common.total') ?>)
                             </label>
                         </div>
                     <?php } ?>
@@ -1160,7 +1165,7 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('abstract', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="abstract" class="floating-title  <?= $req('abstract') ?>">
                                 <?= lang('Abstract', 'Kurzbeschreibung') ?>
                             </label>
@@ -1180,7 +1185,7 @@ if ($is_subproject) {
                 <?php } ?>
                 <?php if (array_key_exists('abstract_de', $fields)) { ?>
                     <div class="form-group with-icon">
-                        <div class=" lang-<?= lang('en', 'de') ?>">
+                        <div class=" lang-<?= lang('common.this_language') ?>">
                             <label for="abstract_de" class="floating-title <?= $req('abstract_de') ?>">
                                 <?= lang('Abstract (German)', 'Kurzbeschreibung (Deutsch)') ?>
                             </label>
@@ -1231,7 +1236,7 @@ if ($is_subproject) {
                 <div class="author-widget" id="author-widget">
                     <div class="author-list p-10" id="author-list">
                         <?php
-                        $lang = lang('name', 'name_de');
+                        $lang = lang('common.field_name_language');
                         foreach ($countries as $iso) { ?>
                             <div class='author'>
                                 <input type='hidden' name='values[countries][]' value='<?= $iso ?>'>
@@ -1245,7 +1250,7 @@ if ($is_subproject) {
                         <div class="input-group sm d-inline-flex w-auto">
                             <select id="add-country">
                                 <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                     <option value="<?= $iso ?>"><?= $name ?></option>
                                 <?php } ?>
                             </select>
@@ -1286,9 +1291,9 @@ if ($is_subproject) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
-                            <th><?= lang('Research', 'Forschung') ?></th>
-                            <th><?= lang('Action', 'Aktion') ?></th>
+                            <th><?= lang('common.country') ?></th>
+                            <th><?= lang('common.research') ?></th>
+                            <th><?= lang('common.action') ?></th>
                         </tr>
                     </thead>
                     <tbody id="country-list">
@@ -1298,10 +1303,10 @@ if ($is_subproject) {
                             $role = $country['role'] ?? 'both';
                         ?>
                             <tr>
-                                <td><?= $DB->getCountry($iso, lang('name', 'name_de')) ?></td>
+                                <td><?= $DB->getCountry($iso, lang('common.field_name_language')) ?></td>
                                 <td><?= $role ?></td>
                                 <td>
-                                    <a onclick="$(this).closest('tr').remove()"><?= lang('Remove', 'Entfernen') ?></a>
+                                    <a onclick="$(this).closest('tr').remove()"><?= lang('action.remove') ?></a>
                                     <input type="text" name="values[research-countries][]" value="<?= $iso ?>;<?= $role ?>" hidden>
                                 </td>
                             </tr>
@@ -1313,7 +1318,7 @@ if ($is_subproject) {
                                 <div class="input-group small d-inline-flex w-auto">
                                     <select id="add-research-country" class="form-control">
                                         <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                        <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                        <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                             <option value="<?= $iso ?>"><?= $name ?></option>
                                         <?php } ?>
                                     </select>
@@ -1345,7 +1350,7 @@ if ($is_subproject) {
                                 let tr = $('<tr>')
                                 tr.append('<td>' + el.find('option:selected').text() + '</td>')
                                 tr.append('<td>' + type + '</td>')
-                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('Remove', 'Entfernen') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('action.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
                                 $('#country-list').append(tr)
                             }
                             $(el).val('')
@@ -1424,7 +1429,7 @@ if ($is_subproject) {
                             <div class="author-widget" id="author-widget">
                                 <div class="author-list p-10" id="nagoya-countries-list">
                                     <?php
-                                    $lang = lang('name', 'name_de');
+                                    $lang = lang('common.field_name_language');
                                     foreach ($countries as $country) {
                                         $iso = $country['code'] ?? '';
                                     ?>
@@ -1440,7 +1445,7 @@ if ($is_subproject) {
                                     <div class="input-group sm d-inline-flex w-auto">
                                         <select id="add-nagoya-country">
                                             <option value="" disabled checked><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
-                                            <?php foreach ($DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                            <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                                 <option value="<?= $iso ?>"><?= $name ?></option>
                                             <?php } ?>
                                         </select>
@@ -1527,9 +1532,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= $material ? 'checked' : '' ?>>
-                                <label for="material-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="material-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= $material ? '' : 'checked' ?>>
-                                <label for="material-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="material-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= $material ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['material_details'] ?? '' ?></textarea>
@@ -1549,9 +1554,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= $personnel ? 'checked' : '' ?>>
-                                <label for="personnel-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="personnel-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= $personnel ? '' : 'checked' ?>>
-                                <label for="personnel-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="personnel-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= $personnel ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['personnel_details'] ?? '' ?></textarea>
@@ -1570,9 +1575,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= $room ? 'checked' : '' ?>>
-                                <label for="room-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="room-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= $room ? '' : 'checked' ?>>
-                                <label for="room-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="room-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= $room ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['room_details'] ?? '' ?></textarea>
@@ -1592,9 +1597,9 @@ if ($is_subproject) {
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= $other ? 'checked' : '' ?>>
-                                <label for="other-yes"><?= lang('Yes', 'Ja') ?></label>
+                                <label for="other-yes"><?= lang('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= $other ? '' : 'checked' ?>>
-                                <label for="other-no"><?= lang('No', 'Nein') ?></label>
+                                <label for="other-no"><?= lang('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= $other ? 'block' : 'none' ?>;" placeholder="Details"><?= $res['other_details'] ?? '' ?></textarea>
@@ -1613,7 +1618,7 @@ if ($is_subproject) {
 
             <br>
             <button class="btn secondary" type="button" id="submit-btn">
-                <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+                <i class="ph ph-check"></i> <?= lang('action.save') ?>
             </button>
 
             <script>

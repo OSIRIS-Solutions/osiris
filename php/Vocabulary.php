@@ -124,7 +124,7 @@ class Vocabulary extends DB
      */
     public function getValue($id, $key, $default = '')
     {
-        $lang = lang('en', 'de');
+        $lang = lang('common.this_language');
         $values = $this->getValues($id, true);
         // get value by key
         $values = array_column($values, $lang, 'id');

@@ -80,7 +80,7 @@ $all = $osiris->projects->count();
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
 </h1>
 
 
@@ -102,7 +102,7 @@ $all = $osiris->projects->count();
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
                 <h6 class="mb-0 mt-5"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
@@ -113,7 +113,7 @@ $all = $osiris->projects->count();
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
                 <h6 class="mb-0 mt-5"><?= lang('Change Reporting Date', 'Stichtag ändern') ?>:</h6>
                 <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
     </div>
@@ -130,7 +130,7 @@ $all = $osiris->projects->count();
     <p class="lead">
         <?= lang('Number of projects', 'Anzahl der Projekte') ?> <?= $phrase ?>:
         <b class="badge signal"><?= count($projects) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
     <h2>
@@ -177,8 +177,8 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="projects-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Count', 'Anzahl') ?></th>
+                <th><?= lang('common.type') ?></th>
+                <th><?= lang('common.count') ?></th>
                 <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
             </tr>
         </thead>
@@ -194,7 +194,7 @@ $all = $osiris->projects->count();
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
+                <th colspan="1"><?= lang('common.total') ?></th>
                 <th><?= count($projects) ?></th>
                 <th><?= array_sum($projects_created) ?></th>
             </tr>
@@ -259,10 +259,10 @@ $all = $osiris->projects->count();
     <table class="table w-auto" id="proposals-by-type-table">
         <thead>
             <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Submitted', 'Eingereicht') ?></th>
                 <th><?= lang('Approved', 'Genehmigt') ?></th>
-                <th><?= lang('Rejected', 'Abgelehnt') ?></th>
+                <th><?= lang('common.rejected') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -277,7 +277,7 @@ $all = $osiris->projects->count();
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
+                <th colspan="1"><?= lang('common.total') ?></th>
                 <th><?= array_sum(array_column($table, 'submitted')) ?></th>
                 <th><?= array_sum(array_column($table, 'approved')) ?></th>
                 <th><?= array_sum(array_column($table, 'rejected')) ?></th>
@@ -330,8 +330,8 @@ $all = $osiris->projects->count();
     <table class="table" id="collaborative-partners">
         <thead>
             <tr>
-                <th><?= lang('Name', 'Name') ?></th>
-                <th><?= lang('Type', 'Typ') ?></th>
+                <th><?= lang('common.name') ?></th>
+                <th><?= lang('common.type') ?></th>
                 <th><?= lang('Location', 'Standort') ?></th>
                 <th><?= lang('Number of projects', 'Anzahl der Projekte') ?></th>
             </tr>
@@ -407,7 +407,7 @@ $all = $osiris->projects->count();
             <table class="table" id="collaborative-partners-by-type">
                 <thead>
                     <tr>
-                        <th><?= lang('Type', 'Typ') ?></th>
+                        <th><?= lang('common.type') ?></th>
                         <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
                     </tr>
                 </thead>
@@ -428,7 +428,7 @@ $all = $osiris->projects->count();
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th><?= lang('Total', 'Gesamt') ?></th>
+                        <th><?= lang('common.total') ?></th>
                         <th><?= $count_collab ?></th>
                     </tr>
                 </tfoot>
@@ -524,7 +524,7 @@ $all = $osiris->projects->count();
             <table class="table" id="collaborative-partners-by-country">
                 <thead>
                     <tr>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.country') ?></th>
                         <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
                     </tr>
                 </thead>
@@ -543,7 +543,7 @@ $all = $osiris->projects->count();
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th><?= lang('Total', 'Gesamt') ?></th>
+                        <th><?= lang('common.total') ?></th>
                         <th><?= $count_collab ?></th>
                     </tr>
                 </tfoot>
@@ -695,7 +695,7 @@ $all = $osiris->projects->count();
                 <table class="table" id="research-countries-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
+                            <th><?= lang('common.country') ?></th>
                             <th><?= lang('Research in the country', 'Forschung in dem Land') ?></th>
                             <th><?= lang('Research about the country', 'Forschung über das Land') ?></th>
                         </tr>
@@ -721,7 +721,7 @@ $all = $osiris->projects->count();
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th><?= lang('Total', 'Gesamt') ?></th>
+                            <th><?= lang('common.total') ?></th>
                             <th><?= $counts_in ?></th>
                             <th><?= $counts_about ?></th>
                         </tr>

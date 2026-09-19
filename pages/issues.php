@@ -69,7 +69,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -152,7 +152,7 @@ $issues = $DB->getUserIssues($user);
                 ') ?>
             </p>
             <div class="text-right mt-20">
-                <a href="#close-modal" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#close-modal" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -236,7 +236,7 @@ if (array_sum($a) === 0) { ?>
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
                             <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
-                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('Cancel', 'Abbrechen') ?></button>
+                            <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('action.cancel') ?></button>
                         </form>
                     </div>
                 </div>
@@ -358,7 +358,7 @@ if (array_sum($a) === 0) { ?>
                                 if (isset($h['comment']) && !empty($h['comment'])) { ?>
                                     <blockquote class="alert signal without-icon">
                                         <div class="title">
-                                            <?= lang('Comment', 'Kommentar') ?>
+                                            <?= lang('common.comment') ?>
                                         </div>
                                         <?= $h['comment'] ?>
                                     </blockquote>
@@ -524,7 +524,7 @@ if (array_sum($a) === 0) { ?>
 
                                     <div class="custom-radio d-inline">
                                         <input type="radio" name="values[status]" id="status-completed-<?= $id ?>" value="completed" <?= $status == 'completed' ? 'checked' : '' ?>>
-                                        <label for="status-completed-<?= $id ?>"><?= lang('Completed', 'Abgeschlossen') ?></label>
+                                        <label for="status-completed-<?= $id ?>"><?= lang('common.completed') ?></label>
                                     </div>
 
                                     <div class="custom-radio mr-10 d-inline">
@@ -532,7 +532,7 @@ if (array_sum($a) === 0) { ?>
                                         <label for="status-aborted-<?= $id ?>"><?= lang('Aborted', 'Abgebrochen') ?></label>
                                     </div>
                                 </div>
-                                <button class="btn" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+                                <button class="btn" type="submit"><?= lang('action.submit') ?></button>
                             </form>
                         </div>
                     </td>
@@ -652,13 +652,13 @@ if (array_sum($a) === 0) { ?>
                                     <input type="date" class="form-control w-200" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? '') ?>" required>
                                     <div>
                                         <select class="form-control" id="status-<?= $id ?>" name="values[status]" required>
-                                            <option value="applied"><?= lang('applied', 'beantragt') ?></option>
-                                            <option value="approved" selected><?= lang('approved', 'bewilligt') ?></option>
-                                            <option value="rejected"><?= lang('rejected', 'abgelehnt') ?></option>
-                                            <option value="finished"><?= lang('finished', 'abgeschlossen') ?></option>
+                                            <option value="applied"><?= lang('projects.applied') ?></option>
+                                            <option value="approved" selected><?= lang('projects.approved') ?></option>
+                                            <option value="rejected"><?= lang('projects.rejected') ?></option>
+                                            <option value="finished"><?= lang('projects.finished') ?></option>
                                         </select>
                                     </div>
-                                    <button class="btn ml-10" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+                                    <button class="btn ml-10" type="submit"><?= lang('action.submit') ?></button>
                                 </form>
 
                             </div>

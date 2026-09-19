@@ -71,7 +71,7 @@ $totalProjects     = count($projects ?? []);
                             </a><br>
                             <span>
                                 <i class="ph ph-globe"></i>
-                                <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                                <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
@@ -245,7 +245,7 @@ $totalProjects     = count($projects ?? []);
     <table class="table small" id="nagoya-projects-overview-table">
         <thead>
             <tr>
-                <th><?= lang('Project', 'Projekt') ?></th>
+                <th><?= lang('common.project') ?></th>
                 <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
                 <th><?= lang('Label', 'Label') ?></th>
                 <th><?= lang('Countries (ABS)', 'Länder (ABS)') ?></th>
@@ -339,7 +339,7 @@ $totalProjects     = count($projects ?? []);
             <table class="table small" id="country-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.country') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -354,7 +354,7 @@ $totalProjects     = count($projects ?? []);
                         $projectsN = $cs['projects'] ?? 0;
                         $labels    = $cs['labels'] ?? ['A' => 0, 'B' => 0, 'C' => 0];
                         $permOpen  = $cs['permits_pending'] ?? 0;
-                        $name      = $DB->getCountry($code, lang('name', 'name_de'));
+                        $name      = $DB->getCountry($code, lang('common.field_name_language'));
                     ?>
                         <tr>
                             <td>
@@ -362,7 +362,7 @@ $totalProjects     = count($projects ?? []);
                                     <strong><?= e($name) ?></strong>
                                 </a><br>
                                 <small class="text-muted">
-                                    <?= $projectsN ?> <?= lang('projects', 'Projekte') ?>
+                                    <?= $projectsN ?> <?= lang('common.projects') ?>
                                     <?php if ($labels['A'] ?? 0): ?>
                                         · <span class="badge tiny danger">A: <?= $labels['A'] ?></span>
                                     <?php endif; ?>
@@ -432,10 +432,10 @@ $totalProjects     = count($projects ?? []);
             <table class="table small" id="permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('Project', 'Projekt') ?></th>
-                        <th><?= lang('Country', 'Land') ?></th>
+                        <th><?= lang('common.project') ?></th>
+                        <th><?= lang('common.country') ?></th>
                         <th><?= lang('Permit', 'Genehmigung') ?></th>
-                        <th><?= lang('Status', 'Status') ?></th>
+                        <th><?= lang('common.status') ?></th>
                         <th><?= lang('IRCC', 'IRCC') ?> / <?= lang('Identifier', 'Kennung') ?></th>
                     </tr>
                 </thead>
@@ -452,7 +452,7 @@ $totalProjects     = count($projects ?? []);
                             </td>
                             <td class="font-size-12">
                                 <?php
-                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('name', 'name_de'));
+                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('common.field_name_language'));
                                 ?>
                                 <i class="ph ph-globe"></i>
                                 <?= e($countryName) ?>

@@ -183,7 +183,7 @@ if ($Settings->featureEnabled('spectrum')) {
                     <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
                     <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
                 </div>
-                <button type="submit" class="btn"><?= lang('Upload', 'Hochladen') ?></button>
+                <button type="submit" class="btn"><?= lang('action.upload') ?></button>
             </form>
         </div>
     </div>
@@ -205,7 +205,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <a class="btn float-md-right mb-10" href="<?= ROOTPATH ?>/preview/topic/<?= $topic['id'] ?>">
             <i class="ph ph-eye"></i>
-            <?= lang('Preview', 'Vorschau') ?>
+            <?= lang('common.preview') ?>
         </a>
     <?php } ?>
 
@@ -227,7 +227,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('action.edit') ?>
         </a>
     <?php } ?>
 </div>
@@ -235,7 +235,7 @@ if ($Settings->featureEnabled('spectrum')) {
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
+        <?= lang('common.general') ?>
     </a>
 
     <?php
@@ -252,7 +252,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_persons > 0) { ?>
         <a onclick="navigate('persons')" id="btn-persons" class="btn  <?= $active_page == 'persons' ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Persons', 'Personen') ?>
+            <?= lang('common.persons') ?>
             <span class="index"><?= $count_persons ?></span>
         </a>
     <?php } ?>
@@ -262,7 +262,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn <?= $active_page == 'publications' ? 'active' : '' ?>">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('Publications', 'Publikationen')  ?>
+            <?= lang('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -272,7 +272,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn  <?= $active_page == 'activities' ? 'active' : '' ?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten')  ?>
+            <?= lang('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -282,7 +282,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_projects > 0) { ?>
         <a onclick="navigate('projects')" id="btn-projects" class="btn <?= $active_page == 'projects' ? 'active' : '' ?>">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
-            <?= lang('Projects', 'Projekte')  ?>
+            <?= lang('common.projects')  ?>
             <span class="index"><?= $count_projects ?></span>
         </a>
     <?php } ?>
@@ -345,7 +345,7 @@ if ($Settings->featureEnabled('spectrum')) {
     ?>
         <div class="col-md">
             <h3>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                <?= lang('common.research_spectrum') ?>
             </h3>
             <?php
             if (!empty($spectrum)) :
@@ -435,14 +435,14 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="publications" style="display: none;">
 
-    <h2><?= lang('Publications', 'Publikationen') ?></h2>
+    <h2><?= lang('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -455,7 +455,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="activities" style="display: none;">
-    <h2><?= lang('Activities', 'Aktivitäten') ?></h2>
+    <h2><?= lang('common.activities') ?></h2>
 
     <div class="btn-toolbar justify-content-between">
         <div id="event-selector"></div>
@@ -463,7 +463,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <div class="input-group-prepend">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
             </div>
-            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
+            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
             <div class="input-group-append">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
             </div>
@@ -475,8 +475,8 @@ if ($Settings->featureEnabled('spectrum')) {
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>

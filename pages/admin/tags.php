@@ -20,7 +20,7 @@
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-        <?= lang('Tags', 'Schlagwörter') ?>
+        <?= lang('common.tags') ?>
     </h1>
 
     <p>
@@ -33,7 +33,7 @@
         <!-- input for name of this keyword -->
         <div class="form-group">
             <label for="position">
-                <h5><?= lang('Label', 'Bezeichnung') ?></h5>
+                <h5><?= lang('common.label') ?></h5>
             </label>
 
             <?php

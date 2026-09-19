@@ -1,6 +1,6 @@
 <?php
 
-$pagetitle = lang('Guests', 'Gäste');
+$pagetitle = lang('common.guests');
 $filter = [];
 if (!$Settings->hasPermission('guests.view')) {
     $filter = [

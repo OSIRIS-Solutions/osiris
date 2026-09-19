@@ -643,8 +643,8 @@ function flatten(array $array)
 //     $diff = $now->diff($ago);
 
 //     $string = array(
-//         'y' => lang('year', 'Jahr'),
-//         'm' => lang('month', 'Monat'),
+//         'y' => lang('common.year'),
+//         'm' => lang('common.month'),
 //         'w' => lang('week', 'Woche'),
 //         'd' => lang('day', 'Tag'),
 //         'h' => lang('hour', 'Stunde'),
@@ -695,8 +695,8 @@ function time_elapsed_string(string $date): string
     }
 
     $units = [
-        'y' => [lang('year', 'Jahr'), lang('years', 'Jahre')],
-        'm' => [lang('month', 'Monat'), lang('months', 'Monaten')],
+        'y' => [lang('common.year'), lang('years', 'Jahre')],
+        'm' => [lang('common.month'), lang('months', 'Monaten')],
         'w' => [lang('week', 'Woche'), lang('weeks', 'Wochen')],
         'd' => [lang('day', 'Tag'), lang('days', 'Tagen')],
     ];
@@ -1102,7 +1102,7 @@ function lockedPage($id)
     $html .= lang('This activity is locked and cannot be edited or deleted due to our reporting rules. Please contact the OSIRIS editors if there are any issues.', 'Diese Aktivität ist aufgrund unserer Report-Richtlinien gesperrt und kann nicht bearbeitet oder gelöscht werden. Bitte kontaktiere die OSIRIS-Redaktion, falls dadurch irgendwelche Probleme entstehen.');
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
-    $html .= lang('Go back to activity', 'Zurück zur Aktivität');
+    $html .= lang('navigation.go_back_to_activity');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';
@@ -1134,7 +1134,7 @@ function abortwith($code, $item = '', $link = '', $linkMsg = '')
     include BASEPATH . "/header.php";
     if ($link == '') {
         $link = $_SERVER['HTTP_REFERER'] ?? '/activities';
-        $linkMsg = lang('Go back', 'Geh zurück');
+        $linkMsg = lang('navigation.go_back');
     }
     switch ($code) {
         case 403:

@@ -50,11 +50,11 @@ if ($copy && isset($form['subtype'])) {
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id']) && !$copy) {
     $formaction .= "/crud/activities/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $redirect = ROOTPATH . "/activities/view/" . $form['_id'];
 } else {
     $formaction .= "/crud/activities/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $redirect = ROOTPATH . "/activities/view/*";
 }
 if (isset($_GET['redirect']) && !empty($_GET['redirect']) && str_starts_with($_GET['redirect'], ROOTPATH)) {
@@ -167,7 +167,7 @@ function val($index, $default = '')
             <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('Add event', 'Event hinzufügen') ?></h5>
+            <h5 class="title"><?= lang('action.add_event') ?></h5>
             <div id="content" id="new-event">
 
                 <div class="form-group mb-10">
@@ -189,34 +189,34 @@ function val($index, $default = '')
                         <?php } ?>
                     </select>
                     <label for="event-type" class="required">
-                        <?= lang('Type', 'Typ') ?>
+                        <?= lang('common.type') ?>
                     </label>
                 </div>
 
                 <div class="form-row row-eq-spacing mb-10">
                     <div class="col">
-                        <label for="start" class="required"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                        <label for="start" class="required"><?= lang('common.start_date') ?></label>
                         <input type="date" id="event-start" required class="form-control" onchange="$('#event-end').val(this.value)">
                     </div>
                     <div class="col">
-                        <label for="end" class="required"><?= lang('End date', 'Enddatum') ?></label>
+                        <label for="end" class="required"><?= lang('common.end_date') ?></label>
                         <input type="date" id="event-end" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-row row-eq-spacing">
                     <div class="col">
-                        <label for="event-location" class="required"><?= lang('Location', 'Ort') ?></label>
+                        <label for="event-location" class="required"><?= lang('common.location') ?></label>
                         <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
                     </div>
                     <div class="col">
-                        <label for="event-country"><?= lang('Country', 'Land') ?></label>
+                        <label for="event-country"><?= lang('common.country') ?></label>
                         <select id="event-country" class="form-control">
                             <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                             <!-- germany first -->
                             <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
                             <?php
-                            foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                            foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
                             <?php } ?>
                         </select>
@@ -224,7 +224,7 @@ function val($index, $default = '')
                 </div>
 
                 <div class="form-group mb-10">
-                    <label for="url"><?= lang('URL', 'URL') ?></label>
+                    <label for="url"><?= lang('common.url') ?></label>
                     <input type="url" id="event-url" class="form-control">
                 </div>
 
@@ -233,7 +233,7 @@ function val($index, $default = '')
                     <label for="event-attended" class="blank"><?= lang('I have attended', 'Ich habe teilgenommen') ?></label>
                 </div>
 
-                <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('Add event', 'Event hinzufügen') ?></button>
+                <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('action.add_event') ?></button>
             </div>
         </div>
     </div>
@@ -262,7 +262,7 @@ function val($index, $default = '')
             <h5 class="modal-title">
                 <?= lang('How to edit the author list', 'Wie bearbeite ich die Autorenliste') ?>?
             </h5>
-            <?php if (lang("en", "de") == "en") { ?>
+            <?php if (lang('common.this_language') == "en") { ?>
                 <p>
                     To <b>add an author</b>, you have to enter him in the field marked "Add author ...". Please use the format <code>last name, first name</code>, so that OSIRIS can assign the authors correctly. <?= $Settings->get('affiliation') ?> authors are suggested in a list. An author from the list will be automatically assigned to <?= $Settings->get('affiliation') ?>.
                 </p>
@@ -697,7 +697,7 @@ function val($index, $default = '')
                 </div>
             <?php } else { ?>
                 <div class="form-group">
-                    <label for="comment"><?= lang('Comment', 'Kommentar') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)</label>
+                    <label for="comment"><?= lang('common.comment') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)</label>
                     <textarea name="values[comment]" id="comment" cols="30" rows="2" class="form-control"><?php if (!$copy) {
                                                                                                                 echo val('comment');
                                                                                                             } ?></textarea>

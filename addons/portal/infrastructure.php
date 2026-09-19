@@ -97,7 +97,7 @@ $name = $data['name'];
                                                 <?= $person['displayname'] ?>
                                             </a>
                                         </h5>
-                                        <?= $person['role'][lang('en', 'de')] ?? '' ?>
+                                        <?= $person['role'][lang('common.this_language')] ?? '' ?>
                                         <?php
                                         if (!empty($person['depts'])) {
                                             foreach ($person['depts'] as $d => $dept) {
@@ -126,11 +126,11 @@ $name = $data['name'];
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
+                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -283,7 +283,7 @@ $name = $data['name'];
                         <?php if (!empty($data['category'])): ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang("Category", "Kategorie"); ?></span>
+                                    <span class="key"><?= lang('common.category'); ?></span>
                                     <?= e($data['category']) ?>
                                 </td>
                             </tr>
@@ -291,7 +291,7 @@ $name = $data['name'];
                             <?php if (!empty($data['type'])): ?>
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang("Type", "Typ"); ?></span>
+                                        <span class="key"><?= lang('common.type'); ?></span>
                                         <?= e($data['type']) ?>
                                     </td>
                                 </tr>
@@ -317,7 +317,7 @@ $name = $data['name'];
                             <a href="#staff"> <?= lang('Staff', 'Mitarbeitende') ?></a>
                         <?php endif; ?>
                         <?php if (($data['n_activities'] ?? 0) > 0): ?>
-                            <a href="#activities"> <?= lang('Activities', 'Aktivitäten') ?></a>
+                            <a href="#activities"> <?= lang('common.activities') ?></a>
                         <?php endif; ?>
                         <?php if ($data['collaborative'] ?? false): ?>
                             <a href="#collaborative"> <?= lang('Collaborative Infrastructure', 'Kollaborative Infrastruktur') ?></a>

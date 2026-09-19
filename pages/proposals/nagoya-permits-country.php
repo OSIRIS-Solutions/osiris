@@ -62,7 +62,7 @@ $countryLabel = $evaluation['label'] ?? '';
 <h1 class="mb-0">
     <i class="ph-duotone ph-file-text"></i>
     <?= lang('ABS permits for', 'ABS-Genehmigungen für') ?>
-    <?= ($DB->getCountry($code, lang('name', 'name_de'))) ?>
+    <?= ($DB->getCountry($code, lang('common.field_name_language'))) ?>
 </h1>
 <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
     <i class="ph ph-arrow-left"></i>
@@ -192,17 +192,17 @@ $countryLabel = $evaluation['label'] ?? '';
 
                                 <div class="text-right small">
                                     <label class="mb-1 font-weight-bold">
-                                        <?= lang('Status', 'Status') ?>
+                                        <?= lang('common.status') ?>
                                     </label>
                                     <?php if ($canEditBasic): ?>
                                         <select
                                             name="permits[<?= e($pid) ?>][status]"
                                             class="form-control d-inline-block w-auto">
-                                            <option value="" disabled><?= lang('Status', 'Status') ?></option>
+                                            <option value="" disabled><?= lang('common.status') ?></option>
                                             <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                             <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
                                             <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
-                                            <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('Not applicable', 'Nicht zutreffend') ?></option>
+                                            <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
                                         </select>
                                     <?php else: ?>
                                         <?= Nagoya::permitStatusBadge($status) ?>
@@ -400,7 +400,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <div class="mb-5">
                                     <h5 class="mb-5">
                                         <i class="ph-duotone ph-paperclip"></i>
-                                        <?= lang('Documents', 'Dokumente') ?>
+                                        <?= lang('common.documents') ?>
                                     </h5>
                                     <?php if (!empty($docs)): ?>
                                         <table class="table table-sm mb-5">
@@ -420,7 +420,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                                                 <small class="text-muted">
                                                                     <?= lang('Uploaded by', 'Hochgeladen von') ?>
                                                                     <?= $DB->getNameFromId($doc['uploaded_by']) ?>
-                                                                    <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                                                    <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                                 </small>
                                                             </div>
                                                             <?= e($doc['description'] ?? '') ?><br>
@@ -560,12 +560,12 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                        <label class="required"><?= lang('common.doc_type') ?></label>
                     </div>
 
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>">
-                        <label><?= lang('Description', 'Beschreibung') ?></label>
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>">
+                        <label><?= lang('common.description') ?></label>
                     </div>
 
                     <!-- Kontext-Felder für Nagoya -->
@@ -603,7 +603,7 @@ $countryLabel = $evaluation['label'] ?? '';
             <input type="text" class="form-control" name="permits[**][name]" value="" placeholder="<?= lang('e.g. PIC, MAT, ABS permit…', 'z.B. PIC, MAT, ABS-Genehmigung…') ?>">
         </div>
         <div class="text-right small">
-            <label class="small mb-1"><?= lang('Status', 'Status') ?></label>
+            <label class="small mb-1"><?= lang('common.status') ?></label>
             <select name="permits[**][status]" class="form-control">
                 <option value="" disabled="">Status</option>
                 <option value="needed" selected>Erforderlich</option>

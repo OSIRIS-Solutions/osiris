@@ -33,19 +33,19 @@ $units = DB::doc2Arr($data['units'] ?? []);
     <thead>
         <tr>
             <th>
-                <?= lang('Unit', 'Einheit') ?>
+                <?= lang('common.unit') ?>
             </th>
             <th>
-                <?= lang('Start', 'Start') ?>
+                <?= lang('common.start') ?>
             </th>
             <th>
-                <?= lang('End', 'Ende') ?>
+                <?= lang('common.end') ?>
             </th>
             <th>
                 <?= lang('Scientific', 'Wissenschaftlich') ?>
             </th>
             <th class="text-center">
-                <?= lang('Actions', 'Aktionen') ?>
+                <?= lang('common.actions') ?>
             </th>
         </tr>
     </thead>
@@ -86,7 +86,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     if (isset($unit['start'])) {
                         echo format_date($unit['start']);
                     } else {
-                        echo '<em class="text-danger">' . lang('unknown', 'unbekannt') . '</em>';
+                        echo '<em class="text-danger">' . lang('common.unknown') . '</em>';
                     }
                     ?>
                 </td>
@@ -102,12 +102,12 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     <?php if ($unit['scientific']) { ?>
                         <span class="badge primary">
                             <i class="ph ph-lightning"></i>
-                            <?= lang('yes', 'ja') ?>
+                            <?= lang('common.yes') ?>
                         </span>
                     <?php } else { ?>
                         <span class="badge secondary">
                             <i class="ph ph-lightning-slash"></i>
-                            <?= lang('no', 'nein') ?>
+                            <?= lang('common.no') ?>
                         </span>
                     <?php } ?>
                 </td>
@@ -123,11 +123,11 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                 <input type="hidden" name="values[unit]" value="<?= $unit['unit'] ?>">
 
                                 <div class="form-group">
-                                    <label for="start"><?= lang('Start', 'Start') ?></label>
+                                    <label for="start"><?= lang('common.start') ?></label>
                                     <input type="date" class="form-control" id="start" name="values[start]" value="<?= $unit['start'] ?? '' ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="end"><?= lang('End', 'Ende') ?></label>
+                                    <label for="end"><?= lang('common.end') ?></label>
                                     <input type="date" class="form-control" id="end" name="values[end]" value="<?= $unit['end'] ?? '' ?>">
                                     <small class="text-muted">
                                         <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>
@@ -136,11 +136,11 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                 <div class="form-group">
                                     <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
                                     <select class="form-control" id="scientific" name="values[scientific]">
-                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('yes', 'ja') ?></option>
-                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('no', 'nein') ?></option>
+                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
+                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('common.no') ?></option>
                                     </select>
                                 </div>
-                                <button class="btn block primary" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                <button class="btn block primary" type="submit"><?= lang('action.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -214,18 +214,18 @@ function printTree($tree, $level = 0)
             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
                 <div class="form-group">
-                    <label for="unit"><?= lang('Unit', 'Einheit') ?></label>
+                    <label for="unit"><?= lang('common.unit') ?></label>
                     <select class="form-control" id="unit" name="values[unit]">
                         <option value=""><?= lang('Select unit', 'Einheit auswählen') ?></option>
                         <?php printTree($tree) ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="start"><?= lang('Start', 'Start') ?></label>
+                    <label for="start"><?= lang('common.start') ?></label>
                     <input type="date" class="form-control" id="start" name="values[start]">
                 </div>
                 <div class="form-group">
-                    <label for="end"><?= lang('End', 'Ende') ?></label>
+                    <label for="end"><?= lang('common.end') ?></label>
                     <input type="date" class="form-control" id="end" name="values[end]">
                     <small class="text-muted">
                         <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>
@@ -234,11 +234,11 @@ function printTree($tree, $level = 0)
                 <div class="form-group">
                     <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
                     <select class="form-control" id="scientific" name="values[scientific]">
-                        <option value="1"><?= lang('yes', 'ja') ?></option>
-                        <option value="0"><?= lang('no', 'nein') ?></option>
+                        <option value="1"><?= lang('common.yes') ?></option>
+                        <option value="0"><?= lang('common.no') ?></option>
                     </select>
                 </div>
-                <button class="btn primary" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                <button class="btn primary" type="submit"><?= lang('action.save') ?></button>
             </form>
             <script>
 

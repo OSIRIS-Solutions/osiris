@@ -40,11 +40,11 @@ $filesize = Settings::getMaxFileSize('16M');
                                 <option value="<?= $v['id'] ?>" <?= ($file['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                               <?php } ?>
                             </select>
-                            <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                            <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                           </div>
                           <div class="form-group">
-                            <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                            <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $file['description'] ?? '' ?></textarea>
+                            <label for="description"><?= lang('common.description') ?></label>
+                            <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                           </div>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                           <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
@@ -61,7 +61,7 @@ $filesize = Settings::getMaxFileSize('16M');
                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                           <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                          <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
                         </form>
                       </div>
                     </div>
@@ -69,7 +69,7 @@ $filesize = Settings::getMaxFileSize('16M');
                 </div>
                 <h6 class="m-0">
                   <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
                     <i class="ph ph-download"></i>
                   </a>
                 </h6>
@@ -80,7 +80,7 @@ $filesize = Settings::getMaxFileSize('16M');
                     <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                     <br>
                     <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                    <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                    <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                   </div>
                 </div>
               </td>
@@ -110,13 +110,13 @@ $filesize = Settings::getMaxFileSize('16M');
               <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
             <?php } ?>
           </select>
-          <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+          <label for="name" class="required"><?= lang('common.doc_type') ?></label>
         </div>
         <div class="form-group floating-form">
-          <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-          <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+          <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
+          <label for="description"><?= lang('common.description') ?></label>
         </div>
-        <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+        <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
       </form>
 
       <script>
@@ -131,7 +131,7 @@ $filesize = Settings::getMaxFileSize('16M');
       </script>
 
       <div class="text-right mt-20">
-        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
       </div>
     </div>
   </div>
@@ -166,7 +166,7 @@ $filesize = Settings::getMaxFileSize('16M');
 
           <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
           </button>
         </form>
       <?php } ?>
@@ -231,7 +231,7 @@ $filesize = Settings::getMaxFileSize('16M');
                         <li>
                           <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                             <i class="ph ph-trash"></i>
-                            <?= lang('Remove', 'Entfernen') ?>
+                            <?= lang('action.remove') ?>
                           </button>
                         </li>
                       </ul>
@@ -255,9 +255,9 @@ $filesize = Settings::getMaxFileSize('16M');
           <div class="modal-footer">
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
-              <?= lang('Save', 'Speichern') ?>
+              <?= lang('action.save') ?>
             </button>
-            <a href="#close-modal" class="btn" role="button"><?= lang('Cancel', 'Abbrechen') ?></a>
+            <a href="#close-modal" class="btn" role="button"><?= lang('action.cancel') ?></a>
           </div>
         </form>
 
@@ -335,7 +335,7 @@ $filesize = Settings::getMaxFileSize('16M');
               <h5 class="mt-0">${topicName}</h5>
               <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                 <i class="ph ph-trash"></i>
-                <?= lang('Remove', 'Entfernen') ?>
+                <?= lang('action.remove') ?>
               </button>
             </div>
           </div>

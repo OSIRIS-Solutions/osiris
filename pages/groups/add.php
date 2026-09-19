@@ -22,7 +22,7 @@ if (!$Settings->hasPermission('units.add')) {
 }
 
 $formaction = ROOTPATH . "/crud/groups/create";
-$btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+$btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
 $url = ROOTPATH . "/groups/edit/*";
 $title = lang('New group', 'Neue Gruppe');
 
@@ -36,7 +36,7 @@ $title = lang('New group', 'Neue Gruppe');
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <fieldset>
-        <legend><?= lang('General', 'Allgemein') ?></legend>
+        <legend><?= lang('common.general') ?></legend>
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-2">
                 <label for="id" class="required">
@@ -80,7 +80,7 @@ $title = lang('New group', 'Neue Gruppe');
 
         </div>
         <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
-            <label for="color" class=""><?= lang('Color', 'Farbe') ?></label>
+            <label for="color" class=""><?= lang('common.color') ?></label>
             <input type="color" class="form-control w-50" name="values[color]" required>
             <span><?= lang('Note that only level 1 groups can have a color.', 'Bitte beachte, dass nur Level 1-Gruppen eine eigene Farbe haben können.') ?></span>
         </div>
@@ -91,10 +91,10 @@ $title = lang('New group', 'Neue Gruppe');
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (EN)
+                        <?= lang('forms.full_name') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[name]" id="name" required>
                 </div>
@@ -102,10 +102,10 @@ $title = lang('New group', 'Neue Gruppe');
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (DE)
+                        <?= lang('forms.full_name') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[name_de]" id="name_de" required>
                 </div>
@@ -161,7 +161,7 @@ $title = lang('New group', 'Neue Gruppe');
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+        <i class="ph ph-check"></i> <?= lang('action.save') ?>
     </button>
 
     <datalist id="unit-list">

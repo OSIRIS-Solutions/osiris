@@ -133,7 +133,7 @@ $scope = $Project->getScope($collaborators);
 <?php if ($Settings->featureEnabled('portal') && ($project['public'] ?? true)) { ?>
     <a class="btn float-right" href="<?= ROOTPATH ?>/preview/project/<?= $id ?>">
         <i class="ph ph-eye ph-fw"></i>
-        <?= lang('Preview', 'Vorschau') ?>
+        <?= lang('common.preview') ?>
     </a>
 <?php } ?>
 
@@ -141,9 +141,9 @@ $scope = $Project->getScope($collaborators);
 
     <b class="badge text-uppercase primary">
         <?php if ($is_subproject) { ?>
-            <?= lang('Subproject', 'Teilprojekt') ?>
+            <?= lang('common.subproject') ?>
         <?php } else { ?>
-            <?= lang('Project', 'Projekt') ?>
+            <?= lang('common.project') ?>
         <?php } ?>
     </b>
     <h1 class="mt-0">
@@ -252,25 +252,25 @@ if ($topicsEnabled) {
         if (count($parent['collaborators'] ?? []) > 0) { ?>
             <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
                 <i class="ph ph-handshake" aria-hidden="true"></i>
-                <?= lang('Collaborators', 'Kooperationspartner') ?>
+                <?= lang('common.collaborators') ?>
                 <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
             </a>
         <?php  }
     } elseif (count($project['collaborators'] ?? []) > 0) { ?>
         <a onclick="navigate('collabs')" id="btn-collabs" class="btn">
             <i class="ph ph-handshake" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
             <span class="index"><?= count($project['collaborators'] ?? array()) ?></span>
         </a>
     <?php } elseif ($edit_perm) { ?>
         <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" id="btn-collabs" class="btn">
             <i class="ph ph-plus-circle" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
         </a>
     <?php } else { ?>
         <a id="btn-collabs" class="btn disabled">
             <i class="ph ph-handshake" aria-hidden="true"></i>
-            <?= lang('Collaborators', 'Kooperationspartner') ?>
+            <?= lang('common.collaborators') ?>
             <span class="index">0</span>
         </a>
     <?php } ?>
@@ -278,7 +278,7 @@ if ($topicsEnabled) {
     <?php if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('common.activities') ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
@@ -289,7 +289,7 @@ if ($topicsEnabled) {
     <?php } else { ?>
         <a id="btn-activities" class="btn disabled">
             <i class="ph ph-suitcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('common.activities') ?>
             <span class="index">0</span>
         </a>
     <?php } ?>
@@ -298,12 +298,12 @@ if ($topicsEnabled) {
         } else if ($Settings->hasPermission('proposals.view') || ($edit_perm)) { ?>
             <a href="<?= ROOTPATH ?>/proposals/view/<?= $project['proposal_id'] ?>" class="btn">
                 <i class="ph ph-link m-0"></i>
-                <?= lang('Proposal', 'Antrag') ?>
+                <?= lang('common.proposal') ?>
             </a>
         <?php } else { ?>
             <button type="button" class="disabled btn" disabled>
                 <i class="ph ph-link m-0"></i>
-                <?= lang('Proposal', 'Antrag') ?>
+                <?= lang('common.proposal') ?>
             </button>
         <?php } ?>
         <?php if ($nagoyaRelevant) { ?>
@@ -321,7 +321,7 @@ if ($topicsEnabled) {
     ?>
         <a onclick="navigate('history')" id="btn-history" class="btn">
             <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-            <?= lang('History', 'Historie') ?>
+            <?= lang('common.history') ?>
             <span class="index"><?= $count_history ?></span>
         </a>
     <?php endif; ?>
@@ -330,7 +330,7 @@ if ($topicsEnabled) {
     <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
         <a onclick="navigate('raw-data')" id="btn-raw" class="btn">
             <i class="ph ph-code" aria-hidden="true"></i>
-            <?= lang('Raw data', 'Rohdaten')  ?>
+            <?= lang('common.raw_data')  ?>
         </a>
     <?php } ?>
 
@@ -350,7 +350,7 @@ if ($topicsEnabled) {
                 <?php if ($edit_perm) { ?>
                     <a href="<?= ROOTPATH ?>/projects/edit/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 <?php } ?>
 
@@ -359,7 +359,7 @@ if ($topicsEnabled) {
                     <div class="dropdown">
                         <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-trash"></i>
-                            <span class="sr-only"><?= lang('Delete', 'Löschen') ?></span>
+                            <span class="sr-only"><?= lang('action.delete') ?></span>
                             <i class="ph ph-caret-down" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
@@ -451,7 +451,7 @@ if ($topicsEnabled) {
                                     <br>
                                     <a href="#edit-image" data-toggle="modal">
                                         <i class="ph ph-image"></i>
-                                        <?= lang('Edit', 'Bearbeiten') ?>
+                                        <?= lang('action.edit') ?>
                                     </a>
                                 <?php }
                                 ?>
@@ -486,7 +486,7 @@ if ($topicsEnabled) {
                 <div class="btn-toolbar mb-10">
                     <a href="<?= ROOTPATH ?>/projects/persons/<?= $id ?>" class="btn primary">
                         <i class="ph ph-edit"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -532,7 +532,7 @@ if ($topicsEnabled) {
             </table>
 
             <h2>
-                <?= lang('Units', 'Einheiten') ?>
+                <?= lang('common.units') ?>
             </h2>
             <table class="table unit-table w-full">
                 <tbody>
@@ -571,14 +571,14 @@ if ($topicsEnabled) {
 <section id="collabs" style="display:none">
 
     <h2>
-        <?= lang('Collaborators', 'Kooperationspartner') ?>
+        <?= lang('common.collaborators') ?>
     </h2>
 
     <?php if ($edit_perm && !$is_subproject) { ?>
         <div class="btn-toolbar mb-10">
             <a href="<?= ROOTPATH ?>/projects/collaborators/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
+                <?= lang('action.edit') ?>
             </a>
         </div>
     <?php } ?>
@@ -684,7 +684,7 @@ if ($topicsEnabled) {
 <section id="activities" style="display:none">
 
     <h2>
-        <?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>
+        <?= lang('common.connected_activities') ?>
         (<?= $count_activities ?>)
     </h2>
 
@@ -762,7 +762,7 @@ if ($topicsEnabled) {
                         <div class="input-group-prepend">
                             <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                         </div>
-                        <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('Year', 'Jahr') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'projects':  PROJECT})">
+                        <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'projects':  PROJECT})">
                         <div class="input-group-append">
                             <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                         </div>
@@ -780,8 +780,8 @@ if ($topicsEnabled) {
                 <table class="table dataTable responsive" id="activities-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Type', 'Typ') ?></th>
-                            <th><?= lang('Activity', 'Aktivität') ?></th>
+                            <th><?= lang('common.type') ?></th>
+                            <th><?= lang('common.activity') ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -833,7 +833,7 @@ if ($topicsEnabled) {
         ?>
             <div class="col-md">
                 <h3>
-                    <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                    <?= lang('common.research_spectrum') ?>
                 </h3>
                 <?php
                 if (!empty($spectrum)) :
@@ -880,7 +880,7 @@ if ($topicsEnabled) {
                         </div>
                         <button class="btn primary mt-20">
                             <i class="ph ph-check"></i>
-                            <?= lang('Submit', 'Bestätigen') ?>
+                            <?= lang('action.submit') ?>
                         </button>
                     </form>
                 </div>
@@ -908,7 +908,7 @@ if ($topicsEnabled) {
 
                     <!-- input field with suggesting activities -->
                     <div class="form-group" id="activity-suggest">
-                        <!-- <label for="activity-suggested"><?= lang('Activity', 'Aktivität') ?></label> -->
+                        <!-- <label for="activity-suggested"><?= lang('common.activity') ?></label> -->
                         <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="...">
                         <div class="suggestions on-focus">
                             <div class="content"><?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?></div>
@@ -918,7 +918,7 @@ if ($topicsEnabled) {
 
                     <button class="btn primary">
                         <i class="ph ph-check"></i>
-                        <?= lang('Submit', 'Bestätigen') ?>
+                        <?= lang('action.submit') ?>
                     </button>
                 </form>
 
@@ -999,7 +999,7 @@ if ($topicsEnabled) {
 <!-- new section with history -->
 <section id="history" style="display: none;">
     <h2 class="title">
-        <?= lang('History', 'Historie') ?>
+        <?= lang('common.history') ?>
     </h2>
     <p>
         <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
@@ -1102,7 +1102,7 @@ if ($topicsEnabled) {
 <!-- raw data -->
 <section id="raw-data" style="display: none;">
     <h2 class="title">
-        <?= lang('Raw data', 'Rohdaten') ?>
+        <?= lang('common.raw_data') ?>
     </h2>
     <p>
         <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>

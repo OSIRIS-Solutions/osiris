@@ -17,7 +17,7 @@
 Route::get('/user/browse', function () {
     // if ($page == 'users') 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen')]
+        ['name' => lang('common.users')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -59,9 +59,9 @@ Route::get('/user/edit/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -84,7 +84,7 @@ Route::get('/user/units/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Edit units", "Einheiten bearbeiten")]
     ];
@@ -111,7 +111,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Configure web view", "Webansicht Konfigurieren")]
     ];
@@ -138,7 +138,7 @@ Route::get('/user/inactivate/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
         ['name' => lang("Inactivate", "Inaktivieren")]
     ];
@@ -166,9 +166,9 @@ Route::get('/user/delete/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang("Delete", "Löschen")]
+        ['name' => lang('action.delete')]
     ];
 
     include BASEPATH . "/header.php";
@@ -189,7 +189,7 @@ Route::get('/user/ldap-example', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("LDAP Example", "LDAP Beispiel")]
     ];
 
@@ -225,7 +225,7 @@ Route::get('/profile/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $name]
     ];
 
@@ -246,7 +246,7 @@ Route::get('/my-year/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
         ['name' => lang("The Year", "Das Jahr")]
     ];
@@ -286,7 +286,7 @@ Route::get('/messages', function () {
 Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"]
+        ['name' => lang('common.users'), 'path' => "/user/browse"]
     ];
     if ($collection == 'keywords') {
         $breadcrumb[] = ['name' => lang('Keywords', 'Schlagwörter')];
@@ -309,7 +309,7 @@ Route::get('/achievements/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => $name, 'path' => "/profile/$user"],
         ['name' => lang('Achievements', 'Errungenschaften')]
 
@@ -544,7 +544,7 @@ Route::post('/switch-user', function () {
 
 Route::post('/crud/users/update/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
         $_SESSION['msg'] = lang("You don't have permission to edit users.", "Du hast keine Berechtigung, Benutzer zu bearbeiten.");
         $_SESSION['msg_type'] = "error";
@@ -697,7 +697,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['projection' => ['units.$' => 1]]
         );
         if (empty($unit)) {
-            abortwith(404, lang("Unit", "Einheit"), "/user/units/$user");
+            abortwith(404, lang('common.unit'), "/user/units/$user");
         }
         $unit = $unit['units'][0];
 
@@ -969,19 +969,19 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = 'error';
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = 'error';
         } else {
             // check image settings
@@ -1015,7 +1015,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
             }
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $filename = "$user.jpg";
@@ -1126,9 +1126,9 @@ Route::get('/claim/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
+        ['name' => lang('common.users'), 'path' => "/user/browse"],
         ['name' => lang("$name", "$name"), 'path' => "/profile/$user"],
-        ['name' => lang("Claim", "Beanspruchen")]
+        ['name' => lang('action.claim')]
     ];
 
     include BASEPATH . "/header.php";

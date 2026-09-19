@@ -111,7 +111,7 @@ $all = $osiris->activities->count(
                 <option value="<?= $s ?>" <?= $s === $selectedSemester ? 'selected' : '' ?>><?= $s ?></option>
             <?php endforeach ?>
         </select>
-        <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+        <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
     </form>
 </div>
 
@@ -123,7 +123,7 @@ $all = $osiris->activities->count(
     <p class="lead">
         <?= lang('Number of courses in the selected semester', 'Anzahl der Lehrveranstaltungen im gewählten Semester') ?>:
         <b class="badge signal"><?= count($teaching) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
 
@@ -138,9 +138,9 @@ $all = $osiris->activities->count(
                 <th>Modul</th>
                 <th><?= lang('Affiliation', 'Affiliation') ?></th>
                 <th><?= lang('Type', 'Art') ?></th>
-                <th><?= lang('Start date', 'Beginn') ?></th>
-                <th><?= lang('End date', 'Ende') ?></th>
-                <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                <th><?= lang('common.start_date') ?></th>
+                <th><?= lang('common.end_date') ?></th>
+                <th><?= lang('common.affiliated') ?></th>
                 <th><?= lang('SWS (total)', 'SWS (gesamt)') ?></th>
                 <th><?= lang('SWS', 'SWS') ?> (<?= $Settings->get('affiliation') ?>)</th>
             </tr>
@@ -212,7 +212,7 @@ $all = $osiris->activities->count(
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-end"><?= lang('Total', 'Gesamt') ?>:</th>
+                <th colspan="6" class="text-end"><?= lang('common.total') ?>:</th>
                 <th><?= $counts['total'] ?></th>
                 <th><?= $counts['affiliation'] ?></th>
             </tr>
@@ -343,9 +343,9 @@ $unique_number = count($uniques);
             content: function() {
                 return `<b>${d.title ?? 'No title available'}:</b> <b class="text-primary">${d.cat}</b><br>
                 ${d.name ?? 'No name available'}<br>
-                <b>${lang('Start date', 'Beginn')}: </b>${d.start}<br>
-                <b>${lang('End date', 'Ende')}: </b>${d.end}<br>
-                <b>${lang('Affiliated', 'Affiliiert')}: </b>
+                <b>${lang('common.start_date')}: </b>${d.start}<br>
+                <b>${lang('common.end_date')}: </b>${d.end}<br>
+                <b>${lang('common.affiliated')}: </b>
                 ${d.hasAoi ? '<i class="ph ph-check-circle text-primary"></i>' : '<i class="ph ph-x-circle text-secondary"></i>'}
                 `
             }

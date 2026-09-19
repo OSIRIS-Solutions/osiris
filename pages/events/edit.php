@@ -3,7 +3,7 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $action = ROOTPATH . "/crud/conferences/add";
-$btn = lang('Add event', 'Event hinzufügen');
+$btn = lang('action.add_event');
 if (!empty($form ?? []) && isset($form['_id'])) {
     $action = ROOTPATH . "/crud/conferences/update/" . $form['_id'];
     $btn = lang('Save event', 'Event speichern');
@@ -17,7 +17,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <h1>
         <i class="ph-duotone ph-calendar-plus"></i>
-        <?= lang('Add event', 'Event hinzufügen') ?>
+        <?= lang('action.add_event') ?>
     </h1>
 
     <blockquote>
@@ -50,12 +50,12 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <?php } ?>
             </select>
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('common.type') ?>
             </label>
         </div>
 
         <div class="form-group">
-            <label for="description" class="floating-title"><?= lang('Description', 'Beschreibung') ?></label>
+            <label for="description" class="floating-title"><?= lang('common.description') ?></label>
 
             <div class="form-group title-editor" id="description-quill"><?= $form['description'] ?? '' ?></div>
             <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
@@ -68,11 +68,11 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
                 <input type="date" name="values[start]" required class="form-control" onchange="$('#conference-end-date').val(this.value)" value="<?= $form['start'] ?? '' ?>" placeholder="start">
-                <label for="start" class="required"><?= lang('Start date', 'Anfangsdatum') ?></label>
+                <label for="start" class="required"><?= lang('common.start_date') ?></label>
             </div>
             <div class="col floating-form">
                 <input type="date" name="values[end]" class="form-control" id="conference-end-date" value="<?= $form['end'] ?? '' ?>" placeholder="end">
-                <label for="end" class="required"><?= lang('End date', 'Enddatum') ?></label>
+                <label for="end" class="required"><?= lang('common.end_date') ?></label>
             </div>
         </div>
 
@@ -80,24 +80,24 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
                 <input type="text" name="values[location]" required class="form-control" value="<?= e($form['location'] ?? '') ?>" placeholder="location">
-                <label for="location" class="required"><?= lang('Location', 'Ort') ?></label>
+                <label for="location" class="required"><?= lang('common.location') ?></label>
             </div>
             <div class="col floating-form">
                 <select name="values[country]" class="form-control">
                     <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                     <?php
                     $c = $form['country'] ?? '';
-                    foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                    foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                         <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                     <?php } ?>
                 </select>
-                <label for="country"><?= lang('Country', 'Land') ?></label>
+                <label for="country"><?= lang('common.country') ?></label>
             </div>
         </div>
 
         <div class="form-group floating-form">
             <input type="url" name="values[url]" class="form-control" value="<?= e($form['url'] ?? '') ?>" placeholder="url">
-            <label for="url"><?= lang('URL', 'URL') ?></label>
+            <label for="url"><?= lang('common.url') ?></label>
         </div>
 
         <?php if ($Settings->featureEnabled('topics') && $osiris->topics->count() > 0) {

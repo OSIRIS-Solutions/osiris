@@ -19,12 +19,12 @@
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/fields/" . $form['id'];
     $title = $name;
 } else {
     $formaction .= "/crud/fields/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/fields";
     $title = lang('New field', 'Neues Feld');
 }
@@ -74,7 +74,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -124,7 +124,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                         <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('Integer', 'Ganzzahl') ?></option>
                         <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('Float', 'Gleitkommazahl') ?></option>
                         <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)') ?></option>
-                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('Date', 'Datum') ?></option>
+                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('common.date') ?></option>
                         <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)') ?></option>
                         <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('Boolean (as checkbox)', 'Boolean (als Checkbox)') ?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
@@ -258,7 +258,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
         <tbody>
             <tr>
                 <th class="w-200">
-                    <?= lang('Activities', 'Aktivitäten') ?>
+                    <?= lang('common.activities') ?>
                 </th>
                 <td>
                     <?php if (!empty($activities)) { ?>
@@ -275,7 +275,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                 </th>
                 <td>
                     <?php if (!empty($projects)) { ?>
@@ -292,7 +292,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('Persons', 'Personen') ?>
+                    <?= lang('common.persons') ?>
                 </th>
                 <td>
                     <?php if ($persons) { ?>
@@ -336,7 +336,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
             </p>
 
-            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('Delete', 'Löschen') ?></button>
+            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('action.delete') ?></button>
 
         </form>
     </div>

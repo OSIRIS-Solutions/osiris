@@ -88,29 +88,29 @@ $topicLabel = $Settings->topicLabel();
         </div> -->
         <div class="col-md-6 floating-form">
             <input type="color" id="color" class="form-control" name="values[color]" value="<?= $form['color'] ?? '' ?>" placeholder="color">
-            <label for="color"><?= lang('Color', 'Farbe') ?></label>
+            <label for="color"><?= lang('common.color') ?></label>
         </div>
     </div>
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Title', 'Titel') ?> (EN)
+                        <?= lang('common.title') ?> (EN)
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="subtitle">
-                        <?= lang('Subtitle', 'Untertitel') ?> (EN)
+                        <?= lang('common.subtitle') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle]" id="subtitle" value="<?= $form['subtitle'] ?? ''  ?>">
                 </div>
 
                 <label for="description">
-                    <?= lang('Description', 'Beschreibung') ?>
+                    <?= lang('common.description') ?>
                 </label>
                 <div class="form-group">
                     <div id="description-quill"><?= $form['description'] ?? '' ?></div>
@@ -123,24 +123,24 @@ $topicLabel = $Settings->topicLabel();
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Title', 'Titel') ?> (DE)
+                        <?= lang('common.title') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" value="<?= $form['name_de'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Subtitle', 'Untertitel') ?> (DE)
+                        <?= lang('common.subtitle') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle_de]" id="subtitle_de" value="<?= $form['subtitle_de'] ?? '' ?>">
                 </div>
 
 
                 <label for="description_de">
-                    <?= lang('Description', 'Beschreibung') ?>
+                    <?= lang('common.description') ?>
                 </label>
                 <div class="form-group">
                     <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
@@ -165,7 +165,7 @@ $topicLabel = $Settings->topicLabel();
         </div>
     </div>
 
-    <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
+    <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
 </form>
 
 
@@ -174,7 +174,7 @@ $topicLabel = $Settings->topicLabel();
     <br>
     <div class="alert danger mt-20">
         <a onclick="$('#delete').slideToggle()">
-            <?= lang('Delete', 'Löschen') ?>
+            <?= lang('action.delete') ?>
             <i class="ph ph-caret-down"></i>
         </a>
 
@@ -186,7 +186,7 @@ $topicLabel = $Settings->topicLabel();
                         'Möchten Sie diesen ' . $topicLabel . ' wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
                     ) ?>
                 </p>
-                <button type="submit" class="btn danger"><?= lang('Delete', 'Löschen') ?></button>
+                <button type="submit" class="btn danger"><?= lang('action.delete') ?></button>
             </form>
         </div>
     </div>

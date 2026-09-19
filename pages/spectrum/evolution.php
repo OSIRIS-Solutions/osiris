@@ -276,10 +276,10 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
     <thead>
         <tr>
             <th><?= lang('Element', 'Element') ?></th>
-            <th><?= lang('Start', 'Start') ?></th>
-            <th><?= lang('End', 'Ende') ?></th>
+            <th><?= lang('common.start') ?></th>
+            <th><?= lang('common.end') ?></th>
             <th><?= lang('Change', 'Veränderung') ?></th>
-            <th><?= lang('Total', 'Gesamt') ?></th>
+            <th><?= lang('common.total') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -548,7 +548,7 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
                     .html(`
                     <strong>${d.name}</strong><br>
                     ${d.year}<br>
-                    <?= lang('Value', 'Wert') ?>: ${valueText}
+                    <?= lang('common.value') ?>: ${valueText}
                 `)
                     .style("left", (event.pageX + 12) + "px")
                     .style("top", (event.pageY + 12) + "px");

@@ -75,7 +75,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
@@ -97,7 +97,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
                 <h6 class="m-0"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
@@ -109,7 +109,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
                 <h6 class="m-0"><?= lang('Change Reporting Period', 'Reportzeitraum ändern') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required />
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required />
-                <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
+                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
     </div>
@@ -130,12 +130,12 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <p class="lead">
             <?= lang('Number of activities', 'Anzahl der Aktivitäten') ?> <?= $phrase ?>:
             <b class="badge signal"><?= count($activities) ?></b>
-            <span class="text-muted">(<?= $all ?> <?= lang('total', 'gesamt') ?>)</span>
+            <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
         </p>
 
 
         <h2 id="activities-by-type">
-            <?= lang('Activities', 'Aktivitäten') ?> <?= $phrase ?>:
+            <?= lang('common.activities') ?> <?= $phrase ?>:
         </h2>
         <p class="text-muted">
             <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
@@ -164,9 +164,9 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-by-type-table">
             <thead>
                 <tr>
-                    <th><?= lang('Category', 'Kategorie') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.category') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -180,7 +180,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="2"><?= lang('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -222,9 +222,9 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-started-before-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Subtype', 'Untertyp') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -238,7 +238,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="2"><?= lang('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -340,7 +340,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="1"><?= lang('Total', 'Gesamt') ?></th>
+                    <th colspan="1"><?= lang('common.total') ?></th>
                     <th><?= $counts['all'] ?></th>
                     <th><?= $counts['affiliated'] ?></th>
                     <th><?= $counts['epub'] ?></th>
@@ -387,8 +387,8 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="oa-publications-table">
             <thead>
                 <tr>
-                    <th><?= lang('Status', 'Status') ?></th>
-                    <th><?= lang('Count', 'Anzahl') ?></th>
+                    <th><?= lang('common.status') ?></th>
+                    <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -434,7 +434,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th><?= lang('Total', 'Gesamt') ?></th>
+                    <th><?= lang('common.total') ?></th>
                     <th><?= $count_all ?></th>
                 </tr>
             </tfoot>
@@ -446,7 +446,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
     <div class="col-lg-3 d-none d-lg-block">
         <nav class="on-this-page-nav">
             <div class="content">
-                <div href="#statistics" class="title"><?= lang('Statistics', 'Statistiken') ?></div>
+                <div href="#statistics" class="title"><?= lang('common.statistics') ?></div>
 
                 <a href="#activities-by-type">
                     <?= lang('Activities by type', 'Aktivitäten nach Typ') ?>

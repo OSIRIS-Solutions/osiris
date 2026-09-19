@@ -119,7 +119,7 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid <?= $primary ?>;border-radius:.5rem;overflow:hidden">
         <div style="background:<?= $primary ?>;color:#fff;padding:14px 18px">
             <h2 style="margin:0;font-size:18px;">OSIRIS <?= ucfirst($frequency) ?></h2>
-            <div style="opacity:.85;font-size:12px;"><?= $lang('Date', 'Datum') ?>: <?= date('d.m.Y') ?></div>
+            <div style="opacity:.85;font-size:12px;"><?= $lang('common.date') ?>: <?= date('d.m.Y') ?></div>
         </div>
 
         <div style="padding:18px">

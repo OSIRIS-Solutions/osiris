@@ -104,7 +104,7 @@
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <details class="collapse-panel project-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -120,14 +120,14 @@
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
+                            <option value=""><?= lang('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
                     <!-- make sure that empty projects are also submitted -->
                     <input type="hidden" name="projects[]" value="">
@@ -179,7 +179,7 @@
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert('<?= lang('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists
@@ -221,14 +221,14 @@
                     )->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>">
-                            <option value=""><?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?></option>
+                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('forms.select_infrastructure') ?>">
+                            <option value=""><?= lang('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
 
                     <!-- make sure that empty infrastructures are also submitted -->
@@ -270,7 +270,7 @@
                         const infraId = $('#infrastructure-select').val();
                         const infraName = $('#infrastructure-select option:selected').text();
                         if (!infraId) {
-                            alert('<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>');
+                            alert('<?= lang('forms.select_infrastructure') ?>');
                             return;
                         }
                         // check if infrastructure already exists
@@ -299,7 +299,7 @@
 
         <details class="collapse-panel activity-panel" open>
             <summary class="collapse-header">
-                <?= lang('Activities', 'Aktivitäten') ?>
+                <?= lang('common.activities') ?>
             </summary>
             <div class="collapse-content">
 
@@ -311,7 +311,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>:</th>
+                            <th><?= lang('common.connected_activities') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -358,11 +358,11 @@
         <div class="bottom-buttons">
             <button id="save-button" type="submit" class="btn large success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('action.save') ?>
             </button>
             <a id="cancel-button" type="button" class="btn large light ml-5" href="<?= ROOTPATH ?>/activities/view/<?= $id ?>#edit-activities">
                 <i class="ph ph-x"></i>
-                <?= lang('Cancel', 'Abbrechen') ?>
+                <?= lang('action.cancel') ?>
             </a>
         </div>
 

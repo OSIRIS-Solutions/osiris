@@ -23,7 +23,7 @@ class CustomFields
         $this->fields = array_column($this->fields, null, 'id');
 
         $this->user = $_SESSION['username'] ?? '';
-        $this->lang = lang('en', 'de');
+        $this->lang = lang('common.this_language');
     }
 
     public function name(string $module)
@@ -74,7 +74,7 @@ class CustomFields
         }
 
         if ($val === true || $val === false) {
-            if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+            if ($this->usecase == 'list') return $val ? lang('common.yes') : lang('common.no');
             if (!isset($field['name'])) {
                 $field['name'] = $module;
             }
@@ -154,11 +154,11 @@ class CustomFields
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('Yes', 'Ja') . '</label>
+                    <label for="' . $module . '-true">' . lang('common.yes') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
+                    <label for="' . $module . '-false">' . lang('common.no') . '</label>
                 </div>';
             echo $this->render_help($help);
             echo '</div>';
@@ -226,7 +226,7 @@ class CustomFields
                     justify-content: space-between;
                 }
             </style>
-            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
                     placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
@@ -258,7 +258,7 @@ class CustomFields
         if ($field['format'] == 'text-format') {
             $id = rand(1000, 9999);
         ?>
-            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                 <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
                 <textarea name="values[<?= $module ?>]" id="<?= $module ?>" class="d-none" readonly><?= $value ?></textarea>

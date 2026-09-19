@@ -36,8 +36,8 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
             <th>ID</th>
             <th>Name</th>
             <th><?=lang('Steps', 'Schritte')?></th>
-            <th># <?=lang('Activities', 'Aktivitäten')?></th>
-            <th><?=lang('Action', 'Aktion')?></th>
+            <th># <?=lang('common.activities')?></th>
+            <th><?=lang('common.action')?></th>
         </tr>
     </thead>
     <tbody>
@@ -85,11 +85,11 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                 <option value="remove"><?= lang('Remove all workflows', 'Alle Workflows entfernen') ?></option>
                 <option value="reset"><?= lang('Reset all workflows to the first step', 'Alle Workflows auf den ersten Schritt zurücksetzen') ?></option>
             </select>
-            <label><?= lang('Action', 'Aktion') ?></label>
+            <label><?= lang('common.action') ?></label>
         </div>
         <div class="form-group floating-form">
             <select name="activity" id="activity-type" class="form-control" required>
-                <option value="all"><?= lang('All activities', 'Alle Aktivitäten') ?></option>
+                <option value="all"><?= lang('common.all_activities') ?></option>
                 <?php
                 $activity_types = $osiris->adminCategories->find(['workflow' => ['$exists' => true]]);
                 foreach ($activity_types as $atype) {

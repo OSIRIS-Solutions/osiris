@@ -132,7 +132,7 @@ updateRecursive($flare, $activities);
 
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><?= lang('From', 'Von') ?></span>
+                        <span class="input-group-text"><?= lang('common.from') ?></span>
                     </div>
                     <input type="number" name="time[]" class="form-control" placeholder="month" min="1" max="12" step="1" id="from-month" value="<?= $time[0] ?? '' ?>">
                     <input type="number" name="time[]" class="form-control" placeholder="year" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" id="from-year" value="<?= $time[1] ?? '' ?>">
@@ -149,7 +149,7 @@ updateRecursive($flare, $activities);
 
             </div>
             <div class="form-group">
-                <label for="type-select"><?= lang('Activities', 'Aktivitäten') ?></label>
+                <label for="type-select"><?= lang('common.activities') ?></label>
                 <select name="type" id="type-select" class="form-control ">
                     <option value=""><?= lang('All types', 'Alle Arten') ?></option>
                     <?php foreach ($Settings->getActivities as $a) { ?>

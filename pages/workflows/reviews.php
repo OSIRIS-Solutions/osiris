@@ -48,7 +48,7 @@
         <thead>
             <tr>
                 <th style="width:28px"></th>
-                <th><?= lang('Activity', 'Aktivität') ?></th>
+                <th><?= lang('common.activity') ?></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -100,7 +100,7 @@
                 <a href="<?= ROOTPATH ?>/activities/view/${it.id}" target="_blank" class="colorless link">${it.title}</a>
                 <p class="text-muted font-size-12 mb-0 d-flex align-items-center justify-content-between">
                     <span>
-                        <b>${lang('Completed', 'Abgeschlossen')}</b>: ${it.completed} | 
+                        <b>${lang('common.completed')}</b>: ${it.completed} | 
                         <b>${lang('Your Step', 'Dein Schritt')}</b>: ${it.step.label}
                     </span>
 
@@ -134,7 +134,7 @@
             const $tr = $(this).closest('tr'),
                 id = $tr.data('id'),
                 step = $tr.data('step');
-            const comment = prompt("<?= lang('Comment', 'Kommentar') ?>");
+            const comment = prompt("<?= lang('common.comment') ?>");
             if (comment === null) return;
             $.post('<?= ROOTPATH ?>/crud/activities/workflow/reject/' + id, {
                 stepId: step,

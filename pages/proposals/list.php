@@ -76,7 +76,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1 class="mt-0">
     <i class="ph-duotone ph-tree-structure"></i>
-    <?= lang('Project proposals', 'Projektanträge') ?>
+    <?= lang('common.project_proposals') ?>
 </h1>
 
 <button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
@@ -85,7 +85,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/proposals/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <?php if ($Settings->hasPermission('proposals.finance')) { ?>
     <a href="<?= ROOTPATH ?>/proposals/finances" class="btn">
@@ -97,7 +97,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     
     <a href="<?= ROOTPATH ?>/proposals/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
     
 
@@ -197,22 +197,22 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
                         <td>
-                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('approved', 'bewilligt') ?></a>
+                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('projects.approved') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
                         <td>
-                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('applied', 'beantragt') ?></a>
+                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('projects.applied') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td>
-                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('rejected', 'abgelehnt') ?></a>
+                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('projects.rejected') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
                         <td>
-                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('withdrawn', 'zurückgezogen') ?></a>
+                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('projects.withdrawn') ?></a>
                         </td>
                     </tr>
                 </table>
@@ -289,7 +289,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                 </div>
                 <input type="date" name="from" id="filter-from" class="form-control">
             </div>
@@ -340,11 +340,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
     const activeFilters = $('#active-filters')
     const headers = [{
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('common.type'),
             key: 'type'
         },
         {
@@ -352,15 +352,15 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'funder'
         },
         {
-            title: lang('Start date', 'Startdatum'),
+            title: lang('common.start_date'),
             key: 'start_date'
         },
         {
-            title: lang('End date', 'Enddatum'),
+            title: lang('common.end_date'),
             key: 'end_date'
         },
         {
-            title: lang('Role', 'Rolle'),
+            title: lang('common.role'),
             key: 'role'
         },
         {
@@ -368,11 +368,11 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'applicant'
         },
         {
-            title: lang('Status', 'Status'),
+            title: lang('common.status'),
             key: 'status'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             key: 'units'
         },
         {
@@ -380,15 +380,15 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'topics'
         },
         {
-            title: lang('Funding organization', 'Förderorganisation'),
+            title: lang('common.funding_organizations'),
             key: 'funding_organization'
         },
         {
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('common.title'),
             key: 'title'
         },
         {
@@ -426,7 +426,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.subproject')}
                         </span>`
         }
         return data;
@@ -467,18 +467,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     function renderStatus(data) {
         switch (data) {
             case 'approved':
-                return `<span class='badge success'>${lang('approved', 'bewilligt')}</span>`;
+                return `<span class='badge success'><?= lang('projects.approved') ?></span>`;
             case 'finished':
-                return `<span class='badge success filled'>${lang('finished', 'abgeschlossen')}</span>`;
+                return `<span class='badge success filled'><?= lang('projects.finished') ?></span>`;
             case 'applied':
             case 'proposed':
-                return `<span class='badge signal'>${lang('proposed', 'beantragt')}</span>`;
+                return `<span class='badge signal'><?= lang('projects.proposed') ?></span>`;
             case 'rejected':
-                return `<span class='badge danger'>${lang('rejected', 'abgelehnt')}</span>`;
+                return `<span class='badge danger'><?= lang('projects.rejected') ?></span>`;
             case 'withdrawn':
-                return `<span class='badge muted'>${lang('withdrawn', 'zurückgezogen')}</span>`;
+                return `<span class='badge muted'><?= lang('projects.withdrawn') ?></span>`;
             case 'expired':
-                return `<span class='badge dark'>${lang('expired', 'abgelaufen')}</span>`;
+                return `<span class='badge dark'><?= lang('projects.expired') ?></span>`;
         }
     }
 
@@ -589,7 +589,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('Type', 'Typ')
+                    header: lang('common.type')
                 },
                 {
                     target: 2,
@@ -606,7 +606,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Start date', 'Startdatum')
+                    header: lang('common.start_date')
                 },
                 {
                     target: 4,
@@ -614,7 +614,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('End date', 'Enddatum')
+                    header: lang('common.end_date')
                 },
                 {
                     target: 5,
@@ -622,7 +622,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Role', 'Rolle')
+                    header: lang('common.role')
                 },
                 {
                     target: 6,
@@ -637,7 +637,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     data: 'status',
                     searchable: true,
                     visible: false,
-                    header: lang('Status', 'Status'),
+                    header: lang('common.status'),
                     defaultContent: 'proposed'
                 },
                 {
@@ -646,7 +646,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Units', 'Einheiten')
+                    header: lang('common.units')
                 },
                 {
                     target: 9,
@@ -667,7 +667,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Funding organization', 'Förderorganisation')
+                    header: lang('common.funding_organizations')
                 },
                 {
                     target: 11,
@@ -675,7 +675,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Project', 'Projekt')
+                    header: lang('common.project')
                 },
                 {
                     target: 12,
@@ -683,7 +683,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Title', 'Titel')
+                    header: lang('common.title')
                 },
                 {
                     target: 13,

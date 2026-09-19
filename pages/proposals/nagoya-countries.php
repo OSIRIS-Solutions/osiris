@@ -32,10 +32,10 @@ $nagoya = $project['nagoya'] ?? [];
     <table class="table">
         <thead>
             <tr>
-                <th><?= lang('Country', 'Land') ?></th>
+                <th><?= lang('common.country') ?></th>
                 <th><?= lang('Party to Nagoya?', 'Nagoya-Protokoll?') ?></th>
                 <th><?= lang('Own ABS measures?', 'Eigene ABS-Maßnahmen?') ?></th>
-                <th><?= lang('Comment', 'Kommentar') ?></th>
+                <th><?= lang('common.comment') ?></th>
                 <th><?= lang('Decision', 'Entscheidung') ?></th>
             </tr>
         </thead>
@@ -46,7 +46,7 @@ $nagoya = $project['nagoya'] ?? [];
                 <tr>
                     <th>
                         <input type="hidden" name="id[]" value="<?= $c['id'] ?>">
-                        <?= $DB->getCountry($c['code'], lang('name', 'name_de')) ?>
+                        <?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?>
                     </th>
                     <td>
                         <select name="nagoyaParty[]" class="form-control form-control-sm">
@@ -70,7 +70,7 @@ $nagoya = $project['nagoya'] ?? [];
                                 <?= lang('Last reviewed by', 'Zuletzt bewertet von') ?><br>
                                 <?= $DB->getNameFromId($r['reviewed_by']) ?>
                                 <?php if (!empty($r['reviewed'] ?? '')) { ?>
-                                    <?= lang('on', 'am') ?> <?= format_date($r['reviewed']) ?>
+                                    <?= lang('common.on') ?> <?= format_date($r['reviewed']) ?>
                                 <?php } ?>
                             </small>
                         <?php } ?>

@@ -1875,7 +1875,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'project:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'project',
                 'label' => $label,
                 'url' => '/projects/view/' . $id,
@@ -1887,7 +1887,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'projects',
-                'label' => lang('Projects', 'Projekte'),
+                'label' => lang('common.projects'),
                 'items' => $items
             ];
         }
@@ -1962,7 +1962,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'proposal:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'proposal',
                 'label' => $label,
                 'url' => '/proposals/view/' . $id,
@@ -1974,7 +1974,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'proposals',
-                'label' => lang('Project Proposals', 'Projektanträge'),
+                'label' => lang('common.project_proposals'),
                 'items' => $items
             ];
         }
@@ -2027,7 +2027,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'person:' . $id,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'person',
             'label' => (string)($doc->displayname ?? $id),
             'url' => '/profile/' . $id,
@@ -2039,7 +2039,7 @@ Route::get('/api/command-palette/search', function () {
     if (!empty($items)) {
         $groups[] = [
             'id' => 'persons',
-            'label' => lang('People', 'Personen'),
+            'label' => lang('common.people'),
             'items' => $items
         ];
     }
@@ -2096,7 +2096,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'infrastructure:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'infrastructure',
                 'label' => $doc->name ?? $id,
                 'url' => '/infrastructures/view/' . $id,
@@ -2108,7 +2108,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'infrastructures',
-                'label' => lang('Infrastructures', 'Infrastrukturen'),
+                'label' => lang('common.infrastructures'),
                 'items' => $items
             ];
         }
@@ -2159,7 +2159,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'event:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'event',
                 'label' => $doc->title ?? $id,
                 'url' => '/conferences/view/' . $id,
@@ -2171,7 +2171,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'events',
-                'label' => lang('Events', 'Veranstaltungen'),
+                'label' => lang('common.events'),
                 'items' => $items
             ];
         }
@@ -2219,7 +2219,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'deadline:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'deadline',
                 'label' => $doc->title ?? $id,
                 'url' => '/deadlines/view/' . $id,
@@ -2290,7 +2290,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'unit:' . $mongoId,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'unit',
             'label' => $label,
             'url' => '/groups/view/' . $mongoId,
@@ -2302,7 +2302,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'units',
-            'label' => lang('Units', 'Einheiten'),
+            'label' => lang('common.units'),
             'items' => $items
         ];
     }
@@ -2349,7 +2349,7 @@ Route::get('/api/command-palette/search', function () {
         $id = (string)$doc->_id;
         $items[] = [
             'id' => 'org:' . $id,
-            'type' => lang('Entity', 'Entität'),
+            'type' => lang('common.entity'),
             'entity' => 'organization',
             'label' => (string)($doc->name ?? $id),
             'url' => '/organizations/view/' . $id,
@@ -2361,7 +2361,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'organizations',
-            'label' => lang('Organizations', 'Organisationen'),
+            'label' => lang('common.organizations'),
             'items' => $items
         ];
     }
@@ -2416,7 +2416,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'journal:' . $id,
-                'type' => lang('Entity', 'Entität'),
+                'type' => lang('common.entity'),
                 'entity' => 'journal',
                 'label' => $doc->journal ?? $id,
                 'url' => '/journal/view/' . $id,

@@ -34,7 +34,7 @@
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
         </p>
 
         <button type="submit" class="btn success" id="submitBtn">
-            <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+            <i class="ph ph-check"></i> <?= lang('action.save') ?>
         </button>
 
     </div>

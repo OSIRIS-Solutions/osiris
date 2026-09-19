@@ -19,7 +19,7 @@ Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge')]
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/list.php";
@@ -30,8 +30,8 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
-        ['name' => lang("New", "Neu")]
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/proposals/edit.php";
@@ -43,8 +43,8 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     $user = $_SESSION['username'];
     $collection = 'projects';
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.projects'), 'path' => "/projects"],
+        ['name' => lang('common.new')]
     ];
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);
@@ -67,7 +67,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' => lang("Statistics", "Statistik")]
     ];
     include BASEPATH . "/header.php";
@@ -78,7 +78,7 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
 Route::get('/proposals/finances', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Project proposals', 'Projektanträge'), 'path' => "/proposals"],
+        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => lang("Finances overview", "Finanzübersicht")]
     ];
     include BASEPATH . "/header.php";
@@ -99,10 +99,10 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' => $project['acronym'] ?? $project['name']]
     ];
 
@@ -121,7 +121,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
     $Project = new Project($project);
 
@@ -133,21 +133,21 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     switch ($page) {
         case 'collaborators':
-            $name = lang("Collaborators", "Kooperationspartner");
+            $name = lang('common.collaborators');
             break;
         case 'finance':
             $name = lang("Finance", "Finanzen");
             break;
         case 'persons':
-            $name = lang("Persons", "Personen");
+            $name = lang('common.persons');
             break;
         default:
-            $name = lang("Edit", "Bearbeiten");
+            $name = lang('action.edit');
             break;
     }
 
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('Projects', 'Projekte') : lang('Project proposals', 'Projektanträge'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
         ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
@@ -191,12 +191,12 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
     // check if project exists
     if (empty($project)) {
-        abortwith(404, lang('Project', 'Projekt'), "/projects");
+        abortwith(404, lang('common.project'), "/projects");
     }
 
     // set breadcrumb
     $breadcrumb = [
-        ['name' => lang('Projects', 'Projekte'), 'path' => "/projects"],
+        ['name' => lang('common.projects'), 'path' => "/projects"],
         ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
         ['name' => lang("Add subproject", "Teilprojekt hinzufügen")]
     ];
@@ -343,14 +343,14 @@ Route::post('/proposals/download/(.*)', function ($id) {
         "personnel" => $project['personnel'] ?? 'NA',
         "countries" => isset($project['countries']) ? implode(', ', $project['countries']) : 'NA',
         "in-kind" => $project['in-kind'] ?? 'NA',
-        "public" => $project['public'] ? lang("Yes", "Ja") : lang("No", "Nein"),
-        "res:material" => ($res['material'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "public" => $project['public'] ? lang('common.yes') : lang('common.no'),
+        "res:material" => ($res['material'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:material_details" => $res['material_details'] ?? 'NA',
-        "res:personnel" => ($res['personnel'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:personnel" => ($res['personnel'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:personnel_details" => $res['personnel_details'] ?? 'NA',
-        "res:room" => ($res['room'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:room" => ($res['room'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:room_details" => $res['room_details'] ?? 'NA',
-        "res:other" => ($res['other'] == 'yes' ? lang("Yes", "Ja") : lang("No", "Nein")),
+        "res:other" => ($res['other'] == 'yes' ? lang('common.yes') : lang('common.no')),
         "res:other_details" => $res['other_details'] ?? 'NA',
         "coordinator" => $project['coordinator'] ?? 'NA',
         "purpose" => $project['purpose'] ?? 'NA',
@@ -385,7 +385,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
 Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
 
     $values = validateValues($_POST['values'], $DB);
@@ -644,7 +644,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     /**
      * Combine values[grant_years] && values[grant_amounts] to associative array
@@ -696,11 +696,11 @@ Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $
 Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
+        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
 
     $values = validateValues($_POST['values'], $DB);
@@ -1045,7 +1045,7 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
     // get project
     $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, lang('Project', 'Projekt'), "/projects");
+        abortwith(404, lang('common.project'), "/projects");
     }
     $Project = new Project();
 
@@ -1090,19 +1090,19 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_upload_too_large', replace:['max' => '16 MB']);
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
             $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
@@ -1113,7 +1113,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
                 ['$set' => ["image" => "projects/" . $filename]]
             );
         } else {
-            $_SESSION['msg'] = lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload.");
+            $_SESSION['msg'] = lang('error.file_upload_generic');
             $_SESSION['msg_type'] = "error";
         }
     } else if (isset($_POST['delete'])) {
@@ -1134,7 +1134,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
             ['$set' => ["image" => null]]
         );
     } else {
-        $_SESSION['msg'] = lang("No file was uploaded.", "Es wurde keine Datei hochgeladen.");
+        $_SESSION['msg'] = lang('error.no_file_uploaded');
         $_SESSION['msg_type'] = "info";
     }
 

@@ -1,0 +1,25 @@
+<?php
+return [
+    'admin_no_permission' => 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.',
+    'file_partially_uploaded' => 'Die hochgeladene Datei wurde nur teilweise hochgeladen.',
+    'file_too_big_max_2MB' => 'Die Datei ist zu groß: maximal 2 MB sind erlaubt.',
+    'file_upload_generic' => 'Entschuldigung, aber es gab einen Fehler beim Dateiupload.',
+    'file_upload_exceeds_limit' => 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini',
+    'file_upload_missing_temp' => 'Der temporäre Ordner fehlt.',
+    'file_upload_stopped' => 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.',
+    'file_upload_too_large' => 'Die Datei ist zu groß: maximal {{max}} sind erlaubt.',
+    'file_upload_write_failed' => 'Datei konnte nicht auf die Festplatte geschrieben werden.',
+    'method_not_allowed_message' => 'Die Methode "{{method}}" ist für die angeforderte URL nicht erlaubt.',
+    'method_not_allowed' => 'Methode nicht erlaubt',
+    'no_file_uploaded' => 'Es wurde keine Datei hochgeladen.',
+    'no_values' => 'Keine Werte angegeben.',
+    'organization_select_missing' => 'Keine Organisation ausgewählt',
+    'page_not_found_message' => 'Die gesuchte Seite existiert nicht oder wurde verschoben.',
+    'page_not_found' => 'Seite nicht gefunden',
+    'password_reset_no_permission' => 'Du hast keine Berechtigung, Passwörter zurückzusetzen.',
+    'something_went_wrong' => 'Etwas ist schiefgelaufen.',
+    'user_not_found' => 'Benutzer nicht gefunden.',
+    'username_already_taken' => 'Der Nutzername ist bereits vergeben. Versuche es erneut.',
+    'news_not_enabled' => 'News sind nicht aktiviert.',
+    'infrastructure_no_edit_permission' => 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'
+];

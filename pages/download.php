@@ -92,9 +92,9 @@
                 <select name="filter[workflow]" id="filter-workflow" class="form-control">
                     <option value=""><?= lang('Do not filter', 'Nicht filtern') ?></option>
                     <option value="in_progress"><?= lang('In Progress', 'In Bearbeitung') ?></option>
-                    <option value="verified"><?= lang('Completed', 'Abgeschlossen') ?></option>
+                    <option value="verified"><?= lang('common.completed') ?></option>
                     <option value="verified-or-empty"><?= lang('Completed or no workflow', 'Abgeschlossen oder kein Workflow') ?></option>
-                    <option value="rejected"><?= lang('Rejected', 'Abgelehnt') ?></option>
+                    <option value="rejected"><?= lang('common.rejected') ?></option>
                 </select>
             </div>
         <?php } ?>
@@ -119,7 +119,7 @@
             <label for="filter-year"><?= lang('Filter by time frame', 'Filter nach Zeitraum') ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><?= lang('From', 'Von') ?></span>
+                    <span class="input-group-text"><?= lang('common.from') ?></span>
                 </div>
                 <input type="number" name="filter[time][from][month]" class="form-control" placeholder="month" min="1" max="12" step="1" id="from-month" onchange="filtertime()">
                 <input type="number" name="filter[time][from][year]" class="form-control" placeholder="year" min="1900" max="<?= CURRENTYEAR+1 ?>" step="1" id="from-year" onchange="filtertime()">

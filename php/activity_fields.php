@@ -11,10 +11,10 @@ class ActivityFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $types = $osiris->adminCategories->find()->toArray();
-        $types = array_column($types, lang('name', 'name_de'), 'id');
+        $types = array_column($types, lang('common.field_name_language'), 'id');
 
         $subtypes = $osiris->adminTypes->find()->toArray();
-        $subtypes = array_column($subtypes, lang('name', 'name_de'), 'id');
+        $subtypes = array_column($subtypes, lang('common.field_name_language'), 'id');
 
 
         $adminCategories = $osiris->adminCategories->find()->toArray();
@@ -58,7 +58,7 @@ class ActivityFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -101,7 +101,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Category', 'Kategorie'),
+                'label' => lang('common.category'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $types
@@ -114,7 +114,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Type', 'Typ'),
+                'label' => lang('common.type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $subtypes
@@ -126,7 +126,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Title', 'Titel'),
+                'label' => lang('common.title'),
                 'type' => 'string'
             ],
             [
@@ -136,7 +136,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Start date', 'Startdatum'),
+                'label' => lang('common.start_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
@@ -147,7 +147,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('End date', 'Enddatum'),
+                'label' => lang('common.end_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
@@ -381,7 +381,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Affiliated', 'Affiliiert'),
+                'label' => lang('common.affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -473,7 +473,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Year', 'Jahr'),
+                'label' => lang('common.year'),
                 'type' => 'integer',
                 'default_value' => CURRENTYEAR
             ],
@@ -517,7 +517,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Month', 'Monat'),
+                'label' => lang('common.month'),
                 'type' => 'integer'
             ],
             [
@@ -595,7 +595,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Gender', 'Geschlecht'),
+                'label' => lang('common.gender'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['f', 'm', 'd']
@@ -784,7 +784,7 @@ class ActivityFields extends Fields
                     'guest scientist' => lang('Guest Scientist', 'Gastwissenschaftler:in'),
                     'lecture internship' => lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium'),
                     'student internship' => lang('Student Internship', 'Schülerpraktikum'),
-                    'other' => lang('Other', 'Sonstiges'),
+                    'other' => lang('common.other'),
                     'doctoral thesis' => lang('Doctoral Thesis', 'Doktorand:in'),
                     'master thesis' => lang('Master Thesis', 'Master-Thesis'),
                     'bachelor thesis' => lang('Bachelor Thesis', 'Bachelor-Thesis')
@@ -829,7 +829,7 @@ class ActivityFields extends Fields
                 'input' => 'select',
                 'values' => [
                     'in progress' => lang('In Progress', 'In Bearbeitung'),
-                    'completed' => lang('Completed', 'Abgeschlossen'),
+                    'completed' => lang('common.completed'),
                     'aborted' => lang('Aborted', 'Abgebrochen')
                 ]
             ],
@@ -882,7 +882,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Location', 'Ort'),
+                'label' => lang('common.location'),
                 'type' => 'string'
             ],
             [
@@ -893,7 +893,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Country', 'Land'),
+                'label' => lang('common.country'),
                 'type' => 'string'
             ],
             [
@@ -1075,8 +1075,8 @@ class ActivityFields extends Fields
             ]
         ];
 
-        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('name', 'name_de') => 1], 'projection' => ['_id' => 1, 'id'=> 1, 'name' => 1, 'name_de' => 1]])->toArray();
-        $units = array_column(DB::doc2Arr($units), lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find(['inactive' => ['$ne' => true]], ['sort' => [lang('common.field_name_language') => 1], 'projection' => ['_id' => 1, 'id'=> 1, 'name' => 1, 'name_de' => 1]])->toArray();
+        $units = array_column(DB::doc2Arr($units), lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units',
             'module_of' => ['general'],
@@ -1141,7 +1141,7 @@ class ActivityFields extends Fields
                 'input' => 'select',
                 'values' => [
                     'verified' => lang('Verified', 'Verifiziert'),
-                    'rejected' => lang('Rejected', 'Abgelehnt'),
+                    'rejected' => lang('common.rejected'),
                     'in_progress' => lang('In Process', 'In Bearbeitung'),
                 ]
             ];

@@ -176,7 +176,7 @@ if ($process == 'project') {
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -187,13 +187,13 @@ if ($process == 'project') {
     >
     <span class="text-primary">
         <?php if ($stage == '1') { ?>
-            <?= lang('General', 'Allgemein') ?>
+            <?= lang('common.general') ?>
         <?php } else if ($stage == '2') { ?>
             <?= lang('Phases', 'Phasen') ?>
         <?php } else if ($stage == '3') { ?>
             <?= lang('Subprojects', 'Teilprojekte') ?>
         <?php } else { ?>
-            <?= lang('New', 'Neu') ?>
+            <?= lang('common.new') ?>
         <?php } ?>
     </span>
 </h1>
@@ -236,7 +236,7 @@ if ($process == 'project') {
                         </div>
                     </div>
                     <div class="col-sm">
-                        <label for="color" class="required "><?= lang('Color', 'Farbe') ?></label>
+                        <label for="color" class="required "><?= lang('common.color') ?></label>
                         <input type="color" class="form-control" name="values[color]" required value="<?= $project['color'] ?? '' ?>">
                     </div>
                 </div>
@@ -284,7 +284,7 @@ if ($process == 'project') {
             <div class="content">
 
                 <h5>
-                    <?= lang('Proposals', 'Anträge') ?>
+                    <?= lang('common.proposals') ?>
                 </h5>
 
                 <p class="text-muted">
@@ -335,8 +335,8 @@ if ($process == 'project') {
                     ?>
 
                     <select name="values[notification_created]" id="notification" class="form-control">
-                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
-                        <option value="" disabled>--- <?= lang('Roles', 'Rollen') ?> ---</option>
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('common.none') ?></option>
+                        <option value="" disabled>--- <?= lang('common.roles') ?> ---</option>
                         <?php
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification  == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
@@ -361,7 +361,7 @@ if ($process == 'project') {
                     ?>
 
                     <select name="values[notification_changed]" id="notification" class="form-control">
-                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="" <?= empty($notification) ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                         <?php
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
@@ -387,7 +387,7 @@ if ($process == 'project') {
 
 
         <button type="submit" class="btn success">
-            <?= lang('Next', 'Weiter') ?>
+            <?= lang('navigation.next') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button>
 
@@ -507,7 +507,7 @@ if ($process == 'project') {
                         if (empty($field)) $field = ['en' => $m, 'de' => null];
                         if (($field['custom'] ?? false) && !$custom) {
                             echo "<p>
-                            <b>" . lang('Custom Fields', 'Benutzerdefinierte Felder') . "</b>
+                            <b>" . lang('common.custom_fields') . "</b>
                             <br>
                             <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
                             </p>";
@@ -541,10 +541,10 @@ if ($process == 'project') {
             <i class="ph ph-arrow-fat-line-left"></i>
         </a>
         <!-- <button type="submit" class="btn success">
-            <?= lang('Next', 'Weiter') ?>
+            <?= lang('navigation.next') ?>
             <i class="ph ph-arrow-fat-line-right"></i>
         </button> -->
-        <button type="submit" class="btn success" id="submitBtn"><?= lang('Save', 'Speichern') ?></button>
+        <button type="submit" class="btn success" id="submitBtn"><?= lang('action.save') ?></button>
 
     <?php } ?>
 
@@ -590,7 +590,7 @@ if ($process == 'project') {
     if ($member == 0) { ?>
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/admin/projects/delete/<?= $project['_id'] ?>" method="post">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

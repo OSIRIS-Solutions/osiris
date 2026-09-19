@@ -362,7 +362,7 @@ $tagLabels = [
             </button>
             <div id="field-preview"></div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -397,7 +397,7 @@ $tagLabels = [
             </p>
 
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -415,7 +415,7 @@ $tagLabels = [
             <div id="data-modules" class="row row-eq-spacing">
             </div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -458,7 +458,7 @@ $tagLabels = [
                 </button>
             </form>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('Close', 'Schließen') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -472,7 +472,7 @@ $tagLabels = [
     </a>
     <a class="btn" href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
         <i class="ph ph-x"></i>
-        <?= lang('Cancel', 'Abbrechen') ?>
+        <?= lang('action.cancel') ?>
     </a>
 </div>
 
@@ -550,7 +550,7 @@ $tagLabels = [
                         </li>
                     </ul>
 
-                    <div class="font-size-12 text-muted"><?= lang('Custom Fields', 'Benutzerdefinierte Felder') ?></div>
+                    <div class="font-size-12 text-muted"><?= lang('common.custom_fields') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($custom_fields as $field) { ?>
                             <li class="drag-item"
@@ -568,7 +568,7 @@ $tagLabels = [
 
                     </ul>
 
-                    <div class="font-size-12 text-muted mt-10"><?= lang('Data fields', 'Datenfelder') ?></div>
+                    <div class="font-size-12 text-muted mt-10"><?= lang('common.data_fields') ?></div>
                     <ul id="catalog-list" class="list-group mb-10">
                         <?php foreach ($Modules->all_modules as $id => $def):
                             // skip elements that are in the form already
@@ -896,11 +896,11 @@ $tagLabels = [
                 <div class="sticky-footer text-end">
                     <button class="btn primary" type="submit" id="saveBtn">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('Save', 'Speichern') ?>
+                        <?= lang('action.save') ?>
                     </button>
                     <button class="btn" type="button" id="preview-button">
                         <i class="ph ph-eye"></i>
-                        <?= lang('Preview', 'Vorschau') ?>
+                        <?= lang('common.preview') ?>
                     </button>
                 </div>
             </div>

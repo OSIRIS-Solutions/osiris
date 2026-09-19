@@ -23,7 +23,7 @@ $level = 0;
 
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
-$btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+$btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
 $url = ROOTPATH . "/groups/public/" . $form['id'];
 $title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
 
@@ -114,16 +114,16 @@ function sel($index, $value)
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (EN)
+                        <?= lang('forms.full_name') ?> (EN)
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= val('name') ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="description"><?= lang('Description', 'Beschreibung') ?> (EN)</label>
+                    <label for="description"><?= lang('common.description') ?> (EN)</label>
 
                     <div id="description-quill"><?= $form['description'] ?? '' ?></div>
                     <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
@@ -135,15 +135,15 @@ function sel($index, $value)
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de" class="required">
-                        <?= lang('Full Name', 'Voller Name') ?> (DE)
+                        <?= lang('forms.full_name') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" required value="<?= val('name_de') ?>">
                 </div>
                 <div class="form-group">
-                    <label for="description_de"><?= lang('Description', 'Beschreibung') ?> (DE)</label>
+                    <label for="description_de"><?= lang('common.description') ?> (DE)</label>
 
                     <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
                     <textarea name="values[description_de]" id="description_de" class="d-none" readonly><?= $form['description_de'] ?? '' ?></textarea>
@@ -156,7 +156,7 @@ function sel($index, $value)
     </div>
 
 
-    <h3><?= lang('Research interest', 'Forschungsinteressen') ?></h3>
+    <h3><?= lang('common.research_interests') ?></h3>
     <div id="research-list">
         <?php
         if (isset($form['research']) && !empty($form['research'])) {
@@ -170,11 +170,11 @@ function sel($index, $value)
                             <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
-                                <label for="values[research][<?= $i ?>][title]" class="required"><?=lang('Title', 'Titel')?></label>
+                                <label for="values[research][<?= $i ?>][title]" class="required"><?=lang('common.title')?></label>
                             </div>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
-                                <label for="values[research][<?= $i ?>][subtitle]"><?=lang('Subtitle', 'Untertitel')?></label>
+                                <label for="values[research][<?= $i ?>][subtitle]"><?=lang('common.subtitle')?></label>
                             </div>
                             <div class="form-group mb-0">
                                 <div id="info-<?=$i?>-quill"><?= $con['info'] ?? '' ?></div>
@@ -189,11 +189,11 @@ function sel($index, $value)
                             <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
-                                <label for="values[research][<?= $i ?>][title_de]"><?=lang('Title', 'Titel')?></label>
+                                <label for="values[research][<?= $i ?>][title_de]"><?=lang('common.title')?></label>
                             </div>
                             <div class="form-group floating-form">
                                 <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
-                                <label for="values[research][<?= $i ?>][subtitle_de]"><?=lang('Subtitle', 'Untertitel')?></label>
+                                <label for="values[research][<?= $i ?>][subtitle_de]"><?=lang('common.subtitle')?></label>
                             </div>
                             <div class="form-group mb-0">
                                 <div id="info_de-<?=$i?>-quill"><?= $con['info_de'] ?? '' ?></div>
@@ -207,7 +207,7 @@ function sel($index, $value)
                     </div>
 
                     <div id="activities-<?= $i ?>">
-                        <h5><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?></h5>
+                        <h5><?= lang('common.connected_activities') ?></h5>
 
                         <ul>
                             <?php foreach ($con['activities'] ?? [] as $res) {
@@ -225,7 +225,7 @@ function sel($index, $value)
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search for Activity">
                             <div class="input-group-append">
-                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('Search', 'Suchen') ?></button>
+                                <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('action.search') ?></button>
                             </div>
                         </div>
 
@@ -233,7 +233,7 @@ function sel($index, $value)
 
                     </div>
 
-                    <button class="btn danger small my-10" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                    <button class="btn danger small my-10" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 </div>
         <?php }
         } ?>
@@ -309,7 +309,7 @@ function sel($index, $value)
                     </div>
                 </div>
                 ${lang('Please save once to add more information.', 'Bitte speichere einmal, um weitere Informationen hinzuzufügen.')}<br>
-                <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('Delete', 'Löschen')}</button>
+                <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('action.delete')}</button>
             </div>
 
                 `;
@@ -330,7 +330,7 @@ function sel($index, $value)
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang("Save", "Speichern") ?>
+        <i class="ph ph-check"></i> <?= lang('action.save') ?>
     </button>
 
 </form>

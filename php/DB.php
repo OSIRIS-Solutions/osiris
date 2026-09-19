@@ -162,7 +162,7 @@ class DB
     {
         $notifications = [
             'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
-            'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
+            'epub' => '<em>Online ahead of print</em>-' . lang('common.publications'),
             'status' => lang('Expired status', 'Abgelaufener Status'),
             'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
             'project-open' => lang('Open project applications', 'Offene Projektanträge'),
@@ -201,7 +201,7 @@ class DB
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
-                    'name' => lang('Activities', 'Aktivitäten'),
+                    'name' => lang('common.activities'),
                     'count' => 0,
                     'key' => 'activity',
                     'values' => []
@@ -232,7 +232,7 @@ class DB
 
             // Prüfe auf neue OSIRIS-Version
             // $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
-            // if (lang('en', 'de') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
+            // if (lang('common.this_language') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
             //     $issues['version'] = [
             //         'name' => lang('New version available', 'Neue Version verfügbar'),
             //         'count' => 1,

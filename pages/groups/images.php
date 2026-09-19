@@ -112,7 +112,7 @@ foreach ($groupImages as $image) {
         <div class="modal modal-full" id="group-image-modal" tabindex="-1" role="dialog" aria-modal="true" aria-label="<?= lang('Image gallery', 'Bildergalerie') ?>">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('Close', 'Schließen') ?>" href="#close-modal">
+                    <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <img id="group-image-full" class="group-image-full" src="" alt="">
@@ -124,10 +124,10 @@ foreach ($groupImages as $image) {
                         <div class="btn-group d-flex justify-content-center mt-10">
                             <button type="button" class="btn" onclick="changeGroupImage(-1)">
                                 <i class="ph ph-caret-left"></i>
-                                <?= lang('Previous', 'Zurück') ?>
+                                <?= lang('navigation.previous') ?>
                             </button>
                             <button type="button" class="btn" onclick="changeGroupImage(1)">
-                                <?= lang('Next', 'Weiter') ?>
+                                <?= lang('navigation.next') ?>
                                 <i class="ph ph-caret-right"></i>
                             </button>
                         </div>
@@ -170,7 +170,7 @@ $filesize = Settings::getMaxFileSize('8M');
     <div class="modal" id="manage-group-images" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="manage-group-images-title">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('Close', 'Schließen') ?>" href="#close-modal">
+                <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h2 id="manage-group-images-title" class="title"><?= lang('Manage images', 'Bilder verwalten') ?></h2>
@@ -280,7 +280,7 @@ $filesize = Settings::getMaxFileSize('8M');
                                     </div>
                                     <button type="submit" class="btn secondary small">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('Save', 'Speichern') ?>
+                                        <?= lang('action.save') ?>
                                     </button>
                                 </form>
 
@@ -292,7 +292,7 @@ $filesize = Settings::getMaxFileSize('8M');
                                 >
                                     <button type="submit" class="btn danger small mt-10">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('Delete', 'Löschen') ?>
+                                        <?= lang('action.delete') ?>
                                     </button>
                                 </form>
                             </div>

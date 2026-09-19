@@ -28,7 +28,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-group floating-form">
             <input type="text" name="values[title]" class="form-control" value="<?= e($form['title'] ?? '') ?>" placeholder="title" required>
-            <label for="title" class="required"><?= lang('Title', 'Titel') ?></label>
+            <label for="title" class="required"><?= lang('common.title') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -46,12 +46,12 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <?php } ?>
             </select>
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('common.type') ?>
             </label>
         </div>
 
         <div class="form-group">
-            <label for="description" class="floating-title"><?= lang('Description', 'Beschreibung') ?></label>
+            <label for="description" class="floating-title"><?= lang('common.description') ?></label>
 
             <div class="form-group title-editor" id="description-quill"><?= $form['description'] ?? '' ?></div>
             <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
@@ -70,7 +70,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
 
         <div class="form-group">
-            <b class="floating-title"><?= lang('Roles', 'Rollen') ?></b><br>
+            <b class="floating-title"><?= lang('common.roles') ?></b><br>
             <?php
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));

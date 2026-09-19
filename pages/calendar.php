@@ -204,7 +204,7 @@ function updateCalendar(el, unit) {
         var calendarEl = document.getElementById('calendar');
         Calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: lang('en', 'de'),
+            locale: lang('common.this_language'),
             events: function(fetchInfo, successCallback, failureCallback) {
                 // start and end as ISO dates
                 var start = fetchInfo.startStr.split('T')[0];
@@ -285,7 +285,7 @@ function updateCalendar(el, unit) {
 
                 switch (type) {
                     case 'event':
-                        label = lang('Event', 'Veranstaltung');
+                        label = lang('common.event');
                         link = ROOTPATH + '/conferences/view/' + info.event.id;
                         break;
                     case 'research_trip':
@@ -293,11 +293,11 @@ function updateCalendar(el, unit) {
                         link = ROOTPATH + '/research-trips/' + info.event.id;
                         break;
                     case 'activity':
-                        label = lang('Activity', 'Aktivität');
+                        label = lang('common.activity');
                         link = ROOTPATH + '/activities/view/' + info.event.id;
                         break;
                     case 'project':
-                        label = lang('Project', 'Projekt');
+                        label = lang('common.project');
                         link = ROOTPATH + '/projects/view/' + info.event.id;
                         break;
                     case 'guest':
@@ -316,8 +316,8 @@ function updateCalendar(el, unit) {
                     content: `
                         <div class="calendar-tooltip">
                             <h3>${info.event.title}</h3>
-                            <p><strong>${lang('Type', 'Typ')}:</strong> <span class="badge ${type}">${label}</span></p>
-                            <p><strong>${lang('Date', 'Datum')}:</strong> ${date}</p>
+                            <p><strong>${lang('common.type')}:</strong> <span class="badge ${type}">${label}</span></p>
+                            <p><strong>${lang('common.date')}:</strong> ${date}</p>
                             <a class="btn small" href="${link}">${lang('More details', 'Mehr Details')}</a>
                             <button class="btn small" onclick="$('.popover').remove()">
                                 Schließen

@@ -35,17 +35,17 @@
         <div class="row row-eq-spacing mb-0">
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('Title', 'Titel') ?> (EN)
+                            <?= lang('common.title') ?> (EN)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title]" id="public_title" required value="<?= $project['public_title'] ?? $project['name'] ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('Subtitle', 'Untertitel') ?> (EN)
+                            <?= lang('common.subtitle') ?> (EN)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle]" id="public_subtitle" required value="<?= $project['public_subtitle'] ?? $project['title'] ?? ''  ?>">
                     </div>
@@ -53,17 +53,17 @@
             </div>
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                    <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('Title', 'Titel') ?> (DE)
+                            <?= lang('common.title') ?> (DE)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title_de]" id="public_title_de" value="<?= $project['public_title_de'] ?? '' ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('Subtitle', 'Untertitel') ?> (DE)
+                            <?= lang('common.subtitle') ?> (DE)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle_de]" id="public_subtitle_de" value="<?= $project['public_subtitle_de'] ?? '' ?>">
                     </div>
@@ -82,7 +82,7 @@
 
         <div class="form-group">
             <h5>
-                <?= lang('Image', 'Bild') ?>
+                <?= lang('common.image') ?>
             </h5>
             <p>
                 <?= lang('Upload an image (e.g.) Logo for the project. The image will be displayed in the metadata.', 'Lade ein Bild (z.B. ein Logo) für das Projekt hoch, das bei den Metadaten auf der Projektseite gezeigt wird.') ?>
@@ -103,7 +103,7 @@
 
         <h4>
             <?= lang('Abstract', 'Zusammenfassung') ?>
-            in <span class="d-inline-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
+            in <span class="d-inline-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract-quill"><?= $project['public_abstract'] ?? $project['abstract'] ?? '' ?></div>
@@ -116,7 +116,7 @@
 
         <h4>
             <?= lang('Abstract', 'Zusammenfassung') ?>
-            in <span class="d-inline-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
+            in <span class="d-inline-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract_de-quill"><?= $project['public_abstract_de'] ?? '' ?></div>
@@ -126,6 +126,6 @@
                 quillEditor('public_abstract_de');
             </script>
         </div>
-        <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
+        <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
     </form>
 </div>

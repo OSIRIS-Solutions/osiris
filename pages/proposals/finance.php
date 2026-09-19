@@ -27,7 +27,7 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
         <table class="table mb-20">
             <thead>
                 <tr>
-                    <th><?=lang('Year', 'Jahr')?></th>
+                    <th><?=lang('common.year')?></th>
                     <th><?=lang('Planned Amount', 'Geplante Summe')?> in EUR</th>
                     <th><?=lang('Spent Amount', 'Tatsächliche Summe')?> in EUR</th>
                     <th></th>

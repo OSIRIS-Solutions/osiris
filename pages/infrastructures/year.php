@@ -85,7 +85,7 @@ $kdsf_mapping = [
 ?>
 
 <h1>
-    <?= lang('Statistics', 'Statistiken') ?>
+    <?= lang('common.statistics') ?>
     <?= $year ?>
 </h1>
 
@@ -107,6 +107,6 @@ $kdsf_mapping = [
 
     <button class="btn btn-primary">
         <i class="ph ph-save"></i>
-        <?= lang('Save', 'Speichern') ?>
+        <?= lang('action.save') ?>
     </button>
 </form>

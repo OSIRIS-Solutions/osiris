@@ -28,7 +28,7 @@
                 <input type="text" class="form-control" name="general[affiliation][id]" required value="<?= $affiliation['id'] ?>">
             </div>
             <div class="col-sm">
-                <label for="name" class="required "><?= lang('Name', 'Name') ?></label>
+                <label for="name" class="required "><?= lang('common.name') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][name]" required value="<?= $affiliation['name'] ?? '' ?>">
             </div>
             <div class="col-sm">
@@ -75,7 +75,7 @@
         </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
-                <label for="location"><?= lang('Location', 'Ort') ?></label>
+                <label for="location"><?= lang('common.location') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][location]" value="<?= $affiliation['location'] ?? '' ?>">
             </div>
             <div class="col-sm">
@@ -100,7 +100,7 @@
 
         <button class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
     </form>
 </div>

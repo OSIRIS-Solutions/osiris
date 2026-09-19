@@ -247,11 +247,11 @@
                         ?>
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="topics_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="topics_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[topics_label][en]" id="topics_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Research topics') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="topics_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="topics_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[topics_label][de]" id="topics_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Forschungsbereiche') ?>">
                             </div>
                         </div>
@@ -285,11 +285,11 @@
 
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="infrastructures_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="infrastructures_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[infrastructures_label][en]" id="infrastructures_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Infrastructures') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="infrastructures_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="infrastructures_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[infrastructures_label][de]" id="infrastructures_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Infrastrukturen') ?>">
                             </div>
                         </div>
@@ -328,7 +328,7 @@
 
                 <div class="box padded">
                     <h4 class="title" id="tags">
-                        <?= lang('Tags', 'Schlagwörter') ?>
+                        <?= lang('common.tags') ?>
                     </h4>
                     <p class="description">
                         <?= lang('Tags can be used to label and categorize activities, projects and events. By enabling this feature, you can create and manage tags within OSIRIS. Once activated, you can manage tags in the content section of the admin panel.', 'Schlagwörter können verwendet werden, um Aktivitäten, Projekte und Events zu kennzeichnen und zu kategorisieren. Durch die Aktivierung dieser Funktion kannst du Schlagwörter innerhalb von OSIRIS erstellen und verwalten. Nach der Aktivierung kannst du Schlagwörter im Inhalte-Bereich des Admin-Panels verwalten.') ?>
@@ -345,11 +345,11 @@
                         ?>
                         <div class="row row-eq-spacing my-0">
                             <div class="col-md-6">
-                                <label for="tags_label" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                                <label for="tags_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                                 <input name="general[tags_label][en]" id="tags_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Tags') ?>">
                             </div>
                             <div class="col-md-6">
-                                <label for="tags_label_de" class="d-flex"><?= lang('Label', 'Bezeichnung') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                                <label for="tags_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                                 <input name="general[tags_label][de]" id="tags_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Schlagwörter') ?>">
                             </div>
                         </div>
@@ -541,7 +541,7 @@
 
                 <div class="box padded">
                     <h4 class="title" id="spectrum">
-                        <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                        <?= lang('common.research_spectrum') ?>
                     </h4>
 
                     <?= badgeBeta() ?>
@@ -699,9 +699,9 @@
                     <a href="#projects" class="submenu"><?= lang('Projects and Proposals', 'Projekte und Anträge') ?></a>
                     <a href="#teaching-modules" class="submenu"><?= lang('Teaching modules', 'Lehrveranstaltungen') ?></a>
                     <a href="#research-topics" class="submenu"><?= lang('Research Topics', 'Forschungsbereiche') ?></a>
-                    <a href="#infrastructures" class="submenu"><?= lang('Infrastructures', 'Infrastrukturen') ?></a>
+                    <a href="#infrastructures" class="submenu"><?= lang('common.infrastructures') ?></a>
                     <a href="#calendar" class="submenu"><?= lang('Calendar and Events', 'Kalender und Events') ?></a>
-                    <a href="#tags" class="submenu"><?= lang('Tags', 'Schlagwörter') ?></a>
+                    <a href="#tags" class="submenu"><?= lang('common.tags') ?></a>
                     <a href="#trips" class="submenu"><?= lang('Research Trips', 'Forschungsreisen') ?></a>
                     <a href="#wordcloud" class="submenu"><?= lang('Word Clouds', 'Word Clouds') ?></a>
 
@@ -714,7 +714,7 @@
                     <a href="#imports-external-features"><?= lang('Imports & External Features', 'Importe & Externe Funktionen') ?></a>
                     <a href="#imports" class="submenu"><?= lang('Imports', 'Importe') ?></a>
                     <a href="#altmetrics" class="submenu"><?= lang('Altmetrics', 'Altmetriken') ?></a>
-                    <a href="#spectrum" class="submenu"><?= lang('Research Spectrum', 'Forschungs-Spektrum') ?></a>
+                    <a href="#spectrum" class="submenu"><?= lang('common.research_spectrum') ?></a>
 
                     <a href="#guest-management-features"><?= lang('Profiles and Guests', 'Profile und Gäste') ?></a>
                     <a href="#home-page" class="submenu"><?= lang('Home Page', 'Startseite') ?></a>

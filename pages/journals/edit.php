@@ -51,7 +51,7 @@ $oa = $data['oa'] ?? false;
 
         <div class="form-group floating-form">
             <input type="text" name="values[journal]" id="journal" class="form-control" value="<?= $data['journal'] ?? '' ?>" required placeholder="Journal name">
-            <label for="journal" class="required"><?= lang('Name', 'Name') ?></label>
+            <label for="journal" class="required"><?= lang('common.name') ?></label>
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[abbr]" id="abbr" class="form-control" value="<?= $data['abbr'] ?? '' ?>" placeholder="Abbreviation">
@@ -100,11 +100,11 @@ $oa = $data['oa'] ?? false;
                 <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
                 <?php
                 $c = $form['country'] ?? '';
-                foreach ($DB->getCountries(lang('name', 'name_de')) as $key => $value) { ?>
+                foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                     <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                 <?php } ?>
             </select>
-            <label for="country"><?= lang('Country', 'Land') ?></label>
+            <label for="country"><?= lang('common.country') ?></label>
         </div>
 
         <div class="form-group">
@@ -151,7 +151,7 @@ $oa = $data['oa'] ?? false;
 
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
     </form>
 </div>

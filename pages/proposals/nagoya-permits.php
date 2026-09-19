@@ -128,7 +128,7 @@ $canAddNotes = true; // later
                         <div class="box padded">
                             <h3 class="title">
                                 <i class="ph-duotone ph-globe-stand"></i>
-                                <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                                <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                             </h3>
                             <div class="d-flex justify-content-between align-items-center mb-10">
                                 <div>
@@ -163,7 +163,7 @@ $canAddNotes = true; // later
                                         <thead>
                                             <tr>
                                                 <th><?= lang('Permit', 'Genehmigung') ?></th>
-                                                <th><?= lang('Status', 'Status') ?></th>
+                                                <th><?= lang('common.status') ?></th>
                                                 <th><?= lang('IRCC / Permit number', 'IRCC / Genehmigungsnummer') ?></th>
                                                 <th><?= lang('Docs', 'Dokumente') ?></th>
                                                 <?php if ($Settings->hasPermission('nagoya.view')): ?>
@@ -207,10 +207,10 @@ $canAddNotes = true; // later
                                                             // } 
                                                             $statusClass = 'badge success';
                                                         } elseif ($status === 'not-applicable') {
-                                                            $statusLabel = lang('Not applicable', 'Nicht zutreffend');
+                                                            $statusLabel = lang('common.not_applicable');
                                                             $statusClass = 'badge muted';
                                                         } else {
-                                                            $statusLabel = lang('Unknown', 'Unbekannt');
+                                                            $statusLabel = lang('common.unknown');
                                                         }
                                                         ?>
                                                         <span class="<?= $statusClass ?>"><?= $statusLabel ?></span>

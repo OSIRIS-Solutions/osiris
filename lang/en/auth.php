@@ -1,0 +1,22 @@
+<?php
+return [
+    'account_created_success' => 'Account created successfully. Please login with your new account.',
+    'auth_token' => 'AUTH Token',
+    'password_forgot_if_mail_correct' => 'If the mail address is correct, you will receive an email with further instructions.',
+    'password_forgot_please_wait' => 'You have recently requested a password reset. Please wait a few minutes.',
+    'password_forgot' => 'Forgot password',
+    'password_new' => 'New password',
+    'password_reset_click_link' => 'You have requested a password reset from OSIRIS. Please click the following link to reset your password:',
+    'password_reset_from' => 'Password reset from',
+    'password_reset_if_not_requested' => 'If you did not request a password reset, please ignore this email.',
+    'password_reset_instructions' => 'If you reset the password, a link will be created that the user can use to set a new password.',
+    'password_reset_link_expired' => 'The link has expired. Please request a new password reset.',
+    'password_reset_link_invalid' => 'The link is not valid. Please request a new password reset.',
+    'password_reset_link_reminder' => 'Please note that the link does not work when you are already logged-in.',
+    'password_reset_link_share' => 'A password reset link has been created. Please share the following link with the user:',
+    'password_reset_success' => 'Password reset successfully. Please login with your new password.',
+    'password_reset' => 'Reset password',
+    'register_contact_admin' => 'To register, please contact the administrator.',
+    'token_invalid' => 'The provided AUTH token is not valid.',
+    'token_valid' => 'The provided AUTH token is valid. You can now register.',
+    ];

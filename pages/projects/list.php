@@ -35,7 +35,7 @@ function val($index, $default = '')
     return $val;
 }
 
-$pagetitle = lang('Projects', 'Projekte');
+$pagetitle = lang('common.projects');
 $filter = [];
 if (!$Settings->hasPermission('projects.view')) {
     $filter = [
@@ -103,7 +103,7 @@ $Vocabulary = new Vocabulary();
     <div class="btn-group">
         <a href="<?= ROOTPATH ?>/projects/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
-            <?= lang('Statistics', 'Statistiken') ?>
+            <?= lang('common.statistics') ?>
         </a>
         <a href="<?= ROOTPATH ?>/visualize/map" class="btn">
             <i class="ph ph-map-pin-line"></i>
@@ -112,7 +112,7 @@ $Vocabulary = new Vocabulary();
     </div>
     <a href="<?= ROOTPATH ?>/projects/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
 
     <?php if ($Settings->canProjectsBeCreated()) { ?>
@@ -361,7 +361,7 @@ $Vocabulary = new Vocabulary();
                     </tr>
                     <tr>
                         <td>
-                            <a data-type="true" onclick="filterProjects(this, '<?= lang('Subproject', 'Teilprojekt') ?>', 14)" class="item" id="subproject-true-btn">
+                            <a data-type="true" onclick="filterProjects(this, '<?= lang('common.subproject') ?>', 14)" class="item" id="subproject-true-btn">
                                 <span>
                                     <i class="ph ph-git-merge"></i>&nbsp;
                                     <?= lang('Subprojects', 'Teilprojekte') ?>
@@ -380,7 +380,7 @@ $Vocabulary = new Vocabulary();
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                 </div>
                 <input type="date" name="from" id="filter-from" class="form-control">
             </div>
@@ -407,11 +407,11 @@ $Vocabulary = new Vocabulary();
 
     const activeFilters = $('#active-filters')
     const headers = [{
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('common.type'),
             key: 'type'
         },
         {
@@ -419,15 +419,15 @@ $Vocabulary = new Vocabulary();
             key: 'funder'
         },
         {
-            title: lang('Start date', 'Startdatum'),
+            title: lang('common.start_date'),
             key: 'start_date'
         },
         {
-            title: lang('End date', 'Enddatum'),
+            title: lang('common.end_date'),
             key: 'end_date'
         },
         {
-            title: lang('Role', 'Rolle'),
+            title: lang('common.role'),
             key: 'role'
         },
         {
@@ -439,7 +439,7 @@ $Vocabulary = new Vocabulary();
             key: 'proposal_id'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             key: 'units'
         },
         {
@@ -447,15 +447,15 @@ $Vocabulary = new Vocabulary();
             key: 'topics'
         },
         {
-            title: lang('Funding organization', 'Förderorganisation'),
+            title: lang('common.funding_organizations'),
             key: 'funding_organization'
         },
         {
-            title: lang('Project', 'Projekt'),
+            title: lang('common.project'),
             key: 'name'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('common.title'),
             key: 'title'
         },
         {
@@ -463,7 +463,7 @@ $Vocabulary = new Vocabulary();
             key: 'persons'
         },
         {
-            title: lang('Subproject', 'Teilprojekt'),
+            title: lang('common.subproject'),
             key: 'subproject'
         },
         {
@@ -508,7 +508,7 @@ $Vocabulary = new Vocabulary();
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.subproject')}
                         </span>`
         }
         return data;
@@ -611,7 +611,7 @@ $Vocabulary = new Vocabulary();
             deferRender: true,
             responsive: true,
             buttons: [{
-                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('Advanced search', 'Erweiterte Suche') ?>',
+                    text: '<i class="ph ph-magnifying-glass-plus"></i> <?= lang('navigation.advanced_search') ?>',
                     className: 'btn small text-primary mr-10',
                     action: function(e, dt, node, config) {
                         window.location.href = '<?= ROOTPATH ?>/projects/search';
@@ -688,7 +688,7 @@ $Vocabulary = new Vocabulary();
                     data: 'type',
                     searchable: true,
                     visible: false,
-                    header: lang('Type', 'Typ')
+                    header: lang('common.type')
                 },
                 {
                     target: 2,
@@ -704,14 +704,14 @@ $Vocabulary = new Vocabulary();
                     data: 'start_date',
                     searchable: true,
                     visible: false,
-                    header: lang('Start date', 'Startdatum')
+                    header: lang('common.start_date')
                 },
                 {
                     target: 4,
                     data: 'end_date',
                     searchable: true,
                     visible: false,
-                    header: lang('End date', 'Enddatum')
+                    header: lang('common.end_date')
                 },
                 {
                     target: 5,
@@ -719,7 +719,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Role', 'Rolle')
+                    header: lang('common.role')
                 },
                 {
                     target: 6,
@@ -743,7 +743,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Units', 'Einheiten')
+                    header: lang('common.units')
                 },
                 {
                     target: 9,
@@ -764,7 +764,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Funding organization', 'Förderorganisation')
+                    header: lang('common.funding_organizations')
                 },
                 {
                     target: 11,
@@ -772,7 +772,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Project', 'Projekt')
+                    header: lang('common.project')
                 },
                 {
                     target: 12,
@@ -780,7 +780,7 @@ $Vocabulary = new Vocabulary();
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Title', 'Titel')
+                    header: lang('common.title')
                 },
                 {
                     target: 13,
@@ -802,10 +802,10 @@ $Vocabulary = new Vocabulary();
                     defaultContent: false,
                     searchable: true,
                     visible: false,
-                    header: lang('Subproject', 'Teilprojekt'),
+                    header: lang('common.subproject'),
                     render: (data, type, row) => {
                         if (data) {
-                            return lang('Subproject', 'Teilprojekt');
+                            return lang('common.subproject');
                         }
                         return lang('Main project', 'Hauptprojekt');
                     }

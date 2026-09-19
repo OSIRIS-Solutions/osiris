@@ -66,7 +66,7 @@ include_once BASEPATH . "/header-editor.php";
             <input type="text" class="form-control" name="values[module]" id="module" required value="<?= val('module') ?>" placeholder="MB05">
         </div>
 
-        <div class="form-group lang-<?= lang('en', 'de') ?>">
+        <div class="form-group lang-<?= lang('common.this_language') ?>">
             <label for="title" class="required element-title">
                 <?= lang('Name of the module', 'Name des Moduls') ?>
             </label>
@@ -97,7 +97,7 @@ include_once BASEPATH . "/header-editor.php";
                 <div id="org-organization-value">
                     <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                        <?= lang('error.organization_select_missing') ?>
                         <?php if (!empty($org_id)) { ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                         <?php } ?>
@@ -108,7 +108,7 @@ include_once BASEPATH . "/header-editor.php";
                             <b><?= $collab['name'] ?></b>
                             <br><small class="text-muted"><?= $collab['location'] ?></small>
                         <?php } else { ?>
-                            <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                            <?= lang('error.organization_select_missing') ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                     <?php }
                     } ?>
@@ -147,7 +147,7 @@ include_once BASEPATH . "/header-editor.php";
         </div>
 
 
-        <button type="submit" class="btn secondary" id="submit"><?= lang('Save', 'Speichern') ?></button>
+        <button type="submit" class="btn secondary" id="submit"><?= lang('action.save') ?></button>
     </form>
 
 
@@ -159,7 +159,7 @@ include_once BASEPATH . "/header-editor.php";
                 </a>
                 <label for="org-organization-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                     <div class="input-group-append">
                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'organization')"><i class="ph ph-magnifying-glass"></i></button>
                     </div>
@@ -172,15 +172,17 @@ include_once BASEPATH . "/header-editor.php";
                 <small class="text-muted">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
 
                 <p>
-                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new" target="_blank"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                    <?php } else { ?>
-                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                        </a>
-                    <?php } ?>
+                    <?php 
+                    if ($Settings->hasPermission('organizations.edit')) {
+                        lang('forms.organization_not_found_add_new', replace:[
+                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                        ]);
+                    } else { 
+                        lang('forms.organization_not_found_contact', replace:[
+                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                        ]);
+                    } 
+                    ?>
                 </p>
             </div>
         </div>

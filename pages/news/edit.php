@@ -198,7 +198,7 @@ if (isset($news) && isset($news['_id'])) {
         <div class="box padded">
             <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2 class="title">
             <div class="form-group">
-                <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
+                <label for="news-title" class="required"><?= lang('common.title') ?></label>
                 <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
@@ -222,7 +222,7 @@ if (isset($news) && isset($news['_id'])) {
                     <h2 class="title d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h2 class="title">
 
                     <div class="form-group">
-                        <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
+                        <label for="news-title" class="required"><?= lang('common.title') ?></label>
                         <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
                     </div>
 
@@ -248,7 +248,7 @@ if (isset($news) && isset($news['_id'])) {
                     <h2 class="title d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h2 class="title">
 
                     <div class="form-group">
-                        <label for="news-title-de"><?= lang('Title', 'Titel') ?></label>
+                        <label for="news-title-de"><?= lang('common.title') ?></label>
                         <input type="text" name="news[title_de]" id="news-title-de" class="form-control large" value="<?= $news['title_de'] ?? '' ?>">
                     </div>
 
@@ -279,7 +279,7 @@ if (isset($news) && isset($news['_id'])) {
 
         <details class="collapse-panel person-panel" open>
             <summary class="collapse-header">
-                <?= lang('People', 'Personen') ?>
+                <?= lang('common.people') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
@@ -291,7 +291,7 @@ if (isset($news) && isset($news['_id'])) {
                             <option value="<?= $s['_id'] ?>"><?= $s['displayname'] ?></option>
                         <?php } ?>
                     </select>
-                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                 </div>
 
                 <!-- Make sure that empty person connections are also submitted. -->
@@ -356,12 +356,12 @@ if (isset($news) && isset($news['_id'])) {
 
         <details class="collapse-panel activity-panel" open id="activity-panel">
             <summary class="collapse-header">
-                <?= lang('Activities', 'Aktivitäten') ?>
+                <?= lang('common.activities') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
                     <input type="text" id="activity-search" class="form-control" placeholder="<?= lang('Search for an activity', 'Nach einer Aktivität suchen') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
-                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('Search', 'Suchen') ?></button>
+                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('action.search') ?></button>
                 </div>
 
                 <div class="suggestions" style="display:none;"></div>
@@ -371,7 +371,7 @@ if (isset($news) && isset($news['_id'])) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>:</th>
+                            <th><?= lang('common.connected_activities') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -406,7 +406,7 @@ if (isset($news) && isset($news['_id'])) {
         ?>
             <details class="collapse-panel project-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -422,14 +422,14 @@ if (isset($news) && isset($news['_id'])) {
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
+                            <option value=""><?= lang('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
                     <!-- make sure that empty projects are also submitted -->
                     <input type="hidden" name="news[projects]" value="">
@@ -485,7 +485,7 @@ if (isset($news) && isset($news['_id'])) {
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert('<?= lang('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists
@@ -524,7 +524,7 @@ if (isset($news) && isset($news['_id'])) {
         ?>
             <details class="collapse-panel event-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('Events', 'Veranstaltungen') ?>
+                    <?= lang('common.events') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -548,7 +548,7 @@ if (isset($news) && isset($news['_id'])) {
                                 </option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
                     <!-- make sure that empty events are also submitted -->
                     <input type="hidden" name="news[events]" value="">
@@ -640,14 +640,14 @@ if (isset($news) && isset($news['_id'])) {
                     )->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>">
-                            <option value=""><?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?></option>
+                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('forms.select_infrastructure') ?>">
+                            <option value=""><?= lang('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
                     </div>
 
                     <!-- make sure that empty infrastructures are also submitted -->
@@ -689,7 +689,7 @@ if (isset($news) && isset($news['_id'])) {
                         const infraId = $('#infrastructure-select').val();
                         const infraName = $('#infrastructure-select option:selected').text();
                         if (!infraId) {
-                            alert('<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>');
+                            alert('<?= lang('forms.select_infrastructure') ?>');
                             return;
                         }
                         // check if infrastructure already exists
@@ -730,7 +730,7 @@ if (isset($news) && isset($news['_id'])) {
             </p>
 
             <div class="form-group mb-0">
-                <label for="featured-entity"><?= lang('Entity', 'Entität') ?></label>
+                <label for="featured-entity"><?= lang('common.entity') ?></label>
                 <select id="featured-entity" class="form-control" disabled>
                     <option value=""><?= lang('No featured entity', 'Keine Hervorhebung') ?></option>
                 </select>
@@ -773,7 +773,7 @@ if (isset($news) && isset($news['_id'])) {
 
         <div class="form-group">
             <label for="type" class="required">
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('common.type') ?>
             </label>
             <select name="news[type]" id="type" class="form-control w-auto" required>
                 <?php
@@ -808,7 +808,7 @@ if (isset($news) && isset($news['_id'])) {
 
     <button type="submit" class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('Save', 'Speichern') ?>
+        <?= lang('action.save') ?>
     </button>
 </form>
 
@@ -868,10 +868,10 @@ if (isset($news) && isset($news['_id'])) {
         const featuredEditor = $('#featured-editor');
         const featuredTextFields = $('#featured-text-fields');
         const typeLabels = {
-            person: <?= json_encode(lang('People', 'Personen')) ?>,
-            activity: <?= json_encode(lang('Activities', 'Aktivitäten')) ?>,
-            project: <?= json_encode(lang('Projects', 'Projekte')) ?>,
-            event: <?= json_encode(lang('Events', 'Veranstaltungen')) ?>,
+            person: <?= json_encode(lang('common.people')) ?>,
+            activity: <?= json_encode(lang('common.activities')) ?>,
+            project: <?= json_encode(lang('common.projects')) ?>,
+            event: <?= json_encode(lang('common.events')) ?>,
             infrastructure: <?= json_encode($Settings->infrastructureLabel()) ?>
         };
 

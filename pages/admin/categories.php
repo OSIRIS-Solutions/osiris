@@ -26,7 +26,7 @@
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -58,7 +58,7 @@
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('Submit', 'Bestätigen') ?>
+                    <?= lang('action.submit') ?>
                 </button>
             </form>
             <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -108,7 +108,7 @@
     </div>
     <a class="btn ml-auto" href="#order">
         <i class="ph ph-list-numbers"></i>
-        <?= lang('Change order', 'Reihenfolge ändern') ?>
+        <?= lang('common.change_order') ?>
     </a>
 </div>
 
@@ -122,7 +122,7 @@ foreach ($Categories->categories as $type) {
         </h3>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('action.edit') ?>
         </a>
         <div class="d-flex align-items-baseline flex-wrap">
             <h5><?= lang('Types', 'Typen') ?>:</h5>

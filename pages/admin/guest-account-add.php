@@ -34,7 +34,7 @@ include_once BASEPATH . '/header-editor.php';
 
         <div class="col floating-form">
             <input class="form-control" type="password" id="password" name="password" required placeholder="password">
-            <label class="required" for="password"><?= lang('Password', 'Passwort') ?></label>
+            <label class="required" for="password"><?= lang('common.password') ?></label>
         </div>
     </div>
 
@@ -52,15 +52,15 @@ include_once BASEPATH . '/header-editor.php';
                 <option value="PD" <?= $title == 'PD' ? 'selected' : '' ?>>PD</option>
                 <!-- <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option> -->
             </select>
-            <label for="academic_title"><?= lang('Title', 'Titel') ?></label>
+            <label for="academic_title"><?= lang('common.title') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
-            <label class="required" for="first"><?= lang('First name', 'Vorname') ?></label>
+            <label class="required" for="first"><?= lang('common.name_first') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required placeholder="last name">
-            <label class="required" for="last"><?= lang('Last name', 'Nachname') ?></label>
+            <label class="required" for="last"><?= lang('common.name_last') ?></label>
         </div>
     </div>
 
@@ -74,7 +74,7 @@ include_once BASEPATH . '/header-editor.php';
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
-            <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+            <label for="telephone"><?= lang('common.telephone') ?></label>
         </div>
 
     </div>
@@ -106,26 +106,26 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div class="form-group">
-        <span><?= lang('Gender', 'Geschlecht') ?>:</span>
+        <span><?= lang('common.gender') ?>:</span>
         <?php
         $gender = $data['gender'] ?? 'n';
         ?>
 
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-            <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+            <label for="gender-m"><?= lang('common.gender_male') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-            <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+            <label for="gender-f"><?= lang('common.gender_female') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-            <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+            <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-            <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+            <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
         </div>
 
     </div>
@@ -165,7 +165,7 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div>
-        <h5><?= lang('Roles', 'Rollen') ?></h5>
+        <h5><?= lang('common.roles') ?></h5>
         <?php
         $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
         $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));

@@ -21,7 +21,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 ?>
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
-    <a href="<?= ROOTPATH ?>/preview/groups" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('Preview', 'Vorschau') ?></a>
+    <a href="<?= ROOTPATH ?>/preview/groups" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('common.preview') ?></a>
 <?php } ?>
 <h1>
     <i class="ph-duotone ph-users-three"></i>

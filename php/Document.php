@@ -166,7 +166,7 @@ class Document extends Settings
         $this->custom_fields = array_column($fields, null, 'id');
         $this->custom_field_values = array_column($fields, 'values', 'id');
 
-        $this->lang = lang('en', 'de');
+        $this->lang = lang('common.this_language');
 
         $this->field_ids = array_keys($this->templates);
         foreach ($this->custom_fields as $field) {
@@ -464,7 +464,7 @@ class Document extends Settings
 
     function activity_subtype()
     {
-        $name = $this->lang("Other", "Sonstiges");
+        $name = $this->lang('common.other');
         if (!empty($this->subtypeArr) && isset($this->subtypeArr['name'])) {
             $name = $this->lang(
                 $this->subtypeArr['name'],
@@ -482,7 +482,7 @@ class Document extends Settings
     }
     function activity_type()
     {
-        $name = $this->lang("Other", "Sonstiges");
+        $name = $this->lang('common.other');
         if (!empty($this->typeArr) && isset($this->typeArr['name'])) {
             $name = $this->lang(
                 $this->typeArr['name'],
@@ -1220,7 +1220,7 @@ class Document extends Settings
             case 'seminar':
                 return $this->lang('Seminar');
             case 'other':
-                return $this->lang('Other', 'Sonstiges');
+                return $this->lang('common.other');
             case "doctoral student":
                 return $this->lang('Doctoral Student', 'Doktorand:in');
             case "master student":
@@ -1244,7 +1244,7 @@ class Document extends Settings
             'committee-member' => $this->lang('Committee member', 'Ausschussmitglied'),
             'chair' => $this->lang('Chair', 'Vorsitzender'),
             'mentor' => $this->lang('Mentor', 'Mentor'),
-            'other' => $this->lang('Other', 'Sonstiges')
+            'other' => $this->lang('common.other')
         ];
         if (isset($roles[$role])) {
             return $roles[$role];
@@ -1299,7 +1299,7 @@ class Document extends Settings
             case "correction": // ["correction"],
                 $val = $this->getVal('correction', false);
                 if ($this->usecase == 'list')
-                    return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    return $val ? lang('common.yes') : lang('common.no');
                 if ($val)
                     return "<span style='color:#B61F29;'>[Correction]</span>";
                 else return '';
@@ -1449,7 +1449,7 @@ class Document extends Settings
                 return $this->getVal('magazine');
             case "online-ahead-of-print": // ["epub"],
                 if ($this->usecase == 'list')
-                    return $this->getVal('epub', false) ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    return $this->getVal('epub', false) ? lang('common.yes') : lang('common.no');
                 if ($this->getVal('epub', false))
                     return "<span style='color:#B61F29;'>[Online ahead of print]</span>";
                 else return '';
@@ -1679,7 +1679,7 @@ class Document extends Settings
                 $topics = DB::doc2Arr($this->getVal('topics', []));
                 if (empty($topics)) return '';
                 $topics = $this->osiris->topics->find(['id' => ['$in' => $topics]]);
-                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('name', 'name_de'));
+                $topics_arr = array_column(DB::doc2Arr($topics), $this->lang('common.field_name_language'));
                 return implode(', ', $topics_arr);
             case "university": // ["publisher"],
                 return $this->getVal('publisher');
@@ -1692,24 +1692,24 @@ class Document extends Settings
             case "country":
             case "nationality":
                 $code = $this->getVal('country');
-                return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
+                return $this->DB->getCountry($code, $this->lang('common.field_name_language'));
             case 'countries':
                 $countries = DB::doc2Arr($this->getVal('countries', []));
                 if (empty($countries)) return '';
                 $country_names = array_map(function ($code) {
-                    return $this->DB->getCountry($code, $this->lang('name', 'name_de'));
+                    return $this->DB->getCountry($code, $this->lang('common.field_name_language'));
                 }, $countries);
                 return implode(', ', $country_names);
             case "gender":
                 switch ($this->getVal('gender')) {
                     case 'f':
-                        return $this->lang('female', 'weiblich');
+                        return $this->lang('common.gender_female');
                     case 'm':
-                        return $this->lang('male', 'männlich');
+                        return $this->lang('common.gender_male');
                     case 'd':
-                        return $this->lang('non-binary', 'divers');
+                        return $this->lang('common.gender_non_binary');
                     case '-':
-                        return $this->lang('not specified', 'keine Angabe');
+                        return $this->lang('common.gender_not_specified');
                     default:
                         return '';
                 }
@@ -1765,7 +1765,7 @@ class Document extends Settings
                 }
 
                 if ($val === true || $val === false) {
-                    if ($this->usecase == 'list') return $val ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                    if ($this->usecase == 'list') return $val ? lang('common.yes') : lang('common.no');
                     $field = $this->custom_fields[$module];
                     if (!isset($field['name'])) {
                         $field['name'] = $module;
@@ -1813,7 +1813,7 @@ class Document extends Settings
             $line .= "<br><small style='color:#878787;'>" . $this->appendix . "</small>";
         }
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }
@@ -1851,7 +1851,7 @@ class Document extends Settings
         $line .= $this->get_field('file-icons');
         $line .= "</small>";
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }
@@ -1880,7 +1880,7 @@ class Document extends Settings
         $line .= $this->getSubtitle();
         $line .= "</small>";
         if ($lang !== null) {
-            $this->lang = lang('en', 'de');
+            $this->lang = lang('common.this_language');
         }
         return $line;
     }

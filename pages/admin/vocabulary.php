@@ -16,19 +16,19 @@
 
 $categories = [
     'Project' => [
-        'label' => lang('Projects', 'Projekte'),
+        'label' => lang('common.projects'),
         'icon' => 'ph ph-tree-structure'
     ],
     'Infrastructure' => [
-        'label' => lang('Infrastructures', 'Infrastrukturen'),
+        'label' => lang('common.infrastructures'),
         'icon' => 'ph ph-cube-transparent'
     ],
     'Event' => [
-        'label' => lang('Events', 'Veranstaltungen'),
+        'label' => lang('common.events'),
         'icon' => 'ph ph-calendar'
     ],
     'Activity' => [
-        'label' => lang('Activities', 'Aktivitäten'),
+        'label' => lang('common.activities'),
         'icon' => 'ph ph-folder'
     ],
 ];
@@ -38,7 +38,7 @@ $categories = [
 
     <h1>
         <i class="ph ph-book-bookmark text-primary"></i>
-        <?= lang('Vocabulary', 'Vokabular') ?>
+        <?= lang('common.vocabulary') ?>
     </h1>
 
     <p>

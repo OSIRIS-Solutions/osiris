@@ -34,11 +34,11 @@ $attributeMappings = array_merge($attributeMappings, $availableLdapFields ?? [])
 
 $fields = [
     'first' => [
-        'name' => lang('First Name', 'Vorname'),
+        'name' => lang('common.name_first'),
         'example' => 'givenname', // Beispiel: "John"
     ],
     'last' => [
-        'name' => lang('Last Name', 'Nachname'),
+        'name' => lang('common.name_last'),
         'example' => 'sn', // Beispiel: "Doe"
     ],
     'academic_title' => [
@@ -50,7 +50,7 @@ $fields = [
         'example' => 'mail', // Beispiel: "john.doe@example.com"
     ],
     'telephone' => [
-        'name' => lang('Telephone', 'Telefon'),
+        'name' => lang('common.telephone'),
         'example' => 'telephonenumber', // Beispiel: "+1 555 123 456"
     ],
     'mobile' => [
@@ -58,7 +58,7 @@ $fields = [
         'example' => 'mobile', // Beispiel: "+1 555 987 654"
     ],
     'position' => [
-        'name' => lang('Position', 'Position'),
+        'name' => lang('common.position'),
         'example' => 'title', // Beispiel: "Software Engineer"
     ],
     'department' => [
@@ -66,7 +66,7 @@ $fields = [
         'example' => 'department', // Beispiel: "IT Department"
     ], //description
     'is_active' => [
-        'name' => lang('Active', 'Aktiv'),
+        'name' => lang('common.active'),
         'example' => 'useraccountcontrol', // Beispiel: "512" (Aktiv) oder "514" (Deaktiviert)
     ],
     'room' => [
@@ -74,7 +74,7 @@ $fields = [
         'example' => 'physicaldeliveryofficename', // Beispiel: "Room 101"
     ],
     'internal_id' => [
-        'name' => lang('Internal ID', 'Interne ID'),
+        'name' => lang('common.internal_id'),
         'example' => 'objectsid', // Beispiel: "12345"
     ],
 ];

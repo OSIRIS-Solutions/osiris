@@ -31,7 +31,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -62,7 +62,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('Submit', 'Bestätigen') ?>
+                    <?= lang('action.submit') ?>
                 </button>
             </form>
             <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -83,7 +83,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
 
 <h1>
     <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('Reports', 'Berichte') ?>
+    <?= lang('common.reports') ?>
 </h1>
 
 <?php if ($Settings->hasPermission('report.templates')) { ?>
@@ -98,7 +98,7 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
         </a>
         <a href="#order" class="btn " data-toggle="modal">
             <i class="ph ph-list-numbers"></i>
-            <?= lang('Change order', 'Reihenfolge ändern') ?>
+            <?= lang('common.change_order') ?>
         </a>
     </div>
 <?php } ?>

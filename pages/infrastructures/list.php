@@ -85,7 +85,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/infrastructures/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <?php if ($Settings->hasPermission('infrastructures.edit')) { ?>
         <a href="<?= ROOTPATH ?>/infrastructures/new">
@@ -101,12 +101,12 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         <table class="table" id="infrastructure-table">
             <thead>
                 <tr>
-                    <th><?= lang('Name', 'Name') ?></th>
-                    <th><?= lang('Name', 'Name') ?></th>
-                    <th><?= lang('Start Date', 'Startdatum') ?></th>
-                    <th><?= lang('End Date', 'Enddatum') ?></th>
-                    <th><?= lang('Category', 'Kategorie') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('common.name') ?></th>
+                    <th><?= lang('common.name') ?></th>
+                    <th><?= lang('common.start_date') ?></th>
+                    <th><?= lang('common.end_date') ?></th>
+                    <th><?= lang('common.category') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Access', 'Zugang') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                 </tr>

@@ -36,7 +36,7 @@ $type = $_GET['type'] ?? 'publication';
 
         <div class="pills">
             <button id="btn-units" class="btn <?= ($entity == 'units') ? 'active' : '' ?>" onclick="showForm('units')">
-                <?= lang('Units', 'Einheiten') ?>
+                <?= lang('common.units') ?>
             </button>
             <?php if ($Settings->featureEnabled('topics')) { ?>
                 <button id="btn-topics" class="btn <?= ($entity == 'topics') ? 'active' : '' ?>" onclick="showForm('topics')">
@@ -77,7 +77,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <button type="submit" class="btn primary">
-                <?= lang('Update', 'Aktualisieren') ?>
+                <?= lang('action.update') ?>
             </button>
         </form>
 
@@ -107,7 +107,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <button type="submit" class="btn primary">
-                <?= lang('Update', 'Aktualisieren') ?>
+                <?= lang('action.update') ?>
             </button>
         </form>
 

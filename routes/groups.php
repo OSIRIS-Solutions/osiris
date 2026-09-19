@@ -69,7 +69,7 @@ Route::get('/groups', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten")]
+        ['name' => lang('common.units')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/groups.php";
@@ -80,8 +80,8 @@ Route::get('/groups/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.units'), 'path' => "/groups"],
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/add.php";
@@ -103,10 +103,10 @@ Route::get('/groups/view/(.*)', function ($id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang("Unit", "Einheit"), '/groups');
+        abortwith(404, lang('common.unit'), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
+        ['name' => lang('common.units'), 'path' => "/groups"],
         ['name' => $group['id']]
     ];
 
@@ -129,14 +129,14 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang("Unit", "Einheit"), '/groups');
+        abortwith(404, lang('common.unit'), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang("Units", "Einheiten"), 'path' => "/groups"],
+        ['name' => lang('common.units'), 'path' => "/groups"],
         ['name' =>  $group['id'], 'path' => "/groups/view/$id"],
     ];
     if ($page == 'edit') {
-        $breadcrumb[] = ['name' => lang("Edit", "Bearbeiten")];
+        $breadcrumb[] = ['name' => lang('action.edit')];
     }
 
     global $form;
@@ -151,8 +151,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
 
 Route::post('/crud/groups/create', function () {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->groups;
 
     $values = validateValues($_POST['values'], $DB);
@@ -200,10 +199,6 @@ Route::post('/crud/groups/create', function () {
 
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
-    if (!empty($values['head'])) {
-        $Groups = new Groups();
-        renderCurrentUnits(['username' => ['$in' => array_values($values['head'])]]);
-    }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
@@ -221,8 +216,7 @@ Route::post('/crud/groups/create', function () {
 
 Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $id = $DB->to_ObjectID($id);
 
@@ -236,9 +230,6 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     // dump($values);
     // die;
     $id_changed = false;
-    $parent_changed = array_key_exists('parent', $values)
-        && ($values['parent'] ?? null) !== ($group['parent'] ?? null);
-    $heads_added = [];
     if (isset($values['hide'])) $values['hide'] = boolval($values['hide']);
     // check if ID has changes
     if (isset($values['id']) && $group['id'] != $values['id']) {
@@ -338,7 +329,6 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
                         ]
                     ]]
                 );
-                $heads_added[] = $head;
             }
         }
     }
@@ -348,13 +338,8 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if ($id_changed) {
+        include_once BASEPATH . "/php/Render.php";
         renderAuthorUnitsMany(['authors.units' => $group['id']]);
-    }
-    if ($id_changed || $parent_changed) {
-        $Groups = new Groups();
-        renderCurrentUnits();
-    } elseif (!empty($heads_added)) {
-        renderCurrentUnits(['username' => ['$in' => array_values(array_unique($heads_added))]]);
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
@@ -375,7 +360,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
@@ -540,7 +525,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
@@ -557,7 +542,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
             break;
         }
     }
-    if (!$imageExists) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+    if (!$imageExists) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
 
     $takenAt = trim($_POST['taken_at'] ?? '');
     if ($takenAt !== '') {
@@ -594,7 +579,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang("Unit", "Einheit"), '/groups');
+    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
@@ -611,7 +596,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
             break;
         }
     }
-    if ($selectedImage === null) abortwith(404, lang('Image', 'Bild'), "/groups/view/{$group['id']}");
+    if ($selectedImage === null) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
 
     $allowedMimeTypes = [
         'image/jpeg' => 'jpg',
@@ -641,7 +626,6 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
 
 Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Render.php";
     // select the right collection
 
     // prepare id
@@ -649,11 +633,12 @@ Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
 
     // remove from all users
     $group = $osiris->groups->findOne(['_id' => $id]);
-    $osiris->persons->updateMany(
-        ['units.unit' => $group['id']],
+    $osiris->persons->updateOne(
+        ['units' => $group['id']],
         [
             '$pull' => ['units' => ['unit' => $group['id']]]
-        ]
+        ],
+        ['multi' => true]
     );
 
     $updateResult = $osiris->groups->deleteOne(
@@ -661,8 +646,6 @@ Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
     );
 
     $deletedCount = $updateResult->getDeletedCount();
-    $Groups = new Groups();
-    renderCurrentUnits();
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
@@ -709,7 +692,6 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
     );
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
-    renderCurrentUnits(['username' => $user]);
     if (isset($_POST['start'])) {
         renderAuthorUnitsMany(['rendered.affiliated_users' => $user, 'date' => ['$gte' => $_POST['start']]]);
     } else {
@@ -731,7 +713,6 @@ Route::post('/crud/groups/removeperson/(.*)', function ($id) {
 
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
-    renderCurrentUnits(['username' => $_POST['username']]);
     renderAuthorUnitsMany(['authors.user' => $_POST['username']]);
 
     $_SESSION['msg'] = lang("Person removed successfully.", "Person erfolgreich entfernt.");

@@ -176,7 +176,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <form action="<?= ROOTPATH ?>/crud/users/profile-picture/<?= $user ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
                         <label for="profile-input"><?= lang('Upload new profile image', 'Lade ein neues Profilbild hoch') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
@@ -412,7 +412,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
                     <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -509,7 +509,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Preview', 'Vorschau') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
@@ -617,7 +617,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('General', 'Allgemein') ?>
+        <?= lang('common.general') ?>
     </a>
 
     <?php
@@ -630,7 +630,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('Publications', 'Publikationen')  ?>
+            <?= lang('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -666,7 +666,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-briefcase" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten')  ?>
+            <?= lang('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -712,7 +712,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_projects > 0) { ?>
             <a onclick="navigate('projects')" id="btn-projects" class="btn">
                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('Projects', 'Projekte')  ?>
+                <?= lang('common.projects')  ?>
                 <span class="index"><?= $count_projects ?></span>
             </a>
         <?php } ?>
@@ -771,7 +771,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_spectrum > 0) { ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum')  ?>
+                <?= lang('common.research_spectrum')  ?>
             </a>
     <?php }
     } ?>
@@ -828,20 +828,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('internal_id') && isset($scientist['internal_id'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
+                                    <span class="key"><?= lang('common.internal_id') ?></span>
                                     <?= $scientist['internal_id'] ?>
                                 </td>
                             </tr>
                         <?php } ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Last name', 'Nachname') ?></span>
+                                <span class="key"><?= lang('common.name_last') ?></span>
                                 <?= $scientist['last'] ?? '' ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('First name', 'Vorname') ?></span>
+                                <span class="key"><?= lang('common.name_first') ?></span>
                                 <?= $scientist['first'] ?? '' ?>
                             </td>
                         </tr>
@@ -856,7 +856,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Roles', 'Rollen') ?></span>
+                                <span class="key"><?= lang('common.roles') ?></span>
 
                                 <?php foreach (($scientist['roles'] ?? []) as $role) { ?>
                                     <span class="badge">
@@ -903,7 +903,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('telephone') && isset($scientist['telephone'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Telephone', 'Telefon') ?></span>
+                                    <span class="key"><?= lang('common.telephone') ?></span>
                                     <a href="tel:<?= $scientist['telephone'] ?>"><?= $scientist['telephone'] ?></a>
                                 </td>
                             </tr>
@@ -1008,7 +1008,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <div class="content">
 
                         <h4 class="title">
-                            <?= lang('Research interest', 'Forschungsinteressen') ?>
+                            <?= lang('common.research_interests') ?>
                             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                                 <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research">
                                     <i class="ph ph-note-pencil ph-lg"></i>
@@ -1134,14 +1134,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <section id="publications" style="display:none">
 
-    <h2><?= lang('Publications', 'Publikationen') ?></h2>
+    <h2><?= lang('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -1201,8 +1201,8 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -1217,7 +1217,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="box">
                 <div class="chart content">
                     <h4 class="title mb-0">
-                        <?= lang('All activities', 'Alle Aktivitäten') ?>
+                        <?= lang('common.all_activities') ?>
                     </h4>
                     <p class="text-muted mt-0"><?= lang('in which ' . $scientist['first'] . ' was involved', 'an denen ' . $scientist['first'] . ' beteiligt war') ?></p>
 
@@ -1454,7 +1454,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <div>
                                     <?= lang('Active as', 'Aktiv als') ?>
                                     <b class="text-primary"><?= $Infra->getRole($person_role['role']) ?></b>
-                                    <?= lang('from', 'von') ?>
+                                    <?= lang('common.from') ?>
                                     <?= fromToYear($person_role['start'], $person_role['end'] ?? null, true) ?>
                                 </div>
                             </td>
@@ -1655,7 +1655,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </p>
         <div class="btn-group mt-20">
             <button class="btn small" id="toggle-wordcloud-activities" disabled>
-                <?= lang('All activities', 'Alle Aktivitäten') ?>
+                <?= lang('common.all_activities') ?>
             </button>
             <button class="btn small" id="toggle-wordcloud-publications">
                 <?= lang('Only publications', 'Nur Publikationen') ?>

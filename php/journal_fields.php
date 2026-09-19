@@ -16,7 +16,7 @@ class JournalFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('ID', 'ID'),
+                'label' => lang('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -26,7 +26,7 @@ class JournalFields extends Fields
             [
                 "id" => "journal",
                 "module_of" => ['general'],
-                "label" => lang("Name", "Name"),
+                "label" => lang('common.name'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -88,7 +88,7 @@ class JournalFields extends Fields
             [
                 "id" => "country",
                 "module_of" => ['general'],
-                "label" => lang("Country", "Land"),
+                "label" => lang('common.country'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

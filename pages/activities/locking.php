@@ -43,7 +43,7 @@
     <p>
         <?=lang('The following roles can still edit or delete locked activities:', 'Die folgenden Rollen können weiterhin gesperrte Aktivitäten bearbeiten oder löschen:')?>
         <br>
-        <b><?=lang('Edit', 'Bearbeiten')?>:</b>
+        <b><?=lang('action.edit')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.edit-locked',
@@ -52,7 +52,7 @@
             echo implode(', ', array_column($roles, 'role'));
         ?>
         <br>
-        <b><?=lang('Delete', 'Löschen')?>:</b>
+        <b><?=lang('action.delete')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.delete-locked',
@@ -80,13 +80,13 @@
                 </div>
                 <div class="col-sm">
                     <label class="required" for="end">
-                        <?= lang('End', 'Ende') ?>
+                        <?= lang('common.end') ?>
                     </label>
                     <input type="date" class="form-control" name="end" id="end" value="<?= CURRENTYEAR ?>-06-30" required>
                 </div>
             </div>
             <div class="my-20">
-                <span><?= lang('Action', 'Aktion') ?>:</span>
+                <span><?= lang('common.action') ?>:</span>
 
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--danger-color);">
                     <input type="radio" name="action" id="action-lock" value="lock" checked="">
@@ -97,7 +97,7 @@
                     <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
                 </div>
             </div>
-            <button class="btn" type="submit"><?= lang('Submit', 'Bestätigen') ?></button>
+            <button class="btn" type="submit"><?= lang('action.submit') ?></button>
 
         </form>
     </div>

@@ -180,8 +180,8 @@ class Modules
             "fields" => ["year" => 2023, "month" => 5, "day" => 4],
             "name" => "Date",
             "name_de" => "Datum",
-            "label" => null,
-            "label_de" => null,
+            "label" => "Date",
+            "label_de" => "Datum",
             "description" => "A field for a date, divided into year, month and day. A shortcut button for today's date is available.",
             "description_de" => "Ein Feld für ein Datum, aufgeteilt in Jahr, Monat und Tag. Ein Shortcut-Button für das heutige Datum ist verfügbar.",
             "width" => 12,
@@ -564,8 +564,8 @@ class Modules
             "fields" => ["open_access" => true],
             "name" => "Open Access",
             "name_de" => "Open Access",
-            "label" => null,
-            "label_de" => null,
+            "label" => "Open Access",
+            "label_de" => "Open Access",
             "description" => "Checkbox for an open access flag. This flag is used to indicate that a publication is freely available online. Important: If the actual open access status is important, please use the 'openaccess-status' module.",
             "description_de" => "Checkbox für eine Open-Access-Markierung. Dieses Flag wird verwendet, um anzuzeigen, dass eine Publikation frei online verfügbar ist. Wichtig: Wenn der tatsächliche Open-Access-Status wichtig ist, verwenden Sie bitte das Modul 'openaccess-status'.",
             "width" => 12,
@@ -1349,11 +1349,11 @@ class Modules
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('Yes', 'Ja') . '</label>
+                    <label for="' . $module . '-true">' . lang('common.yes') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('No', 'Nein') . '</label>
+                    <label for="' . $module . '-false">' . lang('common.no') . '</label>
                 </div>';
             echo $this->render_help($help);
             echo '</div>';
@@ -1421,7 +1421,7 @@ class Modules
                     justify-content: space-between;
                 }
             </style>
-            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
                     placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
@@ -1453,7 +1453,7 @@ class Modules
         if ($field['format'] == 'text-format') {
             $id = rand(1000, 9999);
         ?>
-            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('en', 'de') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                 <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
                 <textarea name="values[<?= $module ?>]" id="<?= $module ?>" class="d-none" readonly><?= $value ?></textarea>
@@ -1734,11 +1734,11 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-gender">
                     <select name="values[gender]" id="gender" class="form-control" <?= $labelClass ?>>
-                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
-                        <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('female', 'weiblich') ?></option>
-                        <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('male', 'männlich') ?></option>
-                        <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('non-binary', 'divers') ?></option>
-                        <option value="-" <?= $val == '-' ? 'selected' : '' ?>><?= lang('not specified', 'keine Angabe') ?></option>
+                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
+                        <option value="f" <?= $val == 'f' ? 'selected' : '' ?>><?= lang('common.gender_female') ?></option>
+                        <option value="m" <?= $val == 'm' ? 'selected' : '' ?>><?= lang('common.gender_male') ?></option>
+                        <option value="d" <?= $val == 'd' ? 'selected' : '' ?>><?= lang('common.gender_non_binary') ?></option>
+                        <option value="-" <?= $val == '-' ? 'selected' : '' ?>><?= lang('common.gender_not_specified') ?></option>
                     </select>
                     <label for="gender" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -1751,8 +1751,8 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="country">
                     <select name="values[country]" id="country" class="form-control" <?= $labelClass ?>>
-                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('unknown', 'unbekannt') ?></option>
-                        <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $code => $country) { ?>
+                        <option value="" <?= empty($val) ? 'selected' : '' ?>><?= lang('common.unknown') ?></option>
+                        <?php foreach ($this->DB->getCountries(lang('common.field_name_language')) as $code => $country) { ?>
                             <option value="<?= $code ?>" <?= $val == $code ? 'selected' : '' ?>><?= $country ?></option>
                         <?php } ?>
                     </select>
@@ -1775,7 +1775,7 @@ class Modules
                             <?php
                             foreach ($countries as $k) { ?>
                                 <div class='author'>
-                                    <?= $this->DB->getCountry($k, lang('name', 'name_de')) ?>
+                                    <?= $this->DB->getCountry($k, lang('common.field_name_language')) ?>
                                     <input type='hidden' name='values[countries][]' value='<?= $k ?>'>
                                     <a onclick='$(this).parent().remove()'>&times;</a>
                                 </div>
@@ -1785,7 +1785,7 @@ class Modules
                             <div class="input-group small d-inline-flex w-auto">
                                 <select class="form-control" id="country-select">
                                     <option value="" disabled selected><?= lang("Add country ...", "Füge Land hinzu ...") ?></option>
-                                    <?php foreach ($this->DB->getCountries(lang('name', 'name_de')) as $iso => $name) { ?>
+                                    <?php foreach ($this->DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                         <option value="<?= $iso ?>"><?= $name ?></option>
                                     <?php } ?>
                                 </select>
@@ -1831,7 +1831,7 @@ class Modules
                 $id = rand(1000, 9999);
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="title">
-                    <div class="lang-<?= lang('en', 'de') ?>">
+                    <div class="lang-<?= lang('common.this_language') ?>">
                         <label for="title" class="<?= $labelClass ?> floating-title">
                             <?= $label ?>
                         </label>
@@ -1924,10 +1924,10 @@ class Modules
                             <thead>
                                 <tr>
                                     <th><label for="user">Username</label></th>
-                                    <th><label for="last" class="required"><?= lang('Last name', 'Nachname') ?></label></th>
-                                    <th><label for="first" class="required"><?= lang('First name', 'Vorname') ?></label></th>
-                                    <th><label for="position"><?= lang('Position', 'Position') ?></label></th>
-                                    <th><label for="aoi"><?= lang('Affiliated', 'Affiliiert') ?></label></th>
+                                    <th><label for="last" class="required"><?= lang('common.name_last') ?></label></th>
+                                    <th><label for="first" class="required"><?= lang('common.name_first') ?></label></th>
+                                    <th><label for="position"><?= lang('common.position') ?></label></th>
+                                    <th><label for="aoi"><?= lang('common.affiliated') ?></label></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2067,9 +2067,9 @@ class Modules
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th><?= lang('Last name', 'Nachname') ?></th>
-                                    <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                                    <th><?= lang('common.name_last') ?></th>
+                                    <th><?= lang('common.name_first') ?></th>
+                                    <th><?= lang('common.affiliated') ?></th>
                                     <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
@@ -2186,10 +2186,10 @@ class Modules
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th><?= lang('Last name', 'Nachname') ?></th>
-                                    <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
-                                    <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
+                                    <th><?= lang('common.name_last') ?></th>
+                                    <th><?= lang('common.name_first') ?></th>
+                                    <th><?= lang('common.affiliated') ?></th>
+                                    <th><?= lang('common.role') ?> <span class="text-danger">*</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2224,7 +2224,7 @@ class Modules
                                                 <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
                                                 <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
                                                 <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
-                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                             </select>
                                         </td>
                                         <td>
@@ -2294,7 +2294,7 @@ class Modules
                                 'committee-member': lang('Committee member', 'Ausschussmitglied'),
                                 'chair': lang('Chair', 'Vorsitzender'),
                                 'mentor': lang('Mentor', 'Mentor'),
-                                'other': lang('Other', 'Sonstiges')
+                                'other': lang('common.other')
                             }
                             for (const [key, value] of Object.entries(roles)) {
                                 select.append('<option value="' + key + '">' + value + '</option>')
@@ -2330,7 +2330,7 @@ class Modules
                         <option value="lecture-seminar" <?= $this->val('category') == 'lecture-seminar' ? 'selected' : '' ?>><?= lang('Lecture and seminar', 'Vorlesung und Seminar') ?></option>
                         <option value="lecture-practical-seminar" <?= $this->val('category') == 'lecture-practical-seminar' ? 'selected' : '' ?>><?= lang('Lecture, seminar, practical course', 'Vorlesung, Seminar und Praktikum') ?></option>
                         <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('Seminar') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="teaching-cat" class="<?= $labelClass ?> "><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2606,7 +2606,7 @@ class Modules
                             <div id="org-<?= $rand_id ?>-value">
                                 <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                    <?= lang('error.organization_select_missing') ?>
                                     <?php if (!empty($org_id)) { ?>
                                         <br><small class="text-muted"><?= $org_id ?></small>
                                     <?php } ?>
@@ -2617,7 +2617,7 @@ class Modules
                                         <b><?= $collab['name'] ?></b>
                                         <br><small class="text-muted"><?= $collab['location'] ?></small>
                                     <?php } else { ?>
-                                        <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                        <?= lang('error.organization_select_missing') ?>:
                                         <br><small class="text-muted"><?= $org_id ?></small>
                                 <?php }
                                 } ?>
@@ -2635,7 +2635,7 @@ class Modules
                                     <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
 
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                         <div class="input-group-append">
                                             <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
                                         </div>
@@ -2670,15 +2670,17 @@ class Modules
                                         </script>
                                     <?php } ?>
                                     <p>
-                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                        <?php } else { ?>
-                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                            </a>
-                                        <?php } ?>
+                                        <?php 
+                                        if ($Settings->hasPermission('organizations.edit')) {
+                                            lang('forms.organization_not_found_add_new', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                            ]);
+                                        } else { 
+                                            lang('forms.organization_not_found_contact', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                            ]);
+                                        } 
+                                        ?>
                                     </p>
                                 </div>
                             </div>
@@ -2696,7 +2698,7 @@ class Modules
                         <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
                         <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelorstudent') ?></option>
                         <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-students" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2759,7 +2761,7 @@ class Modules
 
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-completed" value="completed" value="1" <?= $status == 'completed' ? 'checked' : '' ?>>
-                            <label for="status-completed"><?= lang('Completed', 'Abgeschlossen') ?></label>
+                            <label for="status-completed"><?= lang('common.completed') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
@@ -2780,7 +2782,7 @@ class Modules
                         <option value="guest scientist" <?= $this->val('category') == 'guest scientist' ? 'selected' : '' ?>><?= lang('Guest Scientist', 'Gastwissenschaftler:in') ?></option>
                         <option value="lecture internship" <?= $this->val('category') == 'lecture internship' ? 'selected' : '' ?>><?= lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium') ?></option>
                         <option value="student internship" <?= $this->val('category') == 'student internship' ? 'selected' : '' ?>><?= lang('Student Internship', 'Schülerpraktikum') ?></option>
-                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('Other', 'Sonstiges') ?></option>
+                        <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-guest" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2805,11 +2807,11 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?> row" data-module="date">
                     <div class="col-sm floating-form">
                         <input type="number" min="1901" max="2155" step="1" class="form-control" name="values[year]" id="year" <?= $labelClass ?> value="<?= $this->val('year') ?>" placeholder="2024">
-                        <label for="year" class="<?= $labelClass ?> element-time"><?= lang('Year', 'Jahr') ?></label>
+                        <label for="year" class="<?= $labelClass ?> element-time"><?= lang('common.year') ?></label>
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="month" <?= $labelClass ?> value="<?= $this->val('month') ?>" placeholder="12">
-                        <label for="month" class="<?= $labelClass ?> element-time"><?= lang('Month', 'Monat') ?></label>
+                        <label for="month" class="<?= $labelClass ?> element-time"><?= lang('common.month') ?></label>
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="31" step="1" class="form-control" name="values[day]" id="day" value="<?= $this->val('day') ?>" placeholder="24">
@@ -2853,8 +2855,8 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="lecture-invited">
                     <select name="values[invited_lecture]" id="invited_lecture" class="form-control" autocomplete="off" <?= $labelClass ?>>
-                        <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('No', 'Nein') ?></option>
-                        <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('Yes', 'Ja') ?></option>
+                        <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('common.no') ?></option>
+                        <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="lecture_type"><?= lang('Invited lecture') ?></label>
                     <?= $this->render_help($help) ?>
@@ -3190,11 +3192,11 @@ class Modules
                     <label for="peer_reviewed" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                     <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed" value="true" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? 'checked' : '' ?>>
-                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> <?= lang('Yes', 'Ja') ?></label>
+                        <label for="peer_reviewed"><i class="ph ph-user-circle-check text-success"></i> <?= lang('common.yes') ?></label>
                     </div>
                     <div class="custom-radio" id="peer_reviewed-div">
                         <input type="radio" id="peer_reviewed-0" value="false" name="values[peer_reviewed]" <?= $this->val('peer_reviewed', true) ? '' : 'checked' ?>>
-                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> <?= lang('No', 'Nein') ?></label>
+                        <label for="peer_reviewed-0"><i class="ph ph-user-circle-dashed text-danger"></i> <?= lang('common.no') ?></label>
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>
@@ -3515,7 +3517,7 @@ class Modules
                         <div id="org-<?= $rand_id ?>-value">
                             <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                                <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>
+                                <?= lang('error.organization_select_missing') ?>
                                 <?php if (!empty($org_id)) { ?>
                                     <br><small class="text-muted"><?= $org_id ?></small>
                                 <?php } ?>
@@ -3526,7 +3528,7 @@ class Modules
                                     <b><?= $collab['name'] ?></b>
                                     <br><small class="text-muted"><?= $collab['location'] ?></small>
                                 <?php } else { ?>
-                                    <?= lang('No organization selected', 'Keine Organisation ausgewählt') ?>:
+                                    <?= lang('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= $org_id ?></small>
                             <?php }
                             } ?>
@@ -3542,7 +3544,7 @@ class Modules
                                 <small class="text-muted float-sm-right">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                 <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, '<?= $rand_id ?>')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -3578,15 +3580,17 @@ class Modules
                                 <?php } ?>
 
                                 <p>
-                                    <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                        <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                    <?php } else { ?>
-                                        <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                        <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                            <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                        </a>
-                                    <?php } ?>
+                                    <?php 
+                                    if ($Settings->hasPermission('organizations.edit')) {
+                                        lang('forms.organization_not_found_add_new', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                        ]);
+                                    } else { 
+                                        lang('forms.organization_not_found_contact', replace:[
+                                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                        ]);
+                                    } 
+                                    ?>
                                 </p>
                             </div>
                         </div>
@@ -3632,7 +3636,7 @@ class Modules
                                 <td colspan="2">
                                     <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                                        <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                         <div class="input-group-append">
                                             <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
                                         </div>
@@ -3644,15 +3648,17 @@ class Modules
                                     </table>
                                     <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                     <p>
-                                        <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                            <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                                        <?php } else { ?>
-                                            <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                            <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                                <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                            </a>
-                                        <?php } ?>
+                                        <?php 
+                                        if ($Settings->hasPermission('organizations.edit')) {
+                                            lang('forms.organization_not_found_add_new', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                            ]);
+                                        } else { 
+                                            lang('forms.organization_not_found_contact', replace:[
+                                                'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                            ]);
+                                        } 
+                                        ?>
                                     </p>
                                     <script>
                                         $(document).ready(function() {
@@ -3733,8 +3739,8 @@ class Modules
                                         <?= lang('Connect a project', 'Verknüpfe ein Projekt') ?>:
                                     </b>
                                     <div class="input-group">
-                                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
+                                            <option value=""><?= lang('forms.project_select') ?></option>
                                             <?php
                                             foreach ($project_list as $s) { ?>
                                                 <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
@@ -3766,7 +3772,7 @@ class Modules
                             if (!projectName) projectName = $('#project-select option:selected').text();
 
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert('<?= lang('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists

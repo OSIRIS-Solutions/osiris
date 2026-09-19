@@ -39,7 +39,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->persons->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Person', 'Person');
+                $featuredCard['type_label'] = lang('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = $entity['displayname'] ?? '';
                 if (!empty($entity['username'])) {
@@ -61,7 +61,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->projects->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Project', 'Projekt');
+                $featuredCard['type_label'] = lang('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
                 $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . ($entity['name'] ?? '');
                 $featuredCard['subtitle'] = lang($entity['title'] ?? null, $entity['title_de'] ?? null);
@@ -73,7 +73,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->conferences->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('Event', 'Veranstaltung');
+                $featuredCard['type_label'] = lang('common.event');
                 $featuredCard['icon'] = 'ph-calendar-blank';
                 $featuredCard['title'] = $entity['title'] ?? '';
                 $eventDetails = [];
@@ -249,7 +249,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
                         <label for="profile-input"><?= lang('Select new image', 'Wähle ein neues Bild') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
@@ -266,7 +266,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('Upload', 'Hochladen') ?>
+                        <?= lang('action.upload') ?>
                     </button>
                 </form>
 
@@ -292,7 +292,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if ($Settings->hasPermission('news.edit')) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
+                <?= lang('action.edit') ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>
@@ -304,7 +304,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
-                    <?= lang('Delete', 'Löschen') ?>
+                    <?= lang('action.delete') ?>
                 </button>
             </form>
         <?php } ?>
@@ -419,7 +419,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($persons)) : ?>
             <?php foreach ($persons as $person) { ?>
                 <div class="connection">
-                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang("People", "Personen") ?></span>
+                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang('common.people') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/profile/<?= $person['_id']; ?>"> <?= $person['displayname']; ?> </a>
                     </h5>
@@ -431,7 +431,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($projects)): ?>
             <?php foreach ($projects as $project): ?>
                 <div class="connection">
-                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
+                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.project') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
                     </h5>
@@ -459,7 +459,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($activities)) : ?>
             <?php foreach ($activities as $con) { ?>
                 <div class="connection">
-                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
+                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang('common.activity') ?></span>
                     <p><?= $con['rendered']['web'] ?? '' ?></p>
                 </div>
             <?php } ?>
@@ -468,7 +468,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($events)) : ?>
             <?php foreach ($events as $event) { ?>
                 <div class="connection">
-                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang("Event", "Veranstaltung") ?></span>
+                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang('common.event') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/conferences/view/<?= $event['_id']; ?>"> <?= $event['title']; ?> </a>
                     </h5>
@@ -488,7 +488,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
             <div>
                 <?= lang('Created by', 'Erstellt von') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
-                <?= lang('on', 'am') ?>
+                <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['created'])) ?>
             </div>
         <?php } ?>
@@ -497,7 +497,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
             <div>
                 <?= lang('Last updated by', 'Aktualisiert von') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['updated_by']) ?>"><?= e($DB->getNameFromId($news['updated_by'])) ?></a>
-                <?= lang('on', 'am') ?>
+                <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['updated'])) ?>
             </div>
         <?php } ?>

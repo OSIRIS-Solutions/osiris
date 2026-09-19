@@ -32,7 +32,7 @@ Route::get('/infrastructures/statistics', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => lang("Statistics", "Statistiken")]
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/statistics.php";
@@ -48,7 +48,7 @@ Route::get('/infrastructures/new', function () {
 
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/edit.php";
@@ -101,7 +101,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
     global $form;
 
@@ -125,13 +125,13 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -145,7 +145,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
     }
 
     global $form;
@@ -168,13 +168,13 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
-        ['name' => lang("Persons", "Personen")]
+        ['name' => lang('common.persons')]
     ];
 
     include_once BASEPATH . "/php/Infrastructure.php";
@@ -198,7 +198,7 @@ Route::post('/crud/infrastructures/create', function () {
         abortwith(403, lang('You do not have permission to create a new infrastructure.', 'Du hast keine Berechtigung, eine neue Infrastruktur zu erstellen.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -271,10 +271,10 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
         }
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
     $values = validateValues($_POST['values'], $DB);
@@ -325,7 +325,7 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     if (empty($infrastructure)) {
         abortwith(404, lang('Infrastructure not found', 'Infrastruktur nicht gefunden'), '/infrastructures', lang('Go back to infrastructures', 'Zurück zu Infrastrukturen'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $year = intval($_POST['year'] ?? 0);
     $base = [
@@ -462,7 +462,7 @@ Route::get('/api/infrastructure/stats', function () {
 
     echo json_encode([
         'data' => array_values($data),
-        'labels' => array_column($fields, lang('en', 'de'), 'id'),
+        'labels' => array_column($fields, lang('common.this_language'), 'id'),
     ]);
 });
 
@@ -486,7 +486,7 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
             }
         }
         if (!$permission) {
-            abortwith(403, lang('You do not have permission to edit this infrastructure.', 'Du hast keine Berechtigung, diese Infrastruktur zu bearbeiten.'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
+            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('Go back to infrastructure', 'Zurück zur Infrastruktur'));
         }
     }
 
@@ -581,19 +581,19 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_too_big_max_2MB'),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else {
             // check image settings
@@ -617,7 +617,7 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $osiris->infrastructures->updateOne(

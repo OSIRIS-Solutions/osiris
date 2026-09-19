@@ -59,7 +59,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'activities',
-                        'label' => lang('Activities', 'Aktivitäten'),
+                        'label' => lang('common.activities'),
                         'icon' => 'folders',
                         'url' => '/activities',
                         'active' => ['^/activities($|/)'],
@@ -71,7 +71,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'proposals',
-                        'label' => lang('Proposals', 'Anträge'),
+                        'label' => lang('common.proposals'),
                         'icon' => 'tree-structure',
                         'url' => '/proposals',
                         'active' => ['^/proposals($|/)'],
@@ -84,7 +84,7 @@ class SidebarNav
 
                     [
                         'id' => 'projects',
-                        'label' => lang('Projects', 'Projekte'),
+                        'label' => lang('common.projects'),
                         'icon' => 'tree-structure',
                         'url' => '/projects',
                         'active' => ['^/projects($|/)'],
@@ -180,7 +180,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'documents',
-                        'label' => lang('Documents', 'Dokumente'),
+                        'label' => lang('common.documents'),
                         'icon' => 'files',
                         'url' => '/documents',
                         'active' => ['^/documents($|/)'],
@@ -198,7 +198,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'users',
-                        'label' => lang('Users', 'Personen'),
+                        'label' => lang('common.users'),
                         'icon' => 'users',
                         'url' => '/user/browse',
                         'active' => ['^/(user|profile)($|/)'],
@@ -222,7 +222,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'organizations',
-                        'label' => lang('Organisations', 'Organisationen'),
+                        'label' => lang('common.organizations'),
                         'icon' => 'building',
                         'url' => '/organizations',
                         'active' => ['^/organizations($|/)'],
@@ -300,7 +300,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'portal-public',
-                        'label' => lang('Go to portal', 'Zum Portal'),
+                        'label' => lang('navigation.go_to_portal'),
                         'icon' => 'globe-hemisphere-west',
                         'url' => ROOTPATH . '/portal/info',
                         'active' => ['^/portal($|/)'],
@@ -367,7 +367,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'reports',
-                        'label' => lang('Reports', 'Berichte'),
+                        'label' => lang('common.reports'),
                         'icon' => 'printer',
                         'url' => '/reports',
                         'active' => ['^/reports($|/)'],
@@ -397,7 +397,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'settings',
-                        'label' => lang('Settings', 'Einstellungen'),
+                        'label' => lang('common.settings'),
                         'icon' => 'faders',
                         'url' => '/admin',
                         'active' => ['^/admin($|/)'],
@@ -574,7 +574,7 @@ class SidebarNav
             if ($item['id'] === 'users') {
                 $searchUrl = ROOTPATH . '/persons/search';
             }
-            $html .= '<a href="' . $searchUrl . '" class="inline-btn ' . $activeClass . '" title="' . lang('Advanced Search', 'Erweiterte Suche') . '">';
+            $html .= '<a href="' . $searchUrl . '" class="inline-btn ' . $activeClass . '" title="' . lang('navigation.advanced_search') . '">';
             $html .= '<i class="ph-duotone ph-magnifying-glass-plus"></i>';
             $html .= '</a>';
         }

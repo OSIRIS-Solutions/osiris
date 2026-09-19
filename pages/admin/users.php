@@ -87,11 +87,11 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
-                <label class="required" for="first"><?= lang('First name', 'Vorname') ?></label>
+                <label class="required" for="first"><?= lang('common.name_first') ?></label>
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required placeholder="last name">
-                <label class="required" for="last"><?= lang('Last name', 'Nachname') ?></label>
+                <label class="required" for="last"><?= lang('common.name_last') ?></label>
             </div>
         </div>
 
@@ -105,7 +105,7 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
-                <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
+                <label for="telephone"><?= lang('common.telephone') ?></label>
             </div>
 
         </div>
@@ -138,33 +138,33 @@ $um = strtoupper(USER_MANAGEMENT);
 
 
         <div class="form-group">
-            <span><?= lang('Gender', 'Geschlecht') ?>:</span>
+            <span><?= lang('common.gender') ?>:</span>
             <?php
             $gender = $data['gender'] ?? 'n';
             ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                <label for="gender-m"><?= lang('Male', 'Männlich') ?></label>
+                <label for="gender-m"><?= lang('common.gender_male') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                <label for="gender-f"><?= lang('Female', 'Weiblich') ?></label>
+                <label for="gender-f"><?= lang('common.gender_female') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                <label for="gender-d"><?= lang('Non-binary', 'Divers') ?></label>
+                <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                <label for="gender-n"><?= lang('Not specified', 'Nicht angegeben') ?></label>
+                <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
             </div>
 
         </div>
 
 
         <div>
-            <h5><?= lang('Roles', 'Rollen') ?></h5>
+            <h5><?= lang('common.roles') ?></h5>
             <?php
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
@@ -211,18 +211,24 @@ $um = strtoupper(USER_MANAGEMENT);
             <div class="box padded">
                 <?= lang('To allow users to register, share the following token with them:', 'Um Nutzern die Registrierung zu ermöglichen, teile ihnen folgendes Token mit:') ?>
                 <code id="auth-token" class="code"><?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyTextToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
                 <br>
                 <!-- or share the link -->
                 <?= lang('or share the link', 'oder teile den Link') ?>
                 <code id="auth-token" class="code"><?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyTextToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
             </div>
 
+            <script>
+                function copyToClipboard(text) {
+                    navigator.clipboard.writeText(text)
+                    toastSuccess('Token copied to clipboard.')
+                }
+            </script>
         <?php } else { ?>
             <div class="alert mb-20">
                 <div class="title">

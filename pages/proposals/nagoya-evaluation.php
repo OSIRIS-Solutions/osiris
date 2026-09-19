@@ -88,7 +88,7 @@ foreach ($countries as $c) {
                 <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                     <h2>
                         <i class="ph-duotone ph-globe-stand"></i>
-                        <?= $DB->getCountry($code, lang('name', 'name_de')) ?>
+                        <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
                     </h2>
                 </div>
 
@@ -99,7 +99,7 @@ foreach ($countries as $c) {
                         <small class="text-muted">
                             <?= lang('Review of countries as part of the ABS evaluation process was conducted by:', 'Die Bewertung der Länder im Rahmen des ABS-Bewertungsprozesses wurde durchgeführt von:') ?>
                             <strong><?= e($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
-                            <?= lang('on', 'am') ?> <?= format_date($review['reviewed'] ?? '') ?>
+                            <?= lang('common.on') ?> <?= format_date($review['reviewed'] ?? '') ?>
                         </small>
                     <?php } ?>
                     <div class="mb-10">
@@ -107,11 +107,11 @@ foreach ($countries as $c) {
                         <?php
                         $nagoyaParty = $review['nagoyaParty'] ?? 'unknown';
                         if ($nagoyaParty === 'yes') {
-                            echo '<span class="badge success">' . lang('Yes', 'Ja') . '</span>';
+                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
                         } elseif ($nagoyaParty === 'no') {
-                            echo '<span class="badge danger">' . lang('No', 'Nein') . '</span>';
+                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
+                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
                         }
                         ?>
                     </div>
@@ -120,11 +120,11 @@ foreach ($countries as $c) {
                         <?php
                         $ownABSMeasures = $review['ownABSMeasures'] ?? 'unknown';
                         if ($ownABSMeasures === 'yes') {
-                            echo '<span class="badge success">' . lang('Yes', 'Ja') . '</span>';
+                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
                         } elseif ($ownABSMeasures === 'no') {
-                            echo '<span class="badge danger">' . lang('No', 'Nein') . '</span>';
+                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('Unknown', 'Unbekannt') . '</span>';
+                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
                         }
                         ?>
                     </div>
@@ -132,7 +132,7 @@ foreach ($countries as $c) {
                         <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                     </div>
                     <div>
-                        <strong><?= lang('Comment', 'Kommentar') ?>:</strong><br>
+                        <strong><?= lang('common.comment') ?>:</strong><br>
                         <span><?= nl2br(e($review['comment'] ?? lang('No comment provided.', 'Kein Kommentar hinterlegt.'))) ?></span>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ foreach ($countries as $c) {
                                     <?= lang('Country review by', 'Länderbewertung von') ?>
                                     <?= e($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?>
                                     <?php if (!empty($review['reviewed'])): ?>
-                                        <?= lang('on', 'am') ?> <?= format_date($review['reviewed']) ?>
+                                        <?= lang('common.on') ?> <?= format_date($review['reviewed']) ?>
                                     <?php endif; ?>
                                 </p>
                             <?php endif; ?>
@@ -301,8 +301,8 @@ foreach ($countries as $c) {
                                 <thead>
                                     <tr>
                                         <th><?= lang('Permit name', 'Genehmigungsname') ?></th>
-                                        <th><?= lang('Status', 'Status') ?></th>
-                                        <th><?= lang('Comment', 'Kommentar') ?></th>
+                                        <th><?= lang('common.status') ?></th>
+                                        <th><?= lang('common.comment') ?></th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -325,7 +325,7 @@ foreach ($countries as $c) {
                                                     <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
                                                     <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
                                                     <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
-                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('Not applicable', 'Nicht zutreffend') ?></option>
+                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
                                                 </select>
                                             </td>
                                             <td>
@@ -356,7 +356,7 @@ foreach ($countries as $c) {
                             <div class="small text-muted mt-5">
                                 <?= lang('Last evaluation for this country by', 'Letzte Bewertung für dieses Land von') ?>
                                 <?= e($DB->getNameFromId($eval['by']) ?? $eval['by']) ?>
-                                <?= lang('on', 'am') ?> <?= format_date($eval['at']) ?>
+                                <?= lang('common.on') ?> <?= format_date($eval['at']) ?>
                             </div>
                         <?php endif; ?>
                         </div>

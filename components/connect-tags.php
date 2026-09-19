@@ -22,7 +22,7 @@
     <table class="table simple">
         <thead>
             <tr>
-                <th><?= lang('Entity', 'Entität') ?></th>
+                <th><?= lang('common.entity') ?></th>
                 <th><?= lang('Name') ?></th>
                 <th><?= lang('Link') ?></th>
                 <th></th>
@@ -70,7 +70,7 @@
     </datalist>
     <button class="btn secondary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('Submit', 'Bestätigen') ?>
+        <?= lang('action.submit') ?>
     </button>
 </form>
 

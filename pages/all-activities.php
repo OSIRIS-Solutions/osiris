@@ -34,7 +34,7 @@ $cart = readCart();
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
     <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
         <i class="ph-duotone ph-book-open"></i>
-        <?= lang("All activities", "Alle Aktivitäten") ?>
+        <?= lang('common.all_activities') ?>
     <?php
     } elseif ($page == 'my-activities') { ?>
         <i class="ph-duotone ph-folder-user"></i>
@@ -58,11 +58,11 @@ $cart = readCart();
     <?php } ?>
     <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('Statistics', 'Statistiken') ?>
+        <?= lang('common.statistics') ?>
     </a>
     <a href="<?= ROOTPATH ?>/activities/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('Advanced search', 'Erweiterte Suche') ?>
+        <?= lang('navigation.advanced_search') ?>
     </a>
     <?php if ($Settings->hasPermission('activities.lock')) { ?>
         <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
@@ -92,21 +92,21 @@ $cart = readCart();
             <thead>
                 <tr>
                     <th><?= lang('Quarter', 'Quartal') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
-                    <th><?= lang('Activity', 'Aktivität') ?></th>
+                    <th><?= lang('common.type') ?></th>
+                    <th><?= lang('common.activity') ?></th>
                     <th>Links</th>
                     <th><?= lang('Print', 'Print') ?></th>
                     <th>Start</th>
-                    <th><?= lang('End', 'Ende') ?></th>
-                    <th><?= lang('Units', 'Einheiten') ?></th>
+                    <th><?= lang('common.end') ?></th>
+                    <th><?= lang('common.units') ?></th>
                     <th><?= lang('Online ahead of print') ?></th>
-                    <th><?= lang('Type', 'Typ') ?></th>
+                    <th><?= lang('common.type') ?></th>
                     <th><?= lang('Subtype', 'Subtyp') ?></th>
-                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('common.title') ?></th>
                     <th><?= lang('Authors', 'Autoren') ?></th>
-                    <th><?= lang('Year', 'Jahr') ?></th>
+                    <th><?= lang('common.year') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
-                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                    <th><?= lang('common.affiliated') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -127,7 +127,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-type')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('Type', 'Typ') ?>
+                <?= lang('common.type') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <style>
@@ -208,7 +208,7 @@ $cart = readCart();
                             <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
                                 <span class="text-success">
                                     <span class="mr-5"><i class="ph ph-push-pin"></i></span>
-                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                    <?= lang('common.affiliated') ?>
                                 </span>
                             </a>
                         </td>
@@ -336,7 +336,7 @@ $cart = readCart();
             <div id="filter-time" class="filter border-0 bg-transparent p-0 shadow-none">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <label for="filter-from" class="input-group-text w-50"><?= lang('From', 'Von') ?></label>
+                        <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
                     </div>
                     <input type="date" name="from" id="filter-from" class="form-control">
                 </div>
@@ -373,11 +373,11 @@ $cart = readCart();
             'key': 'quarter'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('common.type'),
             'key': 'type'
         },
         {
-            title: lang('Activity', 'Aktivität'),
+            title: lang('common.activity'),
             'key': 'activity'
         },
         {
@@ -389,15 +389,15 @@ $cart = readCart();
             'key': 'search-text'
         },
         {
-            title: lang('Start', 'Start'),
+            title: lang('common.start'),
             'key': 'start'
         },
         {
-            title: lang('End', 'Ende'),
+            title: lang('common.end'),
             'key': 'end'
         },
         {
-            title: lang('Units', 'Einheiten'),
+            title: lang('common.units'),
             'key': 'unit'
         },
         {
@@ -405,7 +405,7 @@ $cart = readCart();
             'key': 'epub'
         },
         {
-            title: lang('Type', 'Typ'),
+            title: lang('common.type'),
             'key': 'type'
         },
         {
@@ -413,7 +413,7 @@ $cart = readCart();
             'key': 'subtype'
         },
         {
-            title: lang('Title', 'Titel'),
+            title: lang('common.title'),
             'key': 'title'
         },
         {
@@ -421,7 +421,7 @@ $cart = readCart();
             'key': 'authors'
         },
         {
-            title: lang('Year', 'Jahr'),
+            title: lang('common.year'),
             'key': 'year'
         },
         {
@@ -429,7 +429,7 @@ $cart = readCart();
             'key': 'topics'
         },
         {
-            title: lang('Affiliated', 'Affiliiert'),
+            title: lang('common.affiliated'),
             'key': 'affiliated'
         },
         {
@@ -706,7 +706,7 @@ $cart = readCart();
                     // searchPanes: {
                     //     show: true,
                     //     name: 'year',
-                    //     header: lang('Year', 'Jahr')
+                    //     header: lang('common.year')
                     // },
                 },
                 {

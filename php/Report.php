@@ -388,7 +388,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('en', 'de'),     // je nach gewünschter Sprache
+                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];
@@ -496,7 +496,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('en', 'de'),     // je nach gewünschter Sprache
+                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];
@@ -539,7 +539,7 @@ class Report
                 $formats[$n] = $fieldsInfo[$field]['type'] ?? 'text';
                 $transforms[$n] = $fieldsInfo[$field]['values'] ?? null;
                 if ($field == 'country' || $field == 'countries') {
-                    $transforms[$n] = $this->DB->getCountries(lang('name', 'name_de'));
+                    $transforms[$n] = $this->DB->getCountries(lang('common.field_name_language'));
                 }
             }
         }
@@ -558,7 +558,7 @@ class Report
                     if ($f == 'datetime' && !empty($cell)) {
                         $cell = date('d.m.Y', strtotime($cell));
                     } elseif ($f == 'boolean') {
-                        $cell = $cell ? lang('Yes', 'Ja') : lang('No', 'Nein');
+                        $cell = $cell ? lang('common.yes') : lang('common.no');
                     } elseif ($f == 'list' && is_array($cell)) {
                         $cell = implode(', ', $cell);
                     } elseif ($f == 'list' && $cell instanceof MongoDB\Model\BSONArray) {
@@ -683,7 +683,7 @@ class Report
             if (isset($f['values']) && is_array($f['values']) && array_keys($f['values']) !== range(0, count($f['values']) - 1)) {
                 $transform = $f['values'];
             } elseif ($f['id'] == 'country' || $f['id'] == 'countries') {
-                $transform = $this->DB->getCountries(lang('name', 'name_de'));
+                $transform = $this->DB->getCountries(lang('common.field_name_language'));
             }
             if ($f['type'] == 'list') {
                 $unwind = true;

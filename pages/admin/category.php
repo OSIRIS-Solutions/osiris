@@ -27,14 +27,14 @@ $id = $form['id'] ?? null;
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/categories/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/categories/" . $id;
     $title = $name;
 
     $member = $osiris->activities->count(['type' => $id]);
 } else {
     $formaction .= "/crud/categories/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/categories/*";
     $title = lang('New category', 'Neue Kategorie');
 }
@@ -71,7 +71,7 @@ $member = $osiris->activities->count(['type' => $t]);
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('Change order', 'Reihenfolge ändern') ?>
+                <?= lang('common.change_order') ?>
             </h5>
 
             <style>
@@ -103,7 +103,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('Submit', 'Bestätigen') ?>
+                    <?= lang('action.submit') ?>
                 </button>
             </form>
             <script>
@@ -140,7 +140,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -280,7 +280,7 @@ $member = $osiris->activities->count(['type' => $t]);
             <div class="content">
                 <a class="btn float-right" href="#order">
                     <i class="ph ph-list-numbers"></i>
-                    <?= lang('Change order', 'Reihenfolge ändern') ?>
+                    <?= lang('common.change_order') ?>
                 </a>
                 <h5><?= lang('Types', 'Typen') ?>:</h5>
                 <div>
@@ -313,7 +313,7 @@ $member = $osiris->activities->count(['type' => $t]);
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/categories/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

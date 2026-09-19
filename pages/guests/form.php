@@ -35,7 +35,7 @@
                     </label>
                     <div class="input-group" id="date-range-picker">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><?= lang('from', 'von') ?></span>
+                            <span class="input-group-text"><?= lang('common.from') ?></span>
                         </div>
                         <input type="date" class="form-control" name="values[start]" id="date_start" value="<?= valueFromDateArray($form['start'] ?? null) ?>" required>
 
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="form-group" data-module="title">
-                    <div class="lang-<?= lang('en', 'de') ?>">
+                    <div class="lang-<?= lang('common.this_language') ?>">
                         <label for="title" class="required">
                             <?= lang('Title / Topic / Description', 'Titel / Thema / Beschreibung') ?>
                         </label>
@@ -131,19 +131,19 @@
 
                 <div class="form-row row-eq-spacing" data-module="person">
                     <div class="col-sm-2">
-                        <label for="academic-title"><?= lang('Title', 'Titel') ?>
+                        <label for="academic-title"><?= lang('common.title') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][academic_title]" id="academic-title" value="<?= $form['guest']['academic_title'] ?? '' ?>">
                     </div>
                     <div class="col-sm-5">
                         <label for="first-name" class="element-other">
-                            <?= lang('First name', 'Vorname') ?>
+                            <?= lang('common.name_first') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][first]" id="first-name" value="<?= $form['guest']['first'] ?? '' ?>">
                     </div>
                     <div class="col-sm-5">
                         <label for="last-name" class="element-other">
-                            <?= lang('Last name', 'Nachname') ?>
+                            <?= lang('common.name_last') ?>
                         </label>
                         <input type="text" class="form-control" name="values[guest][last]" id="last-name" value="<?= $form['guest']['last'] ?? '' ?>">
                     </div>
@@ -165,7 +165,7 @@
                 </h5>
 
                 <div class="form-group">
-                    <label for="guest-phone" class="element-other"><?= lang('Telephone', 'Telefon') ?></label>
+                    <label for="guest-phone" class="element-other"><?= lang('common.telephone') ?></label>
                     <input type="text" class="form-control" name="values[guest][phone]" id="guest-phone" value="<?= $form['guest']['phone'] ?? '' ?>">
                 </div>
 
@@ -189,7 +189,7 @@
                 </h5>
 
                 <div class="form-group">
-                    <label for="guest-affiliation" class="element-other"><?= lang('Name', 'Name') ?></label>
+                    <label for="guest-affiliation" class="element-other"><?= lang('common.name') ?></label>
                     <input type="text" class="form-control" name="values[affiliation][name]" id="guest-affiliation" value="<?= $form['affiliation']['name'] ?? '' ?>">
                 </div>
 
@@ -199,7 +199,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guest-country" class="element-other"><?= lang('Country', 'Land') ?></label>
+                    <label for="guest-country" class="element-other"><?= lang('common.country') ?></label>
                     <input type="text" class="form-control" name="values[affiliation][country]" id="guest-country" value="<?= $form['affiliation']['country'] ?? '' ?>">
                 </div>
             </div>

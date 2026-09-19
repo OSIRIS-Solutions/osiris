@@ -137,7 +137,7 @@
                 <?php if ($canEdit) { ?>
                     <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary filled">
                         <i class="ph ph-pencil-simple-line mr-5"></i>
-                        <?= lang('Edit', 'Bearbeiten') ?>
+                        <?= lang('action.edit') ?>
                     </a>
                 <?php } ?>
                 <?php if ($user_activity && $locked && empty($doc['end'] ?? null) && $ongoing) { ?>
@@ -153,7 +153,7 @@
                                     <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                 </div>
-                                <button class="btn btn-block" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -163,7 +163,7 @@
                 <?php if ($Settings->featureEnabled('portal')) { ?>
                     <a class="btn secondary outline" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                         <i class="ph ph-eye mr-5"></i>
-                        <?= lang('Preview', 'Vorschau') ?>
+                        <?= lang('common.preview') ?>
                     </a>
                 <?php } ?>
 
@@ -171,7 +171,7 @@
                 <div class="dropdown">
                     <button class="btn" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-download mr-5"></i>
-                        <?= lang('Download', 'Herunterladen') ?>
+                        <?= lang('common.download') ?>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdown-1">
                         <div class="content">
@@ -216,7 +216,7 @@
 
                             <button class="btn block primary">
                                 <i class="ph ph-download mr-5"></i>
-                                <?= lang('Download', 'Herunterladen') ?>
+                                <?= lang('common.download') ?>
                             </button>
                         </form>
                     </div>
@@ -292,7 +292,7 @@
 
                     <?php if ($guests_involved) { ?>
                         <a onclick="navigate('guests')" id="btn-guests" class="btn">
-                            <?= lang('Guests', 'Gäste') ?>
+                            <?= lang('common.guests') ?>
                             <span class="index"><?= count($guests) ?></span>
                         </a>
                     <?php } ?>
@@ -301,7 +301,7 @@
                     if (!empty($doc['history'])) :
                     ?>
                         <a onclick="navigate('history')" id="btn-history" class="btn">
-                            <?= lang('History', 'Historie') ?>
+                            <?= lang('common.history') ?>
                         </a>
                     <?php endif; ?>
 
@@ -316,7 +316,7 @@
                     <?php if ($doc['affiliated'] ?? true) { ?>
                         <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                             <i class="ph-duotone ph-push-pin m-0"></i>
-                            <?= lang('Affiliated', 'Affiliiert') ?>
+                            <?= lang('common.affiliated') ?>
                         </div>
                     <?php } else { ?>
                         <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
@@ -361,7 +361,7 @@
             <section id="raw" style="display:none" class="box padded tab-box">
 
                 <h2 class="title">
-                    <?= lang('Raw data', 'Rohdaten') ?>
+                    <?= lang('common.raw_data') ?>
                 </h2>
 
                 <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
@@ -549,7 +549,7 @@
                                         <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                             <a href="#edit-tags" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang('Edit', 'Bearbeiten') ?></span>
+                                                <span class="sr-only"><?= lang('action.edit') ?></span>
                                             </a>
                                         <?php } ?>
                                     </h3>
@@ -581,7 +581,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="#edit-files" class="ml-10">
                                                 <i class="ph ph-edit"></i>
-                                                <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                                <span class="sr-only"><?= lang('action.edit') ?></span>
                                             </a>
                                         <?php endif; ?>
                                     </h3>
@@ -602,7 +602,7 @@
                                                         <h5>
                                                             <?= $file['filename'] ?>
                                                         </h5>
-                                                        <small class="badge muted"><?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('Other', 'Sonstiges')); ?></small>
+                                                        <small class="badge muted"><?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?></small>
                                                         <p>
                                                             <?= $file['description'] ?? '' ?>
                                                         </p>
@@ -610,7 +610,7 @@
                                                         <ul class="horizontal">
                                                             <li><?= $file_size ?></li>
                                                             <li><?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?></li>
-                                                            <li><?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?></li>
+                                                            <li><?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?></li>
                                                         </ul>
                                                     </div>
                                                     <div class="ml-auto">
@@ -646,7 +646,7 @@
                                     <?php if ($edit_perm) { ?>
                                         <a href="<?= ROOTPATH ?>/activities/edit-connections/<?= $id ?>" class="ml-10">
                                             <i class="ph ph-edit"></i>
-                                            <span class="sr-only"><?= lang("Edit", "Bearbeiten") ?></span>
+                                            <span class="sr-only"><?= lang('action.edit') ?></span>
                                         </a>
                                     <?php } ?>
                                 </h3>
@@ -658,10 +658,10 @@
                                             <?= lang('You can connect', 'Du kannst folgendes verknüpfen') ?>:
                                             <ul class="horizontal mb-10">
                                                 <?php if (isset($connections['projects'])) { ?>
-                                                    <li><?= lang('Projects', 'Projekte') ?></li>
+                                                    <li><?= lang('common.projects') ?></li>
                                                 <?php } ?>
                                                 <?php if (isset($connections['infrastructures'])) { ?>
-                                                    <li><?= lang('Infrastructures', 'Infrastrukturen') ?></li>
+                                                    <li><?= lang('common.infrastructures') ?></li>
                                                 <?php } ?>
                                                 <li><?= lang('Other activities', 'Andere Aktivitäten') ?></li>
                                             </ul>
@@ -674,14 +674,14 @@
                                 <?php } else { ?>
                                     <p>
                                         <?php if (isset($connections['projects'])) { ?>
-                                            <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('Projects', 'Projekte') ?> <b><?= $connections['projects'] ?></b></span>
+                                            <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.projects') ?> <b><?= $connections['projects'] ?></b></span>
                                         <?php } ?>
                                         <?php if (isset($connections['infrastructures'])) { ?>
-                                            <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('Infrastructures', 'Infrastrukturen') ?> <b><?= $connections['infrastructures'] ?></b></span>
+                                            <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructures') ?> <b><?= $connections['infrastructures'] ?></b></span>
                                         <?php } ?>
-                                        <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('Activities', 'Aktivitäten') ?> <b><?= $connections['activities'] ?></b></span>
+                                        <span class="badge activity-badge"><i class="ph ph-folder"></i> <?= lang('common.activities') ?> <b><?= $connections['activities'] ?></b></span>
                                         <?php if (isset($connections['news'])) { ?>
-                                            <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('News', 'News') ?> <b><?= $connections['news'] ?></b></span>
+                                            <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('common.news') ?> <b><?= $connections['news'] ?></b></span>
                                         <?php } ?>
                                     </p>
                                 <?php } ?>
@@ -691,7 +691,7 @@
                                     <?php if (!empty($projects)): ?>
                                         <?php foreach ($projects as $project): ?>
                                             <div class="connection">
-                                                <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang("Project", "Projekt") ?></span>
+                                                <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.project') ?></span>
                                                 <h5>
                                                     <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= $project['name']; ?> </a>
                                                 </h5>
@@ -728,7 +728,7 @@
                                             $conLabel = $Format->getRelationshipLabel($con['relationship'], $reverse);
                                             ?>
                                             <div class="connection">
-                                                <span class="badge activity-badge"><?= $activity['rendered']['icon'] ?> <?= lang("Activity", "Aktivität") ?></span>
+                                                <span class="badge activity-badge"><?= $activity['rendered']['icon'] ?> <?= lang('common.activity') ?></span>
                                                 <div><?= lang($conLabel['en'], $conLabel['de']) ?></div>
                                                 <?= $activity['rendered']['web'] ?? '' ?>
                                             </div>
@@ -738,7 +738,7 @@
                                     <?php if (!empty($connected_news)) : ?>
                                         <?php foreach ($connected_news as $news) { ?>
                                             <div class="connection">
-                                                <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang("News", "News") ?></span>
+                                                <span class="badge news-badge"><i class="ph ph-newspaper"></i> <?= lang('common.news') ?></span>
                                                 <h5>
                                                     <a href="<?= ROOTPATH ?>/news/view/<?= $news['_id']; ?>"> <?= $news['title']; ?> </a>
                                                 </h5>
@@ -770,7 +770,7 @@
 
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang('Date', 'Datum') ?>: </span>
+                                        <span class="key"><?= lang('common.date') ?>: </span>
                                         <?php if (!isset($doc['year']) || empty($doc['year']) || !isset($doc['month']) || empty($doc['month'])) { ?>
                                             <div class="message danger">
                                                 <h3 class="title">
@@ -1018,7 +1018,7 @@
                             [
                                 'bibliography' => lang('Bibliography', 'Bibliographie'),
                                 'locations' => lang('Locations', 'Orte'),
-                                'events' => lang('Events', 'Veranstaltungen'),
+                                'events' => lang('common.events'),
                                 'people' => lang('People and Organizations', 'Personen und Organisationen'),
                                 'software' => lang('Software', 'Software'),
                                 'others' => lang('Other data', 'Weitere Daten')
@@ -1057,7 +1057,7 @@
 
                         <?php if ($Settings->featureEnabled('spectrum') && isset($doc['doi']) && $doc['type'] == 'publication') : ?>
                             <h4 class="table-title">
-                                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                                <?= lang('common.research_spectrum') ?>
                                 <?php if ($edit_perm) { ?>
                                     <a href="#spectrum-editor" class="ml-10" title="<?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>">
                                         <i class="ph ph-edit"></i>
@@ -1152,7 +1152,7 @@
                                         break;
                                     default: ?>
                                         <span class="badge" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
-                                            <?= lang('None', 'Keine') ?>
+                                            <?= lang('common.none') ?>
                                         </span>
                                 <?php
                                         break;
@@ -1177,12 +1177,12 @@
                                     ];
                                 } elseif ($supervisorThesis) {
                                     $thirdCol = [
-                                        'label' => lang('Role', 'Rolle'),
+                                        'label' => lang('common.role'),
                                         'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
                                     ];
                                 } elseif ($role === 'authors') {
                                     $thirdCol = [
-                                        'label' => lang('Position', 'Position'),
+                                        'label' => lang('common.position'),
                                         'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
                                     ];
                                 }
@@ -1202,7 +1202,7 @@
                                         <?php if ($canEdit): ?>
                                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn primary small">
                                                 <i class="ph ph-edit"></i>
-                                                <?= lang("Edit", "Bearbeiten") ?>
+                                                <?= lang('action.edit') ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -1275,7 +1275,7 @@
                                                                     data-toggle="tooltip"
                                                                     data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
                                                                     <i class="ph ph-handshake"></i>
-                                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                                    <?= lang('common.affiliated') ?>
                                                                 </span>
                                                             <?php endif; ?>
 
@@ -1285,7 +1285,7 @@
                                                                         data-toggle="tooltip"
                                                                         data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
                                                                         <?= bool_icon(true) ?>
-                                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                                        <?= lang('common.approved') ?>
                                                                     </span>
                                                                 <?php } else { ?>
                                                                     <span class="author-chip neutral"
@@ -1337,7 +1337,7 @@
                                                                 <div class="dropdown d-inline-block">
                                                                     <button class="btn small" data-toggle="dropdown" type="button"
                                                                         id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                        <?= lang('action.claim') ?>
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                                         <div class="content font-size-12 text-danger mb-10" style="white-space: normal;">
@@ -1350,7 +1350,7 @@
                                                                                 <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                                 <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                                 <button class="btn block small" type="submit">
-                                                                                    <?= lang('Claim', 'Beanspruchen') ?>
+                                                                                    <?= lang('action.claim') ?>
                                                                                 </button>
                                                                             </form>
                                                                         </div>
@@ -1548,7 +1548,7 @@
             <!-- new section with history -->
             <section id="history" style="display: none;" class="box padded tab-box">
                 <h2 class="mt-0">
-                    <?= lang('History', 'Historie') ?>
+                    <?= lang('common.history') ?>
                 </h2>
                 <p>
                     <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
@@ -1644,7 +1644,7 @@
 
                 <h3><?= lang("Citation", "Zitation") ?></h3>
                 <div class="connection" id="citation-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#citation')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#citation')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <span id="citation"><?= $print ?></span>
@@ -1652,7 +1652,7 @@
 
                 <h3>BibTeX</h3>
                 <div class="connection" id="bibtex-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#bibtex')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#bibtex')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <div class="overflow-x-scroll">
@@ -1662,7 +1662,7 @@
 
                 <h3>RIS</h3>
                 <div class="connection" id="ris-box">
-                    <button class="btn primary small float-right" onclick="copyToClipboard('#ris')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>" aria-label="Copy to clipboard">
+                    <button class="btn primary small float-right" onclick="copyToClipboard('#ris')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>" aria-label="Copy to clipboard">
                         <i class="ph ph-clipboard" aria-hidden="true"></i>
                     </button>
                     <div class="overflow-x-scroll">

@@ -28,14 +28,14 @@
         </div>
 
         <div class="custom-file mb-20" id="file-input-div">
-            <input type="file" id="file-input" name="logo" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>">
+            <input type="file" id="file-input" name="logo" data-default-value="<?= lang('common.no_file_chosen') ?>">
             <label for="file-input"><?= lang('Upload a new logo', 'Lade ein neues Logo hoch') ?></label>
             <br><small class="text-danger">Max. 2 MB.</small>
         </div>
 
         <button class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
     </div>
 </form>

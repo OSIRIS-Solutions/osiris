@@ -19,7 +19,10 @@
 use chillerlan\QRCode\{QRCode, QROptions};
 
 // User context
-$user_units = DB::doc2Arr($USER['current_units'] ?? []);
+$user_units = DB::doc2Arr($USER['units'] ?? []);
+if (!empty($user_units)) {
+    $user_units = array_column($user_units, 'unit');
+}
 
 if ($edit_perm) {
     include_once BASEPATH . '/pages/activities/activity-modals.php';
@@ -81,7 +84,7 @@ if ($edit_perm) {
                 <br>
                 <a href="#projects" class="btn success">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -129,7 +132,7 @@ if ($edit_perm) {
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
+                    <?= lang('action.edit') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
@@ -234,7 +237,7 @@ if ($edit_perm) {
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <a class="btn primary outline ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                 <i class="ph ph-eye ph-fw"></i>
-                <?= lang('Preview', 'Vorschau') ?>
+                <?= lang('common.preview') ?>
             </a>
         <?php } ?>
     </div>
@@ -339,7 +342,7 @@ if ($edit_perm) {
     <div class="d-flex">
 
         <div class="mr-10 badge bg-white">
-            <small><?= lang('Date', 'Datum') ?>: </small>
+            <small><?= lang('common.date') ?>: </small>
             <br />
             <span class="badge"><?= $Format->format_date($doc) ?></span>
         </div>
@@ -352,7 +355,7 @@ if ($edit_perm) {
             if ($doc['affiliated'] ?? true) { ?>
                 <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
                     <!-- <i class="ph ph-handshake m-0"></i> -->
-                    <?= lang('Affiliated', 'Affiliiert') ?>
+                    <?= lang('common.affiliated') ?>
                 </div>
             <?php } else { ?>
                 <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
@@ -400,7 +403,7 @@ if ($edit_perm) {
                     break;
                 default: ?>
                     <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
-                        <?= lang('None', 'Keine') ?>
+                        <?= lang('common.none') ?>
                     </span>
             <?php
                     break;
@@ -437,12 +440,12 @@ if ($edit_perm) {
 
         <?php if (!empty($projects)) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Projects', 'Projekte') ?>: </small>
+                <small><?= lang('common.projects') ?>: </small>
                 <br />
                 <a href="#projects" class="badge primary outline">
                     <i class="ph ph-tree-structure"></i>
                     <?= count($projects) ?>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -563,13 +566,13 @@ if ($edit_perm) {
     <nav class="pills mt-20 mb-0" id="navigation">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
             <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('General', 'Allgemein') ?>
+            <?= lang('common.general') ?>
         </a>
 
         <?php if ($guests_involved) { ?>
             <a onclick="navigate('guests')" id="btn-guests" class="btn">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('Guests', 'Gäste') ?>
+                <?= lang('common.guests') ?>
                 <span class="index"><?= count($guests) ?></span>
             </a>
         <?php } ?>
@@ -585,7 +588,7 @@ if ($edit_perm) {
 
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-plugs" aria-hidden="true"></i>
-            <?= lang('Activities', 'Aktivitäten') ?>
+            <?= lang('common.activities') ?>
             <span class="index"><?= count($connected_activities) ?></span>
         </a>
 
@@ -596,7 +599,7 @@ if ($edit_perm) {
             ?>
                 <a onclick="navigate('projects')" id="btn-projects" class="btn">
                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= lang('common.projects') ?>
                     <span class="index"><?= $count_projects ?></span>
                 </a>
 
@@ -644,7 +647,7 @@ if ($edit_perm) {
             ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('Research Spectrum', 'Forschungs-Spektrum') ?>
+                <?= lang('common.research_spectrum') ?>
                 <span class="index"><?= $count_spectrum ?></span>
             </a>
         <?php } ?>
@@ -656,7 +659,7 @@ if ($edit_perm) {
         ?>
             <a onclick="navigate('history')" id="btn-history" class="btn">
                 <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-                <?= lang('History', 'Historie') ?>
+                <?= lang('common.history') ?>
                 <span class="index"><?= $count_history ?></span>
             </a>
         <?php endif; ?>
@@ -664,7 +667,7 @@ if ($edit_perm) {
         <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
             <a onclick="navigate('raw')" id="btn-raw" class="btn">
                 <i class="ph ph-code" aria-hidden="true"></i>
-                <?= lang('Raw data', 'Rohdaten')  ?>
+                <?= lang('common.raw_data')  ?>
             </a>
         <?php } ?>
 
@@ -675,7 +678,7 @@ if ($edit_perm) {
     <section id="raw" style="display:none">
 
         <h2 class="title">
-            <?= lang('Raw data', 'Rohdaten') ?>
+            <?= lang('common.raw_data') ?>
         </h2>
 
         <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
@@ -694,7 +697,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
-                            <?= lang('Edit', 'Bearbeiten') ?>
+                            <?= lang('action.edit') ?>
                         </a>
                     <?php } ?>
 
@@ -721,7 +724,7 @@ if ($edit_perm) {
                                         <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
-                                    <button class="btn btn-block" type="submit"><?= lang('Save', 'Speichern') ?></button>
+                                    <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -731,11 +734,18 @@ if ($edit_perm) {
 
                 <h2 class="mt-0">Details</h2>
 
+                <script>
+                    function copyToClipboard() {
+                        var text = $('#formatted').text()
+                        navigator.clipboard.writeText(text)
+                        toastSuccess('Query copied to clipboard.')
+                    }
+                </script>
                 <table class="table" id="detail-table">
 
                     <tr>
                         <td>
-                            <button class="btn small float-right" onclick="copyToClipboard('#formatted')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
                                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                             </button>
 
@@ -874,10 +884,10 @@ if ($edit_perm) {
                                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                                             <ul class="horizontal mb-0">
                                                 <li>
-                                                    <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
+                                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
                                                 </li>
                                                 <li>
-                                                    <b><?= lang('Date', 'Datum') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                                 </li>
                                                 <li>
                                                     <a href="<?= $conference['url'] ?>" target="_blank">
@@ -916,7 +926,7 @@ if ($edit_perm) {
                                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                     <a href="#add-tags" class="btn small float-right">
                                         <i class="ph ph-edit"></i>
-                                        <?= lang('Edit', 'Bearbeiten') ?>
+                                        <?= lang('action.edit') ?>
                                     </a>
                                 <?php } ?>
                                 <span class="key"><?= $tagLabel ?></span>
@@ -962,7 +972,7 @@ if ($edit_perm) {
                         <tr class="text-muted">
                             <td>
                                 <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
-                                    <?= lang('Comment', 'Kommentar') ?>:
+                                    <?= lang('common.comment') ?>:
                                 </span>
 
                                 <?= $doc['comment'] ?>
@@ -976,7 +986,7 @@ if ($edit_perm) {
 
                 <div class="alert danger mt-20 py-20">
                     <h2 class="title">
-                        <?= lang('Delete', 'Löschen') ?>
+                        <?= lang('action.delete') ?>
                     </h2>
                     <?php
 
@@ -1137,12 +1147,12 @@ if ($edit_perm) {
                         ];
                     } elseif ($supervisorThesis) {
                         $thirdCol = [
-                            'label' => lang('Role', 'Rolle'),
+                            'label' => lang('common.role'),
                             'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
                         ];
                     } elseif ($role === 'authors') {
                         $thirdCol = [
-                            'label' => lang('Position', 'Position'),
+                            'label' => lang('common.position'),
                             'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
                         ];
                     }
@@ -1154,7 +1164,7 @@ if ($edit_perm) {
                         <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                <?= lang("Edit", "Bearbeiten") ?>
+                                <?= lang('action.edit') ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -1162,7 +1172,7 @@ if ($edit_perm) {
                     <table class="table mb-20">
                         <thead>
                             <tr>
-                                <th><?= lang('Person', 'Person') ?></th>
+                                <th><?= lang('common.person') ?></th>
                                 <!-- <th><?= lang('Details', 'Details') ?></th> -->
                                 <?php if (!empty($thirdCol)): ?>
                                     <th><?= $thirdCol['label'] ?></th>
@@ -1212,7 +1222,7 @@ if ($edit_perm) {
                                                     data-toggle="tooltip"
                                                     data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
                                                     <i class="ph ph-handshake"></i>
-                                                    <?= lang('Affiliated', 'Affiliiert') ?>
+                                                    <?= lang('common.affiliated') ?>
                                                 </span>
                                             <?php endif; ?>
 
@@ -1222,7 +1232,7 @@ if ($edit_perm) {
                                                         data-toggle="tooltip"
                                                         data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
                                                         <?= bool_icon(true) ?>
-                                                        <?= lang('Approved', 'Bestätigt') ?>
+                                                        <?= lang('common.approved') ?>
                                                     </span>
                                                 <?php } else { ?>
                                                     <span class="author-chip neutral"
@@ -1239,7 +1249,7 @@ if ($edit_perm) {
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn small" data-toggle="dropdown" type="button"
                                                             id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                            <?= lang('Claim', 'Beanspruchen') ?>
+                                                            <?= lang('action.claim') ?>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                             <div class="content font-size-12">
@@ -1254,7 +1264,7 @@ if ($edit_perm) {
                                                                     <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                     <button class="btn block small" type="submit">
-                                                                        <?= lang('Claim', 'Beanspruchen') ?>
+                                                                        <?= lang('action.claim') ?>
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -1388,7 +1398,7 @@ if ($edit_perm) {
 
     <section id="activities" style="display: none;">
         <h2 class="title">
-            <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+            <?= lang('common.connected_activities') ?>
         </h2>
 
 
@@ -1599,7 +1609,7 @@ if ($edit_perm) {
             </div>
 
             <h2 class="title">
-                <?= lang('Projects', 'Projekte') ?>
+                <?= lang('common.projects') ?>
             </h2>
 
             <?php if (!empty($projects)) {
@@ -1763,11 +1773,11 @@ if ($edit_perm) {
                                                                         <option value="<?= $v['id'] ?>" <?= ($file['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                                                                <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                                                                <textarea class="form-control" name="description" placeholder="<?= lang('Description', 'Beschreibung') ?>"><?= $file['description'] ?? '' ?></textarea>
+                                                                <label for="description"><?= lang('common.description') ?></label>
+                                                                <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                                                             </div>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                                                             <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
@@ -1784,7 +1794,7 @@ if ($edit_perm) {
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
                                                             <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                                                            <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1793,7 +1803,7 @@ if ($edit_perm) {
                                     <?php endif; ?>
                                     <h6 class="m-0">
                                         <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('Other', 'Sonstiges')); ?>
+                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
                                             <i class="ph ph-download"></i>
                                         </a>
                                     </h6>
@@ -1804,7 +1814,7 @@ if ($edit_perm) {
                                             <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                                             <br>
                                             <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                                            <?= lang('on', 'am') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                                            <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                                         </div>
                                     </div>
                                 </td>
@@ -1816,18 +1826,16 @@ if ($edit_perm) {
                 </tbody>
             </table>
 
-            <?php if ($edit_perm) { 
-                $filesize = Settings::getMaxFileSize('16M');
-                ?>
+            <?php if ($edit_perm) { ?>
                 <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
                     <h5 class="title font-size-16">
                         <?= lang('Upload document', 'Dokument hochladen') ?>
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
-                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="<?= $filesize['bytes'] ?>" required>
+                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
                             <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
-                            <br><small class="text-danger"><?= lang('Maximum file size: ' . $filesize['human'] . '.', 'Maximale Dateigröße: ' . $filesize['human'] . '.') ?></small>
+                            <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                     </div>
                     <input type="hidden" name="values[type]" value="activities">
@@ -1840,13 +1848,13 @@ if ($edit_perm) {
                                 <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
+                        <label for="name" class="required"><?= lang('common.doc_type') ?></label>
                     </div>
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-                        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
+                        <label for="description"><?= lang('common.description') ?></label>
                     </div>
-                    <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
+                    <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
                 </form>
 
                 <script>
@@ -1895,7 +1903,7 @@ if ($edit_perm) {
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>
-                            <?= lang('Save', 'Speichern') ?>
+                            <?= lang('action.save') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -1952,7 +1960,7 @@ if ($edit_perm) {
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
-            <?= lang('Edit', 'Bearbeiten') ?>
+            <?= lang('action.edit') ?>
         </a>
         <div class="row row-eq-spacing">
             <div class="col-md-6 flex-grow-0" style="max-width: 40rem">
@@ -1971,7 +1979,7 @@ if ($edit_perm) {
     <!-- new section with history -->
     <section id="history" style="display: none;">
         <h2 class="title">
-            <?= lang('History', 'Historie') ?>
+            <?= lang('common.history') ?>
         </h2>
         <p>
             <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
@@ -2253,7 +2261,7 @@ if ($edit_perm) {
         <section id="guests" style="display:none">
 
             <h2 class="title">
-                <?= lang('Guests', 'Gäste') ?>
+                <?= lang('common.guests') ?>
             </h2>
 
             <?php if ($Settings->featureEnabled('guest-forms')) {
@@ -2296,14 +2304,14 @@ if ($edit_perm) {
                                             echo '<span class="badge primary">' . lang('Pending', 'Ausstehend') . '</span>';
                                             break;
                                         case 'approved':
-                                            echo '<span class="badge success">' . lang('Approved', 'Bestätigt') . '</span>';
+                                            echo '<span class="badge success">' . lang('common.approved') . '</span>';
                                             break;
                                         case 'new':
-                                            echo '<span class="badge signal">' . lang('New', 'Neu') . '</span>';
+                                            echo '<span class="badge signal">' . lang('common.new') . '</span>';
                                             $new_guests = true;
                                             break;
                                         default:
-                                            echo '<span class="badge danger">' . lang('Unknown', 'Unbekannt') . '</span>';
+                                            echo '<span class="badge danger">' . lang('common.unknown') . '</span>';
                                             break;
                                     }
                                     ?>

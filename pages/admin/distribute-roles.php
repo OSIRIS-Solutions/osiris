@@ -64,7 +64,7 @@
         <thead>
             <tr>
                 <th><?= lang('User', 'Benutzer') ?></th>
-                <th><?= lang('Units', 'Einheiten') ?></th>
+                <th><?= lang('common.units') ?></th>
                 <?php foreach ($roles as $role) { ?>
                     <th><?= ucfirst($role) ?></th>
                 <?php } ?>

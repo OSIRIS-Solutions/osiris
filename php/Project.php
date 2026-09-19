@@ -236,7 +236,7 @@ class Project extends Vocabulary
     {
         $isJoint = $this->project['joint_project'] ?? false;
         if (!$isJoint) {
-            return lang('No', 'Nein');
+            return lang('common.no');
         }
         $identifier = $this->project['joint_project_identifier'] ?? '-';
         $title = $this->project['joint_project_title'] ?? '-';
@@ -244,7 +244,7 @@ class Project extends Vocabulary
         $return = '<div class="module">';
         $return .= '<h5 class="title m-0">' . e($title) . '</h5>';
         $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . e($identifier) . '<br>';
-        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('Yes', 'Ja') : lang('No', 'Nein')) . '<br>';
+        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('common.yes') : lang('common.no')) . '<br>';
         $return .= '</div>';
         return $return;
     }
@@ -278,7 +278,7 @@ class Project extends Vocabulary
                 return $this->getJointProject();
             case 'countries':
             case 'research-countries':
-                $lang = lang('name', 'name_de');
+                $lang = lang('common.field_name_language');
                 $countriesList = '';
 
                 foreach ($value ?? [] as $c) {
@@ -357,9 +357,9 @@ class Project extends Vocabulary
                 return $return . '</ul>';
             case 'public':
                 if ($value) {
-                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('yes', 'ja') . '</span>';
+                    return '<span class="text-success"><i class="ph ph-check"></i> ' . lang('common.yes') . '</span>';
                 } else {
-                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('no', 'nein') . '</span>';
+                    return '<span class="text-danger"><i class="ph ph-x"></i> ' . lang('common.no') . '</span>';
                 }
             case 'image':
                 if (empty($value)) return '-';
@@ -465,24 +465,24 @@ class Project extends Vocabulary
         switch ($this->project['status'] ?? $status) {
             case 'applied':
             case 'proposed':
-                return "<span class='badge signal'>" . lang('proposed', 'beantragt') . "</span>";
+                return "<span class='badge signal'>" . lang('projects.proposed') . "</span>";
             case 'approved':
             case 'accepted':
                 if ($this->inPast())
-                    return "<span class='badge success'>" . lang('ended', 'beendet') . "</span>";
-                return "<span class='badge success'>" . lang('approved', 'bewilligt') . "</span>";
+                    return "<span class='badge success'>" . lang('projects.ended') . "</span>";
+                return "<span class='badge success'>" . lang('projects.approved') . "</span>";
             case 'rejected':
-                return "<span class='badge danger'>" . lang('rejected', 'abgelehnt') . "</span>";
+                return "<span class='badge danger'>" . lang('projects.rejected') . "</span>";
             case 'finished':
-                return "<span class='badge success'>" . lang('finished', 'abgeschlossen') . "</span>";
+                return "<span class='badge success'>" . lang('projects.finished') . "</span>";
             case 'withdrawn':
-                return "<span class='badge muted'>" . lang('withdrawn', 'zurückgezogen') . "</span>";
+                return "<span class='badge muted'>" . lang('projects.withdrawn') . "</span>";
             case 'project':
                 if ($this->inPast())
-                    return "<span class='badge dark'>" . lang('ended', 'finished') . "</span>";
-                return "<span class='badge primary'>" . lang('ongoing', 'laufend') . "</span>";
+                    return "<span class='badge dark'>" . lang('projects.ended') . "</span>";
+                return "<span class='badge primary'>" . lang('projects.ongoing') . "</span>";
             default:
-                return "<span class='badge'>" . lang('unknown', 'unbekannt') . "</span>";
+                return "<span class='badge'>" . lang('common.unknown') . "</span>";
         }
     }
 
@@ -520,12 +520,12 @@ class Project extends Vocabulary
         <?php } else if ($type == 'Teilprojekt') { ?>
             <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
-                <?= lang('Subproject', 'Teilprojekt') ?>
+                <?= lang('common.subproject') ?>
             </span>
         <?php } else { ?>
             <span class="badge text-muted no-wrap <?= $cls ?>">
                 <i class="ph ph-coin"></i>
-                <?= lang('Other', 'Sonstiges') ?>
+                <?= lang('common.other') ?>
             </span>
 <?php }
     }
@@ -667,7 +667,7 @@ class Project extends Vocabulary
         }
         if (!isset($this->project['end']) || !isset($this->project['end']['year'])) {
             // no end date set
-            return lang('unknown', 'unbekannt');
+            return lang('common.unknown');
         }
         return sprintf('%02d', $this->project['end']['month']) . "/" . $this->project['end']['year'];
     }

@@ -208,7 +208,7 @@ $design = $Settings->get('design');
                     <?php $fontHeaders = $design['font_headers'] ?? 'no'; ?>
                     <select class="form-control" name="general[design][font_headers]" id="design_font_headers">
                         <option value="no" <?= $fontHeaders == 'no' ? 'selected' : '' ?>><?= lang('No (default)', 'Nein (Standard)') ?></option>
-                        <option value="yes" <?= $fontHeaders == 'yes' ? 'selected' : '' ?>><?= lang('Yes', 'Ja') ?></option>
+                        <option value="yes" <?= $fontHeaders == 'yes' ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                     </select>
                     <small class="text-muted">
                         <?= lang('Default font for headers is TikTok Sans.', 'Standard-Schriftart für Überschriften ist TikTok Sans.') ?>
@@ -328,7 +328,7 @@ $design = $Settings->get('design');
             </script>
             <!-- preview -->
             <tr>
-                <td><?= lang('Preview', 'Vorschau') ?></td>
+                <td><?= lang('common.preview') ?></td>
                 <td>
                     <div id="design_font_preview" class="p-10 rounded bg-light">
                         <div class="mb-5" style="font-size: 20px; font-weight: 600;">
@@ -398,7 +398,7 @@ $design = $Settings->get('design');
                     <select class="form-control" name="general[design][border_width]" id="design_border">
                         <option value="normal" <?= $borderWidth == 'normal' ? 'selected' : '' ?>><?= lang('Normal (default)', 'Normal (Standard)') ?></option>
                         <option value="thick" <?= $borderWidth == 'thick' ? 'selected' : '' ?>><?= lang('Thick', 'Dick') ?></option>
-                        <option value="none" <?= $borderWidth == 'none' ? 'selected' : '' ?>><?= lang('None', 'Keine') ?></option>
+                        <option value="none" <?= $borderWidth == 'none' ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                     </select>
                     <small class="text-muted">
                         <?= lang(
@@ -571,7 +571,7 @@ $design = $Settings->get('design');
         <div class="bottom-buttons mt-10">
             <button class="btn primary">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('action.save') ?>
             </button>
         </div>
     </div>

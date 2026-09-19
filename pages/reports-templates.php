@@ -39,11 +39,11 @@ $reports = $osiris->adminReports->find();
 
             <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report['_id'] ?>" class="btn mr-10">
                 <i class="ph ph-eye"></i>
-                <?= lang('Preview', 'Vorschau') ?>
+                <?= lang('common.preview') ?>
             </a>
             <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn">
                 <i class="ph ph-edit"></i>
-                <?= lang('Edit', 'Bearbeiten') ?>
+                <?= lang('action.edit') ?>
             </a>
 
             <!-- dropdown for deleting -->
@@ -56,7 +56,7 @@ $reports = $osiris->adminReports->find();
                         <input type="hidden" name="id" value="<?= $report['_id'] ?>">
                         <button type="submit" class="text-danger btn block link">
                             <i class="ph ph-trash"></i>
-                            <?= lang('Delete', 'Löschen') ?>
+                            <?= lang('action.delete') ?>
                         </button>
                     </form>
 
@@ -76,7 +76,7 @@ $reports = $osiris->adminReports->find();
                 <?= lang('New report template', 'Neue Vorlage') ?>
             </h3>
             <div class="form-group">
-                <label for="title"><?= lang('Title', 'Titel') ?></label>
+                <label for="title"><?= lang('common.title') ?></label>
                 <input type="text" class="form-control" name="title" required>
             </div>
     </div>

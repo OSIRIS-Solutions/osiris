@@ -15,6 +15,14 @@ class CommandPalette
         $topicLabel = $this->settings->topicLabel();
 
         $elements = [
+            // [
+            //     "url" => "/profile/" . $_SESSION['username'],
+            //     "type" => "Navigation",
+            //     "label" => lang(lang('Profile  of ', 'Profil von ') . ($_SESSION['name'] ?? $_SESSION['username']), null),
+            //     "icon" => "student",
+            //     "keywords" => ["profile", "user", "person", "me", "my profile", "my account", "mein profil", "mein konto"],
+            //     "priority" => 100
+            // ],
             [
                 "url" => "/my-year",
                 "type" => "Navigation",
@@ -35,7 +43,7 @@ class CommandPalette
             ],
             [
                 "url" => "/user/edit/" . $_SESSION['username'],
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "label" => lang("User Settings", "Benutzereinstellungen"),
                 "icon" => "gear",
                 "keywords" => ["settings", "preferences", "account", "einstellungen", "präferenzen", "konto"],
@@ -43,7 +51,7 @@ class CommandPalette
             ],
             [
                 "url" => "/add-activity",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "plus-circle",
                 "label" => lang("Add activity", "Aktivität hinzufügen"),
                 "keywords" => ["add activity", "new activity", "create activity", "neue aktivität", "aktivität erstellen"],
@@ -51,7 +59,7 @@ class CommandPalette
             ],
             [
                 "url" => "/proposals/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "tree-structure",
                 "label" => lang("Add project proposal", "Projektantrag hinzufügen"),
                 "feature" => "projects",
@@ -61,7 +69,7 @@ class CommandPalette
             ],
             [
                 "url" => "/projects/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "tree-structure",
                 "label" => lang("Add project", "Projekt hinzufügen"),
                 "feature" => "projects",
@@ -71,9 +79,9 @@ class CommandPalette
             ],
             [
                 "url" => "/conferences/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "calendar-plus",
-                "label" => lang("Add event", "Event hinzufügen"),
+                "label" => lang('action.add_event'),
                 "feature" => "events",
                 "permission" => "conferences.edit",
                 "keywords" => ["add event", "new event", "create event", "neues event", "event erstellen"],
@@ -130,7 +138,7 @@ class CommandPalette
             ],
             [
                 "url" => "/activities/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search activities", "Aktivitäten durchsuchen"),
                 "keywords" => ["search activities", "find activities", "aktivitäten durchsuchen", "aktivitäten finden"],
@@ -140,13 +148,13 @@ class CommandPalette
                 "url" => "/activities",
                 "type" => "Navigation",
                 "icon" => "folders",
-                "label" => lang("All activities", "Alle Aktivitäten"),
+                "label" => lang('common.all_activities'),
                 "keywords" => ["all activities", "all aktivitäten", "alle aktivitäten", "publications", "publikationen", "transfer"],
                 "priority" => 100
             ],
             [
                 "url" => "/proposals/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search proposals", "Anträge durchsuchen"),
                 "keywords" => ["search proposals", "find proposals", "anträge durchsuchen", "anträge finden"],
@@ -156,14 +164,14 @@ class CommandPalette
                 "url" => "/proposals",
                 "type" => "Navigation",
                 "icon" => "tree-structure",
-                "label" => lang("Proposals", "Anträge"),
+                "label" => lang('common.proposals'),
                 "feature" => "projects",
                 "keywords" => ["proposals", "anträge"],
                 "priority" => 70
             ],
             [
                 "url" => "/projects/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search projects", "Projekte durchsuchen"),
                 "keywords" => ["search projects", "find projects", "projekte durchsuchen", "projekte finden"],
@@ -173,7 +181,7 @@ class CommandPalette
                 "url" => "/projects",
                 "type" => "Navigation",
                 "icon" => "tree-structure",
-                "label" => lang("Projects", "Projekte"),
+                "label" => lang('common.projects'),
                 "feature" => "projects",
                 "keywords" => ["project", "projekt", "research project", "forschungsprojekt", "projects", "projekte", "drittmittelprojekte", "third-party projects"],
                 "priority" => 90
@@ -190,7 +198,7 @@ class CommandPalette
             ],
             [
                 "url" => "/journals/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search journals", "Zeitschriften durchsuchen"),
                 "keywords" => ["search journals", "find journals", "zeitschriften durchsuchen", "zeitschriften finden"],
@@ -206,7 +214,7 @@ class CommandPalette
             ],
             [
                 "url" => "/conferences/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search events", "Veranstaltungen durchsuchen"),
                 "feature" => "events",
@@ -217,7 +225,7 @@ class CommandPalette
                 "url" => "/conferences",
                 "type" => "Navigation",
                 "icon" => "calendar-dots",
-                "label" => lang("Events", "Veranstaltungen"),
+                "label" => lang('common.events'),
                 "feature" => "events",
                 "keywords" => ["events", "veranstaltungen", "conferences", "konferenzen"],
                 "priority" => 50
@@ -242,7 +250,7 @@ class CommandPalette
             ],
             [
                 "url" => "/teaching/new",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "chalkboard-simple",
                 "label" => lang("Add teaching module", "Lehrveranstaltung hinzufügen"),
                 "feature" => "teaching-modules",
@@ -268,43 +276,26 @@ class CommandPalette
                 "priority" => 70
             ],
             [
-                "url" => "/hub",
-                "type" => "Navigation",
-                "icon" => $this->settings->resourceHubIcon(),
-                "label" => $this->settings->resourceHubLabel(),
-                "feature" => "resource-hub",
-                "keywords" => ["resource hub", "ressourcen-hub", "resources", "ressourcen", "hub"],
-            ],
-            [
                 "url" => "/documents",
                 "type" => "Navigation",
                 "icon" => "files",
-                "label" => lang("Documents", "Dokumente"),
-                "permission" => "documents|documents.central|documents.manage",
+                "label" => lang('common.documents'),
+                "permission" => "documents",
                 "keywords" => ["documents", "dokumente"],
                 "priority" => 30
-            ],
-            [
-                "url" => "/documents/manage",
-                "type" => lang("Action", "Aktion"),
-                "icon" => "file-plus",
-                "label" => lang("Manage central documents", "Zentrale Dokumente verwalten"),
-                "permission" => "documents.manage",
-                "keywords" => ["upload documents", "manage documents", "dokumente hochladen", "dokumente verwalten"],
-                "priority" => 50
             ],
             [
                 "url" => "/spectrum",
                 "type" => "Navigation",
                 "icon" => "lightbulb",
-                "label" => lang("Research Spectrum", "Forschungs-Spektrum"),
+                "label" => lang('common.research_spectrum'),
                 "feature" => "spectrum",
                 "keywords" => ["research spectrum", "forschungs-spektrum", "spectrum", "spektrum", "topics", "openalex topics", "openalex themen"],
                 "priority" => 0
             ],
             [
                 "url" => "/persons/search",
-                "type" => lang("Search", "Suchen"),
+                "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
                 "label" => lang("Search persons", "Personen durchsuchen"),
                 "keywords" => ["search persons", "find persons", "personen durchsuchen", "personen finden"],
@@ -314,7 +305,7 @@ class CommandPalette
                 "url" => "/user/browse",
                 "type" => "Navigation",
                 "icon" => "users",
-                "label" => lang("Users", "Personen"),
+                "label" => lang('common.users'),
                 "keywords" => ["users", "personen", "nutzer", "wissenschaftler", "scientists"],
                 "priority" => 90
             ],
@@ -330,7 +321,7 @@ class CommandPalette
                 "url" => "/organizations",
                 "type" => "Navigation",
                 "icon" => "building-office",
-                "label" => lang("Organisations", "Organisationen"),
+                "label" => lang('common.organizations'),
                 "keywords" => ["organizations", "organisations", "institution", "institutions", "company", "companies", "organisationen", "externe organisationen"],
                 "priority" => 60
             ],
@@ -338,7 +329,7 @@ class CommandPalette
                 "url" => "/guests",
                 "type" => "Navigation",
                 "icon" => "user-switch",
-                "label" => lang("Guests", "Gäste"),
+                "label" => lang('common.guests'),
                 "feature" => "guests",
                 "keywords" => ["guests", "gäste"],
                 "priority" => 20
@@ -413,7 +404,7 @@ class CommandPalette
                 "url" => "/reports",
                 "type" => "Navigation",
                 "icon" => "printer",
-                "label" => lang("Reports", "Berichte"),
+                "label" => lang('common.reports'),
                 "permission" => "report.generate",
                 "keywords" => ["reports", "berichte"],
                 "priority" => 30
@@ -438,7 +429,7 @@ class CommandPalette
             ],
             [
                 "url" => "/admin/general",
-                "type" => lang("Action", "Aktion"),
+                "type" => lang('common.action'),
                 "icon" => "gear",
                 "label" => lang("Admin Settings", "Admin-Einstellungen"),
                 "permission" => "admin.see",
@@ -502,7 +493,7 @@ class CommandPalette
         foreach ($this->settings->activityCategories as $cat) {
             $this->add([
                 "url" => "/activities#type=" . $cat['id'],
-                "type" => lang("Category", "Kategorie"),
+                "type" => lang('common.category'),
                 "icon" => "bookmarks",
                 "label" => lang($cat['name'], $cat['name_de'] ?? null),
                 "keywords" => [$cat['name'], $cat['name_de'] ?? $cat['name'], $cat['id']],
@@ -520,12 +511,12 @@ class CommandPalette
         ];
         $queries = $this->settings->osiris->queries->find($filter);
         $collectionMap = [
-            'activities' => lang('Activities', 'Aktivitäten'),
-            'projects' => lang('Projects', 'Projekte'),
-            'proposals' => lang('Proposals', 'Anträge'),
-            'conferences' => lang('Events', 'Veranstaltungen'),
+            'activities' => lang('common.activities'),
+            'projects' => lang('common.projects'),
+            'proposals' => lang('common.proposals'),
+            'conferences' => lang('common.events'),
             'journals' => lang('Journals', 'Zeitschriften'),
-            'persons' => lang('Persons', 'Personen')
+            'persons' => lang('common.persons')
         ];
         foreach ($queries as $query) {
             $this->add([
@@ -564,15 +555,11 @@ class CommandPalette
             return false;
         }
 
-        if (!empty($item['permission'])) {
-            $hasPermission = false;
-            foreach (explode('|', $item['permission']) as $permission) {
-                if ($this->settings->hasPermission($permission)) {
-                    $hasPermission = true;
-                    break;
-                }
-            }
-            if (!$hasPermission) return false;
+        if (
+            !empty($item['permission'])
+            && !$this->settings->hasPermission($item['permission'])
+        ) {
+            return false;
         }
 
         return true;

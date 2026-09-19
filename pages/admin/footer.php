@@ -92,7 +92,7 @@
                     <th><?= lang('Title (EN)', 'Titel (EN)') ?></th>
                     <th><?= lang('Title (DE)', 'Titel (DE)') ?></th>
                     <th><?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?></th>
-                    <th><?= lang('Actions', 'Aktionen') ?></th>
+                    <th><?= lang('common.actions') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -108,7 +108,7 @@
                             <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('Delete', 'Löschen') ?>"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -130,7 +130,7 @@
                                 <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>"></td>
                                 <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>"></td>
                                 <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>"></td>
-                                <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('Delete', 'Löschen') ?>"></i></button></td>
+                                <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button></td>
                             </tr>`;
                 tbody.append(newRow);
             }
@@ -139,7 +139,7 @@
         <div class="bottom-buttons">
             <button class="btn success large">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('Save', 'Speichern') ?>
+                <?= lang('action.save') ?>
             </button>
         </div>
     </div>

@@ -22,7 +22,7 @@ Route::get('/(activities|my-activities)', function ($page) {
     $path = $page;
     if ($page == 'activities') {
         $breadcrumb = [
-            ['name' => lang("All activities", "Alle Aktivitäten")]
+            ['name' => lang('common.all_activities')]
         ];
     } elseif (isset($_GET['user'])) {
         $user = $_GET['user'];
@@ -56,27 +56,27 @@ Route::get('/(activities|projects|proposals|conferences|journals|persons)/search
 
     switch ($collection) {
         case 'activities':
-            $colName = lang('Activities', "Aktivitäten");
+            $colName = lang('common.activities');
             break;
         case 'projects':
-            $colName = lang('Projects', "Projekte");
+            $colName = lang('common.projects');
             break;
         case 'proposals':
-            $colName = lang('Proposals', "Anträge");
+            $colName = lang('common.proposals');
             break;
         case 'conferences':
-            $colName = lang('Events', "Veranstaltungen");
+            $colName = lang('common.events');
             break;
         case 'journals':
             $colName = $Settings->journalLabel();
             break;
         case 'persons':
-            $colName = lang('Persons', "Personen");
+            $colName = lang('common.persons');
             break;
     }
     $breadcrumb = [
         ['name' => $colName, 'path' => "/" . $collection],
-        ['name' => lang("Advanced search", "Erweiterte Suche")]
+        ['name' => lang('navigation.advanced_search')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/advanced-search.php";
@@ -87,8 +87,8 @@ Route::get('/activities/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
-        ['name' => lang("Statistics", "Statistiken")]
+        ['name' => lang('common.activities'), 'path' => "/activities"],
+        ['name' => lang('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/activities/statistics.php";
@@ -111,7 +111,7 @@ Route::get('/add-activity', function () {
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
             if (empty($draft)) {
-                abortwith(404, lang('Activity', "Aktivität"), '/activities');
+                abortwith(404, lang('common.activity'), '/activities');
             }
             $form = DB::doc2Arr($draft);
             unset($form['created']);
@@ -123,7 +123,7 @@ Route::get('/add-activity', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Add new", "Neu hinzufügen")]
     ];
     include BASEPATH . "/header.php";
@@ -157,7 +157,7 @@ Route::get('/activities/drafts', function () {
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Drafts", "Entwürfe")]
     ];
     include BASEPATH . "/header.php";
@@ -178,7 +178,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($draft)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities/drafts');
+        abortwith(404, lang('common.activity'), '/activities/drafts');
     }
 
     if (isset($_GET['frame'])) {
@@ -187,7 +187,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Drafts", "Entwürfe"), 'path' => "/activities/drafts"],
         ['name' => $draft['title'] ?? $id]
     ];
@@ -213,7 +213,7 @@ Route::post('/crud/activities/add-activity', function () {
         $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
     $name = ucfirst($form['type']) . ": " . $name;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("New from Import", "Neu aus Import")]
     ];
 
@@ -227,7 +227,7 @@ Route::get('/activities/online-search', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Search in Pubmed", "Suche in Pubmed")]
     ];
     include BASEPATH . "/header.php";
@@ -257,7 +257,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $activity = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
     if (empty($activity)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     $doc = json_decode(json_encode($activity->getArrayCopy(), JSON_PARTIAL_OUTPUT_ON_ERROR), true);
@@ -273,7 +273,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $name = $activity['rendered']['title'] ?? $id;
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name]
     ];
     if ($Format->hasSchema()) {
@@ -406,13 +406,13 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $doc = $osiris->activities->findOne(['_id' => $id], ['projection' => ['file' => 0]]);
     if (empty($doc)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     $user_activity = $DB->isUserActivity($doc, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $Format = new Document;
@@ -445,7 +445,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $user_units = DB::doc2Arr($USER['current_units'] ?? []);
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
         ['name' => lang("Connections", "Verknüpfungen")]
     ];
@@ -477,7 +477,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
@@ -485,9 +485,9 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
         $name = mb_substr(strip_tags($name), 0, 20) . "&hellip;";
     $name = ucfirst($form['type']) . ": " . $name;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -502,7 +502,7 @@ Route::get('/activities/locking', function () {
         abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities', lang('Go back to activities', 'Zurück zu Aktivitäten'));
     }
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Locking", "Sperren")]
     ];
 
@@ -520,7 +520,7 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
     $Modules = new Modules();
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Doublet", "Dublette")]
     ];
 
@@ -581,12 +581,12 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
     global $form;
     $form = $osiris->activities->findOne(['_id' => $id]);
     if (!$form) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
     $copy = true;
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Copy", "Kopieren")]
     ];
 
@@ -603,7 +603,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 
     $form = $osiris->activities->findOne(['_id' => $id]);
     if (!$form) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
 
     if (($form['locked'] ?? false) && !$Settings->hasPermission('activities.edit-locked')) {
@@ -616,12 +616,12 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"]
     ];
     if ($role == "authors") {
@@ -643,7 +643,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 Route::post('/crud/activities/create', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
     $collection = $osiris->activities;
     $activityType = $_POST['values']['type'];
 
@@ -759,7 +759,7 @@ Route::post('/crud/activities/create', function () {
 
 Route::post('/crud/activities/save-draft', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     $collection = $osiris->activitiesDrafts;
 
@@ -884,7 +884,7 @@ Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->activities;
     $values = validateValues($_POST['values'], $DB);
 
@@ -972,15 +972,15 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     // check permissions
     $doc = $osiris->activities->findOne(['_id' => $id]);
     if (empty($doc)) {
-        abortwith(404, lang('Activity', "Aktivität"), '/activities');
+        abortwith(404, lang('common.activity'), '/activities');
     }
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     if (!$user_activity && !$Settings->hasPermission('activities.delete')) {
-        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     // check if locked
     if (($doc['locked'] ?? false) && !$Settings->hasPermission('activities.delete-locked')) {
-        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $updateResult = $osiris->activities->deleteOne(
@@ -1062,19 +1062,19 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = ($errorMsg);
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = (lang("File is too big: max 16 MB is allowed.", "Die Datei ist zu groß: maximal 16 MB sind erlaubt."));
+            $_SESSION['msg'] = (lang('error.file_upload_too_large', replace:['max' => '16 MB']));
             $_SESSION['msg_type'] = "error";
         } else if (file_exists($target_dir . $filename)) {
             $_SESSION['msg'] = (lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden."));
@@ -1094,7 +1094,7 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
                 ['$push' => ["files" => $values]]
             );
         } else {
-            $_SESSION['msg'] = (lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."));
+            $_SESSION['msg'] = (lang('error.file_upload_generic'));
             $_SESSION['msg_type'] = "error";
         }
         header("Location: " . ROOTPATH . "/activities/view/" . $id);
@@ -1524,7 +1524,7 @@ Route::post('/crud/activities/lock', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
+        ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => lang("Locking", "Sperren")]
     ];
 

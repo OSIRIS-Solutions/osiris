@@ -25,28 +25,28 @@
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/categories" class="">
         <i class="ph-duotone ph-bookmarks text-secondary" aria-hidden="true"></i>
-        <?= lang('Activities', 'Aktivitäten') ?>
+        <?= lang('common.activities') ?>
         <br>
         <small class="text-muted"><?= lang('Manage activity types and categories', 'Verwalte Aktivitätstypen und Kategorien') ?></small>
     </a>
     <?php if ($Settings->featureEnabled('projects')) { ?>
         <a href="<?= ROOTPATH ?>/admin/projects" class="">
             <i class="ph-duotone ph-tree-structure text-secondary" aria-hidden="true"></i>
-            <?= lang('Projects', 'Projekte') ?>
+            <?= lang('common.projects') ?>
             <br>
             <small class="text-muted"><?= lang('Manage projects and proposals', 'Verwalte Projekte und Anträge') ?></small>
         </a>
     <?php } ?>
     <a href="<?= ROOTPATH ?>/admin/persons" class="">
         <i class="ph-duotone ph-user text-secondary" aria-hidden="true"></i>
-        <?= lang('People', 'Personen') ?>
+        <?= lang('common.people') ?>
         <br>
         <small class="text-muted"><?= lang('Manage data of people and login', 'Verwalte Personendaten und Login-Informationen') ?></small>
     </a>
     <?php if ($Settings->featureEnabled('infrastructures')) { ?>
         <a href="<?= ROOTPATH ?>/admin/infrastructures" class="">
             <i class="ph-duotone ph-cube-transparent text-secondary" aria-hidden="true"></i>
-            <?= lang('Infrastructures', 'Infrastrukturen') ?>
+            <?= lang('common.infrastructures') ?>
             <br>
             <small class="text-muted"><?= lang('Manage data of infrastructures', 'Verwalte Daten von Infrastrukturen') ?></small>
         </a>
@@ -59,7 +59,7 @@
 <div class="link-list w-600 mw-full">
     <a href="<?= ROOTPATH ?>/admin/fields" style="--secondary-color: var(--primary-color)">
         <i class="ph-duotone ph-textbox text-secondary" aria-hidden="true"></i>
-        <?= lang('Custom fields', 'Benutzerdefinierte Felder') ?>
+        <?= lang('common.custom_fields') ?>
         <br>
         <small class="text-muted"><?= lang('Create your own data fields for activities and projects', 'Erstelle deine eigenen Datenfelder für Aktivitäten und Projekte') ?></small>
     </a>
@@ -80,7 +80,7 @@
     <?php if ($Settings->featureEnabled('tags')) { ?>
         <a href="<?= ROOTPATH ?>/admin/tags" style="--secondary-color: var(--primary-color)">
             <i class="ph-duotone ph-tag text-secondary" aria-hidden="true"></i>
-            <?= lang('Tags', 'Schlagwörter') ?>
+            <?= lang('common.tags') ?>
             <br>
             <small class="text-muted"><?= lang('Manage tags for activities and projects', 'Verwalte Tags für Aktivitäten und Projekte') ?></small>
         </a>

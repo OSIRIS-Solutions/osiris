@@ -44,7 +44,7 @@
             <div class="col-sm-8 order-sm-first order-last" id="research">
                 <?php if (!empty($data['research'])): ?>
                     <h2 class="title" id="research">
-                        <?= lang("Research interest", "Forschungsinteressen") ?>
+                        <?= lang('common.research_interests') ?>
                     </h2>
                     <ul class="list">
                         <?php foreach ($data['research'] as $item): ?>
@@ -83,17 +83,17 @@
 
                 <?php if (!empty($data['numbers']['publications'])): ?>
                     <div class="pb-10">
-                        <h2 id="publications"><?= lang("Publications", "Publikationen") ?></h2>
+                        <h2 id="publications"><?= lang('common.publications') ?></h2>
 
                         <table class="table datatable"
                             id="publication-table"
                             data-table="publications"
                             data-source="./publications.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
+                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -141,11 +141,11 @@
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('en', 'de') ?>">
+                            data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
                                     <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('Activity', 'Aktivität')?></th>
+                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -189,15 +189,15 @@
                 <?php if (!empty($data['numbers']['teaching'])): ?>
                     <div class="pb-10">
                         <h2 id="teaching"><?= lang("Teaching activity", "Lehrbeteiligung") ?></h2>
-                        <table class="table" id="teaching-table" data-lang="<?= lang('en', 'de') ?>" data-table="teaching">
+                        <table class="table" id="teaching-table" data-lang="<?= lang('common.this_language') ?>" data-table="teaching">
                             <thead>
                                 <tr>
-                                    <th data-><?= lang('Title', 'Titel') ?></th>
+                                    <th data-><?= lang('common.title') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('en', 'de'));
+                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('common.this_language'));
                                 foreach (($teaching) as $t):
                                     $title = str_replace("href='/", "href='" . $base . "/",  $t['title']);
                                 ?>
@@ -369,7 +369,7 @@
                                 <?php if (!empty($data['contact']['phone'])): ?>
                                     <tr>
                                         <td>
-                                            <span class="key"><?= lang("Telephone", "Telefon") ?></span>
+                                            <span class="key"><?= lang('common.telephone') ?></span>
                                             <?= e($data['contact']['phone']) ?>
                                         </td>
                                     </tr>
@@ -467,13 +467,13 @@
                         <div class="content">
                             <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
                             <?php if (!empty($data['research'])): ?>
-                                <a href="#research"><?= lang("Research interest", "Forschungsinteressen") ?></a>
+                                <a href="#research"><?= lang('common.research_interests') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['cv'])): ?>
                                 <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['publications'])): ?>
-                                <a href="#publications"><?= lang("Publications", "Publikationen") ?></a>
+                                <a href="#publications"><?= lang('common.publications') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['activities'])): ?>
                                 <a href="#activities"><?= lang("Other Activities", "Weitere Aktivitäten") ?></a>
@@ -487,7 +487,7 @@
                                 </a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['projects'])): ?>
-                                <a href="#projects"><?= lang("Projects", "Projekte") ?></a>
+                                <a href="#projects"><?= lang('common.projects') ?></a>
                             <?php endif; ?>
                         </div>
                     </nav>

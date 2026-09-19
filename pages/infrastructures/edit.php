@@ -104,7 +104,7 @@ $active = function ($field) use ($data_fields) {
         </div>
         <div class="col-md-6">
             <label for="end_date">
-                <?= lang('End', 'Ende') ?> <span class="badge kdsf">KDSF-B-13-4</span>
+                <?= lang('common.end') ?> <span class="badge kdsf">KDSF-B-13-4</span>
             </label>
             <input type="date" class="form-control" name="values[end_date]" id="end_date" value="<?= $form['end_date'] ?? '' ?>">
         </div>
@@ -113,10 +113,10 @@ $active = function ($field) use ($data_fields) {
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('English', 'Englisch') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Title', 'Titel') ?> (EN)
+                        <?= lang('common.title') ?> (EN)
                         <span class="badge kdsf">KDSF-B-13-2</span>
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
@@ -124,7 +124,7 @@ $active = function ($field) use ($data_fields) {
 
                 <div class="form-group">
                     <label for="subtitle">
-                        <?= lang('Subtitle', 'Untertitel') ?> (EN)
+                        <?= lang('common.subtitle') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle]" id="subtitle" value="<?= $form['subtitle'] ?? ''  ?>">
                 </div>
@@ -132,17 +132,17 @@ $active = function ($field) use ($data_fields) {
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('German', 'Deutsch') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Title', 'Titel') ?> (DE)
+                        <?= lang('common.title') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" value="<?= $form['name_de'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('Subtitle', 'Untertitel') ?> (DE)
+                        <?= lang('common.subtitle') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle_de]" id="subtitle_de" value="<?= $form['subtitle_de'] ?? '' ?>">
                 </div>
@@ -153,7 +153,7 @@ $active = function ($field) use ($data_fields) {
 
     <?php if ($active('description')) { ?>
         <label for="description">
-            <?= lang('Description', 'Beschreibung') ?>
+            <?= lang('common.description') ?>
             <span class="badge kdsf">KDSF-B-13-11</span>
         </label>
         <div class="form-group">
@@ -170,7 +170,7 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('type')) { ?>
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="type" class="required">
-                    <?= lang('Category', 'Kategorie') ?>
+                    <?= lang('common.category') ?>
                     <span class="badge kdsf">KDSF-B-13-5</span>
                 </label>
                 <select name="values[type]" id="type" class="form-control" required>
@@ -303,7 +303,7 @@ $active = function ($field) use ($data_fields) {
                     <table class="table simple">
                         <thead>
                             <tr>
-                                <th><?= lang('Name', 'Name') ?></th>
+                                <th><?= lang('common.name') ?></th>
                                 <th><?= lang('Coordinator', 'Koordinator') ?></th>
                                 <th></th>
                             </tr>
@@ -353,7 +353,7 @@ $active = function ($field) use ($data_fields) {
                     <div class="form-group mt-20 box padded bg-light">
                         <label for="organization-search"><?= lang('Add Cooperation Partner', 'Ko-Betreiber:innen hinzufügen') ?></label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('Search for an organization', 'Suche nach einer Organisation') ?>" autocomplete="off">
+                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
                             </div>
@@ -365,15 +365,16 @@ $active = function ($field) use ($data_fields) {
                         </table>
                         <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                         <p>
-                            <?php if ($Settings->hasPermission('organizations.edit')) { ?>
-                                <?= lang('Organisation not found? You can ', 'Organisation nicht gefunden? Du kannst sie') ?>
-                                <a target="_blank" href="<?= ROOTPATH ?>/organizations/new"><?= lang('add it manually', 'manuell anlegen') ?></a>.
-                            <?php } else { ?>
-                                <?= lang('Organisation not found? Please contact', 'Organisation nicht gefunden? Bitte kontaktiere') ?>
-                                <a target="_blank" href="<?= ROOTPATH ?>/user/browse?permission=organizations.edit">
-                                    <?= lang('someone who can add it manually', 'jemanden, der sie manuell anlegen kann') ?>
-                                </a>
-                            <?php } ?>
+                            <?php 
+                            if ($Settings->hasPermission('organizations.edit')) {
+                                lang('forms.organization_not_found_add_new', replace:[
+                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                ]);
+                            } else { 
+                                lang('forms.organization_not_found_contact', replace:[
+                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                ]);
+                            } ?>
                         </p>
                         <script>
                             function handleKeyDown(event) {
@@ -499,5 +500,5 @@ $active = function ($field) use ($data_fields) {
     <?php } ?>
     
 
-    <button type="submit" class="btn secondary"><?= lang('Save', 'Speichern') ?></button>
+    <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
 </form>

@@ -47,7 +47,7 @@
              <td><?= $module['module'] ?></td>
          </tr>
          <tr>
-             <th><?= lang('Title', 'Titel') ?></th>
+             <th><?= lang('common.title') ?></th>
              <td><?= $module['title'] ?></td>
          </tr>
          <tr>
@@ -76,7 +76,7 @@
 
  <div class="">
      <h2>
-         <?= lang('Connected Activities', 'Verknüpfte Aktivitäten') ?>
+         <?= lang('common.connected_activities') ?>
      </h2>
      <?php
         if (count($activities) != 0) {
@@ -89,9 +89,9 @@
                  <tr>
                      <th></th>
                      <th><?= lang('Supervisors', 'Betreuende') ?></th>
-                     <th><?= lang('Category', 'Kategorie') ?></th>
-                     <th><?= lang('Start Date', 'Anfangsdatum') ?></th>
-                     <th><?= lang('End Date', 'Enddatum') ?></th>
+                     <th><?= lang('common.category') ?></th>
+                     <th><?= lang('common.start_date') ?></th>
+                     <th><?= lang('common.end_date') ?></th>
                      <th><?= lang('Affiliated', 'Zugehörig') ?></th>
                      <th><?= lang('Total SWS', 'Gesamt SWS') ?></th>
                      <th><?= lang('Affiliated SWS', 'Zugehörige SWS') ?></th>
@@ -160,8 +160,8 @@
              <thead>
                  <tr>
                      <th></th>
-                     <th><?= lang('Type', 'Typ') ?></th>
-                     <th><?= lang('Activity', 'Aktivität') ?></th>
+                     <th><?= lang('common.type') ?></th>
+                     <th><?= lang('common.activity') ?></th>
                  </tr>
              </thead>
              <tbody>
@@ -200,7 +200,7 @@
                  <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                  <button class="btn danger small">
                      <i class="ph ph-trash"></i>
-                     <?= lang('Delete', 'Löschen') ?>
+                     <?= lang('action.delete') ?>
                  </button>
              </form>
          <?php } else { ?>

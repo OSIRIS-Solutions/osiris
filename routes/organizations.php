@@ -19,7 +19,7 @@ Route::get('/organizations', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Organisations", "Organisationen")]
+        ['name' => lang('common.organizations')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/list.php";
@@ -35,8 +35,8 @@ Route::get('/organizations/new', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
-        ['name' => lang("New", "Neu")]
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
+        ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/edit.php";
@@ -58,10 +58,10 @@ Route::get('/organizations/view/(.*)', function ($id) {
         $id = strval($organization['_id'] ?? '');
     }
     if (empty($organization)) {
-        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
+        abortwith(404, lang('common.organization'), '/organizations');
     }
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => $organization['name']]
     ];
 
@@ -89,12 +89,12 @@ Route::get('/organizations/edit/(.*)', function ($id) {
         $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
-        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
+        abortwith(404, lang('common.organization'), '/organizations');
     }
     $breadcrumb = [
-        ['name' => lang('Organisations', 'Organisationen'), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => $form['name'], 'path' => "/organizations/view/$id"],
-        ['name' => lang("Edit", "Bearbeiten")]
+        ['name' => lang('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -107,7 +107,7 @@ Route::get('/organizations/map', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang("Organisations", "Organisationen"), 'path' => "/organizations"],
+        ['name' => lang('common.organizations'), 'path' => "/organizations"],
         ['name' => lang("Map", "Karte")]
     ];
     include BASEPATH . "/header.php";
@@ -126,7 +126,7 @@ Route::post('/crud/organizations/create', function () {
         abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
     }
 
-    if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
@@ -210,7 +210,7 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     if (!$Settings->hasPermission('organizations.edit')) {
         abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->organizations;
 
     $values = validateValues($_POST['values'], $DB);
@@ -271,26 +271,26 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
+        abortwith(404, lang('common.organization'), '/organizations');
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'Die hochgeladene Datei überschreitet die Richtlinie upload_max_filesize in php.ini'),
-                2 => lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt."),
-                3 => lang('The uploaded file was only partially uploaded.', 'Die hochgeladene Datei wurde nur teilweise hochgeladen.'),
-                4 => lang('No file was uploaded.', 'Es wurde keine Datei hochgeladen.'),
-                6 => lang('Missing a temporary folder.', 'Der temporäre Ordner fehlt.'),
-                7 => lang('Failed to write file to disk.', 'Datei konnte nicht auf die Festplatte geschrieben werden.'),
-                8 => lang('A PHP extension stopped the file upload.', 'Eine PHP-Erweiterung hat den Datei-Upload gestoppt.'),
-                default => lang('Something went wrong.', 'Etwas ist schiefgelaufen.') . " (" . $_FILES['file']['error'] . ")"
+                1 => lang('error.file_upload_exceeds_limit'),
+                2 => lang('error.file_too_big_max_2MB'),
+                3 => lang('error.file_partially_uploaded'),
+                4 => lang('error.no_file_uploaded'),
+                6 => lang('error.file_upload_missing_temp'),
+                7 => lang('error.file_upload_write_failed'),
+                8 => lang('error.file_upload_stopped'),
+                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang("File is too big: max 2 MB is allowed.", "Die Datei ist zu groß: maximal 2 MB sind erlaubt.");
+            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else {
             // check image settings
@@ -314,7 +314,7 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/organizations/view/$id");
             die;
-            // printMsg(lang("Sorry, there was an error uploading your file.", "Entschuldigung, aber es gab einen Fehler beim Dateiupload."), "error");
+            // printMsg(lang('error.file_upload_generic'), "error");
         }
     } else if (isset($_POST['delete'])) {
         $osiris->organizations->updateOne(
@@ -340,7 +340,7 @@ Route::get('/organizations/image/(.*)', function ($id) {
     // get organization id    
     $organization = $osiris->organizations->findOne(['_id' => $mongo_id]);
     if (empty($organization)) {
-        abortwith(404, lang('Organisation', 'Organisation'), '/organizations');
+        abortwith(404, lang('common.organization'), '/organizations');
     }
     include_once BASEPATH . "/php/Organization.php";
     echo Organization::getLogo($organization, "", "Logo of " . $organization['name'], $organization['type'] ?? "");

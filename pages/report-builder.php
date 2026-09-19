@@ -60,15 +60,15 @@ $report_id = $report['_id'] ?? null;
 
 
 $collections = [
-    'activities' => lang('Activities', 'Aktivitäten'),
-    // 'persons' => lang('Persons', 'Personen')
+    'activities' => lang('common.activities'),
+    // 'persons' => lang('common.persons')
 ];
 if ($Settings->featureEnabled('events')) {
     $collections['conferences'] = lang('Events', 'Ereignisse');
 }
 if ($Settings->featureEnabled('projects')) {
-    $collections['projects'] = lang('Projects', 'Projekte');
-    $collections['proposals'] = lang('Proposals', 'Anträge');
+    $collections['projects'] = lang('common.projects');
+    $collections['proposals'] = lang('common.proposals');
 }
 ?>
 
@@ -347,7 +347,7 @@ if ($Settings->featureEnabled('projects')) {
                 <input type="text" class="form-control" name="title" value="<?= $report['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
-                <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
+                <label for="description"><?= lang('common.description') ?></label>
                 <textarea type="text" class="form-control" name="description"><?= $report['description'] ?? '' ?></textarea>
             </div>
 
@@ -395,8 +395,8 @@ if ($Settings->featureEnabled('projects')) {
                         <thead>
                             <tr>
                                 <th style="width:18%"><?= lang('Key', 'Key') ?></th>
-                                <th style="width:18%"><?= lang('Type', 'Typ') ?></th>
-                                <th><?= lang('Label', 'Bezeichnung') ?></th>
+                                <th style="width:18%"><?= lang('common.type') ?></th>
+                                <th><?= lang('common.label') ?></th>
                                 <th style="width:22%"><?= lang('Default value', 'Standardwert') ?></th>
                                 <th style="width:10%"></th>
                             </tr>
@@ -446,9 +446,9 @@ if ($Settings->featureEnabled('projects')) {
 
                     <div class="modal-footer">
                         <!-- save -->
-                        <button type="submit" class="btn success"><?= lang('Save', 'Speichern') ?></button>
+                        <button type="submit" class="btn success"><?= lang('action.save') ?></button>
 
-                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
                     </div>
                 </div>
             </div>
@@ -495,12 +495,12 @@ if ($Settings->featureEnabled('projects')) {
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save', 'Speichern') ?>
+            <?= lang('action.save') ?>
         </button>
 
         <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">
             <i class="ph ph-eye"></i>
-            <?= lang('Preview', 'Vorschau') ?>
+            <?= lang('common.preview') ?>
         </a>
     </div>
 </form>
@@ -562,7 +562,7 @@ if ($Settings->featureEnabled('projects')) {
                 <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
 
-                <div class="form-group lang-<?= lang('en', 'de') ?> mb-0">
+                <div class="form-group lang-<?= lang('common.this_language') ?> mb-0">
                     <div class="title-editor form-group"></div>
                     <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
                 </div>
@@ -631,7 +631,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
-            <span class="step-title"><?= lang('Activities', 'Aktivitäten') ?></span>
+            <span class="step-title"><?= lang('common.activities') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>

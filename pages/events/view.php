@@ -80,7 +80,7 @@ if ($topicsEnabled) {
                 <form action="<?= ROOTPATH ?>/crud/conferences/delete/<?= $conference['_id'] ?>" method="post" class="content">
                     <?= lang('Do you want to delete this event?', 'Möchten Sie diese Event löschen?') ?>
                     <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
-                    <button class="btn danger" type="submit"><?= lang('Delete', 'Löschen') ?></button>
+                    <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
                 </form>
             </div>
         </div>
@@ -95,20 +95,20 @@ if ($topicsEnabled) {
         <table class="table">
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('Location', 'Ort') ?></span>
+                    <span class="key"><?= lang('common.location') ?></span>
                     <?= $conference['location'] ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('Country', 'Land') ?></span>
-                    <?= $DB->getCountry($conference['country'] ?? '', lang('name', 'name_de')) ?>
+                    <span class="key"><?= lang('common.country') ?></span>
+                    <?= $DB->getCountry($conference['country'] ?? '', lang('common.field_name_language')) ?>
                 </td>
             </tr>
             <?php if (isset($conference['type'])) { ?>
                 <tr>
                     <td colspan="2">
-                        <span class="key"><?= lang('Type', 'Typ') ?></span>
+                        <span class="key"><?= lang('common.type') ?></span>
                         <?= $Vocabulary->getValue('event-type', $conference['type']) ?>
                     </td>
                 </tr>
@@ -117,7 +117,7 @@ if ($topicsEnabled) {
             <?php if (isset($conference['internal_id'])) { ?>
                 <tr>
                     <td colspan="2">
-                        <span class="key"><?= lang('Internal ID', 'Interne ID') ?></span>
+                        <span class="key"><?= lang('common.internal_id') ?></span>
                         <?= $conference['internal_id'] ?>
                     </td>
                 </tr>
@@ -130,13 +130,13 @@ if ($topicsEnabled) {
                     <b class="badge <?= ($in_past ? 'danger' : 'success') ?>"><?= $days ?></b>
                 </td>
                 <td>
-                    <span class="key"><?= lang('End', 'Ende') ?></span>
+                    <span class="key"><?= lang('common.end') ?></span>
                     <?= format_date($conference['end']) ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <span class="key"><?= lang('URL', 'URL') ?></span>
+                    <span class="key"><?= lang('common.url') ?></span>
                     <?php if (!empty($conference['url'])) {
                         $short_url = str_replace('https://', '', $conference['url']);
                         if (strlen($short_url) > 50) {
@@ -270,7 +270,7 @@ if ($topicsEnabled) {
 </div>
 
 
-<h2><?= lang('Activities', 'Aktivitäten') ?></h2>
+<h2><?= lang('common.activities') ?></h2>
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=lecture&conference=<?= $id ?>">
         <i class="ph ph-plus-circle"></i>
@@ -287,8 +287,8 @@ if ($topicsEnabled) {
     <table class="table" id="result-table">
         <thead>
             <tr>
-                <th><?= lang('Type', 'Typ') ?></th>
-                <th><?= lang('Activity', 'Aktivität') ?></th>
+                <th><?= lang('common.type') ?></th>
+                <th><?= lang('common.activity') ?></th>
                 <th></th>
             </tr>
         </thead>

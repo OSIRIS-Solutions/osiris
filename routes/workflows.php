@@ -37,7 +37,7 @@ Route::get('/admin/workflows', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Workflows", "Workflows")]
     ];
     include BASEPATH . "/header.php";
@@ -54,7 +54,7 @@ Route::get('/admin/workflows/new', function () {
 
     $form = [];
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Workflows", "Workflows"), 'path' => '/admin/workflows'],
         ['name' => lang('New workflow', 'Neuer Workflow')]
     ];
@@ -76,7 +76,7 @@ Route::get('/admin/workflows/(.*)', function ($id) {
     $name = $form['name'] ?? $id;
 
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang("Workflows", "Workflows"), 'path' => '/admin/workflows'],
         ['name' => $name]
     ];
@@ -92,7 +92,7 @@ Route::post('/crud/workflows/create', function () {
         abortwith(403, lang("You don't have permission to create workflows.", "Du hast keine Berechtigung, Workflows zu erstellen."), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -119,7 +119,7 @@ Route::post('/crud/workflows/update/(.*)', function ($id) {
         abortwith(403, lang("You don't have permission to update workflows.", "Du hast keine Berechtigung, Workflows zu aktualisieren."), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $values = validateValues($_POST['values'], $DB);
 
     /**
@@ -550,7 +550,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
 
@@ -583,7 +583,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
     }
 
     if (!$canResolve) {
-        abortwith(403, lang("You don't have permission to resolve this rejection.", "Du hast keine Berechtigung, diese Ablehnung als gelöst zu markieren."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang("You don't have permission to resolve this rejection.", "Du hast keine Berechtigung, diese Ablehnung als gelöst zu markieren."), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     // Reset workflow to before rejection
     unset($wf['rejectedDetails']);
@@ -600,17 +600,17 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     include_once BASEPATH . "/php/Workflows.php";
 
     if (!$Settings->hasPermission('workflows.reset')) {
-        abortwith(403, lang("You don't have permission to reset this workflow.", "Du hast keine Berechtigung, diesen Workflow zurückzusetzen."), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(403, lang("You don't have permission to reset this workflow.", "Du hast keine Berechtigung, diesen Workflow zurückzusetzen."), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Activity or workflow', 'Aktivität oder Workflow'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
     $tpl = $osiris->adminWorkflows->findOne(['id' => $wf['workflow_id']]);
     if (!$tpl) {
-        abortwith(404, lang('Workflow template not found', 'Workflow-Vorlage nicht gefunden'), '/activities/view/' . $id, lang('Go back to activity', 'Zurück zur Aktivität'));
+        abortwith(404, lang('Workflow template not found', 'Workflow-Vorlage nicht gefunden'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     $tpl = DB::doc2Arr($tpl);
 

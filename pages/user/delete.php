@@ -110,7 +110,7 @@
             $n = $osiris->activities->count(['rendered.users' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Activities', 'Aktivitäten') ?></th>
+                    <th><?= lang('common.activities') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -119,7 +119,7 @@
             $n = $osiris->projects->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Projects', 'Projekte') ?></th>
+                    <th><?= lang('common.projects') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -128,7 +128,7 @@
             $n = $osiris->proposals->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Proposals', 'Anträge') ?></th>
+                    <th><?= lang('common.proposals') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -137,7 +137,7 @@
             $n = $osiris->infrastructures->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('Infrastructures', 'Infrastrukturen') ?></th>
+                    <th><?= lang('common.infrastructures') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -148,7 +148,7 @@
 
     <button class="btn danger">
         <i class="ph ph-trash"></i>
-        <?= lang('Delete', 'Löschen') ?>
+        <?= lang('action.delete') ?>
     </button>
 
 </form>

@@ -25,7 +25,7 @@ $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id'])) {
     $id = $form['id'];
     $formaction .= "/crud/types/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Update", "Aktualisieren");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
     $url = ROOTPATH . "/admin/types/" . $form['id'];
     $title = $name;
     $new = false;
@@ -34,7 +34,7 @@ if (!empty($form) && isset($form['_id'])) {
 } else {
     $new = true;
     $formaction .= "/crud/types/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang("Save", "Speichern");
+    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/types/*";
     $title = lang('New category', 'Neue Kategorie');
     $member = 0;
@@ -88,7 +88,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('I understand', 'Ich verstehe') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@ if (!empty($form) && isset($form['_id'])) {
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <input type="hidden" class="hidden" name="id" value="<?= $id ?>">
-    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('Download', 'Herunterladen') ?></button>
+    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('common.download') ?></button>
  </form> -->
 
 <form action="<?= $formaction ?>" method="post" id="group-form">
@@ -171,11 +171,11 @@ if (!empty($form) && isset($form['_id'])) {
 
             <div class="row row-eq-spacing">
                 <div class="col-sm">
-                    <label for="description"><?= lang('Description', 'Beschreibung') ?> (en)</label>
+                    <label for="description"><?= lang('common.description') ?> (en)</label>
                     <textarea class="form-control" name="values[description]"><?= e($type['description'] ?? '') ?></textarea>
                 </div>
                 <div class="col-sm">
-                    <label for="description_de" class=""><?= lang('Description', 'Beschreibung') ?> (de)</label>
+                    <label for="description_de" class=""><?= lang('common.description') ?> (de)</label>
                     <textarea class="form-control" name="values[description_de]"><?= e($type['description_de'] ?? '') ?></textarea>
                 </div>
             </div>
@@ -221,7 +221,7 @@ if (!empty($form) && isset($form['_id'])) {
         <hr>
 
         <div class="content">
-            <label for="module" class="font-weight-bold"><?= lang('Data fields', 'Datenfelder') ?>:</label>
+            <label for="module" class="font-weight-bold"><?= lang('common.data_fields') ?>:</label>
 
             <?php if ($new) { ?>
                 <div class="text-signal">
@@ -230,7 +230,7 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
-                    <?= lang('Edit', 'Bearbeiten') ?>
+                    <?= lang('action.edit') ?>
                 </a>
             <?php } ?>
 
@@ -429,7 +429,7 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete', 'Löschen') ?></button>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
                 <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
             </form>
         </div>

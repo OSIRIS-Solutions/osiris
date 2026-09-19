@@ -42,7 +42,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "first",
-                'label' => lang('First name', 'Vorname'),
+                'label' => lang('common.name_first'),
                 'module_of' => $typeModules['first'] ?? [],
                 'usage' => [
                     'filter',
@@ -53,7 +53,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "last",
-                'label' => lang('Last name', 'Nachname'),
+                'label' => lang('common.name_last'),
                 'module_of' => $typeModules['last'] ?? [],
                 'usage' => [
                     'filter',
@@ -93,7 +93,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "orcid",
-                'label' => lang('ORCID', 'ORCID'),
+                'label' => lang('common.orcid'),
                 'module_of' => $typeModules['orcid'] ?? [],
                 'usage' => [
                     'filter',
@@ -113,8 +113,8 @@ class PersonFields extends Fields
                 ],
                 'type' => 'boolean',
                 'values' => [
-                    'true' => lang('yes', 'ja'),
-                    'false' => lang('no', 'nein')
+                    'true' => lang('common.yes'),
+                    'false' => lang('common.no')
                 ],
                 'input' => 'radio',
                 'default_value' => true
@@ -143,7 +143,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'roles',
-                'label' => lang('Roles', 'Rollen'),
+                'label' => lang('common.roles'),
                 'module_of' => $typeModules['roles'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -159,7 +159,7 @@ class PersonFields extends Fields
                 'usage' => [
                     'aggregate',
                 ],
-                "label" => lang("Gender", "Geschlecht"),
+                "label" => lang('common.gender'),
                 "type" => "string",
                 "input" => "select",
                 "values" => [
@@ -200,7 +200,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Internal ID", "Interne ID")
+                "label" => lang('common.internal_id')
             ],
             [
                 "id" => "position",
@@ -211,7 +211,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Position", "Position"),
+                "label" => lang('common.position'),
             ],
             [
                 "id" => "room",
@@ -328,8 +328,8 @@ class PersonFields extends Fields
                     ]
                 ];
         }
-        $units = $osiris->groups->find([], ['sort' => [lang('name', 'name_de') => 1]])->toArray();
-        $units = array_column($units, lang('name', 'name_de'), 'id');
+        $units = $osiris->groups->find([], ['sort' => [lang('common.field_name_language') => 1]])->toArray();
+        $units = array_column($units, lang('common.field_name_language'), 'id');
         $FIELDS[] = [
             'id' => 'units.unit',
             'module_of' => ['general'],

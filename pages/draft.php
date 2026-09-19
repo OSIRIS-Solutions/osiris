@@ -32,7 +32,7 @@
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/add-activity?draft=<?= $draft['_id'] ?>" class="btn primary">
         <i class="ph ph-pencil"></i>
-        <?= lang('Edit', 'Bearbeiten') ?>
+        <?= lang('action.edit') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">
@@ -74,7 +74,7 @@
     <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
         <button type="submit" class="btn danger" onclick="return confirm('<?= lang('Are you sure you want to delete this draft?', 'Sind Sie sicher, dass Sie diesen Entwurf löschen möchten?') ?>');">
             <i class="ph ph-trash"></i>
-            <?= lang('Delete', 'Löschen') ?>
+            <?= lang('action.delete') ?>
         </button>
     </form>
 </div>
@@ -122,7 +122,7 @@ include_once BASEPATH . "/php/Modules.php";
         ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('Projects', 'Projekte') ?></span>
+                    <span class="key"><?= lang('common.projects') ?></span>
                     <?php foreach ($projects as $project) { ?>
                         <a class="module " href="<?= ROOTPATH ?>/projects/view/<?= $project['_id'] ?>">
                             <h5 class="m-0"><?= $project['name'] ?></h5>
@@ -197,10 +197,10 @@ include_once BASEPATH . "/php/Modules.php";
                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                             <ul class="horizontal mb-0">
                                 <li>
-                                    <b><?= lang('Location', 'Ort') ?></b>: <?= $conference['location'] ?>
+                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
                                 </li>
                                 <li>
-                                    <b><?= lang('Date', 'Datum') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                 </li>
                                 <li>
                                     <a href="<?= $conference['url'] ?>" target="_blank">
@@ -253,7 +253,7 @@ include_once BASEPATH . "/php/Modules.php";
         <tr class="text-muted">
             <td>
                 <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
-                    <?= lang('Comment', 'Kommentar') ?>:
+                    <?= lang('common.comment') ?>:
                 </span>
 
                 <?= $draft['comment'] ?>
