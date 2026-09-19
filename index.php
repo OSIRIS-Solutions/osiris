@@ -38,12 +38,60 @@ define('CURRENTQUARTER', intval($quarter));
 define('CURRENTMONTH', intval($month));
 define('CURRENTYEAR', intval($year));
 
-function lang($en, $de = null)
+class Html
 {
-    if ($de === null) return $en;
-    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) == 'de' ? 'de' : 'en';
-    $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
-    return $lang == 'de' ? $de : $en;
+    public function __construct(
+        public readonly string $value
+    ) {}
+}
+
+function currentLanguage(): string
+{
+    static $language = null;
+    if ($language !== null) {
+        return $language;
+    }
+
+    $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) === 'de' ? 'de' : 'en';
+    $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
+
+    $supported = ['en', 'de'];
+    return $language = in_array($language, $supported, true) ? $language : 'en';
+}
+
+function lang(string $en, ?string $de = null, array $replace = []): string
+{
+    $language = currentLanguage();
+
+    // Preserve the legacy two-language format: lang('Login', 'Anmelden')
+    if ($de !== null) {
+        return $language === 'de' ? $de : $en;
+    }
+
+    // Plain text without a translation key remains unchanged.
+    if (!str_contains($en, '.') || str_contains($en, ' ')) {
+        return $en;
+    }
+
+    [$fileName, $fieldName] = explode('.', $en, 2);
+    static $translations = [];
+    $cacheKey = "$language.$fileName";
+
+    if (!isset($translations[$cacheKey])) {
+        $file = __DIR__ . "/lang/$language/$fileName.php";
+        $translations[$cacheKey] = file_exists($file) ? require $file : [];
+    }
+
+    $result = $translations[$cacheKey][$fieldName] ?? $en;
+    foreach ($replace as $key => $value) {
+        $replacement = $value instanceof Html
+            ? $value->value
+            : htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+        $result = str_replace('{{' . $key . '}}', $replacement, $result);
+    }
+
+    return $result;
 }
 
 include_once BASEPATH . "/php/Route.php";
