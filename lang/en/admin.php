@@ -46,7 +46,7 @@ return [
     'custom_fields_description' => 'Create your own data fields for activities and projects',
     'vocabularies' => 'Vocabularies',
     'vocabularies_description' => 'Modify existing vocabularies for activities and projects',
-    'manage_tags_for_activities_and_projects' => 'Manage tags for activities and projects',
+    'tags_description' => 'Manage tags for activities and projects',
     'country_settings' => 'Country Settings',
     'country_settings_description' => 'Update the list of countries',
     'reports_and_tools' => 'Reports & Tools',

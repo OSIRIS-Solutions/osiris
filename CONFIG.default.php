@@ -49,7 +49,6 @@ define("DB_STRING", "mongodb://" . DB_HOST . ":27017/" . DB_NAME . "?retryWrites
 // define CRON secret for cron jobs
 define('CRON_SECRET', 'your_cron_secret');
 
-// not needed right now, but planned in the future
-define("ORCID_APP_ID", null);
-define("ORCID_SECRET_KEY", null);
+// default language
+define('OSIRIS_BASE_LANGUAGE', 'en');
 

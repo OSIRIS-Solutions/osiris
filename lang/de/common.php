@@ -1,6 +1,7 @@
 <?php
 return [
     'about_osiris' => 'Über OSIRIS',
+    'accessibility_options' => 'Barrierefreiheitsoptionen',
     'accessibility' => 'Barrierefreiheit',
     'action' => 'Aktion',
     'actions' => 'Aktionen',

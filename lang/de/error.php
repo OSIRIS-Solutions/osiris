@@ -16,7 +16,7 @@ return [
     'organization_select_missing' => 'Keine Organisation ausgewählt',
     'page_not_found_message' => 'Die gesuchte Seite existiert nicht oder wurde verschoben.',
     'page_not_found' => 'Seite nicht gefunden',
-    'password_reset_no_permission' => 'Du hast keine Berechtigung, Passwörter zurückzusetzen.',
+    'password_no_permission' => 'Du hast keine Berechtigung, Passwörter zurückzusetzen.',
     'something_went_wrong' => 'Etwas ist schiefgelaufen.',
     'user_not_found' => 'Benutzer nicht gefunden.',
     'username_already_taken' => 'Der Nutzername ist bereits vergeben. Versuche es erneut.',

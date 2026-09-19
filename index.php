@@ -47,16 +47,12 @@ class Html
 
 function currentLanguage(): string
 {
-    static $language = null;
-    if ($language !== null) {
-        return $language;
-    }
-
+    global $USER;
     $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) === 'de' ? 'de' : 'en';
-    $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
+    $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? ($USER['lang'] ?? $default);
 
     $supported = ['en', 'de'];
-    return $language = in_array($language, $supported, true) ? $language : 'en';
+    return in_array($language, $supported, true) ? $language : OSIRIS_BASE_LANGUAGE;
 }
 
 function lang(string $en, ?string $de = null, array $replace = []): string
@@ -75,18 +71,21 @@ function lang(string $en, ?string $de = null, array $replace = []): string
 
     [$fileName, $fieldName] = explode('.', $en, 2);
     static $translations = [];
-    $cacheKey = "$language.$fileName";
-
-    if (!isset($translations[$cacheKey])) {
-        $file = __DIR__ . "/lang/$language/$fileName.php";
-        $translations[$cacheKey] = file_exists($file) ? require $file : [];
+    foreach (array_unique([$language, OSIRIS_BASE_LANGUAGE]) as $candidate) {
+        $cacheKey = "$candidate.$fileName";
+        if (!isset($translations[$cacheKey])) {
+            $file = __DIR__ . "/lang/$candidate/$fileName.php";
+            $translations[$cacheKey] = file_exists($file) ? require $file : [];
+        }
+        if (isset($translations[$cacheKey][$fieldName])) {
+            $result = $translations[$cacheKey][$fieldName];
+            break;
+        }
     }
 
-    $result = $translations[$cacheKey][$fieldName] ?? $en;
+    $result ??= $en;
     foreach ($replace as $key => $value) {
-        $replacement = $value instanceof Html
-            ? $value->value
-            : htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $replacement = $value instanceof Html ? $value->value : (string) $value;
 
         $result = str_replace('{{' . $key . '}}', $replacement, $result);
     }

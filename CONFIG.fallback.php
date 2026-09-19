@@ -70,3 +70,8 @@ if (!defined('ORCID_SECRET_KEY'))
 
 if (!defined('CRON_SECRET'))
     define('CRON_SECRET', 'please-change-this-secret');
+
+
+if (!defined('OSIRIS_BASE_LANGUAGE')) {
+    define('OSIRIS_BASE_LANGUAGE', 'en');
+}
