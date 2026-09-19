@@ -288,12 +288,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php } ?>
         </h5>
         <?php
-        $units = DB::doc2Arr($scientist['units'] ?? []);
-        // filter units from the past
-        $units = array_filter($units, function ($unit) {
-            return !isset($unit['end']) || strtotime($unit['end']) > time();
-        });
-        $unit_ids = array_column($units, 'unit');
+        $unit_ids = DB::doc2Arr($scientist['current_units'] ?? []);
         ?>
         <table class="table unit-table">
             <tbody>

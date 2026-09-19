@@ -19,10 +19,10 @@ Route::get('/api/dashboard/timeline', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['year' => CURRENTYEAR];
     if (isset($_GET['filter'])) {
@@ -88,6 +88,11 @@ Route::get('/api/dashboard/event-timeline', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
+        echo return_permission_denied();
+        die;
+    }
+
     $filter = ['year' => CURRENTYEAR];
     if (isset($_GET['filter'])) {
         $filter = $_GET['filter'];
@@ -143,6 +148,11 @@ Route::get('/api/dashboard/event-timeline', function () {
 Route::get('/api/dashboard/deadline-timeline', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
+        echo return_permission_denied();
+        die;
+    }
 
     $filter = ['year' => CURRENTYEAR];
     if (isset($_GET['filter'])) {
@@ -202,6 +212,11 @@ Route::get('/api/dashboard/deadline-timeline', function () {
 Route::get('/api/dashboard/upcoming-events', function () {
     error_reporting(E_ERROR | E_PARSE);
     include BASEPATH . '/php/init.php';
+
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
+        echo return_permission_denied();
+        die;
+    }
     include_once BASEPATH . '/php/Vocabulary.php';
     $Vocabulary = new Vocabulary();
 
@@ -292,7 +307,7 @@ Route::get('/api/dashboard/oa-status', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -333,7 +348,7 @@ Route::get('/api/dashboard/collaborators', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -407,8 +422,7 @@ Route::get('/api/dashboard/collaborators', function () {
             // only for portal
             $dept = $_GET['dept'];
 
-            $child_ids = $Groups->getChildren($dept);
-            $persons = $osiris->persons->find(['units.unit' => ['$in' => $child_ids], 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
+            $persons = $osiris->persons->find(['current_units' => $dept, 'is_active' => ['$ne' => false]], ['sort' => ['last' => 1]])->toArray();
             $users = array_column($persons, 'username');
             $filter = [
                 'persons.user' => ['$in' => $users],
@@ -487,7 +501,7 @@ Route::get('/api/dashboard/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -512,7 +526,7 @@ Route::get('/api/dashboard/author-role', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -601,7 +615,7 @@ Route::get('/api/dashboard/impact-factor-hist', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -656,7 +670,7 @@ Route::get('/api/dashboard/activity-chart', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -730,7 +744,7 @@ Route::get('/api/dashboard/project-timeline', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -754,7 +768,7 @@ Route::get('/api/dashboard/wordcloud', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -853,7 +867,7 @@ Route::get('/api/dashboard/department-network', function () {
     if (empty($focus_id) && $entity === 'units')  $focus_id = $_GET['dept'] ?? null;
     if (empty($focus_id) && $entity === 'topics') $focus_id = $_GET['topic'] ?? null;
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1099,14 +1113,14 @@ Route::get('/api/dashboard/author-network', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
 
     $scientist = $_GET['user'] ?? $_SESSION['username'] ?? '';
     $selectedUser = $osiris->persons->findone(['username' => $scientist]);
-    $userUnits = array_column(DB::doc2Arr($selectedUser['units']), 'unit');
+    $userUnits = DB::doc2Arr($selectedUser['current_units'] ?? []);
     // generate graph json
     $labels = [];
     $combinations = [];
@@ -1239,10 +1253,10 @@ Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors)',
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    // if (!apikey_check($_GET['apikey'] ?? null)) {
-    //     echo return_permission_denied();
-    //     die;
-    // }
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
+        echo return_permission_denied();
+        die;
+    }
 
     if (!isset($_GET['activity'])) return [];
 
@@ -1338,13 +1352,13 @@ Route::get('/api/dashboard/department-graph', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
     $group = $Groups->getGroup($_GET['dept']);
     $children = $Groups->getChildren($group['id']);
-    $persons = $Groups->getAllPersons($children);
+    $persons = $Groups->getAllPersons($group['id'], null, true);
     $users = array_column($persons, 'username');
     $nodes = [];
     $links = [];
@@ -1443,7 +1457,7 @@ Route::get('/api/dashboard/spectrum-search', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1508,7 +1522,7 @@ Route::get('/api/groups', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'catalogs.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1524,7 +1538,7 @@ Route::get('/api/activities-suggest/(.*)', function ($term) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1571,7 +1585,7 @@ Route::get('/api/groups/tree', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'catalogs.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1585,7 +1599,7 @@ Route::get('/api/calendar', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'events.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1607,8 +1621,7 @@ Route::get('/api/calendar', function () {
     $users = [$_SESSION['username']];
     if (isset($_GET['unit'])) {
         // get all people associated with this unit rn
-        $units = $Groups->getChildren($_GET['unit']);
-        $users = $Groups->getAllPersons($units);
+        $users = $Groups->getAllPersons($_GET['unit'], null, true);
         $users = array_column($users, 'username');
     }
     $filter['participants'] = ['$in' => $users];
@@ -1687,7 +1700,7 @@ Route::get('/api/pivot-data', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'dashboards.read')) {
         echo return_permission_denied();
         die;
     }
@@ -1742,6 +1755,10 @@ Route::get('/api/pivot-data', function () {
 Route::get('/api/command-palette', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+    if (!apikey_check($_GET['apikey'] ?? null, 'catalogs.read')) {
+        echo return_permission_denied();
+        die;
+    }
     require_once BASEPATH . "/php/CommandPalette.php";
     $Palette = new CommandPalette($Settings);
 
@@ -1760,6 +1777,11 @@ Route::get('/api/command-palette', function () {
 Route::get('/api/command-palette/search', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
+
+    if (!apikey_check($_GET['apikey'] ?? null, 'catalogs.read')) {
+        echo return_permission_denied();
+        die;
+    }
 
     header('Content-Type: application/json; charset=utf-8');
 

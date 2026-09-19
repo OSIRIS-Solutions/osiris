@@ -435,6 +435,8 @@ Route::post('/(synchronize-users|admin/ldap-users)', function ($both) {
                 continue;
             }
             $osiris->persons->insertOne($new_user);
+            include_once BASEPATH . "/php/Render.php";
+            renderCurrentUnits(['username' => $new_user['username']]);
             echo "<p><i class='ph ph-user-plus text-success'></i> New user created: <a href='" . ROOTPATH . "/profile/$new_user[username]' target='_blank'> $new_user[displayname]</a> ($new_user[username])</p>";
         }
     }
@@ -704,6 +706,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['username' => $user],
             ['$pull' => ['units' => ['id' => $_POST['id']]]]
         );
+        renderCurrentUnits(['username' => $user]);
 
         // update all activities that have this user as author
         if ($unit['scientific']) {
@@ -746,6 +749,8 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['$push' => ['units' => $values]]
         );
     }
+
+    renderCurrentUnits(['username' => $user]);
 
     // update all activities that have this user as author
     $filter = ['authors.user' => $user];

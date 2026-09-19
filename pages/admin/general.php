@@ -46,10 +46,10 @@
                     <button type="button" class="btn" onclick="generateAPIkey()"><i class="ph ph-arrows-clockwise"></i> Generate</button>
                 </div>
             </div>
-            <span class="text-danger">
+            <span class="text-muted">
                 <?= lang(
-                    'If you do not provide an API key, the REST-API will be open to anyone.',
-                    'Falls kein API-Key angegeben wird, ist die REST-API für jeden offen.'
+                    'This legacy key grants unrestricted access to all API routes. If it is empty, external API access is only possible through explicitly configured <a href="'.ROOTPATH.'/admin/api-clients">API clients</a>.',
+                    'Dieser Legacy-Key gewährt uneingeschränkten Zugriff auf alle API-Routen. Ist er leer, ist externer API-Zugriff ausschließlich über ausdrücklich eingerichtete API-Clients möglich.'
                 ) ?>
             </span>
 

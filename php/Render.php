@@ -142,6 +142,76 @@ function renderDates($doc)
 }
 
 
+/**
+ * Materialize the effective current unit memberships of persons.
+ *
+ * The historical `units` assignments remain the source of truth. An assignment
+ * is active on the reference date when its start is empty or not later than the
+ * reference date and its end is empty or not earlier than the reference date.
+ * Every active direct unit is expanded to include all parent units up to and
+ * including the institute root.
+ *
+ * @param array $filter Optional MongoDB filter selecting persons to update.
+ * @return int Number of person documents whose current_units field changed.
+ */
+function renderCurrentUnits(array $filter = []): int
+{
+    global $Groups;
+    $today = date('Y-m-d');
+    $DB = new DB;
+    $cursor = $DB->db->persons->find(
+        $filter,
+        ['projection' => ['units' => 1, 'current_units' => 1]]
+    );
+    $updated = 0;
+
+    foreach ($cursor as $person) {
+        $directUnits = [];
+        foreach (DB::doc2Arr($person['units'] ?? []) as $assignment) {
+            $assignment = DB::doc2Arr($assignment);
+            $unit = $assignment['unit'] ?? null;
+            if (!is_string($unit) || $unit === '') {
+                continue;
+            }
+
+            $start = $assignment['start'] ?? null;
+            $end = $assignment['end'] ?? null;
+            $startsInFuture = $start !== null && $start !== '' && $start > $today;
+            $endedInPast = $end !== null && $end !== '' && $end < $today;
+            if ($startsInFuture || $endedInPast) {
+                continue;
+            }
+            $directUnits[] = $unit;
+        }
+
+        $currentUnits = [];
+        foreach (array_values(array_unique($directUnits)) as $unit) {
+            $currentUnits = array_merge($currentUnits, $Groups->getParents($unit, true));
+        }
+        $currentUnits = array_values(array_unique($currentUnits));
+        sort($currentUnits, SORT_STRING);
+
+        $previousUnits = array_values(array_unique(
+            DB::doc2Arr($person['current_units'] ?? [])
+        ));
+        sort($previousUnits, SORT_STRING);
+        if ($currentUnits === $previousUnits) {
+            continue;
+        }
+
+        $result = $DB->db->persons->updateOne(
+            ['_id' => $person['_id']],
+            ['$set' => ['current_units' => $currentUnits]]
+        );
+        if ($result->getModifiedCount() > 0) {
+            $updated++;
+        }
+    }
+
+    return $updated;
+}
+
+
 function renderAuthorUnits($doc, $old_doc = [])
 {
     global $Groups;

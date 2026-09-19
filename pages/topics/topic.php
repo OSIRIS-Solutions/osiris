@@ -407,9 +407,8 @@ if ($Settings->featureEnabled('spectrum')) {
 
                             <div class="text-muted font-size-12">
                                 <?php
-                                $children = $Groups->getChildren($group['id']);
                                 ?>
-                                <?= $osiris->persons->count(['units.unit' => ['$in' => $children],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
+                                <?= $osiris->persons->count(['current_units' => $group['id'],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>

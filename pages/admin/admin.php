@@ -61,6 +61,11 @@
                 <b><?= lang('Features', 'Funktionen') ?></b>
                 <p><?= lang('Enable, disable or configure features', 'Funktionen aktivieren, deaktivieren oder konfigurieren') ?></p>
             </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/api-clients">
+                <i class="ph-duotone ph-key"></i>
+                <b><?= lang('API Clients', 'API-Clients') ?></b>
+                <p><?= lang('Manage API clients and their access', 'Verwalte API-Clients und deren Zugriff') ?></p>
+            </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/announcements">
                 <i class="ph-duotone ph-megaphone"></i>
                 <b><?= lang('Announcements', 'Ankündigungen') ?></b>
@@ -78,7 +83,6 @@
                     <p><?= lang('Settings for the public portfolio', 'Einstellungen für das öffentliche Portfolio') ?></p>
                 </a>
             <?php } ?>
-
             <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
                 <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
                 <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
@@ -283,6 +287,33 @@
 
 
     <?php if ($adminPerm) : ?>
+        <div class="col-md-6 col-lg-4" id="database-settings">
+            <h2><i class="ph-duotone ph-database"></i> <?= lang('Database', 'Datenbank') ?></h2>
+
+            <a class="card" href="<?= ROOTPATH ?>/rerender">
+                <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
+                <b><?= lang('Re-render', 'Neu rendern') ?></b>
+                <p><?= lang('Re-render all activities (may take some time)', 'Rendere alle Aktivitäten neu (kann einige Zeit dauern)') ?></p>
+            </a>
+            <a class="card" href="<?= ROOTPATH ?>/rerender-units">
+                <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
+                <b><?= lang('Re-render Units', 'Einheiten neu rendern') ?></b>
+                <p><?= lang('Re-render all units', 'Rendere alle Einheiten neu') ?></p>
+            </a>
+
+        </div>
+    <?php endif; ?>
+
+
+    <?php if ($adminPerm) : ?>
+        <div class="col-md-6 col-lg-4" id="info-settings">
+            <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/osiris-info">
+                <i class="ph-duotone ph-info" aria-hidden="true"></i>
+                <b><?= lang('OSIRIS Info', 'OSIRIS Info') ?></b>
+                <p><?= lang('View OSIRIS configuration information', 'Zeige OSIRIS-Konfigurationsinformationen an') ?></p>
+            </a>
         <div class="col-md-6 col-lg-4" id="info-settings">
             <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
 

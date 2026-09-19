@@ -159,6 +159,7 @@ Route::get('/migrate/index', function () {
     /* persons */
     ensureIndex($osiris->persons, ['search_text' => 1]);
     ensureIndex($osiris->persons, ['username' => 1]); // optional but usually helpful
+    ensureIndex($osiris->persons, ['current_units' => 1]);
 
     /* projects */
     ensureIndex($osiris->projects, ['acronym' => 1]);
@@ -605,6 +606,12 @@ Route::get('/migrate', function () {
         flush();
         ob_flush();
         $rerender = true;
+    }
+    if (version_compare($DBversion, '2.2.0', '<')) {
+        include BASEPATH . "/routes/migration/v2.2.0.php";
+        flush();
+        ob_flush();
+        $rerender = false;
     }
 
     if ($rerender) {

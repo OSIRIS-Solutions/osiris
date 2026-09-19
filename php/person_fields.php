@@ -343,6 +343,17 @@ class PersonFields extends Fields
             'input' => 'select',
             'values' => $units
         ];
+        $FIELDS[] = [
+            'id' => 'current_units',
+            'module_of' => ['general'],
+            'usage' => [
+                'filter'
+            ],
+            'label' => lang('Current organizational unit', 'Aktuelle Organisationseinheit'),
+            'type' => 'list',
+            'input' => 'select',
+            'values' => $units
+        ];
 
         if ($Settings->featureEnabled('topics')) {
             $topics = $osiris->topics->find()->toArray();

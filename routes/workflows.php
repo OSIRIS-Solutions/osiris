@@ -418,10 +418,7 @@ Route::post('/crud/activities/workflow/approve/(.*)', function ($id) {
     $tpl = $osiris->adminWorkflows->findOne(['id' => $act['workflow']['workflow_id']]);
     if (!$tpl) return JSON::error('Workflow template not found', 404);
 
-    $units = DB::doc2Arr($USER['units'] ?? []);
-    if (!empty($units)) {
-        $units = array_column($units, 'unit');
-    }
+    $units = DB::doc2Arr($USER['current_units'] ?? []);
     $user = [
         'username' => $_SESSION['username'] ?? null,
         'roles'    => $Settings->roles ?? [],
@@ -562,10 +559,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
     if (($wf['rejectedDetails']['by'] ?? null) === ($_SESSION['username'] ?? null)) {
         $canResolve = true;
     } else {
-        $units = DB::doc2Arr($USER['units'] ?? []);
-        if (!empty($units)) {
-            $units = array_column($units, 'unit');
-        }
+        $units = DB::doc2Arr($USER['current_units'] ?? []);
         $user = [
             'username' => $_SESSION['username'] ?? null,
             'roles'    => $Settings->roles ?? [],
@@ -642,7 +636,7 @@ Route::get('/api/workflow-reviews/count', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'reviews.read')) {
         echo return_permission_denied();
         die;
     }
@@ -651,8 +645,7 @@ Route::get('/api/workflow-reviews/count', function () {
     include_once BASEPATH . "/php/Workflows.php";
 
     // --- User-Kontext (dein Format)
-    $units = DB::doc2Arr($USER['units'] ?? []);
-    if (!empty($units)) $units = array_column($units, 'unit');
+    $units = DB::doc2Arr($USER['current_units'] ?? []);
     $user = [
         'username' => $_SESSION['username'] ?? null,
         'roles'    => $Settings->roles ?? [],   // z. B. ['library','head_of_department']
@@ -727,7 +720,7 @@ Route::get('/api/workflow-reviews/list', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
 
-    if (!apikey_check($_GET['apikey'] ?? null)) {
+    if (!apikey_check($_GET['apikey'] ?? null, 'reviews.read')) {
         echo return_permission_denied();
         die;
     }
@@ -743,8 +736,7 @@ Route::get('/api/workflow-reviews/list', function () {
     $pageSize = max(1, min(100, intval($_GET['pageSize'] ?? 25)));
 
     // === 2) User-Kontext ===
-    $units = DB::doc2Arr($USER['units'] ?? []);
-    if (!empty($units)) $units = array_column($units, 'unit');
+    $units = DB::doc2Arr($USER['current_units'] ?? []);
     $user = [
         'username' => $_SESSION['username'] ?? null,
         'roles'    => $Settings->roles ?? [],

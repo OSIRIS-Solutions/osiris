@@ -265,10 +265,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     renderActivities(['_id' =>  $activity['_id']]);
     $user_activity = $DB->isUserActivity($doc, $user);
     // User context
-    $user_units = DB::doc2Arr($USER['units'] ?? []);
-    if (!empty($user_units)) {
-        $user_units = array_column($user_units, 'unit');
-    }
+    $user_units = DB::doc2Arr($USER['current_units'] ?? []);
 
     $Format = new Document;
     $Format->setDocument($doc);
@@ -445,10 +442,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     )->toArray();
 
     // User context
-    $user_units = DB::doc2Arr($USER['units'] ?? []);
-    if (!empty($user_units)) {
-        $user_units = array_column($user_units, 'unit');
-    }
+    $user_units = DB::doc2Arr($USER['current_units'] ?? []);
 
     $breadcrumb = [
         ['name' => lang('Activities', "Aktivitäten"), 'path' => "/activities"],
