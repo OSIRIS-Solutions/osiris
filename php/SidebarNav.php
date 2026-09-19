@@ -24,6 +24,36 @@ class SidebarNav
         // -----------------------------
         $this->definition = [
             [
+                'id' => 'sidebar-home',
+                'label' => lang('Home', 'Home'),
+                'items' => [
+                    [
+                        'id' => 'home',
+                        'label' => lang('Home', 'Startseite'),
+                        'icon' => 'house',
+                        'url' => '/home',
+                        'active' => ['^/home($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'hub',
+                        'label' => $this->settings->resourceHubLabel(),
+                        'icon' => $this->settings->resourceHubIcon(),
+                        'url' => '/hub',
+                        'active' => ['^/hub($|/)'],
+                        'feature' => 'resource-hub',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ]
+                ]
+            ],
+            [
                 'id' => 'sidebar-activities',
                 'label' => lang('Content', 'Inhalte'),
                 'items' => [
@@ -156,19 +186,7 @@ class SidebarNav
                         'active' => ['^/documents($|/)'],
                         'feature' => null,
                         'default' => false,
-                        'permission' => 'documents',
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'spectrum',
-                        'label' => lang('Spectrum', 'Spektrum'),
-                        'icon' => 'lightbulb',
-                        'url' => '/spectrum',
-                        'active' => ['^/spectrum($|/)'],
-                        'feature' => 'spectrum',
-                        'default' => false,
-                        'permission' => null,
+                        'permission' => 'documents|documents.central|documents.manage',
                         'favoritable' => true,
                         'hasSearch' => false
                     ]
@@ -227,6 +245,18 @@ class SidebarNav
                         'url' => '/dashboard',
                         'active' => ['^/dashboard($|/)'],
                         'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'spectrum',
+                        'label' => lang('Spectrum', 'Spektrum'),
+                        'icon' => 'lightbulb',
+                        'url' => '/spectrum',
+                        'active' => ['^/spectrum($|/)'],
+                        'feature' => 'spectrum',
                         'default' => false,
                         'permission' => null,
                         'favoritable' => true,

@@ -211,24 +211,18 @@ $um = strtoupper(USER_MANAGEMENT);
             <div class="box padded">
                 <?= lang('To allow users to register, share the following token with them:', 'Um Nutzern die Registrierung zu ermöglichen, teile ihnen folgendes Token mit:') ?>
                 <code id="auth-token" class="code"><?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyTextToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
                 <br>
                 <!-- or share the link -->
                 <?= lang('or share the link', 'oder teile den Link') ?>
                 <code id="auth-token" class="code"><?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyTextToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
             </div>
 
-            <script>
-                function copyToClipboard(text) {
-                    navigator.clipboard.writeText(text)
-                    toastSuccess('Token copied to clipboard.')
-                }
-            </script>
         <?php } else { ?>
             <div class="alert mb-20">
                 <div class="title">

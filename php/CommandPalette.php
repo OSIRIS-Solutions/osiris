@@ -15,14 +15,6 @@ class CommandPalette
         $topicLabel = $this->settings->topicLabel();
 
         $elements = [
-            // [
-            //     "url" => "/profile/" . $_SESSION['username'],
-            //     "type" => "Navigation",
-            //     "label" => lang(lang('Profile  of ', 'Profil von ') . ($_SESSION['name'] ?? $_SESSION['username']), null),
-            //     "icon" => "student",
-            //     "keywords" => ["profile", "user", "person", "me", "my profile", "my account", "mein profil", "mein konto"],
-            //     "priority" => 100
-            // ],
             [
                 "url" => "/my-year",
                 "type" => "Navigation",
@@ -276,13 +268,30 @@ class CommandPalette
                 "priority" => 70
             ],
             [
+                "url" => "/hub",
+                "type" => "Navigation",
+                "icon" => $this->settings->resourceHubIcon(),
+                "label" => $this->settings->resourceHubLabel(),
+                "feature" => "resource-hub",
+                "keywords" => ["resource hub", "ressourcen-hub", "resources", "ressourcen", "hub"],
+            ],
+            [
                 "url" => "/documents",
                 "type" => "Navigation",
                 "icon" => "files",
                 "label" => lang("Documents", "Dokumente"),
-                "permission" => "documents",
+                "permission" => "documents|documents.central|documents.manage",
                 "keywords" => ["documents", "dokumente"],
                 "priority" => 30
+            ],
+            [
+                "url" => "/documents/manage",
+                "type" => lang("Action", "Aktion"),
+                "icon" => "file-plus",
+                "label" => lang("Manage central documents", "Zentrale Dokumente verwalten"),
+                "permission" => "documents.manage",
+                "keywords" => ["upload documents", "manage documents", "dokumente hochladen", "dokumente verwalten"],
+                "priority" => 50
             ],
             [
                 "url" => "/spectrum",
@@ -555,11 +564,15 @@ class CommandPalette
             return false;
         }
 
-        if (
-            !empty($item['permission'])
-            && !$this->settings->hasPermission($item['permission'])
-        ) {
-            return false;
+        if (!empty($item['permission'])) {
+            $hasPermission = false;
+            foreach (explode('|', $item['permission']) as $permission) {
+                if ($this->settings->hasPermission($permission)) {
+                    $hasPermission = true;
+                    break;
+                }
+            }
+            if (!$hasPermission) return false;
         }
 
         return true;

@@ -983,6 +983,12 @@ function socialLogo($type)
             return 'ph-student';
         case 'email':
             return 'ph-email-logo';
+        case 'teams':
+            return 'ph-microsoft-teams-logo';
+        case 'slack':
+            return 'ph-slack-logo';
+        case 'mail':
+            return 'ph-envelope';
         default:
             return 'ph-link';
     }

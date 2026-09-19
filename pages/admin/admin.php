@@ -83,6 +83,11 @@
                     <p><?= lang('Settings for the public portfolio', 'Einstellungen für das öffentliche Portfolio') ?></p>
                 </a>
             <?php } ?>
+            <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
+                <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
+                <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
+                <p><?= lang('Settings for the Resource Hub', 'Einstellungen für den Ressourcen-Hub') ?></p>
+            </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
@@ -309,6 +314,9 @@
                 <b><?= lang('OSIRIS Info', 'OSIRIS Info') ?></b>
                 <p><?= lang('View OSIRIS configuration information', 'Zeige OSIRIS-Konfigurationsinformationen an') ?></p>
             </a>
+        <div class="col-md-6 col-lg-4" id="info-settings">
+            <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
+
             <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
                 <b><?= lang('PHP Info', 'PHP Info') ?></b>

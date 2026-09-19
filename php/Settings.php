@@ -117,6 +117,49 @@ class Settings
         ];
     }
 
+    
+    static function convertToBytes($size)
+    {
+        $unit = strtolower(substr($size, -1));
+        $bytes = (int)$size;
+        switch ($unit) {
+            case 'g':
+                $bytes *= 1024;
+            case 'm':
+                $bytes *= 1024;
+            case 'k':
+                $bytes *= 1024;
+        }
+        return $bytes;
+    }
+
+    /** 
+     * Get the maximum file size allowed for uploads, including php ini limits.
+     * @param string $size The default size to return if no limit is set.
+     * @return array An array containing the maximum file size in bytes and a human-readable string.
+     */
+    static function getMaxFileSize($size = '16M')
+    {
+        $limits = [
+            Settings::convertToBytes($size),
+            Settings::convertToBytes(ini_get('upload_max_filesize')),
+            Settings::convertToBytes(ini_get('post_max_size')),
+        ];
+        $limits = array_filter($limits, static fn($bytes) => $bytes > 0);
+        $sizeBytes = empty($limits) ? 0 : min($limits);
+
+        if ($sizeBytes >= 1024 * 1024) {
+            $human = round($sizeBytes / (1024 * 1024), 1) . ' MB';
+        } elseif ($sizeBytes >= 1024) {
+            $human = round($sizeBytes / 1024, 1) . ' KB';
+        } else {
+            $human = $sizeBytes . ' B';
+        }
+
+        return ['bytes' => $sizeBytes, 'human' => $human];
+    }
+
+
     function getQueueCount()
     {
         return $this->osiris->queue->count(['declined' => ['$ne' => true]]);
@@ -742,6 +785,21 @@ class Settings
         $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
         if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
         return lang($arr['name'], $arr['name_de'] ?? null);
+    }
+
+    function resourceHubLabel(){
+        if (!$this->featureEnabled('resource-hub')) return '';
+        $rh = $this->get('resource-hub');
+        $label = $rh['label'] ?? [];
+        if (empty($label) || !isset($label['en'])) return lang('Resource Hub', 'Ressourcen-Hub');
+        return lang($label['en'], $label['de'] ?? null);
+    }
+
+    function resourceHubIcon(): string
+    {
+        $rh = $this->get('resource-hub');
+        $icon = trim((string) ($rh['icon'] ?? 'link'));
+        return preg_match('/^[a-z0-9-]+$/', $icon) ? $icon : 'link';
     }
 
 

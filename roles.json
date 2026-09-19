@@ -206,13 +206,32 @@
                 "id": "raw-data",
                 "de": "Die Rohdaten in der Aktivität sehen",
                 "en": "See raw data for activities"
+            }            
+        ]
+    },
+    {
+        "de": "Dokumente",
+        "en": "Documents",
+        "icon": "file-text",
+        "fields": [
+            {
+                "id": "documents.central",
+                "de": "Zentrale Dokumente sehen",
+                "en": "See central documents",
+                "comment_de": "Nutzende können alle zentralen Dokumente sehen, wenn sie diese Berechtigung haben.",
+                "comment_en": "Users can see all central documents if they have this permission."
+            },
+            {
+                "id": "documents.manage",
+                "de": "Zentrale Dokumente hochladen, bearbeiten und löschen",
+                "en": "Manage central documents"
             },
             {
                 "id": "documents",
                 "de": "Dokumentenbrowser sehen",
                 "en": "See document browser",
-                "comment_de": "Nutzende können alle Dokumente in einer Übersicht sehen, wenn sie diese Berechtigung haben.",
-                "comment_en": "Users can see all documents in an overview if they have this permission."
+                "comment_de": "Nutzende können <b>alle</b> Dokumente, inkl. der mit Aktivitäten und Projekten verknüpften, in einer Übersicht sehen.",
+                "comment_en": "Users can see <b>all</b> documents, including those linked to activities and projects, in an overview."
             }
         ]
     },
