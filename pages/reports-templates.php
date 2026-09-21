@@ -19,7 +19,7 @@ $reports = $osiris->adminReports->find();
 
 <h1>
     <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('Report Templates', 'Berichtsvorlagen') ?>
+    <?= lang('admin.report_templates') ?>
 </h1>
 
 <?php foreach ($reports as $report) { ?>
@@ -29,10 +29,10 @@ $reports = $osiris->adminReports->find();
             <p class="text-primary"><?= $report['description'] ?? '' ?></p>
 
             <span class="badge primary">
-                <b><?= lang('Start month', 'Startmonat') ?></b>: <?= format_month($report['start'] ?? null) ?>
+                <b><?= lang('common.start_month') ?></b>: <?= format_month($report['start'] ?? null) ?>
             </span>
             <span class="badge primary">
-                <b><?= lang('Duration', 'Dauer') ?></b>: <?= $report['duration'] ?? '-' ?> <?= lang('months', 'Monate') ?>
+                <b><?= lang('common.duration') ?></b>: <?= $report['duration'] ?? '-' ?> <?= lang('reports.months') ?>
             </span>
         </div>
         <div class="footer">
@@ -73,7 +73,7 @@ $reports = $osiris->adminReports->find();
 
             <h3>
                 <i class="ph ph-plus-circle text-success"></i>
-                <?= lang('New report template', 'Neue Vorlage') ?>
+                <?= lang('reports.new_report_template') ?>
             </h3>
             <div class="form-group">
                 <label for="title"><?= lang('common.title') ?></label>
@@ -83,7 +83,7 @@ $reports = $osiris->adminReports->find();
     <div class="footer">
         <button type="submit" class="btn success">
             <i class="ph ph-plus"></i>
-            <?= lang('Create', 'Erstellen') ?>
+            <?= lang('reports.create') ?>
         </button>
     </div>
     </form>

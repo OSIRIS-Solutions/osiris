@@ -27,8 +27,8 @@
     <div class="col-md-6">
         <div class="box">
             <div class="chart content text-center">
-                <h5 class="title mb-0">Open Access <?= lang('en', 'Verteilung') ?></h5>
-                <p class="mt-0 text-muted"><?= lang('Status according to Unpaywall since ', 'Status nach Unpaywall seit ') . $Settings->get('startyear') ?></p>
+                <h5 class="title mb-0">Open Access <?= lang('search.en') ?></h5>
+                <p class="mt-0 text-muted"><?= lang('search.status_according_to_unpaywall_since') . $Settings->get('startyear') ?></p>
 
                 <div id="chart-oa-status-pie"></div>
             </div>
@@ -37,8 +37,8 @@
     <div class="col-md-6">
         <div class="box">
             <div class="chart content text-center">
-                <h5 class="title mb-0">Open Access <?= lang('Development', 'Entwicklung') ?></h5>
-                <p class="mt-0 text-muted"><?= lang('Status according to Unpaywall', 'Status nach Unpaywall') ?></p>
+                <h5 class="title mb-0">Open Access <?= lang('search.development') ?></h5>
+                <p class="mt-0 text-muted"><?= lang('search.status_according_to_unpaywall') ?></p>
 
                 <div id="chart-oa-status-line"></div>
             </div>

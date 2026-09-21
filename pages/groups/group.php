@@ -166,11 +166,11 @@ if ($Settings->featureEnabled('wordcloud')) {
                 </a>
                 <!-- <a class="btn" href="#add-person-modal">
                     <i class="ph ph-user-plus ph-fw"></i>
-                    <?= lang('Add person', 'Person hinzufügen') ?>
+                    <?= lang('common.add_person') ?>
                 </a> -->
                 <a href="<?= ROOTPATH ?>/groups/new?parent=<?= $id ?>" class="btn">
                     <i class="ph ph-plus-circle ph-fw"></i>
-                    <?= lang('Add child unit', 'Untereinheit hinzufügen') ?>
+                    <?= lang('groups.add_child_unit') ?>
                 </a>
             </div>
         <?php } ?>
@@ -267,7 +267,7 @@ if ($Settings->featureEnabled('wordcloud')) {
         <?php if ($level != 0) { ?>
             <a onclick="navigate('collab')" id="btn-collab" class="btn">
                 <i class="ph ph-users-three" aria-hidden="true"></i>
-                <?= lang('Other units', 'Andere Einheiten')  ?>
+                <?= lang('groups.other_units')  ?>
             </a>
         <?php } ?>
 
@@ -286,10 +286,10 @@ if ($Settings->featureEnabled('wordcloud')) {
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2><?= lang('Reorder child units', 'Untereinheiten neu anordnen') ?></h2>
+                        <h2><?= lang('groups.reorder_child_units') ?></h2>
                         <form action="<?= ROOTPATH ?>/crud/groups/reorder/<?= $id ?>" method="post">
                             <p>
-                                <?= lang('Drag and drop to reorder', 'Ziehen und Ablegen zum Neuanordnen') ?>
+                                <?= lang('groups.drag_and_drop_to_reorder') ?>
                             </p>
                             <ul id="reorder-list" class="list">
                                 <?php foreach ($children as $child) { ?>
@@ -319,7 +319,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                     <tbody>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Parent unit', 'Übergeordnete Einheit') ?></span>
+                                <span class="key"><?= lang('groups.parent_unit') ?></span>
                                 <?php if ($group['parent']) { ?>
                                     <a href="<?= ROOTPATH ?>/groups/view/<?= $group['parent'] ?>"><?= $Groups->getName($group['parent']) ?></a>
                                 <?php } else { ?>
@@ -330,7 +330,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <?php if (!empty($synonyms)) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Synonyms', 'Synonyme') ?></span>
+                                    <span class="key"><?= lang('common.synonyms') ?></span>
                                     <ul class="list m-0">
                                         <?php foreach ($synonyms as $synonym) { ?>
                                             <li><?= e($synonym) ?></li>
@@ -342,7 +342,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <tr>
                             <td>
 
-                                <span class="key"><?= lang('Child units', 'Untereinheiten') ?></span>
+                                <span class="key"><?= lang('groups.child_units') ?></span>
 
                                 <?php if (!empty($children)) { ?>
                                     <ul class="list">
@@ -356,7 +356,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                                     <?php if ($edit_perm) { ?>
                                         <a href="#reorder-modal" class="btn primary small" id="reorder">
                                             <i class="ph ph-sort-ascending"></i>
-                                            <?= lang('Reorder child units', 'Untereinheiten neu anordnen') ?>
+                                            <?= lang('groups.reorder_child_units') ?>
                                         </a>
                                     <?php } ?>
                                 <?php } else { ?>
@@ -402,7 +402,7 @@ if ($Settings->featureEnabled('wordcloud')) {
 
                 <?php if (isset($group['kdsf-ffk'])) { ?>
                     <h5 class="mt-20">
-                        <?= lang('Research Fields', 'Forschungsfelder') ?>
+                        <?= lang('groups.research_fields') ?>
                     </h5>
                     <div class="kdsf-ffk">
                         <?php
@@ -426,7 +426,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         }
                     </style>
                     <h5>
-                        <?= lang('About', 'Information') ?>
+                        <?= lang('groups.about') ?>
                     </h5>
                     <div id="description">
                         <?= lang($group['description'] ?? '-', $group['description_de'] ?? null) ?>
@@ -446,7 +446,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <?php if (isset($group['research']) && !empty($group['research'])) { ?>
                 <div class="col-md">
                     <h3>
-                        <?= lang('Research interests', 'Forschungsinteressen') ?>
+                        <?= lang('groups.research_interests') ?>
                         <?php if ($edit_perm) { ?>
                             <a class="font-size-16" href="<?= ROOTPATH ?>/groups/public/<?= $id ?>#section-research-interest">
                                 <i class="ph ph-note-pencil ph-fw"></i>
@@ -466,7 +466,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                             <?php if (!empty($r['projects'] ?? null)) {
                                 echo '<hr>';
                                 echo '<div class="content">';
-                                echo '<h4>' . lang('Selected Projects', 'Ausgewählte Projekte') . '</h4>';
+                                echo '<h4>' . lang('groups.selected_projects') . '</h4>';
                                 foreach ($r['projects'] as $a) {
                                     echo $a;
                                 }
@@ -476,7 +476,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                             <?php if (!empty($r['activities'] ?? null)) {
                                 echo '<hr>';
                                 echo '<div class="content">';
-                                echo '<h4>' . lang('Selected Research Activities', 'Ausgewählte Forschungsaktivitäten') . '</h4>';
+                                echo '<h4>' . lang('groups.selected_research_activities') . '</h4>';
                                 foreach ($r['activities'] as $i => $a) {
                                     $doc = $DB->getActivity($a);
                                     echo $doc['rendered']['web'];
@@ -541,7 +541,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         Spectrum::render($spectrum, $count_spectrum, '', '{"units":"'.$id.'"}');
                     else : ?>
                         <p>
-                            <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>
+                            <?= lang('common.no_research_spectrum_is_assigned_to_this_unit') ?>
                         </p>
                     <?php endif; ?>
                 </div>
@@ -553,7 +553,7 @@ if ($Settings->featureEnabled('wordcloud')) {
 
     <section id="persons" style="display: none;">
 
-        <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3>
+        <h3><?= lang('common.employees') ?></h3>
 
         <table class="table cards w-full" id="user-table">
             <thead>
@@ -588,7 +588,7 @@ if ($Settings->featureEnabled('wordcloud')) {
 
 
     <section id="activities" style="display:none">
-        <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2>
+        <h2><?= lang('common.other_activities') ?></h2>
 
         <div class="box">
             <div class="content">
@@ -649,7 +649,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                 }
             ?>
                 <?php if (!empty($ongoing)) { ?>
-                    <h3><?= lang('Ongoing projects', 'Laufende Projekte') ?></h3>
+                    <h3><?= lang('common.ongoing_projects') ?></h3>
                     <div class="row row-eq-spacing my-0">
 
                         <?php foreach ($ongoing as $html) { ?>
@@ -661,7 +661,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                 <?php } ?>
 
                 <?php if (!empty($past)) { ?>
-                    <h3><?= lang('Past projects', 'Vergangene Projekte') ?></h3>
+                    <h3><?= lang('common.past_projects') ?></h3>
                     <div class="row row-eq-spacing my-0">
 
                         <?php foreach ($past as $html) { ?>
@@ -675,7 +675,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <?php } ?>
 
             <!-- <h3 class="title">
-            <?= lang('Timeline of all approved projects', 'Zeitstrahl aller bewilligten Projekte') ?>
+            <?= lang('common.timeline_of_all_approved_projects') ?>
         </h3>
         <div class="box">
             <div class="content">
@@ -690,7 +690,7 @@ if ($Settings->featureEnabled('wordcloud')) {
             <h3 class=""><?= lang('Word cloud') ?></h3>
 
             <p class="text-muted">
-                <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
+                <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
             </p>
             <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
         </section>
@@ -701,9 +701,9 @@ if ($Settings->featureEnabled('wordcloud')) {
 
         <?php if ($level !== 0) { ?>
 
-            <h3><?= lang('Collaboration with other groups', 'Zusammenarbeit mit anderen Gruppen') ?></h3>
+            <h3><?= lang('common.collaboration_with_other_groups') ?></h3>
             <p class="text-muted">
-                <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
+                <?= lang('common.based_on_publications_within_the_past_5_years') ?>
             </p>
             <div id="collab-chart" style="max-width: 60rem"></div>
 
@@ -716,10 +716,10 @@ if ($Settings->featureEnabled('wordcloud')) {
     <?php if ($level !== 0) { ?>
 
         <section id="graph" style="display:none">
-            <h3><?= lang('Graph', 'Graph') ?></h3>
+            <h3><?= lang('common.graph') ?></h3>
 
             <p class="text-muted m-0">
-                <?= lang('Based on publications with associated affiliations.', 'Basierend auf affiliierten Publikationen.') ?>
+                <?= lang('common.based_on_publications_with_associated_affiliations') ?>
             </p>
             <div id="collabGraph" class="mw-full w-800"></div>
 

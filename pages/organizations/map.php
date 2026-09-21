@@ -59,7 +59,7 @@ if (empty($lat) || empty($lng)) {
 
 <h1>
     <i class="ph-duotone ph-map-pin"></i>
-    <?= lang('Organization map', 'Organisations-Karte') ?>
+    <?= lang('common.organization_map') ?>
 </h1>
 
 <div id="map" class=""></div>

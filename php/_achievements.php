@@ -370,12 +370,12 @@ class Achievement
                         echo $lvl;
                         ?>
                     </h5>
-                    <small class="text-muted"><?= lang('achieved at', 'erlangt am') ?> <?= $uac['achieved'] ?? '-' ?></small>
+                    <small class="text-muted"><?= lang('activities.achieved_at') ?> <?= $uac['achieved'] ?? '-' ?></small>
                     <p class="m-0">
                         <?php
                         $descr = $ac['levels'][$uac['level'] - 1][$this->lang];
                         if ($this->self) {
-                            $descr = str_replace(lang('have', 'hat'), lang('has', 'hast'), $descr);
+                            $descr = str_replace(lang('activities.have'), lang('activities.has'), $descr);
                             echo str_replace('*', 'Du', $descr);
                         } else {
                             echo str_replace('*', $this->userdata['first'], $descr);

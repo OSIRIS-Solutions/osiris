@@ -22,15 +22,9 @@ foreach ($teaching as $module) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang(
-        "No teaching modules found. No changes made.",
-        "Keine Lehrveranstaltungen gefunden. Es wurden keine Änderungen vorgenommen."
-    ) . "</p>";
+    echo "<p>" . lang('admin.no_teaching_modules_found_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang(
-        "Transformed module numbers into strings for " . $updated . " out of " . $N_ . " teaching modules.",
-        "Modulnummern für " . $updated . " von " . $N_ . " Lehrveranstaltungen in Zeichenketten umgewandelt."
-    ) . "</p>";
+    echo "<p>" . lang('admin.transformed_module_numbers_into_strings_for_updated_out_of_n_teaching_modul', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 
@@ -52,15 +46,9 @@ foreach ($persons as $person) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang(
-        "No persons found with created date in d.m.Y format. No changes made.",
-        "Keine Personen mit Erstellungsdatum im Format d.m.Y gefunden. Es wurden keine Änderungen vorgenommen."
-    ) . "</p>";
+    echo "<p>" . lang('admin.no_persons_found_with_created_date_in_d_m_y_format_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang(
-        "Transformed created dates from d.m.Y to Y-m-d for " . $updated . " out of " . $N_ . " persons.",
-        "Erstellungsdaten von d.m.Y zu Y-m-d für " . $updated . " von " . $N_ . " Personen umgewandelt."
-    ) . "</p>";
+    echo "<p>" . lang('admin.transformed_created_dates_from_d_m_y_to_y_m_d_for_updated_out_of_n_persons', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 
@@ -88,15 +76,9 @@ foreach ($activities as $activity) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang(
-        "No activities found with authors field to migrate. No changes made.",
-        "Keine Aktivitäten mit Autoren-Feld zum Migrieren gefunden. Es wurden keine Änderungen vorgenommen."
-    ) . "</p>";
+    echo "<p>" . lang('admin.no_activities_found_with_authors_field_to_migrate_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang(
-        "Migrated authors field to supervisors field for " . $updated . " out of " . $N_ . " activities.",
-        "Autoren-Feld für " . $updated . " von " . $N_ . " Aktivitäten in Betreuende-Feld migriert."
-    ) . "</p>";
+    echo "<p>" . lang('admin.migrated_authors_field_to_supervisors_field_for_updated_out_of_n_activities', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 // append public_email, public_other_activities, public_teaching to person-data settings if not present
@@ -117,10 +99,7 @@ if (empty($data_fields)) {
     }
     if ($updated > 0) {
         $Settings->set('person-data', $data_fields);
-        echo "<p>" . lang(
-            "Added " . $updated . " fields to person-data settings.",
-            "Es wurden " . $updated . " Felder zu den Personendaten-Einstellungen hinzugefügt."
-        ) . "</p>";
+        echo "<p>" . lang('admin.added_updated_fields_to_person_data_settings', replace: ['updated' => $updated]) . "</p>";
     }
 }
 

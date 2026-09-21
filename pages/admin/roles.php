@@ -45,11 +45,11 @@ foreach ($osiris->adminRights->find([]) as $row) {
 <div class="btn-group float-right">
     <a class="btn small <?= $view === 'new' ? 'active' : '' ?>" href="?view=new">
         <i class="ph ph-newspaper" aria-hidden="true"></i>
-        <?= lang('New View', 'Neue Ansicht') ?>
+        <?= lang('admin.new_view') ?>
     </a>
     <a class="btn small <?= $view === 'legacy' ? 'active' : '' ?>" href="?view=legacy">
         <i class="ph ph-archive" aria-hidden="true"></i>
-        <?= lang('Legacy View', 'Legacy Ansicht') ?>
+        <?= lang('admin.legacy_view') ?>
     </a>
 </div>
 
@@ -70,7 +70,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><?= lang('Edit Roles', 'Rollen bearbeiten') ?></h5>
+                <h5 class="modal-title"><?= lang('admin.edit_roles') ?></h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -153,13 +153,13 @@ foreach ($osiris->adminRights->find([]) as $row) {
 
 <h1>
     <i class="ph-duotone ph-shield-check"></i>
-    <?= lang('Roles &amp; Rights', 'Rollen &amp; Rechte') ?>
+    <?= lang('admin.roles_amp_rights') ?>
 </h1>
 
 <div class="mb-5">
     <a href="<?=ROOTPATH?>/admin/roles/distribute">
         <i class="ph ph-user-gear" aria-hidden="true"></i>
-        <?= lang('Distribute roles', 'Rollen verteilen') ?>
+        <?= lang('common.distribute_roles') ?>
     </a>
 </div>
 

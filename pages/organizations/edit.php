@@ -49,13 +49,13 @@ if (empty($form) || !isset($form['_id'])) {
 
         <h1 class="title">
             <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
-            <?= lang('New Organisation', 'Neue Organisation') ?>
+            <?= lang('organizations.new_organisation') ?>
         </h1>
 
     <?php } else { ?>
         <h1 class="title">
             <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
-            <?= lang('Edit Organisation', 'Organisation bearbeiten') ?>
+            <?= lang('organizations.edit_organisation') ?>
         </h1>
     <?php } ?>
     <form action="<?= $formaction ?>" method="post" class="form">
@@ -69,26 +69,26 @@ if (empty($form) || !isset($form['_id'])) {
 
             <div class="input-group">
                 <input type="text" class="form-control" name="values[ror]" id="ror" value="<?= $form['ror'] ?? '' ?>">
-                <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('Retreive updated information from ROR', 'Aktualisiere die Daten von ROR') ?>">
+                <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('organizations.retreive_updated_information_from_ror') ?>">
                     <button class="btn" type="button" onclick="updateOrgByROR($('#ror').val())"><i class="ph ph-arrows-clockwise"></i></button>
                 </div>
             </div>
         </div>
 
         <h5>
-            <?= lang('Basic Information', 'Grundinformationen') ?>
+            <?= lang('organizations.basic_information') ?>
         </h5>
 
         <div class="form-group">
             <label for="name" class="required">
-                <?= lang('Name of the organisation', 'Name der Organisation') ?>
+                <?= lang('common.name_of_the_organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-2</span>
             </label>
             <input type="text" class="form-control" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
         </div>
 
         <div class="form-group">
-            <label for="synonym-input"><?= lang('Synonyms / Alternative Names / Acronyms', 'Synonyme / alternative Namen / Akronyme') ?></label>
+            <label for="synonym-input"><?= lang('common.synonyms_alternative_names_acronyms') ?></label>
 
             <div id="list-widget" class="list-widget" data-name="values[synonyms][]">
                 <input
@@ -102,44 +102,44 @@ if (empty($form) || !isset($form['_id'])) {
 
         <!-- url -->
         <div class="form-group">
-            <label for="org-url"><?= lang('URL of the organisation', 'URL der Organisation') ?></label>
+            <label for="org-url"><?= lang('organizations.url_of_the_organisation') ?></label>
             <input type="url" class="form-control" name="values[url]" id="org-url" value="<?= $form['url'] ?? '' ?>">
          </div>
 
         <!-- <div class="row row-eq-spacing"> -->
         <div class="form-group">
             <label for="type" class="required">
-                <?= lang('Type of organisation (from ROR)', 'Art der Organisation (nach ROR)') ?>
+                <?= lang('organizations.type_of_organisation_from_ror') ?>
             </label>
             <select name="values[type]" id="type" class="form-control">
-                <option value="" disabled <?= sel('type', '') ?>><?= lang('Select type', 'Art auswählen') ?></option>
-                <!-- <option value="university" <?= sel('type', 'university') ?>><?= lang('University', 'Universität') ?></option>
-                <option value="applied-sciences" <?= sel('type', 'applied-sciences') ?>><?= lang('University of Applied Sciences', 'Fachhochschule') ?></option>
-                <option value="research-institute" <?= sel('type', 'research-institute') ?>><?= lang('Research Institute', 'Außeruniversitäres Forschungsinstitut') ?></option> -->
-                <option value="education" <?= sel('type', 'education') ?>><?= lang('Education', 'Bildung') ?></option>
-                <option value="funder" <?= sel('type', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
-                <option value="healthcare" <?= sel('type', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
-                <option value="company" <?= sel('type', 'company') ?>><?= lang('Company', 'Unternehmen') ?></option>
-                <option value="archive" <?= sel('type', 'archive') ?>><?= lang('Archive', 'Archiv') ?></option>
-                <option value="nonprofit" <?= sel('type', 'nonprofit') ?>><?= lang('Non-profit', 'Gemeinnützig') ?></option>
-                <option value="government" <?= sel('type', 'government') ?>><?= lang('Government', 'Regierung') ?></option>
-                <option value="facility" <?= sel('type', 'facility') ?>><?= lang('Facility', 'Einrichtung') ?></option>
+                <option value="" disabled <?= sel('type', '') ?>><?= lang('common.select_type') ?></option>
+                <!-- <option value="university" <?= sel('type', 'university') ?>><?= lang('organizations.university') ?></option>
+                <option value="applied-sciences" <?= sel('type', 'applied-sciences') ?>><?= lang('organizations.university_of_applied_sciences') ?></option>
+                <option value="research-institute" <?= sel('type', 'research-institute') ?>><?= lang('organizations.research_institute') ?></option> -->
+                <option value="education" <?= sel('type', 'education') ?>><?= lang('common.education') ?></option>
+                <option value="funder" <?= sel('type', 'funder') ?>><?= lang('common.funder') ?></option>
+                <option value="healthcare" <?= sel('type', 'healthcare') ?>><?= lang('common.healthcare') ?></option>
+                <option value="company" <?= sel('type', 'company') ?>><?= lang('common.company') ?></option>
+                <option value="archive" <?= sel('type', 'archive') ?>><?= lang('common.archive') ?></option>
+                <option value="nonprofit" <?= sel('type', 'nonprofit') ?>><?= lang('common.non_profit') ?></option>
+                <option value="government" <?= sel('type', 'government') ?>><?= lang('common.government') ?></option>
+                <option value="facility" <?= sel('type', 'facility') ?>><?= lang('common.facility') ?></option>
                 <option value="other" <?= sel('type', 'other') ?>><?= lang('common.other') ?></option>
             </select>
         </div>
         <!-- <div class="col-sm">
             <label for="type_kdsf" class="required">
-                <?= lang('Type of organisation', 'Art der Organisation') ?>
+                <?= lang('common.type_of_organisation') ?>
                 <span class="badge kdsf">KDSF-B-15-4</span>
             </label>
             <select name="values[type_kdsf]" id="type_kdsf" class="form-control">
-                <option value="" disabled <?= sel('type_kdsf', '') ?>><?= lang('Select type', 'Art auswählen') ?></option>
-                <option value="university" <?= sel('type_kdsf', 'university') ?>><?= lang('University', 'Universität') ?></option>
-                <option value="applied-sciences" <?= sel('type_kdsf', 'applied-sciences') ?>><?= lang('University of Applied Sciences', 'Fachhochschule') ?></option>
-                <option value="research-institute" <?= sel('type_kdsf', 'research-institute') ?>><?= lang('Research Institute', 'Außeruniversitäres Forschungsinstitut') ?></option>
-                 <option value="funder" <?= sel('type_kdsf', 'funder') ?>><?= lang('Funder', 'Förderer') ?></option>
-                <option value="healthcare" <?= sel('type_kdsf', 'healthcare') ?>><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
-                <option value="company" <?= sel('type_kdsf', 'company') ?>><?= lang('Company', 'Wirtschaft') ?></option>
+                <option value="" disabled <?= sel('type_kdsf', '') ?>><?= lang('common.select_type') ?></option>
+                <option value="university" <?= sel('type_kdsf', 'university') ?>><?= lang('organizations.university') ?></option>
+                <option value="applied-sciences" <?= sel('type_kdsf', 'applied-sciences') ?>><?= lang('organizations.university_of_applied_sciences') ?></option>
+                <option value="research-institute" <?= sel('type_kdsf', 'research-institute') ?>><?= lang('organizations.research_institute') ?></option>
+                 <option value="funder" <?= sel('type_kdsf', 'funder') ?>><?= lang('common.funder') ?></option>
+                <option value="healthcare" <?= sel('type_kdsf', 'healthcare') ?>><?= lang('common.healthcare') ?></option>
+                <option value="company" <?= sel('type_kdsf', 'company') ?>><?= lang('organizations.company') ?></option>
                 <option value="other" <?= sel('type_kdsf', 'other') ?>><?= lang('common.other') ?></option>
             </select>
         </div>
@@ -148,13 +148,13 @@ if (empty($form) || !isset($form['_id'])) {
 
 
         <h5>
-            <?= lang('Location Information', 'Standortinformationen') ?>
+            <?= lang('organizations.location_information') ?>
         </h5>
         <div class="row row-eq-spacing mt-0">
 
             <div class="col-sm">
                 <label for="location">
-                    <?= lang('Location', 'Standort') ?>
+                    <?= lang('common.location_edit') ?>
                 </label>
                 <input type="text" class="form-control" name="values[location]" id="location" value="<?= $form['location'] ?? '' ?>">
             </div>
@@ -165,7 +165,7 @@ if (empty($form) || !isset($form['_id'])) {
                     <span class="badge kdsf">KDSF-B-15-3</span>
                 </label>
                 <select name="values[country]" id="country" class="form-control">
-                    <option value="" disabled <?= sel('country', '') ?>><?= lang('Select country', 'Land auswählen') ?></option>
+                    <option value="" disabled <?= sel('country', '') ?>><?= lang('common.select_country') ?></option>
                     <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                         <option value="<?= $key ?>" <?= sel('country', $key) ?>><?= $value ?></option>
                     <?php } ?>
@@ -177,41 +177,41 @@ if (empty($form) || !isset($form['_id'])) {
         <div class="row row-eq-spacing align-items-end">
             <div class="col-sm">
                 <label for="lat">
-                    <?= lang('Latitude', 'Breitengrad') ?>
+                    <?= lang('common.latitude') ?>
                 </label>
                 <input type="number" class="form-control" name="values[lat]" id="lat" value="<?= $form['lat'] ?? '' ?>" step="any">
             </div>
             <div class="col-sm">
                 <label for="lng">
-                    <?= lang('Longitude', 'Längengrad') ?>
+                    <?= lang('common.longitude') ?>
                 </label>
                 <input type="number" class="form-control" name="values[lng]" id="lng" value="<?= $form['lng'] ?? '' ?>" step="any">
             </div>
             <div class="col-sm">
                 <button type="button" class="btn" onclick="getCoordinates('#location', '#country', '#lat', '#lng')">
                     <i class="ph ph-map-pin"></i>
-                    <?= lang('Get coordinates by location', 'Koordinaten vom Standort ermitteln') ?>
+                    <?= lang('common.get_coordinates_by_location') ?>
                 </button>
             </div>
         </div>
 
         <small class="text-muted">
-            <?= lang('Geographical coordinates are required to correctly display the organisation on a map.', 'Die geografischen Koordinaten werden benötigt, um die Organisation auf einer Karte korrekt darzustellen.') ?>
+            <?= lang('common.geographical_coordinates_are_required_to_correctly_display_the_organisation') ?>
         </small>
         <br><br>
 
 
         <h5>
-            <?= lang('Collaboration Information', 'Kooperationsinformationen') ?>
+            <?= lang('organizations.collaboration_information') ?>
         </h5>
 
         <!-- is this organisation a collaborator of the institution that should appear as such in maps and on portfoli -->
         <div class="form-group">
             <label for="is_collaborator">
-                <?= lang('Is this organisation a collaborator of the institution?', 'Ist diese Organisation ein Kooperationspartner der Institution?') ?>
+                <?= lang('organizations.is_this_organisation_a_collaborator_of_the_institution') ?>
             </label>
             <select name="values[is_collaborator]" id="is_collaborator" class="form-control" onchange="$('#collaborator-details').toggle(this.value === 'true')">
-                <option value="" disabled <?= sel('is_collaborator', '') ?>><?= lang('Select option', 'Option auswählen') ?></option>
+                <option value="" disabled <?= sel('is_collaborator', '') ?>><?= lang('organizations.select_option') ?></option>
                 <option value="true" <?= sel('is_collaborator', true) ?>><?= lang('common.yes') ?></option>
                 <option value="false" <?= sel('is_collaborator', false) ?>><?= lang('common.no') ?></option>
             </select>
@@ -221,13 +221,13 @@ if (empty($form) || !isset($form['_id'])) {
         <div class="row row-eq-spacing" id="collaborator-details" style="display: <?= sel('is_collaborator', true) ? 'flex' : 'none' ?>;">
             <div class="col-sm">
                 <label for="collaboration_start_date">
-                    <?= lang('Collaboration start date', 'Kooperationsbeginn') ?>
+                    <?= lang('organizations.collaboration_start_date') ?>
                 </label>
                 <input type="date" class="form-control" name="values[collaboration_start_date]" id="collaboration_start_date" value="<?= $form['collaboration_start_date'] ?? '' ?>">
             </div>
             <div class="col-sm">
                 <label for="collaboration_end_date">
-                    <?= lang('Collaboration end date', 'Kooperationsende') ?>
+                    <?= lang('organizations.collaboration_end_date') ?>
                 </label>
                 <input type="date" class="form-control" name="values[collaboration_end_date]" id="collaboration_end_date" value="<?= $form['collaboration_end_date'] ?? '' ?>">
             </div>
@@ -251,14 +251,14 @@ if (empty($form) || !isset($form['_id'])) {
                 // check if ROR is missing the https://
                 if (ror.match(/^0[a-z|0-9]{6}[0-9]{2}$/)) {
                     $(this).val('https://ror.org/' + ror);
-                    toastWarning(lang('ROR ID is missing the URL prefix. We updated that for you, please check.', 'Der ROR-ID fehlte der URL-Präfix. Wir haben das für dich geändert, bitte überprüfe es.'));
+                    toastWarning(<?= json_encode(lang('organizations.ror_id_is_missing_the_url_prefix_we_updated_that_for_you_please_check'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                     return;
                 }
 
                 // check if ROR is valid
                 const regex = /^(https?:\/\/)?(www\.)?ror\.org\/0[a-z|0-9]{6}[0-9]{2}$/;
                 if (!regex.test(ror)) {
-                    toastError(lang('Invalid ROR ID format. Please enter a valid ROR ID.', 'Ungültige ROR-ID, bitte überprüfen Sie die Eingabe.'));
+                    toastError(<?= json_encode(lang('organizations.invalid_ror_id_format_please_enter_a_valid_ror_id'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                     $(this).addClass('is-invalid');
                     $('#submit').prop('disabled', true);
                     return;

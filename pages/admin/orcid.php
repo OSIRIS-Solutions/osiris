@@ -2,43 +2,20 @@
 
     <h1>
         <i class="ph-duotone ph-student"></i>
-        <?= lang('ORCID Settings', 'ORCID Einstellungen') ?>
+        <?= lang('admin.orcid_settings') ?>
     </h1>
 
     <p>
-        <?= lang(
-            'The ORCID integration allows users to link their ORCID account to their OSIRIS account. 
-            This enables automatic retrieval of publications and other information from ORCID.',
-            'Die ORCID-Integration ermöglicht es Benutzern, ihr ORCID-Konto mit ihrem OSIRIS-Konto zu verknüpfen. 
-            Dadurch können automatisch Publikationen und andere Informationen von ORCID abgerufen werden.') ?>
+        <?= lang('admin.the_orcid_integration_allows_users_to_link_their_orcid_account_to_their_osi') ?>
     </p>
     <p>
-        <?= lang(
-            'To use the ORCID integration, you need to register an application at 
-            <a href="https://orcid.org/developer-tools" target="_blank">https://orcid.org/developer-tools</a>.', 
-            'Um die ORCID-Integration zu nutzen, müssen Sie Ihre OSIRIS Instanz unter 
-            <a href="https://orcid.org/developer-tools" target="_blank">https://orcid.org/developer-tools</a> 
-            registrieren und die Client-ID und das Client-Geheimnis unten angeben.') ?>
+        <?= lang('admin.to_use_the_orcid_integration_you_need_to_register_an_application_at_https_o') ?>
     </p>
     <p>
-        <?= lang(
-            'Example Settings for ORCID developer tools: <br>
-            <b>Application Name: </b> &emsp; OSIRIS-[Your institute acronym] <br>
-            <b>Application URL: </b>&emsp; [Your OSIRIS instance URL] <br>
-            <b>Application Description: </b>&emsp; OSIRIS-[Your institute acronym] ORCID Integration <br>
-            <b>Redirect URI: </b>&emsp; [Your OSIRIS instance URL]/orcid/validate <br>',
-            'Beispiel Einstellungen für ORCID-Entwicklertools: <br>
-            <b>Anwendungsname: </b>&emsp;OSIRIS-[Ihr Institutsakronym] <br>
-            <b>Anwendungs-URL: </b>&emsp;[Ihre OSIRIS-Instanz-URL] <br>
-            <b>Anwendungsbeschreibung: </b>&emsp;OSIRIS-[Ihr Institutsakronym] ORCID-Integration <br>
-            <b>Umleitungs-URI: </b>&emsp;[Ihre OSIRIS-Instanz-URL]/orcid/validate <br>') ?>
+        <?= lang('admin.example_settings_for_orcid_developer_tools_application_name_emsp_osiris_you') ?>
     </p>
     <p>
-        <?= lang(
-            'For more information on how to register an application, please refer to the 
-            <a href="https://info.orcid.org/documentation/integration-guide/registering-a-public-api-client/" target="_blank">ORCID documentation</a>.',
-            'Weitere Informationen zur Registrierung einer Anwendung finden Sie in der 
-            <a href="https://info.orcid.org/de/documentation/integration-guide/registering-a-public-api-client/" target="_blank">ORCID Dokumentation</a>.') ?>
+        <?= lang('admin.for_more_information_on_how_to_register_an_application_please_refer_to_the') ?>
     </p>
 
 
@@ -56,11 +33,11 @@
             <input type="float" class="form-control" name="general[orcid][client_secret]" value="<?= $orcid['client_secret'] ?? '' ?>">
         </div>
         <div class="form-group">
-            <label for="orcid_api"><?= lang('Choose ORCID API', 'Wähle ORCID API') ?></label>
+            <label for="orcid_api"><?= lang('admin.choose_orcid_api') ?></label>
             <select class="form-control" name="general[orcid][api]" id="orcid_api">
-                <option value="public" <?= ($orcid['api'] ?? 'public') == 'public' ? 'selected' : '' ?>><?= lang('Public API', 'Öffentliche API') ?></option>
-                <option value="member" <?= ($orcid['api'] ?? 'public') == 'member' ? 'selected' : '' ?>><?= lang('Member API', 'Mitglieder API') ?></option>
-                <option value="sandbox" <?= ($orcid['api'] ?? 'public') == 'sandbox' ? 'selected' : '' ?>><?= lang('Sandbox API', 'Sandbox API') ?></option>
+                <option value="public" <?= ($orcid['api'] ?? 'public') == 'public' ? 'selected' : '' ?>><?= lang('admin.public_api') ?></option>
+                <option value="member" <?= ($orcid['api'] ?? 'public') == 'member' ? 'selected' : '' ?>><?= lang('admin.member_api') ?></option>
+                <option value="sandbox" <?= ($orcid['api'] ?? 'public') == 'sandbox' ? 'selected' : '' ?>><?= lang('admin.sandbox_api') ?></option>
             </select>
         </div>
 

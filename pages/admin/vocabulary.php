@@ -42,10 +42,10 @@ $categories = [
     </h1>
 
     <p>
-        <?= lang('Vocabularies are used to manage lists of values for dropdowns and other selection fields.', 'Vokabulare werden verwendet, um Listen von Werten für Dropdowns und andere Auswahlmöglichkeiten zu verwalten.') ?>
+        <?= lang('admin.vocabularies_are_used_to_manage_lists_of_values_for_dropdowns_and_other_sel') ?>
     </p>
 
-    <input type="text" id="vocabulary-search" class="form-control" placeholder="<?= lang('Search vocabularies...', 'Vokabulare durchsuchen...') ?>">
+    <input type="text" id="vocabulary-search" class="form-control" placeholder="<?= lang('admin.search_vocabularies') ?>">
 
     <div class="row row-eq-spacing mt-0">
 
@@ -77,7 +77,7 @@ $categories = [
         <div class="col-lg-3 d-none d-lg-block">
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <h4 class=""><?= lang('Content', 'Inhalt') ?></h4>
+                    <h4 class=""><?= lang('common.content') ?></h4>
                     <div class="list">
                         <?php
                         $cat = '';

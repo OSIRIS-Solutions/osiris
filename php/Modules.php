@@ -1424,7 +1424,7 @@ class Modules
             <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
-                    placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
+                    placeholder="<?= lang('common.search_wikidata') ?>">
 
                 <input type="hidden" name="values[<?= $module ?>][id]" class="wikidata-id" value="<?= $value['id'] ?? '' ?>">
                 <input type="hidden" name="values[<?= $module ?>][label]" class="wikidata-label" value="<?= $value['label'] ?? '' ?>">
@@ -1478,7 +1478,7 @@ class Modules
                         class="list-widget-input"
                         type="text"
                         autocomplete="off"
-                        placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                        placeholder="<?= lang('common.enter_value_and_press_enter') ?>" />
                 </div>
                 <?= $this->render_help($help) ?>
             </div>
@@ -1581,7 +1581,7 @@ class Modules
                 }
                 if ($field['others'] ?? false) {
                     // if nothing was selected but value is not empty, select others
-                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('Others (please specify)', 'Sonstiges (bitte angeben)') . ':</option>';
+                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('common.others_please_specify') . ':</option>';
                     // echo '</select>';
             ?>
             <?php
@@ -1624,7 +1624,7 @@ class Modules
                 }
 
                 .other-input::before {
-                    content: '<?= lang('Other', 'Weiteres') ?>';
+                    content: '<?= lang('common.other_CustomFields') ?>';
                     display: inline-block;
                 }
             </style>
@@ -1784,7 +1784,7 @@ class Modules
                         <div class="footer">
                             <div class="input-group small d-inline-flex w-auto">
                                 <select class="form-control" id="country-select">
-                                    <option value="" disabled selected><?= lang("Add country ...", "Füge Land hinzu ...") ?></option>
+                                    <option value="" disabled selected><?= lang('activities.add_country') ?></option>
                                     <?php foreach ($this->DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                                         <option value="<?= $iso ?>"><?= $name ?></option>
                                     <?php } ?>
@@ -1864,13 +1864,13 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="pubtype">
                     <select class="form-control" name="values[pubtype]" id="pubtype" <?= $labelClass ?>>
                         <option value="article">Journal article (refereed)</option>
-                        <option value="book"><?= lang('Book', 'Buch') ?></option>
-                        <option value="chapter"><?= lang('Book chapter', 'Buchkapitel') ?></option>
+                        <option value="book"><?= lang('activities.book') ?></option>
+                        <option value="chapter"><?= lang('activities.book_chapter') ?></option>
                         <option value="preprint">Preprint (non refereed)</option>
-                        <option value="conference"><?= lang('Conference preceedings', 'Konferenzbeitrag') ?></option>
-                        <option value="magazine"><?= lang('Magazine article (non refereed)', 'Magazin-Artikel (non-refereed)') ?></option>
+                        <option value="conference"><?= lang('activities.conference_preceedings') ?></option>
+                        <option value="magazine"><?= lang('activities.magazine_article_non_refereed') ?></option>
                         <option value="dissertation"><?= lang('Thesis') ?></option>
-                        <option value="others"><?= lang('Others', 'Weiteres') ?></option>
+                        <option value="others"><?= lang('activities.others') ?></option>
                     </select>
                     <label for="pubtype" class="<?= $labelClass ?> floating-title">
                         <?= $label ?>
@@ -1903,7 +1903,7 @@ class Modules
                                 <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
                                 <span class="text-muted"><?= $affiliation ?></span>
                             <?php else : ?>
-                                <span class="title"><?= lang('No module selected', 'Kein Modul ausgewählt') ?></span>
+                                <span class="title"><?= lang('activities.no_module_selected') ?></span>
 
                             <?php endif; ?>
                         </div>
@@ -1981,7 +1981,7 @@ class Modules
                             if ($(el).closest('tbody').find('tr').length > 1) {
                                 $(el).closest('tr').remove()
                             } else {
-                                toastError(lang('At least one author is needed.', 'Mindestens ein Autor muss angegeben werden.'))
+                                toastError(<?= json_encode(lang('activities.at_least_one_author_is_needed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                             }
                         }
 
@@ -2070,7 +2070,7 @@ class Modules
                                     <th><?= lang('common.name_last') ?></th>
                                     <th><?= lang('common.name_first') ?></th>
                                     <th><?= lang('common.affiliated') ?></th>
-                                    <th><?= lang('SWS', 'Anteil in SWS') ?> <span class="text-danger">*</span></th>
+                                    <th><?= lang('activities.sws') ?> <span class="text-danger">*</span></th>
                                     <th>
                                         <a href="#sws-calc" class="btn link"><i class="ph ph-calculator"></i></a>
                                     </th>
@@ -2111,7 +2111,7 @@ class Modules
                                         <div class="d-flex justify-content-between">
                                             <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
                                             <small class="text-muted float-left align-items-center">
-                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                                <?= lang('activities.selecting_a_user_name_will_fill_in_the_first_and_last_name_fields_automatic') ?>
                                             </small>
                                         </div>
                                     </td>
@@ -2126,7 +2126,7 @@ class Modules
                             if ($(el).closest('tbody').find('tr').length > 1) {
                                 $(el).closest('tr').remove()
                             } else {
-                                toastError(lang('At least one supervisor is needed.', 'Mindestens ein Betreuer muss angegeben werden.'))
+                                toastError(<?= json_encode(lang('activities.at_least_one_supervisor_is_needed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                             }
                         }
 
@@ -2217,13 +2217,13 @@ class Modules
                                         </td>
                                         <td>
                                             <select name="values[supervisors][<?= $i ?>][role]" class="form-control">
-                                                <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
-                                                <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
-                                                <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
-                                                <option value="third-reviewer" <?= ($role == 'third-reviewer' ? 'selected' : '') ?>><?= lang('Third reviewer', 'Dritter Gutachter') ?></option>
-                                                <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
-                                                <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
-                                                <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
+                                                <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('people.supervisor') ?></option>
+                                                <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('people.first_reviewer') ?></option>
+                                                <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('people.second_reviewer') ?></option>
+                                                <option value="third-reviewer" <?= ($role == 'third-reviewer' ? 'selected' : '') ?>><?= lang('people.third_reviewer') ?></option>
+                                                <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('people.committee_member') ?></option>
+                                                <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('people.chair') ?></option>
+                                                <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('people.mentor') ?></option>
                                                 <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                             </select>
                                         </td>
@@ -2239,7 +2239,7 @@ class Modules
                                         <div class="d-flex justify-content-between align-items-center">
                                             <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
                                             <small class="text-muted">
-                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                                <?= lang('activities.selecting_a_user_name_will_fill_in_the_first_and_last_name_fields_automatic') ?>
                                             </small>
                                         </div>
                                     </td>
@@ -2254,7 +2254,7 @@ class Modules
                             if ($(el).closest('tbody').find('tr').length > 1) {
                                 $(el).closest('tr').remove()
                             } else {
-                                toastError(lang('At least one supervisor is needed.', 'Mindestens ein Betreuer muss angegeben werden.'))
+                                toastError(<?= json_encode(lang('activities.at_least_one_supervisor_is_needed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                             }
                         }
 
@@ -2287,13 +2287,13 @@ class Modules
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
                             var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
                             var roles = {
-                                'supervisor': lang('Supervisor', 'Betreuer'),
-                                'first-reviewer': lang('First reviewer', 'Erster Gutachter'),
-                                'second-reviewer': lang('Second reviewer', 'Zweiter Gutachter'),
-                                'third-reviewer': lang('Third reviewer', 'Dritter Gutachter'),
-                                'committee-member': lang('Committee member', 'Ausschussmitglied'),
-                                'chair': lang('Chair', 'Vorsitzender'),
-                                'mentor': lang('Mentor', 'Mentor'),
+                                'supervisor': <?= json_encode(lang('people.supervisor'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'first-reviewer': <?= json_encode(lang('people.first_reviewer'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'second-reviewer': <?= json_encode(lang('people.second_reviewer'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'third-reviewer': <?= json_encode(lang('people.third_reviewer'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'committee-member': <?= json_encode(lang('people.committee_member'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'chair': <?= json_encode(lang('people.chair'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                                'mentor': <?= json_encode(lang('people.mentor'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                                 'other': lang('common.other')
                             }
                             for (const [key, value] of Object.entries(roles)) {
@@ -2323,12 +2323,12 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="teaching-category">
                     <select name="values[category]" id="teaching-cat" class="form-control" <?= $labelClass ?>>
-                        <option value="lecture" <?= $this->val('category') == 'lecture' ? 'selected' : '' ?>><?= lang('Lecture', 'Vorlesung') ?></option>
-                        <option value="practical" <?= $this->val('category') == 'practical' ? 'selected' : '' ?>><?= lang('Practical course', 'Praktikum') ?></option>
-                        <option value="practical-lecture" <?= $this->val('category') == 'practical-lecture' ? 'selected' : '' ?>><?= lang('Lecture and practical course', 'Vorlesung und Praktikum') ?></option>
-                        <option value="practical-seminar" <?= $this->val('category') == 'practical-seminar' ? 'selected' : '' ?>><?= lang('Practical course and seminar', 'Praktikum und Seminar') ?></option>
-                        <option value="lecture-seminar" <?= $this->val('category') == 'lecture-seminar' ? 'selected' : '' ?>><?= lang('Lecture and seminar', 'Vorlesung und Seminar') ?></option>
-                        <option value="lecture-practical-seminar" <?= $this->val('category') == 'lecture-practical-seminar' ? 'selected' : '' ?>><?= lang('Lecture, seminar, practical course', 'Vorlesung, Seminar und Praktikum') ?></option>
+                        <option value="lecture" <?= $this->val('category') == 'lecture' ? 'selected' : '' ?>><?= lang('activities.lecture') ?></option>
+                        <option value="practical" <?= $this->val('category') == 'practical' ? 'selected' : '' ?>><?= lang('activities.practical_course') ?></option>
+                        <option value="practical-lecture" <?= $this->val('category') == 'practical-lecture' ? 'selected' : '' ?>><?= lang('activities.lecture_and_practical_course') ?></option>
+                        <option value="practical-seminar" <?= $this->val('category') == 'practical-seminar' ? 'selected' : '' ?>><?= lang('activities.practical_course_and_seminar') ?></option>
+                        <option value="lecture-seminar" <?= $this->val('category') == 'lecture-seminar' ? 'selected' : '' ?>><?= lang('activities.lecture_and_seminar') ?></option>
+                        <option value="lecture-practical-seminar" <?= $this->val('category') == 'lecture-practical-seminar' ? 'selected' : '' ?>><?= lang('activities.lecture_seminar_practical_course') ?></option>
                         <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('Seminar') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
@@ -2341,7 +2341,7 @@ class Modules
             case "semester-select":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="semester-select">
-                    <label for="teaching-cat" class="floating-title"><?= lang('Fast select time', 'Schnellwahl Zeit') ?></label>
+                    <label for="teaching-cat" class="floating-title"><?= lang('activities.fast_select_time') ?></label>
 
                     <div class="btn-group d-flex">
                         <button class="btn" type="button" onclick="selectSemester('SS', '<?= CURRENTYEAR - 1 ?>')">SS <?= CURRENTYEAR - 1 ?></button>
@@ -2384,9 +2384,9 @@ class Modules
                         <button id="event-select-button" class="btn primary" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-calendar-dots ph-2x mr-10"></i>
                             <span>
-                                <b><?= lang('Select event', 'Veranstaltung auswählen') ?></b>
+                                <b><?= lang('activities.select_event') ?></b>
                                 <br>
-                                <small><?= lang('to fill date, event name and location fields automatically.', 'um automatisch Datum, Veranstaltungsname und Ort auszufüllen.') ?></small>
+                                <small><?= lang('activities.to_fill_date_event_name_and_location_fields_automatically') ?></small>
                             </span>
                             <i class="ph ph-caret-down ml-auto" aria-hidden="true"></i>
                         </button>
@@ -2395,7 +2395,7 @@ class Modules
                                 <i class="ph ph-info text-signal"></i>
                                 <?= $help ?>
                             </small>
-                            <input type="text" placeholder="<?= lang('Search event...', 'Veranstaltung suchen...') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
+                            <input type="text" placeholder="<?= lang('activities.search_event') ?>" id="event-select-search" onkeyup="filterEvents();" class="form-control">
 
                             <div class="events-content">
                                 <?php foreach ($events as $ev) { ?>
@@ -2412,7 +2412,7 @@ class Modules
                             </div>
                         </div>
                     </div>
-                    <a href="#add-event" class="btn" id="add-event-button" data-toggle="tooltip" data-title="<?= lang('Add new event', 'Neue Veranstaltung hinzufügen') ?>">
+                    <a href="#add-event" class="btn" id="add-event-button" data-toggle="tooltip" data-title="<?= lang('activities.add_new_event') ?>">
                         <i class="ph ph-calendar-plus ph-2x"></i>
                     </a>
                     <style>
@@ -2491,10 +2491,10 @@ class Modules
             case "authors-first-last":
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="authors">
-                    <a class="float-right" href="#author-help"><i class="ph ph-question" style="line-height:0;"></i> <?= lang('Help', 'Hilfe') ?></a>
+                    <a class="float-right" href="#author-help"><i class="ph ph-question" style="line-height:0;"></i> <?= lang('reports.help') ?></a>
                     <label for="author" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
-                        <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
+                        <small class="text-muted"><?= lang('activities.in_correct_order_format_last_name_first_name') ?></small>
                     </label>
 
                     <?php if (!$req) { ?>
@@ -2508,7 +2508,7 @@ class Modules
                         <div class="footer">
 
                             <div class="input-group d-inline-flex w-auto">
-                                <input type="text" class="form-control" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
+                                <input type="text" class="form-control" placeholder="<?= lang('activities.add_person') ?>" onkeypress="addAuthor(event);" id="add-author" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary" type="button" onclick="addAuthor(event);">
                                         <i class="ph ph-plus"></i>
@@ -2517,9 +2517,9 @@ class Modules
                             </div>
                             <?php if ($module == 'authors-first-last') : ?>
                                 <div class="ml-auto" id="author-numbers">
-                                    <label for="first-authors"><?= lang('Number of first authors:', 'Anzahl der Erstautoren:') ?></label>
+                                    <label for="first-authors"><?= lang('activities.number_of_first_authors') ?></label>
                                     <input type="number" name="values[first_authors]" id="first-authors" value="<?= $this->first ?>" class="form-control sm w-50 d-inline-block mr-10" autocomplete="off">
-                                    <label for="last-authors"><?= lang('last authors:', 'Letztautoren:') ?></label>
+                                    <label for="last-authors"><?= lang('activities.last_authors') ?></label>
                                     <input type="number" name="values[last_authors]" id="last-authors" value="<?= $this->last ?>" class="form-control sm w-50 d-inline-block" autocomplete="off">
                                 </div>
                             <?php endif; ?>
@@ -2528,16 +2528,13 @@ class Modules
                         <?= $this->render_help($help) ?>
                     </div>
                     <small class="text-muted">
-                        <?= lang('Note: A detailed person editor is available after adding the activity.', 'Anmerkung: Ein detaillierter Personeneditor ist verfügbar, nachdem der Datensatz hinzugefügt wurde.') ?>
+                        <?= lang('activities.note_a_detailed_person_editor_is_available_after_adding_the_activity') ?>
                     </small>
                     <div class="alert signal my-20 affiliation-warning" style="display: none;">
                         <h5 class="title">
-                            <?= lang("Attention: No affiliated persons added.", 'Achtung: Keine affiliierten Personen angegeben.') ?>
+                            <?= lang('activities.attention_no_affiliated_persons_added') ?>
                         </h5>
-                        <?= lang(
-                            'Please double click on every affiliated person in the list above, to mark them as affiliated. Only affiliated persons will receive points and are shown in reports.',
-                            'Bitte doppelklicken Sie auf jede affiliierte Person in der Liste oben, um sie als zugehörig zu markieren. Nur zugehörige Personen erhalten Punkte und werden in Berichten berücksichtigt.'
-                        ) ?>
+                        <?= lang('activities.please_double_click_on_every_affiliated_person_in_the_list_above_to_mark_th') ?>
                     </div>
                 </div>
             <?php
@@ -2552,16 +2549,16 @@ class Modules
                     <div class="col-sm-5 floating-form">
                         <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $labelClass ?> element-other">
-                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
+                            <?= lang('activities.name_last_name_given_name') ?>
                         </label>
                     </div>
                     <div class="col-sm-5 floating-form">
                         <input type="text" class="form-control" name="values[affiliation]" id="guest-affiliation" <?= $labelClass ?> value="<?= $this->val('affiliation') ?>" placeholder="affiliation">
-                        <label for="guest-affiliation" class="<?= $labelClass ?> element-other"><?= lang('Affiliation (Name, City, Country)', 'Einrichtung (Name, Ort, Land)') ?></label>
+                        <label for="guest-affiliation" class="<?= $labelClass ?> element-other"><?= lang('activities.affiliation_name_city_country') ?></label>
                     </div>
                     <div class="col-sm-2 floating-form">
                         <input type="text" class="form-control" name="values[academic_title]" id="guest-academic_title" value="<?= $this->val('academic_title') ?>" placeholder="academic_title">
-                        <label for="guest-academic_title"><?= lang('Academ. title', 'Akadem. Titel') ?></label>
+                        <label for="guest-academic_title"><?= lang('activities.academ_title') ?></label>
                     </div>
                     <?= $this->render_help($help) ?>
                 </div>
@@ -2589,18 +2586,18 @@ class Modules
                     <div class="col-sm-6 floating-form">
                         <input type="text" class="form-control" name="values[name]" id="guest-name" <?= $labelClass ?> value="<?= $this->val('name') ?>" placeholder="name" autocomplete="off">
                         <label for="guest-name" class="<?= $labelClass ?> element-other">
-                            <?= lang('Name (last name, given name)', 'Name (Nachname, Vorname)') ?>
+                            <?= lang('activities.name_last_name_given_name') ?>
                         </label>
                     </div>
                     <div class="col-sm-6 floating-form">
                         <label for="organization" class="<?= $labelClass ?> floating-title">
-                            <?= lang('Affiliated Organization', 'Zugehörige Organisation') ?>
+                            <?= lang('activities.affiliated_organization') ?>
                         </label>
                         <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                             <i class="ph ph-edit float-right"></i>
                             <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
-                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
-                                <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('teaching.remove_connected_organization') ?>">
+                                <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('teaching.no_organization_connected') ?>'); return false;"></i>
                             </span>
 
                             <div id="org-<?= $rand_id ?>-value">
@@ -2632,7 +2629,7 @@ class Modules
                                         <span aria-hidden="true">&times;</span>
                                     </a>
                                     <small class="text-muted float-sm-right">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-                                    <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                    <label for="org-<?= $rand_id ?>-search"><?= lang('teaching.search_organization') ?></label>
 
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
@@ -2649,7 +2646,7 @@ class Modules
                                     $orgs = $this->getSuggestedOrgs();
                                     if (!empty($orgs)) { ?>
                                         <div class="suggestions">
-                                            <?= lang('Suggestions:', 'Vorschläge:') ?>
+                                            <?= lang('teaching.suggestions') ?>
                                             <?php
                                             // suggest oftenly used organisations
                                             foreach ($orgs as $org) { ?>
@@ -2694,10 +2691,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="student-category">
                     <select name="values[category]" id="category-students" class="form-control" <?= $labelClass ?>>
-                        <option value="doctoral student" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Student', 'Doktorand:in') ?></option>
-                        <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Student', 'Masterstudent') ?></option>
-                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Student', 'Bachelorstudent') ?></option>
-                        <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('Intern', 'Praktikant') ?></option>
+                        <option value="doctoral student" <?= $this->val('category') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('activities.doctoral_student') ?></option>
+                        <option value="master student" <?= $this->val('category') == 'master thesis' ? 'selected' : '' ?>><?= lang('activities.master_student') ?></option>
+                        <option value="bachelor student" <?= $this->val('category') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('activities.bachelor_student') ?></option>
+                        <option value="intern" <?= $this->val('category') == 'internship' ? 'selected' : '' ?>><?= lang('activities.intern') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-students" class="<?= $labelClass ?>"><?= $label ?></label>
@@ -2728,7 +2725,7 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="pub-language">
                     <select name="values[pub-language]" id="pub-language" class="form-control" <?= $labelClass ?>>
                         <?php if (!$req) { ?>
-                            <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('Select language', 'Sprache auswählen') ?></option>
+                            <option value="" <?= $val == '' ? 'selected' : '' ?>><?= lang('activities.select_language') ?></option>
                         <?php } ?>
 
                         <?php
@@ -2751,12 +2748,12 @@ class Modules
                     <div id="end-question">
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-preparation" value="preparation" value="1" <?= $status == 'preparation' ? 'checked' : '' ?>>
-                            <label for="status-preparation"><?= lang('In preparation', 'In Vorbereitung') ?></label>
+                            <label for="status-preparation"><?= lang('error.in_preparation') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-in-progress" value="in progress" value="1" <?= $status == 'in progress' ? 'checked' : '' ?>>
-                            <label for="status-in-progress"><?= lang('In progress', 'In Progress') ?></label>
+                            <label for="status-in-progress"><?= lang('activities.in_progress') ?></label>
                         </div>
 
                         <div class="custom-radio d-inline-block">
@@ -2766,7 +2763,7 @@ class Modules
 
                         <div class="custom-radio d-inline-block">
                             <input type="radio" name="values[status]" id="status-aborted" value="aborted" value="1" <?= $status == 'aborted' ? 'checked' : '' ?>>
-                            <label for="status-aborted"><?= lang('Aborted', 'Abgebrochen') ?></label>
+                            <label for="status-aborted"><?= lang('error.aborted') ?></label>
                         </div>
                     </div>
                     <?= $this->render_help($help) ?>
@@ -2779,9 +2776,9 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="guest">
                     <select name="values[category]" id="category-guest" class="form-control" <?= $labelClass ?>>
-                        <option value="guest scientist" <?= $this->val('category') == 'guest scientist' ? 'selected' : '' ?>><?= lang('Guest Scientist', 'Gastwissenschaftler:in') ?></option>
-                        <option value="lecture internship" <?= $this->val('category') == 'lecture internship' ? 'selected' : '' ?>><?= lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium') ?></option>
-                        <option value="student internship" <?= $this->val('category') == 'student internship' ? 'selected' : '' ?>><?= lang('Student Internship', 'Schülerpraktikum') ?></option>
+                        <option value="guest scientist" <?= $this->val('category') == 'guest scientist' ? 'selected' : '' ?>><?= lang('common.guest_scientist') ?></option>
+                        <option value="lecture internship" <?= $this->val('category') == 'lecture internship' ? 'selected' : '' ?>><?= lang('common.lecture_internship') ?></option>
+                        <option value="student internship" <?= $this->val('category') == 'student internship' ? 'selected' : '' ?>><?= lang('common.student_internship') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="category-guest" class="<?= $labelClass ?>"><?= $label ?></label>
@@ -2815,13 +2812,13 @@ class Modules
                     </div>
                     <div class="col-sm floating-form">
                         <input type="number" min="1" max="31" step="1" class="form-control" name="values[day]" id="day" value="<?= $this->val('day') ?>" placeholder="24">
-                        <label for="day" class="element-time"><?= lang('Day', 'Tag') ?></label>
+                        <label for="day" class="element-time"><?= lang('activities.day') ?></label>
                         <?= $this->render_help($help) ?>
                     </div>
                     <div class="col flex-grow-0">
                         <button class="btn primary" type="button" onclick="dateToday()" style="height: calc(4rem + 1px); font-size:small; line-height:0">
                             <i class="ph ph-calendar-dot"></i>
-                            <?= lang('Today', 'Heute') ?>
+                            <?= lang('dashboard.today') ?>
                         </button>
                     </div>
                 </div>
@@ -2840,10 +2837,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="lecture-type">
                     <select name="values[lecture_type]" id="lecture_type" class="form-control" autocomplete="off">
-                        <option value="short" <?= $this->val('lecture_type') == 'short' ? 'selected' : '' ?>><?= lang('short', 'kurz') ?> (5-15 min.)</option>
-                        <option value="medium" <?= $this->val('lecture_type') == 'medium' ? 'selected' : '' ?>><?= lang('medium', 'mittel') ?> (15-30 min.)</option>
-                        <option value="long" <?= $this->val('lecture_type') == 'long' ? 'selected' : '' ?>><?= lang('long', 'lang') ?> (> 30 min.)</option>
-                        <option value="repetition" <?= $this->val('lecture_type') == 'repetition' || $this->copy === true ? 'selected' : '' ?>><?= lang('repetition', 'Wiederholung') ?></option>
+                        <option value="short" <?= $this->val('lecture_type') == 'short' ? 'selected' : '' ?>><?= lang('activities.short') ?> (5-15 min.)</option>
+                        <option value="medium" <?= $this->val('lecture_type') == 'medium' ? 'selected' : '' ?>><?= lang('activities.medium') ?> (15-30 min.)</option>
+                        <option value="long" <?= $this->val('lecture_type') == 'long' ? 'selected' : '' ?>><?= lang('activities.long') ?> (> 30 min.)</option>
+                        <option value="repetition" <?= $this->val('lecture_type') == 'repetition' || $this->copy === true ? 'selected' : '' ?>><?= lang('activities.repetition') ?></option>
                     </select>
                     <label class="<?= $labelClass ?> " for="lecture_type"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2869,8 +2866,8 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="date-range">
                     <label class="<?= $labelClass ?> floating-title" for="date_start">
                         <?= $label ?>
-                        <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty if only one day', 'Ende leer lassen, falls es nur ein Tag ist') ?>"><i class="ph ph-question" style="line-height:0;"></i></span>
-                        <!-- <button class="btn small" id="daterange-toggle-btn" type="button" onclick="rebuild_datepicker(this);"><?= lang('Multiple days', 'Mehrtägig') ?></button> -->
+                        <span data-toggle="tooltip" data-title="<?= lang('activities.leave_end_date_empty_if_only_one_day') ?>"><i class="ph ph-question" style="line-height:0;"></i></span>
+                        <!-- <button class="btn small" id="daterange-toggle-btn" type="button" onclick="rebuild_datepicker(this);"><?= lang('activities.multiple_days') ?></button> -->
                     </label>
                     <div class="input-group">
                         <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= $this->dateVal('start') ?>">
@@ -2885,7 +2882,7 @@ class Modules
                         var endDate = new Date(document.getElementById('date_end').value);
                         if (endDate < startDate) {
                             document.getElementById('date_end').value = this.value;
-                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                            toastWarning(<?= json_encode(lang('activities.end_date_cannot_be_before_start_date_setting_end_date_to_start_date'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                         }
                     });
                     document.getElementById('date_end').addEventListener('blur', function() {
@@ -2893,7 +2890,7 @@ class Modules
                         var endDate = new Date(this.value);
                         if (endDate < startDate) {
                             this.value = document.getElementById('date_start').value;
-                            toastWarning(lang('End date cannot be before start date. Setting end date to start date.', 'Enddatum kann nicht vor Startdatum liegen. Setze Enddatum auf Startdatum.'));
+                            toastWarning(<?= json_encode(lang('activities.end_date_cannot_be_before_start_date_setting_end_date_to_start_date'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                         }
                     });
                 </script>
@@ -2905,7 +2902,7 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="date-range-ongoing">
                     <label class="<?= $labelClass ?> element-time floating-title" for="date_start">
                         <?= $label ?>
-                        <span data-toggle="tooltip" data-title="<?= lang('Leave end date empty ongoing activity', 'Ende leer lassen, falls es eine zurzeit laufende Aktivität ist') ?>"><i class="ph ph-question"></i></span>
+                        <span data-toggle="tooltip" data-title="<?= lang('activities.leave_end_date_empty_ongoing_activity') ?>"><i class="ph ph-question"></i></span>
                     </label>
                     <div class="input-group">
                         <input type="date" class="form-control" name="values[start]" id="date_start" <?= $labelClass ?> value="<?= $this->dateVal('start') ?>">
@@ -2975,8 +2972,8 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="misc">
                     <select name="values[iteration]" id="iteration" class="form-control" <?= $labelClass ?> value="<?= $this->val('iteration') ?>">
-                        <option value="once"><?= lang('once', 'einmalig') ?></option>
-                        <option value="annual"><?= lang('continously', 'stetig') ?></option>
+                        <option value="once"><?= lang('activities.once') ?></option>
+                        <option value="annual"><?= lang('activities.continously') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="iteration"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
@@ -2994,9 +2991,9 @@ class Modules
                         <?php
                         if (!empty($this->form) && isset($this->form['conference_id'])) {
                             $conference = $this->DB->getConnected('conference', $this->form['conference_id']);
-                            echo lang('Connected to ', 'Verknüpft mit ') . $conference['title'];
+                            echo lang('activities.connected_to') . $conference['title'];
                         } else {
-                            echo lang('No event connected', 'Kein Event verknüpft');
+                            echo lang('activities.no_event_connected');
                         }
                         ?>
                     </p>
@@ -3010,18 +3007,18 @@ class Modules
                             if (option.length) {
                                 var id = option.data('id')
                                 $('#conference_id').val(id)
-                                $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + input)
+                                $('#connected-conference').html(<?= json_encode(lang('activities.connected_to'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + input)
                                 return
                             }
                             $('#conference_id').val('')
-                            $('#connected-conference').html(lang('No event connected', 'Kein Event verknüpft'))
+                            $('#connected-conference').html(<?= json_encode(lang('activities.no_event_connected'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                         }
 
                         function selectConference(el) {
                             var id = $(el).data('id')
                             $('#conference').val(el.innerHTML)
                             $('#conference_id').val(id)
-                            $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + el.innerHTML)
+                            $('#connected-conference').html(<?= json_encode(lang('activities.connected_to'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + el.innerHTML)
                         }
                     </script>
                     <?= $this->render_help($help) ?>
@@ -3067,14 +3064,14 @@ class Modules
             ?>
                 <div class="data-module col-sm-<?= $width ?>" data-module="journal">
                     <a href="<?= ROOTPATH ?>/docs/add-activities#das-journal-bearbeiten" target="_blank" class="<?= $labelClass ?> float-right">
-                        <i class="ph ph-question"></i> <?= lang('Help', 'Hilfe') ?>
+                        <i class="ph ph-question"></i> <?= lang('reports.help') ?>
                     </a>
                     <label for="journal" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                     <a href="#journal-select" id="journal-field" class="module">
                         <span class="float-right text-secondary"><i class="ph ph-edit"></i></span>
                         <?php if (!$req) { ?>
-                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected journal', 'Verknüpftes Journal entfernen') ?>">
-                                <i class="ph ph-trash" onclick="$('#journal_id').val('');$('#journal').val(''); $('#selected-journal').html('<?= lang('No journal connected', 'Kein Journal verknüpft') ?>'); return false;"></i>
+                            <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('activities.remove_connected_journal') ?>">
+                                <i class="ph ph-trash" onclick="$('#journal_id').val('');$('#journal').val(''); $('#selected-journal').html('<?= lang('activities.no_journal_connected') ?>'); return false;"></i>
                             </span>
                         <?php } ?>
 
@@ -3086,7 +3083,7 @@ class Modules
                                 <span class="float-right text-muted"><?= $journal['publisher'] ?? '' ?></span>
                                 <span class="text-muted">ISSN: <?= print_list($journal['issn'] ?? []) ?></span>
                             <?php else : ?>
-                                <span class="font-weight-bold"><?= lang('Not selected', 'Nichts ausgewählt') ?></span>
+                                <span class="font-weight-bold"><?= lang('activities.not_selected') ?></span>
                             <?php endif; ?>
                         </div>
 
@@ -3239,7 +3236,7 @@ class Modules
                 <div class="data-module col-sm-<?= $width ?>" data-module="editor">
                     <label for="editor" class="<?= $labelClass ?> floating-title">
                         <?= $label ?>
-                        <small class="text-muted"><?= lang('(in correct order, format: Last name, First name)', '(in korrekter Reihenfolge, Format: Nachname, Vorname)') ?></small>
+                        <small class="text-muted"><?= lang('activities.in_correct_order_format_last_name_first_name') ?></small>
                     </label>
 
                     <?php if (!$req) { ?>
@@ -3252,7 +3249,7 @@ class Modules
                         </div>
                         <div class="footer">
                             <div class="input-group small d-inline-flex w-auto">
-                                <input type="text" placeholder="<?= lang('Add person ...', 'Füge Person hinzu ...') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
+                                <input type="text" placeholder="<?= lang('activities.add_person') ?>" onkeypress="addAuthor(event, true);" id="add-editor" list="scientist-list">
                                 <div class="input-group-append">
                                     <button class="btn secondary h-full" type="button" onclick="addAuthor(event, true);">
                                         <i class="ph ph-plus"></i>
@@ -3280,10 +3277,10 @@ class Modules
 
                         <div class="input-group ">
                             <input type="text" class="form-control" <?= $labelClass ?> name="values[doi]" value="<?= $this->val('doi') ?>" id="doi" placeholder="doi" oninput="validateDoi(this)">
-                            <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('Retreive updated information via DOI', 'Aktualisiere die Daten via DOI') ?>">
+                            <div class="input-group-append" data-toggle="tooltip" data-title="<?= lang('activities.retreive_updated_information_via_doi_Modules') ?>">
                                 <button class="btn" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i></button>
                                 <span class="sr-only">
-                                    <?= lang('Retreive updated information via DOI', 'Aktualisiere die bibliographischen Daten via DOI') ?>
+                                    <?= lang('activities.retreive_updated_information_via_doi_8fb1e0bd') ?>
                                 </span>
                             </div>
                         </div>
@@ -3347,7 +3344,7 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="openaccess-status">
                     <select class="form-control" id="oa_status" name="values[oa_status]" <?= $labelClass ?> autocomplete="off">
                         <option value="closed" <?= $status == 'closed' ? 'selected' : '' ?>>Closed Access</option>
-                        <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('unknown status', 'Unbekannter Status') ?>)</option>
+                        <option value="open" <?= $status == 'open' ? 'selected' : '' ?>>Open Access (<?= lang('activities.unknown_status') ?>)</option>
                         <option value="diamond" <?= $status == 'diamond' ? 'selected' : '' ?>>Open Access (Diamond)</option>
                         <option value="gold" <?= $status == 'gold' ? 'selected' : '' ?>>Open Access (Gold)</option>
                         <option value="green" <?= $status == 'green' ? 'selected' : '' ?>>Open Access (Green)</option>
@@ -3408,10 +3405,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
                     <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
-                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('local', 'lokal') ?></option>
-                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('regional', 'regional') ?></option>
-                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('national', 'national') ?></option>
-                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('international', 'international') ?></option>
+                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('activities.local') ?></option>
+                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('activities.regional') ?></option>
+                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('activities.national') ?></option>
+                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('activities.international') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="scope">
                         <?= $label ?>
@@ -3442,11 +3439,11 @@ class Modules
                     </label>
 
                     <small class="help-text">
-                        <?= lang('If applicable, enter', 'Falls möglich, die') ?>
-                        <a href="https://opensource.org/licenses/" target="_blank" rel="noopener noreferrer"><?= lang('SPDX-ID from', 'SPDX-ID der') ?> OSI</a>
-                        <?= lang('or CC license from', 'oder die CC-Lizenz von') ?>
+                        <?= lang('activities.if_applicable_enter') ?>
+                        <a href="https://opensource.org/licenses/" target="_blank" rel="noopener noreferrer"><?= lang('activities.spdx_id_from') ?> OSI</a>
+                        <?= lang('activities.or_cc_license_from') ?>
                         <a href="https://creativecommons.org/share-your-work/cclicenses/" target="_blank" rel="noopener noreferrer">Creative Commons</a>.
-                        <?= lang('', 'angeben') ?>.
+                        <?= lang('activities.text_d75d1ca8cc') ?>.
                     </small>
                     <?= $this->render_help($help) ?>
                 </div>
@@ -3482,7 +3479,7 @@ class Modules
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="political_consultation">
                     <select type="text" class="form-control" <?= $labelClass ?> name="values[political_consultation]" id="political_consultation">
                         <?php if (!$req) { ?>
-                            <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('No political consultation', 'Keine politische Beratung') ?></option>
+                            <option value="" <?= empty($this->val('political_consultation')) ? 'selected' : '' ?>><?= lang('activities.no_political_consultation') ?></option>
                         <?php }
                         $val = $this->val('political_consultation', null);
                         $vocab = $Vocabulary->getValues('political_consultation');
@@ -3510,8 +3507,8 @@ class Modules
                     <a id="organization" class="module" href="#organization-modal-<?= $rand_id ?>">
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[organization]" value="<?= $org_id ?>" <?= $labelClass ?> readonly id="org-<?= $rand_id ?>-organization" />
-                        <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
-                            <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                        <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('teaching.remove_connected_organization') ?>">
+                            <i class="ph ph-trash" onclick="$('#org-<?= $rand_id ?>-organization').val(''); $('#org-<?= $rand_id ?>-value').html('<?= lang('teaching.no_organization_connected') ?>'); return false;"></i>
                         </span>
 
                         <div id="org-<?= $rand_id ?>-value">
@@ -3542,7 +3539,7 @@ class Modules
                                     <span aria-hidden="true">&times;</span>
                                 </a>
                                 <small class="text-muted float-sm-right">Search powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
-                                <label for="org-<?= $rand_id ?>-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                                <label for="org-<?= $rand_id ?>-search"><?= lang('teaching.search_organization') ?></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="org-<?= $rand_id ?>-search" onkeydown="selectOrgEvent(event, '<?= $rand_id ?>')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
@@ -3558,7 +3555,7 @@ class Modules
                                 $orgs = $this->getSuggestedOrgs();
                                 if (!empty($orgs)) { ?>
                                     <div class="suggestions">
-                                        <?= lang('Suggestions:', 'Vorschläge:') ?>
+                                        <?= lang('teaching.suggestions') ?>
                                         <?php
                                         // suggest oftenly used organisations
                                         foreach ($orgs as $org) { ?>
@@ -3634,7 +3631,7 @@ class Modules
                         <tfoot>
                             <tr>
                                 <td colspan="2">
-                                    <label for="organization-search"><?= lang('Add Organisation', 'Organisation hinzufügen') ?></label>
+                                    <label for="organization-search"><?= lang('activities.add_organisation') ?></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                                         <div class="input-group-append">
@@ -3736,7 +3733,7 @@ class Modules
                             <tr>
                                 <td colspan="2">
                                     <b>
-                                        <?= lang('Connect a project', 'Verknüpfe ein Projekt') ?>:
+                                        <?= lang('activities.connect_a_project') ?>:
                                     </b>
                                     <div class="input-group">
                                         <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
@@ -3750,12 +3747,12 @@ class Modules
                                     <?php if ($full_permission) { ?>
                                         <small class="text-muted">
                                             <i class="ph ph-info"></i>
-                                            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                                            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
                                         </small>
                                     <?php } else { ?>
                                         <small class="text-muted">
                                             <i class="ph ph-info"></i>
-                                            <?= lang('Note: only your own projects are shown here. You cannot connect proposals.', 'Bemerkung: nur deine eigenen Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                                            <?= lang('projects.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
                                         </small>
                                     <?php } ?>
                                 </td>
@@ -3777,7 +3774,7 @@ class Modules
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                // toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                // toastError('<?= lang('common.this_project_is_already_connected') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -3832,8 +3829,8 @@ class Modules
                 </div>
                 <script>
                     $('#tag-select').multiSelect({
-                        noneText: '<?= lang('No tags selected', 'Keine Tags ausgewählt') ?>',
-                        allText: '<?= lang('All tags', 'Alle Tags') ?>',
+                        noneText: '<?= lang('activities.no_tags_selected') ?>',
+                        allText: '<?= lang('activities.all_tags') ?>',
                     });
                 </script>
             <?php
@@ -3862,7 +3859,7 @@ class Modules
             default:
             ?>
                 <div class="data-module alert danger col-sm-<?= $width ?>">
-                    <?= lang('Module ' . $module . ' is not defined.', 'Modul ' . $module . ' existiert nicht.') ?>
+                    <?= lang('activities.module_module_is_not_defined', replace: ['module' => $module]) ?>
                 </div>
 <?php
                 break;

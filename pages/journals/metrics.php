@@ -20,17 +20,17 @@ $label = $Settings->journalLabel();
 
 <h1>
     <i class="ph-duotone ph-ranking"></i>
-    <?= lang("$label metrics", "$label-Metriken") ?>
+    <?= lang('journals.label_metrics', replace: ['label' => $label]) ?>
 </h1>
 
 <p>
-    <?= lang("This will check the metrics for all $label. This may take a while.", "Dies wird die Metriken für alle $label prüfen. Dies kann eine Weile dauern.") ?>
+    <?= lang('journals.this_will_check_the_metrics_for_all_label_this_may_take_a_while', replace: ['label' => $label]) ?>
 </p>
 
 <?php
 // check if the user has permission to edit journals
 if (!$Settings->hasPermission('journals.edit')) {
-    echo "<p class='alert alert-danger'>" . lang("You do not have permission to edit $label.", "Sie haben keine Berechtigung, $label zu bearbeiten.") . "</p>";
+    echo "<p class='alert alert-danger'>" . lang('journals.you_do_not_have_permission_to_edit_label', replace: ['label' => $label]) . "</p>";
     die;
 }
 // check the latest year for which metrics are available in the OSIRIS API
@@ -48,13 +48,13 @@ $api_year = $result['latest_year'] ?? 'unknown';
 $year = $_GET['year'] ?? $api_year;
 ?>
 <p>
-    <?= lang('Metrics are available until:', 'Metriken sind verfügbar bis:') ?>
+    <?= lang('journals.metrics_are_available_until') ?>
     <strong class="highlight"><?= $api_year ?></strong>
 </p>
 
 <form action="#" method="get">
     <div class="form-group">
-        <label for="year"><?= lang('Select year', 'Jahr auswählen') ?></label>
+        <label for="year"><?= lang('common.select_year') ?></label>
         <select name="year" id="year" class="form-control">
             <?php
             for ($i = $api_year; $i > 2000; $i--) {
@@ -69,7 +69,7 @@ $year = $_GET['year'] ?? $api_year;
     </div>
     <button type="submit" class="btn primary">
         <i class="ph ph-binoculars"></i>
-        <?= lang('Check metrics', 'Metriken prüfen') ?>
+        <?= lang('common.check_metrics') ?>
 </button>
 </form>
 
@@ -82,14 +82,14 @@ if (isset($_GET['year'])) {
         'no_metrics' => ['$ne' => true]
     ]);
     if ($count == 0) {
-        echo "<p class='alert signal mt-20'>" . lang('All journals from this year are up to date.', 'Alle Journale aus diesem Jahr sind bereits aktuell.') . "</p>";
+        echo "<p class='alert signal mt-20'>" . lang('journals.all_journals_from_this_year_are_up_to_date') . "</p>";
     } else {
 ?>
 
 
         <div class="box padded">
             <p class="mt-5">
-                <?= lang('We found', 'Wir haben') ?>
+                <?= lang('journals.we_found') ?>
                 <strong class="highlight" id="total"><?= $count ?></strong>
                 <?= lang("{$label} that do not have metrics for this year. ", "Für {$label} gefunden, die noch keine Metriken für dieses Jahr haben. ") ?>
             </p>
@@ -110,7 +110,7 @@ if (isset($_GET['year'])) {
                     return;
                 }
                 $("#startBtn").attr("disabled", true);
-                $("#startBtn").text("<?= lang('Processing', 'Verarbeite') ?>...").addClass('loading');
+                $("#startBtn").text("<?= lang('journals.processing') ?>...").addClass('loading');
                 $.post(ROOTPATH + "/journal/metrics/update/" + year, function() {
                     const interval = setInterval(function() {
                         $.getJSON(ROOTPATH + "/journal/metrics/progress/" + year, function(data) {
@@ -120,17 +120,17 @@ if (isset($_GET['year'])) {
                             if (data.done) {
                                 clearInterval(interval);
                                 // $("#startBtn").attr("disabled", false);
-                                $("#startBtn").text("<?= lang('Done', 'Fertig') ?>").removeClass('loading');
-                                $("#status").text("<?= lang('Done', 'Fertig') ?>");
+                                $("#startBtn").text("<?= lang('common.done') ?>").removeClass('loading');
+                                $("#status").text("<?= lang('common.done') ?>");
                                 $("#progressBar").val(100);
                             }
                         });
                     }, 1000);
                 })
                 .fail(function(err) {
-                    $("#status").html("<b class='text-danger'><?= lang('Error:', 'Fehler:') ?></b> " + err.statusText);
+                    $("#status").html("<b class='text-danger'><?= lang('journals.error') ?></b> " + err.statusText);
                     $("#startBtn").attr("disabled", false).removeClass('loading');
-                    $("#startBtn").text("<?= lang('Start', 'Starten') ?>");
+                    $("#startBtn").text("<?= lang('journals.start') ?>");
                 });
             };
         </script>

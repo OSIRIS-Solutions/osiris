@@ -22,7 +22,7 @@ Route::get('/reports', function () {
         ['name' => lang('common.reports')]
     ];
     if (!$Settings->hasPermission('report.generate')) {
-        abortwith(403, lang('You do not have permission to generate reports.', 'Du hast keine Berechtigung, Berichte zu erstellen.'), "/", lang('navigation.go_back'));
+        abortwith(403, lang('reports.you_do_not_have_permission_to_generate_reports'), "/", lang('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports.php";
@@ -34,10 +34,10 @@ Route::get('/admin/reports', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('Templates', 'Vorlagen')],
+        ['name' => lang('common.templates')],
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/reports", lang('navigation.go_back'));
+        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/reports", lang('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
@@ -48,11 +48,11 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
-        ['name' => lang("Builder", "Editor")]
+        ['name' => lang('common.templates'), 'path' => "/admin/reports"],
+        ['name' => lang('reports.builder')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('navigation.go_back'));
+        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/", lang('navigation.go_back'));
     }
 
     $report = [];
@@ -75,16 +75,16 @@ Route::get('/admin/reports/preview/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('Templates', 'Vorlagen'), 'path' => "/admin/reports"],
-        ['name' => lang('Builder', 'Editor'), 'path' => "/admin/reports/builder/$id"],
+        ['name' => lang('common.templates'), 'path' => "/admin/reports"],
+        ['name' => lang('reports.builder'), 'path' => "/admin/reports/builder/$id"],
         ['name' => lang('common.preview')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('You do not have permission to manage report templates.', 'Du hast keine Berechtigung, Berichtsvorlagen zu verwalten.'), "/", lang('navigation.go_back'));
+        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/", lang('navigation.go_back'));
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($report)) {
-        abortwith(404, lang('Report', 'Bericht'), "/admin/reports");
+        abortwith(404, lang('reports.report'), "/admin/reports");
     }
 
     include BASEPATH . "/header.php";
@@ -109,7 +109,7 @@ Route::post('/crud/reports/create', function () {
         'steps' => []
     ]);
     $id = $insertOneResult->getInsertedId();
-    $_SESSION['msg'] = lang("Report template has been created successfully.", "Berichtsvorlage wurde erfolgreich erstellt.");
+    $_SESSION['msg'] = lang('reports.report_template_has_been_created_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
@@ -123,7 +123,7 @@ Route::post('/crud/reports/delete', function () {
     $id = $_POST['id'];
     $osiris->adminReports->deleteOne(['_id' => DB::to_ObjectID($id)]);
 
-    $_SESSION['msg'] = lang("Report template has been deleted successfully.", "Berichtsvorlage wurde erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang('reports.report_template_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports");
 }, 'login');
@@ -186,7 +186,7 @@ Route::post('/crud/reports/update', function () {
         ]
     );
 
-    $_SESSION['msg'] = lang("Report template has been updated successfully.", "Berichtsvorlage wurde erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang('reports.report_template_has_been_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
@@ -203,7 +203,7 @@ Route::post('/crud/reports/update-order', function () {
         );
     }
 
-    $_SESSION['msg'] = lang("Order updated", "Reihenfolge aktualisiert");
+    $_SESSION['msg'] = lang('common.order_updated');
     $_SESSION['msg_type'] = 'success';
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect']);
@@ -225,12 +225,12 @@ Route::post('/reports', function () {
     }
     require_once BASEPATH . '/php/init.php';
     if (!isset($_POST['id'])) {
-        abortwith(500, lang('No report ID provided.', 'Keine Bericht-ID angegeben.'), "/reports");
+        abortwith(500, lang('reports.no_report_id_provided'), "/reports");
     }
     $id = $_POST['id'];
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($report)) {
-        abortwith(404, lang('Report not found.', 'Bericht nicht gefunden.'), "/reports", lang('Go back to reports', 'Zurück zu den Berichten'));
+        abortwith(404, lang('reports.report_not_found'), "/reports", lang('reports.go_back_to_reports'));
     }
 
     // Creating the new document...
@@ -323,8 +323,8 @@ Route::post('/reports', function () {
                 case 'list':
                     $list = $Report->prepareList($step);
                     if (count($list) <= 1) {
-                        $name = $step['name'] ?? lang('List', 'Liste');
-                        $section->addText(lang('No data available for the selected criteria of ' . $name . '.', 'Keine Daten für die ausgewählten Kriterien von ' . $name . ' verfügbar.'), ['italic' => true]);
+                        $name = $step['name'] ?? lang('reports.list');
+                        $section->addText(lang('reports.no_data_available_for_the_selected_criteria_of_name', replace: ['name' => $name]), ['italic' => true]);
                         break;
                     }
                     if (count($list[0]) > 1) {
@@ -411,7 +411,7 @@ Route::post('/reports', function () {
                     }
                     break;
                 default:
-                    $html = "<p><b>" . lang('Unknown step type', 'Unbekannter Schritt-Typ') . ":</b> " . e($step['type'] ?? 'unknown') . "</p>";
+                    $html = "<p><b>" . lang('reports.unknown_step_type') . ":</b> " . e($step['type'] ?? 'unknown') . "</p>";
                     $html = clean_comment_export($html);
                     \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html, false, false);
             }

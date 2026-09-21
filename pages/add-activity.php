@@ -41,7 +41,7 @@ if ($copy && isset($form['subtype'])) {
     $cat = $osiris->adminTypes->findOne(['id' => $form['subtype']]);
     if ($cat === null || (isset($cat['disabled']) && $cat['disabled'] == "true")) {
         echo '<div class="alert signal mb-20">';
-        echo lang('The activity you are trying to copy is of a disabled category. Please select a new category.', 'Die Aktivität, die du kopieren möchtest, gehört zu einer deaktivierten Kategorie. Bitte wähle eine neue Kategorie aus.');
+        echo lang('activities.the_activity_you_are_trying_to_copy_is_of_a_disabled_category_please_select');
         echo '</div>';
         $form['subtype'] = null;
     }
@@ -171,11 +171,11 @@ function val($index, $default = '')
             <div id="content" id="new-event">
 
                 <div class="form-group mb-10">
-                    <label for="title" class="required"><?= lang('(Short) Title', 'Kurztitel') ?></label>
+                    <label for="title" class="required"><?= lang('common.short_title') ?></label>
                     <input type="text" id="event-title" required class="form-control">
                 </div>
                 <div class="form-group mb-10">
-                    <label for="title"><?= lang('Full Title', 'Kompletter Titel') ?></label>
+                    <label for="title"><?= lang('common.full_title') ?></label>
                     <input type="text" id="event-title_full" class="form-control">
                 </div>
 
@@ -212,9 +212,9 @@ function val($index, $default = '')
                     <div class="col">
                         <label for="event-country"><?= lang('common.country') ?></label>
                         <select id="event-country" class="form-control">
-                            <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                            <option value=""><?= lang('common.select_country') ?></option>
                             <!-- germany first -->
-                            <option value="DE"><?= lang('Germany', 'Deutschland') ?></option>
+                            <option value="DE"><?= lang('activities.germany') ?></option>
                             <?php
                             foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
@@ -230,7 +230,7 @@ function val($index, $default = '')
 
                 <div class="custom-checkbox">
                     <input type="checkbox" id="event-attended" value="<?= $_SESSION['username'] ?>">
-                    <label for="event-attended" class="blank"><?= lang('I have attended', 'Ich habe teilgenommen') ?></label>
+                    <label for="event-attended" class="blank"><?= lang('activities.i_have_attended') ?></label>
                 </div>
 
                 <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('action.add_event') ?></button>
@@ -260,7 +260,7 @@ function val($index, $default = '')
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="modal-title">
-                <?= lang('How to edit the author list', 'Wie bearbeite ich die Autorenliste') ?>?
+                <?= lang('activities.how_to_edit_the_author_list') ?>?
             </h5>
             <?php if (lang('common.this_language') == "en") { ?>
                 <p>
@@ -296,7 +296,7 @@ function val($index, $default = '')
                 </p>
             <?php } ?>
 
-            <a href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour" target="_blank"><?= lang('Read more', 'Lies mehr') ?></a>
+            <a href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour" target="_blank"><?= lang('activities.read_more') ?></a>
 
         </div>
     </div>
@@ -310,7 +310,7 @@ function val($index, $default = '')
                 <span aria-hidden="true">&times;</span>
             </a>
 
-            <label for="journal-search"><?= lang('Search Journal by name or ISSN', 'Suche Journal nach Name oder ISSN') ?></label>
+            <label for="journal-search"><?= lang('activities.search_journal_by_name_or_issn') ?></label>
             <div class="input-group">
                 <input type="text" class="form-control" onchange="getJournal(this.value)" list="journal-list" id="journal-search" value="<?= $form['journal'] ?? '' ?>">
                 <div class="input-group-append">
@@ -324,10 +324,7 @@ function val($index, $default = '')
             </table>
 
             <p class="text-muted">
-                <?= lang(
-                    'Note: if you have problems finding the Journal you are looking for, try to enter the Journal\'s ISSN (e.g. 1234-1234).',
-                    'Anmerkung: Falls du Probleme hast, ein Journal zu finden, versuch es mit der ISSN (Format: 1234-1234).'
-                ) ?>
+                <?= lang('activities.note_if_you_have_problems_finding_the_journal_you_are_looking_for_try_to_en') ?>
             </p>
         </div>
     </div>
@@ -341,7 +338,7 @@ function val($index, $default = '')
                 <span aria-hidden="true">&times;</span>
             </a>
 
-            <label for="teaching-search"><?= lang('Search Modules by name or module number', 'Suche Module nach Name oder Modulnummer') ?></label>
+            <label for="teaching-search"><?= lang('activities.search_modules_by_name_or_module_number') ?></label>
             <div class="input-group">
                 <input type="text" class="form-control" onchange="getTeaching(this.value)" list="teaching-list" id="teaching-search" value="<?= $form['module'] ?? '' ?>">
                 <div class="input-group-append">
@@ -365,20 +362,20 @@ function val($index, $default = '')
                 <span aria-hidden="true">&times;</span>
             </a>
             <div class="content">
-                <h3 class="title"><?= lang('SWS Calculator', 'SWS-Rechner') ?></h3>
+                <h3 class="title"><?= lang('activities.sws_calculator') ?></h3>
             </div>
 
             <div class="row row-eq-spacing position-relative">
                 <div class="col">
                     <div class="pr-20">
-                        <label for="per-semester"><?= lang('Hours in the whole semester', 'Anzahl Stunden im Semester') ?> (á 45 min)</label>
+                        <label for="per-semester"><?= lang('activities.hours_in_the_whole_semester') ?> (á 45 min)</label>
                         <input type="number" name="per-semester" class="form-control" id="sws-semester">
                     </div>
                 </div>
                 <div class="text-divider">OR</div>
                 <div class="col">
                     <div class="pl-20">
-                        <label for="per-week"><?= lang('Hours per week', 'Anzahl Stunden pro Woche') ?> (á 45 min)</label>
+                        <label for="per-week"><?= lang('activities.hours_per_week') ?> (á 45 min)</label>
                         <input type="number" name="per-week" class="form-control" id="sws-week">
                     </div>
                 </div>
@@ -386,27 +383,27 @@ function val($index, $default = '')
 
             <div class="row row-eq-spacing">
                 <div class="col-sm">
-                    <label for="supervisors"><?= lang('Count of supervisors', 'Anzahl der Betreuungspersonen in dieser Zeit') ?></label>
+                    <label for="supervisors"><?= lang('activities.count_of_supervisors') ?></label>
                     <input type="number" class="form-control" id="sws-supervisors" name="supervisors">
                 </div>
                 <div class="col-sm">
                     <label for=""></label>
                     <div class="custom-switch">
                         <input type="checkbox" id="sws-practical" value="1">
-                        <label for="sws-practical"><?= lang('Is practical course', 'Ist ein Praktikum') ?></label>
+                        <label for="sws-practical"><?= lang('activities.is_practical_course') ?></label>
                     </div>
                 </div>
             </div>
             <div class="content">
 
-                <button class="btn osiris" type="button" onclick="calcSWS()"><?= lang('Calculate', 'Berechnen') ?></button>
+                <button class="btn osiris" type="button" onclick="calcSWS()"><?= lang('activities.calculate') ?></button>
 
 
 
                 <div id="" class="font-size-16 mt-20">
                     Result: <span class="highlight-text" id="sws-result"></span>
 
-                    <a href="https://humboldt-reloaded.uni-hohenheim.de/sws-beispielrechnung" target="_blank" rel="noopener noreferrer" class="link link-external float-right"><?= lang('Read more', 'Lies mehr') ?></a>
+                    <a href="https://humboldt-reloaded.uni-hohenheim.de/sws-beispielrechnung" target="_blank" rel="noopener noreferrer" class="link link-external float-right"><?= lang('activities.read_more') ?></a>
 
                 </div>
             </div>
@@ -449,7 +446,7 @@ function val($index, $default = '')
 <?php if ($drafts_enabled && $user_drafts > 0) { ?>
     <a data-target="#drafts-modal" class="btn primary mb-10" id="drafts-btn" onclick="loadDrafts()">
         <i class="ph ph-file-text mr-5"></i>
-        <?= lang('You have pending drafts', 'Du hast ausstehende Entwürfe') ?>
+        <?= lang('activities.you_have_pending_drafts') ?>
         <span class="index"><?= $user_drafts ?></span>
     </a>
 <?php } ?>
@@ -457,17 +454,17 @@ function val($index, $default = '')
 
 <a target="_blank" href="https://wiki.osiris-app.de/users/content/create_content/" class="btn tour float-right ml-5" id="docs-btn">
     <i class="ph ph-question mr-5"></i>
-    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
+    <?= lang('common.read_the_docs') ?>
 </a>
 
 <?php if (empty($form)) { ?>
     <!-- Create new activity -->
     <h1 class="my-0">
         <i class="ph-duotone ph-plus-circle"></i>
-        <?= lang('Add activity', 'Füge Aktivität hinzu') ?>
+        <?= lang('activities.add_activity_add_activity') ?>
     </h1>
 
-    <a href="<?= ROOTPATH ?>/activities/online-search" class="link mb-10 d-inline-block"><?= lang('Search in Pubmed', 'Suche in Pubmed') ?></a>
+    <a href="<?= ROOTPATH ?>/activities/online-search" class="link mb-10 d-inline-block"><?= lang('common.search_in_pubmed') ?></a>
 
     <?php
     $orcid = $Settings->get('orcid');
@@ -477,12 +474,12 @@ function val($index, $default = '')
         && !empty($orcid['client_secret'])
         && (isset($user['orcid_validated']) && $user['orcid_validated'])
     ) { ?>
-        <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('Import from ORCID', 'Von ORCID importieren') ?></a>
+        <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('activities.import_from_orcid') ?></a>
     <?php } ?>
 
     <form method="get" onsubmit="getPubData(event, this)">
         <div class="form-group">
-            <label for="doi"><?= lang('Search by DOI or Pubmed-ID', 'Suche über die DOI oder Pubmed-ID') ?>:</label>
+            <label for="doi"><?= lang('activities.search_by_doi_or_pubmed_id') ?>:</label>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="10.1093/nar/gkab961" name="doi" value="" id="search-doi" autofocus>
                 <div class="input-group-append">
@@ -495,15 +492,12 @@ function val($index, $default = '')
 
     <div class="alert danger" id="id-exists" style="display:none;">
         <h4 class="title">
-            <?= lang('Duplicate!', 'Duplikat!') ?>
+            <?= lang('activities.duplicate') ?>
         </h4>
         <p class="mt-10">
-            <?= lang(
-                'This DOI/Pubmed-ID already exists in the database!',
-                'Diese DOI/Pubmed-ID existiert bereits in der Datenbank!'
-            ) ?>
+            <?= lang('activities.this_doi_pubmed_id_already_exists_in_the_database') ?>
         </p>
-        <a class="btn text-danger border-danger" href="link"><?= lang('View entry', 'Eintrag anschauen') ?> <i class="ph ph-arrow-fat-line-right"></i></a>
+        <a class="btn text-danger border-danger" href="link"><?= lang('activities.view_entry') ?> <i class="ph ph-arrow-fat-line-right"></i></a>
     </div>
 
 
@@ -533,18 +527,18 @@ function val($index, $default = '')
 <?php } elseif ($draft) { ?>
     <h1 class="mt-0">
         <i class="ph-duotone ph-file-text"></i>
-        <?= lang('Edit draft', 'Bearbeite Entwurf') ?>
+        <?= lang('activities.edit_draft') ?>
     </h1>
 <?php } elseif ($copy) { ?>
     <h1 class="mt-0">
         <i class="ph-duotone ph-copy"></i>
-        <?= lang('Copy activity', 'Kopiere Aktivität') ?>
+        <?= lang('activities.copy_activity') ?>
     </h1>
 <?php } else { ?>
     <!-- Edit existing activity -->
     <h1 class="my-0">
         <i class="ph-duotone ph-pencil"></i>
-        <?= lang('Edit activity', 'Bearbeite Aktivität') ?>:
+        <?= lang('activities.edit_activity') ?>:
     </h1>
     <div class="mb-10">
         <?php
@@ -560,7 +554,7 @@ function val($index, $default = '')
 
     <a href="#close-modal" class="text-decoration-none" onclick="$(this).next().slideToggle()">
         <i class="ph ph-caret-down"></i>
-        <?= lang('Change type of activity', 'Ändere die Art der Aktivität') ?>
+        <?= lang('activities.change_type_of_activity') ?>
     </a>
     <div class="mb-20 select-btns" id="select-btns" style="display:none">
 
@@ -588,7 +582,7 @@ function val($index, $default = '')
 
     <?php if (isset($form['doi']) && !empty($form['doi'])) { ?>
         <div class="float-right mt-10">
-            <button class="btn small blue" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i> <?= lang('Retreive updated information via DOI', 'Aktualisierte Informationen via DOI abrufen') ?></button>
+            <button class="btn small blue" type="button" onclick="getPubData(event, this)"><i class="ph ph-arrows-clockwise"></i> <?= lang('activities.retreive_updated_information_via_doi') ?></button>
         </div>
     <?php } ?>
 
@@ -598,26 +592,20 @@ function val($index, $default = '')
 
 <div class="box add-form" style="display:none" id="publication-form">
     <div class="content">
-        <!-- <button class="btn osiris small float-right" onclick="$('#publication-form').toggleClass('show-examples')"><?= lang('Examples', 'Beispiele') ?></button> -->
+        <!-- <button class="btn osiris small float-right" onclick="$('#publication-form').toggleClass('show-examples')"><?= lang('activities.examples') ?></button> -->
 
         <?php if (!empty($form) && isset($_GET['epub'])) { ?>
             <div class="alert signal mb-20">
                 <div class="title">
-                    <?= lang('Please review this entry and mark it as "Not Epub".', 'Bitte überprüfe diesen Eintrag und markiere ihn als "nicht Epub".') ?>
+                    <?= lang('activities.please_review_this_entry_and_mark_it_as_not_epub') ?>
                 </div>
                 <p>
-                    <?= lang(
-                        'Review carefully all data, especially the publication date, which has to be the <b>date of the issued publication</b> (not online publication)!',
-                        'Überprüfe alle Daten sorgfältig, für den Fall, dass sich Änderungen ergeben haben. Besonders das Publikationsdatum muss überprüft und auf das <b>tatsächliche Datum der Publikation (nicht online)</b> gesetzt werden.'
-                    ) ?>
+                    <?= lang('activities.review_carefully_all_data_especially_the_publication_date_which_has_to_be_t') ?>
                 </p>
                 <?php if (isset($form['doi']) && !empty($form['doi'])) { ?>
                     <p class="mb-0">
                         <a class="link" href="http://doi.org/<?= $form['doi'] ?>" target="_blank" rel="noopener noreferrer">
-                            <?= lang(
-                                'Have a look at the publishers page of your publication for reference.',
-                                'Als Referenz kannst du hier die Seite des Publishers zu deiner Publikation sehen.'
-                            ) ?>
+                            <?= lang('activities.have_a_look_at_the_publishers_page_of_your_publication_for_reference') ?>
                         </a>
                     </p>
                 <?php } ?>
@@ -688,7 +676,7 @@ function val($index, $default = '')
                 <div class="form-group">
                     <a onclick="$(this).next().toggleClass('hidden')">
                         <label onclick="$(this).next().toggleClass('hidden')" for="comment" class="cursor-pointer">
-                            <i class="ph ph-plus"></i> <?= lang('Add note', 'Notiz') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)
+                            <i class="ph ph-plus"></i> <?= lang('activities.add_note') ?> (<?= lang('activities.only_visible_for_authors_and_controlling_staff') ?>)
                         </label>
                     </a>
                     <textarea name="values[comment]" id="comment" cols="30" rows="2" class="form-control hidden"><?php if (!$copy) {
@@ -697,7 +685,7 @@ function val($index, $default = '')
                 </div>
             <?php } else { ?>
                 <div class="form-group">
-                    <label for="comment"><?= lang('common.comment') ?> (<?= lang('Only visible for authors and controlling staff.', 'Nur sichtbar für Autoren und Admins') ?>)</label>
+                    <label for="comment"><?= lang('common.comment') ?> (<?= lang('activities.only_visible_for_authors_and_controlling_staff') ?>)</label>
                     <textarea name="values[comment]" id="comment" cols="30" rows="2" class="form-control"><?php if (!$copy) {
                                                                                                                 echo val('comment');
                                                                                                             } ?></textarea>
@@ -706,22 +694,19 @@ function val($index, $default = '')
             <?php if (!$copy && !empty($form) && isset($form['authors']) && (count($form['authors']) > 1 || ($form['authors'][0]['user'] ?? '') != $_SESSION['username'])) { ?>
                 <div class="alert signal without-icon p-10 mb-10">
                     <div class="title">
-                        <?= lang('Editorial area', 'Bearbeitungs-Bereich') ?>
+                        <?= lang('activities.editorial_area') ?>
                     </div>
                     <!-- <div class="form-group"> -->
-                    <label for="editor-comment"><?= lang('Editor comment (tell your co-authors what you have changed)', 'Editor-Kommentar (teile deinen Ko-Autoren mit, was du geändert hast)') ?></label>
+                    <label for="editor-comment"><?= lang('activities.editor_comment_tell_your_co_authors_what_you_have_changed') ?></label>
                     <textarea name="values[editor-comment]" id="editor-comment" cols="30" rows="2" class="form-control"></textarea>
                     <!-- </div> -->
                     <div class="mt-10">
                         <div class="custom-checkbox" id="minor-div">
                             <input type="checkbox" id="minor" value="1" name="minor">
-                            <label for="minor"><?= lang('Changes are minor and coauthors do not need to be notified.', 'Änderungen sind minimal und Koautoren müssen nicht benachrichtigt werden.') ?></label>
+                            <label for="minor"><?= lang('activities.changes_are_minor_and_coauthors_do_not_need_to_be_notified') ?></label>
                         </div>
                         <small class="text-muted">
-                            <?= lang(
-                                'Please note that changes to the authors and editors are ignored if this checkmark is set.',
-                                'Bitte beachte, dass Änderungen an den Autoren und Herausgebern ignoriert werden, wenn dieser Haken gesetzt ist.'
-                            ) ?>
+                            <?= lang('activities.please_note_that_changes_to_the_authors_and_editors_are_ignored_if_this_che') ?>
                         </small>
                     </div>
                 </div>
@@ -731,7 +716,7 @@ function val($index, $default = '')
             <div class="alert signal mb-10 <?= empty($form) ? '' : 'hidden' ?>" id="doublet-found" style="display:none;">
                 <h4 class="title">
                     <i class="ph ph-warning text-osiris"></i>
-                    <?= lang('Possible doublet found:', 'Mögliche Doublette erkannt:') ?>
+                    <?= lang('activities.possible_doublet_found') ?>
                 </h4>
                 <p class="m-0">
                     <!-- filled by doubletCheck() in script.js -->
@@ -741,7 +726,7 @@ function val($index, $default = '')
             <button class="btn secondary" type="submit" id="submit-btn" onclick="verifyForm(event, '#activity-form')"><?= $btntext ?></button>
 
             <?php if ($drafts_enabled && (empty($form) || $draft)) { ?>
-                <button class="btn" type="button" id="draft-btn" onclick="saveDraft()"><?= lang('Save as draft', 'Als Entwurf speichern') ?></button>
+                <button class="btn" type="button" id="draft-btn" onclick="saveDraft()"><?= lang('activities.save_as_draft') ?></button>
             <?php } ?>
 
         </form>

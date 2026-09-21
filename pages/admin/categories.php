@@ -78,17 +78,17 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('Activity Categories', 'Aktivitätskategorien') ?>
+    <?= lang('admin.activity_categories') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a class="btn primary" href="<?= ROOTPATH ?>/admin/categories/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('Add category', 'Kategorie hinzufügen') ?>
+        <?= lang('common.add_category') ?>
     </a>
     <a href="<?= ROOTPATH ?>/admin/doi-mappings" class="btn primary">
         <i class="ph ph-link-simple"></i>
-        <?= lang('DOI Mappings', 'DOI Zuordnungen') ?>
+        <?= lang('admin.doi_mappings') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">
@@ -97,11 +97,11 @@
         </button>
         <div class="dropdown-menu w-400" aria-labelledby="rerender">
             <div class="content">
-                <?= lang('In case some activities are not looking right or if you changed something, you can trigger a complete rerendering by clicking the button below:', 'Falls einige Aktivitäten seltsam aussehen, sich die URL eures OSIRIS geändert hat oder ihr einfach Templates angepasst habt, könnt ihr hier ein komplettes neu-rendern der Daten einleiten:') ?>
+                <?= lang('admin.in_case_some_activities_are_not_looking_right_or_if_you_changed_something_y') ?>
                 <a class="btn block primary" href="<?= ROOTPATH ?>/rerender">Rerender now!</a>
 
                 <small class="text-muted">
-                    <?= lang('This won\'t change any data. It will only fix the displaying of data.', 'Dies ändert keine Daten, sondern repariert nur die Anzeige der Daten.') ?>
+                    <?= lang('admin.this_won_t_change_any_data_it_will_only_fix_the_displaying_of_data') ?>
                 </small>
             </div>
         </div>
@@ -125,7 +125,7 @@ foreach ($Categories->categories as $type) {
             <?= lang('action.edit') ?>
         </a>
         <div class="d-flex align-items-baseline flex-wrap">
-            <h5><?= lang('Types', 'Typen') ?>:</h5>
+            <h5><?= lang('common.types') ?>:</h5>
             <?php
             $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
@@ -137,7 +137,7 @@ foreach ($Categories->categories as $type) {
             <a class="btn small ml-10" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
                 <i class="ph ph-plus-circle"></i>
                 <span class="sr-only">
-                    <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
+                    <?= lang('common.add_subtype') ?>
                 </span>
             </a>
         </div>

@@ -20,8 +20,8 @@
 if (isset($_GET['redirect'])) { ?>
 
     <div class="alert danger">
-        <h3 class="title"><?= lang('Access denied', 'Zugriff verweigert') ?></h3>
-        <?= lang('You need to log in to access this page.', 'Du musst dich einloggen, um auf diese Seite zuzugreifen.') ?>
+        <h3 class="title"><?= lang('people.access_denied') ?></h3>
+        <?= lang('people.you_need_to_log_in_to_access_this_page') ?>
     </div>
 
 <?php
@@ -37,18 +37,18 @@ $UM = strtoupper(USER_MANAGEMENT);
 
 
 
-<h1><?= lang('Welcome!', 'Willkommen') ?></h1>
+<h1><?= lang('people.welcome') ?></h1>
 
 <?php if ($UM == 'LDAP') { ?>
     <h5>
-        <?= lang('Please log-in with your ' . $Settings->get('affiliation') . '-Account.', 'Bitte melde dich mit deinem ' . $Settings->get('affiliation') . '-Benutzeraccount an.') ?>
+        <?= lang('people.please_log_in_with_your_affiliation_account', replace: ['affiliation' => $Settings->get('affiliation')]) ?>
     </h5>
 
 
     <form action="<?= ROOTPATH ?>/user/login" method="POST" class="w-400 mw-full">
         <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? $_SERVER['REQUEST_URI'] ?>">
         <div class="form-group">
-            <label for="username"><?= lang('User name', 'Nutzername') ?>: </label>
+            <label for="username"><?= lang('people.user_name') ?>: </label>
             <input class="form-control" id="username" type="text" name="username" placeholder="abc21" required />
         </div>
         <div class="form-group">
@@ -59,11 +59,11 @@ $UM = strtoupper(USER_MANAGEMENT);
         <div class="form-group">
             <div class="custom-checkbox">
                 <input type="checkbox" id="stay_logged_in" name="stay_logged_in" value="1">
-                <label for="stay_logged_in"><?= lang('Stay logged in', 'Eingeloggt bleiben') ?></label>
+                <label for="stay_logged_in"><?= lang('common.stay_logged_in') ?></label>
             </div>
         </div>
 
-        <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />
+        <input class="btn secondary" type="submit" name="submit" value="<?= lang('people.log_in') ?>" />
     </form>
 
 
@@ -73,16 +73,16 @@ $UM = strtoupper(USER_MANAGEMENT);
     }
 ?>
     <a href="<?= ROOTPATH ?>/user/oauth" class="btn primary">
-        <?= lang('Log-in with your ' . OAUTH . ' account', 'Mit deinem ' . OAUTH . '-Konto einloggen') ?>
+        <?= lang('people.log_in_with_your_oauth_account', replace: ['oauth' => OAUTH]) ?>
     </a>
 
 <?php } elseif ($UM == 'AUTH') { ?>
     <h5>
         <?php
         if ($Settings->get('affiliation') === 'LISI') {
-            echo lang('Please log-in with your Demo account.', 'Bitte melde dich mit deinem Demo-Benutzeraccount an.');
+            echo lang('people.please_log_in_with_your_demo_account');
         } else {
-            echo lang('Please log-in with your OSIRIS account.', 'Bitte melde dich mit deinem OSIRIS-Benutzeraccount an.');
+            echo lang('people.please_log_in_with_your_osiris_account');
         }
         ?>
     </h5>
@@ -91,7 +91,7 @@ $UM = strtoupper(USER_MANAGEMENT);
     <form action="<?= ROOTPATH ?>/user/login" method="POST" class="w-400 mw-full">
         <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? $_SERVER['REQUEST_URI'] ?>">
         <div class="form-group">
-            <label for="username"><?= lang('User name', 'Nutzername') ?>: </label>
+            <label for="username"><?= lang('people.user_name') ?>: </label>
             <input class="form-control" id="username" type="text" name="username" placeholder="abc21" required />
         </div>
         <div class="form-group">
@@ -102,36 +102,33 @@ $UM = strtoupper(USER_MANAGEMENT);
         <div class="form-group">
             <div class="custom-checkbox">
                 <input type="checkbox" id="stay_logged_in" name="stay_logged_in" value="1">
-                <label for="stay_logged_in"><?= lang('Stay logged in', 'Eingeloggt bleiben') ?></label>
+                <label for="stay_logged_in"><?= lang('common.stay_logged_in') ?></label>
             </div>
         </div>
 
-        <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />
+        <input class="btn secondary" type="submit" name="submit" value="<?= lang('people.log_in') ?>" />
 
         <hr>
 
         <a class='link d-block' href='<?= ROOTPATH ?>/auth/forgot-password'>
-            <?= lang('Forgot password?', 'Password vergessen?') ?>
+            <?= lang('people.forgot_password') ?>
         </a>
         <?php if ($Settings->get('auth-self-registration', true)) { ?>
             <a class='link' href='<?= ROOTPATH ?>/auth/new-user'>
-                <?= lang('No account? Register now', 'Noch keinen Account? Jetzt registrieren') ?>
+                <?= lang('people.no_account_register_now') ?>
             </a>
         <?php } ?>
 
         <?php if ($Settings->get('affiliation') === 'LISI') { ?>
             <div class="alert signal mt-20">
                 <div class="title">Demo</div>
-                <?= lang(
-                    'This OSIRIS instance is a demo with the fictional institute LISI.',
-                    'Bei dieser OSIRIS-Instanz handelt es sich um eine Demo mit dem fiktiven Institut LISI.'
-                ) ?>
+                <?= lang('people.this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi') ?>
             </div>
         <?php } ?>
     </form>
 
 <?php } else { ?>
     <div class="alert danger">
-        <?= lang('User management not defined.', 'User-Management nicht definiert.') ?>
+        <?= lang('people.user_management_not_defined') ?>
     </div>
 <?php } ?>

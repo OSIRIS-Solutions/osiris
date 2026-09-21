@@ -403,7 +403,7 @@ function collaboratorChartCountries(selector, data) {
                 //     [1, "#7bccc4"]
                 // ],
                 // colorbar: {
-                //     title: lang('Number of Projects', 'Anzahl Projekte'),
+                //     title: lang('topics.number_of_projects'),
                 // }
             };
             console.log(trace);

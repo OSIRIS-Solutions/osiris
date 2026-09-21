@@ -18,14 +18,14 @@
 
 <h1>
     <i class="ph-duotone ph-file-text"></i>
-    <?= $draft['title'] ?? lang('Draft', 'Entwurf') ?>
+    <?= $draft['title'] ?? lang('activities.draft') ?>
 </h1>
 
 
 <p class="text-muted">
-    <?= lang('A draft from', 'Ein Entwurf von') ?> <?= $DB->getNameFromId($draft['created_by'] ?? '') ?> <?= lang('created at', 'erstellt am') ?> <?= format_date($draft['created'] ?? '', 'd.m.Y') ?>
+    <?= lang('activities.a_draft_from') ?> <?= $DB->getNameFromId($draft['created_by'] ?? '') ?> <?= lang('activities.created_at') ?> <?= format_date($draft['created'] ?? '', 'd.m.Y') ?>
     <?php if ($draft['created_by'] !== $_SESSION['username']) { ?>
-        (<?= lang('shared with you', 'mit dir geteilt') ?>)
+        (<?= lang('activities.shared_with_you') ?>)
     <?php } ?>
 </p>
 
@@ -36,11 +36,11 @@
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">
-            <i class="ph ph-user-plus"></i> <?= lang('Share this draft', 'Diesen Entwurf teilen') ?>
+            <i class="ph ph-user-plus"></i> <?= lang('activities.share_this_draft') ?>
         </button>
         <div class="dropdown-menu w-300" aria-labelledby="invite-editor">
             <form action="<?= ROOTPATH ?>/crud/activities/invite-draft/<?= $draft['_id'] ?>" method="post" class="content">
-                <?= lang('You shared this draft with:', 'Du hast diesen Entwurf mit geteilt mit:') ?>
+                <?= lang('activities.you_shared_this_draft_with') ?>
                 <ul class="list">
                     <?php
                     $shared_with = $draft['draft_shared_with'] ?? [];
@@ -52,14 +52,14 @@
                         </li>
                     <?php
                     } else {
-                        echo '<li>' . lang('no one', 'niemand') . '</li>';
+                        echo '<li>' . lang('activities.no_one') . '</li>';
                     }
                     ?>
                 </ul>
                 <div class="form-group">
-                    <label for="invitee"><?= lang('Select a user to invite', 'Wählen Sie einen Nutzenden aus, um ihn einzuladen') ?></label>
+                    <label for="invitee"><?= lang('activities.select_a_user_to_invite') ?></label>
                     <select class="form-control" name="invitee" id="invitee" required>
-                        <option value=""><?= lang('Select editor', 'Editor auswählen') ?></option>
+                        <option value=""><?= lang('activities.select_editor') ?></option>
                         <?php
                         $users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['projection' => ['username' => 1, 'formalname' => 1], 'sort' => ['formalname' => 1]]);
                         foreach ($users as $user) { ?>
@@ -67,12 +67,12 @@
                         <?php } ?>
                     </select>
                 </div>
-                <button class="btn btn-block" type="submit"><?= lang('Share', 'Teilen') ?></button>
+                <button class="btn btn-block" type="submit"><?= lang('common.share') ?></button>
             </form>
         </div>
     </div>
     <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
-        <button type="submit" class="btn danger" onclick="return confirm('<?= lang('Are you sure you want to delete this draft?', 'Sind Sie sicher, dass Sie diesen Entwurf löschen möchten?') ?>');">
+        <button type="submit" class="btn danger" onclick="return confirm('<?= lang('activities.are_you_sure_you_want_to_delete_this_draft') ?>');">
             <i class="ph ph-trash"></i>
             <?= lang('action.delete') ?>
         </button>
@@ -141,7 +141,7 @@ include_once BASEPATH . "/php/Modules.php";
         ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('Teaching module', 'Lehrveranstaltung') ?></span>
+                    <span class="key"><?= lang('common.teaching_module') ?></span>
 
                     <a class="module " href="<?= ROOTPATH ?>/teaching#<?= $draft['module_id'] ?>">
                         <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
@@ -184,7 +184,7 @@ include_once BASEPATH . "/php/Modules.php";
                     <?php if (empty($conference)) { ?>
                         <div><?= $draft['conference'] ?? '' ?></div>
                         <span class="text-danger">
-                            <?= lang('This event has been deleted.', 'Diese Veranstaltung wurde gelöscht.') ?>
+                            <?= lang('common.this_event_has_been_deleted') ?>
                         </span>
                     <?php } else { ?>
 
@@ -205,7 +205,7 @@ include_once BASEPATH . "/php/Modules.php";
                                 <li>
                                     <a href="<?= $conference['url'] ?>" target="_blank">
                                         <i class="ph ph-link"></i>
-                                        <?= lang('Website', 'Website') ?>
+                                        <?= lang('common.website') ?>
                                     </a>
                                 </li>
                             </ul>
@@ -239,7 +239,7 @@ include_once BASEPATH . "/php/Modules.php";
     ?>
         <tr>
             <td>
-                <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
+                <span class="key text-danger"><?= lang('common.the_following_fields_are_not_filled_in') ?>:</span>
                 <?php foreach ($emptyModules as $key) { ?>
                     <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
                 <?php } ?>
@@ -252,7 +252,7 @@ include_once BASEPATH . "/php/Modules.php";
     <?php if (isset($draft['comment'])) : ?>
         <tr class="text-muted">
             <td>
-                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
+                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('common.only_visible_for_authors_and_editors') ?>">
                     <?= lang('common.comment') ?>:
                 </span>
 

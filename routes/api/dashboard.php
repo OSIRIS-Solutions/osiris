@@ -573,27 +573,27 @@ Route::get('/api/dashboard/author-role', function () {
     foreach ($data as $el) {
         switch ($el['x']) {
             case 'first':
-                $label = lang("First author", "Erstautor:in");
+                $label = lang('common.first_author');
                 $color = '#006EB799';
                 break;
             case 'last':
-                $label = lang("Last author", "Letztautor:in");
+                $label = lang('common.last_author');
                 $color = '#004d8099';
                 break;
             case 'middle':
-                $label = lang("Middle author", "Mittelautor:in");
+                $label = lang('common.middle_author');
                 $color = '#cce2f099';
                 break;
             case 'editor':
-                $label = lang("Editorship", "Editorenschaft");
+                $label = lang('dashboard.editorship');
                 $color = '#002c4999';
                 break;
             case 'corresponding':
-                $label = lang("Corresponding", "Korrespondierend");
+                $label = lang('dashboard.corresponding');
                 $color = '#4c99cc99';
                 break;
             case 'supervisor':
-                $label = lang("Supervisorship", "Betreuerschaft");
+                $label = lang('dashboard.supervisorship');
                 $color = '#99336699';
                 break;
             default:
@@ -1327,10 +1327,10 @@ Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors)',
     $colors = [];
     foreach ($depts as $key => $value) {
         if ($key == 'external' && $value > 0) {
-            $labels[] = lang('External partners', 'Externe Personen');
+            $labels[] = lang('dashboard.external_partners');
             $colors[] = '#ececec95';
         } elseif ($key == 'unknown' && $value > 0) {
-            $labels[] = lang('Unknown unit', 'Unbekannte Einheit');
+            $labels[] = lang('dashboard.unknown_unit');
             $colors[] = '#cccccc95';
         } else {
             $group = $Groups->getGroup($key);
@@ -2231,7 +2231,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'deadlines',
-                'label' => lang('Deadlines', 'Fristen'),
+                'label' => lang('dashboard.deadlines'),
                 'items' => $items
             ];
         }
@@ -2428,7 +2428,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'journals',
-                'label' => lang('Journals', 'Journale'),
+                'label' => lang('dashboard.journals'),
                 'items' => $items
             ];
         }

@@ -19,13 +19,13 @@
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
 
             <p>
-                <?= lang('The ID is used internally to save this workflow and associate activities to it. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um diesen Workflow zu speichern und ihm Aktivitäten zuzuordnen. Daher muss sie eindeutig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht zulässig.') ?>
+                <?= lang('admin.the_id_is_used_internally_to_save_this_workflow_and_associate_activities_to') ?>
             </p>
             <p>
-                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="used-ids">
                 <?php foreach ($osiris->adminWorkflows->distinct('id') as $k) { ?>
@@ -45,7 +45,7 @@
 
     <div class="box padded">
         <h4 class="title">
-            <?= lang('New workflow', 'Neuer Workflow') ?>
+            <?= lang('admin.new_workflow') ?>
         </h4>
 
         <div class="form-group">
@@ -54,21 +54,21 @@
 
             <small>
                 <a href="#unique"><i class="ph ph-info"></i>
-                    <?= lang('Important! Must be unique.', 'Wichtig! Die ID muss einzigartig sein.') ?>
+                    <?= lang('common.important_must_be_unique') ?>
                 </a>
             </small>
         </div>
 
         <div class="form-group">
-            <label for="name" class="required "><?= lang('Name of the workflow', 'Name des Workflow') ?></label>
+            <label for="name" class="required "><?= lang('common.name_of_the_workflow') ?></label>
             <input type="text" class="form-control" name="values[name]" required value="<?= $form['name'] ?? '' ?>" maxlength="30">
-            <small class="form-text text-muted"><?= lang('Max 30 characters', 'Maximal 30 Zeichen') ?></small>
+            <small class="form-text text-muted"><?= lang('common.max_30_characters') ?></small>
         </div>
 
-        <h5><?= lang('Steps', 'Schritte') ?></h5>
+        <h5><?= lang('common.steps') ?></h5>
 
         <p class="text-danger">
-            <?= lang('Steps can be defined after you have saved the workflow once.', 'Schritte können definiert werden, sobald du den Workflow einmal gespeichert hast.') ?>
+            <?= lang('admin.steps_can_be_defined_after_you_have_saved_the_workflow_once') ?>
         </p>
 
         <button type="submit" class="btn success" id="submitBtn">

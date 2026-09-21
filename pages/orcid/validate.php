@@ -46,7 +46,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
   if (empty($orcid_data) || !isset($orcid_data['orcid'])) {
     // Handle error, e.g. log it and show an error message to the user
     error_log('ORCID authentication failed: ' . $response);
-    echo "<div class='alert alert-danger'>" . lang('ORCID authentication failed. Please try again.', 'ORCID-Authentifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.') . "</div>";
+    echo "<div class='alert alert-danger'>" . lang('orcid.orcid_authentication_failed_please_try_again') . "</div>";
     exit;
   }
 
@@ -77,27 +77,27 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
 ?>
 
 <div class="container">
-  <h1><?= lang('ORCID Authentication', 'ORCID Authentifizierung') ?></h1>
+  <h1><?= lang('orcid.orcid_authentication') ?></h1>
 
   <?php if ((isset($user['orcid']) && isset($user['orcid_validated'])) || isset($_GET['code'])) { ?>
     <div class="alert success">
       <h5 class="title">
-        <?= lang('Successfully authenticated', 'Erfolgreich authentifiziert!') ?>
+        <?= lang('orcid.successfully_authenticated') ?>
       </h5>
-      <p class="py-10"><?= lang('You have successfully authenticated with ORCID.', 'Sie haben sich erfolgreich mit ORCID authentifiziert.') ?></p>
+      <p class="py-10"><?= lang('orcid.you_have_successfully_authenticated_with_orcid') ?></p>
 
       <a href="<?= ROOTPATH ?>/orcid/import" class="btn success">
-        <?= lang('Import activities from ORCID', 'Aktivitäten von ORCID importieren') ?>
+        <?= lang('orcid.import_activities_from_orcid') ?>
       </a>
       <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>#section-general" class="btn">
-        <?= lang('Back to Profile', 'Zurück zum Profil') ?>
+        <?= lang('orcid.back_to_profile') ?>
       </a>
     </div>
 
   <?php } else { ?>
     <div class="alert">
       <h5 class="title mb-10">
-        <?= lang('ORCID not authenticated', 'Noch nicht mit ORCID authentifiziert') ?></h1>
+        <?= lang('orcid.orcid_not_authenticated') ?></h1>
       </h5>
       <?php
       if (!empty($orcid->client_id) && !empty($orcid->client_secret)) {
@@ -105,12 +105,12 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
       ?>
         <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn primary">
           <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-          <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
+          <?= lang('common.connect_orcid') ?>
         </a>
       <?php } ?>
 
       <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>#section-general" class="btn">
-        <?= lang('Back to Profile', 'Zurück zum Profil') ?>
+        <?= lang('orcid.back_to_profile') ?>
       </a>
     </div>
   <?php } ?>

@@ -19,30 +19,27 @@
 ?>
 
 <h1>
-    <?= lang('Delete', 'Löschen von') ?>
+    <?= lang('people.delete') ?>
     <?= $data['username'] ?>
 </h1>
 
 <div class="alert danger">
     <h5 class="title">
-        <?= lang('Warning! Destructive action!', 'Achtung! Zerstörerische Aktion!') ?>
+        <?= lang('people.warning_destructive_action') ?>
     </h5>
-    <?= lang('You are about to delete the user account:', 'Du bist dabei, das Benutzerkonto zu löschen:') ?>
+    <?= lang('people.you_are_about_to_delete_the_user_account') ?>
     <b><?= $data['username'] ?></b>
     <br>
-    <?= lang('All data of this account will be deleted, including all associated activities, projects, etc. This person will completely removed from the system!', 'Alle Daten dieses Kontos werden gelöscht, einschließlich aller Zugehörigkeiten von Aktivitäten, Projekte usw. Diese Person wird vollständig aus dem System entfernt!') ?>
+    <?= lang('people.all_data_of_this_account_will_be_deleted_including_all_associated_activitie') ?>
     <br>
-    <?= lang('Please note that activities, projects, etc. won’t be deleted but only connection to this account.', 'Bitte beachte, dass Aktivitäten, Projekte usw. nicht gelöscht werden, sondern nur die Verbindung zu diesem Konto.') ?>
+    <?= lang('people.please_note_that_activities_projects_etc_won_t_be_deleted_but_only_connecti') ?>
     <br>
-    <b class="text-danger"><?= lang('This action cannot be undone!', 'Diese Aktion kann nicht rückgängig gemacht werden!') ?></b>
+    <b class="text-danger"><?= lang('people.this_action_cannot_be_undone') ?></b>
 </div>
 
 <form action="<?= ROOTPATH ?>/crud/users/delete/<?= $user ?>" method="post">
     <p class="text-danger">
-        <?= lang(
-            'Be aware that all personal data will be deleted, except for the name and the username:',
-            'Sei dir bewusst, dass alle persönlichen Daten, abgesehen vom Namen und Nutzernamen gelöscht werden:'
-        ) ?>
+        <?= lang('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
     </p>
 
     <table class="table">
@@ -74,7 +71,7 @@
                     <td class="text-danger">
                         <?php if ($delete) { ?>
                             <i class="ph ph-trash"></i>
-                            <?= lang('Delete', 'Wird gelöscht') ?>
+                            <?= lang('common.delete') ?>
                         <?php } ?>
 
                     </td>
@@ -90,7 +87,7 @@
                     </td>
                     <td class="text-danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('Delete', 'Wird gelöscht') ?>
+                        <?= lang('common.delete') ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -101,7 +98,7 @@
     </table>
 
     <p>
-        <?=lang('Furthermore, the connection to the following entities will be removed:', 'Außerdem wird die Verbindung zu den folgenden Entitäten entfernt:')?>
+        <?=lang('people.furthermore_the_connection_to_the_following_entities_will_be_removed')?>
     </p>
     
     <table class="table">

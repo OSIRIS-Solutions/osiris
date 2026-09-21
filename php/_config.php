@@ -294,16 +294,16 @@ function printMsg($msg = '', $type = 'info', $header = '')
     $class = "blue";
     if ($type == 'success') {
         $class = "success";
-        $header = lang("Success!", "Erfolg!");
+        $header = lang('common.success_config');
     } elseif ($type == 'error') {
         $class = "danger";
         if ($header == "") {
-            $header = lang("Error", "Fehler");
+            $header = lang('common.error');
         }
     } elseif ($type == 'warning') {
         $class = "signal";
         if ($header == "") {
-            $header = lang("Warning", "Warnung");
+            $header = lang('common.warning_config');
         }
     }
 
@@ -466,7 +466,7 @@ function fromToDate($from, $to, $continuous = false)
         if (!$continuous) {
             return format_date($from);
         } else {
-            return format_date($from) . ' - ' . lang('today', 'heute');
+            return format_date($from) . ' - ' . lang('common.today');
         }
     }
     // $to = date_create($to);
@@ -501,7 +501,7 @@ function fromToYear($from, $to, $continuous = false)
         if (!$continuous) {
             return $from;
         } else {
-            return $from . ' - ' . lang('today', 'heute');
+            return $from . ' - ' . lang('common.today');
         }
     }
 
@@ -683,22 +683,22 @@ function time_elapsed_string(string $date): string
     $days = (int) $diff->format('%r%a');
 
     if ($days === 0) {
-        return lang('today', 'heute');
+        return lang('common.today');
     }
 
     if ($days === -1) {
-        return lang('yesterday', 'gestern');
+        return lang('common.yesterday');
     }
 
     if ($days === 1) {
-        return lang('tomorrow', 'morgen');
+        return lang('common.tomorrow');
     }
 
     $units = [
-        'y' => [lang('common.year'), lang('years', 'Jahre')],
-        'm' => [lang('common.month'), lang('months', 'Monaten')],
-        'w' => [lang('week', 'Woche'), lang('weeks', 'Wochen')],
-        'd' => [lang('day', 'Tag'), lang('days', 'Tagen')],
+        'y' => [lang('common.year'), lang('common.years')],
+        'm' => [lang('common.month'), lang('common.months')],
+        'w' => [lang('common.week'), lang('common.weeks')],
+        'd' => [lang('common.day'), lang('common.days_view')],
     ];
 
     $value = null;
@@ -719,10 +719,10 @@ function time_elapsed_string(string $date): string
     }
 
     if ($days > 0) {
-        return lang('in ', 'in ') . $value . ' ' . $label;
+        return lang('common.in') . $value . ' ' . $label;
     }
 
-    return lang('', 'vor ') . $value . ' ' . $label . lang(' ago', '');
+    return lang('common.text_826bb269e2') . $value . ' ' . $label . lang('common.ago');
 }
 
 // function time_until($datetime, $full = false, $type = 'str'){
@@ -1024,18 +1024,18 @@ function format_month($month)
     if (empty($month)) return '';
     $month = intval($month);
     $array = [
-        1 => lang("January", "Januar"),
-        2 => lang("February", "Februar"),
-        3 => lang("March", "März"),
+        1 => lang('common.january'),
+        2 => lang('common.february'),
+        3 => lang('common.march'),
         4 => lang("April"),
-        5 => lang("May", "Mai"),
-        6 => lang("June", "Juni"),
-        7 => lang("July", "Juli"),
+        5 => lang('common.may'),
+        6 => lang('common.june'),
+        7 => lang('common.july'),
         8 => lang("August"),
         9 => lang("September"),
-        10 => lang("October", "Oktober"),
+        10 => lang('common.october'),
         11 => lang("November"),
-        12 => lang("December", "Dezember")
+        12 => lang('common.december')
     ];
     return $array[$month];
 }
@@ -1053,10 +1053,10 @@ function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-nothing-here.png" alt="Nothing here">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang($entity . '<br> not found', $entity . '<br> nicht gefunden');
+    $html .= lang('common.entity_not_found', replace: ['entity' => $entity]);
     $html .= '</h1>';
     $html .= '<p>';
-    $html .= lang('The ' . $entity . ' you are looking for does not exist or has been deleted.', 'Die gesuchte ' . $entity . ' existiert nicht mehr oder wurde entfernt.');
+    $html .= lang('common.the_entity_you_are_looking_for_does_not_exist_or_has_been_deleted', replace: ['entity' => $entity]);
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
     $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
@@ -1070,14 +1070,14 @@ function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
 function noPermissionPage($message = "", $link = '', $linkMsg = '')
 {
     if ($message == '') {
-        $message = lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.');
+        $message = lang('common.you_do_not_have_permission_to_access_this_page');
     }
     // if no link is provided, link to last page
     $html = '<div class="not-found">';
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-no-permission.png" alt="No permission">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('No permission', 'Keine Berechtigung');
+    $html .= lang('common.no_permission');
     $html .= '</h1>';
     $html .= '<p>';
     $html .= $message;
@@ -1096,10 +1096,10 @@ function lockedPage($id)
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-locked.png" alt="Locked">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('This activity is locked', 'Diese Aktivität ist gesperrt');
+    $html .= lang('common.this_activity_is_locked');
     $html .= '</h1>';
     $html .= '<p>';
-    $html .= lang('This activity is locked and cannot be edited or deleted due to our reporting rules. Please contact the OSIRIS editors if there are any issues.', 'Diese Aktivität ist aufgrund unserer Report-Richtlinien gesperrt und kann nicht bearbeitet oder gelöscht werden. Bitte kontaktiere die OSIRIS-Redaktion, falls dadurch irgendwelche Probleme entstehen.');
+    $html .= lang('common.this_activity_is_locked_and_cannot_be_edited_or_deleted_due_to_our_reportin');
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
     $html .= lang('navigation.go_back_to_activity');
@@ -1115,7 +1115,7 @@ function errorPage($message, $link = '/', $linkMsg = '')
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-error.png" alt="Error">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('An error occurred', 'Ein Fehler ist aufgetreten');
+    $html .= lang('common.an_error_occurred');
     $html .= '</h1>';
     $html .= '<p>';
     $html .= lang($message, $message);

@@ -55,7 +55,7 @@
             <tr id="last-row">
                 <td></td>
                 <td colspan="6">
-                    <button class="btn" type="button" onclick="addConnectRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
+                    <button class="btn" type="button" onclick="addConnectRow()"><i class="ph ph-plus"></i> <?= lang('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>

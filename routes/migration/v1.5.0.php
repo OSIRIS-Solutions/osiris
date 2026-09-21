@@ -21,19 +21,19 @@ $Project = new Project;
 
 ?>
 <h1>
-    <?= lang('Migrating to OSIRIS v1.5.0', 'Migration auf OSIRIS v1.5.0') ?>
+    <?= lang('admin.migrating_to_osiris_v1_5_0') ?>
 </h1>
 <b class="text-danger">
     <i class="ph ph-warning"></i>
-    <?= lang('Please read the following information carefully. It is important for the migration of your data.', 'Bitte lesen Sie die folgenden Informationen sorgfältig durch. Sie sind wichtig für die Migration Ihrer Daten.') ?>
+    <?= lang('admin.please_read_the_following_information_carefully_it_is_important_for_the_mig') ?>
 </b>
 
 <h2>
-    <?= lang('Project data fields', 'Projekt-Datenfelder') ?>
+    <?= lang('admin.project_data_fields') ?>
 </h2>
 
 <p>
-    <?= lang('In the new version of OSIRIS, we have changed the some project data fields and added new ones. We will need to migrate the old data fields to the new ones. This is a one-time process and will not be repeated in the future.', 'In der neuen Version von OSIRIS haben wir einige Projektdatenfelder geändert und neue hinzugefügt. Wir müssen die alten Datenfelder in die neuen migrieren. Dies ist ein einmaliger Vorgang und wird sich in Zukunft nicht wiederholen.') ?>
+    <?= lang('admin.in_the_new_version_of_osiris_we_have_changed_the_some_project_data_fields_a') ?>
 </p>
 
 <?php
@@ -41,11 +41,11 @@ $funding_organizations = $osiris->projects->distinct('funding_organization');
 
 if (!empty($funding_organizations)) { ?>
     <h4>
-        <?= lang('Funding organizations', 'Förderorganisationen') ?>
+        <?= lang('admin.funding_organizations') ?>
     </h4>
     <details class="collapse-panel">
         <summary class="collapse-header">
-            <?= lang('We have found the following funding organizations in the projects collection:', 'In der Projektsammlung haben wir die folgenden Förderorganisationen gefunden:') ?>
+            <?= lang('admin.we_have_found_the_following_funding_organizations_in_the_projects_collectio') ?>
         </summary>
         <div class="collapse-content">
             <ul class="list">
@@ -60,10 +60,10 @@ if (!empty($funding_organizations)) { ?>
         </div>
     </details>
     <p>
-        <?= lang('In the future, OSIRIS will no longer support free text fields for funding organizations, universities or scholarships. However, we will not be able to migrate the data you entered in the past automatically. The data will be shown correctly in the frontend, but when editing it, you will be forced to select an organization from the list.', 'OSIRIS wird in Zukunft keine Freitextfelder für Förderorganisationen, Universitäten oder Stipendien mehr unterstützen. Allerdings können wir die von Ihnen bisher eingegebenen Daten nicht automatisch migrieren. Die Daten werden im Frontend korrekt angezeigt, bei der Bearbeitung sind Sie jedoch gezwungen, eine Organisation aus der Liste auszuwählen.') ?>
+        <?= lang('admin.in_the_future_osiris_will_no_longer_support_free_text_fields_for_funding_or') ?>
     </p>
     <p>
-        <?= lang('Note: If you still want to enable free text fields, please activate the field "Funding Program" in the project type settings. You will be able to find the data you entered in the field "funding organization" in the past immediately in the field "Funding Program".', 'Hinweis: Wenn Sie dennoch Freitextfelder aktivieren möchten, aktivieren Sie bitte das Feld "Förderprogramm" in den Projekttyp-Einstellungen. Die Daten, die Sie in der Vergangenheit in das Feld "Förderorganisation" eingegeben haben, finden Sie ab sofort im Feld "Förderprogramm" wieder.') ?>
+        <?= lang('admin.note_if_you_still_want_to_enable_free_text_fields_please_activate_the_field') ?>
     </p>
 <?php
     flush();
@@ -77,10 +77,10 @@ $count = count($projects);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('Contact persons', 'Ansprechpartner') ?>
+        <?= lang('admin.contact_persons') ?>
     </h4>
     <p>
-        <?= lang('We have found ' . $count . ' projects with a contact person. The contact person is no longer supported by OSIRIS and is replaced by the new data field "applicants". By doing so, we clean up with misunderstandings regarding this field and make it possible to add multiple applicants to a project immediately. If several applicants are already assigned to a project, we will now migrate them accordingly.', 'Wir haben ' . $count . ' Projekte mit einem Ansprechpartner gefunden. Der Ansprechpartner wird von OSIRIS nicht mehr unterstützt und wird durch das neue Datenfeld "Antragsteller:innen" ersetzt. Damit räumen wir mit Missverständnissen bezüglich dieses Feldes auf und ermöglichen es, einem Projekt gleich mehrere Antragsteller:innen hinzuzufügen. Falls einem Projekt bereits mehrere Antragsteller:innen zugeordnet sind, migrieren wir das jetzt entsprechend.') ?>
+        <?= lang('admin.we_have_found_count_projects_with_a_contact_person_the_contact_person_is_no', replace: ['count' => $count]) ?>
     </p>
     <?php
     foreach ($projects as $project) {
@@ -104,7 +104,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('Migration of the contact person to the new field "applicants" was successful. You can now add multiple applicants to a project.', 'Die Migration des Ansprechpartners in das neue Feld "Antragsteller:innen" war erfolgreich. Sie können nun mehrere Personen zu einem Projekt hinzufügen.') ?>
+        <?= lang('admin.migration_of_the_contact_person_to_the_new_field_applicants_was_successful') ?>
     </p>
 <?php
     flush();
@@ -114,14 +114,14 @@ if ($count > 0) {
 ?>
 
 <h2>
-    <?= lang('Migration of project types', 'Migration der Projekttypen') ?>
+    <?= lang('admin.migration_of_project_types') ?>
 </h2>
 
 <p>
-    <?= lang('In the new version of OSIRIS, we have changed the project types fundamentally. They can now be completely customized and are no longer limited to the old data fields. They now also support many new data fields, including your own custom fields. Additionally, we have now added a new collection for proposals to better separate them from running projects. This allows us to better manage the data and makes confidential information more secure.', 'In der neuen Version von OSIRIS haben wir die Projekttypen grundlegend verändert. Sie können nun vollständig angepasst werden und sind nicht mehr auf die alten Datenfelder beschränkt. Sie unterstützen jetzt auch viele neue Datenfelder, einschließlich Ihrer eigenen benutzerdefinierten Felder. Außerdem haben wir eine neue Sammlung für Vorschläge hinzugefügt, um sie besser von laufenden Projekten zu trennen. Dadurch können wir die Daten besser verwalten und vertrauliche Informationen sicherer machen.') ?>
+    <?= lang('admin.in_the_new_version_of_osiris_we_have_changed_the_project_types_fundamentall') ?>
 </p>
 <p>
-    <?= lang('In the next step, we will migrate the old project types to the new ones. This is a one-time process and will not be repeated in the future. The migration might take some time, so please be patient.', 'Im nächsten Schritt werden wir die alten Projekttypen auf die neuen migrieren. Dies ist ein einmaliger Vorgang und wird sich in Zukunft nicht wiederholen. Die Migration kann einige Zeit in Anspruch nehmen, also haben Sie bitte etwas Geduld.') ?>
+    <?= lang('admin.in_the_next_step_we_will_migrate_the_old_project_types_to_the_new_ones_this') ?>
 </p>
 <?php
 
@@ -131,10 +131,10 @@ $count = count($stipendiates);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('Stipendiates', 'Stipendien') ?>
+        <?= lang('admin.stipendiates') ?>
     </h4>
     <p>
-        <?= lang('We have found ' . $count . ' projects with the type "Stipendium". They will be migrated to the new project type "stipendate".', 'Wir haben ' . $count . ' Projekte mit dem Typ "Stipendium" gefunden. Sie werden in den neuen Projekttyp "Stipendium" migriert..') ?>
+        <?= lang('admin.we_have_found_count_projects_with_the_type_stipendium_they_will_be_migrated', replace: ['count' => $count]) ?>
     </p>
 
     <?php
@@ -340,12 +340,10 @@ if ($count > 0) {
     ?>
 
     <h4>
-        <?= lang('Third-party funding', 'Drittmittel') ?>
+        <?= lang('admin.third_party_funding') ?>
     </h4>
     <p>
-        <?= lang('We have found ' . $count . ' projects with the type "Drittmittel".
-    They will be moved to the new area "Proposals". For projects that are already running, we will create new projects and link them to the proposals.', 'Wir haben gefunden ' . $count . ' Projekte mit dem Typ "Drittmittel" gefunden.
-    Sie werden in den neuen Bereich "Projektanträge" verschoben. Für bereits laufende Projekte werden wir neue Projekte anlegen und mit den Anträgen verknüpfen.') ?>
+        <?= lang('admin.we_have_found_count_projects_with_the_type_drittmittel_they_will_be_moved_t', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -439,10 +437,10 @@ $count = count($projects);
 if ($count > 0) {
     ?>
     <h4>
-        <?= lang('Subprojects', 'Teilprojekte') ?>
+        <?= lang('common.subprojects') ?>
     </h4>
     <p>
-        <?= lang('We have found ' . $count . ' projects with the type "Teilprojekt". In the future they will be of the same type as their parents but be flaged as subprojects', 'Wir haben ' . $count . ' Projekte mit dem Typ "Teilprojekt" gefunden. In Zukunft werden sie vom gleichen Typ wie ihre Eltern sein, aber als Teilprojekte gekennzeichnet sein.') ?>
+        <?= lang('admin.we_have_found_count_projects_with_the_type_teilprojekt_in_the_future_they_w', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -514,7 +512,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('Successfully migrated all subprojects!', 'Alle Teilprojekte wurden erfolgreich migriert.') ?>
+        <?= lang('admin.successfully_migrated_all_subprojects') ?>
     </p>
 
 <?php
@@ -549,7 +547,7 @@ if ($count > 0) {
         <?= lang('common.activities') ?>
     </h4>
     <p>
-        <?= lang('We have found ' . $count . ' activities with projects. We will now migrate the projects to use the ObjectId instead of the name string.', 'Wir haben ' . $count . ' Aktivitäten mit Projekten gefunden. Wir werden jetzt die Projekte migrieren, um die ObjectId anstelle des Namensstrings zu verwenden.') ?>
+        <?= lang('admin.we_have_found_count_activities_with_projects_we_will_now_migrate_the_projec', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -581,7 +579,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('Migration of the activities was successful. You can now use the new project types and the new proposals collection.', 'Die Migration der Aktivitäten war erfolgreich. Sie können jetzt die neuen Projekttypen und die neue Antragsammlung verwenden.') ?>
+        <?= lang('admin.migration_of_the_activities_was_successful_you_can_now_use_the_new_project') ?>
     </p>
 <?php
     flush();
@@ -594,11 +592,11 @@ if ($count > 0) {
 <div class="alert success">
     <h4 class="title">
         <i class="ph ph-check-circle"></i>
-        <?= lang('Migration finished', 'Migration abgeschlossen') ?>
+        <?= lang('admin.migration_finished') ?>
     </h4>
-    <?= lang('Migration of project types was successful. You can now use the new project types and the new proposals collection.', 'Migration der Projekttypen war erfolgreich. Du kannst jetzt die neuen Projekttypen und die neue Antragsammlung verwenden.') ?>
+    <?= lang('admin.migration_of_project_types_was_successful_you_can_now_use_the_new_project_t') ?>
 </div>
 
 <b class="text-danger">
-    <?=lang('Start rerendering all activities, please have patience.', 'Starte jetzt das Rendern der Aktivitäten. Bitte habe Geduld.')?>
+    <?=lang('admin.start_rerendering_all_activities_please_have_patience')?>
 </b>

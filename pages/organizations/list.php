@@ -25,17 +25,17 @@ $organizations  = $osiris->organizations->find(
 
 <h1>
     <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
-    <?= lang('External Organisations', 'Externe Organisationen') ?>
+    <?= lang('organizations.external_organisations') ?>
 </h1>
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/organizations/map" class="btn">
         <i class="ph ph-map-pin"></i>
-        <?= lang('Organization map', 'Organisations-Karte') ?>
+        <?= lang('common.organization_map') ?>
     </a>
     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
         <a href="<?= ROOTPATH ?>/organizations/new">
             <i class="ph ph-plus"></i>
-            <?= lang('Add new organisation', 'Neue Organisation anlegen') ?>
+            <?= lang('organizations.add_new_organisation') ?>
         </a>
     <?php } ?>
 </div>
@@ -48,7 +48,7 @@ $organizations  = $osiris->organizations->find(
             <th><?= lang('common.type') ?></th>
             <th><?= lang('common.location') ?></th>
             <th>ROR</th>
-            <th><?= lang('Synonyms', 'Synonyme') ?></th>
+            <th><?= lang('common.synonyms') ?></th>
         </tr>
     </thead>
     <tbody>

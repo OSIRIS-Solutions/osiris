@@ -75,25 +75,22 @@ $canAddNotes = true; // later
     <div>
         <h1 class="title mb-0">
             <i class="ph-duotone ph-file-text"></i>
-            <?= lang('ABS permits overview', 'ABS-Genehmigungen – Übersicht') ?>
+            <?= lang('projects.abs_permits_overview') ?>
         </h1>
         <div class="small text-muted">
-            <?= lang(
-                'Overview of required and granted ABS permits across all ABS-relevant countries.',
-                'Übersicht der benötigten und erteilten ABS-Genehmigungen über alle ABS-relevanten Länder.'
-            ) ?>
+            <?= lang('projects.overview_of_required_and_granted_abs_permits_across_all_abs_relevant_countr') ?>
         </div>
     </div>
     <div class="text-right small text-muted">
         <div>
-            <?= lang('Total permits:', 'Gesamtanzahl Genehmigungen:') ?>
+            <?= lang('projects.total_permits') ?>
             <strong><?= $permitStats['total'] ?></strong>
         </div>
         <div>
-            <?= lang('Pending:', 'Ausstehend:') ?>
+            <?= lang('projects.pending') ?>
             <small class="badge signal"><?= $permitStats['pending'] ?></small>
             &nbsp;
-            <?= lang('Granted:', 'Erteilt:') ?>
+            <?= lang('projects.granted') ?>
             <small class="badge success"><?= $permitStats['granted'] ?></small>
         </div>
     </div>
@@ -106,7 +103,7 @@ $canAddNotes = true; // later
 
         <h2 class="title">
             <i class="ph-duotone ph-clipboard-text"></i>
-            <?= lang('Permits by country', 'Genehmigungen nach Land') ?>
+            <?= lang('projects.permits_by_country') ?>
         </h2>
         <?php if ($permitsRequired): ?>
             <div id="nagoya-permits">
@@ -114,7 +111,7 @@ $canAddNotes = true; // later
                 <!-- Länder & Permit-Tabelle -->
                 <?php if (empty($absCountries)): ?>
                     <p class="text-muted">
-                        <?= lang('There are no ABS-related permits for this project yet.', 'Für dieses Projekt sind bisher keine ABS-relevanten Genehmigungen erfasst.') ?>
+                        <?= lang('projects.there_are_no_abs_related_permits_for_this_project_yet') ?>
                     </p>
                 <?php else: ?>
 
@@ -140,14 +137,14 @@ $canAddNotes = true; // later
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $project['_id'] ?>/<?= urlencode($cid) ?>"
                                         class="btn primary">
                                         <i class="ph ph-clipboard-text"></i>
-                                        <?= lang('Manage permits', 'Genehmigungen verwalten') ?>
+                                        <?= lang('projects.manage_permits') ?>
                                     </a>
 
                                     <?php if ($Settings->hasPermission('nagoya.view')): ?>
                                         <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $project['_id'] ?>#country-<?= e($cid) ?>"
                                             class="btn">
                                             <i class="ph ph-scales"></i>
-                                            <?= lang('Open ABS details', 'ABS-Details öffnen') ?>
+                                            <?= lang('projects.open_abs_details') ?>
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -155,19 +152,19 @@ $canAddNotes = true; // later
 
                             <?php if (empty($permits)): ?>
                                 <p class="text-muted small mb-0">
-                                    <?= lang('No permits recorded for this country yet.', 'Für dieses Land wurden noch keine Genehmigungen erfasst.') ?>
+                                    <?= lang('projects.no_permits_recorded_for_this_country_yet') ?>
                                 </p>
                             <?php else: ?>
                                 <div class="table-responsive">
                                     <table class="table small simple mb-0">
                                         <thead>
                                             <tr>
-                                                <th><?= lang('Permit', 'Genehmigung') ?></th>
+                                                <th><?= lang('common.permit') ?></th>
                                                 <th><?= lang('common.status') ?></th>
-                                                <th><?= lang('IRCC / Permit number', 'IRCC / Genehmigungsnummer') ?></th>
-                                                <th><?= lang('Docs', 'Dokumente') ?></th>
+                                                <th><?= lang('projects.ircc_permit_number') ?></th>
+                                                <th><?= lang('common.docs') ?></th>
                                                 <?php if ($Settings->hasPermission('nagoya.view')): ?>
-                                                    <th><?= lang('ABS check', 'ABS-Prüfung') ?></th>
+                                                    <th><?= lang('common.abs_check') ?></th>
                                                 <?php endif; ?>
                                             </tr>
                                         </thead>
@@ -182,7 +179,7 @@ $canAddNotes = true; // later
                                             ?>
                                                 <tr>
                                                     <td>
-                                                        <strong><?= e($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
+                                                        <strong><?= e($name ?: lang('common.unnamed_permit')) ?></strong>
                                                         <?php if (!empty($p['comment'])): ?>
                                                             <div class="font-size-12 text-muted">
                                                                 <?= get_preview($p['comment'], 50) ?>
@@ -195,13 +192,13 @@ $canAddNotes = true; // later
                                                         $statusClass = 'badge muted';
 
                                                         if ($status === 'needed') {
-                                                            $statusLabel = lang('Needed', 'Erforderlich');
+                                                            $statusLabel = lang('common.needed');
                                                             $statusClass = 'badge signal';
                                                         } elseif ($status === 'requested') {
-                                                            $statusLabel = lang('Requested', 'Beantragt');
+                                                            $statusLabel = lang('common.requested');
                                                             $statusClass = 'badge signal';
                                                         } elseif ($status === 'granted') {
-                                                            $statusLabel = lang('Granted', 'Erteilt');
+                                                            $statusLabel = lang('common.granted');
                                                             // if ($checked) {
                                                             //     $statusLabel .= ' ' . '<i class="ph ph-check-circle"></i>';
                                                             // } 
@@ -233,12 +230,12 @@ $canAddNotes = true; // later
                                                                 <?php if ($checked): ?>
                                                                     <small class="badge success">
                                                                         <i class="ph ph-check"></i>
-                                                                        <?= lang('validated', 'validiert') ?>
+                                                                        <?= lang('common.validated') ?>
                                                                     </small>
                                                                 <?php else: ?>
                                                                     <small class="badge signal">
                                                                         <i class="ph ph-warning"></i>
-                                                                        <?= lang('needs check', 'Prüfung offen') ?>
+                                                                        <?= lang('common.needs_check') ?>
                                                                     </small>
                                                                 <?php endif; ?>
                                                             <?php else: ?>
@@ -262,10 +259,7 @@ $canAddNotes = true; // later
         <?php else: ?>
             <!-- No permits required -->
             <div class="alert info mt-20">
-                <?= lang(
-                    'No ABS permits are required for this project based on the current evaluation.',
-                    'Basierend auf der aktuellen Bewertung sind für dieses Projekt keine ABS-Genehmigungen erforderlich.'
-                ) ?>
+                <?= lang('projects.no_abs_permits_are_required_for_this_project_based_on_the_current_evaluatio') ?>
             </div>
 
         <?php endif; ?>
@@ -273,7 +267,7 @@ $canAddNotes = true; // later
     <div class="col-md-4">
         <h2 class="title">
             <i class="ph-duotone ph-chats-circle"></i>
-            <?= lang('Shared notes', 'Gemeinsame Notizen') ?>
+            <?= lang('common.shared_notes') ?>
         </h2>
 
         <?php if (!empty($permitNotes)): ?>
@@ -296,7 +290,7 @@ $canAddNotes = true; // later
             </div>
         <?php else: ?>
             <div class="box padded text-muted">
-                <?= lang('No notes added yet.', 'Noch keine Notizen vorhanden.') ?>
+                <?= lang('common.no_notes_added_yet') ?>
             </div>
         <?php endif; ?>
 
@@ -304,17 +298,17 @@ $canAddNotes = true; // later
             <form method="post" action="<?= ROOTPATH ?>/crud/nagoya/add-permit-note/<?= $id ?>" class="box padded">
                 <div class="form-group">
                     <label class="font-weight-bold small">
-                        <?= lang('Add note', 'Notiz hinzufügen') ?>
+                        <?= lang('common.add_note') ?>
                     </label>
                     <textarea
                         name="message"
                         rows="3"
                         class="form-control"
-                        placeholder="<?= lang('Short note on communication, decisions or next steps…', 'Kurze Notiz zu Kommunikation, Entscheidungen oder nächsten Schritten…') ?>"></textarea>
+                        placeholder="<?= lang('common.short_note_on_communication_decisions_or_next_steps') ?>"></textarea>
                 </div>
                 <button type="submit" class="btn small primary">
                     <i class="ph ph-paper-plane-right"></i>
-                    <?= lang('Save note', 'Notiz speichern') ?>
+                    <?= lang('common.save_note') ?>
                 </button>
             </form>
         <?php endif; ?>

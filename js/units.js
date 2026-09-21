@@ -172,7 +172,7 @@ function collabGraph(selector, data) {
             legend.append('div')
                 .style('font-weight', 'bold')
                 .attr('class', 'mb-5')
-                .text(lang("Departments", "Abteilungen"))
+                .text(lang('search.departments'))
 
             for (const dept in depts_in_use) {
                 if (Object.hasOwnProperty.call(depts_in_use, dept)) {

@@ -63,11 +63,11 @@ $authors = DB::doc2Arr($form[$role] ?? []);
     <h1>
         <i class="ph-duotone ph-users"></i>
         <?php if ($role == 'authors') { ?>
-            <?= lang('Edit authors', 'Bearbeite die Autor:innen') ?>
+            <?= lang('people.edit_authors') ?>
         <?php } elseif ($role == 'supervisors') { ?>
-            <?= lang('Edit supervisors', 'Bearbeite die Betreuenden') ?>
+            <?= lang('people.edit_supervisors') ?>
         <?php } else { ?>
-            <?= lang('Edit editors', 'Bearbeite die Editor:innen') ?>
+            <?= lang('people.edit_editors') ?>
         <?php } ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/activities/update-<?= $role ?>/<?= $id ?>" method="post">
@@ -115,13 +115,13 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                         <?php elseif ($supervisorThesis) : ?>
                             <td>
                                 <select name="authors[<?= $i ?>][role]" class="form-control">
-                                    <option value="supervisor" <?= ($thesisRole == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
-                                    <option value="first-reviewer" <?= ($thesisRole == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
-                                    <option value="second-reviewer" <?= ($thesisRole == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
-                                    <option value="third-reviewer" <?= ($thesisRole == 'third-reviewer' ? 'selected' : '') ?>><?= lang('Third reviewer', 'Dritter Gutachter') ?></option>
-                                    <option value="committee-member" <?= ($thesisRole == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
-                                    <option value="chair" <?= ($thesisRole == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
-                                    <option value="mentor" <?= ($thesisRole == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
+                                    <option value="supervisor" <?= ($thesisRole == 'supervisor' ? 'selected' : '') ?>><?= lang('people.supervisor') ?></option>
+                                    <option value="first-reviewer" <?= ($thesisRole == 'first-reviewer' ? 'selected' : '') ?>><?= lang('people.first_reviewer') ?></option>
+                                    <option value="second-reviewer" <?= ($thesisRole == 'second-reviewer' ? 'selected' : '') ?>><?= lang('people.second_reviewer') ?></option>
+                                    <option value="third-reviewer" <?= ($thesisRole == 'third-reviewer' ? 'selected' : '') ?>><?= lang('people.third_reviewer') ?></option>
+                                    <option value="committee-member" <?= ($thesisRole == 'committee-member' ? 'selected' : '') ?>><?= lang('people.committee_member') ?></option>
+                                    <option value="chair" <?= ($thesisRole == 'chair' ? 'selected' : '') ?>><?= lang('people.chair') ?></option>
+                                    <option value="mentor" <?= ($thesisRole == 'mentor' ? 'selected' : '') ?>><?= lang('people.mentor') ?></option>
                                     <option value="other" <?= ($thesisRole == 'other' ? 'selected' : '') ?>><?= lang('common.other') ?></option>
                                 </select>
                             </td>
@@ -191,10 +191,10 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                             <?php } ?>
                             <div class="unit-override mt-5 font-size-12">
                                 <a class="unit-override-toggle text-link" data-author-index="<?= $i ?>">
-                                    <?= lang('Set unit manually', 'Einheit manuell setzen') ?>
+                                    <?= lang('people.set_unit_manually') ?>
                                 </a>
                                 <div class="unit-override-panel" data-author-index="<?= $i ?>" style="display:<?= !empty($overrides) ? 'block' : 'none' ?>">
-                                    <input type="text" name="authors[<?= $i ?>][unit_override]" class="form-control unit-search" placeholder="<?= lang('Search unit…', 'Einheit suchen…') ?>" list="units-list" value="<?= implode(',', $overrides) ?>">
+                                    <input type="text" name="authors[<?= $i ?>][unit_override]" class="form-control unit-search" placeholder="<?= lang('people.search_unit') ?>" list="units-list" value="<?= implode(',', $overrides) ?>">
                                 </div>
                             </div>
                         </td>
@@ -208,7 +208,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                 <tr id="last-row">
                     <td></td>
                     <td colspan="7">
-                        <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= lang('Add author', 'Autor hinzufügen') ?></button>
+                        <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= lang('people.add_author') ?></button>
                     </td>
                 </tr>
             </tfoot>
@@ -256,7 +256,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         <?php if ($sws) : ?>
             tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
-            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('Supervisor', 'Betreuer') ?></option><option value="first-reviewer"><?= lang('First reviewer', 'Erster Gutachter') ?></option><option value="second-reviewer"><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option><option value="third-reviewer"><?= lang('Third reviewer', 'Dritter Gutachter') ?></option><option value="committee-member"><?= lang('Committee member', 'Ausschussmitglied') ?></option><option value="chair"><?= lang('Chair', 'Vorsitzender') ?></option><option value="mentor"><?= lang('Mentor', 'Mentor') ?></option><option value="other"><?= lang('common.other') ?></option></select></td>')
+            tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('people.supervisor') ?></option><option value="first-reviewer"><?= lang('people.first_reviewer') ?></option><option value="second-reviewer"><?= lang('people.second_reviewer') ?></option><option value="third-reviewer"><?= lang('people.third_reviewer') ?></option><option value="committee-member"><?= lang('people.committee_member') ?></option><option value="chair"><?= lang('people.chair') ?></option><option value="mentor"><?= lang('people.mentor') ?></option><option value="other"><?= lang('common.other') ?></option></select></td>')
         <?php elseif ($role == 'authors') : ?>
             tr.append('<td><select name="authors[' + counter + '][position]" class="form-control"><option value="first">first</option><option value="middle">middle</option><option value="corresponding">corresponding</option><option value="last">last</option></select></td>')
         <?php endif; ?>
@@ -326,7 +326,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
             td.append(`
       <div class="unit-override mt-5 font-size-12">
         <a class="unit-override-toggle text-link" data-author-index="${counter}">
-          <?= lang('Set unit manually', 'Einheit manuell setzen') ?>
+          <?= lang('people.set_unit_manually') ?>
         </a>
       </div>`);
             // Wenn keine Units → Manual-Link prominent lassen

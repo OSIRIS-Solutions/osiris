@@ -241,7 +241,7 @@ class Report
     public function formatTOC()
     {
         $toc = $this->getTOC();
-        $html = "<div class='report-toc'><h2>" . lang('Table of contents', 'Inhaltsverzeichnis') . "</h2><ul>";
+        $html = "<div class='report-toc'><h2>" . lang('reports.table_of_contents') . "</h2><ul>";
         $previousLevel = 1;
         foreach ($toc as $item) {
             if ($item['level'] > $previousLevel) {
@@ -588,7 +588,7 @@ class Report
         $html = "";
         $list = $this->prepareList($item);
         if (count($list) == 0) {
-            return "<p><em>" . lang('No data available for the selected criteria.', 'Keine Daten für die ausgewählten Kriterien verfügbar.') . "</em></p>";
+            return "<p><em>" . lang('reports.no_data_available_for_the_selected_criteria') . "</em></p>";
         }
         if (count($list[0]) > 1) {
             $html .= "<table class='table my-20'><thead><tr>";
@@ -749,7 +749,7 @@ class Report
                     $activity = implode(', ', $activity);
                 }
                 if (empty($activity)) {
-                    $activity = '<em>' . lang('Empty', 'Leer') . '</em>';
+                    $activity = '<em>' . lang('reports.empty') . '</em>';
                 } elseif ($transform && isset($transform[$activity])) {
                     $activity = $transform[$activity];
                 }
@@ -771,7 +771,7 @@ class Report
                 if (!array_key_exists($g2, $header)) {
                     $name = $g2;
                     if (empty($g2)) {
-                        $name = '<em>' . lang('Empty', 'Leer') . '</em>';
+                        $name = '<em>' . lang('reports.empty') . '</em>';
                     } elseif ($transform2 && isset($transform2[$g2])) {
                         $name = $transform2[$g2];
                     }
@@ -785,7 +785,7 @@ class Report
             $table[] = array_merge([$label], array_values($header));
             foreach ($activities as $activity => $counts) {
                 if (empty($activity)) {
-                    $activity = '<em>' . lang('Empty', 'Leer') . '</em>';
+                    $activity = '<em>' . lang('reports.empty') . '</em>';
                 } elseif ($transform && isset($transform[$activity])) {
                     $activity = $transform[$activity];
                 }

@@ -21,20 +21,17 @@
 
     <h1>
         <i class="ph-duotone ph-gear"></i>
-        <?= lang('General Settings', 'Allgemeine Einstellungen') ?>
+        <?= lang('admin.general_settings') ?>
     </h1>
 
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
 
         <div class="form-group">
-            <label for="name" class="required "><?= lang('Start year', 'Startjahr') ?></label>
+            <label for="name" class="required "><?= lang('admin.start_year') ?></label>
             <input type="year" class="form-control" name="general[startyear]" required value="<?= $Settings->get('startyear') ?? '2022' ?>">
             <span class="text-muted">
-                <?= lang(
-                    'The start year defines the beginning of many charts in OSIRIS. It is possible to add activities that occured befor that year though.',
-                    'Das Startjahr bestimmt den Anfang vieler Abbildungen in OSIRIS. Man kann jedoch auch Aktivitäten hinzufügen, die vor dem Startjahr geschehen sind.'
-                ) ?>
+                <?= lang('admin.the_start_year_defines_the_beginning_of_many_charts_in_osiris_it_is_possibl') ?>
             </span>
         </div>
         <div class="form-group">
@@ -47,12 +44,8 @@
                 </div>
             </div>
             <span class="text-muted">
-                <?= lang(
-                    'This legacy key grants unrestricted access to all API routes. If it is empty, external API access is only possible through explicitly configured <a href="'.ROOTPATH.'/admin/api-clients">API clients</a>.',
-                    'Dieser Legacy-Key gewährt uneingeschränkten Zugriff auf alle API-Routen. Ist er leer, ist externer API-Zugriff ausschließlich über ausdrücklich eingerichtete API-Clients möglich.'
-                ) ?>
+                <?= lang('admin.legacy_api_key_description', replace: ['rootpath' => ROOTPATH]) ?>
             </span>
-
         </div>
 
         <script>
@@ -72,7 +65,7 @@
 
         <hr>
         <h5 class="mb-0">
-            <?= lang('Print output settings', 'Einstellungen für die Print-Ausgabe') ?>
+            <?= lang('admin.print_output_settings') ?>
         </h5>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm-6">
@@ -81,14 +74,14 @@
                 $format = $Settings->get('affiliation_format', 'bold');
                 ?>
 
-                <label for="affiliation_format"><?= lang('Affiliated authors formatting', 'Formatierung der affiliierten Autor:innen') ?></label>
+                <label for="affiliation_format"><?= lang('admin.affiliated_authors_formatting') ?></label>
                 <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
-                    <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('Bold (default)', 'Fett (Standard)') ?></option>
-                    <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('Italic', 'Kursiv') ?></option>
-                    <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= lang('Underline', 'Unterstrichen') ?></option>
-                    <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= lang('Bold and italic', 'Fett und kursiv') ?></option>
-                    <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= lang('Bold and underline', 'Fett und unterstrichen') ?></option>
-                    <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= lang('Italic and underline', 'Kursiv und unterstrichen') ?></option>
+                    <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('admin.bold_default') ?></option>
+                    <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('admin.italic') ?></option>
+                    <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= lang('admin.underline') ?></option>
+                    <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= lang('admin.bold_and_italic') ?></option>
+                    <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= lang('admin.bold_and_underline') ?></option>
+                    <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= lang('admin.italic_and_underline') ?></option>
                     <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= lang('common.none') ?></option>
                 </select>
             </div>
@@ -98,24 +91,24 @@
                 <?php
                 $renderLang = $Settings->get('render_language', 'en');
                 ?>
-                <label for="render_language"><?= lang('Render language', 'Anzeigesprache') ?></label>
+                <label for="render_language"><?= lang('admin.render_language') ?></label>
                 <select class="form-control" name="general[render_language]" id="render_language">
-                    <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option> -->
-                    <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= lang('English only', 'Nur Englisch') ?></option>
-                    <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= lang('German only', 'Nur Deutsch') ?></option>
+                    <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= lang('common.both_languages') ?></option> -->
+                    <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= lang('admin.english_only') ?></option>
+                    <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= lang('admin.german_only') ?></option>
                 </select>
             </div>
         </div>
         <p class="mt-5">
             <b>
                 <i class="ph ph-warning"></i>
-                <?= lang('Hint:', 'Hinweis:') ?>
+                <?= lang('admin.hint') ?>
             </b>
-            <?= lang('you have to rerender all activities to see the changes. You can do this here:', 'Du musst alle Aktivitäten neu rendern, um die Änderungen zu sehen. Du kannst dies hier tun:') ?>
+            <?= lang('admin.you_have_to_rerender_all_activities_to_see_the_changes_you_can_do_this_here') ?>
             <a href="<?= ROOTPATH ?>/rerender" class="">
-                <?= lang('Render all activities', 'Alle Aktivitäten rendern') ?>.
+                <?= lang('admin.render_all_activities') ?>.
             </a><br>
-            <?= lang('This might take a while. Please be patient and do not reload the page.', 'Das Neu-Rendern kann eine Weile dauern. Bitte sei geduldig und lade die Seite nicht neu.') ?>
+            <?= lang('admin.this_might_take_a_while_please_be_patient_and_do_not_reload_the_page') ?>
         </p>
 
 

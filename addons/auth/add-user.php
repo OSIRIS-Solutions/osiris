@@ -106,17 +106,7 @@ $data = $_POST['values'] ?? [];
                 Demo
             </div>
 
-            <?= lang('
-            This OSIRIS instance is a demo with the fictional institute LISI. 
-            The use of this app and therefore the provision of personal data is voluntary. 
-            By using this site, you agree to our <a href="/impress" class="">privacy</a> policy.
-            User accounts will be deleted by the admin after an unspecified amount of time. If you want me to actively delete your data, contact me.
-            ', '
-            Bei dieser OSIRIS-Instanz handelt es sich um eine Demo mit dem fiktiven Institut LISI. 
-            Die Nutzung dieser App und somit auch der Bereitstellung von personenbezogenen Daten ist freiwillig. 
-            Wenn du diese Seite nutzt, stimmst du damit unseren Richtlinien zum <a href="/impress" class="">Datenschutz</a> zu.
-            Nutzeraccounts werden nach unbestimmter Zeit vom Admin gelöscht. Wenn ihr möchtet, dass ich eure Daten aktiv lösche, meldet euch bei mir.
-            ') ?>
+            <?= lang('auth.this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi_the_use_of') ?>
         </div>
     <?php
     }

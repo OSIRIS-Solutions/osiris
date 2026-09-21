@@ -41,12 +41,12 @@ if (in_array($forcedView, ['new', 'legacy'], true)) {
 
 $otherView = ($currentView === 'new') ? 'legacy' : 'new';
 $otherLabel = ($otherView === 'new')
-    ? lang('Modern view', 'Modernen Ansicht')
-    : lang('Classic view', 'Klassische Ansicht');
+    ? lang('activities.modern_view_preference_banner')
+    : lang('activities.classic_view_preference_banner');
 
 $currentLabel = ($currentView === 'new')
-    ? lang('Modern view', 'Modernen Ansicht')
-    : lang('Classic view', 'Klassische Ansicht');
+    ? lang('activities.modern_view_preference_banner')
+    : lang('activities.classic_view_preference_banner');
 
 $showBanner = false;
 $bannerText = '';
@@ -54,31 +54,25 @@ $bannerToneClass = 'info'; // info | subtle | warning (your CSS)
 
 
 $saveLabel = ($currentView === 'new')
-    ? lang('Set modern view as default', 'Moderne Ansicht als Standard')
-    : lang('Set classic view as default', 'Klassische Ansicht als Standard');
+    ? lang('activities.set_modern_view_as_default')
+    : lang('activities.set_classic_view_as_default');
 
 $switchLabel = ($otherView === 'new')
-    ? lang('Try modern view', 'Moderne Ansicht ausprobieren')
-    : lang('Switch to classic view', 'Zur klassischen Ansicht wechseln');
+    ? lang('activities.try_modern_view')
+    : lang('activities.switch_to_classic_view');
 
 
 // Case A: no preference yet -> invite to try + set default
 if ($preference === 'none') {
     $showBanner = true;
-    $bannerText = lang(
-        'You can switch between the modern and classic activity view. Pick one as your default anytime.',
-        'Du kannst zwischen moderner und klassischer Aktivitätsansicht wechseln. Wenn du magst, setze eine davon als Standard.'
-    );
+    $bannerText = lang('activities.you_can_switch_between_the_modern_and_classic_activity_view_pick_one_as_you');
 }
 // Case B: preference exists, but user is currently looking at the other view -> offer "make this my default"
 elseif ($preference !== $currentView) {
     $showBanner = true;
     $bannerToneClass = 'subtle';
-    $bannerText = lang(
-        'You are viewing the ' . ($currentLabel) . '. Want to make this your default?',
-        'Du nutzt gerade die ' . ($currentLabel) . '. Soll das dein Standard werden?'
-    );
-    $switchLabel = lang('Go back to ' . ($otherLabel), 'Zurück zur ' . ($otherLabel));
+    $bannerText = lang('activities.you_are_viewing_the_currentlabel_want_to_make_this_your_default', replace: ['currentLabel' => ($currentLabel)]);
+    $switchLabel = lang('activities.go_back_to_otherlabel', replace: ['otherLabel' => ($otherLabel)]);
 }
 
 ?>
@@ -86,7 +80,7 @@ elseif ($preference !== $currentView) {
 <?php if ($showBanner): ?>
     <div class="preference-view-banner <?= htmlspecialchars($bannerToneClass) ?>">
         <div class="banner-text">
-            <b><?= lang('Activity view:', 'Aktivitätsansicht:') ?></b>
+            <b><?= lang('activities.activity_view') ?></b>
             <?= htmlspecialchars($bannerText) ?>
         </div>
 

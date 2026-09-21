@@ -62,7 +62,7 @@ function addCollaboratorROR(ror, msg = true) {
             addCollaborator(org)
             $('#collaborators-ror-id').val('')
             if (msg)
-                toastSuccess(lang('Collaborator added', 'Kooperationspartner hinzugefügt'))
+                toastSuccess(lang('projects.collaborator_added'))
         },
         error: function (response) {
             var errors = response.responseJSON.errors

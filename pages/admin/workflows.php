@@ -26,7 +26,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
 <div class="btn-toolbar">
     <a class="" href="<?= ROOTPATH ?>/admin/workflows/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('Add workflow', 'Workflow hinzufügen') ?>
+        <?= lang('admin.add_workflow') ?>
     </a>
 </div>
 
@@ -35,7 +35,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th><?=lang('Steps', 'Schritte')?></th>
+            <th><?=lang('common.steps')?></th>
             <th># <?=lang('common.activities')?></th>
             <th><?=lang('common.action')?></th>
         </tr>
@@ -71,19 +71,19 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
 
 <article class="box padded">
     <h5 class="title">
-        <?= lang('Modify applied workflows', 'Angewendete Workflows bearbeiten') ?>
+        <?= lang('admin.modify_applied_workflows') ?>
     </h5>
 
     <p>
-        <?= lang('If you change a workflow, this will not affect activities that have already been submitted or approved. You can remove or reset all workflows for these activities if needed.', 'Wenn du einen Workflow änderst, wirkt sich dies nicht auf Aktivitäten aus, die bereits eingereicht oder genehmigt wurden. Du kannst bei Bedarf alle Workflows für diese Aktivitäten entfernen oder zurücksetzen.') ?>
+        <?= lang('admin.if_you_change_a_workflow_this_will_not_affect_activities_that_have_already') ?>
     </p>
 
-    <form action="<?= ROOTPATH ?>/crud/workflows/reset-action" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to apply this action to all selected activities? This action cannot be undone.', 'Bist du sicher, dass du diese Aktion auf alle ausgewählten Aktivitäten anwenden möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>');">
+    <form action="<?= ROOTPATH ?>/crud/workflows/reset-action" method="post" onsubmit="return confirm('<?= lang('admin.are_you_sure_you_want_to_apply_this_action_to_all_selected_activities_this') ?>');">
         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
         <div class="form-group floating-form">
             <select name="action" class="form-control" required>
-                <option value="remove"><?= lang('Remove all workflows', 'Alle Workflows entfernen') ?></option>
-                <option value="reset"><?= lang('Reset all workflows to the first step', 'Alle Workflows auf den ersten Schritt zurücksetzen') ?></option>
+                <option value="remove"><?= lang('admin.remove_all_workflows') ?></option>
+                <option value="reset"><?= lang('admin.reset_all_workflows_to_the_first_step') ?></option>
             </select>
             <label><?= lang('common.action') ?></label>
         </div>
@@ -97,11 +97,11 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                     <option value="<?= $atype['id'] ?>"><?= lang($atype['name'], $atype['name_de']?? null) ?></option>
                 <?php } ?>
             </select>
-            <label><?= lang('Activity category', 'Aktivitäts-Kategorie') ?></label>
+            <label><?= lang('admin.activity_category') ?></label>
         </div>
         <button class="btn warning" type="submit">
             <i class="ph ph-arrows-counter-clockwise"></i>
-            <?= lang('Execute action', 'Aktion ausführen') ?>
+            <?= lang('admin.execute_action') ?>
         </button>
     </form>
 </article>
@@ -114,7 +114,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                 [0, "asc"]
             ],
             "language": {
-                "emptyTable": "<?= lang('No workflows defined yet.', 'Es wurden noch keine Workflows definiert.') ?>"
+                "emptyTable": "<?= lang('admin.no_workflows_defined_yet') ?>"
             }
         });
     });

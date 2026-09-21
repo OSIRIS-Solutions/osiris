@@ -24,7 +24,7 @@
     </h1>
 
     <p>
-        <?= lang('Define tags that can be attached to activities and projects.', 'Definiere Schlagworte, die für Aktivitäten und Projekte verwendet werden können.') ?>
+        <?= lang('admin.define_tags_that_can_be_attached_to_activities_and_projects') ?>
     </p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
@@ -57,17 +57,17 @@
         ?>
         <div class="form-group">
             <label for="tags" class="font-weight-bold">
-                <?= lang('Defined list of tags', 'Definierte Liste von Schlagworten') ?>:
+                <?= lang('admin.defined_list_of_tags') ?>:
             </label>
             <small class="d-block text-muted">
-                <?= lang('Define a list of tags, each tag should be seperated by a new line.', 'Definiere eine Liste von Schlagworten. Jedes Schlagwort sollte in einer neuen Zeile stehen.') ?>
+                <?= lang('admin.define_a_list_of_tags_each_tag_should_be_seperated_by_a_new_line') ?>
             </small>
             <textarea name="general[tags]" id="tags" class="form-control" rows="10"><?= implode(PHP_EOL, $keywords) ?></textarea>
         </div>
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save changes', 'Änderungen speichern') ?>
+            <?= lang('common.save_changes') ?>
         </button>
     </form>
 </div>

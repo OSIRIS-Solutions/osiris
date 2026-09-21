@@ -114,7 +114,7 @@ updateRecursive($flare, $activities);
 
 <h1>
     <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-    <?= lang('Department overview', 'Abteilungs-Übersicht') ?>
+    <?= lang('common.department_overview') ?>
 </h1>
 
 <div class="dropdown">
@@ -128,7 +128,7 @@ updateRecursive($flare, $activities);
 
 
             <div class="form-group">
-                <label for="type-select"><?= lang('Time range', 'Zeitspanne') ?></label>
+                <label for="type-select"><?= lang('search.time_range') ?></label>
 
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -137,7 +137,7 @@ updateRecursive($flare, $activities);
                     <input type="number" name="time[]" class="form-control" placeholder="month" min="1" max="12" step="1" id="from-month" value="<?= $time[0] ?? '' ?>">
                     <input type="number" name="time[]" class="form-control" placeholder="year" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" id="from-year" value="<?= $time[1] ?? '' ?>">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><?= lang('to', 'bis') ?></span>
+                        <span class="input-group-text"><?= lang('common.to') ?></span>
                     </div>
                     <input type="number" name="time[]" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month" value="<?= $time[2] ?? '' ?>">
                     <input type="number" name="time[]" class="form-control" placeholder="year" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" id="to-year" value="<?= $time[3] ?? '' ?>">
@@ -151,7 +151,7 @@ updateRecursive($flare, $activities);
             <div class="form-group">
                 <label for="type-select"><?= lang('common.activities') ?></label>
                 <select name="type" id="type-select" class="form-control ">
-                    <option value=""><?= lang('All types', 'Alle Arten') ?></option>
+                    <option value=""><?= lang('search.all_types') ?></option>
                     <?php foreach ($Settings->getActivities as $a) { ?>
                         <option value="<?= $a['id'] ?>" <?= $a['id'] == $filter_type ? 'selected' : '' ?>><?= lang($a['name'], $a['name_de'] ?? $a['name']) ?></option>
                     <?php } ?>
@@ -161,7 +161,7 @@ updateRecursive($flare, $activities);
             <div class="form-group">
                 <div class="custom-checkbox">
                     <input type="checkbox" id="epub" value="1" name="epub" <?= isset($_GET['epub']) ? 'checked' : '' ?>>
-                    <label for="epub"><?= lang('Include online ahead of print', 'Inklusive Online ahead of print') ?></label>
+                    <label for="epub"><?= lang('search.include_online_ahead_of_print') ?></label>
                 </div>
             </div>
 

@@ -161,15 +161,15 @@ class DB
     function notifications($force = false, $user = null)
     {
         $notifications = [
-            'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
+            'approval' => lang('common.approval_of_activities'),
             'epub' => '<em>Online ahead of print</em>-' . lang('common.publications'),
-            'status' => lang('Expired status', 'Abgelaufener Status'),
-            'openend' => lang('Ongoing activities', 'Laufende Aktivitäten'),
-            'project-open' => lang('Open project applications', 'Offene Projektanträge'),
-            'project-end' => lang('Expired projects', 'Abgelaufene Projekte'),
-            'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
-            'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
-            'nagoya' => lang('Nagoya Protocol Compliance', 'Nagoya-Protokoll Bewertungen'),
+            'status' => lang('common.expired_status'),
+            'openend' => lang('people.ongoing_activities_profile'),
+            'project-open' => lang('common.open_project_applications'),
+            'project-end' => lang('common.expired_projects'),
+            'infrastructure' => lang('common.updating_infrastructures'),
+            'rejected' => lang('common.rejected_activities'),
+            'nagoya' => lang('common.nagoya_protocol_compliance'),
         ];
 
         $now = time();
@@ -223,7 +223,7 @@ class DB
             $queue = $this->db->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
             if ($queue !== 0) {
                 $issues['queue'] = [
-                    'name' => lang('Queue', 'Warteschlange'),
+                    'name' => lang('import.queue'),
                     'count' => $queue,
                     'key' => 'queue',
                 ];
@@ -250,7 +250,7 @@ class DB
                 $lastquarter = $this->getLastQuarter();
                 if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
                     $issues['approval'] = [
-                        'name' => lang('Approval of the quarter', 'Freigabe des Quartals'),
+                        'name' => lang('common.approval_of_the_quarter'),
                         'count' => 1,
                         'key' => $lastquarter,
                     ];

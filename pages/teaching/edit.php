@@ -49,26 +49,26 @@ include_once BASEPATH . "/header-editor.php";
 
         <h1 class="title">
             <i class="ph-duotone ph-chalkboard" aria-hidden="true"></i>
-            <?= lang('New Teaching Module', 'Neue Lehrveranstaltung') ?>
+            <?= lang('teaching.new_teaching_module') ?>
         </h1>
 
     <?php } else { ?>
         <h1 class="title">
             <i class="ph-duotone ph-chalkboard" aria-hidden="true"></i>
-            <?= lang('Edit Teaching Module', 'Lehrveranstaltung bearbeiten') ?>
+            <?= lang('common.edit_teaching_module') ?>
         </h1>
     <?php } ?>
     <form action="<?= $formaction ?>" method="post" class="form">
         <input type="hidden" name="redirect" value="<?= $url ?>">
 
         <div class="form-group">
-            <label for="module" class="required element-other"><?= lang('Module number', 'Modulnummer') ?></label>
+            <label for="module" class="required element-other"><?= lang('teaching.module_number') ?></label>
             <input type="text" class="form-control" name="values[module]" id="module" required value="<?= val('module') ?>" placeholder="MB05">
         </div>
 
         <div class="form-group lang-<?= lang('common.this_language') ?>">
             <label for="title" class="required element-title">
-                <?= lang('Name of the module', 'Name des Moduls') ?>
+                <?= lang('teaching.name_of_the_module') ?>
             </label>
 
             <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
@@ -85,13 +85,13 @@ include_once BASEPATH . "/header-editor.php";
         ?>
         <div class="form-group">
             <label for="organization" class="required">
-                <?= lang('Teaching venue / University', 'Lehrort / Hochschule') ?>
+                <?= lang('common.teaching_venue_university') ?>
             </label>
             <a id="organization" class="module" href="#organization-modal-organization">
                 <i class="ph ph-edit float-right"></i>
                 <input hidden readonly name="values[organization]" value="<?= $org_id ?>" id="org-organization-organization" required />
-                <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('Remove connected organization', 'Verknüpfte Organisation entfernen') ?>">
-                    <i class="ph ph-trash" onclick="$('#org-organization-organization').val(''); $('#org-organization-value').html('<?= lang('No organization connected', 'Keine Organisation verknüpft') ?>'); return false;"></i>
+                <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('teaching.remove_connected_organization') ?>">
+                    <i class="ph ph-trash" onclick="$('#org-organization-organization').val(''); $('#org-organization-value').html('<?= lang('teaching.no_organization_connected') ?>'); return false;"></i>
                 </span>
 
                 <div id="org-organization-value">
@@ -126,7 +126,7 @@ include_once BASEPATH . "/header-editor.php";
             ])->toArray();
             if (!empty($orgs)) { ?>
                 <div class="suggestions">
-                    <?= lang('Suggestions:', 'Vorschläge:') ?>
+                    <?= lang('teaching.suggestions') ?>
                     <?php
                     // suggest oftenly used organisations
                     foreach ($orgs as $o) {
@@ -157,7 +157,7 @@ include_once BASEPATH . "/header-editor.php";
                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <label for="org-organization-search"><?= lang('Search organization', 'Suche nach Organisation') ?></label>
+                <label for="org-organization-search"><?= lang('teaching.search_organization') ?></label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                     <div class="input-group-append">

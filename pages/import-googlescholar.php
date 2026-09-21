@@ -7,7 +7,7 @@ $result = $google->getAllUserEntries();
 
 if (empty($result) || empty($result['publications'])) { ?>
     <p class="text-danger">
-        <?= lang('We could not find any articles from your Google Scholar Account. Sorry.', 'Wir haben keine Artikel auf deinem Google Scholar Account gefunden. Sorry.') ?>
+        <?= lang('import.we_could_not_find_any_articles_from_your_google_scholar_account_sorry') ?>
     </p>
 <?php
 } else {
@@ -28,7 +28,7 @@ if (empty($result) || empty($result['publications'])) { ?>
     sort($pubs);
 ?>
     <p class="text-success">
-        <?= lang('We found the following articles from your Google Scholar Account:', 'Wir haben die folgenden Artikel auf deinem Google Scholar Account gefunden:') ?>
+        <?= lang('import.we_found_the_following_articles_from_your_google_scholar_account') ?>
     </p>
 
     <table class="table">
@@ -64,9 +64,9 @@ if (empty($result) || empty($result['publications'])) { ?>
                             <div class="alert <?= $alert ?>">
                                 <p class="mt-0">
                                     <?php if ($sim >= 98) { ?>
-                                        <?= lang('This is a 100% duplicate of the follwing publication:', 'Dies ist ein 100%iges Duplikat der folgenden Publikation:') ?>
+                                        <?= lang('import.this_is_a_100_duplicate_of_the_follwing_publication') ?>
                                     <?php } else { ?>
-                                        <?= lang('This might be a duplicate of the follwing publication', 'Dies könnte ein Duplikat der folgenden Publikation sein') ?>
+                                        <?= lang('import.this_might_be_a_duplicate_of_the_follwing_publication') ?>
                                         (<b><?= $sim ?>&nbsp;%</b>):
                                     <?php } ?>
                                 </p>
@@ -77,7 +77,7 @@ if (empty($result) || empty($result['publications'])) { ?>
                         <?php if ($sim < 98) { ?>
                             <button class="btn mt-5" onclick='addGoogleActivity("<?= $scholar_id ?>", "<?= $pub_id ?>")'>
                                 <i class="ph ph-plus"></i>
-                                <?= lang('Add to database', 'Zur DB hinzufügen') ?>
+                                <?= lang('import.add_to_database') ?>
                             </button>
                         <?php } ?>
 
@@ -176,7 +176,7 @@ if (empty($result) || empty($result['publications'])) { ?>
                     var td = $('tr#' + doc).find('td:first')
                     td.find('.alert,.btn').remove()
                     var alert = $('<div class="alert success">')
-                    alert.append('<p class="my-0">' + lang('Publication successfully added. Please review the result carefully.', 'Publikation wurde hinzugefügt. Bitte überprüfe das Ergebnis sorgfältig!') + '</p>')
+                    alert.append('<p class="my-0">' + <?= json_encode(lang('import.publication_successfully_added_please_review_the_result_carefully'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</p>')
                     alert.append(response.formatted)
                     alert.append('<br><a class="btn mt-5" href="' + ROOTPATH + '/activities/view/' + response.id + '" target="_blank">Review</a>')
                     td.append(alert)

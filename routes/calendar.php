@@ -17,7 +17,7 @@
 Route::get('/calendar', function () {
 
     $breadcrumb = [
-        ['name' => lang('Calendar', 'Kalender')]
+        ['name' => lang('dashboard.calendar')]
     ];
 
     include_once BASEPATH . "/php/init.php";

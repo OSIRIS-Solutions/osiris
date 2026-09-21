@@ -80,12 +80,12 @@ Route::get('/news/add', function () {
     }
 
     if (!$Settings->hasPermission('news.edit')) {
-        abortwith(403, lang('You do not have permission to create news items.', "Sie haben keine Berechtigung, News zu erstellen."));
+        abortwith(403, lang('news.you_do_not_have_permission_to_create_news_items'));
     }
 
     $breadcrumb = [
         ['path' => '/news', 'name' => lang('common.news')],
-        ['path' => '/news/add', 'name' => lang('Create news item', 'Nachricht erstellen')]
+        ['path' => '/news/add', 'name' => lang('common.create_news_item')]
     ];
 
     include BASEPATH . "/header.php";
@@ -103,7 +103,7 @@ Route::get('/news/view/([a-f0-9]{24})', function ($id) {
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
 
     if (!$news) {
-        abortwith(404, lang('News item not found.', "Nachricht nicht gefunden."));
+        abortwith(404, lang('news.news_item_not_found'));
     }
 
     $breadcrumb = [
@@ -126,7 +126,7 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
 
     if (!$news) {
-        abortwith(404, lang('News item not found.', "Nachricht nicht gefunden."));
+        abortwith(404, lang('news.news_item_not_found'));
     }
 
     $breadcrumb = [
@@ -149,7 +149,7 @@ Route::post('/crud/news/create', function () {
     }
 
     if (!$Settings->hasPermission('news.edit')) {
-        abortwith(403, lang('You do not have permission to create news items.', "Sie haben keine Berechtigung, News zu erstellen."));
+        abortwith(403, lang('news.you_do_not_have_permission_to_create_news_items'));
     }
 
     $data = $_POST['news'] ?? [];
@@ -157,7 +157,7 @@ Route::post('/crud/news/create', function () {
 
     // basic validation
     if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
-        abortwith(400, lang('Please fill in all required fields.', "Bitte füllen Sie alle erforderlichen Felder aus."));
+        abortwith(400, lang('news.please_fill_in_all_required_fields'));
     }
 
     $newsItem = [
@@ -193,7 +193,7 @@ Route::post('/crud/news/create', function () {
         header('Location: ' . ROOTPATH . '/news/view/' . e($result->getInsertedId()));
         exit;
     } else {
-        abortwith(500, lang('Failed to create news item.', "Die Erstellung der Nachricht ist fehlgeschlagen."));
+        abortwith(500, lang('news.failed_to_create_news_item'));
     }
 });
 
@@ -206,7 +206,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
     }
 
     if (!$Settings->hasPermission('news.edit')) {
-        abortwith(403, lang('You do not have permission to edit news items.', "Sie haben keine Berechtigung, News zu bearbeiten."));
+        abortwith(403, lang('news.you_do_not_have_permission_to_edit_news_items'));
     }
 
     $data = $_POST['news'] ?? [];
@@ -214,7 +214,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
 
     // basic validation
     if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
-        abortwith(400, lang('Please fill in all required fields.', "Bitte füllen Sie alle erforderlichen Felder aus."));
+        abortwith(400, lang('news.please_fill_in_all_required_fields'));
     }
 
     $newsItem = [
@@ -256,7 +256,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
     // get news id    
     $news = $osiris->news->findOne(['_id' => $mongo_id]);
     if (empty($news)) {
-        abortwith(404, lang('News item', 'Nachricht'), '/news');
+        abortwith(404, lang('news.news_item'), '/news');
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
@@ -295,7 +295,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
                     'uploaded' => date('Y-m-d')
                 ]]]
             );
-            $_SESSION['msg'] = lang("News image uploaded successfully.", "Bild erfolgreich hochgeladen.");
+            $_SESSION['msg'] = lang('news.news_image_uploaded_successfully');
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/news/view/$id");
             die;
@@ -306,7 +306,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
             ['_id' => $mongo_id],
             ['$unset' => ['image' => ""]]
         );
-        $_SESSION['msg'] = lang("News image deleted.", "Bild gelöscht.");
+        $_SESSION['msg'] = lang('news.news_image_deleted');
         $_SESSION['msg_type'] = "success";
         header("Location: " . ROOTPATH . "/news/view/$id");
         die;
@@ -325,13 +325,13 @@ Route::post('/crud/news/delete', function () {
     }
 
     if (!$Settings->hasPermission('news.delete')) {
-        abortwith(403, lang('You do not have permission to delete news items.', "Sie haben keine Berechtigung, News zu löschen."));
+        abortwith(403, lang('news.you_do_not_have_permission_to_delete_news_items'));
     }
 
     $id = $_POST['id'] ?? '';
 
     if (empty($id)) {
-        abortwith(400, lang('Invalid news item ID.', "Ungültige News-ID."));
+        abortwith(400, lang('news.invalid_news_item_id'));
     }
 
     $result = $osiris->news->deleteOne(['_id' => DB::to_ObjectID($id)]);
@@ -340,6 +340,6 @@ Route::post('/crud/news/delete', function () {
         header('Location: ' . ROOTPATH . '/news');
         exit;
     } else {
-        abortwith(500, lang('Failed to delete news item.', "Die Löschung der Nachricht ist fehlgeschlagen."));
+        abortwith(500, lang('news.failed_to_delete_news_item'));
     }
 });

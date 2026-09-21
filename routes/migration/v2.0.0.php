@@ -190,11 +190,8 @@ function ensureIndex($collection, array $keys, array $options = [])
 }
 
 echo '<div class="migration-card">';
-echo '<h3>' . lang('Command palette search indexes', 'Suchindizes für die Command Palette') . '</h3>';
-echo '<p class="migration-muted">' . lang(
-    'OSIRIS is creating or confirming the indexes required for fast command palette search.',
-    'OSIRIS erstellt oder bestätigt die Indizes, die für eine schnelle Suche in der Command Palette benötigt werden.'
-) . '</p>';
+echo '<h3>' . lang('admin.command_palette_search_indexes') . '</h3>';
+echo '<p class="migration-muted">' . lang('admin.osiris_is_creating_or_confirming_the_indexes_required_for_fast_command_pale') . '</p>';
 echo '<ul class="migration-index-list">';
 
 /* persons */
@@ -268,10 +265,7 @@ if ($news->countDocuments() === 0) {
 }
 
 echo '<div class="migration-card success">';
-echo '<h3 class="migration-ok">✓ ' . lang('Migration completed', 'Migration abgeschlossen') . '</h3>';
-echo '<p>' . lang(
-    'All required migration steps have finished. OSIRIS is ready to use with the updated database structure.',
-    'Alle notwendigen Migrationsschritte wurden abgeschlossen. OSIRIS kann mit der aktualisierten Datenbankstruktur verwendet werden.'
-) . '</p>';
+echo '<h3 class="migration-ok">✓ ' . lang('admin.migration_completed') . '</h3>';
+echo '<p>' . lang('admin.all_required_migration_steps_have_finished_osiris_is_ready_to_use_with_the') . '</p>';
 echo '</div>';
 echo '</div>';

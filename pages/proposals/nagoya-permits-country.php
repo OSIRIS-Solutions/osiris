@@ -4,7 +4,7 @@ $Vocabulary = new Vocabulary();
 if (!$country) {
 ?>
     <div class="alert danger">
-        <?= lang('Country not found for this project.', 'Land für dieses Projekt nicht gefunden.') ?>
+        <?= lang('projects.country_not_found_for_this_project') ?>
     </div>
 <?php
     return;
@@ -61,16 +61,16 @@ $countryLabel = $evaluation['label'] ?? '';
 
 <h1 class="mb-0">
     <i class="ph-duotone ph-file-text"></i>
-    <?= lang('ABS permits for', 'ABS-Genehmigungen für') ?>
+    <?= lang('projects.abs_permits_for') ?>
     <?= ($DB->getCountry($code, lang('common.field_name_language'))) ?>
 </h1>
 <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>#nagoya">
     <i class="ph ph-arrow-left"></i>
-    <?= lang('Back to all countries', 'Zurück zu allen Ländern') ?>
+    <?= lang('projects.back_to_all_countries') ?>
 </a>
 
 <div class="d-flex align-items-center gap-10 mt-20">
-    <b><?= lang('Nagoya status', 'Nagoya-Status') ?>:</b>
+    <b><?= lang('common.nagoya_status') ?>:</b>
     <!-- <?= Nagoya::badge(DB::doc2Arr($project), false) ?> -->
     <?= Nagoya::countryBadge(DB::doc2Arr($country)) ?>
 </div>
@@ -81,21 +81,15 @@ $countryLabel = $evaluation['label'] ?? '';
     <div class="col-md-8 my-0">
         <h2 class="title">
             <i class="ph-duotone ph-file-text"></i>
-            <?= lang('Permits for this country', 'Genehmigungen für dieses Land') ?>
+            <?= lang('projects.permits_for_this_country') ?>
         </h2>
         <?php if (!$canEditBasic): ?>
             <p class="text-muted mb-0 font-size-12">
-                <?= lang(
-                    'You can see the permit information for this country. Changes can only be made by the ABS Compliance Team.',
-                    'Du kannst die Genehmigungsinformationen für dieses Land einsehen. Änderungen können nur vom ABS-Compliance-Team vorgenommen werden.'
-                ) ?>
+                <?= lang('projects.you_can_see_the_permit_information_for_this_country_changes_can_only_be_mad') ?>
             </p>
         <?php else: ?>
             <p class="text-muted mb-0 font-size-12">
-                <?= lang(
-                    'Please keep permit information up to date. Use the fields below to edit names, identifiers and status. Document uploads are handled per permit.',
-                    'Bitte halte die Genehmigungsinformationen aktuell. Nutze die Felder unten, um Namen, Kennungen und Status zu bearbeiten. Dokumente können pro Genehmigung hochgeladen werden.'
-                ) ?>
+                <?= lang('projects.please_keep_permit_information_up_to_date_use_the_fields_below_to_edit_name') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -104,21 +98,15 @@ $countryLabel = $evaluation['label'] ?? '';
     <div class="col-md-4 my-0">
         <h2 class="title">
             <i class="ph-duotone ph-chats-circle"></i>
-            <?= lang('Shared notes', 'Gemeinsame Notizen') ?>
+            <?= lang('common.shared_notes') ?>
         </h2>
         <?php if (!$canAddNotes): ?>
             <p class="text-muted mb-0 font-size-12">
-                <?= lang(
-                    'You can see shared notes related to permits for this country. Adding notes is restricted to the ABS Compliance Team.',
-                    'Du kannst gemeinsame Notizen zu Genehmigungen für dieses Land einsehen. Das Hinzufügen von Notizen ist auf das ABS-Compliance-Team beschränkt.'
-                ) ?>
+                <?= lang('projects.you_can_see_shared_notes_related_to_permits_for_this_country_adding_notes_i') ?>
             </p>
         <?php else: ?>
             <p class="text-muted mb-0 font-size-12">
-                <?= lang(
-                    'Use the shared notes area to document communication and decisions related to ABS permits for this country.',
-                    'Nutze den Bereich für gemeinsame Notizen, um Kommunikation und Entscheidungen zu ABS-Genehmigungen für dieses Land zu dokumentieren.'
-                ) ?>
+                <?= lang('projects.use_the_shared_notes_area_to_document_communication_and_decisions_related_t') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -151,14 +139,14 @@ $countryLabel = $evaluation['label'] ?? '';
                             <div class="dropdown float-right">
                                 <button class="btn link small text-danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                                     <i class="ph-duotone ph-trash"></i>
-                                    <span class="sr-only"><?= lang('Delete permit', 'Genehmigung löschen') ?></span>
+                                    <span class="sr-only"><?= lang('projects.delete_permit') ?></span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
                                     <div class="content">
-                                        <?= lang('Are you sure you want to delete this permit? This action cannot be undone.', 'Möchten Sie diese Genehmigung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
+                                        <?= lang('projects.are_you_sure_you_want_to_delete_this_permit_this_action_cannot_be_undone') ?>
                                         <button type="button" class="btn danger" onclick="$(this).parent('.permit-block').remove();">
                                             <i class="ph ph-trash"></i>
-                                            <?= lang('Yes, delete permit', 'Ja, Genehmigung löschen') ?>
+                                            <?= lang('projects.yes_delete_permit') ?>
                                         </button>
                                     </div>
                                 </div>
@@ -179,9 +167,9 @@ $countryLabel = $evaluation['label'] ?? '';
                                             class="form-control w-300"
                                             name="permits[<?= e($pid) ?>][name]"
                                             value="<?= e($name) ?>"
-                                            placeholder="<?= lang('Permit name (e.g. PIC, MAT, ABS permit…)', 'Name der Genehmigung (z.B. PIC, MAT, ABS-Genehmigung…)') ?>">
+                                            placeholder="<?= lang('projects.permit_name_e_g_pic_mat_abs_permit') ?>">
                                     <?php else: ?>
-                                        <strong><?= e($name ?: lang('Unnamed permit', 'Unbenannte Genehmigung')) ?></strong>
+                                        <strong><?= e($name ?: lang('common.unnamed_permit')) ?></strong>
                                     <?php endif; ?>
                                     <?php if (!empty($comment) && !$canEditBasic): ?>
                                         <div class="small text-muted">
@@ -199,9 +187,9 @@ $countryLabel = $evaluation['label'] ?? '';
                                             name="permits[<?= e($pid) ?>][status]"
                                             class="form-control d-inline-block w-auto">
                                             <option value="" disabled><?= lang('common.status') ?></option>
-                                            <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('Needed', 'Erforderlich') ?></option>
-                                            <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('Requested', 'Beantragt') ?></option>
-                                            <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
+                                            <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('common.needed') ?></option>
+                                            <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('common.requested') ?></option>
+                                            <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('common.granted') ?></option>
                                             <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
                                         </select>
                                     <?php else: ?>
@@ -213,7 +201,7 @@ $countryLabel = $evaluation['label'] ?? '';
                             <?php if ($status !== 'not-applicable') { ?>
                                 <div class="row row-eq-spacing">
                                     <div class="col-md-6">
-                                        <label class="small mb-1"><?= lang('Permit number', 'Genehmigungsnummer') ?></label>
+                                        <label class="small mb-1"><?= lang('projects.permit_number') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
@@ -226,7 +214,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small mb-1"><?= lang('IRCC number', 'IRCC-Nummer') ?> <small>(Internationally Recognized Certificate of Compliance)</small></label>
+                                        <label class="small mb-1"><?= lang('projects.ircc_number') ?> <small>(Internationally Recognized Certificate of Compliance)</small></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
@@ -241,7 +229,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                 </div>
                                 <div class="row row-eq-spacing">
                                     <div class="col-md-6">
-                                        <label class="small mb-1"><?= lang('Link to IRCC in the ABS Clearing House', 'Link zum IRCC im ABS Clearing-House') ?></label>
+                                        <label class="small mb-1"><?= lang('projects.link_to_ircc_in_the_abs_clearing_house') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
@@ -254,7 +242,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small mb-1"><?= lang('Validity of the permit', 'Gültigkeit der Genehmigung') ?></label>
+                                        <label class="small mb-1"><?= lang('projects.validity_of_the_permit') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <input
                                                 type="text"
@@ -278,20 +266,20 @@ $countryLabel = $evaluation['label'] ?? '';
                                             value="1"
                                             onchange="$('#restriction-details-<?= e($pid) ?>').toggleClass('hidden', !this.checked);"
                                             <?= $restricts_transfer ? 'checked' : '' ?>>
-                                        <label class="ml-5"><?= lang('The permit includes restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?></label>
+                                        <label class="ml-5"><?= lang('projects.the_permit_includes_restrictions_to_transfer_generic_materials_to_third_par') ?></label>
                                     <?php else: ?>
                                         <div class="small">
                                             <?php if ($restricts_transfer) { ?>
-                                                <?= lang('The permit includes restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?>
+                                                <?= lang('projects.the_permit_includes_restrictions_to_transfer_generic_materials_to_third_par') ?>
                                             <?php } else { ?>
-                                                <?= lang('The permit does not include restrictions to transfer generic materials to third parties', 'Die Genehmigung enthält keine Einschränkungen für die Weitergabe generischer Materialien an Dritte') ?>
+                                                <?= lang('projects.the_permit_does_not_include_restrictions_to_transfer_generic_materials_to_t') ?>
                                             <?php } ?>
                                         </div>
                                     <?php endif; ?>
 
                                     <!-- if yes: add comment -->
                                     <div class="form-group mt-2 <?= $restricts_transfer ? '' : 'hidden' ?>" id="restriction-details-<?= e($pid) ?>">
-                                        <label class="small mb-1"><?= lang('Please specify the restrictions', 'Bitte geben Sie die Einschränkungen an') ?></label>
+                                        <label class="small mb-1"><?= lang('projects.please_specify_the_restrictions') ?></label>
                                         <?php if ($canEditBasic): ?>
                                             <textarea
                                                 type="text"
@@ -306,7 +294,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                 <!-- Main benefit sharing commitments and deadlines -->
                                 <div class="form-group">
                                     <?php if ($canEditBasic): ?>
-                                        <label class="small mb-1"><?= lang('Main benefit-sharing commitments and deadlines', 'Hauptverpflichtungen und Fristen zur Vorteilsbeteiligung') ?></label>
+                                        <label class="small mb-1"><?= lang('projects.main_benefit_sharing_commitments_and_deadlines') ?></label>
                                         <textarea
                                             type="text"
                                             class="form-control"
@@ -320,7 +308,7 @@ $countryLabel = $evaluation['label'] ?? '';
 
                                 <?php if ($countryLabel === 'A') { ?>
                                     <div class="form-group">
-                                        <?= lang('Have you submitted the Due Diligence Declaration for this permit to the ABS Clearing-House?', 'Hast du die <em>Due Diligence Declaration</em> für diese Genehmigung im ABS Clearing-House eingereicht?') ?>
+                                        <?= lang('projects.have_you_submitted_the_due_diligence_declaration_for_this_permit_to_the_abs') ?>
                                         <a href="https://nagoyaprotocol-hub.de/my-obligations/#obligation-2" target="_blank" rel="noopener noreferrer"><i class="ph ph-info"></i></a>
                                         <?php if ($canEditBasic): ?>
                                             <input type="hidden" name="permits[<?= e($pid) ?>][declared]" value="0">
@@ -331,17 +319,17 @@ $countryLabel = $evaluation['label'] ?? '';
                                                     value="1"
                                                     id="declared-<?= e($pid) ?>"
                                                     <?= $declared ? 'checked' : '' ?>>
-                                                <label class="ml-5" for="declared-<?= e($pid) ?>"><?= lang('Yes, I have submitted the declaration.', 'Ja, ich habe die Erklärung eingereicht.') ?></label>
+                                                <label class="ml-5" for="declared-<?= e($pid) ?>"><?= lang('projects.yes_i_have_submitted_the_declaration') ?></label>
                                             </div>
                                             <small class="text-muted">
-                                                <?= lang('If you have submitted the declaration, please upload a copy of the confirmation received from the ABS Clearing-House in the documents section below.', 'Falls du die Erklärung eingereicht hast, lade bitte eine Kopie der Bestätigung, die du vom ABS Clearing-House erhalten hast, im untenstehenden Dokumentenbereich hoch.') ?>
+                                                <?= lang('projects.if_you_have_submitted_the_declaration_please_upload_a_copy_of_the_confirmat') ?>
                                             </small>
                                         <?php else: ?>
                                             <div class="small">
                                                 <?php if ($declared) { ?>
-                                                    <?= lang('Yes, the declaration has been submitted.', 'Ja, die Erklärung wurde eingereicht.') ?>
+                                                    <?= lang('projects.yes_the_declaration_has_been_submitted') ?>
                                                 <?php } else { ?>
-                                                    <?= lang('No, the declaration has not yet been submitted.', 'Nein, die Erklärung wurde noch nicht eingereicht.') ?>
+                                                    <?= lang('projects.no_the_declaration_has_not_yet_been_submitted') ?>
                                             </div>
                                         <?php } ?>
                                     <?php endif; ?>
@@ -355,7 +343,7 @@ $countryLabel = $evaluation['label'] ?? '';
 
 
                                 <div class="form-group">
-                                    <label class="small mb-1"><?= lang('Comment from ABS team', 'Kommentar vom ABS-Team') ?></label>
+                                    <label class="small mb-1"><?= lang('projects.comment_from_abs_team') ?></label>
                                     <?php if ($canValidateABS): ?>
                                         <textarea
                                             type="text"
@@ -375,10 +363,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                                 value="1"
                                                 <?= $checked ? 'checked' : '' ?>>
                                             <span class="ml-5">
-                                                <?= lang(
-                                                    'ABS team has checked and validated all information for this permit.',
-                                                    'ABS-Team hat alle Informationen zu dieser Genehmigung geprüft und validiert.'
-                                                ) ?>
+                                                <?= lang('projects.abs_team_has_checked_and_validated_all_information_for_this_permit') ?>
                                             </span>
                                         </label>
                                     </div>
@@ -386,11 +371,11 @@ $countryLabel = $evaluation['label'] ?? '';
                                     <div class="small text-muted mb-5">
                                         <?php if ($checked): ?>
                                             <span class="badge tiny success">
-                                                <i class="ph ph-check"></i> <?= lang('validated by ABS team', 'vom ABS-Team validiert') ?>
+                                                <i class="ph ph-check"></i> <?= lang('projects.validated_by_abs_team') ?>
                                             </span>
                                         <?php else: ?>
                                             <span class="badge tiny warning">
-                                                <i class="ph ph-warning"></i> <?= lang('validation pending', 'Validierung ausstehend') ?>
+                                                <i class="ph ph-warning"></i> <?= lang('projects.validation_pending') ?>
                                             </span>
                                         <?php endif; ?>
                                     </div>
@@ -418,7 +403,7 @@ $countryLabel = $evaluation['label'] ?? '';
                                                                     </strong>
                                                                 </a>
                                                                 <small class="text-muted">
-                                                                    <?= lang('Uploaded by', 'Hochgeladen von') ?>
+                                                                    <?= lang('common.uploaded_by') ?>
                                                                     <?= $DB->getNameFromId($doc['uploaded_by']) ?>
                                                                     <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                                 </small>
@@ -432,14 +417,14 @@ $countryLabel = $evaluation['label'] ?? '';
                                         </table>
                                     <?php else: ?>
                                         <p class="text-muted small mb-5">
-                                            <?= lang('No documents uploaded yet for this permit.', 'Für diese Genehmigung wurden noch keine Dokumente hochgeladen.') ?>
+                                            <?= lang('projects.no_documents_uploaded_yet_for_this_permit') ?>
                                         </p>
                                     <?php endif; ?>
 
                                     <?php if ($canUploadDocs): ?>
                                         <a href="#docs-permit-<?= e($pid) ?>" class="btn small" data-toggle="modal">
                                             <i class="ph ph-upload"></i>
-                                            <?= lang('Upload Documents', 'Dokumente hochladen') ?>
+                                            <?= lang('projects.upload_documents') ?>
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -452,7 +437,7 @@ $countryLabel = $evaluation['label'] ?? '';
                 <?php if ($canEditBasic): ?>
                     <button type="button" class="btn small outline" id="add-permit">
                         <i class="ph ph-plus"></i>
-                        <?= lang('Add permit', 'Genehmigung hinzufügen') ?>
+                        <?= lang('common.add_permit') ?>
                     </button>
                 <?php endif; ?>
             </div>
@@ -461,7 +446,7 @@ $countryLabel = $evaluation['label'] ?? '';
                 <div class="mt-15">
                     <button type="submit" class="btn success">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('Save permit information', 'Genehmigungsinformationen speichern') ?>
+                        <?= lang('projects.save_permit_information') ?>
                     </button>
                 </div>
             <?php endif; ?>
@@ -492,7 +477,7 @@ $countryLabel = $evaluation['label'] ?? '';
             </div>
         <?php else: ?>
             <div class="box padded text-muted">
-                <?= lang('No notes added yet.', 'Noch keine Notizen vorhanden.') ?>
+                <?= lang('common.no_notes_added_yet') ?>
             </div>
         <?php endif; ?>
 
@@ -500,17 +485,17 @@ $countryLabel = $evaluation['label'] ?? '';
             <form method="post" action="<?= ROOTPATH ?>/crud/nagoya/add-permit-note/<?= $id ?>" class="box padded">
                 <div class="form-group">
                     <label class="font-weight-bold small">
-                        <?= lang('Add note', 'Notiz hinzufügen') ?>
+                        <?= lang('common.add_note') ?>
                     </label>
                     <textarea
                         name="message"
                         rows="3"
                         class="form-control"
-                        placeholder="<?= lang('Short note on communication, decisions or next steps…', 'Kurze Notiz zu Kommunikation, Entscheidungen oder nächsten Schritten…') ?>"></textarea>
+                        placeholder="<?= lang('common.short_note_on_communication_decisions_or_next_steps') ?>"></textarea>
                 </div>
                 <button type="submit" class="btn small primary">
                     <i class="ph ph-paper-plane-right"></i>
-                    <?= lang('Save note', 'Notiz speichern') ?>
+                    <?= lang('common.save_note') ?>
                 </button>
             </form>
         <?php endif; ?>
@@ -526,12 +511,12 @@ $countryLabel = $evaluation['label'] ?? '';
             <div class="modal-content">
                 <h5 class="title">
                     <i class="ph-duotone ph-upload"></i>
-                    <?= lang('Upload document for permit', 'Dokument für Genehmigung hochladen') ?>: <q><?= e($p['name'] ?? '') ?></q>
+                    <?= lang('projects.upload_document_for_permit') ?>: <q><?= e($p['name'] ?? '') ?></q>
                 </h5>
 
                 <p>
                     <i class="ph-duotone ph-warning text-danger"></i>
-                    <?= lang('Please make sure to save your progress on the main permit form before uploading documents, because the upload will reload the page.', 'Bitte stelle sicher, dass du deine Fortschritte im Hauptformular für Genehmigungen gespeichert hast, bevor du Dokumente hochlädst, da der Upload die Seite neu laden wird.') ?>
+                    <?= lang('projects.please_make_sure_to_save_your_progress_on_the_main_permit_form_before_uploa') ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/data/upload"
@@ -542,7 +527,7 @@ $countryLabel = $evaluation['label'] ?? '';
                         <div class="custom-file">
                             <input type="file" id="upload-file-<?= e($pid) ?>" name="file" class="custom-file-input" required>
                             <label for="upload-file-<?= e($pid) ?>" class="custom-file-label">
-                                <?= lang('Choose a file', 'Wähle eine Datei aus') ?>
+                                <?= lang('common.choose_a_file') ?>
                             </label>
                         </div>
                     </div>
@@ -578,7 +563,7 @@ $countryLabel = $evaluation['label'] ?? '';
 
                     <button class="btn primary" type="submit">
                         <i class="ph ph-upload-simple"></i>
-                        <?= lang('Upload document', 'Dokument hochladen') ?>
+                        <?= lang('common.upload_document') ?>
                     </button>
                 </form>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -594,13 +579,13 @@ $countryLabel = $evaluation['label'] ?? '';
 <div class="box padded permit-block hidden" data-permit-id="**" id="template">
     <h3 class="title">
         <i class="ph-duotone ph-file-text"></i>
-        <?= lang('New permit', 'Neue Genehmigung') ?>
+        <?= lang('projects.new_permit') ?>
     </h3>
     <input type="hidden" name="permits[**][id]" value="**">
     <div class="d-flex justify-content-between align-items-center mb-20">
         <div>
-            <label class="small mb-1"><?= lang('Permit name', 'Name der Genehmigung') ?></label>
-            <input type="text" class="form-control" name="permits[**][name]" value="" placeholder="<?= lang('e.g. PIC, MAT, ABS permit…', 'z.B. PIC, MAT, ABS-Genehmigung…') ?>">
+            <label class="small mb-1"><?= lang('projects.permit_name') ?></label>
+            <input type="text" class="form-control" name="permits[**][name]" value="" placeholder="<?= lang('projects.e_g_pic_mat_abs_permit') ?>">
         </div>
         <div class="text-right small">
             <label class="small mb-1"><?= lang('common.status') ?></label>
@@ -615,7 +600,7 @@ $countryLabel = $evaluation['label'] ?? '';
     </div>
     <small class="text-muted">
         <i class="ph ph-info"></i>
-        <?= lang('Please save the permit information to see more options for this permit.', 'Bitte speichere die Genehmigungsinformationen, um weitere Optionen für diese Genehmigung zu sehen.') ?>
+        <?= lang('projects.please_save_the_permit_information_to_see_more_options_for_this_permit') ?>
     </small>
 </div>
 

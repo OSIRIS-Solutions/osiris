@@ -83,18 +83,18 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/infrastructures">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to Infrastructures', 'Zurück zu Infrastrukturen') ?>
+        <?= lang('infrastructures.back_to_infrastructures') ?>
     </a>
 </div>
 
 
 <div class="alert signal">
-    <?= lang('All of the following statistics are based on the reporting date.', 'Alle unten aufgeführten Statistiken basieren auf dem angegebenen Stichtag.') ?>
+    <?= lang('infrastructures.all_of_the_following_statistics_are_based_on_the_reporting_date') ?>
 
     <form action="<?= ROOTPATH ?>/infrastructures/statistics" method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-        <h6 class="mb-0 mt-5"><?= lang('Change Reporting Date', 'Stichtag ändern') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= lang('common.change_reporting_date') ?>:</h6>
         <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" />
-        <h6 class="mb-0 mt-5"><?= lang('Change Year for Statistics', 'Jahr für Statistik ändern') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= lang('infrastructures.change_year_for_statistics') ?>:</h6>
         <input type="number" name="year" value="<?= $year ?>" class="form-control w-100 d-inline-block" />
         <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
     </form>
@@ -103,21 +103,21 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 <br>
 <div id="statistics">
     <p class="lead">
-        <?= lang('Number of infrastructures on the reporting date', 'Anzahl der Infrastrukturen zum Stichtag') ?>:
+        <?= lang('infrastructures.number_of_infrastructures_on_the_reporting_date') ?>:
         <b class="badge signal"><?= count($infrastructures) ?></b>
         <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
     <h3>
-        <?= lang('List of research infrastructures', 'Liste bestehender Forschungsinfrastrukturen') ?>
+        <?= lang('infrastructures.list_of_research_infrastructures') ?>
     </h3>
     <table class="table" id="infrastructures">
         <thead>
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.category') ?></th>
-                <th><?= lang('Access Type', 'Art des Zugangs') ?></th>
-                <th><?= lang('Type', 'Art') ?></th>
+                <th><?= lang('infrastructures.access_type') ?></th>
+                <th><?= lang('common.type_statistics') ?></th>
                 <th><?= lang('common.description') ?></th>
             </tr>
         </thead>
@@ -147,7 +147,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     </table>
 
     <h3>
-        <?= lang('Users in', 'Anzahl der Nutzer:innen in') ?> <?= $year ?>
+        <?= lang('infrastructures.users_in') ?> <?= $year ?>
     </h3>
 
     <table class="table" id="user-stats">
@@ -155,9 +155,9 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
-                <th class="text-right"><?= lang('Internal', 'Intern') ?></th>
-                <th class="text-right"><?= lang('National', 'National') ?></th>
-                <th class="text-right"><?= lang('International', 'International') ?></th>
+                <th class="text-right"><?= lang('common.internal') ?></th>
+                <th class="text-right"><?= lang('infrastructures.national') ?></th>
+                <th class="text-right"><?= lang('infrastructures.international') ?></th>
                 <th class="text-right"><?= lang('common.total') ?></th>
             </tr>
         </thead>
@@ -247,7 +247,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h3>
-        <?= lang('Usage statistics in', 'Nutzungsstatistiken in') ?> <?= $year ?>
+        <?= lang('infrastructures.usage_statistics_in') ?> <?= $year ?>
     </h3>
 
 
@@ -327,8 +327,8 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h3>
-        <?= lang('Personnel statistics', 'Personalstatistiken') ?>
-        <?= lang('on the reporting date', 'am Stichtag') ?>
+        <?= lang('infrastructures.personnel_statistics') ?>
+        <?= lang('common.on_the_reporting_date') ?>
     </h3>
 
     <table class="table" id="person-stats">
@@ -338,10 +338,10 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <th>Typ</th>
                 <th>Umfang (VZÄ)</th>
                 <th>
-                    <?= lang('Contact person', 'Ansprechpartner') ?>
+                    <?= lang('infrastructures.contact_person') ?>
                 </th>
                 <th>
-                    <?= lang('# Persons', '# Persons') ?>
+                    <?= lang('infrastructures.persons') ?>
                 </th>
             </tr>
         </thead>
@@ -423,7 +423,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <hr>
 
     <h2>
-        <?= lang('Collaborative research infrastructures', 'Verbundforschungsinfrastrukturen') ?>
+        <?= lang('infrastructures.collaborative_research_infrastructures') ?>
     </h2>
 
     <?php
@@ -447,14 +447,14 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <tbody>
             <tr>
                 <td>
-                    <?= lang('Number of collaborative infrastructures on the reporting date', 'Anzahl der Verbundinfrastrukturen zum Stichtag') ?>
+                    <?= lang('infrastructures.number_of_collaborative_infrastructures_on_the_reporting_date') ?>
                     <br>
                     <b class="text-secondary"><?= count($collaborations) ?></b>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <?= lang('Number of collaborative infrastructures with a coordinator', 'Davon Anzahl der Verbundinfrastrukturen mit Koordinator') ?>
+                    <?= lang('infrastructures.number_of_collaborative_infrastructures_with_a_coordinator') ?>
                     <br>
                     <b class="text-secondary"><?= $coordinators ?></b>
                 </td>
@@ -464,7 +464,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h5>
-        <?= lang('List of collaborative research infrastructures', 'Liste bestehender Verbundforschungsinfrastrukturen') ?>
+        <?= lang('infrastructures.list_of_collaborative_research_infrastructures') ?>
     </h5>
 
     <table class="table" id="collaborations">
@@ -472,7 +472,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
-                <th><?= lang('Coordinator', 'Koordinator') ?></th>
+                <th><?= lang('common.coordinator') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -497,7 +497,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                                     echo '<a href="' . ROOTPATH . '/organizations/view/' . $coordinator['_id'] . '">' . lang($coordinator['name'], $coordinator['name_de'] ?? null) . '</a>';
                                 }
                             } else {
-                                echo lang('No coordinator', 'Kein Koordinator');
+                                echo lang('infrastructures.no_coordinator');
                             }
                         } ?>
                     </td>
@@ -537,7 +537,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     ?>
 
     <h5>
-        <?= lang('Cooperation partners', 'Kooperationspartner') ?>
+        <?= lang('common.cooperation_partners') ?>
         (<?= count($collaborations) ?>)
     </h5>
 
@@ -546,8 +546,8 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
-                <th><?= lang('Location', 'Standort') ?></th>
-                <th><?= lang('Number of infrastructures', 'Anzahl der Infrastrukturen') ?></th>
+                <th><?= lang('common.location_edit') ?></th>
+                <th><?= lang('infrastructures.number_of_infrastructures') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -602,11 +602,11 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     }
 
     $(document).ready(function() {
-        initDownloadTable('#infrastructures', lang('Infrastructures - Overview', 'Infrastrukturen - Übersicht') + ' <?= $reportdate ?>');
-        initDownloadTable('#user-stats', lang('Infrastructures - User Statistics', 'Infrastrukturen - Nutzerstatistiken') + ' <?= $year ?>');
-        initDownloadTable('#action-stats', lang('Infrastructures - Usage Statistics', 'Infrastrukturen - Nutzungsstatistiken') + ' <?= $year ?>');
-        initDownloadTable('#person-stats', lang('Infrastructures - Personnel Statistics', 'Infrastrukturen - Personalstatistiken') + ' <?= $reportdate ?>');
-        initDownloadTable('#collaborations', lang('Infrastructures - Collaborative Infrastructures', 'Infrastrukturen - Verbundinfrastrukturen') + ' <?= $reportdate ?>');
-        initDownloadTable('#collaborative-partners', lang('Infrastructures - Collaborative Partners', 'Infrastrukturen - Kooperationspartner') + ' <?= $reportdate ?>');
+        initDownloadTable('#infrastructures', <?= json_encode(lang('infrastructures.infrastructures_overview'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#user-stats', <?= json_encode(lang('infrastructures.infrastructures_user_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
+        initDownloadTable('#action-stats', <?= json_encode(lang('infrastructures.infrastructures_usage_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
+        initDownloadTable('#person-stats', <?= json_encode(lang('infrastructures.infrastructures_personnel_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborations', <?= json_encode(lang('infrastructures.infrastructures_collaborative_infrastructures'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborative-partners', <?= json_encode(lang('infrastructures.infrastructures_collaborative_partners'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
     });
 </script>

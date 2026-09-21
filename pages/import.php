@@ -35,10 +35,10 @@ require_once BASEPATH . '/php/Orcid.php';
 <?php if (!$googlescholar && !$openalex && !$orcid) { ?>
     <div class="alert danger">
         <h2 class="title">
-            <?= lang('Import not available', 'Import nicht verfügbar') ?>
+            <?= lang('import.import_not_available') ?>
         </h2>
         <p>
-            <?= lang('The import feature is not available for your institute.', 'Die Import-Funktion ist für dein Institut nicht verfügbar.') ?>
+            <?= lang('import.the_import_feature_is_not_available_for_your_institute') ?>
         </p>
     </div>
 <?php } ?>
@@ -57,30 +57,23 @@ if ($openalex) {
                 </b>
                 <h2 class="title mt-10">OpenAlex Import</h2>
                 <p>
-                    <?= lang(
-                        'You can import data from OpenAlex! This method is very reliable, so we recommend it.',
-                        'Du kannst Publikationen von OpenAlex importieren! Da diese Methode sehr zuverlässig ist, empfehlen wir sie.'
-                    ) ?>
+                    <?= lang('import.you_can_import_data_from_openalex_this_method_is_very_reliable_so_we_recomm') ?>
                 </p>
                 <p>
                     <b>
-                        <?= lang(
-                            '
-            How you can find your OpenAlex ID:',
-                            'Wie du deine OpenAlex-ID herausfindest:'
-                        ) ?>
+                        <?= lang('import.how_you_can_find_your_openalex_id') ?>
                     </b>
                 </p>
 
                 <ol class="list success">
                     <li>
-                        <?= lang('Go to OpenAlex and search for your name or for one of your publications.', 'Gehe zu OpenAlex und suche nach deinem Namen oder nach einer deiner Publikationen.') ?>
+                        <?= lang('import.go_to_openalex_and_search_for_your_name_or_for_one_of_your_publications') ?>
                     </li>
                     <li>
-                        <?= lang('Click on one of your publications. A side window will open showing the details. In the list of authors, you click on your name.', 'Klicke auf eine deiner Publikationen, woraufhin sich eine Seitenleiste mit den Details öffnet. Dort klickst du auf deinen Namen in der Autorenliste.') ?>
+                        <?= lang('import.click_on_one_of_your_publications_a_side_window_will_open_showing_the_detai') ?>
                     </li>
                     <li>
-                        <?= lang('You are now on your OpenAlex profile page. To import all the publications shown there into OSIRIS at once, you need the OpenAlex ID, which is the last part of the URL. It starts with `a` followed by numbers. Copy it into the field below and start the import.', 'Nun bist du auf deiner OpenAlex-Profilseite. Um alle dort gezeigten Publikationen mit einmal in OSIRIS zu importieren brauchst du die OpenAlex-ID, die der letzte Teil der URL ist. Sie beginnt mit einem `a` gefolgt von Zahlen. Kopiere sie in das Feld unten und starte mit dem Import.') ?>
+                        <?= lang('import.you_are_now_on_your_openalex_profile_page_to_import_all_the_publications_sh') ?>
                     </li>
 
                     <form action="<?= ROOTPATH ?>/import/openalex" method="get">
@@ -100,10 +93,7 @@ if ($openalex) {
             <div class="content">
                 <h2 class="title">OpenAlex Import</h2>
                 <p>
-                    <?= lang(
-                        'Your Institute must add the institutional OpenAlex ID in their general settings to use this feature.',
-                        'Dein Institut muss die institutionelle OpenAlex-ID in den allgemeinen Einstellungen hinterlegen, um dieses Feature zu nutzen.'
-                    ) ?>
+                    <?= lang('import.your_institute_must_add_the_institutional_openalex_id_in_their_general_sett') ?>
                 </p>
             </div>
         </div>
@@ -118,17 +108,14 @@ if ($googlescholar) {
             <div class="content">
                 <h2 class="title">Google Scholar Import</h2>
                 <p>
-                    <?= lang(
-                        'You can import data from your Google scholar account',
-                        'Du kannst Publikationen von deinem Google Scholar-Account importieren'
-                    ) ?>:
+                    <?= lang('import.you_can_import_data_from_your_google_scholar_account') ?>:
                 </p>
                 <p class="mt-0 font-size-16 font-weight-bold">
                     Account-ID: <a href="https://scholar.google.com/citations?user=<?= $USER['google_scholar'] ?>"><?= $USER['google_scholar'] ?></a>
                 </p>
 
                 <p class="font-size-12 text-muted">
-                    <?= lang('Please note that only the 100 latest entries can be imported.', 'Bitte beachte, dass nur die 100 neusten Einträge importiert werden können.') ?>
+                    <?= lang('import.please_note_that_only_the_100_latest_entries_can_be_imported') ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $USER['google_scholar'] ?>" method="get">
@@ -142,13 +129,10 @@ if ($googlescholar) {
             <div class="content">
                 <h2 class="title">Google Scholar Import</h2>
                 <p>
-                    <?= lang(
-                        'You must connect a google scholar account to your profile to use this feature.',
-                        'Du musst einen Google Scholar-Account in deinem Profil hinterlegen, um dieses Feature zu nutzen.'
-                    ) ?>
+                    <?= lang('import.you_must_connect_a_google_scholar_account_to_your_profile_to_use_this_featu') ?>
                 </p>
 
-                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" class="btn"><?= lang('Update Profile', 'Profil bearbeiten') ?></a>
+                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" class="btn"><?= lang('import.update_profile') ?></a>
 
             </div>
         </div>
@@ -167,10 +151,7 @@ if($orcid) {
                 <div class="content">
                     <h2 class="title">ORCID Import</h2>
                     <p>
-                        <?= lang(
-                            'You can import data from your ORCID account',
-                            'Du kannst Publikationen von deinem ORCID-Account importieren'
-                        ) ?>:
+                        <?= lang('import.you_can_import_data_from_your_orcid_account') ?>:
                     </p>
                     <p class="mt-0">
                         Account-ID: <a href="<?= $orcid->api_base_url . $USER['orcid'] ?>"><?= $USER['orcid'] ?></a>
@@ -187,13 +168,10 @@ if($orcid) {
                 <div class="content">
                     <h2 class="title">ORCID Import</h2>
                     <p>
-                        <?= lang(
-                            'You must connect an ORCID account to your profile to use this feature.',
-                            'Du musst einen ORCID-Account in deinem Profil verifizieren, um dieses Feature zu nutzen.'
-                        ) ?>
+                        <?= lang('import.you_must_connect_an_orcid_account_to_your_profile_to_use_this_feature') ?>
                     </p>
 
-                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('Update Profile', 'Profil bearbeiten') ?></a>
+                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('import.update_profile') ?></a>
 
                 </div>
             </div>
@@ -211,13 +189,13 @@ if($orcid) {
 <div class="box box-signal">
     <div class="content">
         <h2 class="title">
-            <?= lang('Import activities from file', 'Importiere Aktivitäten aus einer Datei') ?>
+            <?= lang('common.import_activities_from_file') ?>
         </h2>
         <form action="<?= ROOTPATH ?>/crud/import/file" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
             <div class="custom-file mb-20" id="file-input-div" >
                 <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                <label for="file-input"><?= lang('Upload a BibTeX file', 'Lade eine BibTeX-Datei hoch') ?></label>
+                <label for="file-input"><?= lang('common.upload_a_bibtex_file') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>
             </div>
 

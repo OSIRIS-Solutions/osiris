@@ -36,7 +36,7 @@ class JournalFields extends Fields
             [
                 "id" => "issn",
                 "module_of" => ['general'],
-                "label" => lang("ISSN", "ISSN"),
+                "label" => lang('journals.issn'),
                 'type' => 'list',
                 'usage' => [
                     'filter',
@@ -55,7 +55,7 @@ class JournalFields extends Fields
             [
                 "id" => "publisher",
                 "module_of" => ['general'],
-                "label" => lang("Publisher", "Verlag"),
+                "label" => lang('journals.publisher'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -66,7 +66,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.impact",
                 "module_of" => ['general'],
-                "label" => $if_label . lang(" Value", "-Wert"),
+                "label" => $if_label . lang('journals.value'),
                 'type' => 'double',
                 'usage' => [
                     'aggregate',
@@ -77,7 +77,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.year",
                 "module_of" => ['general'],
-                "label" => $if_label . lang(" Year", "-Jahr"),
+                "label" => $if_label . lang('journals.year'),
                 'type' => 'integer',
                 'usage' => [
                     'aggregate',
@@ -99,7 +99,7 @@ class JournalFields extends Fields
             [
                 "id" => "oa",
                 "module_of" => ['general'],
-                "label" => lang("Open Access", "Open Access"),
+                "label" => lang('journals.open_access'),
                 'type' => 'boolean',
                 'usage' => [
                     'aggregate',

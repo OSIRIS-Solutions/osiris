@@ -17,7 +17,7 @@
 include_once BASEPATH . '/php/Project.php';
 $Project = new Project();
 
-$phrase = lang('in the reporting year', 'im Reportjahr');
+$phrase = lang('common.in_the_reporting_year');
 $time_frame = '';
 
 // today is the default reportyear
@@ -26,20 +26,20 @@ if (isset($_GET['reportdate']) && !empty($_GET['reportdate'])) {
     $reportyear = date('Y', strtotime($reportdate));
     $reportstart = date('Y-m-d', strtotime($reportdate));
     $reportend = date('Y-m-d', strtotime($reportdate));
-    $phrase = lang('on the reporting date', 'am Stichtag');
-    $time_frame = lang('Reporting date', 'Stichtag') . ': ' . $reportdate;
+    $phrase = lang('common.on_the_reporting_date');
+    $time_frame = lang('projects.reporting_date') . ': ' . $reportdate;
 } else if (isset($_GET['reportyear']) && !empty($_GET['reportyear'])) {
     $reportyear = intval($_GET['reportyear']);
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
     $reportdate = date('Y-m-d');
-    $time_frame = lang('Reporting year', 'Reportjahr') . ': ' . $reportyear;
+    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
 } else {
     $reportyear = CURRENTYEAR;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
     $reportdate = date('Y-m-d');
-    $time_frame = lang('Reporting year', 'Reportjahr') . ': ' . $reportyear;
+    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
 }
 
 // get all projects that are active in the reporting year
@@ -87,31 +87,31 @@ $all = $osiris->projects->count();
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/projects">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to projects', 'Zurück zu Projekten') ?>
+        <?= lang('projects.back_to_projects') ?>
     </a>
 </div>
 
 
 <div class="alert signal">
     <i class="ph ph-warning text-signal"></i>
-    <?= lang('All of the following statistics are based on the selected reporting time.', 'Alle unten aufgeführten Statistiken basieren auf dem angegebenen Zeitraum/punkt.') ?>
+    <?= lang('projects.all_of_the_following_statistics_are_based_on_the_selected_reporting_time') ?>
 
     <div class="row position-relative mt-10">
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
-                <h6 class="mb-0 mt-5"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
+                <h6 class="mb-0 mt-5"><?= lang('common.change_reporting_year') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" required />
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
-        <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
+        <div class="text-divider"><?= lang('common.or') ?></div>
 
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/projects/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
-                <h6 class="mb-0 mt-5"><?= lang('Change Reporting Date', 'Stichtag ändern') ?>:</h6>
+                <h6 class="mb-0 mt-5"><?= lang('common.change_reporting_date') ?>:</h6>
                 <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" required />
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
@@ -128,13 +128,13 @@ $all = $osiris->projects->count();
     </h2>
 
     <p class="lead">
-        <?= lang('Number of projects', 'Anzahl der Projekte') ?> <?= $phrase ?>:
+        <?= lang('projects.number_of_projects') ?> <?= $phrase ?>:
         <b class="badge signal"><?= count($projects) ?></b>
         <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
 
     <h2>
-        <?= lang('Number of projects', 'Anzahl der Projekte') ?> <?= $phrase ?>:
+        <?= lang('projects.number_of_projects') ?> <?= $phrase ?>:
     </h2>
 
     <?php
@@ -179,7 +179,7 @@ $all = $osiris->projects->count();
             <tr>
                 <th><?= lang('common.type') ?></th>
                 <th><?= lang('common.count') ?></th>
-                <th><?= lang('Created in time frame', 'Erstellt im Zeitraum') ?></th>
+                <th><?= lang('projects.created_in_time_frame') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -206,7 +206,7 @@ $all = $osiris->projects->count();
 
 
     <h2>
-        <?= lang('Number of proposals', 'Anzahl der Anträge') ?> <?= $phrase ?>:
+        <?= lang('projects.number_of_proposals') ?> <?= $phrase ?>:
     </h2>
 
     <?php
@@ -260,8 +260,8 @@ $all = $osiris->projects->count();
         <thead>
             <tr>
                 <th><?= lang('common.type') ?></th>
-                <th><?= lang('Submitted', 'Eingereicht') ?></th>
-                <th><?= lang('Approved', 'Genehmigt') ?></th>
+                <th><?= lang('projects.submitted') ?></th>
+                <th><?= lang('projects.approved_statistics') ?></th>
                 <th><?= lang('common.rejected') ?></th>
             </tr>
         </thead>
@@ -286,7 +286,7 @@ $all = $osiris->projects->count();
 
     <p class="text-muted">
         <i class="ph ph-info"></i>
-        <?= lang('The list shows the applications that had the respective status timestamp in the report period. For example, "Submitted" includes all applications that were submitted during the reporting period, regardless of whether they have already been approved or rejected. If they were approved or rejected in the period, they are also listed in the respective column.', 'In der Aufstellung sind jeweils die Anträge zu sehen, die den jeweiligen Status-Zeitstempel im Reportzeitraum hatten. Beispielsweise sind "Eingereicht" alle Anträge, die im Reportzeitraum eingereicht wurden, unabhängig davon, ob sie bereits genehmigt oder abgelehnt wurden. Wenn sie im Zeitraum genehmigt oder abgelehnt wurden, sind sie in der jeweiligen Spalte ebenfalls aufgeführt.') ?>
+        <?= lang('projects.the_list_shows_the_applications_that_had_the_respective_status_timestamp_in') ?>
     </p>
 
     <br>
@@ -323,7 +323,7 @@ $all = $osiris->projects->count();
     ?>
 
     <h2>
-        <?= lang('Cooperation partners', 'Kooperationspartner') ?>
+        <?= lang('common.cooperation_partners') ?>
         (<?= $count_collab ?>)
     </h2>
 
@@ -332,8 +332,8 @@ $all = $osiris->projects->count();
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.type') ?></th>
-                <th><?= lang('Location', 'Standort') ?></th>
-                <th><?= lang('Number of projects', 'Anzahl der Projekte') ?></th>
+                <th><?= lang('common.location_edit') ?></th>
+                <th><?= lang('projects.number_of_projects') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -362,7 +362,7 @@ $all = $osiris->projects->count();
     </table>
 
     <h3>
-        <?= lang('Cooperation partners by type', 'Kooperationspartner nach Typ') ?>
+        <?= lang('projects.cooperation_partners_by_type') ?>
     </h3>
 
     <?php
@@ -408,7 +408,7 @@ $all = $osiris->projects->count();
                 <thead>
                     <tr>
                         <th><?= lang('common.type') ?></th>
-                        <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
+                        <th><?= lang('projects.number_of_partners') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -457,7 +457,7 @@ $all = $osiris->projects->count();
 
                     var layout = {
                         title: {
-                            text: lang('Cooperation partners by type', 'Kooperationspartner nach Typ'),
+                            text: <?= json_encode(lang('projects.cooperation_partners_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                             font: {
                                 size: 20
                             }
@@ -475,7 +475,7 @@ $all = $osiris->projects->count();
 
 
     <h3>
-        <?= lang('Cooperation partners by country', 'Kooperationspartner nach Land') ?>
+        <?= lang('projects.cooperation_partners_by_country') ?>
     </h3>
 
     <?php
@@ -525,7 +525,7 @@ $all = $osiris->projects->count();
                 <thead>
                     <tr>
                         <th><?= lang('common.country') ?></th>
-                        <th><?= lang('Number of partners', 'Anzahl der Partner') ?></th>
+                        <th><?= lang('projects.number_of_partners') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -563,7 +563,7 @@ $all = $osiris->projects->count();
 
         var layout = {
             title: {
-                text: lang('Cooperation partners by country', 'Kooperationspartner nach Land'),
+                text: <?= json_encode(lang('projects.cooperation_partners_by_country'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             },
             geo: {
                 projection: {
@@ -619,7 +619,7 @@ $all = $osiris->projects->count();
                 ],
                 colorbar: {
                     len: 0.5,
-                    title: lang('Number of<br>partners', 'Anzahl der<br>Partner')
+                    title: <?= json_encode(lang('projects.number_ofpartners'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 },
             }];
 
@@ -656,7 +656,7 @@ $all = $osiris->projects->count();
     if ($osiris->projects->count($filter_countries) > 0) { ?>
 
         <h3>
-            <?= lang('Research in and about countries', 'Forschung in und über Länder') ?>
+            <?= lang('projects.research_in_and_about_countries') ?>
         </h3>
 
         <?php
@@ -696,8 +696,8 @@ $all = $osiris->projects->count();
                     <thead>
                         <tr>
                             <th><?= lang('common.country') ?></th>
-                            <th><?= lang('Research in the country', 'Forschung in dem Land') ?></th>
-                            <th><?= lang('Research about the country', 'Forschung über das Land') ?></th>
+                            <th><?= lang('projects.research_in_the_country') ?></th>
+                            <th><?= lang('projects.research_about_the_country') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -732,11 +732,11 @@ $all = $osiris->projects->count();
                 <div class="btn-toolbar">
                     <button class="btn" onclick="updateResearchMap('research_in');">
                         <i class="ph ph-globe"></i>
-                        <?= lang('Research in countries', 'Forschung in Ländern') ?>
+                        <?= lang('projects.research_in_countries') ?>
                     </button>
                     <button class="btn" onclick="updateResearchMap('research_about');">
                         <i class="ph ph-globe"></i>
-                        <?= lang('Research about countries', 'Forschung über Länder') ?>
+                        <?= lang('projects.research_about_countries') ?>
                     </button>
                 </div>
                 <div id="map-research" class="box p-5 m-0"></div>
@@ -759,12 +759,12 @@ $all = $osiris->projects->count();
                         ['1.0', '#008084']
                     ],
                     colorbar: {
-                        title: lang('Research in', 'Forschung in'),
+                        title: <?= json_encode(lang('projects.research_in'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                         len: 0.5
                     }
                 }];
                 layout.title = {
-                    text: lang('Research in and about countries', 'Forschung in und über Länder'),
+                    text: <?= json_encode(lang('projects.research_in_and_about_countries'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                 };
 
                 Plotly.newPlot("map-research", data, layout, {
@@ -774,7 +774,7 @@ $all = $osiris->projects->count();
 
             function updateResearchMap(mode) {
                 var z = unpack(researchCountries, mode);
-                var label = (mode === 'research_in') ? lang('Research in', 'Forschung in') : lang('Research about', 'Forschung über');
+                var label = (mode === 'research_in') ? <?= json_encode(lang('projects.research_in'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> : <?= json_encode(lang('projects.research_about'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                 console.log(mode);
                 Plotly.update("map-research", {
                     z: [z],

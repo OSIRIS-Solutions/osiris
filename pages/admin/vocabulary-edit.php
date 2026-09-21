@@ -37,7 +37,7 @@
 
     <p>
         <i class="ph ph-warning text-signal"></i>
-        <?= lang('Please be careful when editing vocabularies. As deleting values can have unintended consequences, it is only possible to inactivate them. The ID of a value that have been saved to the database cannot be changed.', 'Bitte sei bei der Bearbeitung von Vokabularen vorsichtig. Da das Löschen von Werten ungewollte Folgen haben kann, ist es nur möglich, sie zu inaktivieren. Die ID eines Wertes, der in der Datenbank gespeichert wurde, kann nicht geändert werden.') ?>
+        <?= lang('admin.please_be_careful_when_editing_vocabularies_as_deleting_values_can_have_uni') ?>
     </p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/vocabularies/<?= $vocab['id'] ?>" method="POST" id="vocabulary-<?= $vocab['id'] ?>">
@@ -59,7 +59,7 @@
                         <?= lang('common.value') ?> (DE)
                     </th>
                     <th>
-                        <?= lang('Inactive', 'Inaktiv') ?>
+                        <?= lang('common.inactive') ?>
                     </th>
                 </tr>
             </thead>
@@ -102,7 +102,7 @@
                     <td colspan="4">
                         <button type="button" class="btn small" onclick="addRow(this)">
                             <i class="ph ph-plus"></i>
-                            <?= lang('Add Value', 'Wert hinzufügen') ?>
+                            <?= lang('admin.add_value') ?>
                         </button>
                     </td>
                 </tr>

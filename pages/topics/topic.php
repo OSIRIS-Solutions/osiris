@@ -177,11 +177,11 @@ if ($Settings->featureEnabled('spectrum')) {
 <div id="upload-image" class="modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <h3 class="title"><?= lang('Upload Image', 'Bild hochladen') ?></h3>
+            <h3 class="title"><?= lang('topics.upload_image') ?></h3>
             <form action="<?= ROOTPATH ?>/crud/topics/upload/<?= $topic['_id'] ?>" method="post" enctype="multipart/form-data">
                 <div class="custom-file">
-                    <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
-                    <label for="image"><?= lang('Select image', 'Bild auswählen') ?></label>
+                    <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('common.no_image_uploaded') ?>">
+                    <label for="image"><?= lang('common.select_image') ?></label>
                 </div>
                 <button type="submit" class="btn"><?= lang('action.upload') ?></button>
             </form>
@@ -218,7 +218,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <h2 class="subtitle">
         <?= lang($topic['subtitle'] ?? '', $topic['subtitle_de'] ?? null) ?>
         <?php if ($topic['inactive'] ?? false) { ?>
-            <small class="badge danger"><?= lang('Inactive', 'Inaktiv') ?></small>
+            <small class="badge danger"><?= lang('common.inactive') ?></small>
         <?php } ?>
     </h2>
 
@@ -242,7 +242,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_groups > 0) { ?>
         <a onclick="navigate('groups')" id="btn-groups" class="btn <?= $active_page == 'groups' ? 'active' : '' ?>">
             <i class="ph ph-users-three" aria-hidden="true"></i>
-            <?= lang('Groups', 'Gruppen') ?>
+            <?= lang('topics.groups') ?>
             <span class="index"><?= $count_groups ?></span>
         </a>
     <?php } ?>
@@ -353,7 +353,7 @@ if ($Settings->featureEnabled('spectrum')) {
                 Spectrum::render($spectrum, $count_spectrum, '', '{"topics":"' . $topic['id'] . '"}');
             else : ?>
                 <p>
-                    <?= lang('No Research Spectrum is assigned to this ' . $topicLabel . '.', 'Zu diesem ' . $topicLabel . ' ist kein Forschungs-Spektrum zugewiesen.') ?>
+                    <?= lang('topics.no_research_spectrum_is_assigned_to_this_topiclabel', replace: ['topicLabel' => $topicLabel]) ?>
                 </p>
             <?php endif; ?>
         <?php } ?>
@@ -362,7 +362,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="persons" style="display: none;">
 
-    <h3><?= lang('Employees', 'Mitarbeitende Personen') ?></h3>
+    <h3><?= lang('common.employees') ?></h3>
 
     <table class="table cards w-full" id="user-table">
         <thead>
@@ -377,7 +377,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="groups" style="display: none;">
 
-    <h3><?= lang('Organisational Units', 'Organisationseinheiten') ?></h3>
+    <h3><?= lang('common.organisational_units') ?></h3>
 
     <table class="table cards w-full" id="group-table">
         <thead>
@@ -408,7 +408,7 @@ if ($Settings->featureEnabled('spectrum')) {
                             <div class="text-muted font-size-12">
                                 <?php
                                 ?>
-                                <?= $osiris->persons->count(['current_units' => $group['id'],  'is_active' => ['$ne' => false]]) ?> <?= lang('Coworkers', 'Mitarbeitende') ?>
+                                <?= $osiris->persons->count(['current_units' => $group['id'],  'is_active' => ['$ne' => false]]) ?> <?= lang('common.coworkers') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>
@@ -510,7 +510,7 @@ if ($Settings->featureEnabled('spectrum')) {
             }
         ?>
             <?php if (!empty($ongoing)) { ?>
-                <h3><?= lang('Ongoing projects', 'Laufende Projekte') ?></h3>
+                <h3><?= lang('common.ongoing_projects') ?></h3>
                 <div class="row row-eq-spacing my-0">
 
                     <?php foreach ($ongoing as $html) { ?>
@@ -522,7 +522,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <?php } ?>
 
             <?php if (!empty($past)) { ?>
-                <h3><?= lang('Past projects', 'Vergangene Projekte') ?></h3>
+                <h3><?= lang('common.past_projects') ?></h3>
                 <div class="row row-eq-spacing my-0">
 
                     <?php foreach ($past as $html) { ?>
@@ -542,7 +542,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <h3 class=""><?= lang('Word cloud') ?></h3>
 
     <p class="text-muted">
-        <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
+        <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
     </p>
     <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
 </section>
@@ -551,9 +551,9 @@ if ($Settings->featureEnabled('spectrum')) {
 
     <?php if ($level !== 0) { ?>
 
-        <h3><?= lang('Collaboration with other groups', 'Zusammenarbeit mit anderen Gruppen') ?></h3>
+        <h3><?= lang('common.collaboration_with_other_groups') ?></h3>
         <p class="text-muted">
-            <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
+            <?= lang('common.based_on_publications_within_the_past_5_years') ?>
         </p>
         <div id="collab-chart" style="max-width: 60rem"></div>
 
@@ -565,10 +565,10 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="graph" style="display:none">
-    <h3><?= lang('Graph', 'Graph') ?></h3>
+    <h3><?= lang('common.graph') ?></h3>
 
     <p class="text-muted m-0">
-        <?= lang('Based on publications with associated affiliations.', 'Basierend auf affiliierten Publikationen.') ?>
+        <?= lang('common.based_on_publications_with_associated_affiliations') ?>
     </p>
     <div id="collabGraph" class="mw-full w-800"></div>
 

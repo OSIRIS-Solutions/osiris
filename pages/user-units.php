@@ -20,7 +20,7 @@
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
-    <small class="font-weight-normal"><?= lang('Organisational units of', 'Organisationseinheiten von') ?></small>
+    <small class="font-weight-normal"><?= lang('people.organisational_units_of') ?></small>
     <br>
     <div class="text-primary"><?= $data['displayname'] ?></div>
 </h1>
@@ -42,7 +42,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                 <?= lang('common.end') ?>
             </th>
             <th>
-                <?= lang('Scientific', 'Wissenschaftlich') ?>
+                <?= lang('common.scientific') ?>
             </th>
             <th class="text-center">
                 <?= lang('common.actions') ?>
@@ -94,7 +94,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     if (isset($unit['end'])) {
                         echo format_date($unit['end']);
                     } else {
-                        echo '<b class="text-success">' . lang('current', 'laufend') . '</b>';
+                        echo '<b class="text-success">' . lang('common.current') . '</b>';
                     }
                     ?>
                 </td>
@@ -130,11 +130,11 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                     <label for="end"><?= lang('common.end') ?></label>
                                     <input type="date" class="form-control" id="end" name="values[end]" value="<?= $unit['end'] ?? '' ?>">
                                     <small class="text-muted">
-                                        <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>
+                                        <?= lang('people.leave_empty_if_still_active') ?>
                                     </small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
+                                    <label for="scientific"><?= lang('common.scientific') ?></label>
                                     <select class="form-control" id="scientific" name="values[scientific]">
                                         <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                                         <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('common.no') ?></option>
@@ -152,10 +152,10 @@ $units = DB::doc2Arr($data['units'] ?? []);
                         <div class="dropdown-menu dropdown-menu-right w-400 border-danger" aria-labelledby="remove-unit-<?= $unit['id'] ?>">
                             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                                 <i class="ph ph-warning text-danger"></i>
-                                <?= lang('You are in the process of deleting the unit from the person profile. If the unit has changed, it can often be better to end the period instead in order to continue to show former participation.', 'Du bist dabei die Einheit aus dem Personenprofil zu löschen. Wenn sich die Einheit geändert hat, kann es oftmals besser sein stattdessen den Zeitraum zu beenden, um ehemalige Beteiligung weiterhin abzubilden.') ?>
+                                <?= lang('people.you_are_in_the_process_of_deleting_the_unit_from_the_person_profile_if_the') ?>
                                 <input type="hidden" name="id" value="<?= $unit['id'] ?>">
                                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
-                                <button class="btn block danger" type="submit"><i class="ph ph-trash"></i> <?= lang('Remove unit', 'Einheit löschen') ?></button>
+                                <button class="btn block danger" type="submit"><i class="ph ph-trash"></i> <?= lang('people.remove_unit') ?></button>
                             </form>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
             <td colspan="5">
                 <a href="#add-unit" class="btn primary">
                     <i class="ph ph-plus"></i>
-                    <?= lang('Add unit', 'Einheit hinzufügen') ?>
+                    <?= lang('people.add_unit') ?>
                 </a>
             </td>
         </tr>
@@ -178,7 +178,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
 <!-- explain scientific -->
 <p class="font-size-12">
     <i class="ph ph-lightning text-primary"></i>
-    <?= lang('Scientific units will be added to all research activities that have happened within the time of affiliation.', 'Wissenschaftliche Einheiten werden zu allen Forschungsaktivitäten hinzugefügt, die während der Zeit der Zugehörigkeit stattgefunden haben.') ?>
+    <?= lang('people.scientific_units_will_be_added_to_all_research_activities_that_have_happene') ?>
 </p>
 
 
@@ -206,17 +206,17 @@ function printTree($tree, $level = 0)
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="title">
-                <?= lang('Add new unit', 'Einheit hinzufügen') ?>
+                <?= lang('people.add_new_unit') ?>
             </h5>
             <p>
-                <?= lang('Please select the unit you want to add.', 'Bitte wählen Sie die Einheit aus, die Sie hinzufügen möchten.') ?>
+                <?= lang('people.please_select_the_unit_you_want_to_add') ?>
             </p>
             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
                 <div class="form-group">
                     <label for="unit"><?= lang('common.unit') ?></label>
                     <select class="form-control" id="unit" name="values[unit]">
-                        <option value=""><?= lang('Select unit', 'Einheit auswählen') ?></option>
+                        <option value=""><?= lang('people.select_unit') ?></option>
                         <?php printTree($tree) ?>
                     </select>
                 </div>
@@ -228,11 +228,11 @@ function printTree($tree, $level = 0)
                     <label for="end"><?= lang('common.end') ?></label>
                     <input type="date" class="form-control" id="end" name="values[end]">
                     <small class="text-muted">
-                        <?= lang('Leave empty if still active', 'Leer lassen, wenn noch aktiv') ?>
+                        <?= lang('people.leave_empty_if_still_active') ?>
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
+                    <label for="scientific"><?= lang('common.scientific') ?></label>
                     <select class="form-control" id="scientific" name="values[scientific]">
                         <option value="1"><?= lang('common.yes') ?></option>
                         <option value="0"><?= lang('common.no') ?></option>

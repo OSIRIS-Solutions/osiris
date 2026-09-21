@@ -88,10 +88,10 @@
     <div class="d-flex align-items-end">
         <div>
             <h1>
-                <?= lang('What\'s new in OSIRIS', 'Neuigkeiten zu OSIRIS') ?>
+                <?= lang('news.what_s_new_in_osiris') ?>
             </h1>
             <p>
-                <?= lang('Here you can find the latest news and updates about OSIRIS.', 'Hier findest du die neuesten Nachrichten und Updates zu OSIRIS.') ?>
+                <?= lang('news.here_you_can_find_the_latest_news_and_updates_about_osiris') ?>
             </p>
         </div>
         <img src="<?= ROOTPATH ?>/img/sophie/sophie-announcement.png" alt="OSIRIS Announcement" style="max-width: 30rem; margin: 0 0 -1rem auto; display: block;">

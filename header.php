@@ -39,7 +39,7 @@ $pageactive = function ($p) use ($page) {
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= e(currentLanguage()) ?>">
 
 <head>
     <!-- Meta tags -->
@@ -96,6 +96,7 @@ $pageactive = function ($p) use ($page) {
     <script src="<?= ROOTPATH ?>/js/jquery-3.3.1.min.js?v=<?= OSIRIS_BUILD ?>"></script>
     <script src="<?= ROOTPATH ?>/js/datatables/datatables.min.js?v=<?= OSIRIS_BUILD ?>"></script>
 
+    <?php include BASEPATH . '/php/js_translations.php'; ?>
     <script src="<?= ROOTPATH ?>/js/script.js?v=<?= OSIRIS_BUILD ?>"></script>
 
     <script>
@@ -172,7 +173,7 @@ $pageactive = function ($p) use ($page) {
         <?= $_COOKIE['D3-accessibility-contrast'] ?? '' ?>
         <?= $_COOKIE['D3-accessibility-transitions'] ?? '' ?>
         <?= $_COOKIE['D3-accessibility-dyslexia'] ?? '' ?>
-        lang-<?= lang('en', 'de') ?>
+        lang-<?= currentLanguage() ?>
     ">
         <div class="sticky-alerts"></div>
 
@@ -274,12 +275,12 @@ $pageactive = function ($p) use ($page) {
                 <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
                     <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
                     <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
-                        <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
+                        <input type="hidden" name="language" value="<?= currentLanguage() === 'de' ? 'en' : 'de' ?>">
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                         <button type="submit" class="btn primary block ">
                             <i class="ph ph-translate" aria-hidden="true"></i>
                             <span class="sr-only"><?= lang('header.change_language') ?></span>
-                            <?= lang('Deutsch', 'English') ?>
+                            <?= currentLanguage() === 'de' ? 'English' : 'Deutsch' ?>
                         </button>
                     </form>
                 </div>

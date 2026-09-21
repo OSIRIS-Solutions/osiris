@@ -29,7 +29,7 @@ $fields = $osiris->adminFields->find()->toArray();
     <div class="btn-toolbar">
         <a class="btn" href="<?= ROOTPATH ?>/admin/fields/new">
             <i class="ph ph-plus-circle"></i>
-            <?= lang('Add field', 'Feld hinzufügen') ?>
+            <?= lang('admin.add_field') ?>
         </a>
     </div>
 
@@ -73,7 +73,7 @@ $fields = $osiris->adminFields->find()->toArray();
                 [0, "asc"]
             ],
             "language": {
-                "emptyTable": "<?= lang('No custom fields defined yet.', 'Es wurden noch keine benutzerdefinierten Felder definiert.') ?>"
+                "emptyTable": "<?= lang('admin.no_custom_fields_defined_yet') ?>"
             }
         });
     });

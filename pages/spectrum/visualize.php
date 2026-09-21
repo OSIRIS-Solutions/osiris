@@ -139,14 +139,11 @@ foreach ($rows as $row) {
 
 <h1>
     <i class="ph-duotone ph-chart-donut" aria-hidden="true"></i>
-    <?= lang('Spectrum Visualization', 'Spektrum-Visualisierung') ?>
+    <?= lang('spectrum.spectrum_visualization') ?>
 </h1>
 
 <p class="text-muted">
-    <?= lang(
-        'Interactive sunburst visualization of the thematic structure based on OpenAlex topics.',
-        'Interaktive Sunburst-Visualisierung der thematischen Struktur auf Basis der OpenAlex-Themen.'
-    ) ?>
+    <?= lang('spectrum.interactive_sunburst_visualization_of_the_thematic_structure_based_on_opena') ?>
 </p>
 <style>
     .funnel {
@@ -162,30 +159,27 @@ foreach ($rows as $row) {
                 <span class="funnel"><i class="ph ph-funnel" aria-hidden="true"></i></span>
             </div>
             <div class="col">
-                <label class="form-label"><?= lang('From year', 'Von Jahr') ?></label>
+                <label class="form-label"><?= lang('common.from_year') ?></label>
                 <input type="number" class="form-control" name="year_from" value="<?= e($yearFrom) ?>">
             </div>
             <div class="col">
-                <label class="form-label"><?= lang('To year', 'Bis Jahr') ?></label>
+                <label class="form-label"><?= lang('common.to_year') ?></label>
                 <input type="number" class="form-control" name="year_to" value="<?= e($yearTo) ?>">
             </div>
             <div class="col flex-grow-0">
-                <button class="btn primary block"><?= lang('Apply filter', 'Filter anwenden') ?></button>
+                <button class="btn primary block"><?= lang('common.apply_filter') ?></button>
             </div>
         </div>
     </div>
 </form>
 
 <p class="text-muted mb-0">
-    <?= lang(
-        'The visualization is based on the current filter selection. Click segments to zoom. Topic segments link to the detailed spectrum page. Clicking the center brings you back to the next higher level.',
-        'Die Visualisierung basiert auf der aktuellen Filterauswahl. Segmente können angeklickt werden, um hinein zu zoomen. Themen-Segmente verlinken auf die jeweilige Detailseite. In der Mitte zu klicken bringt dich zurück zur nächst-höheren Ebene.'
-    ) ?>
+    <?= lang('spectrum.the_visualization_is_based_on_the_current_filter_selection_click_segments_t') ?>
 </p>
 
 <div id="sunburst-chart"></div>
 <p class="text-muted mb-0">
-    <?= lang('Total topic assignments', 'Gesamte Themenzuordnungen') ?>:
+    <?= lang('spectrum.total_topic_assignments') ?>:
     <strong><?= number_format($totalPublications, 0, ',', '.') ?></strong>
 </p>
 
@@ -278,8 +272,8 @@ foreach ($rows as $row) {
                     .html(`
                     <strong>${d.data.name}</strong><br>
                     ${d.data.level ? '<span class="text-muted">' + d.data.level + '</span><br>' : ''}
-                    <?= lang('Assignments', 'Zuordnungen') ?>: ${d.value}<br>
-                    <?= lang('Share', 'Anteil') ?>: ${pct} %
+                    <?= lang('spectrum.assignments') ?>: ${d.value}<br>
+                    <?= lang('common.share_list') ?>: ${pct} %
                 `)
                     .style("left", (event.pageX + 12) + "px")
                     .style("top", (event.pageY + 12) + "px");

@@ -52,23 +52,23 @@ function loginGuest($username, $password)
     // find user and check password
     $USER = $osiris->guestAccounts->findOne(['username' => $username]);
     if (empty($USER)) {
-        $return["msg"] = lang("Guest-Account not found or password incorrect.", "Gast-Account nicht gefunden oder Passwort falsch.");
+        $return["msg"] = lang('auth.guest_account_not_found_or_password_incorrect');
         $return['code'] = 1;
         return $return;
     }
     if (!empty($USER['valid_until']) && $USER['valid_until'] < date('Y-m-d')) {
-        $return["msg"] = lang("Guest-Account has expired.", "Gast-Account ist abgelaufen.");
+        $return["msg"] = lang('auth.guest_account_has_expired');
         $return['code'] = 2;
         return $return;
     }
     if (empty($USER['password'])) {
-        $return["msg"] = lang("Guest-Account has no password. Please contact the administrator.", "Gast-Account hat kein Passwort. Bitte kontaktieren Sie den Administrator.");
+        $return["msg"] = lang('auth.guest_account_has_no_password_please_contact_the_administrator');
         $return['code'] = 3;
         return $return;
     }
     // check if password is correct
     if (!password_verify($password, $USER['password'])) {
-        $return["msg"] = lang("Guest-Account not found or password incorrect.", "Gast-Account nicht gefunden oder Passwort falsch.");
+        $return["msg"] = lang('auth.guest_account_not_found_or_password_incorrect');
         $return['code'] = 4;
         return $return;
     }

@@ -17,7 +17,7 @@
  */
 ?>
 <h2>
-    <?= lang('Publications in the last four quarters', 'Publikationen in den letzten vier Quartalen') ?>
+    <?= lang('dashboard.publications_in_the_last_four_quarters') ?>
 </h2>
 
 <div class="row row-eq-spacing">
@@ -89,7 +89,7 @@
                             stacked: true,
                             title: {
                                 display: true,
-                                text: lang('Number of publications', 'Anzahl Publikationen')
+                                text: <?= json_encode(lang('dashboard.number_of_publications'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                             },
                             ticks: {
                                 callback: function(value, index, ticks) {
@@ -135,7 +135,7 @@
     <div class="col-lg-4">
         <div class="box h-full">
             <div class="chart content">
-                <h5 class="title text-center"><?= lang('Role of ' . $Settings->get('affiliation') . ' authors', 'Rolle der ' . $Settings->get('affiliation') . '-Autoren') ?></h5>
+                <h5 class="title text-center"><?= lang('dashboard.role_of_affiliation_authors', replace: ['affiliation' => $Settings->get('affiliation')]) ?></h5>
                 <canvas id="chart-authors" style="max-height: 30rem;"></canvas>
             </div>
             <script>
@@ -143,7 +143,7 @@
                 var myChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['<?= lang("First or last author", "Erst- oder Letztautor") ?>', '<?= lang("Middle authors", "Mittelautor") ?>'],
+                        labels: ['<?= lang('dashboard.first_or_last_author') ?>', '<?= lang('dashboard.middle_authors') ?>'],
                         datasets: [{
                             label: '# of Scientists',
                             data: [<?= $authors['firstorlast'] ?>, <?= $authors['middle'] ?>],
@@ -186,7 +186,7 @@
 </div>
 
 <h2>
-    <?= lang('Development of activities by type', 'Entwicklung der Aktivitäten nach Art') ?>
+    <?= lang('dashboard.development_of_activities_by_type') ?>
 </h2>
 
 <div class="row row-eq-spacing mb-0">
@@ -207,7 +207,7 @@
                     <div class="mt-5 text-right">
                         <a href="<?= ROOTPATH ?>/add-activity?type=<?= $type ?>" class="btn small">
                             <i class="ph ph-plus"></i>
-                            <?= lang('Add new', 'Neu anlegen') ?>
+                            <?= lang('dashboard.add_new') ?>
                         </a>
                     </div>
 
@@ -249,5 +249,5 @@
 
 <a href="<?= ROOTPATH ?>/activities" class="btn select bg-white mr-20">
     <i class="ph ph-book-bookmark text-danger"></i>
-    <?= lang('View all activites', 'Zeige alle Aktivitäten') ?>
+    <?= lang('dashboard.view_all_activites') ?>
 </a>

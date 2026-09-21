@@ -80,7 +80,7 @@
         <div class="col-sm-8 order-sm-first order-last" id="about">
             <?php if (!empty($data['abstract'])) { ?>
                 <h2 class="title">
-                    <?= lang('About this project', 'Über das Projekt') ?>
+                    <?= lang('portal.about_this_project') ?>
                 </h2>
             <?php } ?>
 
@@ -93,13 +93,13 @@
             <?php if (!empty($data['website'] ?? null)) { ?>
                 <a href="<?= $data['website'] ?>" target="_blank" class="btn secondary">
                     <i class="ph ph-arrow-square-out"></i>
-                    <?= lang('Visit Website', 'Webseite besuchen') ?>
+                    <?= lang('portal.visit_website') ?>
                 </a>
             <?php } ?>
 
 
             <h2 class="title mb-0" id="team">
-                <?= lang('Team', 'Team') ?>
+                <?= lang('common.team') ?>
             </h2>
             <?php if (!empty($data['persons'] ?? array())) { ?>
                 <div class="row row-eq-spacing mt-0">
@@ -141,7 +141,7 @@
             if ($data['activities'] > 0) { ?>
 
                 <h3 class="title mt-20" id="research-output">
-                    <?= lang('Research Output', 'Forschungsergebnisse') ?>
+                    <?= lang('portal.research_output') ?>
                 </h3>
 
                 <div class=" w-full">
@@ -151,7 +151,7 @@
                         data-lang="<?= lang('common.this_language') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
                                 <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                             </tr>
                         </thead>
@@ -223,13 +223,13 @@
                     </div>
                     <p>
                         <i class="ph ph-duotone ph-circle" style="color:#f78104"></i>
-                        <?= lang('Coordinator', 'Koordinator') ?>
+                        <?= lang('common.coordinator') ?>
                         <br>
                         <i class="ph ph-duotone ph-circle" style="color:#008083"></i>
                         Partner
                         <br>
                         <i class="ph ph-duotone ph-circle" style="color:#cccccc"></i>
-                        <?= lang('Accociated', 'Beteiligt') ?>
+                        <?= lang('portal.accociated') ?>
                     </p>
 
                     <div class="modal" id="cooperation-partners" tabindex="-1" role="dialog">
@@ -247,7 +247,7 @@
                                             ?>
                                                 <tr>
                                                     <td>
-                                                        <?= lang('No collaborators connected.', 'Keine Partner verknüpft.') ?>
+                                                        <?= lang('common.no_collaborators_connected') ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -365,10 +365,7 @@
                                         data.lat.push(item.data.lat);
                                         var text = `<b>${item.data.name}</b>`;
                                         if (PROJECT && !item.data.current) {
-                                            text += `<br>${item.count} ${lang(
-                                            "Projects",
-                                            "Projekte"
-                                        )}`;
+                                            text += `<br>${item.count} ${<?= json_encode(lang('common.projects'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}`;
                                         }
                                         if (item.data.location) {
                                             text += `<br>${item.data.location}`;
@@ -412,7 +409,7 @@
 
         <div class="col-md-4 position-relative">
             <h2>
-                <?= lang('Details', 'Details') ?>
+                <?= lang('common.details') ?>
             </h2>
             <table class="table ">
                 <tbody>
@@ -476,14 +473,14 @@
 
                     <tr>
                         <td>
-                            <span class="key"><?= lang('Project type', 'Projekttyp') ?></span>
+                            <span class="key"><?= lang('projects.project_type') ?></span>
                             <b><?= lang($data['type'] ?? '-') ?></b>
                         </td>
                     </tr>
                     <?php if (isset($data['funder'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Third-party funder', 'Drittmittelgeber') ?></span>
+                                <span class="key"><?= lang('portal.third_party_funder') ?></span>
                                 <b><?= $data['funder'] ?? '-' ?></b>
                             </td>
                         </tr>
@@ -499,7 +496,7 @@
                     <?php if (isset($data['funding_number'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Funding reference number(s)', 'Förderkennzeichen') ?></span>
+                                <span class="key"><?= lang('portal.funding_reference_number_s') ?></span>
                                 <b><?= is_iterable($data['funding_number'] ?? null) ? implode(', ', $data['funding_number']) : '-' ?></b>
                             </td>
                         </tr>
@@ -507,7 +504,7 @@
                     <?php if (isset($data['coordinator'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Coordinator facility', 'Koordinator-Einrichtung') ?></span>
+                                <span class="key"><?= lang('projects.coordinator_facility') ?></span>
                                 <b><?= $data['coordinator'] ?? '-' ?></b>
                             </td>
                         </tr>
@@ -522,9 +519,9 @@
                     ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Project logo', 'Projektlogo') ?></span>
+                                <span class="key"><?= lang('portal.project_logo') ?></span>
                                 <div>
-                                    <img src="<?= $img_path ?>" class="img-fluid" alt="<?= lang('Project image', 'Projektbild') ?>">
+                                    <img src="<?= $img_path ?>" class="img-fluid" alt="<?= lang('projects.project_image') ?>">
                                 </div>
                             </td>
                         </tr>
@@ -537,17 +534,17 @@
 
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
+                    <div class="title"><?= lang('common.on_this_page') ?></div>
 
                     <a href="#about">
-                        <?= lang('About this project', 'Über das Projekt') ?>
+                        <?= lang('portal.about_this_project') ?>
                     </a>
                     <a href="#team">
-                        <?= lang('Team', 'Team') ?>
+                        <?= lang('common.team') ?>
                     </a>
                     <?php if ($data['activities'] > 0) { ?>
                         <a href="#research-output">
-                            <?= lang('Research Output', 'Forschungsergebnisse') ?>
+                            <?= lang('portal.research_output') ?>
                         </a>
                     <?php } ?>
                     <?php if (!empty($data['collaborators'] ?? [])) { ?>

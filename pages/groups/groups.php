@@ -25,21 +25,21 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 <?php } ?>
 <h1>
     <i class="ph-duotone ph-users-three"></i>
-    <?= lang('Organisational Units', 'Organisationseinheiten') ?>
+    <?= lang('common.organisational_units') ?>
 </h1>
 
 <div class="d-flex align-items-center mb-10">
 
     <?php if ($Settings->hasPermission('units.add')) { ?>
-        <a href="<?= ROOTPATH ?>/groups/new"><i class="ph ph-plus"></i> <?= lang('New unit', 'Neue Einheit') ?></a>
+        <a href="<?= ROOTPATH ?>/groups/new"><i class="ph ph-plus"></i> <?= lang('groups.new_unit') ?></a>
     <?php } ?>
 
 
     <div class="pills small ml-auto">
-        <span class="badge text-muted"><?= lang('Show as', 'Zeige als') ?></span>
-        <a class="btn <?= $style == 'cards' ? 'active' : '' ?>" href="?style=cards"><?= lang('Cards', 'Karten') ?></a>
-        <a class="btn <?= $style == 'hierarchy' ? 'active' : '' ?>" href="?style=hierarchy"><?= lang('Hierarchy', 'Hierarchie') ?></a>
-        <a class="btn <?= $style == 'organigramm' ? 'active' : '' ?>" href="?style=organigramm"><?= lang('Organisation Chart', 'Organigramm') ?></a>
+        <span class="badge text-muted"><?= lang('groups.show_as') ?></span>
+        <a class="btn <?= $style == 'cards' ? 'active' : '' ?>" href="?style=cards"><?= lang('common.cards') ?></a>
+        <a class="btn <?= $style == 'hierarchy' ? 'active' : '' ?>" href="?style=hierarchy"><?= lang('groups.hierarchy') ?></a>
+        <a class="btn <?= $style == 'organigramm' ? 'active' : '' ?>" href="?style=organigramm"><?= lang('groups.organisation_chart') ?></a>
     </div>
 </div>
 
@@ -165,7 +165,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
                             <div class="text-muted font-size-12">
                                 <?= $Groups->countAllPersons($group['id'], null, true) ?> 
-                                <?= lang('Coworkers', 'Mitarbeitende') ?>
+                                <?= lang('common.coworkers') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>
@@ -191,7 +191,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
     <!-- download: download/user-groups -->
     <div class="mt-20">
-        <a href="<?= ROOTPATH ?>/download/user-groups" class="ml-20"><i class="ph ph-download"></i> <?= lang('Download list of users with units', 'Liste der Personen mit Einheiten herunterladen') ?></a>
+        <a href="<?= ROOTPATH ?>/download/user-groups" class="ml-20"><i class="ph ph-download"></i> <?= lang('groups.download_list_of_users_with_units') ?></a>
     </div>
 
     <script>

@@ -19,10 +19,7 @@ $ldap_fields = array_filter($fields);
 
 if (empty($ldap_fields)) {
     echo '<div class="alert warning">';
-    echo lang(
-        'No LDAP attributes have been configured for synchronization. Please configure them first in the <a href="' . ROOTPATH . '/admin/persons#section-auth">LDAP settings</a>.',
-        'Es wurden keine LDAP-Attribute für die Synchronisation konfiguriert. Bitte konfiguriere diese zuerst in den <a href="' . ROOTPATH . '/admin/persons#section-auth">LDAP-Einstellungen</a>.'
-    );
+    echo lang('people.no_ldap_attributes_have_been_configured_for_synchronization_please_configur', replace: ['rootpath' => ROOTPATH]);
     echo '</div>';
     exit;
 }
@@ -42,16 +39,16 @@ if (is_string($result)) {
 ?>
 
 <div class="alert success">
-    <?= lang('The attributes have been saved.', 'Die Attribute wurden gespeichert.') ?>
+    <?= lang('people.the_attributes_have_been_saved') ?>
 </div>
 
 <h1>
     <i class="ph-duotone ph-arrow-clockwise"></i>
-    <?= lang('Synchronized attributes from LDAP', 'Synchronisierte Attribute aus LDAP') ?>
+    <?= lang('people.synchronized_attributes_from_ldap') ?>
 </h1>
 
 <p>
-    <?= lang('The following attributes are synchronized from LDAP to OSIRIS every time a user synchronization is performed.', 'Die folgenden Attribute werden von LDAP nach OSIRIS synchronisiert, jedes Mal wenn eine Nutzer-Synchronisation durchgeführt wird.') ?>
+    <?= lang('people.the_following_attributes_are_synchronized_from_ldap_to_osiris_every_time_a') ?>
 </p>
 
 <style>
@@ -117,15 +114,12 @@ if (is_string($result)) {
 </table>
 
 <p>
-    <?= lang(
-        'You are now ready to synchronize attributes from LDAP to OSIRIS by <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">setting up a CRON-Job</a> or you can do it manually:',
-        'Du bist nun bereit, die Attribute von LDAP nach OSIRIS zu synchronisieren, indem du einen <a href="https://wiki.osiris-app.de/technical/user-management/ldap/#synchronisation-der-nutzerattribute" target="_blank">CRON-Job</a> einrichtest oder es manuell tust:'
-    ) ?>
+    <?= lang('people.you_are_now_ready_to_synchronize_attributes_from_ldap_to_osiris_by_setting') ?>
 </p>
 
 <form action="<?= ROOTPATH ?>/synchronize-attributes-now" method="post">
     <button class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('Synchronize now', 'Jetzt synchronisieren') ?>
+        <?= lang('people.synchronize_now') ?>
     </button>
 </form>

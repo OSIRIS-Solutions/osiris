@@ -3,13 +3,13 @@
 /**
  * The statistics of all activities
  * Created in cooperation with DSMZ
- * 
+ *
  * This file is part of the OSIRIS package.
  * Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  *
  * @package     OSIRIS
  * @since       1.4.1
- * 
+ *
  * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
@@ -17,22 +17,22 @@
 
 
 $time_frame = '';
-$phrase = lang('in the reporting year', 'im Reportjahr');
+$phrase = lang('common.in_the_reporting_year');
 // today is the default reportyear
 if (isset($_GET['reportyear']) && !empty($_GET['reportyear'])) {
     $reportyear = intval($_GET['reportyear']);
-    $time_frame = lang('Reporting year', 'Reportjahr') . ': ' . $reportyear;
+    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
 } elseif (isset($_GET['reportstart']) && !empty($_GET['reportstart']) && isset($_GET['reportend']) && !empty($_GET['reportend'])) {
     $reportstart = $_GET['reportstart'];
     $reportend = $_GET['reportend'];
-    $time_frame = lang('Reporting period', 'Reportzeitraum') . ': ' . date('d.m.Y', strtotime($reportstart)) . ' - ' . date('d.m.Y', strtotime($reportend));
+    $time_frame = lang('common.reporting_period') . ': ' . date('d.m.Y', strtotime($reportstart)) . ' - ' . date('d.m.Y', strtotime($reportend));
     $reportyear = date('Y', strtotime($reportstart));
-    $phrase = lang('in the reporting period', 'im Reportzeitraum');
+    $phrase = lang('common.in_the_reporting_period');
 } else {
     $reportyear = CURRENTYEAR;
-    $time_frame = lang('Reporting year', 'Reportjahr') . ': ' . $reportyear;
+    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
 }
@@ -81,32 +81,32 @@ $all = $osiris->activities->count(['affiliated' => true]);
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/activities">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to Activities', 'Zurück zu Aktivitäten') ?>
+        <?= lang('activities.back_to_activities') ?>
     </a>
 </div>
 
 
 <div class="alert signal">
     <i class="ph ph-warning text-signal"></i>
-    <?= lang('All of the following statistics are based on the reporting period.', 'Alle unten aufgeführten Statistiken basieren auf dem angegebenen Reportzeitraum.') ?>
+    <?= lang('activities.all_of_the_following_statistics_are_based_on_the_reporting_period') ?>
 
 
     <div class="row position-relative mt-10">
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
+                <h6 class="m-0"><?= lang('common.change_reporting_year') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" />
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
-        <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
+        <div class="text-divider"><?= lang('common.or') ?></div>
 
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('Change Reporting Period', 'Reportzeitraum ändern') ?>:</h6>
+                <h6 class="m-0"><?= lang('common.change_reporting_period') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required />
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required />
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
@@ -116,7 +116,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
 </div>
 
 <p class="text-muted">
-    <?= lang('Only affiliated activities are counted (at least one author is affiliated with the institute).', 'Es werden nur affiliierte Aktivitäten gezählt (mind. ein:e Autor:in ist mit dem Institut affiliiert).') ?>
+    <?= lang('activities.only_affiliated_activities_are_counted_at_least_one_author_is_affiliated_wi') ?>
 </p>
 
 <div class="row row-eq-spacing">
@@ -128,7 +128,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
         </h2>
 
         <p class="lead">
-            <?= lang('Number of activities', 'Anzahl der Aktivitäten') ?> <?= $phrase ?>:
+            <?= lang('activities.number_of_activities') ?> <?= $phrase ?>:
             <b class="badge signal"><?= count($activities) ?></b>
             <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
         </p>
@@ -138,7 +138,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <?= lang('common.activities') ?> <?= $phrase ?>:
         </h2>
         <p class="text-muted">
-            <?= lang('Only activities with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Aktivitäten mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
+            <?= lang('activities.only_activities_with_a_start_and_end_date_in_the_reporting_period_and_at_le') ?>
         </p>
 
         <?php
@@ -188,10 +188,10 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 
         <h3 id="activities-started-before">
-            <?= lang('Activities that have started before the time frame', 'Aktivitäten, die vor dem Zeitraum gestartet sind') ?>
+            <?= lang('activities.activities_that_have_started_before_the_time_frame') ?>
         </h3>
         <p class="text-muted">
-            <?= lang('Only activities that have started before the reporting period but were still running are counted.', 'Es werden nur Aktivitäten gezählt, die vor dem Reportzeitraum gestartet sind, aber im Zeitraum immer noch liefen.') ?>
+            <?= lang('activities.only_activities_that_have_started_before_the_reporting_period_but_were_stil') ?>
         </p>
         <?php
         $filter = [
@@ -223,7 +223,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             <thead>
                 <tr>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Subtype', 'Untertyp') ?></th>
+                    <th><?= lang('activities.subtype_statistics') ?></th>
                     <th><?= lang('common.count') ?></th>
                 </tr>
             </thead>
@@ -250,11 +250,11 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <hr>
 
         <h2 id="statistics-on-publications">
-            <?= lang('Statistics on publications', 'Statistiken zu Publikationen') ?>
+            <?= lang('activities.statistics_on_publications') ?>
         </h2>
 
         <p class="text-muted">
-            <?= lang('Only publications with a start and end date in the reporting period and at least one affiliated author are counted.', 'Es werden nur Publikationen mit einem Start- und Enddatum im Reportzeitraum und mindestens einer/einem affiliierten Autor/Autorin gezählt.') ?>
+            <?= lang('activities.only_publications_with_a_start_and_end_date_in_the_reporting_period_and_at') ?>
         </p>
 
         <?php
@@ -296,11 +296,11 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="publications-by-type-table">
             <thead>
                 <tr>
-                    <th><?= lang('Type of publication', 'Art der Publikation') ?></th>
-                    <th><?= lang('Count', 'Gesamt') ?></th>
-                    <th><?= lang('Count of affiliated', 'davon Affiliiert') ?></th>
-                    <th><?= lang('Count of Online', 'davon Online') ?><sup>1</sup></th>
-                    <th><?= lang('Without external', 'ohne Externe') ?><sup>2</sup></th>
+                    <th><?= lang('activities.type_of_publication') ?></th>
+                    <th><?= lang('activities.count') ?></th>
+                    <th><?= lang('activities.count_of_affiliated') ?></th>
+                    <th><?= lang('activities.count_of_online') ?><sup>1</sup></th>
+                    <th><?= lang('activities.without_external') ?><sup>2</sup></th>
                     <th><?= lang('Peer-reviewed') ?><sup>3</sup></th>
                 </tr>
             </thead>
@@ -352,13 +352,13 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <p class="text-muted mt-0">
             <sup>1</sup>Online = Online ahead of print
             <br>
-            <sup>2</sup><?= lang('External co-creators are persons who are not affiliated with the reporting institution via an employment relationship or a doctoral procedure.', 'Als externe Ko-Schöpfer/-innen gelten Personen, die nicht mit der berichtenden Einrichtung affiliiert sind über ein Beschäftigungsverhältnis oder ein Promotionsverfahren.') ?>
+            <sup>2</sup><?= lang('activities.external_co_creators_are_persons_who_are_not_affiliated_with_the_reporting') ?>
             <br>
-            <sup>3</sup><?= lang('Peer-reviewed = Only if the <code>peer-reviewed</code> module is used.', 'Peer-reviewed = Nur gefüllt, wenn das <code>peer-reviewed</code>-Modul verwendet wird.') ?>
+            <sup>3</sup><?= lang('activities.peer_reviewed_only_if_the_peer_reviewed_module_is_used') ?>
         </p>
 
         <h3 id="oa-publications">
-            <?= lang('Number of Open Access publications', 'Anzahl der Open Access-Pubikationen') ?>
+            <?= lang('activities.number_of_open_access_publications') ?>
         </h3>
 
         <?php
@@ -401,27 +401,27 @@ $all = $osiris->activities->count(['affiliated' => true]);
                                     echo '<i class="icon-closed-access"></i> <span class="badge danger"> Closed Access</span>';
                                     break;
                                 case 'green':
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge success">Green Open Access</span>';
                                     break;
                                 case 'gold':
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge signal">Gold Open Access</span>';
                                     break;
                                 case 'hybrid':
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge">Hybrid Open Access</span>';
                                     break;
                                 case 'bronze':
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge secondary">Bronze Open Access</span>';
                                     break;
                                 case 'diamond':
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge primary">Diamond Open Access</span>';
                                     break;
                                 default:
-                                    echo '<i class="icon-open-access"></i> 
+                                    echo '<i class="icon-open-access"></i>
                                         <span class="badge muted">Open Access (Unknown Status)</span>';
                                     break;
                             }
@@ -449,16 +449,16 @@ $all = $osiris->activities->count(['affiliated' => true]);
                 <div href="#statistics" class="title"><?= lang('common.statistics') ?></div>
 
                 <a href="#activities-by-type">
-                    <?= lang('Activities by type', 'Aktivitäten nach Typ') ?>
+                    <?= lang('activities.activities_by_type') ?>
                 </a>
                 <a href="#activities-started-before">
-                    <?= lang('Activities started before', 'Aktivitäten gestartet vor') ?>
+                    <?= lang('activities.activities_started_before') ?>
                 </a>
                 <a href="#statistics-on-publications">
-                    <?= lang('Statistics on publications', 'Statistiken zu Publikationen') ?>
+                    <?= lang('activities.statistics_on_publications') ?>
                 </a>
                 <a href="#oa-publications">
-                    <?= lang('Open Access publications', 'Open Access Publikationen') ?>
+                    <?= lang('activities.open_access_publications') ?>
                 </a>
             </div>
 
@@ -488,10 +488,10 @@ $all = $osiris->activities->count(['affiliated' => true]);
     }
 
     let tables = {
-        '#activities-by-type-table': lang('Activities by type', 'Aktivitäten nach Typ') + ', <?= $time_frame ?>', 
-        '#publications-by-type-table': lang('Publications by type', 'Publikationen nach Typ') + ', <?= $time_frame ?>', 
-        '#oa-publications-table': lang('OA Publications', 'OA Publikationen') + ', <?= $time_frame ?>', 
-        '#activities-started-before-table': lang('Activities started before', 'Aktivitäten gestartet vor') + ', <?= $time_frame ?>'
+        '#activities-by-type-table': <?= json_encode(lang('activities.activities_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#publications-by-type-table': <?= json_encode(lang('activities.publications_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#oa-publications-table': <?= json_encode(lang('activities.oa_publications'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#activities-started-before-table': <?= json_encode(lang('activities.activities_started_before'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>'
     };
 
     for (const [selector, name] of Object.entries(tables)) {

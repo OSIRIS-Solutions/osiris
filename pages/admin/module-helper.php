@@ -16,17 +16,17 @@
 ?>
 
 <h1>
-    <?= lang('Data field overview', 'Übersicht der Datenfelder') ?>
+    <?= lang('admin.data_field_overview') ?>
 </h1>
 
 <p>
-    <?= lang('This page shows an overview of all data fields that are available in the system.', 'Diese Seite zeigt eine Übersicht aller Datenfelder, die im System verfügbar sind.') ?>
+    <?= lang('admin.this_page_shows_an_overview_of_all_data_fields_that_are_available_in_the_sy') ?>
 </p>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <!-- search bar -->
-<input type="search" id="search" class="form-control" placeholder="<?= lang('Search', 'Suche') ?>">
+<input type="search" id="search" class="form-control" placeholder="<?= lang('common.search') ?>">
 <br>
 
 <table class="table" id="modules">
@@ -70,7 +70,7 @@
                             <?= lang($vals['description'] ?? '', $vals['description_de'] ?? null) ?>
                         </p>
                         <p>
-                            <?= lang('Saved fields', 'Gespeicherte Felder') ?>:
+                            <?= lang('admin.saved_fields') ?>:
                             <?php foreach ($vals['fields'] as $f => $_) { ?>
                                 <code class="badge primary"><?= $f ?></code>
                             <?php } ?>
@@ -83,7 +83,7 @@
                     </div>
 
                     <?php if (count($activities) > 0) { ?>
-                        <?= lang('This field is used in the following activity types:', 'Dieses Feld wird zurzeit in folgenden Aktivitätstypen verwendet:') ?>
+                        <?= lang('admin.this_field_is_used_in_the_following_activity_types') ?>
                         <?php foreach ($activities as $a) { ?>
                             <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge badge-<?= $a['parent'] ?> mb-5">
                                 <i class="ph ph-<?= $a['icon'] ?? 'folder-open' ?>"></i>
@@ -92,7 +92,7 @@
                         <?php } ?>
                     <?php } else { ?>
                         <em class="text-muted">
-                            <?= lang('This field is currently not used in any activity types.', 'Dieses Feld wird zurzeit in keinen Aktivitätstypen verwendet.') ?>
+                            <?= lang('admin.this_field_is_currently_not_used_in_any_activity_types') ?>
                         </em>
                     <?php } ?>
 

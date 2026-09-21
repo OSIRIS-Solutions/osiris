@@ -33,15 +33,12 @@ $queue = $osiris->queue->find($filter, ['sort' => ['duplicate' => 1]])->toArray(
 
 <h1>
     <i class="ph-duotone ph-queue"></i>
-    <?= lang('Queue', 'Warteschlange') ?>
+    <?= lang('import.queue') ?>
 </h1>
 
 <?php
 if ($n_queue == 0) {
-    echo "<p>" . lang(
-        "No items in your queue.",
-        "Keine Elemente in der Warteschlange."
-    ) . "</p>";
+    echo "<p>" . lang('import.no_items_in_your_queue') . "</p>";
 } else { ?>
     <?php
     foreach ($queue as $doc) {
@@ -61,23 +58,23 @@ if ($n_queue == 0) {
                     </p>
                     <div class='' id="approve-<?= $id ?>">
                         <?php if (isset($doc['duplicate'])) { ?>
-                            <button class="btn danger mr-10" onclick="_queue('<?= $id ?>', false)" data-toggle="tooltip" data-title="<?= lang('It is a duplicate: remove from queue.', 'Es ist ein Duplikat: aus der Warteschlange entfernen.') ?>">
+                            <button class="btn danger mr-10" onclick="_queue('<?= $id ?>', false)" data-toggle="tooltip" data-title="<?= lang('import.it_is_a_duplicate_remove_from_queue') ?>">
                                 <i class="ph ph-x ph-fw"></i>
                             </button>
-                            <button class="btn text-success" onclick="_queue('<?= $id ?>', true)" data-toggle="tooltip" data-title="<?= lang('No duplicate: Accept and add to the database.', 'Kein Duplikat: akzeptieren und zur Datenbank hinzufügen.') ?>">
+                            <button class="btn text-success" onclick="_queue('<?= $id ?>', true)" data-toggle="tooltip" data-title="<?= lang('import.no_duplicate_accept_and_add_to_the_database') ?>">
                                 <i class="ph ph-check ph-fw"></i>
                             </button>
-                            <a target="_self" href="<?= ROOTPATH ?>/add-activity?doi=<?= $doc['doi'] ?>" class="btn text-secondary" data-toggle="tooltip" data-title="<?= lang('Add manually', 'Manuell hinzufügen') ?>">
+                            <a target="_self" href="<?= ROOTPATH ?>/add-activity?doi=<?= $doc['doi'] ?>" class="btn text-secondary" data-toggle="tooltip" data-title="<?= lang('import.add_manually') ?>">
                                 <i class="ph ph-pencil-simple-line"></i>
                             </a>
                         <?php } else { ?>
-                            <button class="btn success mr-10" onclick="_queue('<?= $id ?>', true)" data-toggle="tooltip" data-title="<?= lang('Accept and add to the database.', 'Akzeptieren und zur Datenbank hinzufügen.') ?>">
+                            <button class="btn success mr-10" onclick="_queue('<?= $id ?>', true)" data-toggle="tooltip" data-title="<?= lang('import.accept_and_add_to_the_database') ?>">
                                 <i class="ph ph-check ph-fw"></i>
                             </button>
-                            <button class="btn text-danger" onclick="_queue('<?= $id ?>', false)" data-toggle="tooltip" data-title="<?= lang('Decline and remove from queue.', 'Ablehnen und aus der Warteschlange entfernen.') ?>">
+                            <button class="btn text-danger" onclick="_queue('<?= $id ?>', false)" data-toggle="tooltip" data-title="<?= lang('import.decline_and_remove_from_queue') ?>">
                                 <i class="ph ph-x ph-fw"></i>
                             </button>
-                            <a target="_self" href="<?= ROOTPATH ?>/add-activity?doi=<?= $doc['doi'] ?>" class="btn text-secondary" data-toggle="tooltip" data-title="<?= lang('Add manually', 'Manuell hinzufügen') ?>">
+                            <a target="_self" href="<?= ROOTPATH ?>/add-activity?doi=<?= $doc['doi'] ?>" class="btn text-secondary" data-toggle="tooltip" data-title="<?= lang('import.add_manually') ?>">
                                 <i class="ph ph-pencil-simple-line"></i>
                             </a>
                         <?php } ?>
@@ -86,7 +83,7 @@ if ($n_queue == 0) {
                         $duplicate = $osiris->activities->findOne(['_id' => $doc['duplicate']]);
                     ?>
                         <p class="text-danger">
-                            <?= lang('Possible duplicate of ', 'Mögliches Duplikat von ') ?>
+                            <?= lang('import.possible_duplicate_of') ?>
                             <a class="link colorless font-weight-bold" href="<?= ROOTPATH ?>/activities/view/<?= $doc['duplicate'] ?>" target="_blank" rel="noopener noreferrer"><?= $duplicate['title'] ?? 'Activity' ?></a>
                         </p>
                     <?php } ?>
@@ -116,7 +113,7 @@ if ($n_queue == 0) {
                 if (accept) {
                     $('#tr-' + id).empty()
                     var p = $('<p>')
-                    p.html(lang('Added new activity: ', 'Neue Aktivität hinzugefügt: '))
+                    p.html(<?= json_encode(lang('import.added_new_activity'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                     var a = $('<a>')
                     a.attr('href', ROOTPATH + '/activities/view/' + response)
                     a.attr('target', '_blank')
@@ -124,14 +121,14 @@ if ($n_queue == 0) {
                     p.append(a)
                     $('#tr-' + id).append(p)
                     toastSuccess(
-                        lang('Added new activity to the database.', 'Neue Aktivität zur Datenbank hinzugefügt.'),
-                        lang('Accepted', 'Akzeptiert')
+                        <?= json_encode(lang('import.added_new_activity_to_the_database'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                        <?= json_encode(lang('import.accepted'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                     )
                 } else {
                     $('#tr-' + id).remove()
                     toastSuccess(
-                        lang('Activity has not been added to the database.', 'Aktivität wurde nicht zur Datenbank hinzugefügt.'),
-                        lang('Declined', 'Abgelehnt')
+                        <?= json_encode(lang('import.activity_has_not_been_added_to_the_database'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                        <?= json_encode(lang('import.declined'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                     )
                 }
             },

@@ -1,7 +1,7 @@
 
         <div class="box h-full">
             <div class="chart content">
-                <h5 class="title text-center"><?= lang('Role of ' . $Settings->get('affiliation') . ' authors', 'Rolle der ' . $Settings->get('affiliation') . '-Autoren') ?></h5>
+                <h5 class="title text-center"><?= lang('dashboard.role_of_affiliation_authors', replace: ['affiliation' => $Settings->get('affiliation')]) ?></h5>
                 <canvas id="chart-authors" style="max-height: 30rem;"></canvas>
             </div>
 
@@ -32,7 +32,7 @@
                 var myChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['<?= lang("First or last author", "Erst- oder Letztautor") ?>', '<?= lang("Middle authors", "Mittelautor") ?>'],
+                        labels: ['<?= lang('dashboard.first_or_last_author') ?>', '<?= lang('dashboard.middle_authors') ?>'],
                         datasets: [{
                             label: '# of Scientists',
                             data: [<?= $authors['firstorlast'] ?>, <?= $authors['middle'] ?>],

@@ -27,7 +27,7 @@ if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
     $ldap_fields = array_keys(array_filter($ldap_fields));
 }
 
-$ldap_msg = '<small class="text-muted">' . lang('This field is centrally managed by your organisation.', 'Dieses Feld wird durch deine Organisation zentral verwaltet.') . '</small>';
+$ldap_msg = '<small class="text-muted">' . lang('people.this_field_is_centrally_managed_by_your_organisation') . '</small>';
 
 $data_fields = $Settings->get('person-data');
 if (!is_null($data_fields)) {
@@ -75,11 +75,11 @@ $active = function ($field) use ($data_fields) {
 
 <?php if ($data['is_active'] ?? true) { ?>
     <div class="text-success">
-        <?= lang('This user account is active.', 'Dieser Benutzeraccount ist aktiv.') ?>
+        <?= lang('people.this_user_account_is_active') ?>
     </div>
 <?php } else { ?>
     <div class="text-danger">
-        <?= lang('This user account is inactive.', 'Dieser Benutzeraccount ist inaktiv.') ?>
+        <?= lang('people.this_user_account_is_inactive') ?>
     </div>
 <?php } ?>
 
@@ -87,12 +87,12 @@ $active = function ($field) use ($data_fields) {
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('personal')" id="btn-personal" class="btn active">
         <i class="ph ph-user" aria-hidden="true"></i>
-        <?= lang('Personal', 'Persönlich') ?>
+        <?= lang('people.personal') ?>
     </a>
 
     <a onclick="navigate('contact')" id="btn-contact" class="btn">
         <i class="ph ph-identification-card" aria-hidden="true"></i>
-        <?= lang('Contact &amp; Profile', 'Kontakt &amp; Profil') ?>
+        <?= lang('people.contact_amp_profile') ?>
     </a>
 
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
@@ -107,23 +107,23 @@ $active = function ($field) use ($data_fields) {
 
     <a onclick="navigate('biography')" id="btn-biography" class="btn">
         <i class="ph ph-book-open-text" aria-hidden="true"></i>
-        <?= lang('Biography', 'Biografie') ?>
+        <?= lang('common.biography') ?>
     </a>
 
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <a onclick="navigate('portfolio')" id="btn-portfolio" class="btn">
             <i class="ph ph-eye" aria-hidden="true"></i>
-            <?= lang('Portfolio', 'Portfolio') ?>
+            <?= lang('admin.portfolio') ?>
         </a>
     <?php } ?>
     <a onclick="navigate('account')" id="btn-account" class="btn">
         <i class="ph ph-key" aria-hidden="true"></i>
-        <?= lang('Account', 'Account') ?>
+        <?= lang('people.account') ?>
     </a>
     <?php if ($data['username'] == $_SESSION['username'] || $Settings->hasPermission('user.settings')) { ?>
         <a onclick="navigate('preferences')" id="btn-preferences" class="btn">
             <i class="ph ph-gear" aria-hidden="true"></i>
-            <?= lang('Preferences', 'Einstellungen') ?>
+            <?= lang('people.preferences') ?>
         </a>
     <?php } ?>
 </nav>
@@ -132,7 +132,7 @@ $active = function ($field) use ($data_fields) {
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
 
     <section id="personal">
-        <h2 class="title"><?= lang('Name and personal information', 'Name und persönliche Informationen') ?></h2>
+        <h2 class="title"><?= lang('people.name_and_personal_information') ?></h2>
 
         <div class="form-row row-eq-spacing">
             <div class="col-sm-2">
@@ -180,7 +180,7 @@ $active = function ($field) use ($data_fields) {
 
 
         <div class="form-group">
-            <label for="names" class=""><?= lang('Names for author matching', 'Namen für das Autoren-Matching') ?></label>
+            <label for="names" class=""><?= lang('people.names_for_author_matching') ?></label>
 
             <div class="box m-0 p-5">
                 <?php foreach ($names as $n) { ?>
@@ -193,7 +193,7 @@ $active = function ($field) use ($data_fields) {
                 <?php } ?>
 
                 <button class="btn secondary m-5" type="button" onclick="addName(event, this);">
-                    <i class="ph ph-plus"></i> <?= lang('Add name', 'Füge Namen hinzu') ?>
+                    <i class="ph ph-plus"></i> <?= lang('people.add_name') ?>
                 </button>
             </div>
         </div>
@@ -231,14 +231,14 @@ $active = function ($field) use ($data_fields) {
     <section id="organization" style="display:none;">
 
         <h2 class="title mb-0">
-            <?= lang('Organisational information', 'Organisatorische Informationen') ?>
+            <?= lang('people.organisational_information') ?>
         </h2>
 
         <p>
-            <strong><?= lang('Username', 'Benutzername') ?>:</strong> <code class="code"><?= $data['username'] ?></code>
+            <strong><?= lang('common.username') ?>:</strong> <code class="code"><?= $data['username'] ?></code>
             <br>
             <small class="text-muted">
-                <?= lang('The username cannot be changed.', 'Der Benutzername kann nicht geändert werden.') ?>
+                <?= lang('people.the_username_cannot_be_changed') ?>
             </small>
         </p>
 
@@ -278,7 +278,7 @@ $active = function ($field) use ($data_fields) {
         <!-- room -->
         <?php if ($active('room')) { ?>
             <div class="form-group">
-                <label for="room"><?= lang('Room', 'Raum') ?></label>
+                <label for="room"><?= lang('common.room') ?></label>
                 <input type="text" name="values[room]" id="room" class="form-control w-auto" value="<?= $data['room'] ?? '' ?>" <?= in_array('room', $ldap_fields) ? 'disabled' : '' ?>>
                 <?php if (in_array('room', $ldap_fields)) {
                     echo $ldap_msg;
@@ -300,7 +300,7 @@ $active = function ($field) use ($data_fields) {
             <?php if ($active('position')) { ?>
                 <div class="form-group">
                     <label for="position">
-                        <h5><?= lang('Current Position', 'Aktuelle Position') ?></h5>
+                        <h5><?= lang('common.current_position') ?></h5>
                     </label>
 
                     <?php
@@ -328,7 +328,7 @@ $active = function ($field) use ($data_fields) {
                     <?php } else { ?>
                         <!-- select list from predifined pos -->
                         <select name="values[position_both]" id="position" class="form-control">
-                            <option value=""> -- <?= lang('no position selected', 'keine Position gewählt') ?> --- </option>
+                            <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
                             <?php foreach ($staffPos as $pos) {
                                 $en = $pos[0] ?? '-';
                                 $de = $pos[1] ?? '-';
@@ -342,7 +342,7 @@ $active = function ($field) use ($data_fields) {
             <?php } ?>
 
             <h5>
-                <?= lang('Organisational units', 'Organisationseinheiten') ?>
+                <?= lang('people.organisational_units') ?>
             </h5>
 
             <?php
@@ -351,7 +351,7 @@ $active = function ($field) use ($data_fields) {
 
             <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" target="_blank" rel="noopener noreferrer">
                 <i class="ph ph-edit"></i>
-                <?= lang('Edit units', 'Einheiten bearbeiten') ?>
+                <?= lang('people.edit_units') ?>
             </a>
 
             <table class="table w-auto mt-10">
@@ -375,7 +375,7 @@ $active = function ($field) use ($data_fields) {
                         <tr data-id="<?= $dept['id'] ?>">
                             <td><?= $d ?></td>
                             <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('common.unknown') . '</em>' ?></td>
-                            <td><?= $dept['end'] ?? '<em class="text-success">' . lang('current', 'laufend') . '</em>' ?></td>
+                            <td><?= $dept['end'] ?? '<em class="text-success">' . lang('common.current') . '</em>' ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -390,35 +390,29 @@ $active = function ($field) use ($data_fields) {
     <?php if ($Settings->featureEnabled('portal')) { ?>
 
         <section id="portfolio" style="display:none;">
-            <h2 class="title"><?= lang('Public visibility', 'Öffentliche Darstellung') ?> (Portfolio)</h2>
+            <h2 class="title"><?= lang('people.public_visibility') ?> (Portfolio)</h2>
 
 
             <?php if ($active('hide')) { ?>
                 <div class="alert danger">
                     <div class="custom-checkbox">
                         <input type="checkbox" id="hide" value="1" name="values[hide]" <?= ($data['hide'] ?? false) ? 'checked' : '' ?>>
-                        <label for="hide"><?= lang('Hide profile in Portfolio', 'Profil nicht im Portfolio zeigen') ?></label>
+                        <label for="hide"><?= lang('people.hide_profile_in_portfolio') ?></label>
                     </div>
                     <small class="text-danger">
-                        <?= lang(
-                            'By hiding your profile, you prevent OSIRIS Portfolio from displaying your profile to the public. You can revoke this at any time by unticking the checkbox again.',
-                            'Indem du dein Profil versteckst, verhinderst du, dass OSIRIS Portfolio dein Profil öffentlich zeigt. Du kannst dies jederzeit wieder rückgängig machen, indem du das Häkchen wieder entfernst.'
-                        ) ?>
+                        <?= lang('people.by_hiding_your_profile_you_prevent_osiris_portfolio_from_displaying_your_pr') ?>
                     </small>
                 </div>
             <?php } ?>
 
             <p class="text-danger">
-                <?= lang(
-                    'By setting the image, mail or phone number to publicly visible, you allow OSIRIS Portfolio to display this personal data of yours to the open public. You can retract this at any time by unticking the check boxes again.',
-                    'Indem du das Bild, die Mail oder die Telefonnummer auf öffentlich sichtbar setzt, erlaubst du OSIRIS Portfolio, diese persönlichen Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Häkchen wieder entfernst.'
-                ) ?>
+                <?= lang('people.by_setting_the_image_mail_or_phone_number_to_publicly_visible_you_allow_osi') ?>
             </p>
             <?php if ($active('public_image')) { ?>
                 <!-- show profile picture -->
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_image" value="1" name="values[public_image]" <?= ($data['public_image'] ?? false) ? 'checked' : '' ?>>
-                    <label for="public_image"><?= lang('Show profile picture', 'Zeige Profilbild') ?></label>
+                    <label for="public_image"><?= lang('people.show_profile_picture') ?></label>
                 </div>
             <?php } ?>
 
@@ -427,7 +421,7 @@ $active = function ($field) use ($data_fields) {
                 <input type="hidden" name="values[public_other_activities]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_other_activities" value="true" name="values[public_other_activities]" <?= ($data['public_other_activities'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_other_activities"><?= lang('Show other activities (not publications) as a separate section in the profile', 'Zeige sonstige Aktivitäten (nicht Publikationen) als eigene Sektion im Profil') ?></label>
+                    <label for="public_other_activities"><?= lang('people.show_other_activities_not_publications_as_a_separate_section_in_the_profile') ?></label>
                 </div>
             <?php } ?>
 
@@ -436,30 +430,30 @@ $active = function ($field) use ($data_fields) {
                 <input type="hidden" name="values[public_teaching]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_teaching" value="true" name="values[public_teaching]" <?= ($data['public_teaching'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_teaching"><?= lang('Show teaching activities as a separate section in the profile', 'Zeige Lehraktivitäten als eigene Sektion im Profil') ?></label>
+                    <label for="public_teaching"><?= lang('people.show_teaching_activities_as_a_separate_section_in_the_profile') ?></label>
                 </div>
             <?php } ?>
 
             <?php if ($active('public_email')) { ?>
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_email"><?= lang('Show email address', 'Zeige E-Mail-Adresse') ?></label>
+                    <label for="public_email"><?= lang('people.show_email_address') ?></label>
                 </div>
             <?php } ?>
 
             <div class="custom-checkbox mb-20">
                 <input type="checkbox" id="public_phone" value="1" name="values[public_phone]" <?= ($data['public_phone'] ?? false) ? 'checked' : '' ?>>
-                <label for="public_phone"><?= lang('Show telephone number', 'Zeige Telefonnummer') ?></label>
+                <label for="public_phone"><?= lang('people.show_telephone_number') ?></label>
             </div>
 
             <!-- alternative mail -->
             <div class="form-group">
-                <label for="mail_alternative"><?= lang('Alternative Mail', 'Alternative Mail-Adresse') ?></label>
+                <label for="mail_alternative"><?= lang('people.alternative_mail') ?></label>
                 <input type="text" name="values[mail_alternative]" id="mail_alternative" class="form-control" value="<?= $data['mail_alternative'] ?? '' ?>">
             </div>
             <!-- comment for mail -->
             <div class="form-group">
-                <label for="mail_alternative_comment"><?= lang('Explanation for alternative mail', 'Erklärung für die alternative Mail') ?></label>
+                <label for="mail_alternative_comment"><?= lang('people.explanation_for_alternative_mail') ?></label>
                 <input type="text" name="values[mail_alternative_comment]" id="mail_alternative_comment" class="form-control" value="<?= $data['mail_alternative_comment'] ?? '' ?>">
             </div>
 
@@ -468,7 +462,7 @@ $active = function ($field) use ($data_fields) {
 
 
     <section id="contact" style="display:none;">
-        <h4 class="title"><?= lang('Contact', 'Kontakt') ?></h4>
+        <h4 class="title"><?= lang('common.contact') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
             <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) ? 'disabled' : '' ?> onblur="validateEmail(this)">
@@ -487,17 +481,17 @@ $active = function ($field) use ($data_fields) {
             }
         ?>
             <div class="form-group">
-                <label for="mail_digest"><?= lang('Mail Digest', 'E-Mail-Zusammenfassung') ?></label>
+                <label for="mail_digest"><?= lang('people.mail_digest') ?></label>
                 <select name="values[mail_digest]" id="mail_digest" class="form-control w-auto">
-                    <option value="default" <?= $user_digest == 'default' ? 'selected' : '' ?>>--- <?= lang('Use default setting', 'Standard-Einstellung verwenden') ?> (<?= lang(ucfirst($digest), ucfirst($digest)) ?>)</option>
-                    <option value="none" <?= $user_digest == 'none' ? 'selected' : '' ?>><?= lang('No mail digest', 'Keine E-Mail-Zusammenfassung') ?></option>
-                    <option value="daily" <?= $user_digest == 'daily' ? 'selected' : '' ?>><?= lang('Daily mail digest', 'Tägliche E-Mail-Zusammenfassung') ?></option>
-                    <option value="weekly" <?= $user_digest == 'weekly' ? 'selected' : '' ?>><?= lang('Weekly mail digest', 'Wöchentliche E-Mail-Zusammenfassung') ?></option>
-                    <option value="monthly" <?= $user_digest == 'monthly' ? 'selected' : '' ?>><?= lang('Monthly mail digest', 'Monatliche E-Mail-Zusammenfassung') ?></option>
+                    <option value="default" <?= $user_digest == 'default' ? 'selected' : '' ?>>--- <?= lang('people.use_default_setting') ?> (<?= ucfirst($digest) ?>)</option>
+                    <option value="none" <?= $user_digest == 'none' ? 'selected' : '' ?>><?= lang('people.no_mail_digest') ?></option>
+                    <option value="daily" <?= $user_digest == 'daily' ? 'selected' : '' ?>><?= lang('people.daily_mail_digest') ?></option>
+                    <option value="weekly" <?= $user_digest == 'weekly' ? 'selected' : '' ?>><?= lang('people.weekly_mail_digest') ?></option>
+                    <option value="monthly" <?= $user_digest == 'monthly' ? 'selected' : '' ?>><?= lang('people.monthly_mail_digest') ?></option>
                 </select>
                 <small class="text-muted">
-                    <?= lang('You can choose to receive a summary of your activities by email at regular intervals. You can also opt out of this at any time.', 'Du kannst wählen, ob du in regelmäßigen Abständen eine Zusammenfassung deiner Aktivitäten per E-Mail erhalten möchtest. Du kannst dies auch jederzeit wieder abwählen.') ?>
-                    <?= lang('Preferred language based on interface:', 'Bevorzugte Sprache basierend auf der Benutzeroberfläche:') ?>
+                    <?= lang('people.you_can_choose_to_receive_a_summary_of_your_activities_by_email_at_regular') ?>
+                    <?= lang('people.preferred_language_based_on_interface') ?>
                     <strong><?= strtoupper($data['lang'] ?? 'de') ?></strong>
                 </small>
             </div>
@@ -516,7 +510,7 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('mobile')) { ?>
                 <div class="col-sm-6">
-                    <label for="mobile"><?= lang('Mobile', 'Mobil') ?></label>
+                    <label for="mobile"><?= lang('common.mobile') ?></label>
                     <input type="tel" name="values[mobile]" id="mobile" class="form-control need-validation" data-validator="telephone" value="<?= $data['mobile'] ?? '' ?>" <?= in_array('mobile', $ldap_fields) ? 'disabled' : '' ?> onblur="validateTelephone(this)">
                     <?php if (in_array('mobile', $ldap_fields)) {
                         echo $ldap_msg;
@@ -526,7 +520,7 @@ $active = function ($field) use ($data_fields) {
 
         </div>
 
-        <h4 class="title"><?= lang('Researcher IDs', 'Forschenden-IDs') ?></h4>
+        <h4 class="title"><?= lang('people.researcher_ids') ?></h4>
 
         <div class="form-row row-eq-spacing">
             <div class="col-sm-6">
@@ -537,7 +531,7 @@ $active = function ($field) use ($data_fields) {
                 if (!isset($data['orcid_validated']) || !$data['orcid_validated'] || !$Settings->featureEnabled('orcid')) { ?>
                     <input type="text" name="values[orcid]" id="orcid" class="form-control need-validation" data-validator="orcid" value="<?= $data['orcid'] ?? '' ?>" oninput="validateORCID(this);">
                     <small class="text-danger" id="orcid-wrong" style="display: none;">
-                        <?= lang('The ORCID should be in the format 0000-0000-0000-0000', 'Die ORCID sollte im Format 0000-0000-0000-0000 angegeben werden') ?>
+                        <?= lang('people.the_orcid_should_be_in_the_format_0000_0000_0000_0000') ?>
                     </small>
                 <?php } else { ?>
                     <div class="input-group">
@@ -547,12 +541,12 @@ $active = function ($field) use ($data_fields) {
                         </div>
                     </div>
                     <small class="text-muted">
-                        <?= lang('ORCID is already connected', 'Die ORCID ist bereits verknüpft') ?>
+                        <?= lang('people.orcid_is_already_connected') ?>
                     </small>
                     <br>
                     <script>
                         function disconnectORCID() {
-                            if (confirm('<?= lang('Are you sure you want to disconnect your ORCID?', 'Bist du sicher, dass du deine ORCID trennen möchtest?') ?>')) {
+                            if (confirm('<?= lang('people.are_you_sure_you_want_to_disconnect_your_orcid') ?>')) {
                                 // /crud/orcid/disconnect
                                 fetch('<?= ROOTPATH ?>/crud/orcid/disconnect', {
                                     method: 'POST',
@@ -565,15 +559,15 @@ $active = function ($field) use ($data_fields) {
                                 }).then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
-                                            alert('<?= lang('ORCID disconnected successfully.', 'ORCID erfolgreich getrennt.') ?>');
+                                            alert('<?= lang('people.orcid_disconnected_successfully') ?>');
                                             location.reload();
                                         } else {
-                                            alert('<?= lang('Error disconnecting ORCID.', 'Fehler beim Trennen der ORCID.') ?>');
+                                            alert('<?= lang('people.error_disconnecting_orcid') ?>');
                                         }
                                     })
                                     .catch(error => {
                                         console.error('Error:', error);
-                                        alert('<?= lang('Error disconnecting ORCID.', 'Fehler beim Trennen der ORCID.') ?>');
+                                        alert('<?= lang('people.error_disconnecting_orcid') ?>');
                                     });
                             }
                         }
@@ -585,12 +579,12 @@ $active = function ($field) use ($data_fields) {
                     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                 ?>
                     <small class="text-muted">
-                        <?= lang('or', 'oder') ?>
+                        <?= lang('common.or_auth_page') ?>
                     </small>
                     <br>
                     <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-                        <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
+                        <?= lang('common.connect_orcid') ?>
                     </a>
                 <?php } ?>
             </div>
@@ -600,10 +594,10 @@ $active = function ($field) use ($data_fields) {
                 <label for="google_scholar">Google Scholar ID</label>
                 <input type="text" name="values[google_scholar]" id="google_scholar" class="form-control need-validation" data-validator="googleScholar" value="<?= $data['google_scholar'] ?? '' ?>" oninput="validateGoogleScholar(this)">
                 <small class="text-muted">
-                    <?= lang('Not the URL! Only the bold part: https://scholar.google.com/citations?user=<b>2G1YzvwAAAAJ</b>&hl=de ', 'Nicht die URL! Nur der fettgedruckte Teil: https://scholar.google.com/citations?user=<b>2G1YzvwAAAAJ</b>&hl=de') ?>
+                    <?= lang('people.not_the_url_only_the_bold_part_https_scholar_google_com_citations_user_2g1y') ?>
                 </small>
                 <div class="text-danger" id="google-scholar-wrong" style="display: none;">
-                    <?= lang('Please enter a valid Google Scholar ID.', 'Bitte gib eine gültige Google Scholar ID ein.') ?>
+                    <?= lang('people.please_enter_a_valid_google_scholar_id') ?>
                 </div>
             </div>
         </div>
@@ -612,16 +606,12 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('socials')) { ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
                 <p class="text-danger">
-                    <?= lang('
-            Please note that the following information is optional. If you do not wish to make your contact information publicly visible, you can leave the corresponding fields blank. If you fill them in, you authorise OSIRIS Portfolio to show this data publicly. You can revoke this at any time by leaving the fields blank.
-            ', '
-            Bitte beachte, dass die folgenden Informationen freiwillige Angaben sind. Wenn du deine Kontaktinformationen nicht öffentlich sichtbar machen möchtest, kannst du die entsprechenden Felder leer lassen. Solltest du sie ausfüllen, erlaubst du OSIRIS Portfolio, diese Daten öffentlich zu zeigen. Du kannst dies jederzeit wieder rückgängig machen, indem du die Felder leer lässt.
-            ') ?>
+                    <?= lang('people.please_note_that_the_following_information_is_optional_if_you_do_not_wish_t') ?>
                 </p>
             <?php } ?>
 
             <h4>
-                <?= lang('Social Media', 'Soziale Medien') ?>
+                <?= lang('people.social_media') ?>
             </h4>
             <div id="socials">
                 <input type="hidden" name="values[socials]" value="">
@@ -651,7 +641,7 @@ $active = function ($field) use ($data_fields) {
             <div class="dropdown">
                 <button class="btn" data-toggle="dropdown" type="button" id="socials-dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-plus"></i>
-                    <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
+                    <?= lang('people.add_new_social') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
                     <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'website'] as $s) {
@@ -699,7 +689,7 @@ $active = function ($field) use ($data_fields) {
         <!-- Contact Button -->
         <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
             <h4>
-                <?= lang('Contact Button', 'Kontakt Button') ?>
+                <?= lang('people.contact_button') ?>
             </h4>
             <?php 
                 $contact_button = $data['contact-button'] ?? false;
@@ -710,19 +700,19 @@ $active = function ($field) use ($data_fields) {
                 <div>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
-                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        <label for="contact-button-true"><?= lang('common.enabled_features') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
-                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        <label for="contact-button-false"><?= lang('common.disabled_features') ?></label>
                     </div>
                 </div>
                 <small class="text-muted">
-                    <?= lang('The contact button will be displayed on your OSIRIS profile page. You can choose your preferred contact type to be displayed.', 'Der Kontakt-Button wird auf deiner OSIRIS-Profilseite angezeigt. Du kannst deinen Wunsch-Kontaktweg wählen.') ?>
+                    <?= lang('people.the_contact_button_will_be_displayed_on_your_osiris_profile_page_you_can_ch') ?>
                 </small>
                 <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
                     <div class="col-sm">
-                        <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
+                        <label for="contact-button-type"><?= lang('common.contact_type') ?></label>
                         <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
                             <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
                                 if (!$enabled) continue; ?>
@@ -731,7 +721,7 @@ $active = function ($field) use ($data_fields) {
                         </select>
                     </div>
                     <div class="col-sm">
-                        <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
+                        <label for="contact"><?= lang('common.contact') ?></label>
                         <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
                         <small class="text-muted" id="contact-button-input-help"></small>
                     </div>
@@ -755,8 +745,8 @@ $active = function ($field) use ($data_fields) {
                         var contactInput = $('#contact-button-input');
                         var contactHelp = $('#contact-button-input-help');
                         if (type === 'mail' || type === 'teams') {
-                            contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add an email address. It will be used for the contact button.', 'Bitte hier eine E-Mail-Adresse eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            contactInput.attr('placeholder', '<?= lang('people.enter_email_address') ?>');
+                            contactHelp.text('<?= lang('people.please_add_an_email_address_it_will_be_used_for_the_contact_button') ?>');
                             if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['mail'] ?? false ?>') {
@@ -765,16 +755,16 @@ $active = function ($field) use ($data_fields) {
                                 contactInput.val('');
                             }
                         } else if (type === 'slack') {
-                            contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button. Keep in mind that the contact link will only work if the person clicking it is part of the same Slack Workspace', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet. Bitte beachte, dass der Link nur funktionieren wird, wenn die klickende Person Teil des gleichen Slack-Workspaces ist.') ?>');
+                            contactInput.attr('placeholder', '<?= lang('people.enter_slack_user_id') ?>');
+                            contactHelp.text('<?= lang('people.please_add_a_slack_user_id_in_the_format_u12345678_it_will_be_used_for_the') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else {
                                 contactInput.val('');
                             }
                         } else if (type === 'matrix') {
-                            contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Matrix ID in the format @username:server. It will be used for the contact button.', 'Bitte hier eine Matrix-ID im Format @username:server eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            contactInput.attr('placeholder', '<?= lang('people.enter_matrix_id') ?>');
+                            contactHelp.text('<?= lang('people.please_add_a_matrix_id_in_the_format_username_server_it_will_be_used_for_th') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
@@ -786,8 +776,8 @@ $active = function ($field) use ($data_fields) {
                                 contactInput.val('');
                             }
                         } else if (type === 'other') {
-                            contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a contact URL. It will be used for the contact button.', 'Bitte hier eine Kontakt-URL eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            contactInput.attr('placeholder', '<?= lang('people.enter_contact_url') ?>');
+                            contactHelp.text('<?= lang('people.please_add_a_contact_url_it_will_be_used_for_the_contact_button') ?>');
                             if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else {
@@ -807,16 +797,16 @@ $active = function ($field) use ($data_fields) {
 
     <section id="account" style="display:none;">
         <h2 class="title">
-            <?= lang('Account settings', 'Account-Einstellungen') ?>
+            <?= lang('people.account_settings') ?>
         </h2>
 
         <?php if (!($data['is_active'] ?? true)) { ?>
             <h5>
-                <?= lang('Reactivate inactive user account', 'Inaktiven Account reaktivieren') ?>
+                <?= lang('people.reactivate_inactive_user_account') ?>
             </h5>
             <div class="custom-checkbox mb-10">
                 <input type="checkbox" id="is_active" value="1" name="values[is_active]">
-                <label for="is_active"><?= lang('Reactivate', 'Reaktivieren') ?></label>
+                <label for="is_active"><?= lang('people.reactivate') ?></label>
             </div>
         <?php } ?>
 
@@ -826,37 +816,37 @@ $active = function ($field) use ($data_fields) {
         ) { ?>
 
             <h5>
-                <?= lang('Change password', 'Passwort ändern') ?>
+                <?= lang('people.change_password') ?>
             </h5>
 
             <div class="form-group">
-                <label for="old_password"><?= lang('Old password', 'Vorheriges Password') ?></label>
+                <label for="old_password"><?= lang('people.old_password') ?></label>
                 <input type="password" name="old_password" id="old_password" class="form-control">
             </div>
 
             <div class="form-row row-eq-spacing">
                 <div class="col-sm-6">
-                    <label for="password"><?= lang('New password', 'Neues Passwort') ?></label>
+                    <label for="password"><?= lang('auth.password_new') ?></label>
                     <input type="password" name="password" id="password" class="form-control need-validation" data-validator="password" oninput="validatePassword(this);">
                     <small id="password-wrong-length">
-                        <?= lang('The password should be at least 8 characters long.', 'Das Passwort sollte mindestens 8 Zeichen lang sein.') ?>
+                        <?= lang('people.the_password_should_be_at_least_8_characters_long') ?>
                     </small>
                     <br>
                     <small id="password-wrong-uppercase">
-                        <?= lang('The password must contain at least one uppercase letter.', 'Das Passwort muss mindestens einen Großbuchstaben enthalten.') ?>
+                        <?= lang('people.the_password_must_contain_at_least_one_uppercase_letter') ?>
                     </small>
                     <br>
                     <small id="password-wrong-lowercase">
-                        <?= lang('The password must contain at least one lowercase letter.', 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.') ?>
+                        <?= lang('people.the_password_must_contain_at_least_one_lowercase_letter') ?>
                     </small>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="password2"><?= lang('Repeat password', 'Passwort wiederholen') ?></label>
+                    <label for="password2"><?= lang('people.repeat_password') ?></label>
                     <input type="password" name="password2" id="password2" class="form-control need-validation" data-validator="password2" oninput="validatePassword2(this)">
                     <br>
                     <small class="text-danger" id="password2-wrong" style="display: none;">
-                        <?= lang('Passwords do not match.', 'Die Passwörter stimmen nicht überein.') ?>
+                        <?= lang('people.passwords_do_not_match') ?>
                     </small>
                 </div>
             </div>
@@ -887,7 +877,7 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <h5>
-            <?= lang('Transfer the maintenance of your profile', 'Übertrage die Pflege deines Profils') ?>
+            <?= lang('people.transfer_the_maintenance_of_your_profile') ?>
         </h5>
         <?php
         if (is_string($data['maintenance'] ?? null)) $data['maintenance'] = [$data['maintenance']];
@@ -899,13 +889,13 @@ $active = function ($field) use ($data_fields) {
 
             <style>
                 #maintenance-list:empty::before {
-                    content: "<?= lang('This profile is not shared with someone.', 'Dieses Profil wurde mit niemandem geteilt.') ?>";
+                    content: "<?= lang('people.this_profile_is_not_shared_with_someone') ?>";
                     color: var(--muted-color);
                     font-style: italic;
                 }
 
                 #maintenance-list:not(:empty)::before {
-                    content: "<?= lang('This profile was shared with:', 'Dieses Profil wurde geteilt mit:') ?>";
+                    content: "<?= lang('people.this_profile_was_shared_with') ?>";
                 }
             </style>
             <div class="author-widget">
@@ -921,7 +911,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="maintenance-select">
-                            <option value="" disabled selected><?= lang("Select a person to share with ...", "Wähle eine Person zum Teilen aus ...") ?></option>
+                            <option value="" disabled selected><?= lang('people.select_a_person_to_share_with') ?></option>
                             <?php
                             $all_users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['sort' => ['last' => 1, 'first' => 1]]);
                             foreach ($all_users as $s) { ?>
@@ -946,7 +936,7 @@ $active = function ($field) use ($data_fields) {
                     if (user.length === 0) return;
                     // check if already exists
                     if ($('#maintenance-list').find(`input[value="${user}"]`).length > 0) {
-                        toastError('<?= lang('Person already exists', 'Person existiert bereits') ?>');
+                        toastError('<?= lang('people.person_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'>${name} <input type='hidden' name='values[maintenance][]' value='${user}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -958,7 +948,7 @@ $active = function ($field) use ($data_fields) {
             <!-- 
             <select name="values[maintenance]" id="maintenance" class="form-control">
                 <option value="">
-                    <?= lang('Profile is not shared with someone', 'Du hast dein Profil an niemanden übertragen') ?>
+                    <?= lang('people.profile_is_not_shared_with_someone') ?>
                 </option>
 
                 <?php
@@ -972,10 +962,7 @@ $active = function ($field) use ($data_fields) {
 
         <p class=" text-danger">
             <i class="ph ph-warning"></i>
-            <?= lang(
-                'Warning: this person gets full access to your OSIRIS profile and can edit in your name.',
-                'Warnung: diese Person erhält vollen Zugriff auf dein OSIRIS-Profil und kann in deinem Namen editieren.'
-            ) ?>
+            <?= lang('people.warning_this_person_gets_full_access_to_your_osiris_profile_and_can_edit_in') ?>
         </p>
 
     </section>
@@ -983,13 +970,13 @@ $active = function ($field) use ($data_fields) {
     <?php if ($data['username'] == $_SESSION['username'] || $Settings->hasPermission('user.settings')) { ?>
 
         <section id="preferences" style="display:none;">
-            <h2 class="title"><?= lang('Profile preferences', 'Profil-Einstellungen') ?></h2>
+            <h2 class="title"><?= lang('people.profile_preferences') ?></h2>
 
 
-            <h5><?= lang('Sidebar Favourites', 'Seitenleisten-Favoriten') ?></h5>
+            <h5><?= lang('people.sidebar_favourites') ?></h5>
 
             <p>
-                <?= lang('You can add your favourite pages to the sidebar for quick access. ', 'Du kannst deine Lieblingsseiten zur Seitenleiste hinzufügen, um schnell darauf zugreifen zu können. ') ?>
+                <?= lang('people.you_can_add_your_favourite_pages_to_the_sidebar_for_quick_access') ?>
             </p>
 
             <?php
@@ -1018,7 +1005,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="sidebar-select">
-                            <option value="" disabled selected><?= lang("Add favorite ...", "Füge Favorit hinzu ...") ?></option>
+                            <option value="" disabled selected><?= lang('people.add_favorite') ?></option>
                             <?php
                             foreach ($options as $option) {
                                 $id = $option['id'];
@@ -1042,7 +1029,7 @@ $active = function ($field) use ($data_fields) {
                     var label = $('#sidebar-select option:selected').text();
                     // check if already exists
                     if ($('#sidebar_favorites-list').find(`input[value="${sidebar}"]`).length > 0) {
-                        toastError('<?= lang('Sidebar favorite already exists', 'Favorit existiert bereits') ?>');
+                        toastError('<?= lang('people.sidebar_favorite_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'><i class="ph ph-dots-six-vertical text-muted"></i> ${label} <input type='hidden' name='values[sidebar_favorites][]' value='${sidebar}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -1056,7 +1043,7 @@ $active = function ($field) use ($data_fields) {
 
 
             <h5>
-                <?= lang('Display of Activities', 'Darstellung der Aktivitäten') ?>
+                <?= lang('people.display_of_activities') ?>
                 <a href="#" onclick="$('#display_activities-info').toggleClass('hidden'); return false;">
                     <i class="ph ph-info text-muted"></i>
                 </a>
@@ -1065,26 +1052,26 @@ $active = function ($field) use ($data_fields) {
             $display_activities = $data['display_activities'] ?? 'web';
             ?>
             <p class="hidden" id="display_activities-info">
-                <?= lang('You can choose how activities are displayed for you when you use OSIRIS.', 'Du kannst wählen, wie Aktivitäten für dich dargestellt werden, wenn du OSIRIS nutzt.') ?>
+                <?= lang('people.you_can_choose_how_activities_are_displayed_for_you_when_you_use_osiris') ?>
             </p>
 
 
             <div class="form-group">
                 <div class="custom-radio">
                     <input type="radio" name="values[display_activities]" id="display_activities-web" value="web" <?= $display_activities == 'web' ? 'checked' : '' ?>>
-                    <label for="display_activities-web"><?= lang('Web Display', 'Web-Darstellung') ?></label>
+                    <label for="display_activities-web"><?= lang('people.web_display') ?></label>
                 </div>
                 <small class="text-muted">
-                    <?= lang('Display type optimized for the web.', 'Darstellung, die für das Web optimiert ist.') ?>
+                    <?= lang('people.display_type_optimized_for_the_web') ?>
                 </small>
             </div>
             <div class="form-group">
                 <div class="custom-radio">
                     <input type="radio" name="values[display_activities]" id="display_activities-print" value="print" <?= $display_activities != 'web' ? 'checked' : '' ?>>
-                    <label for="display_activities-print"><?= lang('Print Display', 'Druck-Darstellung') ?></label>
+                    <label for="display_activities-print"><?= lang('people.print_display') ?></label>
                 </div>
                 <small class="text-muted">
-                    <?= lang('Display type optimized for printing and exporting activities.', 'Darstellung, die für den Druck optimiert ist und für den Export von Aktivitäten verwendet wird.') ?>
+                    <?= lang('people.display_type_optimized_for_printing_and_exporting_activities') ?>
                 </small>
             </div>
 
@@ -1095,7 +1082,7 @@ $active = function ($field) use ($data_fields) {
 
                 <div class="mt-10">
                     <h5>
-                        <?= lang('Coin visibility', 'Sichtbarkeit der Coins') ?>
+                        <?= lang('people.coin_visibility') ?>
                         <a href="#" onclick="$('#coins-info').toggleClass('hidden'); return false;">
                             <i class="ph ph-info text-muted"></i>
                         </a>
@@ -1106,19 +1093,19 @@ $active = function ($field) use ($data_fields) {
 
                     <p class="hidden" id="coins-info">
                         <i class="ph ph-coins text-signal"></i>
-                        <?= lang('Coins are a gamification element in OSIRIS and represent points you earn for your activities. You can choose to show them to everyone, only to yourself, or to nobody. If you do not show them to everyone, they won\'t be visible to others, including admins and technical staff.', 'Coins sind ein Gamification-Element in OSIRIS und stellen Punkte dar, die du für deine Aktivitäten erhältst. Du kannst wählen, sie allen, nur dir selbst oder niemandem zu zeigen. Wenn du sie nicht allen zeigst, sind sie für andere, einschließlich Admins und technischem Personal, nicht sichtbar.') ?>
+                        <?= lang('people.coins_are_a_gamification_element_in_osiris_and_represent_points_you_earn_fo') ?>
                     </p>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-true" value="none" <?= $show_coins == 'none' ? 'checked' : '' ?>>
-                        <label for="show_coins-true"><?= lang('For nobody', 'Für niemanden') ?></label>
+                        <label for="show_coins-true"><?= lang('people.for_nobody') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-myself" value="myself" <?= $show_coins == 'myself' ? 'checked' : '' ?>>
-                        <label for="show_coins-myself"><?= lang('For myself', 'Für mich') ?></label>
+                        <label for="show_coins-myself"><?= lang('people.for_myself') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-all" value="all" <?= $show_coins == 'all' ? 'checked' : '' ?>>
-                        <label for="show_coins-all"><?= lang('For everyone', 'Für jeden') ?></label>
+                        <label for="show_coins-all"><?= lang('people.for_everyone') ?></label>
                     </div>
 
                 </div>
@@ -1132,7 +1119,7 @@ $active = function ($field) use ($data_fields) {
             ?>
                 <div class="mb-20">
                     <h5>
-                        <?= lang('Achievement visibility', 'Sichtbarkeit der Achievements') ?>
+                        <?= lang('people.achievement_visibility') ?>
                         <a href="#" onclick="$('#achievements-info').toggleClass('hidden'); return false;">
                             <i class="ph ph-info text-muted"></i>
                         </a>
@@ -1142,16 +1129,16 @@ $active = function ($field) use ($data_fields) {
                     ?>
                     <p class="hidden" id="achievements-info">
                         <i class="ph ph-trophy text-signal"></i>
-                        <?= lang('Achievements are a gamification element in OSIRIS and represent badges you earn for your activities. You can choose to hide them from everyone or show them to everyone. If you hide them, they won\'t be visible to others, including admins and technical staff.', 'Achievements sind ein Gamification-Element in OSIRIS und stellen Abzeichen dar, die du für deine Aktivitäten erhältst. Du kannst wählen, sie vor allen zu verstecken oder allen zu zeigen. Wenn du sie versteckst, sind sie für andere, einschließlich Admins und technischem Personal, nicht sichtbar.') ?>
+                        <?= lang('people.achievements_are_a_gamification_element_in_osiris_and_represent_badges_you') ?>
                     </p>
 
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[hide_achievements]" id="hide_achievements-true" value="true" <?= $hide_achievements ? 'checked' : '' ?>>
-                        <label for="hide_achievements-true"><?= lang('For nobody', 'Für niemanden') ?></label>
+                        <label for="hide_achievements-true"><?= lang('people.for_nobody') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[hide_achievements]" id="hide_achievements-false" value="false" <?= $hide_achievements ? '' : 'checked' ?>>
-                        <label for="hide_achievements-false"><?= lang('For everyone', 'Für jeden') ?></label>
+                        <label for="hide_achievements-false"><?= lang('people.for_everyone') ?></label>
                     </div>
                 </div>
             <?php
@@ -1194,7 +1181,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="keyword-select">
-                            <option value="" disabled selected><?= lang("Add $kw_name ...", "Füge $kw_name hinzu ...") ?></option>
+                            <option value="" disabled selected><?= lang('people.add_kw_name', replace: ['kw_name' => $kw_name]) ?></option>
                             <?php
                             foreach ($all_kw as $kw) {
                                 // if (in_array($kw, $selected_kw)) continue;
@@ -1217,7 +1204,7 @@ $active = function ($field) use ($data_fields) {
                     if (kw.length === 0) return;
                     // check if already exists
                     if ($('#keyword-list').find(`input[value="${kw}"]`).length > 0) {
-                        toastError('<?= lang('Keyword already exists', 'Schlagwort existiert bereits') ?>');
+                        toastError('<?= lang('people.keyword_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'>${kw} <input type='hidden' name='values[keywords][]' value='${kw}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -1338,7 +1325,7 @@ $active = function ($field) use ($data_fields) {
 
 
         <?php if ($active('research_profile')) { ?>
-            <h2 class="title"><?= lang('Research Profile', 'Forschungsprofil') ?></h2>
+            <h2 class="title"><?= lang('people.research_profile_user_editor') ?></h2>
 
             <div class="row row-eq-spacing">
                 <div class="col-md-6">
@@ -1378,9 +1365,9 @@ $active = function ($field) use ($data_fields) {
             <!-- ensure to save empty cv -->
             <input type="hidden" name="values[cv]" value="">
 
-            <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
+            <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('common.add_entry') ?></button>
             <br>
-            <small class="text-muted float-right"><?= lang('Sorting will be done automatically', 'Wir sortieren das automatisch für dich') ?></small>
+            <small class="text-muted float-right"><?= lang('people.sorting_will_be_done_automatically') ?></small>
             <br>
             <div id="cv-list" class="w-800 mw-full">
                 <?php
@@ -1408,11 +1395,11 @@ $active = function ($field) use ($data_fields) {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><?= lang('common.from') ?>*</span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
+                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('people.yyyy_mm') ?> *" required>
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('to', 'bis') ?></span>
+                                    <span class="input-group-text"><?= lang('common.to') ?></span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?>">
+                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('people.yyyy_mm') ?>">
                             </div>
 
                             <div class="form-group mb-10">
@@ -1422,7 +1409,7 @@ $active = function ($field) use ($data_fields) {
                                 <input name="values[cv][<?= $i ?>][affiliation]" type="text" class="form-control" value="<?= $con['affiliation'] ?? '' ?>" placeholder="Affiliation *" list="affiliation-list" required>
                             </div>
 
-                            <small class="text-muted">* <?= lang('required', 'benötigt') ?></small><br>
+                            <small class="text-muted">* <?= lang('people.required') ?></small><br>
 
                             <!-- checkbox to hide from portfolio -->
 
@@ -1430,7 +1417,7 @@ $active = function ($field) use ($data_fields) {
                                 <div class="custom-checkbox ml-10">
                                     <input type="checkbox" id="hide-<?= $i ?>" <?= ($con['hide'] ?? false) ? 'checked' : '' ?> name="values[cv][<?= $i ?>][hide]">
                                     <label for="hide-<?= $i ?>">
-                                        <?= lang('Hide in portfolio', 'Im Portfolio verstecken') ?>
+                                        <?= lang('people.hide_in_portfolio') ?>
                                     </label>
                                 </div>
                             <?php } ?>
@@ -1454,11 +1441,11 @@ $active = function ($field) use ($data_fields) {
                         <div class="input-group-prepend">
                             <span class="input-group-text">${lang('common.from')}*</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?> *" required>
+                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('people.yyyy_mm') ?> *" required>
                         <div class="input-group-prepend">
-                            <span class="input-group-text">${lang('to', 'bis')}</span>
+                            <span class="input-group-text">${<?= json_encode(lang('common.to'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="<?= lang('YYYY-MM', 'JJJJ-MM') ?>">
+                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="<?= lang('people.yyyy_mm') ?>">
                     </div>
 
                     <div class="form-group mb-10">
@@ -1469,7 +1456,7 @@ $active = function ($field) use ($data_fields) {
                         <input name="values[cv][${i}][affiliation]" type="text" class="form-control" placeholder="Affiliation *" list="affiliation-list" required>
                     </div>
 
-                    <small class="text-muted">* <?= lang('required', 'benötigt') ?></small><br>
+                    <small class="text-muted">* <?= lang('people.required') ?></small><br>
 
                     <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
                 </div>
@@ -1520,7 +1507,7 @@ $active = function ($field) use ($data_fields) {
                             return;
                         }
                         validateFeedback(this, false);
-                        toastError('<?= lang('Please enter a valid month in the format YYYY-MM', 'Bitte gib einen gültigen Monat im Format JJJJ-MM ein') ?>');
+                        toastError('<?= lang('people.please_enter_a_valid_month_in_the_format_yyyy_mm') ?>');
                     } else {
                         validateFeedback(this, true);
                     }
@@ -1539,7 +1526,7 @@ $active = function ($field) use ($data_fields) {
 
 
         <?php if ($active('biography')) { ?>
-            <h2 class="title"><?= lang('Biography', 'Biografie') ?></h2>
+            <h2 class="title"><?= lang('common.biography') ?></h2>
 
             <div class="row row-eq-spacing my-0">
                 <div class="col-md-6">
@@ -1570,7 +1557,7 @@ $active = function ($field) use ($data_fields) {
 
 
         <?php if ($active('education')) { ?>
-            <h2><?= lang('Education', 'Ausbildung') ?></h2>
+            <h2><?= lang('common.education_profile') ?></h2>
 
             <div class="row row-eq-spacing my-0">
                 <div class="col-md-6">

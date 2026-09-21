@@ -11,15 +11,15 @@ $in_past = $end < $today;
 
 $days = false;
 if ($is_today) {
-    $days = lang('today', 'heute');
+    $days = lang('common.today');
 } elseif (!$in_past) {
     $days = ceil((strtotime($start) - time()) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('currently ongoing', 'derzeit im Gange') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+    $days = $days == 0 ? lang('events.currently_ongoing') : 'in ' . $days . ' ' . lang('common.days_view');
 } elseif ($in_past) {
     $days = ceil((time() - strtotime($end)) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('until today', 'bis heute') : lang('ended', 'vor') . ' ' . $days . ' ' . lang('days ago', 'Tagen geendet');
+    $days = $days == 0 ? lang('events.until_today') : lang('events.ended') . ' ' . $days . ' ' . lang('events.days_ago');
 }
 
 $conference['participants'] = DB::doc2Arr($conference['participants']);
@@ -69,7 +69,7 @@ if ($topicsEnabled) {
     <div class="btn-toolbar">
         <a href="<?= ROOTPATH ?>/conferences/edit/<?= $conference['_id'] ?>" class="btn text-primary">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit event', 'Event bearbeiten') ?>
+            <?= lang('events.edit_event') ?>
         </a>
 
         <div class="dropdown">
@@ -78,8 +78,8 @@ if ($topicsEnabled) {
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <form action="<?= ROOTPATH ?>/crud/conferences/delete/<?= $conference['_id'] ?>" method="post" class="content">
-                    <?= lang('Do you want to delete this event?', 'Möchten Sie diese Event löschen?') ?>
-                    <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
+                    <?= lang('events.do_you_want_to_delete_this_event') ?>
+                    <?= lang('common.please_note_this_cannot_be_undone') ?>
                     <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
                 </form>
             </div>
@@ -125,7 +125,7 @@ if ($topicsEnabled) {
 
             <tr>
                 <td>
-                    <span class="key"><?= lang('Start', 'Beginn') ?></span>
+                    <span class="key"><?= lang('common.start_view') ?></span>
                     <?= format_date($conference['start']) ?><br>
                     <b class="badge <?= ($in_past ? 'danger' : 'success') ?>"><?= $days ?></b>
                 </td>
@@ -154,14 +154,14 @@ if ($topicsEnabled) {
                 ?>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('Portfolio Visibility', 'Sichtbarkeit in Portfolio') ?>: </span>
+                            <span class="key"><?= lang('common.portfolio_visibility') ?>: </span>
                             <?php if ($public) { ?>
                                 <span class="badge success">
-                                    <i class="ph ph-globe m-0"></i> <?= lang('Shown', 'Gezeigt') ?>
+                                    <i class="ph ph-globe m-0"></i> <?= lang('common.shown') ?>
                                 </span>
                             <?php } else { ?>
                                 <span class="badge signal">
-                                    <i class="ph ph-globe-x m-0"></i> <?= lang('Not shown', 'Nicht gezeigt') ?>
+                                    <i class="ph ph-globe-x m-0"></i> <?= lang('common.not_shown') ?>
                                 </span>
                             <?php } ?>
                         </td>
@@ -180,7 +180,7 @@ if ($topicsEnabled) {
                     <td colspan="2">
                         <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $conference['_id'] ?>">
                             <i class="ph ph-calendar-plus"></i>
-                            <?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>
+                            <?= lang('common.add_to_calendar') ?>
                         </a>
                     </td>
                 </tr>
@@ -203,21 +203,21 @@ if ($topicsEnabled) {
 <div class="row row-eq-spacing">
     <div class="col">
         <div class="header d-flex align-items-center justify-content-between">
-            <h5 class="mt-0"><?= lang('Participating persons', 'Teilnehmende Personen') ?>:</h5>
+            <h5 class="mt-0"><?= lang('events.participating_persons') ?>:</h5>
             <?php if ($participate) { ?>
                 <a class="btn small active primary" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'participants')">
-                    <i class="ph ph-user-circle-minus"></i> <?= lang('Withdraw participation', 'Teilnahme zurückziehen') ?>
+                    <i class="ph ph-user-circle-minus"></i> <?= lang('events.withdraw_participation') ?>
                 </a>
             <?php } else { ?>
                 <a class="btn small" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'participants')">
-                    <i class="ph ph-user-circle-plus"></i> <?= lang('Participate', 'Teilnehmen') ?>
+                    <i class="ph ph-user-circle-plus"></i> <?= lang('events.participate') ?>
                 </a>
             <?php } ?>
         </div>
 
         <?php if (empty($conference['participants'])) : ?>
             <div class="box padded">
-                <?= lang('No one will participate or has participated', 'Niemand wird teilnehmen oder hat teilgenommen') ?>
+                <?= lang('events.no_one_will_participate_or_has_participated') ?>
             </div>
         <?php else : ?>
             <?php foreach ($conference['participants'] as $username) : ?>
@@ -236,21 +236,21 @@ if ($topicsEnabled) {
 
 
         <div class="header d-flex align-items-center justify-content-between">
-            <h5><?= lang('Interested persons', 'Interessierte Personen') ?>:</h5>
+            <h5><?= lang('events.interested_persons') ?>:</h5>
             <?php if ($interest) { ?>
                 <a class="btn small active primary" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'interests')">
-                    <i class="ph ph-user-circle-minus"></i> <?= lang('Withdraw interest', 'Interesse zurückziehen') ?>
+                    <i class="ph ph-user-circle-minus"></i> <?= lang('events.withdraw_interest') ?>
                 </a>
             <?php } else { ?>
                 <a class="btn small" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'interests')">
-                    <i class="ph ph-user-circle-plus"></i> <?= lang('Show interest', 'Interesse bekunden') ?>
+                    <i class="ph ph-user-circle-plus"></i> <?= lang('events.show_interest') ?>
                 </a>
             <?php } ?>
         </div>
 
         <?php if (empty($conference['interests'])) : ?>
             <div class="box padded">
-                <?= lang('No one is currently interested', 'Keine Personen sind zurzeit interessiert') ?>
+                <?= lang('events.no_one_is_currently_interested') ?>
             </div>
         <?php else : ?>
             <?php foreach ($conference['interests'] as $username) : ?>
@@ -274,13 +274,13 @@ if ($topicsEnabled) {
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=lecture&conference=<?= $id ?>">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('Add contribution', 'Beitrag hinzufügen') ?>
+        <?= lang('common.add_contribution') ?>
     </a>
 </div>
 
 <?php if (empty($activities)) : ?>
     <div class="alert muted">
-        <?= lang('No activities connected', 'Noch keine Aktivitäten verknüpft') ?>
+        <?= lang('events.no_activities_connected') ?>
     </div>
 <?php else : ?>
 

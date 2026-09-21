@@ -57,6 +57,7 @@ function currentLanguage(): string
 
 function lang(string $en, ?string $de = null, array $replace = []): string
 {
+    return $en; // test
     $language = currentLanguage();
 
     // Preserve the legacy two-language format: lang('Login', 'Anmelden')

@@ -30,7 +30,7 @@ class PersonFields extends Fields
         $FIELDS = [
             [
                 'id' => "username",
-                'label' => lang('Username', 'Kürzel'),
+                'label' => lang('people.username'),
                 'module_of' => $typeModules['username'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -64,7 +64,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "academic_title",
-                'label' => lang('Acad. title', 'Akad. Titel'),
+                'label' => lang('people.acad_title'),
                 'module_of' => $typeModules['academic_title'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -74,7 +74,7 @@ class PersonFields extends Fields
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    '' => lang('none', 'keiner'),
+                    '' => lang('people.none'),
                     'Dr.' => 'Dr.',
                     'Prof.' => 'Prof.',
                     'Prof. Dr.' => 'Prof. Dr.'
@@ -82,7 +82,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "mail",
-                'label' => lang('Mail', 'Email'),
+                'label' => lang('people.mail'),
                 'module_of' => $typeModules['mail'] ?? [],
                 'usage' => [
                     'filter',
@@ -104,7 +104,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'is_active',
-                'label' => lang('Is active', 'Ist aktiv'),
+                'label' => lang('people.is_active'),
                 'module_of' => $typeModules['is_active'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -121,7 +121,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'created',
-                'label' => lang('Created at', 'Angelegt am'),
+                'label' => lang('people.created_at'),
                 'module_of' => $typeModules['created'] ?? [],
                 'usage' => [
                     'filter',
@@ -132,7 +132,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'updated',
-                'label' => lang('Updated at', 'Geändert am'),
+                'label' => lang('people.updated_at'),
                 'module_of' => $typeModules['updated'] ?? [],
                 'usage' => [
                     'filter',
@@ -178,7 +178,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Phone", "Telefon")
+                "label" => lang('people.phone')
             ],
             [
                 "id" => "mobile",
@@ -189,7 +189,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Mobile", "Mobiltelefon")
+                "label" => lang('people.mobile')
             ],
             [
                 "id" => "internal_id",
@@ -222,7 +222,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Room", "Raum")
+                "label" => lang('common.room')
             ],
             [
                 "id" => "hide",
@@ -233,7 +233,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "boolean",
-                "label" => lang("Hide in Portfolio", "Profil im Portfolio ausblenden"),
+                "label" => lang('people.hide_in_portfolio_person_fields'),
             ],
             [
                 "id" => "research",
@@ -244,7 +244,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Research interests", "Forschungsinteressen"),
+                "label" => lang('groups.research_interests'),
             ],
             [
                 "id" => "research_profile",
@@ -255,7 +255,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Research profile", "Forschungsprofil"),
+                "label" => lang('people.research_profile'),
             ],
             [
                 "id" => "cv",
@@ -266,7 +266,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("CV", "Lebenslauf"),
+                "label" => lang('people.cv'),
             ],
             [
                 "id" => "biography",
@@ -277,7 +277,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Biography", "Biografie"),
+                "label" => lang('common.biography'),
             ],
             [
                 "id" => "education",
@@ -288,7 +288,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang("Education", "Ausbildung"),
+                "label" => lang('common.education_profile'),
             ]
         ];
 
@@ -301,7 +301,7 @@ class PersonFields extends Fields
                     "type" => "string",
                     'input' => 'select',
                     "values" => DB::doc2Arr($expertise),
-                    "label" => lang("Expertise", "Expertise"),
+                    "label" => lang('common.expertise'),
                     'usage' => [
                         'aggregate',
                         'filter',
@@ -338,7 +338,7 @@ class PersonFields extends Fields
                 'filter',
                 'columns'
             ],
-            'label' => lang('Organizational unit', 'Organisationseinheit'),
+            'label' => lang('common.organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units
@@ -349,7 +349,7 @@ class PersonFields extends Fields
             'usage' => [
                 'filter'
             ],
-            'label' => lang('Current organizational unit', 'Aktuelle Organisationseinheit'),
+            'label' => lang('people.current_organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units

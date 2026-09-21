@@ -19,4 +19,38 @@ return [
     'register_contact_admin' => 'Um dich zu registrieren, kontaktiere bitte den Administrator.',
     'token_invalid' => 'Der angegebene AUTH-Token ist nicht gültig.',
     'token_valid' => 'Der angegebene AUTH-Token ist gültig. Du kannst dich jetzt registrieren.',
+    'user_login' => 'Login',
+    'please_log_in_to_access_the_requested_page' => 'Bitte melde dich an, um auf die gewünschte Seite zuzugreifen.',
+    'your_account_is_blocked_please_contact_the_administrator' => 'Dein Konto ist gesperrt. Bitte kontaktiere den Administrator.',
+    'sorry_the_user_does_not_exist_please_contact_system_administrator' => 'Leider existiert der Nutzer nicht. Bitte kontaktiere den Systemadministrator!',
+    'username_is_required' => 'Bitte gib deinen Nutzernamen ein.',
+    'password_is_required' => 'Bitte gib dein Passwort ein.',
+    'invalid_or_expired_token' => 'Ungültiger oder abgelaufener Token.',
+    'reset_password_for_guest_account' => 'Passwort für Gastkonto zurücksetzen',
+    'confirm_new_password' => 'Neues Passwort bestätigen',
+    'passwords_match' => 'Passwörter stimmen überein',
+    'passwords_do_not_match' => 'Passwörter stimmen nicht überein',
+    'password_cannot_be_empty' => 'Passwort darf nicht leer sein.',
+    'password_successfully_reset_you_can_now_log_in_with_your_new_password' => 'Passwort erfolgreich zurückgesetzt. Du kannst dich jetzt mit deinem neuen Passwort einloggen.',
+    'error_while_connecting_to_the_ldap_server' => 'Fehler bei der Verbindung mit dem LDAP-Server: ',
+    'please_enter_your_username_and_password' => 'Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.',
+    'you_are_already_logged_in' => 'Sie sind bereits angemeldet.',
+    'error_while_searching_for_the_user_in_ldap' => 'Fehler bei der Suche nach dem Benutzer in LDAP.',
+    'user_not_found_in_ldap' => 'Benutzer nicht in LDAP gefunden.',
+    'user_not_found_in_ldap_or_ldap_misconfigured' => 'Benutzer nicht in LDAP gefunden oder LDAP falsch konfiguriert.',
+    'login_failed_please_check_your_username_and_password' => 'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.',
+    'guest_account_not_found_or_password_incorrect' => 'Gast-Account nicht gefunden oder Passwort falsch.',
+    'guest_account_has_expired' => 'Gast-Account ist abgelaufen.',
+    'guest_account_has_no_password_please_contact_the_administrator' => 'Gast-Account hat kein Passwort. Bitte kontaktieren Sie den Administrator.',
+    'the_provided_auth_token_is_not_valid' => 'Das angegebene AUTH-Token ist nicht gültig.',
+    'the_provided_auth_token_is_valid_you_can_now_register' => 'Das angegebene AUTH-Token ist gültig. Du kannst dich jetzt registrieren.',
+    'password_reset_index' => 'Passwort zurücksetzen',
+    'you_have_requested_a_password_reset_from_osiris_please_click_the_following' => 'Du hast ein in OSIRIS Passwort zurücksetzen angefordert. Bitte klicke auf den folgenden Link, um dein Passwort zurückzusetzen:',
+    'please_enter_your_email_address' => 'Bitte gib deine E-Mail-Adresse ein.',
+    'this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi_the_use_of' => '
+            Bei dieser OSIRIS-Instanz handelt es sich um eine Demo mit dem fiktiven Institut LISI.
+            Die Nutzung dieser App und somit auch der Bereitstellung von personenbezogenen Daten ist freiwillig.
+            Wenn du diese Seite nutzt, stimmst du damit unseren Richtlinien zum <a href="/impress" class="">Datenschutz</a> zu.
+            Nutzeraccounts werden nach unbestimmter Zeit vom Admin gelöscht. Wenn ihr möchtet, dass ich eure Daten aktiv lösche, meldet euch bei mir.
+            ',
 ];

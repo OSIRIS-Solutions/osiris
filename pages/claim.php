@@ -40,38 +40,35 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
 
 <h1>
     <i class="ph-duotone ph-hand"></i>
-    <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>
+    <?= lang('common.claim_activities') ?>
 </h1>
 
-<?= lang(
-    'The following names are used to search in activities, where your user account is not connected yet.',
-    'Die folgenden Namen werden für die Suche in Aktivitäten verwendet, mit denen Ihr Benutzerkonto noch nicht verbunden ist'
-) ?>
+<?= lang('activities.the_following_names_are_used_to_search_in_activities_where_your_user_accoun') ?>
 
 <p>
-    <b><?= lang('Last names', 'Nachnamen') ?>:</b>
+    <b><?= lang('activities.last_names') ?>:</b>
     <?php foreach ($last as $l) { ?>
         <span class="badge primary"><?= $l ?></span>
     <?php } ?>
 
 </p>
 <p>
-    <b><?= lang('First names', 'Vornamen') ?>:</b>
+    <b><?= lang('activities.first_names') ?>:</b>
     <?php foreach ($first as $f) { ?>
         <span class="badge primary"><?= $f ?></span>
     <?php } ?>
 </p>
 <p>
-    <?= lang('Update your names ', 'Aktualisiere deine Namen ') ?>
-    <a href="<?= ROOTPATH ?>/user/edit/<?= $scientist['username'] ?>" class="link"><?= lang('here', 'hier') ?></a>
+    <?= lang('activities.update_your_names') ?>
+    <a href="<?= ROOTPATH ?>/user/edit/<?= $scientist['username'] ?>" class="link"><?= lang('activities.here') ?></a>
 </p>
 
 <?php if (empty($activities)) { ?>
     <div class="alert danger mb-10 ">
-        <?= lang('No activities found', 'Keine Aktivitäten gefunden') ?>
+        <?= lang('activities.no_activities_found') ?>
     </div>
     <a href="<?= ROOTPATH ?>/profile/<?= $scientist['username'] ?>" class="btn primary">
-        <?= lang('Back to profile', 'Zurück zum Profil') ?>
+        <?= lang('activities.back_to_profile') ?>
     </a>
     <?php return; ?>
 
@@ -87,7 +84,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                 <?= lang('common.activities') ?>
             </th>
             <th>
-                <?= lang('Matched author', 'Übereinstimmende:r Autor:in') ?>
+                <?= lang('activities.matched_author') ?>
             </th>
             <th>
                 <?= lang('action.claim') ?>
@@ -116,7 +113,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                         if ($author) {
                             echo $author['last'] . ', ' . $author['first'];
                         } else {
-                            echo lang('No matching author found', 'Kein:e passende:r Autor:in gefunden');
+                            echo lang('activities.no_matching_author_found');
                         }
                         ?>
                     </td>
@@ -133,6 +130,6 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
     </table>
 
     <button type="submit" class="btn primary">
-        <?= lang('Claim selected activities', 'Ausgewählte Aktivitäten beanspruchen') ?>
+        <?= lang('activities.claim_selected_activities') ?>
     </button>
 </form>

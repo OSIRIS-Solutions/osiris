@@ -19,45 +19,42 @@
 
         <h1>
             <i class="ph-duotone ph-globe"></i>
-            <?= lang('Portfolio Settings', 'Portfolio Einstellungen') ?>
+            <?= lang('admin.portfolio_settings') ?>
         </h1>
 
         <!-- portfolio url -->
         <div class="form-group">
             <label for="portfolio_url">
-                <?= lang('Portfolio URL', 'Portfolio URL') ?>
+                <?= lang('admin.portfolio_url') ?>
             </label>
             <input type="url" class="form-control" name="general[portfolio_url]" value="<?= $Settings->get('portfolio_url') ?>">
             <span class="text-muted">
-                <?= lang(
-                    'The portfolio URL is used to link to the portfolio from various places in OSIRIS. Make sure to include the full URL (e.g. https://research.institute.edu). If you do not provide a URL, Portfolio will try to use relative links.',
-                    'Die Portfolio-URL wird verwendet, um von verschiedenen Stellen in OSIRIS auf das Portfolio zu verlinken. Achte darauf, die vollständige URL anzugeben (z.B. https://portfolio.institute.de). Falls keine URL angegeben wird, versucht das Portfolio, relative Links zu verwenden.'
-                ) ?>
+                <?= lang('admin.the_portfolio_url_is_used_to_link_to_the_portfolio_from_various_places_in_o') ?>
             </span>
         </div>
 
 
         <!-- <h5>
-            <?=lang('Memberships', 'Mitgliedschaften')?> in Portfolio
+            <?=lang('admin.memberships')?> in Portfolio
         </h5>
 
         <p>
-            <?= lang('You can specify here, which research activities should be shown under the memberships section in the portfolio page of a person. By default, this section will not be visible.', 'Hier kannst du festlegen, welche Forschungsaktivitäten unter der Rubrik Mitgliedschaften auf der Portfolio-Seite einer Person angezeigt werden sollen. Standardmäßig ist diese Rubrik nicht sichtbar.') ?>
+            <?= lang('admin.you_can_specify_here_which_research_activities_should_be_shown_under_the_me') ?>
         </p>
 
         <p>
             <i class="ph ph-info"></i>
-            <?=lang('Only activity types that are generally visible in Portfolio and have the "date-range-ongoing" field qualify for memberships.', 'Nur Aktivitätstypen, die generell im Portfolio sichtbar sind und über das Feld "date-range-ongoing" verfügen, kommen für Mitgliedschaften in Frage.')?>
+            <?=lang('admin.only_activity_types_that_are_generally_visible_in_portfolio_and_have_the_da')?>
         </p>
 
         <table class="table">
             <thead>
                 <tr>
                     <th>
-                        <?= lang('Activity Type', 'Aktivitätstyp') ?>
+                        <?= lang('admin.activity_type') ?>
                     </th>
                     <th>
-                        <?= lang('Membership Template', 'Mitgliedschafts-Vorlage') ?>
+                        <?= lang('admin.membership_template') ?>
                     </th>
                 </tr>
             </thead>
@@ -89,9 +86,9 @@
 
         <?php if ($Settings->featureEnabled('quality-workflow')) { ?>
             <h5>
-                <?= lang('Portfolio Workflow Visibility', 'Sichtbarkeit im Portfolio-Workflow') ?>
+                <?= lang('admin.portfolio_workflow_visibility') ?>
             </h5>
-            <?= lang('You can specify here, if only workflow-approved activities should be shown in the portfolio.', 'Hier kannst du festlegen, ob nur workflow-genehmigte Aktivitäten im Portfolio angezeigt werden sollen.') ?>
+            <?= lang('admin.you_can_specify_here_if_only_workflow_approved_activities_should_be_shown_i') ?>
 
             <div class="form-group">
                 <?php
@@ -101,14 +98,14 @@
                 <div class="custom-radio">
                     <input type="radio" id="portfolio-workflow-visibility-approved" value="only-approved" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'only-approved' ? 'checked' : '' ?>>
                     <label for="portfolio-workflow-visibility-approved">
-                        <?= lang('Only approved activities', 'Nur genehmigte Aktivitäten') ?>
+                        <?= lang('admin.only_approved_activities') ?>
                     </label>
                 </div>
 
                 <div class="custom-radio">
                     <input type="radio" id="portfolio-workflow-visibility-approved-or-empty" value="approved-or-empty" name="general[portfolio-workflow-visibility]" <?= $portfolio == 'approved-or-empty' ? 'checked' : '' ?>>
                     <label for="portfolio-workflow-visibility-approved-or-empty">
-                        <?= lang('Approved activities and activities without workflow', 'Genehmigte Aktivitäten und Aktivitäten ohne Workflow') ?>
+                        <?= lang('admin.approved_activities_and_activities_without_workflow') ?>
                     </label>
                 </div>
 
@@ -122,34 +119,31 @@
         <?php } ?>
 
         <h5>
-            <?= lang('Portfolio-API Key', 'Portfolio-API-Schlüssel') ?>
+            <?= lang('admin.portfolio_api_key') ?>
         </h5>
         <div class="form-group">
             <input type="text" class="form-control" name="general[portfolio_apikey]" value="<?= $Settings->get('portfolio_apikey') ?>">
             <span class="text-muted">
-                <?= lang(
-                    'The portfolio API key is used to authenticate the portfolio API. If you do not provide an API key, the portfolio API will be open to anyone.',
-                    'Der Portfolio-API-Schlüssel wird verwendet, um die Portfolio-API zu authentifizieren. Falls kein API-Schlüssel angegeben wird, ist die Portfolio-API für jeden offen.'
-                ) ?>
+                <?= lang('admin.the_portfolio_api_key_is_used_to_authenticate_the_portfolio_api_if_you_do_n') ?>
             </span>
         </div>
 
        <?php if ($Settings->featureEnabled('spectrum')) { ?>
          <h5>
-            <?= lang('Research Spectrum in Portfolio', 'Forschungsspektrum im Portfolio') ?>
+            <?= lang('admin.research_spectrum_in_portfolio') ?>
         </h5>
         <div class="form-group">
             <div class="custom-radio">
                 <input type="radio" id="portfolio-spectrum-visibility-enabled" value="enabled" name="features[portfolio-spectrum]" <?= $Settings->featureEnabled('portfolio-spectrum') ? 'checked' : '' ?>>
                 <label for="portfolio-spectrum-visibility-enabled">
-                    <?= lang('Show research spectrum in portfolio', 'Forschungsspektrum im Portfolio anzeigen') ?>
+                    <?= lang('common.show_research_spectrum_in_portfolio') ?>
                 </label>
             </div>
 
             <div class="custom-radio">
                 <input type="radio" id="portfolio-spectrum-visibility-disabled" value="disabled" name="features[portfolio-spectrum]" <?= !$Settings->featureEnabled('portfolio-spectrum') ? 'checked' : '' ?>>
                 <label for="portfolio-spectrum-visibility-disabled">
-                    <?= lang('Do not show research spectrum in portfolio', 'Forschungsspektrum im Portfolio nicht anzeigen') ?>
+                    <?= lang('admin.do_not_show_research_spectrum_in_portfolio') ?>
                 </label>
             </div>
         </div>
@@ -157,7 +151,7 @@
        
 
         <h5>
-            <?= lang('Generally visible activity types', 'Allgemein sichtbare Aktivitätstypen') ?>
+            <?= lang('admin.generally_visible_activity_types') ?>
         </h5>
 
         <ul class="list">
@@ -171,9 +165,9 @@
             <?php } ?>
         </ul>
         <p class="text-muted">
-            <?= lang('The activity types listed above are generally visible in the portfolio. You can manage the activity types in the', 'Die oben aufgeführten Aktivitätstypen sind generell im Portfolio sichtbar. Du kannst die Aktivitätstypen im') ?>
+            <?= lang('admin.the_activity_types_listed_above_are_generally_visible_in_the_portfolio_you') ?>
             <a href="<?= ROOTPATH ?>/admin/categories" class="colorless text-decoration-underline">
-                <?= lang('activity types settings', 'Einstellungen der Aktivitätstypen') ?>
+                <?= lang('admin.activity_types_settings') ?>
             </a>.
         </p>
 

@@ -2,7 +2,7 @@
 include_once BASEPATH . "/php/Nagoya.php";
 $nagoya = $project['nagoya'] ?? [];
 ?>
-<h1 class="mb-3"><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></h1>
+<h1 class="mb-3"><?= lang('common.nagoya_evaluation') ?></h1>
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
@@ -11,7 +11,7 @@ $nagoya = $project['nagoya'] ?? [];
 </h2>
 
 <div class="mb-20">
-    <b><?= lang('Current Status', 'Aktueller Status') ?>:</b><br>
+    <b><?= lang('common.current_status') ?>:</b><br>
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
 
     <?php if (($nagoya['status'] ?? 'unknown') === 'researcher-input' && !($nagoya['review']['researcher-notified'] ?? false)) { ?>
@@ -20,7 +20,7 @@ $nagoya = $project['nagoya'] ?? [];
             <input type="hidden" name="project_id" value="<?= $id ?>">
             <button type="submit" class="btn success">
                 <i class="ph ph-bell-ringing"></i>
-                <?= lang('Notify applicants that ABS review is complete', 'Antragstellende über abgeschlossene ABS-Bewertung benachrichtigen') ?>
+                <?= lang('projects.notify_applicants_that_abs_review_is_complete') ?>
             </button>
         </form>
     <?php } ?>
@@ -33,10 +33,10 @@ $nagoya = $project['nagoya'] ?? [];
         <thead>
             <tr>
                 <th><?= lang('common.country') ?></th>
-                <th><?= lang('Party to Nagoya?', 'Nagoya-Protokoll?') ?></th>
-                <th><?= lang('Own ABS measures?', 'Eigene ABS-Maßnahmen?') ?></th>
+                <th><?= lang('projects.party_to_nagoya') ?></th>
+                <th><?= lang('projects.own_abs_measures') ?></th>
                 <th><?= lang('common.comment') ?></th>
-                <th><?= lang('Decision', 'Entscheidung') ?></th>
+                <th><?= lang('projects.decision') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +67,7 @@ $nagoya = $project['nagoya'] ?? [];
                         <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                         <?php if (!empty($r['reviewed_by'] ?? '')) { ?>
                             <small class="d-block text-muted">
-                                <?= lang('Last reviewed by', 'Zuletzt bewertet von') ?><br>
+                                <?= lang('projects.last_reviewed_by') ?><br>
                                 <?= $DB->getNameFromId($r['reviewed_by']) ?>
                                 <?php if (!empty($r['reviewed'] ?? '')) { ?>
                                     <?= lang('common.on') ?> <?= format_date($r['reviewed']) ?>
@@ -81,7 +81,7 @@ $nagoya = $project['nagoya'] ?? [];
         <tfoot>
             <tr>
                 <td colspan="5">
-                    <label for="overallRationale"><strong><?= lang('Overall rationale / comments', 'Gesamtbegründung / Kommentare') ?></strong></label>
+                    <label for="overallRationale"><strong><?= lang('common.overall_rationale_comments') ?></strong></label>
                     <textarea name="overallRationale" rows="4" class="form-control mb-3"><?= e($nagoya['absRationale'] ?? '') ?></textarea>
                 </td>
             </tr>
@@ -91,7 +91,7 @@ $nagoya = $project['nagoya'] ?? [];
     <div class="mt-20">
         <button type="submit" class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save review', 'Bewertung speichern') ?>
+            <?= lang('projects.save_review') ?>
         </button>
     </div>
 </form>

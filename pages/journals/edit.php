@@ -29,7 +29,7 @@ $oa = $data['oa'] ?? false;
         <?php
         $label = $Settings->journalLabel();
         if ($id === null || empty($data)) {
-            echo lang("Add $label",  "$label hinzufügen");
+            echo lang('common.add_label', replace: ['label' => $label]);
         } else {
             echo $data['journal'];
         }
@@ -55,7 +55,7 @@ $oa = $data['oa'] ?? false;
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[abbr]" id="abbr" class="form-control" value="<?= $data['abbr'] ?? '' ?>" placeholder="Abbreviation">
-            <label for="abbr"><?= lang('Abbreviation', 'Abkürzung') ?></label>
+            <label for="abbr"><?= lang('journals.abbreviation') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -97,7 +97,7 @@ $oa = $data['oa'] ?? false;
         <!-- country -->
         <div class="form-group floating-form">
             <select name="values[country]" class="form-control">
-                <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                <option value=""><?= lang('common.select_country') ?></option>
                 <?php
                 $c = $form['country'] ?? '';
                 foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>

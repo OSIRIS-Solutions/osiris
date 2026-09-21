@@ -3,10 +3,10 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 
 $action = ROOTPATH . "/crud/deadlines/add";
-$btn = lang('Add deadline', 'Deadline hinzufügen');
+$btn = lang('deadlines.add_deadline');
 if (!empty($form ?? []) && isset($form['_id'])) {
     $action = ROOTPATH . "/crud/deadlines/update/" . $form['_id'];
-    $btn = lang('Save deadline', 'Deadline speichern');
+    $btn = lang('deadlines.save_deadline');
 }
 ?>
 
@@ -17,11 +17,11 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <h1>
         <i class="ph-duotone ph-flag-pennant"></i>
-        <?= lang('Add deadline', 'Deadline hinzufügen') ?>
+        <?= lang('deadlines.add_deadline') ?>
     </h1>
 
     <p class="text-muted">
-        <?= lang('The deadline will be shown on the start page of people. It can be used to inform users about important dates, e.g. the end of a call for papers or the end of a registration period.', 'Die Deadline wird auf der Startseite der Nutzer angezeigt. Sie kann verwendet werden, um Nutzer über wichtige Termine zu informieren, z.B. das Ende einer Einreichungsfrist oder das Ende einer Registrierungsphase.') ?>
+        <?= lang('deadlines.the_deadline_will_be_shown_on_the_start_page_of_people_it_can_be_used_to_in') ?>
     </p>
 
     <form action="<?= $action ?>" method="post" id="deadline-form">
@@ -33,7 +33,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-group floating-form">
             <input type="date" name="values[date]" class="form-control" id="conference-end-date" value="<?= $form['date'] ?? '' ?>" placeholder="date">
-            <label for="date" class="required"><?= lang('Deadline Date', 'Fristdatum') ?></label>
+            <label for="date" class="required"><?= lang('deadlines.deadline_date') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -65,7 +65,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
         <div class="form-group floating-form">
             <input type="url" name="values[url]" class="form-control" value="<?= e($form['url'] ?? '') ?>" placeholder="url">
-            <label for="url"><?= lang('Link', 'Link') ?></label>
+            <label for="url"><?= lang('common.link') ?></label>
         </div>
 
 
@@ -86,7 +86,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             }
             ?><br>
             <small class="text-muted">
-                <?= lang('The deadline will only be shown to users with the selected roles. If no role is selected, the deadline will be shown to all users.', 'Die Deadline wird nur Nutzern mit den ausgewählten Rollen angezeigt. Wenn keine Rolle ausgewählt ist, wird die Deadline allen Nutzern angezeigt.') ?>
+                <?= lang('deadlines.the_deadline_will_only_be_shown_to_users_with_the_selected_roles_if_no_role') ?>
             </small>
         </div>
 

@@ -159,13 +159,13 @@ $fields = [
 
 <h1>
     <i class="ph-duotone ph-link-simple" aria-hidden="true"></i>
-    <?= lang('DOI Mappings', 'DOI Zuordnungen') ?>
+    <?= lang('admin.doi_mappings') ?>
 </h1>
 
 <!-- apply default mapping to all none -->
 <div class="input-group mb-20 w-auto">
     <select id="default-mapping-select" class="form-control w-200 flex-reset">
-        <option value=""><?= lang('Select type', 'Typ auswählen') ?></option>
+        <option value=""><?= lang('admin.select_type') ?></option>
         <?php
         foreach ($type_options as $type_id => $type_name) {
         ?>
@@ -175,7 +175,7 @@ $fields = [
     <div class="input-group-append">
         <button type="button" class="btn" id="apply-default-mapping">
             <i class="ph ph-magic-wand"></i>
-            <?= lang('Apply default mapping to all "None"', 'Standardzuordnung auf alle "Keine" anwenden') ?>
+            <?= lang('admin.apply_default_mapping_to_all_none') ?>
         </button>
     </div>
 </div>
@@ -187,8 +187,8 @@ $fields = [
     <table class="table w-auto">
         <thead>
             <tr>
-                <th><?= lang('Field', 'Feld') ?></th>
-                <th><?= lang('Mapping', 'Zuordnung') ?></th>
+                <th><?= lang('common.field') ?></th>
+                <th><?= lang('admin.mapping') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -240,7 +240,7 @@ $fields = [
         $('#apply-default-mapping').on('click', function() {
             var selectedType = $('#default-mapping-select').val();
             if (selectedType === '') {
-                toastError('<?= lang('Please select a type to apply.', 'Bitte wählen Sie einen Typ zum Anwenden aus.') ?>');
+                toastError('<?= lang('admin.please_select_a_type_to_apply') ?>');
                 return;
             }
 

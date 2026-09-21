@@ -28,7 +28,7 @@ $localizedValue = static function ($value): string {
     $value = DB::doc2Arr($value ?? []);
     if (!is_array($value)) return trim((string) $value);
 
-    $language = lang('en', 'de');
+    $language = lang('common.this_language');
     $fallback = $language === 'de' ? 'en' : 'de';
     $localized = trim((string) ($value[$language] ?? ''));
     return $localized !== '' ? $localized : trim((string) ($value[$fallback] ?? ''));
@@ -152,18 +152,18 @@ $hubIcon = $Settings->resourceHubIcon();
 
     <?php if ($hasImageMap && !empty($displayCards)) { ?>
         <button type="button" class="btn small" data-resource-hub-view="image-map">
-            <i class="ph ph-image" aria-hidden="true"></i> <?= lang('Image map', 'Image-Map') ?>
+            <i class="ph ph-image" aria-hidden="true"></i> <?= lang('common.image_map') ?>
         </button>
     <?php } ?>
 </div>
 
 <?php if (empty($rh)) { ?>
     <div class="alert signal">
-        <div class="title"><?= lang('The Resource Hub is not configured.', 'Der Ressourcen-Hub ist nicht konfiguriert.') ?></div>
+        <div class="title"><?= lang('common.the_resource_hub_is_not_configured') ?></div>
         <?php if ($Settings->hasPermission('admin.see')) { ?>
-            <?= lang('Please configure it in the "Resource Hub" section of the admin panel.', 'Bitte konfiguriere ihn im Bereich "Ressourcen-Hub" des Admin-Panels.') ?>
+            <?= lang('common.please_configure_it_in_the_resource_hub_section_of_the_admin_panel') ?>
         <?php } else { ?>
-            <?= lang('Please contact your administrator to configure the Resource Hub.', 'Bitte kontaktiere deinen Administrator, um den Ressourcen-Hub zu konfigurieren.') ?>
+            <?= lang('common.please_contact_your_administrator_to_configure_the_resource_hub') ?>
         <?php } ?>
     </div>
 <?php return;
@@ -171,12 +171,12 @@ $hubIcon = $Settings->resourceHubIcon();
 
 <?php if (empty($displayCards)) { ?>
     <div class="alert signal">
-        <div class="title"><?= lang('No resources available yet.', 'Noch keine Ressourcen vorhanden.') ?></div>
+        <div class="title"><?= lang('common.no_resources_available_yet') ?></div>
         <?php if ($Settings->hasPermission('admin.see')) { ?>
-            <?= lang('Add the first card in the Resource Hub settings.', 'Füge die erste Karte in den Ressourcen-Hub-Einstellungen hinzu.') ?>
-            <a href="<?= ROOTPATH ?>/admin/resource-hub" class="btn small ml-10"><i class="ph ph-gear" aria-hidden="true"></i> <?= lang('Open settings', 'Einstellungen öffnen') ?></a>
+            <?= lang('common.add_the_first_card_in_the_resource_hub_settings') ?>
+            <a href="<?= ROOTPATH ?>/admin/resource-hub" class="btn small ml-10"><i class="ph ph-gear" aria-hidden="true"></i> <?= lang('common.open_settings') ?></a>
         <?php } else { ?>
-            <?= lang('Please try again later.', 'Bitte versuche es später erneut.') ?>
+            <?= lang('common.please_try_again_later') ?>
         <?php } ?>
     </div>
 <?php } else { ?>
@@ -210,7 +210,7 @@ $hubIcon = $Settings->resourceHubIcon();
         <div id="resource-hub-image-view" class="<?= $currentView === 'image-map' ? '' : 'd-none' ?>">
             <div class="resource-hub-image-map-shell">
                 <div class="resource-hub-image-map" id="resource-hub-image-map">
-                    <img src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>" alt="<?= lang('Resource Hub image map', 'Image-Map des Ressourcen-Hubs') ?>">
+                    <img src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>" alt="<?= lang('common.resource_hub_image_map') ?>">
 
                     <div class="resource-hub-image-heading">
                         <div class="resource-hub-heading-copy">
@@ -220,7 +220,7 @@ $hubIcon = $Settings->resourceHubIcon();
                             <?php } ?>
                         </div>
                         <button type="button" class="btn small" data-resource-hub-view="cards">
-                            <i class="ph ph-squares-four" aria-hidden="true"></i> <?= lang('Cards', 'Karten') ?>
+                            <i class="ph ph-squares-four" aria-hidden="true"></i> <?= lang('common.cards') ?>
                         </button>
                     </div>
 
@@ -229,7 +229,7 @@ $hubIcon = $Settings->resourceHubIcon();
                         $markerIcon = $card['icon'] !== '' ? $card['icon'] : 'map-pin';
                         $labelSide = $card['x'] > 65 ? 'label-left' : 'label-right';
                     ?>
-                        <button type="button" class="resource-hub-hotspot <?= $labelSide ?>" style="left: <?= number_format($card['x'], 2, '.', '') ?>%; top: <?= number_format($card['y'], 2, '.', '') ?>%;" data-popover-id="resource-hub-popover-<?= $index ?>" aria-label="<?= e($card['title'] !== '' ? $card['title'] : lang('Open resource', 'Ressource öffnen')) ?>">
+                        <button type="button" class="resource-hub-hotspot <?= $labelSide ?>" style="left: <?= number_format($card['x'], 2, '.', '') ?>%; top: <?= number_format($card['y'], 2, '.', '') ?>%;" data-popover-id="resource-hub-popover-<?= $index ?>" aria-label="<?= e($card['title'] !== '' ? $card['title'] : lang('common.open_resource')) ?>">
                             <i class="ph ph-<?= e($markerIcon) ?>" aria-hidden="true"></i>
                             <?php if ($card['title'] !== '') { ?>
                                 <span class="resource-hub-hotspot-label"><?= e($card['title']) ?></span>

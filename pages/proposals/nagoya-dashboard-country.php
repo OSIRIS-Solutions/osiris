@@ -11,18 +11,15 @@ $projectCount = count($projectsForCountry);
 
 <h1 class="mb-3">
     <i class="ph-duotone ph-globe-stand"></i>
-    <?= lang('ABS overview for', 'ABS-Übersicht für') ?>
+    <?= lang('projects.abs_overview_for') ?>
     <?= e($countryName) ?>
     <span class="text-muted font-size-14">(<?= e($code) ?>)</span>
 </h1>
 
-<a href="<?= ROOTPATH ?>/nagoya"><i class="ph ph-arrow-left"></i> <?= lang('Back to dashboard', 'Zurück zum Dashboard') ?></a>
+<a href="<?= ROOTPATH ?>/nagoya"><i class="ph ph-arrow-left"></i> <?= lang('projects.back_to_dashboard') ?></a>
 
 <p class="text-muted mb-0">
-    <?= lang(
-        'This page lists all Nagoya/ABS-relevant projects for this country, including A/B/C labels and permits. Use this overview for internal ABS checks and BfN reporting.',
-        'Diese Seite listet alle Nagoya/ABS-relevanten Projekte für dieses Land auf, inkl. A/B/C-Labels und Genehmigungen. Nutze die Übersicht für interne ABS-Prüfungen und BfN-Reporting.'
-    ) ?>
+    <?= lang('projects.this_page_lists_all_nagoya_abs_relevant_projects_for_this_country_including') ?>
 </p>
 <div class="row row-eq-spacing dashboard mt-0">
     <div class="col-md-4">
@@ -34,14 +31,14 @@ $projectCount = count($projectsForCountry);
             <p class="mb-5">
                 <span class="badge"><?= $projectCount ?></span>
                 <span class="text-muted font-size-12">
-                    <?= lang('projects with this country in Nagoya scope', 'Projekte mit diesem Land im Nagoya-Scope') ?>
+                    <?= lang('projects.projects_with_this_country_in_nagoya_scope') ?>
                 </span>
             </p>
             <p class="font-size-12 text-muted mb-0">
                 <?php if ($projectCount === 0): ?>
-                    <?= lang('No projects found for this country.', 'Keine Projekte für dieses Land gefunden.') ?>
+                    <?= lang('projects.no_projects_found_for_this_country') ?>
                 <?php else: ?>
-                    <?= lang('Click on a project name to open the Nagoya details.', 'Klicke auf einen Projektnamen, um die Nagoya-Details zu öffnen.') ?>
+                    <?= lang('projects.click_on_a_project_name_to_open_the_nagoya_details') ?>
                 <?php endif; ?>
             </p>
         </div>
@@ -51,13 +48,10 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-squares-four"></i>
-                <?= lang('A/B/C labels', 'A/B/C-Labels') ?>
+                <?= lang('projects.a_b_c_labels') ?>
             </h3>
             <p class="font-size-12 text-muted mb-10">
-                <?= lang(
-                    'Current ABS classification for projects in this country.',
-                    'Aktuelle ABS-Klassifikation der Projekte in diesem Land.'
-                ) ?>
+                <?= lang('projects.current_abs_classification_for_projects_in_this_country') ?>
             </p>
             <div class="d-flex flex-wrap gap-10 flex-column text-center font-size-16">
                 <span class="badge danger"><b>A:</b> <?= (int)$labelCounts['A'] ?></span>
@@ -71,36 +65,33 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-file-text"></i>
-                <?= lang('Permits summary', 'Genehmigungsübersicht') ?>
+                <?= lang('projects.permits_summary') ?>
             </h3>
             <p class="font-size-12 text-muted mb-10">
-                <?= lang(
-                    'Overview of all permits linked to projects in this country.',
-                    'Übersicht aller Genehmigungen, die mit Projekten in diesem Land verknüpft sind.'
-                ) ?>
+                <?= lang('projects.overview_of_all_permits_linked_to_projects_in_this_country') ?>
             </p>
             <ul class="list-unstyled font-size-12 mb-5">
                 <li>
                     <span class="badge"><?= (int)$permitStats['total'] ?></span>
-                    <?= lang('permits in total', 'Genehmigungen insgesamt') ?>
+                    <?= lang('projects.permits_in_total') ?>
                 </li>
                 <li>
                     <span class="badge warning"><?= (int)$permitStats['needed'] + (int)$permitStats['requested'] ?></span>
-                    <?= lang('permits needed/requested', 'erforderliche/beantragte Genehmigungen') ?>
+                    <?= lang('projects.permits_needed_requested') ?>
                 </li>
                 <li>
                     <span class="badge success"><?= (int)$permitStats['granted'] ?></span>
-                    <?= lang('granted permits', 'erteilte Genehmigungen') ?>
+                    <?= lang('projects.granted_permits') ?>
                 </li>
                 <li>
                     <span class="badge muted"><?= (int)$permitStats['notApplicable'] ?></span>
-                    <?= lang('marked as not applicable', 'als nicht zutreffend markiert') ?>
+                    <?= lang('projects.marked_as_not_applicable') ?>
                 </li>
             </ul>
             <p class="font-size-12 text-muted mb-0">
                 <i class="ph ph-paperclip"></i>
                 <?= (int)$permitStats['docs'] ?>
-                <?= lang('documents uploaded for permits.', 'Dokumente zu Genehmigungen hochgeladen.') ?>
+                <?= lang('projects.documents_uploaded_for_permits') ?>
             </p>
         </div>
     </div>
@@ -113,20 +104,20 @@ $projectCount = count($projectsForCountry);
     <div class="col-md-7">
         <h2 class="title mb-10">
             <i class="ph-duotone ph-clipboard-text"></i>
-            <?= lang('Projects with ABS relevance in this country', 'Projekte mit ABS-Relevanz in diesem Land') ?>
+            <?= lang('projects.projects_with_abs_relevance_in_this_country') ?>
         </h2>
         <?php if (!$projectCount): ?>
             <div class="box padded text-muted">
-                <?= lang('No projects found.', 'Keine Projekte gefunden.') ?>
+                <?= lang('projects.no_projects_found') ?>
             </div>
         <?php else: ?>
                 <table class="table" id="nagoya-projects-overview-table">
                     <thead>
                         <tr>
                             <th><?= lang('common.project') ?></th>
-                            <th><?= lang('Label', 'Label') ?></th>
-                            <th><?= lang('Nagoya status', 'Nagoya-Status') ?></th>
-                            <th><?= lang('Permits', 'Genehmigungen') ?></th>
+                            <th><?= lang('common.label_nagoya_dashboard_country') ?></th>
+                            <th><?= lang('common.nagoya_status') ?></th>
+                            <th><?= lang('common.permits') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,12 +168,12 @@ $projectCount = count($projectsForCountry);
                                         <span class="badge <?= $permOpen ? 'signal' : 'success' ?>">
                                             <?= $permTotal ?>
                                             <?php if ($permOpen): ?>
-                                                (<?= $permOpen ?> <?= lang('open', 'offen') ?>)
+                                                (<?= $permOpen ?> <?= lang('common.open') ?>)
                                             <?php endif; ?>
                                         </span>
                                         <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $idStr ?>/<?= urlencode($c['id'] ?? '') ?>" class="small">
                                             <i class="ph ph-arrow-up-right"></i>
-                                            <?= lang('Details', 'Details') ?>
+                                            <?= lang('common.details') ?>
                                         </a>
                                     <?php else: ?>
                                         <span class="text-muted">–</span>
@@ -199,21 +190,21 @@ $projectCount = count($projectsForCountry);
     <div class="col-md-5">
         <h2 class="title mb-10">
             <i class="ph-duotone ph-file-text"></i>
-            <?= lang('All permits for this country', 'Alle Genehmigungen für dieses Land') ?>
+            <?= lang('projects.all_permits_for_this_country') ?>
         </h2>
         <?php if (empty($projectsForCountry) || $permitStats['total'] === 0): ?>
             <div class="box padded text-muted">
-                <?= lang('No permits recorded for this country yet.', 'Für dieses Land sind noch keine Genehmigungen hinterlegt.') ?>
+                <?= lang('projects.no_permits_recorded_for_this_country_yet_nagoya_dashboard_country') ?>
             </div>
         <?php else: ?>
             <table class="table table-sm font-size-12" id="nagoya-permits-overview-table">
                 <thead>
                     <tr>
                         <th><?= lang('common.project') ?></th>
-                        <th><?= lang('Permit', 'Genehmigung') ?></th>
+                        <th><?= lang('common.permit') ?></th>
                         <th><?= lang('common.status') ?></th>
-                        <th><?= lang('Docs', 'Dokumente') ?></th>
-                        <th><?= lang('ABS check', 'ABS-Prüfung') ?></th>
+                        <th><?= lang('common.docs') ?></th>
+                        <th><?= lang('common.abs_check') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -232,13 +223,13 @@ $projectCount = count($projectsForCountry);
 
                             // small status badge
                             if ($status === 'needed') {
-                                $statusLabel = lang('Needed', 'Erforderlich');
+                                $statusLabel = lang('common.needed');
                                 $statusClass = 'badge tiny warning';
                             } elseif ($status === 'requested') {
-                                $statusLabel = lang('Requested', 'Beantragt');
+                                $statusLabel = lang('common.requested');
                                 $statusClass = 'badge tiny signal';
                             } elseif ($status === 'granted') {
-                                $statusLabel = lang('Granted', 'Erteilt');
+                                $statusLabel = lang('common.granted');
                                 $statusClass = 'badge tiny success';
                             } elseif ($status === 'not-applicable') {
                                 $statusLabel = lang('common.not_applicable');
@@ -254,7 +245,7 @@ $projectCount = count($projectsForCountry);
                                         <?= e($p['name'] ?? '') ?>
                                     </a>
                                 </td>
-                                <td><?= e($name ?: lang('Unnamed', 'Unbenannt')) ?></td>
+                                <td><?= e($name ?: lang('projects.unnamed')) ?></td>
                                 <td><span class="<?= $statusClass ?>"><?= $statusLabel ?></span></td>
                                 <td>
                                     <?php if ($docCount > 0): ?>
@@ -270,12 +261,12 @@ $projectCount = count($projectsForCountry);
                                         <?php if ($checked): ?>
                                             <span class="badge tiny success">
                                                 <i class="ph ph-check"></i>
-                                                <?= lang('validated', 'validiert') ?>
+                                                <?= lang('common.validated') ?>
                                             </span>
                                         <?php else: ?>
                                             <span class="badge tiny warning">
                                                 <i class="ph ph-warning"></i>
-                                                <?= lang('needs check', 'Prüfung offen') ?>
+                                                <?= lang('common.needs_check') ?>
                                             </span>
                                         <?php endif; ?>
                                     <?php else: ?>

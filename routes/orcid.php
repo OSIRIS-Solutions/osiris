@@ -44,6 +44,6 @@
                 ]
             ]
         );
-        echo json_encode(['success' => true, 'message' => lang('Your ORCID has been disconnected.', 'Deine ORCID wurde getrennt.')]);
+        echo json_encode(['success' => true, 'message' => lang('orcid.your_orcid_has_been_disconnected')]);
     });
 ?>

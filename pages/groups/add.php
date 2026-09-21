@@ -24,7 +24,7 @@ if (!$Settings->hasPermission('units.add')) {
 $formaction = ROOTPATH . "/crud/groups/create";
 $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
 $url = ROOTPATH . "/groups/edit/*";
-$title = lang('New group', 'Neue Gruppe');
+$title = lang('groups.new_group');
 
 ?>
 
@@ -40,7 +40,7 @@ $title = lang('New group', 'Neue Gruppe');
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-2">
                 <label for="id" class="required">
-                    <?= lang('Acronym', 'Abkürzung') ?>
+                    <?= lang('common.acronym') ?>
                 </label>
                 <input type="text" class="form-control" name="values[id]" id="id" required maxlength="9">
             </div>
@@ -48,10 +48,10 @@ $title = lang('New group', 'Neue Gruppe');
 
             <div class="col-sm-5">
                 <label for="parent">
-                    <?= lang('Parent group', 'Übergeordnete Gruppe') ?>
+                    <?= lang('common.parent_group') ?>
                 </label>
                 <select class="form-control" name="values[parent]" id="parent" onchange="deptSelect(this.value)">
-                    <option value="" data-level="99"><?= lang('!!!Attention: No parent group chosen', '!!! Achtung: Keine übergeordnete Gruppe gewählt') ?></option>
+                    <option value="" data-level="99"><?= lang('common.attention_no_parent_group_chosen') ?></option>
                     <?php foreach ($Groups->groups as $d => $dept) {
                         $selected = false;
                         $l = $dept['level'] ?? $Groups->getLevel($d);
@@ -73,16 +73,16 @@ $title = lang('New group', 'Neue Gruppe');
 
             <div class="col-sm-5">
                 <label for="unit" class="required">
-                    <?= lang('Type of group', 'Art der Gruppe') ?>
+                    <?= lang('common.type_of_group') ?>
                 </label>
-                <input type="text" class="form-control" name="values[unit]" id="unit" required placeholder="<?= lang('Double click to see suggestions', 'Doppelklick für Vorschläge') ?>" list="unit-list">
+                <input type="text" class="form-control" name="values[unit]" id="unit" required placeholder="<?= lang('common.double_click_to_see_suggestions') ?>" list="unit-list">
             </div>
 
         </div>
         <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
             <label for="color" class=""><?= lang('common.color') ?></label>
             <input type="color" class="form-control w-50" name="values[color]" required>
-            <span><?= lang('Note that only level 1 groups can have a color.', 'Bitte beachte, dass nur Level 1-Gruppen eine eigene Farbe haben können.') ?></span>
+            <span><?= lang('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
         </div>
     </fieldset>
 
@@ -116,11 +116,11 @@ $title = lang('New group', 'Neue Gruppe');
 
     <fieldset>
         <legend>
-            <?= lang('Staff', 'Personal') ?>
+            <?= lang('common.staff') ?>
         </legend>
         <div class="form-group">
             <label for="head">
-                <?= lang('Head(s)', 'Leitende Person(en)') ?>
+                <?= lang('common.head_s') ?>
             </label>
             <div class="author-widget">
                 <div class="author-list p-10">
@@ -129,7 +129,7 @@ $title = lang('New group', 'Neue Gruppe');
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="head-input form-control">
-                            <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
+                            <option value="" disabled selected><?= lang('common.add_head') ?></option>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null], 'is_active' => ['$ne' => false]], ['sort' => ["last" => 1]]);
                             foreach ($userlist as $j) {

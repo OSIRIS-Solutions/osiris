@@ -109,10 +109,7 @@ function quillEditor(selector) {
                             const file = input.files[0];
                             if (!file) return;
                             if (file.size > maxImageSize) {
-                                toastError(lang(
-                                    'The selected image is too large. Maximum size is 1 MB.',
-                                    'Das ausgewählte Bild ist zu groß. Maximal erlaubt sind 1 MB.'
-                                ));
+                                toastError(lang('common.the_selected_image_is_too_large_maximum_size_is_1_mb'));
                                 return;
                             }
                             const reader = new FileReader();
@@ -129,7 +126,7 @@ function quillEditor(selector) {
             }
         },
         formats: ['italic', 'bold', 'underline', 'script', 'link', 'image', 'list', 'header'],
-        placeholder: lang('Start typing here ...', 'Hier tippen ...'),
+        placeholder: lang('common.start_typing_here'),
         theme: 'snow', // or 'bubble' 
     });
     quill.on('text-change', (delta, oldDelta, source) => {
@@ -171,7 +168,7 @@ $('input[name=activity]').on('change', function () {
 })
 
 function toastError(msg = "", title = null) {
-    if (title === null) title = lang("Error", "Fehler")
+    if (title === null) title = lang('common.error')
     osirisJS.initStickyAlert({
         content: msg,
         title: title,
@@ -183,7 +180,7 @@ function toastError(msg = "", title = null) {
     console.error(msg)
 }
 function toastSuccess(msg = "", title = null) {
-    if (title === null) title = lang("Success", "Erfolg")
+    if (title === null) title = lang('common.success')
     osirisJS.initStickyAlert({
         content: msg,
         title: title,
@@ -193,7 +190,7 @@ function toastSuccess(msg = "", title = null) {
     })
 }
 function toastWarning(msg = "", title = null) {
-    if (title === null) title = lang("Warning", "Achtung")
+    if (title === null) title = lang('common.warning')
     osirisJS.initStickyAlert({
         content: msg,
         title: title,
@@ -203,7 +200,7 @@ function toastWarning(msg = "", title = null) {
     })
 }
 function toastInfo(msg = "", title = null) {
-    if (title === null) title = lang("Info", "Information")
+    if (title === null) title = lang('common.info_727698de')
     osirisJS.initStickyAlert({
         content: msg,
         title: title,
@@ -231,8 +228,8 @@ function getCookie(cname) {
     return "";
 }
 function lang(en, de = null) {
-    if (de === null) return en;
-    var language = getCookie('osiris-language');
+    if (de === null) return window.OSIRIS_JS_TRANSLATIONS?.[en] ?? en;
+    var language = document.documentElement.lang || getCookie('osiris-language');
     if (language === undefined) return de;
     if (language == "en") return en;
     if (language == "de") return de;
@@ -390,7 +387,7 @@ function strDate(date) {
 
 function todo() {
     osirisJS.initStickyAlert({
-        content: lang('Sorry, but this button does not work yet.', 'Sorry, aber der Knopf funktioniert noch nicht.'),
+        content: lang('common.sorry_but_this_button_does_not_work_yet'),
         title: '<i class="ph ph-smiley-sad ph-3x text-signal"></i>',
         alertType: "",
         hasDismissButton: true
@@ -499,10 +496,10 @@ function addToCart(el, id) {//.addClass('animate__flip')
             favlist.splice(index, 1);
             action = "remove";
             updateCart(false)
-            toastInfo(lang('Item removed from your collection.', 'Aktivität aus deiner Sammlung entfernt.'))
+            toastInfo(lang('common.item_removed_from_your_collection'))
         } else {
             if (favlist.length > 30) {
-                toastError(lang('You can have no more than 30 items in your collection.', 'Du kannst nicht mehr als 30 Aktivitäten in deiner Sammlung haben.'))
+                toastError(lang('common.you_can_have_no_more_than_30_items_in_your_collection'))
                 return;
             }
             favlist.push(id)
@@ -549,20 +546,20 @@ function dump(el) {
 function copyTextToClipboard(text) {
     // check if navigator.clipboard is available
     if (!navigator.clipboard) {
-        toastError(lang('This browser does not support copying to clipboard.', 'Dieser Browser unterstützt das Kopieren in die Zwischenablage nicht.'));
+        toastError(lang('common.this_browser_does_not_support_copying_to_clipboard'));
         return;
     }
     navigator.clipboard.writeText(text)
-    toastSuccess(lang('Query copied to clipboard.', 'Abfrage in die Zwischenablage kopiert.'))
+    toastSuccess(lang('common.query_copied_to_clipboard'))
 }
 
 function copyToClipboard(selector) {
     // check if navigator.clipboard is available
     if (!navigator.clipboard) {
-        toastError(lang('This browser does not support copying to clipboard.', 'Dieser Browser unterstützt das Kopieren in die Zwischenablage nicht.'));
+        toastError(lang('common.this_browser_does_not_support_copying_to_clipboard'));
         return;
     }
     var text = $(selector).text()
     navigator.clipboard.writeText(text)
-    toastSuccess(lang('Query copied to clipboard.', 'Abfrage in die Zwischenablage kopiert.'))
+    toastSuccess(lang('common.query_copied_to_clipboard'))
 }

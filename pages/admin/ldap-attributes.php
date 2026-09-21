@@ -42,11 +42,11 @@ $fields = [
         'example' => 'sn', // Beispiel: "Doe"
     ],
     'academic_title' => [
-        'name' => lang('Academic Title', 'Akademischer Titel'),
+        'name' => lang('admin.academic_title'),
         'example' => 'personalTitle', // Beispiel: "Dr."
     ],
     'mail' => [
-        'name' => lang('Email', 'E-Mail'),
+        'name' => lang('common.email'),
         'example' => 'mail', // Beispiel: "john.doe@example.com"
     ],
     'telephone' => [
@@ -54,7 +54,7 @@ $fields = [
         'example' => 'telephonenumber', // Beispiel: "+1 555 123 456"
     ],
     'mobile' => [
-        'name' => lang('Mobile', 'Mobil'),
+        'name' => lang('common.mobile'),
         'example' => 'mobile', // Beispiel: "+1 555 987 654"
     ],
     'position' => [
@@ -62,7 +62,7 @@ $fields = [
         'example' => 'title', // Beispiel: "Software Engineer"
     ],
     'department' => [
-        'name' => lang('Department', 'Abteilung'),
+        'name' => lang('common.department'),
         'example' => 'department', // Beispiel: "IT Department"
     ], //description
     'is_active' => [
@@ -70,7 +70,7 @@ $fields = [
         'example' => 'useraccountcontrol', // Beispiel: "512" (Aktiv) oder "514" (Deaktiviert)
     ],
     'room' => [
-        'name' => lang('Room', 'Raum'),
+        'name' => lang('common.room'),
         'example' => 'physicaldeliveryofficename', // Beispiel: "Room 101"
     ],
     'internal_id' => [
@@ -84,7 +84,7 @@ $fields = [
 
         <h1>
             <i class="ph-duotone ph-user-switch" aria-hidden="true"></i>
-            LDAP: <?= lang('Attribute synchronization', 'Attribut-Synchronisation') ?>
+            LDAP: <?= lang('admin.attribute_synchronization') ?>
         </h1>
 
         <?php
@@ -93,24 +93,24 @@ $fields = [
         ?>
 
         <p>
-            <?= lang('Last synchronization:', 'Letzte Synchronisierung:') ?> <b><?= $last_sync ? format_date($last_sync) : lang('Never', 'Nie') ?></b>
+            <?= lang('admin.last_synchronization') ?> <b><?= $last_sync ? format_date($last_sync) : lang('common.never') ?></b>
         </p>
 
         <p>
-            <?= lang('Here you can define the attributes that will be automatically synchronized with your LDAP instance.', 'Hier kannst du die Attribute festlegen, die automatisch mit deiner LDAP-Instanz synchronisiert werden sollen.') ?>
+            <?= lang('admin.here_you_can_define_the_attributes_that_will_be_automatically_synchronized') ?>
         </p>
 
         <p class="text-danger">
             <i class="ph ph-warning"></i>
-            <?= lang('Please note that the synchronized attributes cannot be edited within OSIRIS anymore, except for units.', 'Bitte beachte, dass die synchronisierten Attribute nicht mehr in OSIRIS bearbeitet werden können, abgesehen von Einheiten.') ?>
+            <?= lang('admin.please_note_that_the_synchronized_attributes_cannot_be_edited_within_osiris') ?>
         </p>
 
         <table class="table w-auto mb-20">
             <thead>
                 <tr>
-                    <th><?= lang('Person attribute in OSIRIS', 'Personen-Attribut in OSIRIS') ?></th>
-                    <th><?= lang('LDAP variable (leave empty to manage the field in OSIRIS)', 'LDAP-Variable (leer lassen, um das Feld in OSIRIS zu managen)') ?></th>
-                    <th><?= lang('Example', 'Beispiel') ?></th>
+                    <th><?= lang('admin.person_attribute_in_osiris') ?></th>
+                    <th><?= lang('admin.ldap_variable_leave_empty_to_manage_the_field_in_osiris') ?></th>
+                    <th><?= lang('common.example') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -126,7 +126,7 @@ $fields = [
                         </td>
                         <td class="text-muted">
                             <?= e($f['example']) ?>
-                            <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= lang('Take', 'Übernehmen') ?></a>
+                            <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= lang('admin.take') ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -134,7 +134,7 @@ $fields = [
         </table>
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save &amp; Preview', 'Speichern und Vorschau zeigen') ?>
+            <?= lang('admin.save_amp_preview') ?>
         </button>
 
     </form>

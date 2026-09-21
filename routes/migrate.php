@@ -40,7 +40,7 @@ Route::get('/migration-needed', function () {
     if (empty($version) || version_compare($version['value'], OSIRIS_VERSION, '<')) {
         // migration needed
     } else {
-        $_SESSION['msg'] = lang('Your OSIRIS installation is up to date.', 'Deine OSIRIS-Installation ist auf dem neuesten Stand.');
+        $_SESSION['msg'] = lang('admin.your_osiris_installation_is_up_to_date');
         header('Location: ' . ROOTPATH . '/');
     }
     include_once BASEPATH . "/header.php";
@@ -50,19 +50,16 @@ Route::get('/migration-needed', function () {
         <div class="container text-center" style="max-width: 70rem;">
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
             <h1 class="mt-0">
-                <?= lang('A new OSIRIS version has been found', 'Eine neue OSIRIS-Version wurde gefunden') ?>!
+                <?= lang('admin.a_new_osiris_version_has_been_found') ?>!
             </h1>
             <p>
-                <?= lang(
-                    'OSIRIS will be updated and set up automatically. Depending on the version, this might take some time, so please make sure not to reload or close the page during the process.',
-                    'OSIRIS wird automatisch aktualisiert und eingerichtet. Abhängig von der Version kann dies eine ganze Weile dauern, stelle also bitte sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
-                ) ?>
+                <?= lang('admin.osiris_will_be_updated_and_set_up_automatically_depending_on_the_version_th') ?>
             </p>
             <p class="text-muted">
-                <small><?= lang('Installed', 'Installiert') ?>: <?= $version['value'] ?></small> | <small><?= lang('Latest', 'Neueste') ?>: <?= OSIRIS_VERSION ?></small>
+                <small><?= lang('admin.installed') ?>: <?= $version['value'] ?></small> | <small><?= lang('admin.latest') ?>: <?= OSIRIS_VERSION ?></small>
             </p>
             <a href="<?= ROOTPATH ?>/migrate" class="btn cta large">
-                <?= lang('Update OSIRIS', 'OSIRIS aktualisieren') ?>
+                <?= lang('admin.update_osiris') ?>
             </a>
         </div>
     <?php
@@ -71,19 +68,16 @@ Route::get('/migration-needed', function () {
         <div class="container text-center">
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
             <h1 class="mt-0">
-                <?= lang('OSIRIS is being updated', 'OSIRIS wird aktualisiert') ?>...
+                <?= lang('admin.osiris_is_being_updated') ?>...
             </h1>
 
             <p>
-                <?= lang(
-                    'OSIRIS is currently being updated to the latest version. Please check back later.',
-                    'OSIRIS wird gerade auf die neueste Version aktualisiert. Bitte schau später noch einmal vorbei.'
-                ) ?>
+                <?= lang('admin.osiris_is_currently_being_updated_to_the_latest_version_please_check_back_l') ?>
             </p>
 
             <div class="spacer h-100"></div>
             <small class="text-muted">
-                <?= lang('In case you are seeing this message for a long time, please contact your administrator.', 'Falls du diese Nachricht über einen längeren Zeitraum siehst, kontaktiere bitte deinen Administrator.') ?>
+                <?= lang('admin.in_case_you_are_seeing_this_message_for_a_long_time_please_contact_your_adm') ?>
             </small>
         </div>
     <?php
@@ -147,11 +141,8 @@ Route::get('/migrate/index', function () {
     }
 
     echo '<div class="migration-card">';
-    echo '<h3>' . lang('Creating or confirming indexes for fast journal table', 'Erstellen oder Bestätigen von Indizes für eine schnellere Journal-Tabelle') . '</h3>';
-    echo '<p class="migration-muted">' . lang(
-        'OSIRIS is creating or confirming the indexes required for fast journal table.',
-        'OSIRIS erstellt oder bestätigt die Indizes, die für eine schnellere Journal-Tabelle erforderlich sind.'
-    ) . '</p>';
+    echo '<h3>' . lang('common.creating_or_confirming_indexes_for_fast_journal_table') . '</h3>';
+    echo '<p class="migration-muted">' . lang('common.osiris_is_creating_or_confirming_the_indexes_required_for_fast_journal_tabl') . '</p>';
     echo '<ul class="migration-index-list">';
     ensureIndex($osiris->activities, ['rendered.plain' => 'text']);
     ensureIndex($osiris->activities, ['journal_id' => 1]);
@@ -231,7 +222,7 @@ Route::get('/migrate/cv', function () {
             ['$set' => ['cv' => $cv]]
         );
     }
-    echo lang('CV dates migrated successfully.', 'CV-Daten wurden erfolgreich migriert.');
+    echo lang('admin.cv_dates_migrated_successfully');
 
     include BASEPATH . "/footer.php";
 });
@@ -248,7 +239,7 @@ Route::get('/migrate/(.*)', function ($v) {
 
     echo '<div class="migration-report">';
 
-    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
+    echo "<h1>" . lang('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
     flush();
     ob_flush();
 
@@ -433,14 +424,14 @@ Route::get('/migrate', function () {
 
     // check if user is logged in and has admin rights
     if (!$Settings->hasPermission('admin.see')) {
-        echo "<p class='alert danger'>" . lang('You do not have permission to access this page.', 'Du hast keine Berechtigung, diese Seite zu betreten.') . "</p>";
+        echo "<p class='alert danger'>" . lang('common.you_do_not_have_permission_to_access_this_page') . "</p>";
         include BASEPATH . "/footer.php";
         die;
     }
 
     echo '<div class="migration-report">';
 
-    echo "<h1>" . lang('Migrating OSIRIS to Version <span class="version">' . OSIRIS_VERSION . '</span>', 'OSIRIS wird auf Version <span class="version">' . OSIRIS_VERSION . '</span> migriert') . "</h1>";
+    echo "<h1>" . lang('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
     flush();
     ob_flush();
 
@@ -451,12 +442,9 @@ Route::get('/migrate', function () {
         echo '
         <div class="migration-report">
             <div class="migration-card">
-                <h3 class="migration-ok">✓ ' . lang('Everything is up to date', 'Alles ist auf dem neuesten Stand') . '</h3>
+                <h3 class="migration-ok">✓ ' . lang('admin.everything_is_up_to_date') . '</h3>
 
-                <p>' . lang(
-            'No migration steps were required. OSIRIS is already using the latest database schema and configuration.',
-            'Es waren keine Migrationsschritte erforderlich. OSIRIS verwendet bereits das aktuelle Datenbankschema und die aktuelle Konfiguration.'
-        ) . '</p>
+                <p>' . lang('admin.no_migration_steps_were_required_osiris_is_already_using_the_latest_databas') . '</p>
             </div>
         </div>
         </div>';
@@ -465,12 +453,9 @@ Route::get('/migrate', function () {
     }
 
     ?>
-    <h2><?= lang('Database migration report', 'Bericht zur Datenbankmigration') ?></h2>
+    <h2><?= lang('admin.database_migration_report') ?></h2>
     <p class="migration-muted">
-        <?= lang(
-            'OSIRIS is updating required database structures for the current version. Existing data is preserved and adapted where necessary.',
-            'OSIRIS aktualisiert notwendige Datenbankstrukturen für die aktuelle Version. Bestehende Daten bleiben erhalten und werden bei Bedarf angepasst.'
-        ) ?>
+        <?= lang('admin.osiris_is_updating_required_database_structures_for_the_current_version_exi') ?>
     </p>
 <?php
 
@@ -623,7 +608,7 @@ Route::get('/migrate', function () {
     }
 
 
-    echo "<p>" . lang('Migration completed successfully.', 'Die Migration wurde erfolgreich abgeschlossen.') . "</p>";
+    echo "<p>" . lang('admin.migration_completed_successfully') . "</p>";
     $osiris->system->updateOne(
         ['key' => 'version'],
         ['$set' => ['value' => OSIRIS_VERSION]],

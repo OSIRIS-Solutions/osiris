@@ -25,7 +25,7 @@ $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
 $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
 $url = ROOTPATH . "/groups/public/" . $form['id'];
-$title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
+$title = lang('common.edit_group') . $id;
 
 $level = $Groups->getLevel($id);
 
@@ -96,7 +96,7 @@ function sel($index, $value)
 
     <fieldset>
         <legend>
-            <?= lang('Visibility on Website', 'Darstellung auf der Webseite') ?>
+            <?= lang('common.visibility_on_website') ?>
         </legend>
 
         <div class="form-group">
@@ -104,7 +104,7 @@ function sel($index, $value)
             <div class="custom-switch">
                 <input type="checkbox" id="hide-check" <?= val('hide') ? 'checked' : '' ?> name="values[hide]" value="1" onchange="toggleVisibility()">
                 <label for="hide-check">
-                    <?= lang('Hide group from public view', 'Gruppe nicht öffentlich anzeigen') ?>
+                    <?= lang('groups.hide_group_from_public_view') ?>
                 </label>
             </div>
         </div>
@@ -239,7 +239,7 @@ function sel($index, $value)
         } ?>
 
     </div>
-    <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')"><i class="ph ph-plus text-success"></i> <?= lang('Add entry', 'Eintrag hinzufügen') ?></button>
+    <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')"><i class="ph ph-plus text-success"></i> <?= lang('common.add_entry') ?></button>
 
 
     <script>
@@ -255,13 +255,13 @@ function sel($index, $value)
                 }
             })
             if (val.length < 3) {
-                suggest.append(`<span >${lang('Please type at least 3 characters', 'Mindestens 3 Zeichen erforderlich')}</span>`)
+                suggest.append(`<span >${<?= json_encode(lang('common.please_type_at_least_3_characters'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>`)
                 return;
             }
             $.get('<?= ROOTPATH ?>/api/activities-suggest/' + val, function(data) {
                 console.log(data);
                 if (data.count == 0) {
-                    suggest.append(`<span >${lang('Nothing found', 'Nichts gefunden')}</span>`)
+                    suggest.append(`<span >${<?= json_encode(lang('common.nothing_found'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>`)
                     return;
                 }
                 data.data.forEach(function(d) {
@@ -308,7 +308,7 @@ function sel($index, $value)
                         </div>
                     </div>
                 </div>
-                ${lang('Please save once to add more information.', 'Bitte speichere einmal, um weitere Informationen hinzuzufügen.')}<br>
+                ${<?= json_encode(lang('groups.please_save_once_to_add_more_information'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}<br>
                 <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('action.delete')}</button>
             </div>
 

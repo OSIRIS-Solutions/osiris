@@ -23,13 +23,13 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
 
     <form action="<?= $formaction ?>" method="post" id="proposal-form">
         <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
-        <h2><?= lang('Third-party funding per year', 'Drittmitteleinnahmen pro Jahr') ?></h2>
+        <h2><?= lang('common.third_party_funding_per_year') ?></h2>
         <table class="table mb-20">
             <thead>
                 <tr>
                     <th><?=lang('common.year')?></th>
-                    <th><?=lang('Planned Amount', 'Geplante Summe')?> in EUR</th>
-                    <th><?=lang('Spent Amount', 'Tatsächliche Summe')?> in EUR</th>
+                    <th><?=lang('projects.planned_amount')?> in EUR</th>
+                    <th><?=lang('projects.spent_amount')?> in EUR</th>
                     <th></th>
                 </tr>
             </thead>
@@ -52,7 +52,7 @@ $url = ROOTPATH . "/proposals/view/" . $form['_id'];
                     <td colspan="4">
                         <button type="button" class="btn" id="add-year" onclick="addYear()">
                             <i class="ph ph-plus"></i>
-                            <?= lang('Add Year', 'Jahr hinzufügen') ?>
+                            <?= lang('projects.add_year') ?>
                         </button>
                     </td>
                 </tr>

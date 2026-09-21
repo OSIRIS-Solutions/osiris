@@ -61,10 +61,10 @@ $all = $osiris->activities->count(
 );
 
 $statuses = [
-    'preparation' => lang('In Preparation', 'In Vorbereitung'),
-    'in-progress' => lang('In Progress', 'Laufend'),
+    'preparation' => lang('common.in_preparation'),
+    'in-progress' => lang('common.in_progress'),
     'completed' => lang('common.completed'),
-    'aborted' => lang('Cancelled', 'Abgebrochen'),
+    'aborted' => lang('common.cancelled'),
 ];
 
 
@@ -223,7 +223,7 @@ foreach ($countries as $iso => $data) {
     <div class="btn-toolbar">
         <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=travel">
             <i class="ph ph-plus-circle"></i>
-            <?= lang('Add trip', 'Reise hinzufügen') ?>
+            <?= lang('common.add_trip') ?>
         </a>
     </div>
 
@@ -231,27 +231,27 @@ foreach ($countries as $iso => $data) {
     <!-- UI-Änderung -->
     <div class="alert signal">
         <i class="ph ph-warning text-signal"></i>
-        <?= lang('Select a year to see all research trips.', 'Wähle ein Jahr, um alle Forschungsreisen anzuzeigen.') ?>
+        <?= lang('common.select_a_year_to_see_all_research_trips') ?>
 
 
         <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-            <h6 class="mb-0 mt-5 w-200"><?= lang('Select year', 'Jahr auswählen') ?>:</h6>
+            <h6 class="mb-0 mt-5 w-200"><?= lang('common.select_year') ?>:</h6>
             <input type="number" name="year" class="form-control" value="<?= $year ?>" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" required>
             <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
         </form>
     </div>
 
     <h3>
-        <?= lang('Research trips in', 'Forschungsreisen in') ?> <?= $year ?>
+        <?= lang('common.research_trips_in') ?> <?= $year ?>
         <span class="badge signal ml-10">
             <?= count($trips) ?>
-            <?= lang('trips', 'Reisen') ?>
+            <?= lang('common.trips') ?>
         </span>
     </h3>
 
     <div id="gantt-container" style="width: 100%; height: auto;">
         <div id="legend" class="text-center">
-            <b><?= lang('Legend', 'Legende') ?>:</b>
+            <b><?= lang('common.legend') ?>:</b>
             <?php foreach ($statuses as $key => $label) { ?>
                 <span class="<?= $key ?>"><?= $label ?></span>
             <?php } ?>
@@ -264,12 +264,12 @@ foreach ($countries as $iso => $data) {
     <div id="statistics" class="days">
 
         <div class="pills">
-            <button class="btn active" onclick="showData(this,'days')"><?= lang('Days', 'Tage') ?></button>
-            <button class="btn" onclick="showData(this,'trips')"><?= lang('Trips', 'Reisen') ?></button>
+            <button class="btn active" onclick="showData(this,'days')"><?= lang('common.days') ?></button>
+            <button class="btn" onclick="showData(this,'trips')"><?= lang('common.trips_trips') ?></button>
             <button class="btn" onclick="showData(this,'people')"><?= lang('common.people') ?></button>
         </div>
 
-        <h4><?= lang('Countries', 'Länder') ?></h4>
+        <h4><?= lang('common.countries') ?></h4>
 
         <div class="row row-eq-spacing">
             <div class="col-md">
@@ -313,7 +313,7 @@ foreach ($countries as $iso => $data) {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td><?= lang('Sum', 'Summe') ?></td>
+                            <td><?= lang('common.sum') ?></td>
                             <?php foreach ($statuses as $key => $name) {
                                 echo "<td class='$key'>";
                                 echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
@@ -369,7 +369,7 @@ foreach ($countries as $iso => $data) {
             </tbody>
             <tfoot>
                 <tr>
-                    <td><?= lang('Sum', 'Summe') ?></td>
+                    <td><?= lang('common.sum') ?></td>
                     <?php foreach ($statuses as $key => $name) {
                         echo "<td class='$key'>";
                         echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
@@ -421,7 +421,7 @@ foreach ($countries as $iso => $data) {
             </tbody>
             <tfoot>
                 <tr>
-                    <td><?= lang('Sum', 'Summe') ?></td>
+                    <td><?= lang('common.sum') ?></td>
                     <?php foreach ($statuses as $key => $name) {
                         echo "<td class='$key'>";
                         echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
@@ -486,13 +486,13 @@ $unique_number = count($uniques);
     function cat(status) {
         switch (status) {
             case 'preparation':
-                return lang('In Preparation', 'In Vorbereitung');
+                return <?= json_encode(lang('common.in_preparation'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
             case 'in-progress':
-                return lang('In Progress', 'Laufend');
+                return <?= json_encode(lang('common.in_progress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
             case 'completed':
                 return lang('common.completed');
             case 'aborted':
-                return lang('Cancelled', 'Abgebrochen');
+                return <?= json_encode(lang('common.cancelled'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
             default:
                 return lang('common.unknown');
         }
@@ -596,7 +596,7 @@ $unique_number = count($uniques);
         .attr("text-anchor", "middle")
         .attr("font-size", "1rem")
         .attr("fill", "var(--danger-color)")
-        .text(lang('today', 'heute'))
+        .text(<?= json_encode(lang('common.today'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
 
     function mouseover(d, i) {
         d3.select(this)
@@ -622,7 +622,7 @@ $unique_number = count($uniques);
                 <b>${lang('common.status')}: </b>${cat(d.cat)}<br>
                 <b>${lang('common.start_date')}: </b>${start.toLocaleDateString()}<br>
                 <b>${lang('common.end_date')}: </b>${end.toLocaleDateString()}<br>
-                <b>${lang('Duration', 'Dauer')}: </b>${d.days} ${lang('days', 'Tage')}<br>
+                <b>${<?= json_encode(lang('common.duration'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}: </b>${d.days} ${<?= json_encode(lang('common.days_trips'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}<br>
                 `
             }
         });
@@ -686,7 +686,7 @@ $unique_number = count($uniques);
             ],
             colorbar: {
                 len: 0.5,
-                title: lang('Days', 'Tage'),
+                title: <?= json_encode(lang('common.days'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                 autotic: false,
             },
             zmin: 0,
@@ -707,13 +707,13 @@ $unique_number = count($uniques);
         var label = '';
         switch (mode) {
             case 'days':
-                label = lang('Days', 'Tage');
+                label = <?= json_encode(lang('common.days'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                 break;
             case 'people':
                 label = lang('common.people');
                 break;
             case 'trips':
-                label = lang('Trips', 'Reisen');
+                label = <?= json_encode(lang('common.trips_trips'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                 break;
             default:
                 label = lang('common.unknown');

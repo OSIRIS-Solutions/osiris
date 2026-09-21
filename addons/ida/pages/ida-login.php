@@ -1,6 +1,6 @@
 
 <h1>
-    <?=lang('Log-in to IDA', 'IDA Log-in')?>
+    <?=lang('ida.log_in_to_ida')?>
 </h1>
 <form action="<?= ROOTPATH ?>/ida/auth" method="POST" class="w-400 mw-full">
     <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? $_SERVER['REQUEST_URI'] ?>">
@@ -13,5 +13,5 @@
         <input class="form-control" id="password" type="password" name="password" placeholder="your password" required />
     </div>
 
-    <input class="btn secondary" type="submit" name="submit" value="<?= lang("Log-in", 'Einloggen') ?>" />
+    <input class="btn secondary" type="submit" name="submit" value="<?= lang('people.log_in') ?>" />
 </form>

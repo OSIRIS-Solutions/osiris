@@ -530,7 +530,7 @@ Route::get('/api/users', function () {
     foreach ($result as $user) {
         $subtitle = "";
         if (isset($user['is_active']) && !$user['is_active']) {
-            $subtitle = '<span class="badge text-danger">' . lang('Former employee', 'Ehemalige Beschäftigte') . '</span>';
+            $subtitle = '<span class="badge text-danger">' . lang('common.former_employee') . '</span>';
         } elseif (isset($_GET['subtitle'])) {
             if ($_GET['subtitle'] == 'position') {
                 $subtitle = lang($user['position'] ?? '', $user['position_de'] ?? null);
@@ -545,7 +545,7 @@ Route::get('/api/users', function () {
         }
         $guest = '';
         if (isset($user['is_guest']) && $user['is_guest']) {
-            $guest = ' <i class="ph ph-user-plus float-right text-signal" title="' . lang('Guest Account', 'Gast-Account') . '"></i>';
+            $guest = ' <i class="ph ph-user-plus float-right text-signal" title="' . lang('people.guest_account') . '"></i>';
         }
         $topics = '';
         if ($topicsEnabled && $user['topics'] ?? false) {
@@ -668,7 +668,7 @@ Route::get('/api/user-units/(.*)', function ($id) {
     }
     $person = $osiris->persons->findOne($filter, ['units' => 1, 'last' => 1, 'first' => 1]);
     if (empty($person)) {
-        echo return_rest(lang('User not found', 'Nutzer nicht gefunden'), 0, 404);
+        echo return_rest(lang('common.user_not_found'), 0, 404);
         die;
     }
     if (empty($person['units'] ?? null)) {

@@ -17,7 +17,7 @@
 if (strtoupper(USER_MANAGEMENT) !== 'LDAP') {
 ?>
     <div class="alert danger">
-        <?= lang('Synchronizing users is currently only available for the LDAP Interface.', 'Nutzer-Synchronisation ist zurzeit nur mit der LDAP-Schnittstelle möglich.') ?>
+        <?= lang('admin.synchronizing_users_is_currently_only_available_for_the_ldap_interface') ?>
     </div>
 <?php
     return;
@@ -25,14 +25,14 @@ if (strtoupper(USER_MANAGEMENT) !== 'LDAP') {
 ?>
 <h1>
     <i class='ph-duotone ph-arrows-clockwise'></i>
-    <?= lang('Synchronize users', 'Synchronisiere Nutzer:innen') ?>
+    <?= lang('common.synchronize_users') ?>
 </h1>
 
 <p>
-    <?= lang('You will see an overview on the next page where you can confirm any actions before they are applied.', 'Auf der nächsten Seite wird eine Übersicht angezeigt, in der du alle Aktionen bestätigen kannst, bevor sie ausgeführt werden.') ?>
+    <?= lang('admin.you_will_see_an_overview_on_the_next_page_where_you_can_confirm_any_actions') ?>
 </p>
 
 
 <a class="btn primary" href="<?= ROOTPATH ?>/synchronize-users?action=synchronize">
-    <?= lang('Start synchronization now', 'Starte die Synchronisation') ?>
+    <?= lang('admin.start_synchronization_now') ?>
 </a>

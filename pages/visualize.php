@@ -27,26 +27,26 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
 
     <h1>
         <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-        <?= lang('Visualisations', 'Visualisierungen') ?>
+        <?= lang('search.visualisations') ?>
     </h1>
 
 
     <div class="tiles">
         <a href="<?= ROOTPATH ?>/visualize/coauthors" class="tile">
             <h5 class="title">
-                <?= lang('Coauthor network', 'Koautoren-Netzwerk') ?>
+                <?= lang('common.coauthor_network') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/chord.svg" alt="" class="w-full">
         </a>
         <a href="<?= ROOTPATH ?>/visualize/sunburst" class="tile">
             <h5 class="title">
-                <?= lang('Department overview', 'Abteilungs-Übersicht') ?>
+                <?= lang('common.department_overview') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/sunburst.svg" alt="" class="w-full">
         </a>
         <a href="<?= ROOTPATH ?>/visualize/departments" class="tile">
             <h5 class="title">
-                <?= lang('Activity network', 'Aktivitäten-Netzwerk') ?>
+                <?= lang('common.activity_network') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/departments.svg" alt="" class="w-full">
         </a>
@@ -59,7 +59,7 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <a href="<?= ROOTPATH ?>/visualize/map" class="tile">
                 <h5 class="title">
-                    <?= lang('Collaborator-Map', 'Kooperations-Karte') ?>
+                    <?= lang('search.collaborator_map') ?>
                 </h5>
                 <img src="<?= ROOTPATH ?>/img/charts/map.png" alt="" class="w-full">
             </a>

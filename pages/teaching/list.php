@@ -26,7 +26,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1>
     <i class="ph-duotone ph-calendar-dots"></i>
-    <?= lang('Teaching Modules', 'Lehrveranstaltungen') ?>
+    <?= lang('teaching.teaching_modules') ?>
 </h1>
 
 
@@ -40,7 +40,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     <?php if ($Settings->hasPermission('teaching.edit')) { ?>
         <a href="<?= ROOTPATH ?>/teaching/new" class="">
             <i class="ph ph-plus"></i>
-            <?= lang('Add Teaching module', 'Lehrveranstaltung hinzufügen') ?>
+            <?= lang('teaching.add_teaching_module') ?>
         </a>
     <?php } ?>
 
@@ -71,10 +71,10 @@ $teaching = $osiris->teaching->aggregate([
     <table class="table" id="teaching-table">
         <thead>
             <tr>
-                <th><?= lang('Module No.', 'Modulnummer') ?></th>
+                <th><?= lang('common.module_no') ?></th>
                 <th><?= lang('common.title') ?></th>
-                <th><?= lang('Teaching venue / University', 'Lehrort / Hochschule') ?></th>
-                <th><?= lang('Number of Activities', 'Anzahl der Aktivitäten') ?></th>
+                <th><?= lang('common.teaching_venue_university') ?></th>
+                <th><?= lang('common.number_of_activities') ?></th>
             </tr>
         </thead>
         <tbody>

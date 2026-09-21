@@ -23,13 +23,13 @@
 
         <h1>
             <i class="ph-duotone ph-shield-check" aria-hidden="true"></i>
-            <?= lang('Distribute roles', 'Rollen verteilen') ?>
+            <?= lang('common.distribute_roles') ?>
         </h1>
 
         <p>
             <i class="ph ph-warning text-signal"></i>
-            <?= lang('You cannot assign the admin role here. This can only be done directly in the profile of the user.', 'Die Admin-Rolle kann hier nicht vergeben werden. Dies ist nur direkt im Profil des Nutzers möglich.') ?>
-            <?= lang('All logged in users have the role <code>user</code>.', 'Alle angemeldeten Nutzer:innen haben die Rolle <code>user</code>.') ?>
+            <?= lang('admin.you_cannot_assign_the_admin_role_here_this_can_only_be_done_directly_in_the') ?>
+            <?= lang('admin.all_logged_in_users_have_the_role_user') ?>
         </p>
 
     </div>
@@ -63,7 +63,7 @@
     <table class="table hover small w-auto mx-auto sticky-head">
         <thead>
             <tr>
-                <th><?= lang('User', 'Benutzer') ?></th>
+                <th><?= lang('admin.user_distribute_roles') ?></th>
                 <th><?= lang('common.units') ?></th>
                 <?php foreach ($roles as $role) { ?>
                     <th><?= ucfirst($role) ?></th>
@@ -106,7 +106,7 @@
     <div class="container w-800 mw-full">
         <button class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('Save roles', 'Rollen speichern') ?>
+            <?= lang('admin.save_roles') ?>
         </button>
     </div>
 </form>

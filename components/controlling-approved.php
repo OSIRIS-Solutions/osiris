@@ -1,7 +1,7 @@
 <div class="content">
 
     <h3 class="title">
-        <?= lang('Scientist overview (selected quarter)', 'Übersicht der Forschenden (ausgewähltes Quartal)') ?>
+        <?= lang('activities.scientist_overview_selected_quarter') ?>
     </h3>
 
 </div>
@@ -21,7 +21,7 @@
             ['sort' => ["approved" => -1, "last" => 1]]
         );
         if (empty($cursor)) {
-            echo "<div class='content'>" . lang('No scientists found.', 'Keine Forschenden gefunden.') . "</div>";
+            echo "<div class='content'>" . lang('activities.no_scientists_found') . "</div>";
         } else foreach ($cursor as $s) {
             $approved = isset($s['approved']) && in_array($yq, DB::doc2Arr($s['approved']));
         ?>

@@ -118,14 +118,14 @@ if ($edit_perm) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('Change organization logo', 'Organisations-Logo ändern') ?>
+                    <?= lang('organizations.change_organization_logo') ?>
                 </h2>
 
                 <form action="<?= ROOTPATH ?>/crud/organizations/upload-picture/<?= $mongo_id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
                         <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
-                        <label for="profile-input"><?= lang('Select new logo', 'Wähle ein neues Logo') ?></label>
+                        <label for="profile-input"><?= lang('common.select_new_logo') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
@@ -134,7 +134,7 @@ if ($edit_perm) { ?>
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(lang("File is too large! Max. 2MB is supported!", "Die Datei ist zu groß! Max. 2MB werden unterstützt."));
+                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
@@ -150,7 +150,7 @@ if ($edit_perm) { ?>
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('Delete current picture', 'Aktuelles Bild löschen') ?>
+                        <?= lang('common.delete_current_picture') ?>
                     </button>
                 </form>
             </div>
@@ -164,7 +164,7 @@ if ($edit_perm) { ?>
     <div class="d-flex align-items-center mb-20">
         <div class="position-relative mr-20">
             <?php
-            Organization::printLogo($organization, 'org-logo', lang('Logo of', 'Logo von ') . ' ' . $organization['name'], $organization['type'] ?? '');
+            Organization::printLogo($organization, 'org-logo', lang('common.logo_of') . ' ' . $organization['name'], $organization['type'] ?? '');
             ?>
 
             <?php if ($edit_perm) { ?>
@@ -179,7 +179,7 @@ if ($edit_perm) { ?>
         <?php if ($Settings->hasPermission('organizations.edit')) { ?>
             <a href="<?= ROOTPATH ?>/organizations/edit/<?= $mongo_id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('Edit organization', 'Organisation bearbeiten') ?>
+                <?= lang('organizations.edit_organization') ?>
             </a>
         <?php } ?>
     </div>
@@ -206,7 +206,7 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('Synonyms / Alternative Names / Acronyms', 'Synonyme / alternative Namen / Akronyme') ?></span>
+                            <span class="key"><?= lang('common.synonyms_alternative_names_acronyms') ?></span>
                             <?= !empty($organization['synonyms']) ? implode(', ', DB::doc2Arr($organization['synonyms'])) : '-' ?>
                         </td>
                     </tr>
@@ -227,11 +227,11 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('Latitude', 'Breitengrad') ?></span>
+                            <span class="key"><?= lang('common.latitude') ?></span>
                             <?= $organization['lat'] ?? '-' ?>
                         </td>
                         <td>
-                            <span class="key"><?= lang('Longitude', 'Längengrad') ?></span>
+                            <span class="key"><?= lang('common.longitude') ?></span>
                             <?= $organization['lng'] ?? '-' ?>
                         </td>
                     </tr>
@@ -271,11 +271,11 @@ if ($edit_perm) { ?>
                     <tr>
                         <!-- is_collaborator -->
                         <td>
-                            <span class="key"><?= lang('Collaborator', 'Kooperationspartner') ?></span>
+                            <span class="key"><?= lang('organizations.collaborator') ?></span>
                             <?= isset($organization['is_collaborator']) && $organization['is_collaborator'] ? lang('common.yes') : lang('common.no') ?>
                         </td>
                         <td>
-                            <span class="key"><?= lang('Collaboration timeframe', 'Kooperationszeitraum') ?></span>
+                            <span class="key"><?= lang('organizations.collaboration_timeframe') ?></span>
                             <?= fromToYear($organization['collaboration_start_date'] ?? null, $organization['collaboration_end_date'] ?? null, true) ?>
                         </td>
                     </tr>
@@ -411,7 +411,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 ?>
     <div id="spectrum-container">
         <h2>
-            <?= lang('Associated Research Spectrum', 'Assoziiertes Forschungs-Spektrum') ?>
+            <?= lang('organizations.associated_research_spectrum') ?>
         </h2>
         <?php
         if (!empty($spectrum)) :
@@ -419,7 +419,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
             Spectrum::render($spectrum, $count_spectrum);
         else : ?>
             <p>
-                <?= lang('No Research Spectrum is assigned to this organization.', 'Zu dieser Organisation ist kein Forschungs-Spektrum zugewiesen.') ?>
+                <?= lang('organizations.no_research_spectrum_is_assigned_to_this_organization') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -472,7 +472,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('projects') && !empty($projects)) { ?>
     <h2>
-        <?= lang('Connected projects', 'Verknüpfte Projekte') ?>
+        <?= lang('common.connected_projects') ?>
     </h2>
 
     <div class="mt-20 w-full">
@@ -509,7 +509,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('infrastructures') && !empty($infrastructures)) { ?>
     <h2>
-        <?= lang('Connected infrastructures', 'Verknüpfte Infrastrukturen') ?>
+        <?= lang('organizations.connected_infrastructures') ?>
     </h2>
 
     <div class="mt-20 w-full">
@@ -555,14 +555,14 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('teaching-modules', true) && !empty($teaching_modules)) { ?>
     <h2>
-        <?= lang('Connected teaching modules', 'Verknüpfte Lehrveranstaltungen') ?>
+        <?= lang('organizations.connected_teaching_modules') ?>
     </h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="teaching-modules-table">
             <thead>
                 <tr>
-                    <th><?= lang('Module No.', 'Modulnummer') ?></th>
+                    <th><?= lang('common.module_no') ?></th>
                     <th><?= lang('common.title') ?></th>
                 </tr>
             </thead>
@@ -594,16 +594,16 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 <?php if ($Settings->hasPermission('organizations.delete')) { ?>
     <button type="button" class="btn danger mt-20" id="delete-organization" onclick="$('#delete-organization-confirm').toggle();$(this).toggle();">
         <i class="ph ph-trash"></i>
-        <?= lang('Delete organization', 'Organisation löschen') ?>
+        <?= lang('organizations.delete_organization') ?>
     </button>
 
     <div class="mt-20 alert danger" style="display: none;" id="delete-organization-confirm">
         <form action="<?= ROOTPATH ?>/crud/organizations/delete/<?= $str_id ?>" method="post">
             <h4 class="title">
-                <?= lang('Delete organization', 'Organisation löschen') ?>
+                <?= lang('organizations.delete_organization') ?>
             </h4>
             <p>
-                <?= lang('Are you sure you want to delete this organization?', 'Sind Sie sicher, dass Sie diese Organisation löschen möchten?') ?>
+                <?= lang('organizations.are_you_sure_you_want_to_delete_this_organization') ?>
             </p>
             <button type="submit" class="btn danger">
                 <?= lang('action.delete') ?>

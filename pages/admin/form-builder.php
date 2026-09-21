@@ -157,7 +157,7 @@ $tagLabels = [
     }
 
     .row.row-eq-spacing.droparea::after {
-        content: "<?= lang('Select fields on the left and place them here.', 'Felder links auswählen und hier platzieren.') ?>";
+        content: "<?= lang('admin.select_fields_on_the_left_and_place_them_here') ?>";
         position: absolute;
         bottom: 10px;
         left: 50%;
@@ -375,25 +375,25 @@ $tagLabels = [
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('Field properties', 'Feldeigenschaften') ?>
+                <?= lang('admin.field_properties') ?>
             </h2>
 
             <!-- required: cannot be saved without a value -->
             <!-- recommended: influences the quality score of the entry -->
             <p>
-                <?= lang('<b>Required fields</b> must be filled in by the user, otherwise the form cannot be saved.', '<b>Pflichtfelder</b> müssen vom Nutzer ausgefüllt werden, ansonsten kann das Formular nicht gespeichert werden. ') ?>
+                <?= lang('admin.required_fields_must_be_filled_in_by_the_user_otherwise_the_form_cannot_be') ?>
             </p>
 
             <p>
-                <?= lang('<b>Recommended fields</b> are highlighted, but not mandatory. They will in the future influence the quality score of the entry.', '<b>Empfohlene Felder</b> werden hervorgehoben, sind aber nicht verpflichtend. Sie werden in Zukunft den Qualitätsscore der Einträge beeinflussen.') ?>
+                <?= lang('admin.recommended_fields_are_highlighted_but_not_mandatory_they_will_in_the_futur') ?>
             </p>
 
             <div class="alert signal my-20">
-                <?=lang('Recommended fields have currently no impact, but are here in preparation for a future release.', 'Empfohlene Felder haben aktuell noch keine Auswirkung, sind aber hier in Vorbereitung auf eine zukünftige Version.')?>
+                <?=lang('admin.recommended_fields_have_currently_no_impact_but_are_here_in_preparation_for')?>
             </div>
 
             <p>
-                <?= lang('Please be aware that the Portfolio setting only affects the visibility in the "fields" section (Metadata table in Portfolio). Fields that are for example part of the citation or general information like authors and affiliations will still be shown in Portfolio.', 'Bitte beachte, dass die Portfolio-Einstellung nur die Sichtbarkeit in der Metadaten-Tabelle in Portfolio beeinflusst. Felder, die z.B. Teil der Zitation sind oder allgemeine Informationen wie Autor:innen und Affiliationen, werden weiterhin im Portfolio angezeigt.') ?>
+                <?= lang('admin.please_be_aware_that_the_portfolio_setting_only_affects_the_visibility_in_t') ?>
             </p>
 
             <div class="text-right mt-20">
@@ -410,7 +410,7 @@ $tagLabels = [
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('Form preview', 'Vorschau des Formulars') ?>: <?= lang($type['name'] ?? $type['id'], $type['name_de'] ?? null) ?>
+                <?= lang('admin.form_preview') ?>: <?= lang($type['name'] ?? $type['id'], $type['name_de'] ?? null) ?>
             </h2>
             <div id="data-modules" class="row row-eq-spacing">
             </div>
@@ -429,18 +429,18 @@ $tagLabels = [
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('Load form', 'Formular laden') ?>
+                <?= lang('admin.load_form') ?>
             </h2>
 
             <p class="text-muted">
-                <?= lang('Select a form to load its fields into the builder.', 'Wähle ein Formular, um dessen Felder in den Builder zu laden.') ?>
+                <?= lang('admin.select_a_form_to_load_its_fields_into_the_builder') ?>
             </p>
 
             <form action="#" method="GET">
                 <div class="form-group">
-                    <label for="load-form-select"><?= lang('Select form', 'Formular auswählen') ?></label>
+                    <label for="load-form-select"><?= lang('admin.select_form') ?></label>
                     <select id="load-form-select" class="form-control" name="copy" required>
-                        <option value="" disabled selected><?= lang('Select a form', 'Ein Formular auswählen') ?></option>
+                        <option value="" disabled selected><?= lang('admin.select_a_form') ?></option>
                         <?php foreach ($osiris->adminTypes->find() as $at): ?>
                             <option value="<?= $at['id'] ?>"><?= lang($at['name'], $at['name_de'] ?? null) ?></option>
                         <?php endforeach; ?>
@@ -449,12 +449,12 @@ $tagLabels = [
 
                 <p class="text-signal">
                     <i class="ph ph-info"></i>
-                    <?= lang('This will load the select form into the builder, however, as long as you do not save your form will not be overwritten.', 'Dies lädt das ausgewählte Formular in den Builder, aber solange du nicht speicherst, wird dein Formular nicht überschrieben.') ?>
+                    <?= lang('admin.this_will_load_the_select_form_into_the_builder_however_as_long_as_you_do_n') ?>
                 </p>
 
                 <button class="btn signal">
                     <i class="ph ph-download-simple"></i>
-                    <?= lang('Load form', 'Formular laden') ?>
+                    <?= lang('admin.load_form') ?>
                 </button>
             </form>
             <div class="text-right mt-20">
@@ -468,7 +468,7 @@ $tagLabels = [
 <div class="btn-toolbar float-right">
     <a class="btn" href="#load-form">
         <i class="ph ph-download-simple"></i>
-        <?= lang('Load form', 'Formular laden') ?>
+        <?= lang('admin.load_form') ?>
     </a>
     <a class="btn" href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
         <i class="ph ph-x"></i>
@@ -478,11 +478,11 @@ $tagLabels = [
 
 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
     <i class="ph ph-arrow-left"></i>
-    <?= lang('Back to activity type', 'Zurück zum Aktivitätstyp') ?>
+    <?= lang('admin.back_to_activity_type') ?>
 </a>
 
 <h1 class="m-0">
-    <?= lang('Form Builder', 'Formular-Builder') ?>
+    <?= lang('admin.form_builder') ?>
 </h1>
 
 <ul class="breadcrumb category" style="--highlight-color:<?= $parent['color'] ?? '' ?>">
@@ -500,9 +500,9 @@ $tagLabels = [
 
 <?php if ($copy) { ?>
     <div class="alert info">
-        <?= lang('You have loaded the fields from the following activity into your working space', 'Du hast die Felder von folgender Aktivität in den Arbeitsbereich geladen') ?>: <strong><?= lang($copy['name'], $copy['name_de'] ?? null) ?></strong>.
+        <?= lang('admin.you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp') ?>: <strong><?= lang($copy['name'], $copy['name_de'] ?? null) ?></strong>.
         <br>
-        <?= lang('Once you save the form, it will overwrite the fields of this activity.', 'Sobald du das Formular speicherst, werden die Felder dieser Aktivität überschrieben.') ?>
+        <?= lang('admin.once_you_save_the_form_it_will_overwrite_the_fields_of_this_activity') ?>
     </div>
 <?php } ?>
 
@@ -516,11 +516,11 @@ $tagLabels = [
         <div class="col-4" id="catalog-panel">
             <div class="panel card catalog sticky-panel pt-0">
                 <div class="card-header" id="catalog-search-header">
-                    <input id="catalog-search" type="search" class="form-control" placeholder="<?= lang('Search in fields …', 'Felder durchsuchen …') ?>">
+                    <input id="catalog-search" type="search" class="form-control" placeholder="<?= lang('admin.search_in_fields') ?>">
 
                     <!-- Layout-Sektion -->
                     <div class="pillbar">
-                        <a class="badge tag" data-tag="all"><?= lang('All', 'Alle') ?></a>
+                        <a class="badge tag" data-tag="all"><?= lang('common.all') ?></a>
                         <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
                         <?php foreach ($tags as $tag): ?>
                             <a class="badge tag" data-tag="<?= $tag ?>"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
@@ -535,18 +535,18 @@ $tagLabels = [
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-heading" data-label="Überschrift">
-                            <span><?= lang('Heading', 'Überschrift') ?></span>
+                            <span><?= lang('common.heading') ?></span>
                             <!-- <span class="badge bg-light ">H2–H4</span> -->
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-hr" data-label="Trennlinie">
-                            <span><?= lang('Horizontal line', 'Trennlinie') ?></span>
+                            <span><?= lang('admin.horizontal_line') ?></span>
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-paragraph" data-label="Absatz">
-                            <span><?= lang('Paragraph', 'Absatz') ?></span>
+                            <span><?= lang('common.paragraph') ?></span>
                         </li>
                     </ul>
 
@@ -605,20 +605,20 @@ $tagLabels = [
                 <button type="button" class="close" role="button" aria-label="Close" id="close-properties-btn">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <!-- <b><?= lang('Properties of', 'Eigenschaften von') ?></b><br> -->
+                <!-- <b><?= lang('admin.properties_of') ?></b><br> -->
                 <div class="title text-monospace" id="prop-id">
                 </div>
                 <div class="card-body">
 
                     <div class="action mb-20">
                         <button class="btn small danger" type="button" id="deleteSelection">
-                            <i class="ph ph-trash"></i> <?= lang('Delete element', 'Element löschen') ?>
+                            <i class="ph ph-trash"></i> <?= lang('admin.delete_element') ?>
                         </button>
                     </div>
 
                     <div id="props-field" style="display:none;">
                         <b>
-                            <?= lang('Overwrite the default label', 'Feldbezeichnung überschreiben') ?>
+                            <?= lang('admin.overwrite_the_default_label') ?>
                         </b>
                         <div class="form-group">
                             <div class="input-group">
@@ -637,34 +637,34 @@ $tagLabels = [
 
                         <div class="form-group">
                             <b>
-                                <?= lang('Field properties', 'Feldeigenschaften') ?>
+                                <?= lang('admin.field_properties') ?>
                                 <a href="#field-props-modal">
                                     <i class="ph ph-info"></i> 
                                 </a>
                             </b>
                             <div class="custom-checkbox radio mt-10">
                                 <input type="checkbox" id="prop-required" value="">
-                                <label for="prop-required"><?= lang('Required Field', 'Pflichtfeld') ?></label>
+                                <label for="prop-required"><?= lang('admin.required_field') ?></label>
                             </div>
 
                             <div class="custom-checkbox radio mt-10">
                                 <input type="checkbox" id="prop-recommended" value="">
-                                <label for="prop-recommended"><?= lang('Recommended Field', 'Empfohlenes Feld') ?></label>
+                                <label for="prop-recommended"><?= lang('admin.recommended_field') ?></label>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="custom-switch">
                                 <input type="checkbox" id="prop-portfolio" value="">
-                                <label for="prop-portfolio"><?= lang('Deliver in portfolio', 'Im Portfolio ausliefern') ?></label>
+                                <label for="prop-portfolio"><?= lang('admin.deliver_in_portfolio') ?></label>
                             </div>
                         </div>
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <label class="font-weight-bold d-block mb-0"><?= lang('admin.visible_for') ?></label>
                             <select id="prop-roles" class="form-control">
-                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <option value="" selected><?= lang('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -677,7 +677,7 @@ $tagLabels = [
 
 
                         <b>
-                            <?= lang('Help text', 'Hilfetext') ?>
+                            <?= lang('admin.help_text') ?>
                         </b>
                         <div class="form-group">
                             <div class="input-group">
@@ -695,10 +695,10 @@ $tagLabels = [
                         </div>
 
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0"><?= lang('Width', 'Breite') ?></label>
+                            <label class="font-weight-bold d-block mb-0"><?= lang('admin.width') ?></label>
                             <select class="form-control w-auto d-inline" id="prop-width">
                                 <option value="" selected>Default</option>
-                                <option value="12"><?= lang('Full width', 'Vollbreite') ?></option>
+                                <option value="12"><?= lang('admin.full_width') ?></option>
                                 <option value="9">3/4</option>
                                 <option value="8">2/3</option>
                                 <option value="6">1/2</option>
@@ -730,9 +730,9 @@ $tagLabels = [
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0" for="prop-heading-roles"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <label class="font-weight-bold d-block mb-0" for="prop-heading-roles"><?= lang('admin.visible_for') ?></label>
                             <select id="prop-heading-roles" class="form-control">
-                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <option value="" selected><?= lang('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -754,9 +754,9 @@ $tagLabels = [
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0" for="prop-paragraph-roles"><?= lang('Visible for', 'Sichtbar für') ?></label>
+                            <label class="font-weight-bold d-block mb-0" for="prop-paragraph-roles"><?= lang('admin.visible_for') ?></label>
                             <select id="prop-paragraph-roles" class="form-control">
-                                <option value="" selected><?= lang('All roles', 'Alle Rollen') ?></option>
+                                <option value="" selected><?= lang('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -777,7 +777,7 @@ $tagLabels = [
         <div class="col-8">
             <div class="panel card">
                 <div class="card-header d-flex align-items-center">
-                    <div class="title"><?= lang('This form', 'Dieses Formular') ?></div>
+                    <div class="title"><?= lang('admin.this_form') ?></div>
                     <div class="ml-auto">
                         <span class="badge" id="field-count">Felder: 0</span>
                     </div>
@@ -845,7 +845,7 @@ $tagLabels = [
                                             <i class="ph ph-text-h"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('Header', 'Überschrift') ?></div>
+                                            <div class="title"><?= lang('admin.header_form_builder') ?></div>
                                             <div class="subtitle">
                                                 <?= (e($it['props']['text'] ?? 'Platzhaltertext')) ?>
                                                 <?php if (!empty($it['props']['roles'])): ?>
@@ -862,7 +862,7 @@ $tagLabels = [
                                             <i class="ph ph-paragraph"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('Paragraph', 'Absatz') ?></div>
+                                            <div class="title"><?= lang('common.paragraph') ?></div>
                                             <div class="subtitle">
                                                 <?= e(($it['props']['text'] ?? 'Placeholder')) ?>
                                                 <?php if (!empty($it['props']['roles'])): ?>
@@ -878,7 +878,7 @@ $tagLabels = [
                                             <i class="ph ph-minus"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('Horizontal Line', 'Trennlinie') ?></div>
+                                            <div class="title"><?= lang('admin.horizontal_line_form_builder') ?></div>
                                         </div>
                                     </li>
                                 <?php endif; ?>
@@ -1318,7 +1318,7 @@ $tagLabels = [
             console.log(schema);
             // check if schema is empty
             if (schema.items.length === 0) {
-                toastError(lang('The form does not contain any fields. Please add at least one field.', 'Das Formular enthält keine Felder. Bitte füge mindestens ein Feld hinzu.'));
+                toastError(<?= json_encode(lang('admin.the_form_does_not_contain_any_fields_please_add_at_least_one_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                 return;
             }
 
@@ -1327,7 +1327,7 @@ $tagLabels = [
             ids = ids.filter(id => id); // remove empty IDs
             var duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
             if (duplicates.length > 0) {
-                toastError(lang('The form contains duplicate IDs:', 'Das Formular enthält doppelte IDs: ') + duplicates.join(', '));
+                toastError(<?= json_encode(lang('admin.the_form_contains_duplicate_ids'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + duplicates.join(', '));
                 return;
             }
 
@@ -1335,7 +1335,7 @@ $tagLabels = [
             let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
-                toastError(lang('The form must contain at least one person field.', 'Das Formular muss mindestens ein Personen-Feld enthalten.'));
+                toastError(<?= json_encode(lang('admin.the_form_must_contain_at_least_one_person_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                 // filter by authors tag
                 $('.pillbar .tag').removeClass('active');
                 searchByTag('authors');
@@ -1484,7 +1484,7 @@ $tagLabels = [
 
         function updateFieldCount() {
             var count = $('#canvas-list .canvas-item').length;
-            $('#field-count').text(lang('Fields: ', 'Felder: ') + count);
+            $('#field-count').text(<?= json_encode(lang('admin.fields_form_builder'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + count);
         }
 
         // init count (falls serverseitig Items vorhanden)
@@ -1493,6 +1493,6 @@ $tagLabels = [
 
     $('#properties-panel').on('click', '.disabled', function(e) {
         e.preventDefault();
-        toastError(lang('This option is not available for this field.', 'Diese Option ist für dieses Feld nicht verfügbar.'));
+        toastError(<?= json_encode(lang('admin.this_option_is_not_available_for_this_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
     });
 </script>

@@ -29,7 +29,7 @@ $type = $_GET['type'] ?? 'publication';
 </style>
 <h1>
     <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-    <?= lang('Activity network', 'Aktivitäten-Netzwerk') ?>
+    <?= lang('common.activity_network') ?>
 </h1>
 <div class="row">
     <div class="col-md-3">
@@ -48,16 +48,16 @@ $type = $_GET['type'] ?? 'publication';
         <form action="#" method="get" class="box padded" id="form-units" <?= $entity == 'units' ? '' : 'style="display:none;"' ?>>
             <input type="hidden" name="entity" value="units">
             <div class="form-group">
-                <label for="level"><?= lang('Organizational level', 'Organisationsebene') ?></label>
+                <label for="level"><?= lang('search.organizational_level') ?></label>
                 <select id="level" name="level" class="form-control">
-                    <option value="1" <?= ($level == 1) ? 'selected' : '' ?>><?= lang('Level 1', 'Ebene 1') ?></option>
-                    <option value="2" <?= ($level == 2) ? 'selected' : '' ?>><?= lang('Level 2', 'Ebene 2') ?></option>
+                    <option value="1" <?= ($level == 1) ? 'selected' : '' ?>><?= lang('search.level_1') ?></option>
+                    <option value="2" <?= ($level == 2) ? 'selected' : '' ?>><?= lang('search.level_2') ?></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="type"><?= lang('Activity type', 'Aktivitätstyp') ?></label>
+                <label for="type"><?= lang('search.activity_type') ?></label>
                 <select id="type" name="type" class="form-control">
-                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('All activity types', 'Alle Aktivitätstypen') ?></option>
+                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('search.all_activity_types') ?></option>
                     <?php
                     foreach ($Categories->categories as $key) { ?>
                         <option value="<?= $key['id'] ?>" <?= ($type == $key['id']) ? 'selected' : '' ?>><?= lang($key['name'], $key['name_de'] ?? null) ?></option>
@@ -66,7 +66,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <div class="form-group">
-                <label for="year"><?= lang('Starting year', 'Startjahr') ?></label>
+                <label for="year"><?= lang('search.starting_year') ?></label>
                 <select id="year" name="year" class="form-control">
                     <?php
                     $currentYear = (int)date('Y');
@@ -85,9 +85,9 @@ $type = $_GET['type'] ?? 'publication';
         <form action="#" method="get" id="form-topics" class="box padded" <?= $entity == 'topics' ? '' : 'style="display:none;"' ?>>
             <input type="hidden" name="entity" value="topics">
             <div class="form-group">
-                <label for="type"><?= lang('Activity type', 'Aktivitätstyp') ?></label>
+                <label for="type"><?= lang('search.activity_type') ?></label>
                 <select id="type" name="type" class="form-control">
-                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('All activity types', 'Alle Aktivitätstypen') ?></option>
+                    <option value="all" <?= ($type == 'all') ? 'selected' : '' ?>><?= lang('search.all_activity_types') ?></option>
                     <?php
                     foreach ($Categories->categories as $key) { ?>
                         <option value="<?= $key['id'] ?>" <?= ($type == $key['id']) ? 'selected' : '' ?>><?= lang($key['name'], $key['name_de'] ?? null) ?></option>
@@ -96,7 +96,7 @@ $type = $_GET['type'] ?? 'publication';
                 </select>
             </div>
             <div class="form-group">
-                <label for="year"><?= lang('Starting year', 'Startjahr') ?></label>
+                <label for="year"><?= lang('search.starting_year') ?></label>
                 <select id="year" name="year" class="form-control">
                     <?php
                     $currentYear = (int)date('Y');
@@ -153,7 +153,7 @@ $type = $_GET['type'] ?? 'publication';
             var data = response.data.labels;
 
             if (matrix.length == 0) {
-                $('#chart').html('<div class="alert signal"><?= lang('No data available for the selected parameters.', 'Keine Daten für die ausgewählten Parameter vorhanden.') ?></div>');
+                $('#chart').html('<div class="alert signal"><?= lang('search.no_data_available_for_the_selected_parameters') ?></div>');
                 return;
             }
 

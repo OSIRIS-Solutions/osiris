@@ -10,24 +10,24 @@ if ($action === 'view') {
 
     <h1>
         <i class="ph ph-users"></i>
-        <?= lang('User Management', 'Nutzerverwaltung') ?>
+        <?= lang('people.user_management') ?>
     </h1>
 
-    <?= lang('Please find general settings on user data fields and LDAP attribute synchronization in the', 'Allgemeine Einstellungen zu Nutzerfeldern und LDAP-Attribut-Synchronisation findest du in den') ?> <a href="<?= ROOTPATH ?>/admin/persons"><?= lang('Person Settings', 'Nutzereinstellungen') ?></a>.
+    <?= lang('people.please_find_general_settings_on_user_data_fields_and_ldap_attribute_synchro') ?> <a href="<?= ROOTPATH ?>/admin/persons"><?= lang('people.person_settings') ?></a>.
 
     <div class="box">
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-arrows-clockwise"></i>
-                <?= lang('Synchronize users', 'Nutzer:innen synchronisieren') ?>
+                <?= lang('admin.synchronize_users') ?>
             </h2>
             <p>
-                <?= lang('Here you can synchronize your users with your LDAP directory. You can choose to add new users, reactivate inactive users, or inactivate users that are no longer present in the LDAP directory.', 'Hier kannst du deine Nutzer:innen mit deinem LDAP-Verzeichnis synchronisieren. Du kannst wählen, ob du neue Nutzer:innen hinzufügen, inaktive Nutzer:innen reaktivieren oder Nutzer:innen, die nicht mehr im LDAP-Verzeichnis vorhanden sind, inaktivieren möchtest.') ?>
+                <?= lang('people.here_you_can_synchronize_your_users_with_your_ldap_directory_you_can_choose') ?>
             </p>
 
             <a href="?action=synchronize" class="btn primary">
                 <i class="ph ph-arrows-clockwise"></i>
-                <?= lang('Start synchronization', 'Synchronisierung starten') ?>
+                <?= lang('people.start_synchronization') ?>
             </a>
         </div>
     </div>
@@ -36,20 +36,20 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-list text-secondary"></i>
-                <?= lang('Attribute synchronization', 'Attribut-Synchronisation') ?>
+                <?= lang('admin.attribute_synchronization') ?>
             </h2>
             <p>
-                <?= lang('You can synchronize user attributes from your LDAP directory to OSIRIS. This includes fields like email, telephone, and department.', 'Du kannst Nutzerattribute aus deinem LDAP-Verzeichnis mit OSIRIS synchronisieren. Dazu gehören Felder wie E-Mail, Telefon und Abteilung.') ?>
+                <?= lang('people.you_can_synchronize_user_attributes_from_your_ldap_directory_to_osiris_this') ?>
             </p>
             <!-- <a href="<?= ROOTPATH ?>/admin/persons#section-auth" class="btn primary">
                 <i class="ph ph-user-list"></i>
-                <?= lang('Attribute preview', 'Vorschau der Attribute') ?>
+                <?= lang('people.attribute_preview') ?>
             </a> -->
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post">
                 <input type="hidden" name="preview" value="1">
                 <button type="submit" class="btn primary">
                     <i class="ph ph-user-list"></i>
-                    <?= lang('Attribute preview', 'Vorschau der Attribute') ?>
+                    <?= lang('people.attribute_preview') ?>
                 </button>
             </form>
         </div>
@@ -59,14 +59,14 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-plus text-secondary"></i>
-                <?= lang('Guest accounts', 'Gast-Accounts') ?>
+                <?= lang('people.guest_accounts') ?>
             </h2>
             <p>
-                <?= lang('You can add a guest account that allows temporary access to OSIRIS for users who are not in your LDAP directory.', 'Du kannst einen Gast-Account hinzufügen, der temporären Zugang zu OSIRIS für Nutzer:innen ermöglicht, die nicht in deinem LDAP-Verzeichnis sind.') ?>
+                <?= lang('people.you_can_add_a_guest_account_that_allows_temporary_access_to_osiris_for_user') ?>
             </p>
             <a href="<?= ROOTPATH ?>/admin/guest-account" class="btn primary">
                 <i class="ph ph-user-plus"></i>
-                <?= lang('Manage guest accounts', 'Gast-Accounts verwalten') ?>
+                <?= lang('common.manage_guest_accounts') ?>
             </a>
         </div>
     </div>
@@ -74,7 +74,7 @@ if ($action === 'view') {
 <?php
 } elseif ($action === 'synchronize') {
 
-    echo "<h1><i class='ph-duotone ph-arrows-clockwise'></i>" . lang('Synchronize users', 'Synchronisiere Nutzer:innen') . "</h1>";
+    echo "<h1><i class='ph-duotone ph-arrows-clockwise'></i>" . lang('common.synchronize_users') . "</h1>";
 
     // get all users from LDAP
     $blacklist = [];
@@ -114,7 +114,7 @@ if ($action === 'view') {
     }
 
     if (empty($users)) {
-        echo "<p>" . lang('No users found', 'Keine Nutzer:innen gefunden') . "</p>";
+        echo "<p>" . lang('people.no_users_found') . "</p>";
         return;
     }
 
@@ -190,7 +190,7 @@ if ($action === 'view') {
 
 
         <?php if (!empty($inactiveGuests) || !empty($activeGuests)) { ?>
-            <h2><?= lang('Guest accounts', 'Gast-Accounts') ?></h2>
+            <h2><?= lang('people.guest_accounts') ?></h2>
 
             <?php
             // inactive guest accounts
@@ -198,7 +198,7 @@ if ($action === 'view') {
             ?>
                 <!-- list of inactive guest accounts -->
                 <p>
-                    <?= lang('The following guest accounts are <b>inactive</b> (valid until date in the past) and will be treated like regular inactive users during synchronization.', 'Die folgenden Gast-Accounts sind <b>inaktiv</b> (Gültig-bis-Datum in der Vergangenheit) und werden bei der Synchronisation wie reguläre inaktive Nutzer behandelt.') ?>
+                    <?= lang('people.the_following_guest_accounts_are_inactive_valid_until_date_in_the_past_and') ?>
                 </p>
                 <ul>
                     <?php
@@ -215,7 +215,7 @@ if ($action === 'view') {
             ?>
                 <!-- list of active guest accounts -->
                 <p>
-                    <?= lang('The following guest accounts are <b>active</b> and will be ignored during synchronization.', 'Die folgenden Gast-Accounts sind <b>aktiv</b> und werden bei der Synchronisation ignoriert.') ?>
+                    <?= lang('people.the_following_guest_accounts_are_active_and_will_be_ignored_during_synchron') ?>
                 </p>
                 <ul>
                     <?php
@@ -236,7 +236,7 @@ if ($action === 'view') {
         if (!empty($actions['inactivate'])) {
             // interface to inactivate users
         ?>
-            <h2><?= lang('Inactivated users', 'Inaktivierte Nutzer') ?></h2>
+            <h2><?= lang('people.inactivated_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $inactivate = $actions['inactivate'];
@@ -254,7 +254,7 @@ if ($action === 'view') {
         if (!empty($actions['reactivate'])) {
             // interface to reactivate users
         ?>
-            <h2><?= lang('Reactivated users', ' Reaktivierte Nutzer') ?></h2>
+            <h2><?= lang('people.reactivated_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $reactivate = $actions['reactivate'];
@@ -274,7 +274,7 @@ if ($action === 'view') {
         if (!empty($actions['add'])) {
             // interface to add users
         ?>
-            <h2><?= lang('New users', 'Neue Nutzer:innen') ?></h2>
+            <h2><?= lang('people.new_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $add = $actions['add'];
@@ -286,7 +286,7 @@ if ($action === 'view') {
                     <label for="add-<?= $u ?>"><?= $n . ' (' . $u . ')' ?></label>
                     <!-- add option for blacklist -->
                     <input type="checkbox" name="blacklist[]" id="blacklist-<?= $u ?>" value="<?= $u ?>" onclick="$('#add-<?= $u ?>').attr('checked', !$('#add-<?= $u ?>').attr('checked'))">
-                    <label for="blacklist-<?= $u ?>"><?= lang('Blacklist', 'Blacklist') ?></label>
+                    <label for="blacklist-<?= $u ?>"><?= lang('people.blacklist') ?></label>
                 </div>
             <?php } ?>
         <?php
@@ -296,13 +296,13 @@ if ($action === 'view') {
         // unchanged users (as collapsed list)
         if (!empty($actions['unchanged'])) {
         ?>
-            <h2><?= lang('Unchanged users', 'Unveränderte Nutzer') ?></h2>
+            <h2><?= lang('people.unchanged_users') ?></h2>
             <p>
-                <?= lang('The following users are unchanged and will not be affected by the synchronization.', 'Die folgenden Nutzer:innen sind unverändert und werden von der Synchronisation nicht betroffen sein.') ?>
+                <?= lang('people.the_following_users_are_unchanged_and_will_not_be_affected_by_the_synchroni') ?>
             </p>
             <details class="collapse-panel mb-20">
                 <summary class="collapse-header">
-                    <?= lang('Click here to view unchanged users', 'Unveränderte Nutzer anzeigen') ?>
+                    <?= lang('people.click_here_to_view_unchanged_users') ?>
                 </summary>
                 <div class="collapse-content">
                     <ul>
@@ -320,7 +320,7 @@ if ($action === 'view') {
         ?>
             <details class="collapse-panel">
                 <summary class="collapse-header">
-                    <?= lang('Blacklisted users', 'Nutzer auf der Blacklist') ?>
+                    <?= lang('people.blacklisted_users') ?>
                 </summary>
                 <div class="collapse-content">
                     <ul>
@@ -332,7 +332,7 @@ if ($action === 'view') {
             </details>
         <?php } ?>
 
-        <button type="submit" class="btn secondary"><?= lang('Synchronize', 'Synchronisieren') ?></button>
+        <button type="submit" class="btn secondary"><?= lang('people.synchronize') ?></button>
     </form>
 <?php
 }

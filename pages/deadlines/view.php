@@ -4,11 +4,11 @@ $in_past = !$today && strtotime($deadline['date']) < time();
 
 $days = false;
 if ($today) {
-    $days = lang('today', 'heute');
+    $days = lang('common.today');
 } elseif (!$in_past) {
     $days = ceil((strtotime($deadline['date']) - time()) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('today', 'heute') : 'in ' . $days . ' ' . lang('days', 'Tagen');
+    $days = $days == 0 ? lang('common.today') : 'in ' . $days . ' ' . lang('common.days_view');
 }
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
@@ -21,7 +21,7 @@ $Vocabulary = new Vocabulary();
     <?php if ($deadline['created_by'] == $_SESSION['username'] || $Settings->hasPermission('deadlines.edit')) { ?>
         <a href="<?= ROOTPATH ?>/deadlines/edit/<?= $deadline['_id'] ?>" class="btn text-primary">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit deadline', 'Deadline bearbeiten') ?>
+            <?= lang('deadlines.edit_deadline') ?>
         </a>
     <?php } ?>
 
@@ -32,8 +32,8 @@ $Vocabulary = new Vocabulary();
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <form action="<?= ROOTPATH ?>/crud/deadlines/delete/<?= $deadline['_id'] ?>" method="post" class="content">
-                    <?= lang('Do you want to delete this deadline?', 'Möchten Sie diese Deadline löschen?') ?>
-                    <?= lang('Please note: this cannot be undone.', 'Achtung: dies kann nicht rückgängig gemacht werden.') ?>
+                    <?= lang('deadlines.do_you_want_to_delete_this_deadline') ?>
+                    <?= lang('common.please_note_this_cannot_be_undone') ?>
                     <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
                 </form>
             </div>
@@ -64,7 +64,7 @@ $Vocabulary = new Vocabulary();
                     <?php if (!$in_past) { ?>
                         <b class="badge danger ml-10"><?= $days ?></b>
                     <?php } else { ?>
-                        <b class="badge muted ml-10"> <?= lang('already over', 'bereits vorbei') ?></b>
+                        <b class="badge muted ml-10"> <?= lang('deadlines.already_over') ?></b>
                     <?php } ?>
 
                 </td>
@@ -89,7 +89,7 @@ $Vocabulary = new Vocabulary();
                     <td>
                         <a class="btn small" href="<?= ROOTPATH ?>/deadline/ics/<?= $deadline['_id'] ?>">
                             <i class="ph ph-calendar-plus"></i>
-                            <?= lang('Add to calendar', 'Zum Kalender hinzufügen') ?>
+                            <?= lang('common.add_to_calendar') ?>
                         </a>
                     </td>
                 </tr>

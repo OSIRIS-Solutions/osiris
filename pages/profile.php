@@ -170,26 +170,26 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('Change profile picture', 'Profilbild ändern') ?>
+                    <?= lang('people.change_profile_picture') ?>
                 </h2>
 
                 <form action="<?= ROOTPATH ?>/crud/users/profile-picture/<?= $user ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
                         <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                        <label for="profile-input"><?= lang('Upload new profile image', 'Lade ein neues Profilbild hoch') ?></label>
+                        <label for="profile-input"><?= lang('people.upload_new_profile_image') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
                     <p>
-                        <?= lang('Please note that your profile picture will be visible to all users of OSIRIS.', 'Bitte beachte, dass dein Profilbild für alle OSIRIS-Personen sichtbar sein wird.') ?>
+                        <?= lang('people.please_note_that_your_profile_picture_will_be_visible_to_all_users_of_osiri') ?>
                     </p>
                     <script>
                         var uploadField = document.getElementById("profile-input");
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(lang("File is too large! Max. 2MB is supported!", "Die Datei ist zu groß! Max. 2MB werden unterstützt."));
+                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
@@ -206,7 +206,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <input type="hidden" name="delete" value="true">
                         <button class="btn danger">
                             <i class="ph ph-trash"></i>
-                            <?= lang('Delete current picture', 'Aktuelles Bild löschen') ?>
+                            <?= lang('common.delete_current_picture') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -232,7 +232,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <h5 class="subtitle">
             <?= lang($scientist['position'] ?? '', $scientist['position_de'] ?? null) ?>
             <?php if ($scientist['hide'] ?? false) { ?>
-                <small class="badge danger" data-toggle="tooltip" data-title="<?= lang('This person does not wish to be found in Portfolio', 'Diese Person möchte nicht in OSIRIS Portfolio gefunden werden.') ?>">
+                <small class="badge danger" data-toggle="tooltip" data-title="<?= lang('people.this_person_does_not_wish_to_be_found_in_portfolio') ?>">
                     <i class="ph ph-globe-x m-0"></i>
                 </small>
             <?php } ?>
@@ -240,10 +240,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
         <?php if (!($scientist['is_active'] ?? true)) { ?>
             <span class="text-danger badge">
-                <?= lang('Former Employee', 'Ehemalige Beschäftigte') ?>
+                <?= lang('people.former_employee') ?>
                 <?php if (isset($scientist['inactivated'])) { ?>
                     <small>
-                        <?= lang('since', 'seit') ?>
+                        <?= lang('people.since') ?>
                         <?= date('d.m.Y', strtotime($scientist['inactivated'])) ?>
                     </small>
                 <?php } ?>
@@ -258,14 +258,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             $guestState = $osiris->guests->findOne(['username' => $user]);
             if (!empty($guestState)) { ?>
                 <span class="badge">
-                    <?= lang('Guest:', 'Gast:') ?>
+                    <?= lang('people.guest') ?>
                     <?= fromToDate($guestState['start'], $guestState['end'] ?? null) ?>
                 </span>
             <?php }
         }
         if ($scientist['is_guest'] ?? false) { ?>
             <span class="badge signal">
-                <?= lang('Guest Account', 'Gast-Account') ?>
+                <?= lang('people.guest_account') ?>
             </span>
         <?php }
         ?>
@@ -279,7 +279,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <div id="units">
         <h5 class="mt-0">
-            <?= lang('Organisational Unit(s)', 'Organisationseinheit(en)') ?>
+            <?= lang('people.organisational_unit_s') ?>
 
             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                 <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" class="font-size-14 ml-5">
@@ -308,7 +308,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                         <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                     </a>
                                     <?php if ($head) { ?>
-                                        <span data-toggle="tooltip" data-title="<?= lang('The person is leading this unit.', 'Die Person leitet diese Einheit.') ?>">
+                                        <span data-toggle="tooltip" data-title="<?= lang('people.the_person_is_leading_this_unit') ?>">
                                             <i class="ph ph-crown-simple text-signal"></i>
                                         </span>
                                     <?php } ?>
@@ -325,7 +325,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 } else { ?>
                     <tr>
                         <td>
-                            <?= lang('No organisational unit selected', 'Keine Organisationseinheit ausgewählt') ?>
+                            <?= lang('people.no_organisational_unit_selected') ?>
                         </td>
                     </tr>
                 <?php }
@@ -368,10 +368,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <!-- print message to change password -->
         <div class="alert danger mt-10">
             <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>#section-account'>
-                <?= lang(
-                    "You have not yet set a password. Please change your password now.",
-                    "Du hast noch kein Passwort gesetzt. Bitte ändere jetzt dein Passwort."
-                ) ?>
+                <?= lang('people.you_have_not_yet_set_a_password_please_change_your_password_now') ?>
             </a>
         </div>
     <?php  } ?>
@@ -383,16 +380,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <b>
-                        <?= lang("You can now approve the past quarter", "Du kannst jetzt das vergangene Quartal freigeben") ?>
+                        <?= lang('common.you_can_now_approve_the_past_quarter') ?>
                     </b>
                     <p class="text-muted my-5 font-size-12">
-                        <?= lang(
-                            'To complete the quarterly review, please confirm that all activities from the previous quarter have been entered and are up to date.',
-                            'Für den Quartalsabschluss brauchen wir seine Bestätigung, dass alle Aktivitäten aus dem vergangenen Quartal erfasst und aktuell sind.'
-                        ) ?>
+                        <?= lang('common.to_complete_the_quarterly_review_please_confirm_that_all_activities_from_th') ?>
                     </p>
                     <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
-                        <?= lang('Review & Approve', 'Überprüfen & Freigeben') ?>
+                        <?= lang('common.review_approve') ?>
                     </a>
                 </div>
 
@@ -404,10 +398,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('My activities', 'Meine Aktivitäten ') ?>">
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('common.my_activities') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
             </a>
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('My Year', 'Mein Jahr') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.my_year') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
             </a>
 
@@ -419,20 +413,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
         <div class="btn-group btn-group-lg">
             <?php if ($show_achievements) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('My Achievements', 'Meine Errungenschaften') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('people.my_achievements') ?>">
                     <i class="ph-duotone ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('people.edit_user_profile') ?>">
                 <i class="ph-duotone ph-note-pencil ph-fw"></i>
-                <!-- <?= lang('Edit user profile', 'Bearbeite Profil') ?> -->
+                <!-- <?= lang('people.edit_user_profile') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('Claim activities', 'Aktivitäten beanspruchen') ?>">
+            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('common.claim_activities') ?>">
                 <i class="ph-duotone ph-hand ph-fw"></i>
-                <!-- <?= lang('Claim activities', 'Aktivitäten beanspruchen') ?> -->
+                <!-- <?= lang('common.claim_activities') ?> -->
             </a>
         </div>
 
@@ -442,7 +436,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <input type="hidden" name="format" value="word">
             <input type="hidden" name="type" value="cv">
 
-            <button class="btn primary outline large mr-10" data-toggle="tooltip" data-title="<?= lang('Export CV', 'CV exportieren') ?>">
+            <button class="btn primary outline large mr-10" data-toggle="tooltip" data-title="<?= lang('people.export_cv') ?>">
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
@@ -456,18 +450,18 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($googlescholar || $openalex || $orcid) { ?>
             <div class="btn-group btn-group-lg">
                 <?php if ($orcid) { ?>
-                    <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('Import from ORCID', 'Importiere aus ORCID') ?>">
+                    <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('common.import_from_orcid') ?>">
                         <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
                     </a>
                 <?php } ?>
                 <?php if ($openalex) { ?>
-                    <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Import from OpenAlex', 'Importiere aus OpenAlex') ?>">
+                    <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.import_from_openalex') ?>">
                         <i class="ph-duotone ph-globe-hemisphere-west ph-fw"></i>
                     </a>
                 <?php } ?>
                 <?php if ($googlescholar) { ?>
                     <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $scientist['google_scholar'] ?>" method="get">
-                        <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('Import from Google Scholar', 'Importiere von Google Scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
+                        <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('common.import_from_google_scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
                             <img src="<?= ROOTPATH ?>/img/google-scholar.svg" alt="Google Scholar" width="24" height="24">
                         </button>
                     </form>
@@ -484,7 +478,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if (!empty($new)) {
             $notification = true;
             echo '<div class="mt-20">';
-            echo '<h5 class="title font-size-16">' . lang('Congratulation, you achieved something new: ', 'Glückwunsch, du hast neue Errungenschaften erlangt:') . '</h5>';
+            echo '<h5 class="title font-size-16">' . lang('common.congratulation_you_achieved_something_new') . '</h5>';
             foreach ($new as $i => $n) {
                 $Achievement->snack($n);
             }
@@ -497,14 +491,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <?php } else { ?>
     <div class="btn-toolbar">
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('The year of ', 'Das Jahr von ') . $scientist['first'] ?> ">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('people.the_year_of') . $scientist['first'] ?> ">
                 <i class="ph ph-calendar ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('All activities of ', 'Alle Aktivitäten von ') . $scientist['first'] ?>">
+            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('people.all_activities_of') . $scientist['first'] ?>">
                 <i class="ph ph-folder-user ph-fw"></i>
             </a>
             <?php if ($show_achievements) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('Achievements of ', 'Errungenschaften von ') . $scientist['first'] ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('people.achievements_of') . $scientist['first'] ?>">
                     <i class="ph ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
@@ -516,7 +510,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         </div>
 
         <?php if ($Settings->hasPermission('user.edit')) { ?>
-            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('Edit user profile', 'Bearbeite Profil') ?>">
+            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('people.edit_user_profile') ?>">
                 <i class="ph ph-edit ph-fw"></i>
             </a>
         <?php } ?>
@@ -526,39 +520,39 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($is_admin) {
         ?>
             <div class="dropdown with-arrow">
-                <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('More options', 'Weitere Optionen') ?>">
+                <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('people.more_options') ?>">
                     <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                         <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" class="item">
                             <i class="ph ph-users-three ph-fw text-primary"></i>
-                            <?= lang('Edit org. units', 'Einheiten bearbeiten') ?>
+                            <?= lang('people.edit_org_units') ?>
                         </a>
                     <?php } ?>
                     <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH' && $Settings->hasPermission('user.password-reset')) { ?>
                         <a class="item" href="<?= ROOTPATH ?>/user/password-reset/<?= $scientist['_id'] ?>">
                             <i class="ph ph-key ph-fw text-primary"></i>
-                            <?= lang('Reset password', 'Passwort zurücksetzen') ?>
+                            <?= lang('auth.password_reset') ?>
                         </a>
                     <?php } ?>
                     <?php if ($Settings->hasPermission('user.inactive')) { ?>
                         <?php if (($scientist['is_active'] ?? true)) { ?>
                             <a class="item" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>">
                                 <i class="ph ph-user-circle-dashed ph-fw text-danger"></i>
-                                <?= lang('Inactivate user', 'Nutzer:in inaktivieren') ?>
+                                <?= lang('people.inactivate_user') ?>
                             </a>
                         <?php } elseif ($Settings->hasPermission('user.edit')) { ?>
                             <a class="item" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account">
                                 <i class="ph ph-user-circle-plus ph-fw text-success"></i>
-                                <?= lang('Re-activate user', 'Nutzer:in reaktivieren') ?>
+                                <?= lang('people.re_activate_user') ?>
                             </a>
                         <?php } ?>
                     <?php } ?>
                     <?php if ($Settings->hasPermission('user.delete')) { ?>
                         <a class="item" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>">
                             <i class="ph ph-trash ph-fw text-danger"></i>
-                            <?= lang('Delete user', 'Nutzer:in löschen') ?>
+                            <?= lang('people.delete_user') ?>
                         </a>
                     <?php } ?>
 
@@ -590,16 +584,16 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 }
                 $contactLogo = socialLogo($contactType);
                 if ($contactType == 'other') {
-                    $contactInfo = lang('prefered contact link', 'bevorzugtem Kontakt-Link');
+                    $contactInfo = lang('people.prefered_contact_link');
                 }
                 else {
                     $contactInfo = ucfirst($contactType);
                 }
                 ?>
                 <div class="btn-group btn-group-lg" >
-                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] . lang(' via ', ' per ') . $contactInfo ?>">
+                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('people.contact') . $scientist['first'] . lang('people.via') . $contactInfo ?>">
                         <i class="ph <?= $contactLogo ?>"></i>
-                        <?= lang('Contact', 'Kontakt')?>
+                        <?= lang('common.contact')?>
                     </a>
                 </div>
             <?php } ?>
@@ -651,7 +645,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_coauthors > 3) { ?>
         <a onclick="navigate('coauthors')" id="btn-coauthors" class="btn">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('Coauthors', 'Koautoren')  ?>
+            <?= lang('common.coauthors')  ?>
             <span class="index"><?= $count_coauthors ?></span>
         </a>
     <?php } ?>
@@ -690,7 +684,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
-            <?= lang('Ongoing activities', 'Laufende Aktivitäten')  ?>
+            <?= lang('people.ongoing_activities_profile')  ?>
             <span class="index"><?= $count_memberships_ongoing ?></span>
         </a>
     <?php } ?>
@@ -753,7 +747,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_teaching > 0) { ?>
         <a onclick="navigate('teaching')" id="btn-teaching" class="btn">
             <i class="ph ph-graduation-cap" aria-hidden="true"></i>
-            <?= lang('Teaching', 'Lehre')  ?>
+            <?= lang('people.teaching')  ?>
             <span class="index"><?= $count_teaching ?></span>
         </a>
     <?php } ?>
@@ -813,14 +807,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <tbody>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Username', 'Benutzername') ?></span>
+                                <span class="key"><?= lang('common.username') ?></span>
                                 <?= $user ?>
                             </td>
                         </tr>
                         <?php if ($Settings->hasPermission('raw-data')) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('OSIRIS-ID', 'OSIRIS-ID') ?></span>
+                                    <span class="key"><?= lang('people.osiris_id') ?></span>
                                     <?= $scientist['_id'] ?>
                                 </td>
                             </tr>
@@ -848,7 +842,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if (isset($scientist['academic_title'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Academic title', 'Akademischer Titel') ?></span>
+                                    <span class="key"><?= lang('people.academic_title_profile') ?></span>
                                     <?= $scientist['academic_title'] ?? '' ?>
                                 </td>
                             </tr>
@@ -870,7 +864,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             $approvedQ = DB::doc2Arr($scientist['approved']);
                             sort($approvedQ);
                             echo "<tr><td>";
-                            echo "<span class='key'>" . lang('Quarters approved', 'Bestätigte Quartale') . ":</span>";
+                            echo "<span class='key'>" . lang('people.quarters_approved') . ":</span>";
                             foreach ($approvedQ as $appr) {
                                 $Q = explode('Q', $appr);
                                 echo "<a href='" . ROOTPATH . "/my-year/$user?year=$Q[0]&quarter=$Q[1]' class='badge success mr-5 mb-5'>$appr</a>";
@@ -911,7 +905,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Mobile', 'Mobil') ?></span>
+                                    <span class="key"><?= lang('common.mobile') ?></span>
                                     <a href="tel:<?= $scientist['mobile'] ?>"><?= $scientist['mobile'] ?></a>
                                 </td>
                             </tr>
@@ -920,7 +914,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('room') && isset($scientist['room'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Room', 'Raum') ?></span>
+                                    <span class="key"><?= lang('common.room') ?></span>
                                     <?= $scientist['room'] ?>
                                 </td>
                             </tr>
@@ -946,7 +940,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
                                     <?= $scientist['orcid'] ?>
                                     <?php if ($Settings->featureEnabled('orcid')) { ?>
-                                        </a><?= lang('(unauthenticated)', '(nicht authentifiziert)') ?>
+                                        </a><?= lang('people.unauthenticated') ?>
                                     <?php } ?>
                                 </td>
                             </tr>
@@ -1030,12 +1024,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <?php } ?>
                             </ul>
                         <?php } else { ?>
-                            <p><?= lang('No research interests stated.', 'Keine Forschungsinteressen angegeben.') ?></p>
+                            <p><?= lang('people.no_research_interests_stated') ?></p>
                         <?php } ?>
 
                         <?php if (isset($scientist['research_profile'])) { ?>
                             <h6 class="title">
-                                <?= lang('Research profile', 'Forschungsprofil') ?>
+                                <?= lang('people.research_profile') ?>
                             </h6>
                             <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
                         <?php } ?>
@@ -1048,7 +1042,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php if (isset($scientist['highlighted'])) { ?>
                     <div class="content">
                         <h4 class="title">
-                            <?= lang('Highlighted Research', 'Hervorgehobene Forschung') ?>
+                            <?= lang('people.highlighted_research') ?>
                         </h4>
                         <table class="table simple">
                             <?php
@@ -1069,7 +1063,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                         <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                             <p class="text-muted font-size-12">
-                                <i class="ph ph-edit"></i> <?= lang('You can highlight/unhighlight publications by clicking on them and changing the "Displayed in your profile" option.', 'Du kannst Publikationen hervorheben/entfernen, indem du sie anklickst und die Option "Darstellung in deinem Profil" änderst.') ?>
+                                <i class="ph ph-edit"></i> <?= lang('people.you_can_highlight_unhighlight_publications_by_clicking_on_them_and_changing') ?>
                             </p>
                         <?php } ?>
                     </div>
@@ -1101,7 +1095,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 <?php } ?>
                             </div>
                         <?php } else { ?>
-                            <p><?= lang('No CV given.', 'Kein CV angegeben.') ?></p>
+                            <p><?= lang('people.no_cv_given') ?></p>
                         <?php } ?>
                     <?php } ?>
 
@@ -1109,7 +1103,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <?php if ($active('biography')) { ?>
                         <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
                             <h6 class="title">
-                                <?= lang('Biography', 'Biografie') ?>
+                                <?= lang('common.biography') ?>
                             </h6>
                             <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
                         <?php } ?>
@@ -1118,7 +1112,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <?php if ($active('education')) { ?>
                         <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
                             <h6 class="title">
-                                <?= lang('Education', 'Ausbildung') ?>
+                                <?= lang('common.education_profile') ?>
                             </h6>
                             <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
                         <?php } ?>
@@ -1160,9 +1154,9 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <div class="chart content">
                         <h4 class="title mb-0">
                             <?= $Settings->impactLabel() ?>
-                            <?= lang('histogram', 'Histogramm') ?>
+                            <?= lang('people.histogram') ?>
                         </h4>
-                        <p class="text-muted mt-0"><?= lang('since', 'seit') . " " . $Settings->get('startyear') ?></p>
+                        <p class="text-muted mt-0"><?= lang('people.since') . " " . $Settings->get('startyear') ?></p>
                         <canvas id="chart-impact-canvas" style="max-height: 30rem;"></canvas>
                     </div>
                 </div>
@@ -1178,9 +1172,9 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <div class="box h-full">
                     <div class="chart content">
                         <h4 class="title mb-0">
-                            <?= lang('Role in publications', 'Rolle in Publikationen') ?>
+                            <?= lang('people.role_in_publications') ?>
                         </h4>
-                        <p class="text-muted mt-0"><?= lang('since', 'seit') . " " . $Settings->get('startyear') ?></p>
+                        <p class="text-muted mt-0"><?= lang('people.since') . " " . $Settings->get('startyear') ?></p>
 
                         <canvas id="chart-authors-canvas" style="max-height: 30rem;"></canvas>
 
@@ -1195,7 +1189,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <section id="activities" style="display:none">
 
 
-    <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2>
+    <h2><?= lang('common.other_activities') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">
@@ -1219,12 +1213,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <h4 class="title mb-0">
                         <?= lang('common.all_activities') ?>
                     </h4>
-                    <p class="text-muted mt-0"><?= lang('in which ' . $scientist['first'] . ' was involved', 'an denen ' . $scientist['first'] . ' beteiligt war') ?></p>
+                    <p class="text-muted mt-0"><?= lang('people.in_which_scientist_was_involved', replace: ['scientist' => $scientist['first']]) ?></p>
 
                     <canvas id="chart-activities-canvas" style="max-height: 35rem;"></canvas>
 
                     <small class="text-muted">
-                        <?= lang('For multi-year activities, only the start date is relevant.', 'Bei mehrjährigen Aktivitäten wird nur das Startdatum gezählt.') ?>
+                        <?= lang('people.for_multi_year_activities_only_the_start_date_is_relevant') ?>
                     </small>
                 </div>
             </div>
@@ -1260,7 +1254,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($ongoing)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('Ongoing activities', 'Laufende Aktivitäten') ?></h4>
+                        <h4 class="title"><?= lang('people.ongoing_activities_profile') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>
@@ -1288,7 +1282,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if (!empty($past)) { ?>
                 <details class="collapse-panel">
                     <summary class="collapse-header">
-                        <h4 class="m-0"><?= lang('Past activities', 'Vergangene Tätigkeiten') ?></h4>
+                        <h4 class="m-0"><?= lang('people.past_activities') ?></h4>
                     </summary>
                     <div class="collapse-content p-0 pb-5">
                         <table class="table simple">
@@ -1333,7 +1327,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 ?>
     <section id="projects" style="display:none">
         <h3 class="title">
-            <?= lang('Timeline of all approved projects', 'Zeitstrahl aller bewilligten Projekte') ?>
+            <?= lang('common.timeline_of_all_approved_projects') ?>
         </h3>
         <div class="box">
             <div class="content">
@@ -1360,7 +1354,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             $i = 0;
         ?>
             <?php if (!empty($ongoing)) { ?>
-                <h2><?= lang('Ongoing projects', 'Laufende Projekte') ?></h2>
+                <h2><?= lang('common.ongoing_projects') ?></h2>
 
                 <div class="row row-eq-spacing my-0">
                     <?php foreach ($ongoing as $html) { ?>
@@ -1377,7 +1371,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 if (!empty($proposals)) {
             ?>
 
-                    <h2><?= lang('Proposed projects', 'Beantragte Projekte') ?></h2>
+                    <h2><?= lang('people.proposed_projects') ?></h2>
 
                     <div class="row row-eq-spacing my-0">
                         <?php foreach ($proposals as $proposal) {
@@ -1390,15 +1384,15 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     </div>
 
                     <p class="text-muted font-size-12">
-                        <?= lang('Others can not see your proposals on your profile page.', 'Andere Nutzende können Projektanträge nicht auf deiner Profilseite sehen.') ?>
-                        <a href="<?= ROOTPATH ?>/proposals" class="link"><?= lang('See all proposals', 'Zeige alle Anträge') ?></a>
+                        <?= lang('people.others_can_not_see_your_proposals_on_your_profile_page') ?>
+                        <a href="<?= ROOTPATH ?>/proposals" class="link"><?= lang('people.see_all_proposals') ?></a>
                     </p>
                 <?php } ?>
             <?php } ?>
 
 
             <?php if (!empty($past)) { ?>
-                <h2><?= lang('Past projects', 'Vergangene Projekte') ?></h2>
+                <h2><?= lang('common.past_projects') ?></h2>
 
                 <div class="row row-eq-spacing my-0">
                     <?php foreach ($past as $html) { ?>
@@ -1452,7 +1446,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <?php } ?>
                                 </div>
                                 <div>
-                                    <?= lang('Active as', 'Aktiv als') ?>
+                                    <?= lang('people.active_as') ?>
                                     <b class="text-primary"><?= $Infra->getRole($person_role['role']) ?></b>
                                     <?= lang('common.from') ?>
                                     <?= fromToYear($person_role['start'], $person_role['end'] ?? null, true) ?>
@@ -1463,7 +1457,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </table>
 
         <?php } else { ?>
-            <?= lang('No infrastructures connected.', 'Noch keine Infrastrukturen verknüpft.') ?>
+            <?= lang('common.no_infrastructures_connected') ?>
         <?php } ?>
 
 
@@ -1474,13 +1468,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <section id="coauthors" style="display:none">
     <h2>
         <i class="ph ph-graph" aria-hidden="true"></i>
-        <?= lang('Coauthor network of', 'Koautoren-Netzwerk von') ?> <?= $scientist['displayname'] ?>
+        <?= lang('people.coauthor_network_of') ?> <?= $scientist['displayname'] ?>
     </h2>
     <p class="text-muted" id="coauthor-network-info-5">
-        <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
+        <?= lang('common.based_on_publications_within_the_past_5_years') ?>
     </p>
     <p class="text-muted" id="coauthor-network-info-all" style="display:none">
-        <?= lang('Based on all publications.', 'Basierend auf allen Publikationen.') ?>
+        <?= lang('people.based_on_all_publications') ?>
     </p>
     <div class="box">
         <div class="row">
@@ -1490,10 +1484,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="col-md-4">
                 <div class="btn-group mt-20">
                     <button class="btn small" id="toggle-show-5" disabled>
-                        <?= lang('Last 5 years', 'Letzte 5 Jahre') ?>
+                        <?= lang('people.last_5_years') ?>
                     </button>
                     <button class="btn small" id="toggle-show-all">
-                        <?= lang('All years', 'Alle Jahre') ?>
+                        <?= lang('people.all_years') ?>
                     </button>
                 </div>
                 <div id="legend"></div>
@@ -1506,7 +1500,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <?php if ($count_teaching > 0) { ?>
     <section id="teaching" style="display: none;">
 
-        <h2><?= lang('Teaching activities', 'Lehrtätigkeiten') ?></h2>
+        <h2><?= lang('people.teaching_activities') ?></h2>
 
         <div class="collapse-group">
             <?php foreach ($teaching as $t) {
@@ -1549,7 +1543,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                         <?php } else { ?>
 
-                            <?= lang('No activities connected.', 'Keine Aktivitäten verknüpft.') ?>
+                            <?= lang('common.no_activities_connected') ?>
 
                         <?php } ?>
                     </div>
@@ -1563,7 +1557,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 <?php if ($Settings->featureEnabled('spectrum')) { ?>
     <section id="spectrum" style="display:none">
         <h2>
-            <?= lang('Research spectrum of', 'Forschungsspektrum von') ?> <?= $scientist['displayname'] ?>
+            <?= lang('people.research_spectrum_of') ?> <?= $scientist['displayname'] ?>
         </h2>
         <?php
         $show_link = true;
@@ -1626,11 +1620,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php if ($show_link) { ?>
                 <p class="text-muted mb-0">
                     <?php if (!$full_spectrum && $count_spectrum > 10) { ?>
-                        <?= lang('Based on publications within the past 5 years.', 'Basierend auf Publikationen aus den vergangenen 5 Jahren.') ?>
-                        <a href="?fullspectrum=1#section-spectrum"><?= lang('View full spectrum', 'Vollständiges Spektrum anzeigen') ?></a>
+                        <?= lang('common.based_on_publications_within_the_past_5_years') ?>
+                        <a href="?fullspectrum=1#section-spectrum"><?= lang('people.view_full_spectrum') ?></a>
                     <?php } elseif ($full_spectrum) { ?>
-                        <?= lang('Based on all publications in OSIRIS.', 'Basierend auf allen Publikationen in OSIRIS.') ?>
-                        <a href="?#section-spectrum"><?= lang('View recent spectrum', 'Aktuelles Spektrum anzeigen') ?></a>
+                        <?= lang('people.based_on_all_publications_in_osiris') ?>
+                        <a href="?#section-spectrum"><?= lang('people.view_recent_spectrum') ?></a>
                     <?php } ?>
                 </p>
             <?php } ?>
@@ -1639,7 +1633,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             Spectrum::render($spectrum, $count_spectrum, '', '{"rendered.users":"'.$user.'"}');
         else : ?>
             <p>
-                <?= lang('We do not have enough data to display a research spectrum for this scientist yet. This could be because there are not enough publications in OSIRIS, or because the publications are not well covered by OpenAlex data.', 'Wir haben noch nicht genügend Daten, um ein Forschungsspektrum für diese Person anzuzeigen. Das könnte daran liegen, dass es noch nicht genügend Publikationen in OSIRIS gibt oder dass die Publikationen nicht gut von OpenAlex abgedeckt sind.') ?>
+                <?= lang('people.we_do_not_have_enough_data_to_display_a_research_spectrum_for_this_scientis') ?>
             </p>
         <?php endif; ?>
     </section>
@@ -1651,14 +1645,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <h3 class=""><?= lang('Word cloud') ?></h3>
 
         <p class="text-muted">
-            <?= lang('Based on the title and abstract (if available) of activities in OSIRIS.', 'Basierend auf dem Titel und Abstract (falls verfügbar) von Aktivitäten in OSIRIS.') ?>
+            <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
         </p>
         <div class="btn-group mt-20">
             <button class="btn small" id="toggle-wordcloud-activities" disabled>
                 <?= lang('common.all_activities') ?>
             </button>
             <button class="btn small" id="toggle-wordcloud-publications">
-                <?= lang('Only publications', 'Nur Publikationen') ?>
+                <?= lang('people.only_publications') ?>
             </button>
         </div>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>

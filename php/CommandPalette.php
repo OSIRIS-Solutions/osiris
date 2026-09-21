@@ -27,7 +27,7 @@ class CommandPalette
                 "url" => "/my-year",
                 "type" => "Navigation",
                 "icon" => "calendar",
-                "label" => lang("My year", "Mein Jahr"),
+                "label" => lang('common.my_year_docs'),
                 "permission" => "scientist",
                 "keywords" => ["year", "my year", "calendar", "jahr", "mein jahr", "kalender"],
                 "priority" => 60
@@ -36,7 +36,7 @@ class CommandPalette
                 "url" => "/my-activities",
                 "type" => "Navigation",
                 "icon" => "folder-user",
-                "label" => lang("My activities", "Meine Aktivitäten"),
+                "label" => lang('activities.my_activities'),
                 "permission" => "scientist",
                 "keywords" => ["activities", "my activities", "aktivitäten", "meine aktivitäten"],
                 "priority" => 60
@@ -44,7 +44,7 @@ class CommandPalette
             [
                 "url" => "/user/edit/" . $_SESSION['username'],
                 "type" => lang('common.action'),
-                "label" => lang("User Settings", "Benutzereinstellungen"),
+                "label" => lang('navigation.user_settings_CommandPalette'),
                 "icon" => "gear",
                 "keywords" => ["settings", "preferences", "account", "einstellungen", "präferenzen", "konto"],
                 "priority" => 40
@@ -53,7 +53,7 @@ class CommandPalette
                 "url" => "/add-activity",
                 "type" => lang('common.action'),
                 "icon" => "plus-circle",
-                "label" => lang("Add activity", "Aktivität hinzufügen"),
+                "label" => lang('activities.add_activity'),
                 "keywords" => ["add activity", "new activity", "create activity", "neue aktivität", "aktivität erstellen"],
                 "priority" => 70
             ],
@@ -61,7 +61,7 @@ class CommandPalette
                 "url" => "/proposals/new",
                 "type" => lang('common.action'),
                 "icon" => "tree-structure",
-                "label" => lang("Add project proposal", "Projektantrag hinzufügen"),
+                "label" => lang('navigation.add_project_proposal'),
                 "feature" => "projects",
                 "permission" => "projects.add",
                 "keywords" => ["add project proposal", "new project proposal", "create project proposal", "neuen Projektantrag", "Projektantrag erstellen"],
@@ -71,7 +71,7 @@ class CommandPalette
                 "url" => "/projects/new",
                 "type" => lang('common.action'),
                 "icon" => "tree-structure",
-                "label" => lang("Add project", "Projekt hinzufügen"),
+                "label" => lang('dashboard.add_project'),
                 "feature" => "projects",
                 "permission" => "projects.add",
                 "keywords" => ["add project", "new project", "create project", "neues projekt", "projekt erstellen"],
@@ -91,7 +91,7 @@ class CommandPalette
                 "url" => "/issues",
                 "type" => "Navigation",
                 "icon" => "bell",
-                "label" => lang("Issues", "Hinweise"),
+                "label" => lang('dashboard.issues'),
                 "keywords" => ["issues", "hinweise"],
                 "priority" => 10
             ],
@@ -99,7 +99,7 @@ class CommandPalette
                 "url" => "/queue/user",
                 "type" => "Navigation",
                 "icon" => "queue",
-                "label" => lang("Queue to review", "Warteschlange zum Überprüfen"),
+                "label" => lang('navigation.queue_to_review'),
                 "keywords" => ["queue", "review", "to review", "warteschlange", "überprüfen"],
                 "priority" => 10
             ],
@@ -107,7 +107,7 @@ class CommandPalette
                 "url" => "/workflow-reviews",
                 "type" => "Navigation",
                 "icon" => "highlighter",
-                "label" => lang("Reviews", "Überprüfungen"),
+                "label" => lang('dashboard.reviews'),
                 "keywords" => ["reviews", "überprüfungen"],
                 "priority" => 10
             ],
@@ -115,7 +115,7 @@ class CommandPalette
                 "url" => "/messages",
                 "type" => "Navigation",
                 "icon" => "envelope",
-                "label" => lang("Messages", "Nachrichten"),
+                "label" => lang('common.messages'),
                 "keywords" => ["messages", "nachrichten"],
                 "priority" => 10
             ],
@@ -123,7 +123,7 @@ class CommandPalette
                 "url" => "/new-stuff",
                 "type" => "Navigation",
                 "icon" => "bell-ringing",
-                "label" => lang("News", "Neuigkeiten"),
+                "label" => lang('common.news'),
                 "keywords" => ["news", "neuigkeiten", "changelog", "changes", "änderungen", "updates", "aktualisierungen"],
                 "priority" => 10
             ],
@@ -131,7 +131,7 @@ class CommandPalette
                 "url" => "/calendar",
                 "type" => "Navigation",
                 "icon" => "calendar-dots",
-                "label" => lang("Calendar", "Kalender"),
+                "label" => lang('dashboard.calendar'),
                 "feature" => "calendar",
                 "keywords" => ["calendar", "kalender"],
                 "priority" => 20
@@ -140,7 +140,7 @@ class CommandPalette
                 "url" => "/activities/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search activities", "Aktivitäten durchsuchen"),
+                "label" => lang('navigation.search_activities'),
                 "keywords" => ["search activities", "find activities", "aktivitäten durchsuchen", "aktivitäten finden"],
                 "priority" => 30
             ],
@@ -156,7 +156,7 @@ class CommandPalette
                 "url" => "/proposals/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search proposals", "Anträge durchsuchen"),
+                "label" => lang('navigation.search_proposals'),
                 "keywords" => ["search proposals", "find proposals", "anträge durchsuchen", "anträge finden"],
                 "priority" => 60
             ],
@@ -173,7 +173,7 @@ class CommandPalette
                 "url" => "/projects/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search projects", "Projekte durchsuchen"),
+                "label" => lang('navigation.search_projects'),
                 "keywords" => ["search projects", "find projects", "projekte durchsuchen", "projekte finden"],
                 "priority" => 60
             ],
@@ -190,7 +190,7 @@ class CommandPalette
                 "url" => "/nagoya",
                 "type" => "Navigation",
                 "icon" => "scales",
-                "label" => lang("Nagoya Dashboard", "Nagoya-Dashboard"),
+                "label" => lang('navigation.nagoya_dashboard'),
                 "feature" => "nagoya",
                 "permission" => "nagoya.view",
                 "keywords" => ["nagoya", "dashboard", "nagoya dashboard", "nagoya-dashboard", "abs compliance", "access and benefit sharing", "abs", "compliance"],
@@ -200,7 +200,7 @@ class CommandPalette
                 "url" => "/journals/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search journals", "Zeitschriften durchsuchen"),
+                "label" => lang('navigation.search_journals'),
                 "keywords" => ["search journals", "find journals", "zeitschriften durchsuchen", "zeitschriften finden"],
                 "priority" => 30
             ],
@@ -216,7 +216,7 @@ class CommandPalette
                 "url" => "/conferences/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search events", "Veranstaltungen durchsuchen"),
+                "label" => lang('navigation.search_events'),
                 "feature" => "events",
                 "keywords" => ["search events", "find events", "veranstaltungen durchsuchen", "veranstaltungen finden"],
                 "priority" => 30
@@ -234,7 +234,7 @@ class CommandPalette
                 "url" => "/deadlines",
                 "type" => "Navigation",
                 "icon" => "flag",
-                "label" => lang("Deadlines", "Fristen"),
+                "label" => lang('dashboard.deadlines'),
                 "feature" => "deadlines",
                 "keywords" => ["deadlines", "fristen", "deadlines", "fristen"],
                 "priority" => 50
@@ -243,7 +243,7 @@ class CommandPalette
                 "url" => "/teaching",
                 "type" => "Navigation",
                 "icon" => "chalkboard-simple",
-                "label" => lang("Teaching modules", "Lehrveranstaltungen"),
+                "label" => lang('common.teaching_modules'),
                 "feature" => "teaching-modules",
                 "keywords" => ["teaching modules", "lehrmodule"],
                 "priority" => 40
@@ -252,7 +252,7 @@ class CommandPalette
                 "url" => "/teaching/new",
                 "type" => lang('common.action'),
                 "icon" => "chalkboard-simple",
-                "label" => lang("Add teaching module", "Lehrveranstaltung hinzufügen"),
+                "label" => lang('navigation.add_teaching_module'),
                 "feature" => "teaching-modules",
                 "keywords" => ["add teaching module", "lehrmodul hinzufügen", "new teaching module", "neues lehrmodul", "create teaching module", "lehrmodul erstellen"],
                 "priority" => 30
@@ -297,7 +297,7 @@ class CommandPalette
                 "url" => "/persons/search",
                 "type" => lang('action.search'),
                 "icon" => "magnifying-glass",
-                "label" => lang("Search persons", "Personen durchsuchen"),
+                "label" => lang('navigation.search_persons'),
                 "keywords" => ["search persons", "find persons", "personen durchsuchen", "personen finden"],
                 "priority" => 30
             ],
@@ -313,7 +313,7 @@ class CommandPalette
                 "url" => "/groups",
                 "type" => "Navigation",
                 "icon" => "users-three",
-                "label" => lang("Organisational Units", "Einheiten"),
+                "label" => lang('navigation.organisational_units'),
                 "keywords" => ["organisational units", "einheiten", "groups", "gruppen", "units"],
                 "priority" => 70
             ],
@@ -338,7 +338,7 @@ class CommandPalette
                 "url" => "/dashboard",
                 "type" => "Navigation",
                 "icon" => "chart-line",
-                "label" => lang("Dashboard", "Dashboard"),
+                "label" => lang('navigation.dashboard'),
                 "keywords" => ["dashboard", "übersicht", "übersichtstafel"],
                 "priority" => 30
             ],
@@ -346,7 +346,7 @@ class CommandPalette
                 "url" => "/visualize",
                 "type" => "Navigation",
                 "icon" => "graph",
-                "label" => lang("Visualisations", "Visualisierung"),
+                "label" => lang('navigation.visualisations'),
                 "keywords" => ["visualisations", "visualisierung", "visualization"],
                 "priority" => 30
             ],
@@ -354,7 +354,7 @@ class CommandPalette
                 "url" => "/pivot",
                 "type" => "Navigation",
                 "icon" => "table",
-                "label" => lang("Pivot table", "Pivot-Tabelle"),
+                "label" => lang('navigation.pivot_table'),
                 "keywords" => ["pivot table", "pivot-tabelle", "table", "tabelle"],
                 "priority" => 30
             ],
@@ -371,7 +371,7 @@ class CommandPalette
                 "url" => "/download",
                 "type" => "Navigation",
                 "icon" => "download",
-                "label" => lang("Export Activities", "Aktivitäten exportieren"),
+                "label" => lang('navigation.export_activities'),
                 "keywords" => ["export activities", "aktivitäten exportieren"],
                 "priority" => 30
             ],
@@ -379,7 +379,7 @@ class CommandPalette
                 "url" => "/cart",
                 "type" => "Navigation",
                 "icon" => "basket",
-                "label" => lang("Collection", "Sammlung"),
+                "label" => lang('reports.collection'),
                 "keywords" => ["collection", "sammlung", "download", "export", "word", "bibtex", "cart"],
                 "priority" => 30
             ],
@@ -387,7 +387,7 @@ class CommandPalette
                 "url" => "/import",
                 "type" => "Navigation",
                 "icon" => "upload",
-                "label" => lang("Import", "Importieren"),
+                "label" => lang('orcid.import'),
                 "keywords" => ["import", "importieren", "upload", "hochladen"],
                 "priority" => 30
             ],
@@ -395,7 +395,7 @@ class CommandPalette
                 "url" => "/queue/editor",
                 "type" => "Navigation",
                 "icon" => "queue",
-                "label" => lang("Queue", "Warteschlange"),
+                "label" => lang('import.queue'),
                 "permission" => "report.queue",
                 "keywords" => ["queue", "warteschlange"],
                 "priority" => 30
@@ -413,7 +413,7 @@ class CommandPalette
                 "url" => "/portal/info",
                 "type" => "Navigation",
                 "icon" => "globe-hemisphere-west",
-                "label" => lang("OSIRIS portal", "OSIRIS Portal"),
+                "label" => lang('navigation.osiris_portal'),
                 "feature" => "portal-public",
                 "keywords" => ["portal", "public"],
                 "priority" => 20
@@ -422,7 +422,7 @@ class CommandPalette
                 "url" => "/ida/dashboard",
                 "type" => "Navigation",
                 "icon" => "clipboard-text",
-                "label" => lang("IDA-Integration", "IDA-Integration"),
+                "label" => lang('common.ida_integration'),
                 "feature" => "ida",
                 "keywords" => ["reports", "leibniz", "ida integration"],
                 "priority" => 1
@@ -431,7 +431,7 @@ class CommandPalette
                 "url" => "/admin/general",
                 "type" => lang('common.action'),
                 "icon" => "gear",
-                "label" => lang("Admin Settings", "Admin-Einstellungen"),
+                "label" => lang('navigation.admin_settings'),
                 "permission" => "admin.see",
                 "keywords" => ["settings", "einstellungen", "configuration", "konfiguration", "admin"],
                 "priority" => 9
@@ -440,7 +440,7 @@ class CommandPalette
                 "url" => "/admin",
                 "type" => "Navigation",
                 "icon" => "treasure-chest",
-                "label" => lang("Contents", "Inhalte"),
+                "label" => lang('navigation.contents'),
                 "permission" => "admin.see",
                 "keywords" => ["contents", "inhalte", "settings", "einstellungen", "configuration", "konfiguration", "admin"],
                 "priority" => 9
@@ -449,7 +449,7 @@ class CommandPalette
                 "url" => "/admin/roles",
                 "type" => "Navigation",
                 "icon" => "shield-check",
-                "label" => lang("Roles &amp; Rights", "Rollen &amp; Rechte"),
+                "label" => lang('admin.roles_amp_rights'),
                 "permission" => "admin.see",
                 "keywords" => ["roles", "rights", "rollen", "rechte"],
                 "priority" => 9
@@ -458,7 +458,7 @@ class CommandPalette
                 "url" => "/admin/reports",
                 "type" => "Navigation",
                 "icon" => "clipboard-text",
-                "label" => lang("Report templates", "Berichtsvorlagen"),
+                "label" => lang('navigation.report_templates'),
                 "permission" => "report.templates",
                 "keywords" => ["report templates", "berichtsvorlagen", "templates"],
                 "priority" => 9
@@ -467,7 +467,7 @@ class CommandPalette
                 "url" => "/admin/users",
                 "type" => "Navigation",
                 "icon" => "users",
-                "label" => lang("User Management", "Nutzerverwaltung"),
+                "label" => lang('people.user_management'),
                 "permission" => "user.synchronize",
                 "keywords" => ["users", "synchronization", "nutzer", "synchronisierung", "user management", "nutzerverwaltung"],
                 "priority" => 9
@@ -515,16 +515,16 @@ class CommandPalette
             'projects' => lang('common.projects'),
             'proposals' => lang('common.proposals'),
             'conferences' => lang('common.events'),
-            'journals' => lang('Journals', 'Zeitschriften'),
+            'journals' => lang('common.journals'),
             'persons' => lang('common.persons')
         ];
         foreach ($queries as $query) {
             $this->add([
                 "url" => "/" . ($query['type'] ?? 'activities') . "/search?query=" . $query['_id'],
-                "type" => lang("Saved search", "Gespeicherte Suche"),
+                "type" => lang('navigation.saved_search'),
                 "icon" => "magnifying-glass",
                 "label" => $query['name'],
-                "description" => (isset($collectionMap[$query['type']]) ? lang("Search in ", "Suche in ") . $collectionMap[$query['type']] : null),
+                "description" => (isset($collectionMap[$query['type']]) ? lang('navigation.search_in') . $collectionMap[$query['type']] : null),
                 "keywords" => [$query['name'], "saved search", "gespeicherte suche", "advanced search", "erweiterte suche"],
                 "priority" => 80
             ]);
@@ -575,7 +575,7 @@ class CommandPalette
             'groups' => [
                 [
                     'id' => 'main',
-                    'label' => lang('Go to...', 'Gehe zu...'),
+                    'label' => lang('navigation.go_to'),
                     'items' => $items
                 ]
             ]

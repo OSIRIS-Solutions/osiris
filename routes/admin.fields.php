@@ -19,7 +19,7 @@ Route::get('/admin/fields', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('admin.manage_content'), 'path' => '/admin'],
         ['name' => lang("Custom fields")]
     ];
 
@@ -35,7 +35,7 @@ Route::get('/admin/fields/new', function () {
     $user = $_SESSION['username'];
     $form = [];
     $breadcrumb = [
-        ['name' => lang("fields", "Kategorien"), 'path' => "/admin/fields"],
+        ['name' => lang('admin.fields'), 'path' => "/admin/fields"],
         ['name' => lang('common.new')]
     ];
     include BASEPATH . "/header.php";
@@ -52,11 +52,11 @@ Route::get('/admin/fields/(.*)', function ($id) {
 
     $category = $osiris->adminFields->findOne(['id' => $id]);
     if (empty($category)) {
-        abortwith(404, lang("Custom Field", "Benutzerdefiniertes Feld"), '/admin/fields');
+        abortwith(404, lang('admin.custom_field'), '/admin/fields');
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
-        ['name' => lang('Manage content', 'Inhalte verwalten'), 'path' => '/admin'],
+        ['name' => lang('admin.manage_content'), 'path' => '/admin'],
         ['name' => lang("Custom Fields"), 'path' => "/admin/fields"],
         ['name' => $name]
     ];
@@ -99,7 +99,7 @@ Route::post('/crud/fields/create', function () {
     // check if category ID already exists:
     $category_exist = $osiris->adminFields->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang("Field Name does already exist.", "Feldname existiert bereits.");
+        $_SESSION['msg'] = lang('admin.field_name_does_already_exist');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/admin/fields/new");
         die();
@@ -107,7 +107,7 @@ Route::post('/crud/fields/create', function () {
 
     $osiris->adminFields->insertOne($values);
 
-    $_SESSION['msg'] = lang("Custom field created successfully.", "Benutzerdefiniertes Feld erfolgreich erstellt.");
+    $_SESSION['msg'] = lang('admin.custom_field_created_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields");
 });
@@ -140,7 +140,7 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang("Custom field updated successfully.", "Benutzerdefiniertes Feld erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang('admin.custom_field_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields/$id");
 });
@@ -155,13 +155,13 @@ Route::post('/crud/fields/delete/(.*)', function ($id) {
         ['_id' => $mongo_id]
     );
     if ($updateResult->getDeletedCount() === 0) {
-        $_SESSION['msg'] = lang("Custom field not found.", "Benutzerdefiniertes Feld nicht gefunden.");
+        $_SESSION['msg'] = lang('admin.custom_field_not_found');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/admin/fields");
         die();
     }
 
-    $_SESSION['msg'] = lang("Custom field deleted successfully.", "Benutzerdefiniertes Feld erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang('admin.custom_field_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields");
 });

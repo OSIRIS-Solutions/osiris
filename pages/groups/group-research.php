@@ -35,7 +35,7 @@
                             <textarea name="values[research][<?= $i ?>][info_de]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)"><?= e($con['info_de'] ?? '') ?></textarea>
                             <small class="text-muted">
                                 <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">
-                                    <?= lang('Markdown supported', 'Markdown unterstützt') ?> <i class="ph ph-info"></i>
+                                    <?= lang('groups.markdown_supported') ?> <i class="ph ph-info"></i>
                                 </a>
                             </small>
                         </div>
@@ -50,7 +50,7 @@
                             <textarea name="values[research][<?= $i ?>][info]" id="" cols="30" rows="5" class="form-control" value="" placeholder="Information (Markdown support)" required><?= e($con['info'] ?? '') ?></textarea>
                             <small class="text-muted">
                                 <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">
-                                    <?= lang('Markdown supported', 'Markdown unterstützt') ?> <i class="ph ph-info"></i>
+                                    <?= lang('groups.markdown_supported') ?> <i class="ph ph-info"></i>
                                 </a>
                             </small>
                         </div>

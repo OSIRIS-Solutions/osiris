@@ -59,7 +59,7 @@ $Document->setDocument($form);
             <a href="#close-modal" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h2 class="mt-0"><?= lang('Author templates', 'Autorentemplates') ?></h2>
+            <h2 class="mt-0"><?= lang('admin.author_templates') ?></h2>
 
             <p>
                 So ziemlich alle Felder für die Templates sind strikt definiert, bis auf die Autoren und Editoren, da es hier zu viele unterschiedliche Formatierung gibt, um alle auf klassische Weise abzubilden.
@@ -261,13 +261,13 @@ editors-{Namensformat}-{Optionen}
                 ?>
             </select>
             <label for="type-id">
-                <?= lang('Select a type to load the template', 'Wähle einen Typen aus, um das Template zu laden.') ?>
+                <?= lang('admin.select_a_type_to_load_the_template') ?>
             </label>
         </div>
         <div class="col floating-form">
             <input type="text" name="id" placeholder="id" class="form-control" value="<?= $_GET['id'] ?? '' ?>">
             <label for="id">
-                <?= lang('Enter activity ID for displaying a specific example', 'Gib eine für ein spezifisches Beispiel eine Aktivitäts-ID an') ?>
+                <?= lang('admin.enter_activity_id_for_displaying_a_specific_example') ?>
             </label>
         </div>
         <div class="col flex-grow-0">
@@ -279,16 +279,16 @@ editors-{Namensformat}-{Optionen}
 
     <a href="#modal-authors" class="btn primary" role="button">
         <i class="ph ph-student"></i>
-        <?= lang('About authors', 'Über Autoren') ?>
+        <?= lang('admin.about_authors') ?>
     </a>
     <p>
-        <?= lang('In the following, ', 'Im folgenden wird') ?>
+        <?= lang('admin.in_the_following') ?>
         <?php if (DB::is_ObjectID($example)) { ?>
-            <a href="<?= ROOTPATH ?>/activities/view/<?= $example ?>"><?= lang('a real example', 'ein echtes Beispiel') ?></a>
+            <a href="<?= ROOTPATH ?>/activities/view/<?= $example ?>"><?= lang('admin.a_real_example') ?></a>
         <?php } else { ?>
-            <?= lang('a dummy dataset', 'ein Dummy-Datensatz') ?>
+            <?= lang('admin.a_dummy_dataset') ?>
         <?php } ?>
-        <?= lang('is used to show the template builder.', 'eingesetzt, um die Auswirkung des Template-Builders zu veranschaulichen.') ?>
+        <?= lang('admin.is_used_to_show_the_template_builder') ?>
 
     </p>
 
@@ -336,7 +336,7 @@ editors-{Namensformat}-{Optionen}
                 </div>
                 <textarea name="template" id="template" class="form-control" placeholder="Start creating your template here"><?= $template ?></textarea>
                 <div class="example-area">
-                    <b><?= lang('Example', 'Beispiel') ?>:</b>
+                    <b><?= lang('common.example') ?>:</b>
                     <div id="example" style="min-height: 3rem;"></div>
                 </div>
             </div>
@@ -370,7 +370,7 @@ editors-{Namensformat}-{Optionen}
 
                                     <br>
                                     <small>
-                                        <b><?= lang('Example', 'Beispiel') ?>:</b>
+                                        <b><?= lang('common.example') ?>:</b>
                                         <span class="example">
                                             <?php
                                             echo $Document->get_field($name, '-');

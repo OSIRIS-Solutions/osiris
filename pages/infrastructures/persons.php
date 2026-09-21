@@ -30,7 +30,7 @@ $end = $form['end_date'] ?? '';
 
 
 <h2>
-    <?= lang('Operating personnel', 'Betriebspersonal') ?>
+    <?= lang('common.operating_personnel') ?>
 </h2>
 <form action="<?= ROOTPATH ?>/crud/infrastructures/update-persons/<?= $id ?>" method="post">
 
@@ -50,7 +50,7 @@ $end = $form['end_date'] ?? '';
                     </span>
                 </th>
                 <th>
-                    <?= lang('Scope (FTE)', 'Umfang (VZÄ)') ?>
+                    <?= lang('infrastructures.scope_fte') ?>
                     <span class="badge kdsf m-0">
                         KDSF-B-13-16-D
                     </span>
@@ -122,7 +122,7 @@ $end = $form['end_date'] ?? '';
         <tfoot>
             <tr id="last-row">
                 <td colspan="7">
-                    <button class="btn" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
+                    <button class="btn" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus"></i> <?= lang('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>
@@ -130,7 +130,7 @@ $end = $form['end_date'] ?? '';
     </table>
 
     <small>
-        * <?= lang('Reporter are responsible for updating the statistics and will be asked by the system to do so once a year.', 'Die Berichterstatter sind für die Aktualisierung der Statistiken verantwortlich und werden vom System einmal im Jahr dazu aufgefordert.') ?>
+        * <?= lang('infrastructures.reporter_are_responsible_for_updating_the_statistics_and_will_be_asked_by_t') ?>
     </small>
     <br>
     <button class="btn primary mt-20">

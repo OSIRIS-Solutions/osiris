@@ -51,7 +51,7 @@
     <p>
         <button class="btn secondary">
             <i class="ph ph-arrows-merge"></i>
-            <?= lang('Merge', 'Zusammenfügen') ?>
+            <?= lang('import.merge') ?>
         </button>
     </p>
 

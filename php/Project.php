@@ -243,8 +243,8 @@ class Project extends Vocabulary
         $speaker = $this->project['joint_project_speaker'] ?? false;
         $return = '<div class="module">';
         $return .= '<h5 class="title m-0">' . e($title) . '</h5>';
-        $return .= '<strong>' . lang('Identifier', 'Kennung') . ':</strong> ' . e($identifier) . '<br>';
-        $return .= '<strong>' . lang('Speaker/Coordinator/Consortium leader role', 'Sprecher-/Koordinations-/Konsortialführungsrolle') . ':</strong> ' . ($speaker ? lang('common.yes') : lang('common.no')) . '<br>';
+        $return .= '<strong>' . lang('projects.identifier') . ':</strong> ' . e($identifier) . '<br>';
+        $return .= '<strong>' . lang('projects.speaker_coordinator_consortium_leader_role') . ':</strong> ' . ($speaker ? lang('common.yes') : lang('common.no')) . '<br>';
         $return .= '</div>';
         return $return;
     }
@@ -344,7 +344,7 @@ class Project extends Vocabulary
                 $abstract = $value;
                 if (strlen($abstract) > 200) {
                     $abstract = '<div class="preview-text">' . $value . '</div>';
-                    $abstract .= '<a class="text-muted font-size-12" onclick="$(this).prev().removeClass(\'preview-text\'); $(this).toggle()">' . lang('Show more', 'Mehr anzeigen') . '...</a>';
+                    $abstract .= '<a class="text-muted font-size-12" onclick="$(this).prev().removeClass(\'preview-text\'); $(this).toggle()">' . lang('projects.show_more') . '...</a>';
                 }
                 return $abstract;
             case 'kdsf-ffk':
@@ -363,7 +363,7 @@ class Project extends Vocabulary
                 }
             case 'image':
                 if (empty($value)) return '-';
-                $image = '<img src="' . ROOTPATH . '/uploads/' . $value . '" class="img-fluid" alt="' . lang('Project image', 'Projektbild') . '">';
+                $image = '<img src="' . ROOTPATH . '/uploads/' . $value . '" class="img-fluid" alt="' . lang('projects.project_image') . '">';
                 return $image;
             case 'topics':
                 $topics = DB::doc2Arr($value);
@@ -374,10 +374,10 @@ class Project extends Vocabulary
                 $return = '<ul class="list mb-0">';
                 foreach (
                     [
-                        'material' => lang('Additional material resources', 'Zusätzliche Sachmittel'),
-                        'personnel' => lang('Additional personnel resources', 'Zusätzliche Personalmittel'),
-                        'room' => lang('Additional room capacities', 'Zusätzliche Raumkapazitäten'),
-                        'other' => lang('Other resources', 'Sonstige Ressourcen')
+                        'material' => lang('projects.additional_material_resources'),
+                        'personnel' => lang('projects.additional_personnel_resources'),
+                        'room' => lang('projects.additional_room_capacities'),
+                        'other' => lang('projects.other_resources')
                     ] as $res => $label
                 ) {
                     if (isset($value[$res]) && $value[$res] == 'yes') {
@@ -504,18 +504,18 @@ class Project extends Vocabulary
         if ($type == 'Drittmittel') { ?>
             <span class="badge text-danger no-wrap <?= $cls ?>">
                 <i class="ph ph-hand-coins"></i>
-                <?= lang('Third-party funded', 'Drittmittel') ?>
+                <?= lang('common.third_party_funded') ?>
             </span>
 
         <?php } elseif ($type == 'Stipendium') { ?>
             <span class="badge text-success no-wrap <?= $cls ?>">
                 <i class="ph ph-tip-jar"></i>
-                <?= lang('Stipendiate', 'Stipendium') ?>
+                <?= lang('common.stipendiate') ?>
             </span>
         <?php } else if ($type == 'Eigenfinanziert') { ?>
             <span class="badge text-signal no-wrap <?= $cls ?>">
                 <i class="ph ph-piggy-bank"></i>
-                <?= lang('Self-funded', 'Eigenfinanziert') ?>
+                <?= lang('common.self_funded') ?>
             </span>
         <?php } else if ($type == 'Teilprojekt') { ?>
             <span class="badge text-danger no-wrap <?= $cls ?>">
@@ -592,9 +592,9 @@ class Project extends Vocabulary
     public function getCountryRole($role)
     {
         $country_roles = [
-            'in' => lang('Research in', 'Forschung in'),
-            'about' => lang('Research about', 'Forschung über'),
-            'both' => lang('Research in and about', 'Forschung in und über')
+            'in' => lang('projects.research_in'),
+            'about' => lang('projects.research_about'),
+            'both' => lang('projects.research_in_and_about')
         ];
         return $country_roles[$role] ?? $role;
     }
@@ -726,9 +726,9 @@ class Project extends Vocabulary
     public function getProjectStatus()
     {
         if ($this->inPast()) {
-            return '<i class="ph ph-check-circle text-success"></i> ' . lang('ended', 'abgeschlossen');
+            return '<i class="ph ph-check-circle text-success"></i> ' . lang('projects.ended_Project');
         } else {
-            return '<i class="ph ph-play-circle text-signal"></i> ' . lang('ongoing', 'laufend');
+            return '<i class="ph ph-play-circle text-signal"></i> ' . lang('projects.ongoing_Project');
         }
     }
 

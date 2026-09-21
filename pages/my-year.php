@@ -157,9 +157,9 @@ if (!$Settings->featureEnabled('coins')) {
         <div class="col ml-20">
             <h1 class="m-0">
                 <?php if ($user == $_SESSION['username']) { ?>
-                    <?= lang('My Year', 'Mein Jahr') ?>
+                    <?= lang('common.my_year') ?>
                 <?php } else { ?>
-                    <?= lang('The year of', 'Das Jahr von') ?>
+                    <?= lang('activities.the_year_of') ?>
                     <a href="<?= ROOTPATH ?>/profile/<?= $user ?>" class="link colorless">
                         <?= $name ?>
                     </a>
@@ -189,19 +189,19 @@ if (!$Settings->featureEnabled('coins')) {
                 <?php if (!$quarter_in_past) { ?>
                     <a href="#close-modal" class="btn disabled">
                         <i class="ph ph-seal-question mr-5 text-signal"></i>
-                        <?= lang('Selected quarter is not over yet.', 'Gewähltes Quartal ist noch nicht zu Ende.') ?>
+                        <?= lang('activities.selected_quarter_is_not_over_yet') ?>
                     </a>
                 <?php
 
                 } elseif ($approved) { ?>
                     <a href="#close-modal" class="btn disabled">
                         <i class="ph ph-duotone ph-seal-check mr-5 text-success"></i>
-                        <?= lang('You have already approved the currently selected quarter.', 'Du hast das aktuelle Quartal bereits bestätigt.') ?>
+                        <?= lang('activities.you_have_already_approved_the_currently_selected_quarter') ?>
                     </a>
                 <?php } else { ?>
                     <a class="btn large success" href="#approve">
                         <i class="ph ph-seal-check mr-5"></i>
-                        <?= lang('Approve selected quarter', 'Ausgewähltes Quartal freigeben') ?>:
+                        <?= lang('activities.approve_selected_quarter') ?>:
                         <b><?= $YEAR . ' Q' . $QUARTER ?></b>
                     </a>
                 <?php } ?>
@@ -213,33 +213,33 @@ if (!$Settings->featureEnabled('coins')) {
             <div class=" float-right float-md-none">
                 <a target="_blank" href="https://wiki.osiris-app.de/users/profile/scientist_view/" class="btn tour" id="tour">
                     <i class="ph ph-lg ph-question mr-5"></i>
-                    <?= lang('Read the Docs', 'Zur Hilfeseite') ?>
+                    <?= lang('common.read_the_docs') ?>
                 </a>
             </div>
 
             <form id="" action="" method="get" class="d-block w-400 mw-full ml-md-auto mt-20">
                 <div class="form-group">
                     <label for="year">
-                        <?= lang('Change year and quarter', 'Ändere Jahr und Quartal') ?>:
+                        <?= lang('activities.change_year_and_quarter') ?>:
                     </label>
 
 
                     <div class="btn-group">
-                        <a href="?year=<?= $YEAR - 1 ?>&quarter=<?= $QUARTER ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Previous year', 'Vorheriges Jahr') ?>">
+                        <a href="?year=<?= $YEAR - 1 ?>&quarter=<?= $QUARTER ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('activities.previous_year') ?>">
                             <i class="ph ph-caret-double-left"></i>
                         </a>
-                        <a href="?year=<?= $lastY ?>&quarter=<?= $lastQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Previous quarter', 'Vorheriges Quartal') ?>">
+                        <a href="?year=<?= $lastY ?>&quarter=<?= $lastQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('activities.previous_quarter') ?>">
                             <i class="ph ph-caret-left"></i>
                         </a>
-                        <a class="btn primary outline" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('Select quarter in detail', 'Wähle ein Quartal aus') ?>">
+                        <a class="btn primary outline" onclick="$('#detailed').slideToggle()" data-toggle="tooltip" data-title="<?= lang('activities.select_quarter_in_detail') ?>">
                             <!-- <i class="ph ph-circle"></i> -->
                             <?= $YEAR ?>
                             Q<?= $QUARTER ?>
                         </a>
-                        <a href="?year=<?= $nextY ?>&quarter=<?= $nextQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Next quarter', 'Nächstes Quartal') ?>">
+                        <a href="?year=<?= $nextY ?>&quarter=<?= $nextQ ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('activities.next_quarter') ?>">
                             <i class="ph ph-caret-right"></i>
                         </a>
-                        <a href="?year=<?= $YEAR + 1 ?>&quarter=<?= $QUARTER ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('Next year', 'Nächstes Jahr') ?>">
+                        <a href="?year=<?= $YEAR + 1 ?>&quarter=<?= $QUARTER ?>" class="btn primary" data-toggle="tooltip" data-title="<?= lang('activities.next_year') ?>">
                             <i class="ph ph-caret-double-right"></i>
                         </a>
                     </div>
@@ -248,7 +248,7 @@ if (!$Settings->featureEnabled('coins')) {
                         <div class="input-group">
 
                             <div class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" data-title="<?= lang('Select quarter', 'Wähle ein Quartal aus') ?>">
+                                <div class="input-group-text" data-toggle="tooltip" data-title="<?= lang('activities.select_quarter') ?>">
                                     <i class="ph ph-calendar-check"></i>
                                 </div>
                             </div>
@@ -267,7 +267,7 @@ if (!$Settings->featureEnabled('coins')) {
                                 <button class="btn primary"><i class="ph ph-check"></i></button>
                             </div>
                         </div>
-                        <a href="?year=<?= CURRENTYEAR ?>&quarter=<?= CURRENTQUARTER ?>"><?= lang('Current quarter', 'Aktuelles Quartal') ?></a>
+                        <a href="?year=<?= CURRENTYEAR ?>&quarter=<?= CURRENTQUARTER ?>"><?= lang('activities.current_quarter') ?></a>
                     </div>
                 </div>
             </form>
@@ -316,7 +316,7 @@ if (!$Settings->featureEnabled('coins')) {
         <div class="content my-0">
 
             <h2>
-                <?= lang('Activities in ', 'Aktivitäten in ') . $YEAR ?>
+                <?= lang('activities.activities_in') . $YEAR ?>
             </h2>
 
         </div>
@@ -342,7 +342,7 @@ if (!$Settings->featureEnabled('coins')) {
 
 
     <div class="alert signal">
-        <?= lang('The entire year is shown here. Activities in the selected quarter <b class="Q">' . $q . '</b> are highlighted. ', 'Das gesamte Jahr ist hier gezeigt. Aktivitäten innerhalb des gewählten Quartals <b class="Q">' . $q . '</b> sind farbig hinterlegt.') ?>
+        <?= lang('activities.the_entire_year_is_shown_here_activities_in_the_selected_quarter_q_are_high', replace: ['q' => $q]) ?>
 
     </div>
 
@@ -364,7 +364,7 @@ if (!$Settings->featureEnabled('coins')) {
                     </div>
                     <?php if (empty($data)) { ?>
                         <div class="content text-muted">
-                            <?= lang('No activities found.', 'Noch keine Aktivitäten vorhanden.') ?>
+                            <?= lang('activities.no_activities_found_my_year') ?>
                         </div>
                     <?php } else { ?>
 
@@ -419,7 +419,7 @@ if (!$Settings->featureEnabled('coins')) {
                                 ?>
                                         <br>
                                         <b class="text-danger">
-                                            <?= lang('This activity has unresolved warnings.', 'Diese Aktivität hat ungelöste Warnungen.') ?>
+                                            <?= lang('activities.this_activity_has_unresolved_warnings') ?>
                                             <a href="<?= ROOTPATH ?>/issues#tr-<?= $id ?>" class="link">Review</a>
                                         </b>
                                     <?php
@@ -463,13 +463,13 @@ if (!$Settings->featureEnabled('coins')) {
                             if ($col == "publication") $t = "article";
                         ?>
                             <a href="<?= ROOTPATH ?>/my-activities?type=<?= $col ?>" class="btn text-<?= $Settings->getActivities($col)['color'] ?>">
-                                <i class="ph ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i> <?= lang('My ', 'Meine ') ?><?= $Settings->getActivities($col)[lang('common.field_name_language')] ?>
+                                <i class="ph ph-<?= $Settings->getActivities($col)['icon'] ?> mr-5"></i> <?= lang('activities.my') ?><?= $Settings->getActivities($col)[lang('common.field_name_language')] ?>
                             </a>
                             <a href="<?= ROOTPATH . "/add-activity?type=" . $t ?>" class="btn"><i class="ph ph-plus"></i></a>
                             <?php if ($col == 'publication') { ?>
                                 <a class="btn mr-20" href="<?= ROOTPATH ?>/activities/online-search?authors=<?= $scientist['last'] ?>&year=<?= $YEAR ?>">
                                     <i class="ph ph-magnifying-glass-plus mr-5"></i>
-                                    <?= lang('Search in Pubmed', 'Suche in Pubmed') ?>
+                                    <?= lang('common.search_in_pubmed') ?>
                                 </a>
                             <?php } ?>
 
@@ -509,27 +509,24 @@ if (!$Settings->featureEnabled('coins')) {
                     <a href="#close-modal" class="btn float-right" role="button" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h5 class="title text-success"><?= lang("Approve quarter $QUARTER", "Quartal $QUARTER freigeben") ?></h5>
+                    <h5 class="title text-success"><?= lang('activities.approve_quarter_quarter', replace: ['QUARTER' => $QUARTER]) ?></h5>
 
                     <?php
                     if (!$quarter_in_past) {
-                        echo "<p>" . lang('Quarter is not over yet.', 'Das gewählte Quartal ist noch nicht zu Ende.') . "</p>";
+                        echo "<p>" . lang('activities.quarter_is_not_over_yet') . "</p>";
                     } else  if ($approved) {
-                        echo "<p>" . lang('You have already approved the currently selected quarter.', 'Du hast das aktuelle Quartal bereits bestätigt.') . "</p>";
+                        echo "<p>" . lang('activities.you_have_already_approved_the_currently_selected_quarter') . "</p>";
                     } else if (!empty($approval_needed)) {
 
                         $tagnames = [
-                            'approval' => lang('Approval needed', 'Überprüfung nötig'),
+                            'approval' => lang('activities.approval_needed'),
                             'epub' => 'Online ahead of print',
-                            'students' => lang('Student\' graduation', "Studenten-Abschluss"),
+                            'students' => lang('activities.student_graduation'),
                             'openend' => lang('Open-end'),
-                            'journal_id' => lang('Non-standardized journal', 'Nicht-standardisiertes Journal')
+                            'journal_id' => lang('activities.non_standardized_journal')
                         ];
 
-                        echo "<p>" . lang(
-                            "The following activities have unresolved warnings. Please <a href='" . ROOTPATH . "/issues' class='link'>review all issues</a> before approving the current quarter.",
-                            "Die folgenden Aktivitäten haben ungelöste Warnungen. Bitte <a href='" . ROOTPATH . "/issues' class='link'>kläre alle Probleme</a> bevor du das aktuelle Quartal freigeben kannst."
-                        ) . "</p>";
+                        echo "<p>" . lang('activities.the_following_activities_have_unresolved_warnings_please_review_all_issues', replace: ['rootpath' => ROOTPATH]) . "</p>";
                         echo "<table class='table simple'><tbody>";
                         foreach ($approval_needed as $item) {
                             // $type = ucfirst($item['type']);
@@ -549,16 +546,16 @@ if (!$Settings->featureEnabled('coins')) {
 
                         <img src="<?= ROOTPATH ?>/img/sophie/sophie-report.png" class="w-300 float-right">
                         <p>
-                            <?= lang('You are about to approve the current quarter. By confirming, you verify that all reportable activities for this quarter have been entered or reviewed and that the data is complete and correct.', 'Du bist dabei, das aktuelle Quartal freizugeben. Mit der Bestätigung erklärst du, dass alle meldepflichtigen Aktivitäten für dieses Quartal erfasst oder geprüft wurden und die Angaben vollständig und korrekt sind.') ?>
+                            <?= lang('activities.you_are_about_to_approve_the_current_quarter_by_confirming_you_verify_that') ?>
                         </p>
                         <p>
-                            <?= lang('This action cannot be undone. Any later changes should be coordinated with the responsible office.', 'Dieser Vorgang kann nicht rückgängig gemacht werden. Spätere Änderungen sollten mit der zuständigen Stelle abgestimmt werden.') ?>
+                            <?= lang('activities.this_action_cannot_be_undone_any_later_changes_should_be_coordinated_with_t') ?>
                         </p>
 
                         <form action="<?= ROOTPATH ?>/crud/users/approve" method="post">
                             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                             <input type="hidden" name="quarter" class="hidden" value="<?= $YEAR . "Q" . $QUARTER ?>">
-                            <button class="btn success large filled"><?= lang('Approve', 'Freigeben') ?></button>
+                            <button class="btn success large filled"><?= lang('common.approve') ?></button>
                         </form>
                     <?php } ?>
 

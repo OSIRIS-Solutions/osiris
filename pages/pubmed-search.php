@@ -19,10 +19,10 @@
 
 <h1 class="my-0">
     <i class="ph-duotone ph-plus-circle"></i>
-    <?= lang('Search in Pubmed', 'Suche in Pubmed') ?>
+    <?= lang('common.search_in_pubmed') ?>
 </h1>
 
-<a href="<?= ROOTPATH ?>/add-activity" class="link mb-10 d-block"><?= lang('Add manually', 'Füge manuell hinzu') ?></a>
+<a href="<?= ROOTPATH ?>/add-activity" class="link mb-10 d-block"><?= lang('common.add_manually') ?></a>
 
 
 <form action="#" class="form-inline w-500 mw-full" onsubmit="searchLiterature(event)">
@@ -221,18 +221,18 @@
                     p.addClass('text-danger')
 
                     p.html(
-                        lang('<b>Duplicate</b> of', '<b>Duplikat</b> von') +
+                        <?= json_encode(lang('common.duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
                         ` <a href="${ROOTPATH}/activities/view/${result.id}" class="colorless">${result.title}</a>`
                     )
                     btn.remove()
                 } else if (result.similarity > 50) {
                     p.addClass('text-signal')
                     p.html(
-                        lang('Might be duplicate of ', 'Vielleicht Duplikat von') +
+                        <?= json_encode(lang('common.might_be_duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
                         ` (<b>${result.similarity}&nbsp;%</b>):</p>
                      <a href="${ROOTPATH}/activities/view/${result.id}" class="colorless">${result.title}</a>`
                     )
-                    // p.append('<p class="text-signal">'+lang('This might be a duplicate of the follwing publication', 'Dies könnte ein Duplikat der folgenden Publikation sein'))
+                    // p.append('<p class="text-signal">'+<?= json_encode(lang('import.this_might_be_a_duplicate_of_the_follwing_publication'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                 }
                 content.append(p)
 

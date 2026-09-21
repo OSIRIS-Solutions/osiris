@@ -24,42 +24,42 @@ foreach ($data as $item) {
 
 <div class="phpinfo-container">
     <h1 class="p">
-        <i class="ph-duotone ph-info"></i> <?= lang('OSIRIS Info', 'OSIRIS Info') ?>
+        <i class="ph-duotone ph-info"></i> <?= lang('common.osiris_info') ?>
     </h1>
 
     <h2>
-        <?= lang('System Information', 'Systeminformationen') ?>
+        <?= lang('admin.system_information') ?>
     </h2>
 
     <table class="table">
         <tbody>
             <tr>
-                <th class="e"><?= lang('OSIRIS Version (from Database)', 'OSIRIS-Version (aus der Datenbank)') ?></th>
+                <th class="e"><?= lang('admin.osiris_version_from_database') ?></th>
                 <td><?= e($system['version'] ?? '-') ?></td>
             </tr>
             <tr>
-                <th class="e"><?= lang('OSIRIS Version (from Code)', 'OSIRIS-Version (aus dem Code)') ?></th>
+                <th class="e"><?= lang('admin.osiris_version_from_code') ?></th>
                 <td>
                     <?= OSIRIS_VERSION ?> Build: <?= OSIRIS_BUILD ?>
                 </td>
             </tr>
             <tr>
-                <th class="e"><?= lang('Last Updated', 'Letztes Update') ?></th>
+                <th class="e"><?= lang('admin.last_updated') ?></th>
                 <td><?= e($system['last_update'] ?? '-') ?></td>
             </tr>
             <tr>
-                <th class="e"><?= lang('PHP Version', 'PHP-Version') ?></th>
+                <th class="e"><?= lang('admin.php_version') ?></th>
                 <td><?= e(PHP_VERSION) ?></td>
             </tr>
             <tr>
-                <th class="e"><?= lang('Last LDAP Sync', 'Letzte LDAP-Synchronisierung') ?></th>
+                <th class="e"><?= lang('admin.last_ldap_sync') ?></th>
                 <td><?= e($system['ldap-sync'] ?? '-') ?></td>
             </tr>
         </tbody>
     </table>
 
 
-    <h2><?= lang('Uploads', 'Uploads') ?></h2>
+    <h2><?= lang('admin.uploads') ?></h2>
 
     <table class="table">
         <tbody>
@@ -68,12 +68,12 @@ foreach ($data as $item) {
             $uploadsWritable = is_dir(BASEPATH . '/uploads');
             ?>
             <tr>
-                <th class="e"><?= lang('Uploads Directory Exists', 'Uploads-Verzeichnis existiert') ?></th>
+                <th class="e"><?= lang('admin.uploads_directory_exists') ?></th>
                 <td>
                     <?php if ($uploadsWritable) { ?>
-                        <span class="text-success"><?= lang('Yes', 'Ja') ?></span>
+                        <span class="text-success"><?= lang('common.yes') ?></span>
                     <?php } else { ?>
-                        <span class="text-danger"><?= lang('No', 'Nein') ?></span>
+                        <span class="text-danger"><?= lang('common.no') ?></span>
                     <?php } ?>
                 </td>
             </tr>
@@ -82,12 +82,12 @@ foreach ($data as $item) {
             $uploadsWritable = is_writable(BASEPATH . '/uploads');
             ?>
             <tr>
-                <th class="e"><?= lang('Uploads Directory Writable', 'Uploads-Verzeichnis beschreibbar') ?></th>
+                <th class="e"><?= lang('admin.uploads_directory_writable') ?></th>
                 <td>
                     <?php if ($uploadsWritable) { ?>
-                        <span class="text-success"><?= lang('Yes', 'Ja') ?></span>
+                        <span class="text-success"><?= lang('common.yes') ?></span>
                     <?php } else { ?>
-                        <span class="text-danger"><?= lang('No', 'Nein') ?></span>
+                        <span class="text-danger"><?= lang('common.no') ?></span>
                     <?php } ?>
                 </td>
             </tr>
@@ -104,16 +104,16 @@ foreach ($data as $item) {
                 }
             ?>
                 <tr>
-                    <th class="e"><?= lang('Uploads Directory Test File Created', 'Testdatei im Uploads-Verzeichnis erstellt') ?></th>
+                    <th class="e"><?= lang('admin.uploads_directory_test_file_created') ?></th>
                     <td>
                         <?php if ($testFileCreated) { ?>
-                            <span class="text-success"><?= lang('Yes', 'Ja') ?></span>
+                            <span class="text-success"><?= lang('common.yes') ?></span>
                             <?php
                             // delete the test file
                             unlink($testFile);
                             ?>
                         <?php } else { ?>
-                            <span class="text-danger"><?= lang('No', 'Nein') ?></span>
+                            <span class="text-danger"><?= lang('common.no') ?></span>
                         <?php } ?>
                     </td>
                 </tr>
@@ -123,12 +123,12 @@ foreach ($data as $item) {
             $dbPicturesEnabled = $Settings->featureEnabled('db_pictures');
             ?>
             <tr>
-                <th class="e"><?= lang('Database Pictures Enabled', 'Datenbank-Bilder aktiviert') ?></th>
+                <th class="e"><?= lang('admin.database_pictures_enabled') ?></th>
                 <td>
                     <?php if ($dbPicturesEnabled) { ?>
-                        <span class="text-success"><?= lang('Yes, no need to check /img/users', 'Ja, kein Prüfen von /img/users nötig') ?></span>
+                        <span class="text-success"><?= lang('admin.yes_no_need_to_check_img_users') ?></span>
                     <?php } else { ?>
-                        <span class="text-danger"><?= lang('No', 'Nein') ?></span>
+                        <span class="text-danger"><?= lang('common.no') ?></span>
                     <?php } ?>
                 </td>
             </tr>
@@ -138,12 +138,12 @@ foreach ($data as $item) {
                 $imgUsersWritable = is_writable(BASEPATH . '/img/users');
             ?>
                 <tr>
-                    <th class="e"><?= lang('User Images Directory Writable', 'Benutzerbilder-Verzeichnis beschreibbar') ?></th>
+                    <th class="e"><?= lang('admin.user_images_directory_writable') ?></th>
                     <td>
                         <?php if ($imgUsersWritable) { ?>
-                            <span class="text-success"><?= lang('Yes', 'Ja') ?></span>
+                            <span class="text-success"><?= lang('common.yes') ?></span>
                         <?php } else { ?>
-                            <span class="text-danger"><?= lang('No', 'Nein') ?></span>
+                            <span class="text-danger"><?= lang('common.no') ?></span>
                         <?php } ?>
                     </td>
                 </tr>
@@ -155,10 +155,10 @@ foreach ($data as $item) {
             $smallest = min($uploadMaxFilesize, $postMaxSize);
             ?>
             <tr>
-                <th class="e"><?= lang('PHP Upload Limits', 'PHP-Upload-Limits') ?></th>
+                <th class="e"><?= lang('admin.php_upload_limits') ?></th>
                 <td>
                     <?= $smallest ?>B
-                    <small>(<?= lang('upload_max_filesize', 'upload_max_filesize') ?>: <?= e($uploadMaxFilesize) ?>B, <?= lang('post_max_size', 'post_max_size') ?>: <?= e($postMaxSize) ?>B)</small>
+                    <small>(<?= lang('admin.upload_max_filesize') ?>: <?= e($uploadMaxFilesize) ?>B, <?= lang('admin.post_max_size') ?>: <?= e($postMaxSize) ?>B)</small>
                 </td>
             </tr>
         </tbody>

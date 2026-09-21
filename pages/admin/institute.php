@@ -18,13 +18,13 @@
 
     <h1>
         <i class="ph-duotone ph-building" aria-hidden="true"></i>
-        <?= lang('Institution', 'Einrichtung') ?>
+        <?= lang('admin.institution') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm-2">
-                <label for="icon" class="required"><?= lang('Abbreviation', 'Kürzel') ?></label>
+                <label for="icon" class="required"><?= lang('admin.abbreviation') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][id]" required value="<?= $affiliation['id'] ?>">
             </div>
             <div class="col-sm">
@@ -32,46 +32,46 @@
                 <input type="text" class="form-control" name="general[affiliation][name]" required value="<?= $affiliation['name'] ?? '' ?>">
             </div>
             <div class="col-sm">
-                <label for="link" class="required "><?= lang('Link', 'Link') ?></label>
+                <label for="link" class="required "><?= lang('common.link') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][link]" required value="<?= $affiliation['link'] ?? '' ?>">
             </div>
         </div>
         <h2 class="font-size-18">
-            <?= lang('Affiliation matching', 'Zugehörigkeitsabgleich') ?>
+            <?= lang('admin.affiliation_matching') ?>
         </h2>
         <div class="form-group">
             <label for="regex">
-                <?= lang('Regular Expression (Regex) for affiliation', 'Regulärer Ausdruck (Regex) für Zugehörigkeit') ?>
+                <?= lang('admin.regular_expression_regex_for_affiliation') ?>
             </label>
             <input type="text" class="form-control" name="general[regex]" value="<?= $Settings->getRegex(); ?>" style="font-family: monospace;">
             <small class="text-muted">
-                <?= lang('This pattern is used to match the affiliation in online repositories such as CrossRef. If you leave this empty, the institute abbreviation is used as is.', 'Dieses Muster wird verwendet, um die Zugehörigkeit in Online-Repositorien wie CrossRef abzugleichen. Wenn du dieses Feld leer lässt, wird die Institutsabkürzung unverändert verwendet.') ?>
-                <?= lang('As a reference, see', 'Als Referenz, siehe') ?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?= lang('with flavour JavaScript', 'mit Flavour JavaScript') ?>.
+                <?= lang('admin.this_pattern_is_used_to_match_the_affiliation_in_online_repositories_such_a') ?>
+                <?= lang('admin.as_a_reference_see') ?> <a href="https://regex101.com/" target="_blank" rel="noopener noreferrer">Regex101</a> <?= lang('admin.with_flavour_javascript') ?>.
             </small>
         </div>
         <h2 class="font-size-18">
-            <?= lang('External IDs', 'Externe IDs') ?>
+            <?= lang('admin.external_ids') ?>
         </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
                 <label for="openalex">
-                    <?= lang('OpenAlex ID', 'OpenAlex-ID') ?>
+                    <?= lang('admin.openalex_id') ?>
                 </label>
                 <input type="text" class="form-control" name="general[affiliation][openalex]" value="<?= $affiliation['openalex'] ?? '' ?>">
                 <small class="text-primary">
-                    <?= lang('Needed for OpenAlex imports!', 'Diese ID ist notwendig um OpenAlex-Importe zu ermöglichen!') ?>
+                    <?= lang('admin.needed_for_openalex_imports') ?>
                 </small>
             </div>
             <div class="col-sm">
-                <label for="ror"><?= lang('ROR (inkl. URL)', 'ROR (inkl. URL)') ?></label>
+                <label for="ror"><?= lang('admin.ror_inkl_url') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][ror]" value="<?= $affiliation['ror'] ?? 'https://ror.org/' ?>">
                 <a class="font-size-12" href="https://ror.org/" target="_blank" rel="noopener noreferrer">
-                    <?= lang('Find your ROR ID here', 'Finde deine ROR-ID hier') ?>
+                    <?= lang('admin.find_your_ror_id_here') ?>
                 </a>
             </div>
         </div>
         <h2 class="font-size-18">
-            <?= lang('Location', 'Standort') ?>
+            <?= lang('common.location_edit') ?>
         </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
@@ -79,21 +79,21 @@
                 <input type="text" class="form-control" name="general[affiliation][location]" value="<?= $affiliation['location'] ?? '' ?>">
             </div>
             <div class="col-sm">
-                <label for="country"><?= lang('Country Code (2lttr)', 'Ländercode (2 Buchstaben)') ?></label>
+                <label for="country"><?= lang('admin.country_code_2lttr') ?></label>
                 <input type="text" class="form-control" name="general[affiliation][country]" value="<?= $affiliation['country'] ?? 'DE' ?>">
             </div>
         </div>
 
         <h2 class="font-size-18">
-            <?= lang('Coordinates (for map display)', 'Koordinaten (für Kartenanzeige)') ?>
+            <?= lang('admin.coordinates_for_map_display') ?>
         </h2>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm">
-                <label for="lat"><?= lang('Latitude', 'Breitengrad') ?></label>
+                <label for="lat"><?= lang('common.latitude') ?></label>
                 <input type="float" class="form-control" name="general[affiliation][lat]" value="<?= $affiliation['lat'] ?? '' ?>">
             </div>
             <div class="col-sm">
-                <label for="lng"><?= lang('Longitude', 'Längengrad') ?></label>
+                <label for="lng"><?= lang('common.longitude') ?></label>
                 <input type="float" class="form-control" name="general[affiliation][lng]" value="<?= $affiliation['lng'] ?? '' ?>">
             </div>
         </div>

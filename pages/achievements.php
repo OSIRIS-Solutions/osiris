@@ -20,14 +20,14 @@
 <div class="content mt-0">
     <h1>
         <i class="ph-duotone ph-trophy text-signal"></i>
-        <?= lang('Achievements', 'Errungenschaften') ?>
+        <?= lang('common.achievements') ?>
     </h1>
 
     <?php
     // SassCompiler::run("scss/", "css/");
     if ($scientist['hide_achievements'] ?? false) { ?>
         <div class="alert signal">
-            <?= lang('This person has disabled achievements in their profile.', 'Diese Person hat Errungenschaften im Profil ausgeschaltet.') ?>
+            <?= lang('activities.this_person_has_disabled_achievements_in_their_profile') ?>
         </div>
 
     <?php
@@ -47,7 +47,7 @@
     $user_ac = $Achievement->userac;
     if ($user == $_SESSION['username'] && !empty($Achievement->new)) {
         echo '<div class="alert signal m-10">';
-        echo '<h5 class="title font-size-16">' . lang('Congratulation, you achieved something new: ', 'Glückwunsch, du hast neue Errungenschaften erlangt:') . '</h5>';
+        echo '<h5 class="title font-size-16">' . lang('common.congratulation_you_achieved_something_new') . '</h5>';
 
         foreach ($Achievement->new as $i => $n) {
             $Achievement->snack($n);
@@ -75,7 +75,7 @@
         if (($ac['visible'] ?? true) === false && empty($uac)) {
             continue;
         }
-        $user_descr = lang('<em>Unachieved.</em>', '<em>Noch nicht erreicht.</em>');
+        $user_descr = lang('activities.unachieved');
     ?>
         <div class="col-sm-6 col-xl-4">
             <div class="box mt-0" style="height: calc(100% - 2rem);">
@@ -134,7 +134,7 @@
         if (($ac['visible'] ?? true) === false && empty($uac)) {
             continue;
         }
-        $user_descr = lang('<em>Unachieved.</em>', '<em>Noch nicht erreicht.</em>');
+        $user_descr = lang('activities.unachieved');
     ?>
         <div class="d-flex col flex-grow-0">
             <div class="tile w-200 achievement max-<?= $ac['maxlvl'] ?> lvl<?= $uac['level'] ?? 0 ?>" id="<?= $id ?>" style="max-width:25rem">
@@ -155,7 +155,7 @@
                         <?php foreach ($ac['levels'] ?? [] as $lvl) {
                             $descr = $lvl[$Achievement->lang];
                             if ($user == $_SESSION['username']) {
-                                $descr = str_replace(lang('have', 'hat'), lang('has', 'hast'), $descr);
+                                $descr = str_replace(lang('activities.have'), lang('activities.has'), $descr);
                                 $descr = str_replace('*', 'Du', $descr);
                             } else {
                                 $descr = str_replace('*', $firstname, $descr);

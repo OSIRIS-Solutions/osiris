@@ -31,12 +31,12 @@ Route::get('/cart', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         // ['name' => 'Export', 'path' => "/export"], 
-        ['name' => lang("Collection", "Sammlung")]
+        ['name' => lang('reports.collection')]
     ];
     if (isset($_GET['empty']) && $_GET['empty'] == 1) {
         // empty cart
         emptyCart();
-        $_SESSION['msg'] = lang("Collection emptied.", "Sammlung geleert.");
+        $_SESSION['msg'] = lang('reports.collection_emptied');
         header("Location: " . ROOTPATH . "/cart");
         exit();
     }
@@ -242,7 +242,7 @@ Route::post('/download', function () {
 
     if (isset($params['project']) && !empty($params['project'])) {
         if (!DB::is_ObjectID($params['project'])) {
-            return abortwith(400, lang("Invalid project ID:", "Ungültige Projekt-ID") . ' <q>' . $params['project'] . '</q>');
+            return abortwith(400, lang('reports.invalid_project_id') . ' <q>' . $params['project'] . '</q>');
         }
         $filter['$and'][] = array('projects' => DB::to_ObjectID($params['project']));
         $filename .= "_" . trim($params['project']);
@@ -360,7 +360,7 @@ Route::post('/download', function () {
 
             $scientist = $DB->getPerson($params['user']);
 
-            $ReportTemplate->addReportFooter($section, lang('Curriculum Vitae of ', 'Lebenslauf von ') . $scientist['displayname'] . " – " . date('d.m.Y'));
+            $ReportTemplate->addReportFooter($section, lang('reports.curriculum_vitae_of') . $scientist['displayname'] . " – " . date('d.m.Y'));
 
             $section->addTitle($scientist['displayname'], 1);
             $section->addTitle(lang($scientist['position'] ?? '', $scientist['position_de'] ?? null), 3);
@@ -409,21 +409,21 @@ Route::post('/download', function () {
             }
 
             if (isset($scientist['research_profile']) && !empty($scientist['research_profile'])) {
-                $section->addTitle(lang('Research profile', 'Forschungsprofil'), 2);
+                $section->addTitle(lang('people.research_profile'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
                 $line = clean_comment_export(lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
             }
 
             if (isset($scientist['biography']) && !empty($scientist['biography'])) {
-                $section->addTitle(lang('Biography', 'Biografie'), 2);
+                $section->addTitle(lang('common.biography'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
                 $line = clean_comment_export(lang($scientist['biography'], $scientist['biography_de'] ?? null), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
             }
 
             if (isset($scientist['education']) && !empty($scientist['education'])) {
-                $section->addTitle(lang('Education', 'Ausbildung'), 2);
+                $section->addTitle(lang('common.education_profile'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
                 $line = clean_comment_export(lang($scientist['education'], $scientist['education_de'] ?? null), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);

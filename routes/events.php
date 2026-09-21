@@ -21,7 +21,7 @@ Route::get('/(conferences|deadlines)', function ($page) {
         $name = 'Deadlines';
 
         if (!$Settings->featureEnabled('deadlines', false)) {
-            abortwith(500, lang('Deadlines are not enabled.', "Deadlines sind nicht aktiviert."));
+            abortwith(500, lang('events.deadlines_are_not_enabled'));
         }
     } else {
         $name = 'Events';
@@ -45,16 +45,16 @@ Route::get('/(conferences|deadlines)/new', function ($page) {
 
     if ($page == 'deadlines') {
         if (!$Settings->featureEnabled('deadlines', false)) {
-            abortwith(500, lang('Deadlines are not enabled.', "Deadlines sind nicht aktiviert."));
+            abortwith(500, lang('events.deadlines_are_not_enabled'));
         }
         $breadcrumb = [
             ['name' => lang('Deadlines'), 'path' => '/deadlines'],
-            ['name' => lang('New deadline', 'Neue Deadline')]
+            ['name' => lang('deadlines.new_deadline')]
         ];
     } else {
         $breadcrumb = [
             ['name' => lang('Events'), 'path' => '/conferences'],
-            ['name' => lang('New event', 'Neues Event')]
+            ['name' => lang('events.new_event')]
         ];
     }
 
@@ -148,14 +148,14 @@ Route::get('/deadlines/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('Deadlines are not enabled.', "Deadlines sind nicht aktiviert."));
+        abortwith(500, lang('events.deadlines_are_not_enabled'));
     }
 
     $mongo_id = DB::to_ObjectID($id);
     // get deadline
     $deadline = $osiris->deadlines->findOne(['_id' => $mongo_id]);
     if (!$deadline) {
-        abortwith(404, lang('Deadline', "Deadline"), '/deadlines');
+        abortwith(404, lang('events.deadline'), '/deadlines');
     }
     $breadcrumb = [
         ['name' => lang('Deadlines'), 'path' => '/deadlines'],
@@ -171,14 +171,14 @@ Route::get('/deadlines/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('Deadlines are not enabled.', "Deadlines sind nicht aktiviert."));
+        abortwith(500, lang('events.deadlines_are_not_enabled'));
     }
     $conf_id = DB::to_ObjectID($id);
     // get deadline
     $new = false;
     $form = $osiris->deadlines->findOne(['_id' => $conf_id]);
     if (!$form) {
-        abortwith(404, lang('Deadline', "Deadline"), '/deadlines');
+        abortwith(404, lang('events.deadline'), '/deadlines');
     }
 
     $breadcrumb = [
@@ -215,13 +215,13 @@ Route::post('/crud/conferences/add', function () {
     if (!isset($values['title']) || !isset($values['start']) || !isset($values['location'])) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.')]);
+            echo json_encode(['status' => 'error', 'msg' => lang('events.title_location_and_date_are_needed')]);
             exit;
         }
         $new = true;
         $form = $values;
         include BASEPATH . "/header.php";
-        printMsg(lang('Title, Location, and Date are needed.', 'Titel, Ort und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
+        printMsg(lang('events.title_location_and_date_are_needed'), 'error', lang('events.missing_fields'));
         include BASEPATH . "/pages/events/edit.php";
         include BASEPATH . "/footer.php";
         exit;
@@ -234,10 +234,10 @@ Route::post('/crud/conferences/add', function () {
     if ($existing) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'warning', 'msg' => lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.'), 'id' => (string)$existing['_id']]);
+            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id']]);
             exit;
         }
-        $_SESSION['msg'] = lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.');
+        $_SESSION['msg'] = lang('events.an_event_with_the_same_title_and_date_already_exists');
         header("Location: " . ROOTPATH . "/conferences/view/" . $existing['_id']);
         exit;
     }
@@ -274,7 +274,7 @@ Route::post('/crud/conferences/add', function () {
         echo json_encode(['status' => 'success', 'id' => (string)$id]);
         exit;
     }
-    $_SESSION['msg'] = lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.');
+    $_SESSION['msg'] = lang('events.event_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
@@ -304,7 +304,7 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('Event updated successfully.', 'Veranstaltung erfolgreich aktualisiert.');
+    $_SESSION['msg'] = lang('events.event_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
@@ -313,17 +313,17 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
 Route::post('/crud/conferences/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('conferences', true)) {
-        abortwith(500, lang('Events are not enabled.', "Veranstaltungen sind nicht aktiviert."));
+        abortwith(500, lang('events.events_are_not_enabled'));
     }
     $data = $osiris->conferences->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
         abortwith(404, lang('common.event'), '/conferences');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('conferences.delete')) {
-        abortwith(403, lang('You do not have permission to delete this event.', 'Sie haben keine Berechtigung, diese Veranstaltung zu löschen.'));
+        abortwith(403, lang('events.you_do_not_have_permission_to_delete_this_event'));
     }
     $osiris->conferences->deleteOne(['_id' => DB::to_ObjectID($id)]);
-    $_SESSION['msg'] = lang('Event deleted successfully.', 'Veranstaltung erfolgreich gelöscht.');
+    $_SESSION['msg'] = lang('events.event_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . '/conferences');
 }, 'login');
@@ -379,13 +379,13 @@ Route::post('/crud/deadlines/add', function () {
     if (!isset($values['title']) || !isset($values['date'])) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('Title and Date are needed.', 'Titel und Datum sind erforderliche Felder.')]);
+            echo json_encode(['status' => 'error', 'msg' => lang('events.title_and_date_are_needed')]);
             exit;
         }
         $new = true;
         $form = $values;
         include BASEPATH . "/header.php";
-        printMsg(lang('Title and Date are needed.', 'Titel und Datum sind erforderliche Felder.'), 'error', lang('Missing fields', 'Fehlende Daten'));
+        printMsg(lang('events.title_and_date_are_needed'), 'error', lang('events.missing_fields'));
         include BASEPATH . "/pages/events/edit.php";
         include BASEPATH . "/footer.php";
         exit;
@@ -398,10 +398,10 @@ Route::post('/crud/deadlines/add', function () {
     if ($existing) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'warning', 'msg' => lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.'), 'id' => (string)$existing['_id']]);
+            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id']]);
             exit;
         }
-        $_SESSION['msg'] = lang('An event with the same title and date already exists.', 'Ein Event mit dem gleichen Titel und Datum existiert bereits.');
+        $_SESSION['msg'] = lang('events.an_event_with_the_same_title_and_date_already_exists');
         header("Location: " . ROOTPATH . "/deadlines/view/" . $existing['_id']);
         exit;
     }
@@ -431,7 +431,7 @@ Route::post('/crud/deadlines/add', function () {
         echo json_encode(['status' => 'success', 'id' => (string)$id]);
         exit;
     }
-    $_SESSION['msg'] = lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.');
+    $_SESSION['msg'] = lang('events.event_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/deadlines/view/$id");
 }, 'login');
@@ -467,7 +467,7 @@ Route::post('/crud/deadlines/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('Deadline updated successfully.', 'Deadline erfolgreich aktualisiert.');
+    $_SESSION['msg'] = lang('events.deadline_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/deadlines/view/$id");
 }, 'login');
@@ -476,17 +476,17 @@ Route::post('/crud/deadlines/update/(.*)', function ($id) {
 Route::post('/crud/deadlines/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('Deadlines are not enabled.', "Deadlines sind nicht aktiviert."));
+        abortwith(500, lang('events.deadlines_are_not_enabled'));
     }
     $data = $osiris->deadlines->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
         abortwith(404, lang('common.event'), '/deadlines');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('deadlines.delete')) {
-        abortwith(403, lang('You do not have permission to delete this event.', 'Sie haben keine Berechtigung, diese Veranstaltung zu löschen.'));
+        abortwith(403, lang('events.you_do_not_have_permission_to_delete_this_event'));
     }
     $osiris->deadlines->deleteOne(['_id' => DB::to_ObjectID($id)]);
-    $_SESSION['msg'] = lang('Deadline deleted successfully.', 'Deadline erfolgreich gelöscht.');
+    $_SESSION['msg'] = lang('events.deadline_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . '/deadlines');
 }, 'login');

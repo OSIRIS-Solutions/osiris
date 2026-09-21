@@ -170,7 +170,7 @@ class Groups
     public function getName($id)
     {
         $group = $this->getGroup($id);
-        if (empty($group)) return lang('Unknown Unit', 'Unbekannte Einheit');
+        if (empty($group)) return lang('people.unknown_unit');
         return lang($group['name'], $group['name_de'] ?? null);
     }
 

@@ -34,7 +34,7 @@ foreach ($groupImages as $image) {
         }
     }
     if (!empty($image['credits'])) {
-        $details[] = lang('Photo: ', 'Foto: ') . $image['credits'];
+        $details[] = lang('groups.photo') . $image['credits'];
     }
     $galleryImages[] = [
         'src' => ROOTPATH . '/uploads/' . ($image['file'] ?? ''),
@@ -47,21 +47,18 @@ foreach ($groupImages as $image) {
 <?php if (!empty($groupImages) || $edit_perm) { ?>
     <div id="images" class="mt-20">
         <div class="d-flex align-items-center justify-content-between">
-            <h5 class="my-0"><?= lang('Images', 'Bilder') ?></h5>
+            <h5 class="my-0"><?= lang('groups.images') ?></h5>
             <?php if ($edit_perm) { ?>
                 <a class="btn small" href="#manage-group-images">
                     <i class="ph ph-images ph-fw"></i>
-                    <?= lang('Manage images', 'Bilder verwalten') ?>
+                    <?= lang('groups.manage_images') ?>
                 </a>
             <?php } ?>
         </div>
 
         <?php if (empty($groupImages)) { ?>
             <p class="text-muted">
-                <?= lang(
-                    'No images have been uploaded for this unit yet.',
-                    'Für diese Einheit wurden noch keine Bilder hochgeladen.'
-                ) ?>
+                <?= lang('groups.no_images_have_been_uploaded_for_this_unit_yet') ?>
             </p>
         <?php } else { ?>
             <div class="row row-eq-spacing mt-5">
@@ -69,7 +66,7 @@ foreach ($groupImages as $image) {
                     $captionEn = trim($image['caption'] ?? '');
                     $captionDe = trim($image['caption_de'] ?? '');
                     $caption = lang($captionEn ?: $captionDe, $captionDe ?: $captionEn);
-                    $alt = $caption ?: lang('Image of the organizational unit', 'Bild der Organisationseinheit');
+                    $alt = $caption ?: lang('groups.image_of_the_organizational_unit');
                 ?>
                     <div class="col-sm-6 col-md-4">
                         <a href="#group-image-modal" class="card p-0 overflow-hidden d-block" onclick="showGroupImage(<?= $index ?>)">
@@ -109,7 +106,7 @@ foreach ($groupImages as $image) {
     </style>
 
     <?php if (!empty($groupImages)) { ?>
-        <div class="modal modal-full" id="group-image-modal" tabindex="-1" role="dialog" aria-modal="true" aria-label="<?= lang('Image gallery', 'Bildergalerie') ?>">
+        <div class="modal modal-full" id="group-image-modal" tabindex="-1" role="dialog" aria-modal="true" aria-label="<?= lang('groups.image_gallery') ?>">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
@@ -173,41 +170,41 @@ $filesize = Settings::getMaxFileSize('8M');
                 <a data-dismiss="modal" class="close" role="button" aria-label="<?= lang('action.close') ?>" href="#close-modal">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <h2 id="manage-group-images-title" class="title"><?= lang('Manage images', 'Bilder verwalten') ?></h2>
+                <h2 id="manage-group-images-title" class="title"><?= lang('groups.manage_images') ?></h2>
 
                 <div class="box padded">
-                    <h5 class="mt-0"><?= lang('Upload image', 'Bild hochladen') ?></h5>
+                    <h5 class="mt-0"><?= lang('common.upload_image') ?></h5>
                     <form action="<?= ROOTPATH ?>/crud/groups/images/<?= $group['_id'] ?>" method="post" enctype="multipart/form-data">
                         <div class="custom-file">
                             <input type="file" id="group-image-file" name="file" accept="image/jpeg,image/png,image/webp" maxsize="<?= $filesize['bytes'] ?>" required>
-                            <label for="group-image-file"><?= lang('Select image', 'Bild auswählen') ?></label>
+                            <label for="group-image-file"><?= lang('common.select_image') ?></label>
                         </div>
                         <small class="text-muted">
-                            <?= lang('JPEG, PNG or WebP; maximum ' . $filesize['human'] . '.', 'JPEG, PNG oder WebP; maximal ' . $filesize['human'] . '.') ?>
+                            <?= lang('groups.jpeg_png_or_webp_maximum_filesize', replace: ['filesize' => $filesize['human']]) ?>
                         </small>
 
                         <div class="row row-eq-spacing">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="group-image-caption"><?= lang('Caption', 'Bildunterschrift') ?> (EN)</label>
+                                    <label for="group-image-caption"><?= lang('groups.caption') ?> (EN)</label>
                                     <input type="text" class="form-control" id="group-image-caption" name="caption" maxlength="1000">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="group-image-caption-de"><?= lang('Caption', 'Bildunterschrift') ?> (DE)</label>
+                                    <label for="group-image-caption-de"><?= lang('groups.caption') ?> (DE)</label>
                                     <input type="text" class="form-control" id="group-image-caption-de" name="caption_de" maxlength="1000">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="group-image-date"><?= lang('Date taken', 'Aufnahmedatum') ?></label>
+                                    <label for="group-image-date"><?= lang('groups.date_taken') ?></label>
                                     <input type="date" class="form-control" id="group-image-date" name="taken_at">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="group-image-credits"><?= lang('Photo credit', 'Bildnachweis') ?></label>
+                                    <label for="group-image-credits"><?= lang('groups.photo_credit') ?></label>
                                     <input type="text" class="form-control" id="group-image-credits" name="credits" maxlength="255">
                                 </div>
                             </div>
@@ -217,13 +214,13 @@ $filesize = Settings::getMaxFileSize('8M');
                             <div class="custom-switch">
                                 <input type="checkbox" id="group-image-public" name="public" value="1">
                                 <label for="group-image-public">
-                                    <?= lang('Make image publicly available', 'Bild öffentlich verfügbar machen') ?>
+                                    <?= lang('groups.make_image_publicly_available') ?>
                                 </label>
                             </div>
                         </div>
                         <button type="submit" class="btn primary">
                             <i class="ph ph-upload-simple"></i>
-                            <?= lang('Upload image', 'Bild hochladen') ?>
+                            <?= lang('common.upload_image') ?>
                         </button>
                     </form>
                 </div>
@@ -242,23 +239,23 @@ $filesize = Settings::getMaxFileSize('8M');
                             <div class="col-sm-8">
                                 <form action="<?= ROOTPATH ?>/crud/groups/images/<?= $group['_id'] ?>/<?= e($image['id'] ?? '') ?>/update" method="post">
                                     <div class="form-group">
-                                        <label for="caption-<?= e($image['id'] ?? '') ?>"><?= lang('Caption', 'Bildunterschrift') ?> (EN)</label>
+                                        <label for="caption-<?= e($image['id'] ?? '') ?>"><?= lang('groups.caption') ?> (EN)</label>
                                         <input type="text" class="form-control" id="caption-<?= e($image['id'] ?? '') ?>" name="caption" maxlength="1000" value="<?= e($image['caption'] ?? '') ?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="caption-de-<?= e($image['id'] ?? '') ?>"><?= lang('Caption', 'Bildunterschrift') ?> (DE)</label>
+                                        <label for="caption-de-<?= e($image['id'] ?? '') ?>"><?= lang('groups.caption') ?> (DE)</label>
                                         <input type="text" class="form-control" id="caption-de-<?= e($image['id'] ?? '') ?>" name="caption_de" maxlength="1000" value="<?= e($image['caption_de'] ?? '') ?>">
                                     </div>
                                     <div class="row row-eq-spacing mt-0">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="date-<?= e($image['id'] ?? '') ?>"><?= lang('Date taken', 'Aufnahmedatum') ?></label>
+                                                <label for="date-<?= e($image['id'] ?? '') ?>"><?= lang('groups.date_taken') ?></label>
                                                 <input type="date" class="form-control" id="date-<?= e($image['id'] ?? '') ?>" name="taken_at" value="<?= e($image['taken_at'] ?? '') ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="credits-<?= e($image['id'] ?? '') ?>"><?= lang('Photo credit', 'Bildnachweis') ?></label>
+                                                <label for="credits-<?= e($image['id'] ?? '') ?>"><?= lang('groups.photo_credit') ?></label>
                                                 <input type="text" class="form-control" id="credits-<?= e($image['id'] ?? '') ?>" name="credits" maxlength="255" value="<?= e($image['credits'] ?? '') ?>">
                                             </div>
                                         </div>
@@ -274,7 +271,7 @@ $filesize = Settings::getMaxFileSize('8M');
                                                 <?= !empty($image['public']) ? 'checked' : '' ?>
                                             >
                                             <label for="public-<?= e($image['id'] ?? '') ?>">
-                                                <?= lang('Make image publicly available', 'Bild öffentlich verfügbar machen') ?>
+                                                <?= lang('groups.make_image_publicly_available') ?>
                                             </label>
                                         </div>
                                     </div>
@@ -288,7 +285,7 @@ $filesize = Settings::getMaxFileSize('8M');
                                     action="<?= ROOTPATH ?>/crud/groups/images/<?= $group['_id'] ?>/<?= e($image['id'] ?? '') ?>/delete"
                                     method="post"
                                     class="d-inline"
-                                    onsubmit="return confirm('<?= e(lang('Do you really want to delete this image?', 'Möchtest du dieses Bild wirklich löschen?')) ?>')"
+                                    onsubmit="return confirm('<?= e(lang('groups.do_you_really_want_to_delete_this_image')) ?>')"
                                 >
                                     <button type="submit" class="btn danger small mt-10">
                                         <i class="ph ph-trash"></i>

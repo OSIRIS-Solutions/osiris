@@ -75,11 +75,11 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 <i class="ph ph-caret-left" aria-hidden="true"></i>
                 <span>
                     <?php if ($topics_and_groups) { ?>
-                        <?= lang('Explore by topic & unit', 'Erkunden nach Schwerpunkt & Einheit') ?>
+                        <?= lang('common.explore_by_topic_unit') ?>
                     <?php } else if (!empty($topics)) { ?>
-                        <?= lang('Explore by topic', 'Erkunden nach Schwerpunkt') ?>
+                        <?= lang('common.explore_by_topic') ?>
                     <?php } else if (!empty($hierarchy)) { ?>
-                        <?= lang('Explore by unit', 'Erkunden nach Einheit') ?>
+                        <?= lang('common.explore_by_unit') ?>
                     <?php } ?>
                 </span>
             </div>
@@ -170,12 +170,12 @@ $preselect = $open ?? $_GET['open'] ?? null;
             <nav id="group-pills">
                 <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'info' ? 'active' : '' ?>">
                     <i class="ph ph-info" aria-hidden="true"></i>
-                    <?= lang('Info', 'Info') ?>
+                    <?= lang('common.info') ?>
                 </a>
 
                 <a onclick="navigate('persons')" id="btn-persons" class="<?= $preselect === 'persons' ? 'active' : '' ?>">
                     <i class="ph ph-users" aria-hidden="true"></i>
-                    <?= lang('Team', 'Team') ?>
+                    <?= lang('common.team') ?>
                     <span class="index"><?= $numbers['persons'] ?></span>
                 </a>
 
@@ -218,7 +218,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </nav>
 
 
-            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= lang('General information', 'Allgemeine Informationen') ?>">
+            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= lang('projects.general_information') ?>">
                 <!-- head -->
                 <?php
                 $head = $data['heads'] ?? [];
@@ -258,7 +258,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('Employees', 'Mitarbeitende Personen') ?>">
+            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.employees') ?>">
 
                 <table class="table cards w-full datatable" id="users-table" data-page-length="18">
                     <thead>
@@ -333,8 +333,8 @@ $preselect = $open ?? $_GET['open'] ?? null;
                     data-lang="<?= lang('common.this_language') ?>">
                     <thead>
                         <tr>
-                            <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
-                            <th data-col="html" data-search-col="search"><?= lang('Publication', 'Publikation') ?></th>
+                            <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
+                            <th data-col="html" data-search-col="search"><?= lang('common.publication') ?></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -342,10 +342,10 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= lang('Other activities', 'Andere Aktivitäten') ?>">
+            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.other_activities') ?>">
 
 
-                <!-- <h2><?= lang('Other activities', 'Andere Aktivitäten') ?></h2> -->
+                <!-- <h2><?= lang('common.other_activities') ?></h2> -->
 
                 <div class="w-full">
 
@@ -357,7 +357,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         data-lang="<?= lang('common.this_language') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
                                 <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                             </tr>
                         </thead>
@@ -404,8 +404,8 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             </div>
                         </div>
                         <p>
-                            <span style="color:var(--secondary-color)">&#9673;</span> <?= lang("This institution", "Diese Einrichtung") ?><br>
-                            <span style="color:var(--primary-color)">&#9673;</span> <?= lang("Cooperation partner", "Kooperationspartner") ?>
+                            <span style="color:var(--secondary-color)">&#9673;</span> <?= lang('common.this_institution') ?><br>
+                            <span style="color:var(--primary-color)">&#9673;</span> <?= lang('common.cooperation_partner') ?>
                         </p>
                     </div>
 

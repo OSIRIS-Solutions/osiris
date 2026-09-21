@@ -23,7 +23,7 @@
                     <?= lang('error.method_not_allowed') ?>
                 </h1>
                 <p>
-                    <?= lang('error.method_not_allowed_message', ['method' => $_SERVER['REQUEST_METHOD']]) ?>
+                    <?= lang('error.method_not_allowed_message', replace: ['method' => $_SERVER['REQUEST_METHOD']]) ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/" class="btn cta">
                     <?= lang('navigation.go_home') ?>

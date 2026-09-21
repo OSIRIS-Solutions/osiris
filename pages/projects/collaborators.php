@@ -26,34 +26,34 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
             <div class="content">
                 <h3>
-                    <?= lang('Add new organization', 'Neue Organisation hinzufügen') ?>
+                    <?= lang('projects.add_new_organization') ?>
                 </h3>
 
                 <p class="text-muted">
-                    <?= lang('Fill in the details of the new organization you want to add as a collaborator. Please try to search for the organization first to avoid duplicates.', 'Füll die Details der neuen Organisation aus, die du als Kooperationspartner hinzufügen möchtest. Bitte versuche zuerst, die Organisation zu suchen, um Duplikate zu vermeiden.') ?>
+                    <?= lang('projects.fill_in_the_details_of_the_new_organization_you_want_to_add_as_a_collaborat') ?>
                 </p>
 
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('Name of the organisation', 'Name der Organisation') ?>
+                        <?= lang('common.name_of_the_organisation') ?>
                     </label>
                     <input type="text" class="form-control" id="org-name" required>
                 </div>
 
                 <div class="form-group">
                     <label for="type" class="required">
-                        <?= lang('Type of organisation', 'Art der Organisation') ?>
+                        <?= lang('common.type_of_organisation') ?>
                     </label>
                     <select id="org-type" class="form-control" required>
-                        <option value="" disabled><?= lang('Select type', 'Art auswählen') ?></option>
-                        <option value="education"><?= lang('Education', 'Bildung') ?></option>
-                        <option value="funder"><?= lang('Funder', 'Förderer') ?></option>
-                        <option value="healthcare"><?= lang('Healthcare', 'Gesundheitswesen') ?></option>
-                        <option value="company"><?= lang('Company', 'Unternehmen') ?></option>
-                        <option value="archive"><?= lang('Archive', 'Archiv') ?></option>
-                        <option value="nonprofit"><?= lang('Non-profit', 'Gemeinnützig') ?></option>
-                        <option value="government"><?= lang('Government', 'Regierung') ?></option>
-                        <option value="facility"><?= lang('Facility', 'Einrichtung') ?></option>
+                        <option value="" disabled><?= lang('common.select_type') ?></option>
+                        <option value="education"><?= lang('common.education') ?></option>
+                        <option value="funder"><?= lang('common.funder') ?></option>
+                        <option value="healthcare"><?= lang('common.healthcare') ?></option>
+                        <option value="company"><?= lang('common.company') ?></option>
+                        <option value="archive"><?= lang('common.archive') ?></option>
+                        <option value="nonprofit"><?= lang('common.non_profit') ?></option>
+                        <option value="government"><?= lang('common.government') ?></option>
+                        <option value="facility"><?= lang('common.facility') ?></option>
                         <option value="other"><?= lang('common.other') ?></option>
                     </select>
                 </div>
@@ -63,7 +63,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
                     <div class="col-sm">
                         <label for="location">
-                            <?= lang('Location', 'Standort') ?>
+                            <?= lang('common.location_edit') ?>
                         </label>
                         <input type="text" class="form-control" id="org-location">
                     </div>
@@ -73,7 +73,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                             <?= lang('common.country') ?>
                         </label>
                         <select id="org-country" class="form-control" required>
-                            <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                            <option value=""><?= lang('common.select_country') ?></option>
                             <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
                                 <option value="<?= $key ?>"><?= $value ?></option>
                             <?php } ?>
@@ -83,28 +83,28 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
                 <fieldset>
                     <legend>
-                        <?= lang('Geographical Coordinates', 'Geografische Koordinaten') ?>
+                        <?= lang('projects.geographical_coordinates') ?>
                     </legend>
                     <button type="button" class="btn small primary" onclick="getCoordinates('#org-location', '#org-country', '#org-lat', '#org-lng')">
                         <i class="ph ph-map-pin"></i>
-                        <?= lang('Get coordinates by location', 'Koordinaten vom Standort ermitteln') ?>
+                        <?= lang('common.get_coordinates_by_location') ?>
                     </button>
                     <div class="row row-eq-spacing align-items-end">
                         <div class="col-sm">
                             <label for="lat">
-                                <?= lang('Latitude', 'Breitengrad') ?>
+                                <?= lang('common.latitude') ?>
                             </label>
                             <input type="number" class="form-control" id="org-lat" step="any">
                         </div>
                         <div class="col-sm">
                             <label for="lng">
-                                <?= lang('Longitude', 'Längengrad') ?>
+                                <?= lang('common.longitude') ?>
                             </label>
                             <input type="number" class="form-control" id="org-lng" step="any">
                         </div>
                     </div>
                     <small class="text-muted">
-                        <?= lang('Geographical coordinates are required to correctly display the organisation on a map.', 'Die geografischen Koordinaten werden benötigt, um die Organisation auf einer Karte korrekt darzustellen.') ?>
+                        <?= lang('common.geographical_coordinates_are_required_to_correctly_display_the_organisation') ?>
                     </small>
                 </fieldset>
                 <br><br>
@@ -126,21 +126,18 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 
             <div class="content">
                 <h3>
-                    <?= lang('Import ROR from CSV', 'ROR aus CSV-Datei importieren') ?>
+                    <?= lang('projects.import_ror_from_csv') ?>
                 </h3>
                 <p>
-                    <?= lang('Upload a CSV file containing ROR to import multiple collaborators at once.', 'Lade eine CSV-Datei mit ROR-IDs hoch, um mehrere Kooperationspartner auf einmal zu importieren.') ?>
+                    <?= lang('projects.upload_a_csv_file_containing_ror_to_import_multiple_collaborators_at_once') ?>
                 </p>
                 <div class="custom-file">
                     <input type="file" id="ror-file">
-                    <label for="ror-file"><?= lang('Select file', 'Datei auswählen') ?></label>
+                    <label for="ror-file"><?= lang('common.select_file') ?></label>
                 </div>
                 <small>
-                    <?= lang('The file should contain a column with the header "ROR" and the ROR-IDs in the following rows.', 'Die Datei sollte eine Spalte mit der Überschrift "ROR" und den ROR-IDs in den folgenden Zeilen enthalten.') ?>
-                    <?= lang(
-                        'The following other column names are supported and will be filled if they exist: "name", "latitude", "longitude", "coordinator" (please enter any value, e.g. 1, for yes and leave blank for no), "country" (ISO 2 letter code), "location".',
-                        'Die folgenden anderen Spaltennamen werden unterstützt und werden ausgefüllt, wenn sie vorhanden sind: "name", "latitude", "longitude", "coordinator" (bitte geben Sie für "ja" einen beliebigen Wert ein, z. B. 1 und lassen Sie ihn für "nein" leer), "country" (ISO-Code mit zwei Buchstaben), "location".'
-                    ) ?>
+                    <?= lang('projects.the_file_should_contain_a_column_with_the_header_ror_and_the_ror_ids_in_the') ?>
+                    <?= lang('projects.the_following_other_column_names_are_supported_and_will_be_filled_if_they_e') ?>
                 </small>
             </div>
         </div>
@@ -185,12 +182,12 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
 </style>
 <div class="box padded">
     <h6 class="mt-0">
-        <?= lang('Add partner', 'Partner hinzufügen') ?>
+        <?= lang('projects.add_partner') ?>
         <a onclick="$('#search-help').toggleClass('hidden')"><i class="ph ph-question"></i></a>
     </h6>
     <p class="hidden" id="search-help">
         <i class="ph ph-info"></i>
-        <?= lang('You can search for organizations by their name or ROR ID. OSIRIS will look for partners in the database first. If no matching organization is found, it will search in the ROR database.', 'Du kannst nach Organisationen anhand ihres Namens oder ihrer ROR-ID suchen. OSIRIS wird zuerst in der Datenbank nach Partnern suchen. Wenn keine passende Organisation gefunden wird, wird in der ROR-Datenbank gesucht.') ?>
+        <?= lang('projects.you_can_search_for_organizations_by_their_name_or_ror_id_osiris_will_look_f') ?>
     </p>
     <div class="position-relative">
         <div class="d-flex justify-content-between align-items-center">
@@ -198,7 +195,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
         </div>
         <div class="d-flex">
             <div class="input-group">
-                <input type="text" class="form-control" id="organization-search" onchange="getOrganization(this.value)" placeholder="<?= lang('Search for organization by name or ROR ID...', 'Nach Organisation anhand von Name oder ROR ID suchen...') ?>">
+                <input type="text" class="form-control" id="organization-search" onchange="getOrganization(this.value)" placeholder="<?= lang('projects.search_for_organization_by_name_or_ror_id') ?>">
                 <div class="input-group-append">
                     <button class="btn" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
                 </div>
@@ -225,14 +222,14 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
         <tbody id="collaborators">
             <tr id="collab-institute">
                 <td>
-                    <span data-toggle="tooltip" data-title="<?= lang('This is your institution. You do not need to add it again.', 'Dies ist deine Einrichtung. Du musst es nicht erneut hinzufügen.') ?>"><i class="ph ph-info text-muted"></i></span>
+                    <span data-toggle="tooltip" data-title="<?= lang('projects.this_is_your_institution_you_do_not_need_to_add_it_again') ?>"><i class="ph ph-info text-muted"></i></span>
                     <?= $institute['name'] ?? '' ?>
                 </td>
                 <td>
                     <?= ucfirst($institute['role'] ?? '') ?>
                 </td>
                 <td>
-                    <?= lang('Your institution', 'Deine Einrichtung') ?>*
+                    <?= lang('projects.your_institution') ?>*
                 </td>
             </tr>
             <?php
@@ -244,7 +241,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                             <span class="text-danger">
                                 <i class="ph ph-warning-circle"></i>
                                 <b><?= e($con['name'] ?? $con['organization']) ?></b>
-                                <?= lang('Organization not found. It might have been deleted.', 'Organisation nicht gefunden. Sie wurde möglicherweise gelöscht.') ?>
+                                <?= lang('projects.organization_not_found_it_might_have_been_deleted') ?>
                             </span>
                         </td>
                         <td>
@@ -269,7 +266,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                         <select name="values[role][]" type="text" class="form-control " required>
                             <option <?= $t == 'partner' ? 'selected' : '' ?> value="partner">Partner</option>
                             <option <?= $t == 'coordinator' ? 'selected' : '' ?> value="coordinator">Coordinator</option>
-                            <option <?= $t == 'associated' ? 'selected' : '' ?> value="associated"><?= lang('Associated', 'Beteiligt') ?></option>
+                            <option <?= $t == 'associated' ? 'selected' : '' ?> value="associated"><?= lang('projects.associated') ?></option>
                         </select>
                     </td>
                     <td>
@@ -282,7 +279,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
     </table>
 
     <p class="font-size-12 text-muted">
-        * <?= lang('Your institution is automatically added as a collaborator to every project you create. You do not need to add it again and you cannot remove it. You can change the role of your institution in the project settings.', 'Deine Einrichtung wird bei jedem von dir erstellten Projekt automatisch als Kooperationspartner hinzugefügt. Du musst es nicht manuell hinzufügen und kannst es auch nicht entfernen. Die Rolle deiner Einrichtung kannst du in den Projekteinstellungen ändern.') ?>
+        * <?= lang('projects.your_institution_is_automatically_added_as_a_collaborator_to_every_project') ?>
     </p>
 
     <button type="submit" class="btn secondary mt-10">
@@ -307,7 +304,7 @@ if (!isset($project['collaborators']) || empty($project['collaborators'])) {
                     <select name="values[role][]" type="text" class="form-control " required>
                         <option value="partner" selected>Partner</option>
                         <option value="coordinator">Coordinator</option>
-                        <option value="associated">${lang('Associated', 'Beteiligt')}</option>
+                        <option value="associated">${<?= json_encode(lang('projects.associated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</option>
                     </select>
                 </td>`;
         tr += `<td>

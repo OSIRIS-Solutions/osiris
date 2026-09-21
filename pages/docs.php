@@ -19,29 +19,29 @@
 
 <h1>
     <i class="ph-duotone ph-book-open"></i>
-    <?= lang('Documentation', 'Dokumentation') ?>
+    <?= lang('common.documentation') ?>
 </h1>
 
 <!-- wiki hint -->
 <div class="alert">
-    <?= lang('For detailed information on how to use OSIRIS, including administration and configuration, please visit our', 'Für detaillierte Informationen zur Nutzung von OSIRIS, einschließlich Administration und Konfiguration, besuche bitte unser') ?>
+    <?= lang('common.for_detailed_information_on_how_to_use_osiris_including_administration_and') ?>
     <a href="https://wiki.osiris-app.de/" target="_blank">
         <i class="ph ph-book-open mr-5"></i>
-        <?= lang('Wiki', 'Wiki') ?>
+        <?= lang('common.wiki') ?>
     </a>.
-    <?=lang('Some useful links:', 'Einige nützliche Links:')?>
+    <?=lang('common.some_useful_links')?>
 </div>
 
 <div class="link-list" style="max-width:50rem">
 
     <a href="https://wiki.osiris-app.de/users/content/create_content/" target="_blank">
         <i class="ph mr-10 text-secondary ph-book-open"></i>
-        <?= lang('Add activities', 'Aktivitäten hinzufügen') ?>
+        <?= lang('common.add_activities') ?>
     </a>
 
     <a href="https://wiki.osiris-app.de/users/profile/scientist_view/" target="_blank">
         <i class="ph mr-10 text-secondary ph-calendar"></i>
-        <?= lang('My year', 'Mein Jahr') ?>
+        <?= lang('common.my_year_docs') ?>
     </a>
 
     <a href="https://wiki.osiris-app.de/users/advanced-search/" target="_blank">
@@ -51,12 +51,12 @@
 
     <a href="https://wiki.osiris-app.de/users/issues/" target="_blank">
         <i class="ph mr-10 text-secondary ph-warning"></i>
-        <?= lang('Warnings', 'Warnungen') ?>
+        <?= lang('common.warnings') ?>
     </a>
 
     <a href="https://wiki.osiris-app.de/users/profile/start/" target="_blank">
         <i class="ph mr-10 text-secondary ph-user-list"></i>
-        <?= lang('Profile editing', 'Profilbearbeitung') ?>
+        <?= lang('common.profile_editing') ?>
     </a>
 
     <a href="<?= ROOTPATH ?>/docs/faq">
@@ -82,5 +82,5 @@
 </div>
 
 <p>
-    <?= lang('For more information, please refer to the', 'Für weitere Informationen siehe das') ?> <a href="https://wiki.osiris-app.de/" target="_blank"><?= lang('Wiki', 'Wiki') ?></a>.
+    <?= lang('common.for_more_information_please_refer_to_the') ?> <a href="https://wiki.osiris-app.de/" target="_blank"><?= lang('common.wiki') ?></a>.
 </p>

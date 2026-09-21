@@ -946,10 +946,10 @@ class Document extends Settings
     public static function getPosition($position)
     {
         $positions = [
-            'first' => lang('First author', 'Erstautor'),
-            'last' => lang('Last author', 'Letztautor'),
-            'middle' => lang('Middle author', 'Mittelautor'),
-            'corresponding' => lang('Corresponding author', 'Korrespondierender Autor'),
+            'first' => lang('documents.first_author'),
+            'last' => lang('documents.last_author'),
+            'middle' => lang('documents.middle_author'),
+            'corresponding' => lang('documents.corresponding_author'),
         ];
         return $positions[$position] ?? ucfirst($position) . ' author';
     }

@@ -13,7 +13,7 @@ Route::get('/import', function () {
 Route::get('/import/googlescholar/(.*)', function ($scholar_id) {
     $breadcrumb = [
         ['name' => lang('Import'), 'path' => '/import'],
-        ['name' => lang('Google Scholar', 'Google Scholar')]
+        ['name' => lang('search.google_scholar')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -152,7 +152,7 @@ Route::post('/import/file', function () {
     // if ($page == 'users') 
     $breadcrumb = [
         ['name' => lang('Import'), 'path' => '/import'],
-        ['name' => lang('From File', 'Aus Datei')]
+        ['name' => lang('search.from_file')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";

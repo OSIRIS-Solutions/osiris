@@ -18,14 +18,14 @@
 
 <h1>
     <i class="ph-duotone ph-file-text"></i>
-    <?= lang('Drafts', 'Entwürfe') ?>
+    <?= lang('common.drafts') ?>
 </h1>
 
 <table class="table" id="draft-table">
     <thead>
         <tr>
             <th><?= lang('common.title') ?></th>
-            <th><?= lang('Created', 'Erstellt') ?></th>
+            <th><?= lang('common.created') ?></th>
             <th><?= lang('common.actions') ?></th>
         </tr>
     </thead>
@@ -37,9 +37,9 @@
                 <td>
                     <a href="<?= ROOTPATH ?>/add-activity?draft=<?= $draft['_id'] ?>" class="btn text-primary mr-10">
                         <i class="ph ph-pencil"></i>
-                        <?= lang('Continue editing', 'Weiter bearbeiten') ?>
+                        <?= lang('activities.continue_editing') ?>
                     </a>
-                    <a href="<?= ROOTPATH ?>/activities/drafts/<?= $draft['_id'] ?>" target="_blank" class="link"><?= lang('View', 'Anzeigen') ?></a>
+                    <a href="<?= ROOTPATH ?>/activities/drafts/<?= $draft['_id'] ?>" target="_blank" class="link"><?= lang('common.view') ?></a>
                 </td>
             </tr>
         <?php endforeach; ?>

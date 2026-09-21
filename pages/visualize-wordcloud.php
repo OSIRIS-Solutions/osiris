@@ -44,7 +44,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 </form>
 
 <a class="link" href="<?= ROOTPATH ?>/profile/<?= $scientist ?>"><i class="ph ph-student"></i>
-    <?= lang('View scientist page of ', 'Zeige die Übersichtsseite von ') ?>
+    <?= lang('common.view_scientist_page_of') ?>
     <?= $selectedUser['displayname'] ?>
 </a>
 

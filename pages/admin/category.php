@@ -36,7 +36,7 @@ if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/categories/create";
     $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/categories/*";
-    $title = lang('New category', 'Neue Kategorie');
+    $title = lang('common.new_category');
 }
 
 function val($index, $default = '')
@@ -126,12 +126,12 @@ $member = $osiris->activities->count(['type' => $t]);
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
             <p>
-                <?= lang('Each category and each activity type must have a unique ID with which it is linked to an activity.', 'Jede Kategorie und jeder Aktivitätstyp muss eine einzigartige ID haben, mit der er zu einer Aktivität verknüpft wird.') ?>
+                <?= lang('common.each_category_and_each_activity_type_must_have_a_unique_id_with_which_it_is') ?>
             </p>
             <p>
-                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="IDLIST">
                 <?php foreach ($osiris->adminCategories->distinct('id') as $k) { ?>
@@ -162,7 +162,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 <?php } ?>
 
             <?php } else { ?>
-                <?= lang('New category of activity types', 'Neue Kategorie von Aktivitätstypen') ?>
+                <?= lang('admin.new_category_of_activity_types') ?>
             <?php } ?>
         </h4>
 
@@ -178,7 +178,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 <div class="col-sm">
                     <label for="id" class="required">ID</label>
                     <input type="text" class="form-control" name="values[id]" required value="<?= $type['id'] ?? '' ?>" data-value="<?= $type['id'] ?? '' ?>" oninput="sanitizeID(this)">
-                    <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
+                    <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('common.must_be_unqiue') ?></a></small>
                 </div>
                 <div class="col-sm">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
@@ -210,9 +210,9 @@ $member = $osiris->activities->count(['type' => $t]);
 
 
             <div class="form-group mt-20">
-                <label for="visible-role"><?= lang('Role that can see this type', 'Rolle die diese Aktivitäten sehen können') ?></label>
+                <label for="visible-role"><?= lang('admin.role_that_can_see_this_type') ?></label>
                 <select class="form-control" name="values[visible_role]" id="visible-role">
-                    <option value="" <?= sel('visible_role', '') ?>><?= lang('All users', 'Alle Nutzende') ?></option>
+                    <option value="" <?= sel('visible_role', '') ?>><?= lang('admin.all_users') ?></option>
                     <?php
                     $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
                     $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
@@ -234,7 +234,7 @@ $member = $osiris->activities->count(['type' => $t]);
                 <input type="hidden" name="values[upload]" value="false">
                 <div class="custom-checkbox">
                     <input type="checkbox" id="upload-checkbox" value="true" name="values[upload]" <?= $upload ? 'checked' : '' ?>>
-                    <label for="upload-checkbox"><?= lang('Upload of documents possible', 'Upload von Dokumenten möglich') ?></label>
+                    <label for="upload-checkbox"><?= lang('admin.upload_of_documents_possible') ?></label>
                 </div>
             </div>
 
@@ -244,7 +244,7 @@ $member = $osiris->activities->count(['type' => $t]);
         <hr>
         <div class="content">
             <!-- quality workflow -->
-            <h5><?= lang('Quality Workflow', 'Qualitätsworkflow') ?></h5>
+            <h5><?= lang('admin.quality_workflow') ?></h5>
 
            <?php
             $workflow = $type['workflow'] ?? false;
@@ -252,14 +252,14 @@ $member = $osiris->activities->count(['type' => $t]);
             if (empty($workflows)) {
            ?>
                 <p class="text-muted">
-                    <?= lang('No workflow defined yet. Please create a workflow first.', 'Noch kein Workflow definiert. Bitte erstelle zuerst einen Workflow.') ?>
+                    <?= lang('admin.no_workflow_defined_yet_please_create_a_workflow_first') ?>
                     <br>
-                    <a href="<?= ROOTPATH ?>/admin/workflows/new"><i class="ph ph-plus-circle"></i> <?= lang('Create workflow', 'Workflow erstellen') ?></a>
+                    <a href="<?= ROOTPATH ?>/admin/workflows/new"><i class="ph ph-plus-circle"></i> <?= lang('admin.create_workflow') ?></a>
                 </p>
             <?php } else { ?>
                 <div class="form-group">
                     <select class="form-control" name="values[workflow]" id="quality-workflow">
-                        <option value="" <?= sel('workflow', '') ?>><?= lang('No workflow', 'Kein Workflow') ?></option>
+                        <option value="" <?= sel('workflow', '') ?>><?= lang('admin.no_workflow') ?></option>
                         <?php
                         foreach ($workflows as $wf) {
                         ?>
@@ -268,7 +268,7 @@ $member = $osiris->activities->count(['type' => $t]);
                             </option>
                         <?php } ?>
                     </select>
-                    <small><?= lang('If a workflow is selected here, it will be automatically assigned to all activities of this category.', 'Wenn hier ein Workflow ausgewählt ist, wird dieser automatisch allen Aktivitäten dieses Typs zugewiesen.') ?></small>
+                    <small><?= lang('admin.if_a_workflow_is_selected_here_it_will_be_automatically_assigned_to_all_act') ?></small>
                 </div>
             <?php } ?>
         </div>
@@ -282,7 +282,7 @@ $member = $osiris->activities->count(['type' => $t]);
                     <i class="ph ph-list-numbers"></i>
                     <?= lang('common.change_order') ?>
                 </a>
-                <h5><?= lang('Types', 'Typen') ?>:</h5>
+                <h5><?= lang('common.types') ?>:</h5>
                 <div>
                     <?php
                     foreach ($children as $subtype) { ?>
@@ -292,7 +292,7 @@ $member = $osiris->activities->count(['type' => $t]);
                         </a>
                     <?php } ?>
                     <a class="btn" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $id ?>"><i class="ph ph-plus-circle"></i>
-                        <?= lang('Add subtype', 'Neuen Typ hinzufügen') ?>
+                        <?= lang('common.add_subtype') ?>
                     </a>
 
                 </div>
@@ -314,16 +314,16 @@ $member = $osiris->activities->count(['type' => $t]);
             <form action="<?= ROOTPATH ?>/crud/categories/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories">
                 <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-                <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
+                <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
             </form>
         </div>
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can't delete category: $member activities associated.", "Kann Kategorie nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang('admin.can_t_delete_category_member_activities_associated', replace: ['member' => $member]) ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"type":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
-                <?= lang('View activities', 'Aktivitäten zeigen') ?>
+                <?= lang('common.view_activities') ?>
             </a>
 
         </div>

@@ -30,19 +30,19 @@ $if_label = $Settings->impactLabel();
     <?php if ($Settings->hasPermission('journals.edit')) { ?>
         <a href="<?= ROOTPATH ?>/journal/edit/<?= $id ?>" class="btn primary">
             <i class="ph ph-edit"></i>
-            <?= lang("Edit $label", " $label bearbeiten") ?>
+            <?= lang('journals.edit_label', replace: ['label' => $label]) ?>
         </a>
     <?php } ?>
 
     <?php if ($Settings->hasPermission('journals.edit') && !$Settings->featureEnabled('no-journal-metrics')) { ?>
 
         <?php if (count($data['issn'] ?? []) == 0) { ?>
-            <a href="#/" class="btn disabled" data-toggle="tooltip" data-direction="bottom" data-title="<?= lang('No metrics without ISSN.', 'Keine Metriken ohne ISSN.') ?>">
-                <i class="ph ph-ranking"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?>
+            <a href="#/" class="btn disabled" data-toggle="tooltip" data-direction="bottom" data-title="<?= lang('journals.no_metrics_without_issn') ?>">
+                <i class="ph ph-ranking"></i> <?= lang('journals.update_metrics') ?>
             </a>
         <?php } else { ?>
             <a href="#metrics-modal" class="btn primary">
-                <i class="ph ph-ranking"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?>
+                <i class="ph ph-ranking"></i> <?= lang('journals.update_metrics') ?>
             </a>
 
             <div class="modal" id="metrics-modal" tabindex="-1" role="dialog">
@@ -51,14 +51,14 @@ $if_label = $Settings->impactLabel();
                         <a href="#/" class="close" role="button" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </a>
-                        <h5 class="title"><?= lang('Update metrics', 'Metriken aktualisieren') ?></h5>
+                        <h5 class="title"><?= lang('journals.update_metrics_view') ?></h5>
                         <p>
                             <i class="ph ph-warning text-signal"></i>
-                            <?= lang("This will update the metrics for this $label and overwrite all manual changes to $if_label, categories and quartiles.", "Dadurch werden die Metriken für diese $label aktualisiert und alle manuellen Änderungen an $if_label, Kategorien und Quartilen überschrieben.") ?>
+                            <?= lang('journals.this_will_update_the_metrics_for_this_label_and_overwrite_all_manual_change', replace: ['if_label' => $if_label, 'label' => $label]) ?>
                         </p>
 
                         <form action="<?= ROOTPATH ?>/crud/journal/update-metrics/<?= $id ?>" method="post">
-                            <button class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= lang('Update Metrics', 'Metriken aktualisieren') ?></button>
+                            <button class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= lang('journals.update_metrics') ?></button>
                         </form>
                     </div>
                 </div>
@@ -75,7 +75,7 @@ $if_label = $Settings->impactLabel();
         <td class="font-weight-bold"><?= $data['journal'] ?></td>
     </tr>
     <tr>
-        <td><?= lang('Abbreviated', 'Abgekürzt') ?></td>
+        <td><?= lang('journals.abbreviated') ?></td>
         <td><?= $data['abbr'] ?></td>
     </tr>
     <tr>
@@ -93,7 +93,7 @@ $if_label = $Settings->impactLabel();
             if (!($data['oa'] ?? false)) {
                 echo lang('common.no');
             } elseif ($data['oa'] > 1900) {
-                echo lang('since ', 'seit ') . $data['oa'];
+                echo lang('journals.since') . $data['oa'];
             } else {
                 echo lang('common.yes');
             }
@@ -112,7 +112,7 @@ $if_label = $Settings->impactLabel();
     <?php } ?>
     <tr>
         <td>
-            <?= lang('Categories', 'Kategorien') ?>
+            <?= lang('common.categories') ?>
             <?php if ($Settings->hasPermission('journals.edit')) { ?>
 
                 <a aria-haspopup="true" aria-expanded="false" href="#cat-modal" data-toggle="modal">
@@ -125,7 +125,7 @@ $if_label = $Settings->impactLabel();
             <?php
             $categories = $data['categories'] ?? [];
             if (empty($categories)) {
-                echo lang('No categories available.', 'Keine Kategorien verfügbar.');
+                echo lang('journals.no_categories_available');
             } else {
                 echo '<div class="badges">';
                 foreach ($categories as $cat) { ?>
@@ -168,7 +168,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 <a href="#/" class="close" role="button" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <h5 class="title"><?= lang("Edit $label categories", "$label-Kategorien bearbeiten") ?></h5>
+                <h5 class="title"><?= lang('journals.edit_label_categories', replace: ['label' => $label]) ?></h5>
 
                 <form action="<?= ROOTPATH ?>/crud/journal/update/<?= $id ?>" method="post">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
@@ -217,7 +217,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 
 <h3>
-    <?= lang("Connected Publications", "Verknüpfte Publikationen") ?>
+    <?= lang('journals.connected_publications') ?>
 </h3>
 
 <!-- <canvas id="spark"></canvas> -->
@@ -225,7 +225,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 <table class="table" id="publication-table">
     <thead>
         <th><?= lang('common.year') ?></th>
-        <th><?= lang('Publication', 'Publikation') ?></th>
+        <th><?= lang('common.publication') ?></th>
         <th>Link</th>
     </thead>
     <tbody>
@@ -278,7 +278,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
 
 
 <h3>
-    <?= lang("Other activities", "Weitere Aktivitäten") ?>
+    <?= lang('common.other_activities_statistics') ?>
 </h3>
 
 <table class="table" id="activity-table">
@@ -361,7 +361,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
-                    <?= lang('Add value', 'Füge Wert hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
+                    <?= lang('journals.add_value') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="dropdown-2">
                     <div class="content">
@@ -375,10 +375,10 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                                 <label for="if"><?= $if_label ?></label>
                                 <input type="number" min="0" max="300" step="0.001" class="form-control" name="values[if]" id="if">
                             </div>
-                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('journals.add') ?></button>
 
                             <small class="text-muted">
-                                <?= lang('Existing years will be overwritten. Enter 0 to remove.', 'Bestehende Jahre werden überschrieben. Gib eine 0 ein, um zu entfernen.') ?>
+                                <?= lang('journals.existing_years_will_be_overwritten_enter_0_to_remove') ?>
                             </small>
                         </form>
                     </div>
@@ -444,7 +444,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No ' . $if_label . ' factors available.', 'Keine ' . $if_label . ' Faktoren verfügbar.') ?></p>
+            <p><?= lang('journals.no_if_label_factors_available', replace: ['if_label' => $if_label]) ?></p>
         <?php } ?>
 
 
@@ -454,7 +454,7 @@ $impacts = DB::doc2Arr($data['impact'] ?? array());
 
 
 
-<h3><?= lang('Quartiles', 'Quartile') ?></h3>
+<h3><?= lang('common.quartiles') ?></h3>
 <?php
 $metrics = DB::doc2Arr($data['metrics'] ?? array());
 $quartiles = [];
@@ -474,7 +474,7 @@ foreach ($metrics as $metric) {
         <?php if ($Settings->hasPermission('journals.edit')) { ?>
             <div class="dropdown with-arrow float-right mb-20">
                 <button class="btn osiris" data-toggle="dropdown" type="button" id="dropdown-2" aria-haspopup="true" aria-expanded="false">
-                    <?= lang('Add quartile', 'Füge Quartil hinzu') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
+                    <?= lang('journals.add_quartile') ?> <i class="ph ph-duotone ph-angle-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="dropdown-2">
                     <div class="content">
@@ -485,19 +485,19 @@ foreach ($metrics as $metric) {
                                 <input type="number" min="1970" max="<?= CURRENTYEAR ?>" step="1" class="form-control" name="values[year]" id="year" value="<?= CURRENTYEAR - 1 ?>" required>
                             </div>
                             <div class="form-row">
-                                <label for="quartile"><?= lang('Quartile', 'Quartil') ?></label>
+                                <label for="quartile"><?= lang('common.quartile') ?></label>
                                 <select class="form-control" name="values[quartile]" id="quartile">
                                     <option>Q1</option>
                                     <option>Q2</option>
                                     <option>Q3</option>
                                     <option>Q4</option>
-                                    <option value=""><?= lang('Not available', 'Nicht verfügbar') ?></option>
+                                    <option value=""><?= lang('journals.not_available') ?></option>
                                 </select>
                             </div>
-                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('Add', 'Hinzuf.') ?></button>
+                            <button class="btn block success mb-5"><i class="ph ph-check"></i> <?= lang('journals.add') ?></button>
 
                             <small class="text-muted">
-                                <?= lang('Existing years will be overwritten. Select "Not available" to remove.', 'Bestehende Jahre werden überschrieben. Wähle "Nicht verfügbar", um zu entfernen.') ?>
+                                <?= lang('journals.existing_years_will_be_overwritten_select_not_available_to_remove') ?>
                             </small>
                         </form>
                     </div>
@@ -586,7 +586,7 @@ foreach ($metrics as $metric) {
                 var myChart = new Chart(ctx, data);
             </script>
         <?php } else { ?>
-            <p><?= lang('No quartiles available.', 'Keine Quartile verfügbar.') ?></p>
+            <p><?= lang('journals.no_quartiles_available') ?></p>
         <?php } ?>
 
 
@@ -594,13 +594,13 @@ foreach ($metrics as $metric) {
 </div>
 
 <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
-    <h3><?= lang('More Metrics', 'Weitere Metriken') ?></h3>
+    <h3><?= lang('journals.more_metrics') ?></h3>
 
     <?php
     $metrics = DB::doc2Arr($data['metrics'] ?? array());
 
     if (empty($metrics)) {
-        echo '<p>' . lang('No metrics available.', 'Keine weiteren Metriken verfügbar.') . '</p>';
+        echo '<p>' . lang('journals.no_metrics_available') . '</p>';
     } else { ?>
         <table class="table small">
             <thead>
@@ -608,7 +608,7 @@ foreach ($metrics as $metric) {
                 <th>SJR</th>
                 <th>IF (2Y)</th>
                 <th>IF (3Y)</th>
-                <th><?= lang('Best Quartile', 'Bestes Quartil') ?></th>
+                <th><?= lang('journals.best_quartile') ?></th>
             </thead>
             <tbody>
                 <?php
@@ -635,18 +635,18 @@ foreach ($metrics as $metric) {
     $N_activities = $osiris->activities->count(['journal_id' => strval($id)]);
     if ($N_activities > 0) { ?>
         <div class="alert signal mt-20">
-            <h4 class="title"><?= lang('Cannot delete journal', 'Journal kann nicht gelöscht werden') ?></h4>
-            <?= lang("This journal cannot be deleted because there are $N_activities activities associated with it. Please reassign or delete these activities first.", "Dieses Journal kann nicht gelöscht werden, da $N_activities Aktivitäten damit verknüpft sind. Bitte weisen Sie diese Aktivitäten zuerst neu zu oder löschen Sie sie.") ?>
+            <h4 class="title"><?= lang('journals.cannot_delete_journal') ?></h4>
+            <?= lang('journals.this_journal_cannot_be_deleted_because_there_are_n_activities_activities_as', replace: ['N_activities' => $N_activities]) ?>
         </div>
     <?php } else { ?>
         <div class="alert danger mt-20">
-            <h4 class="title"><?= lang('Delete this journal', 'Dieses Journal löschen') ?></h4>
+            <h4 class="title"><?= lang('journals.delete_this_journal') ?></h4>
             <p>
                 <i class="ph ph-warning text-signal"></i>
-                <?= lang("This will delete this journal permanently. This action cannot be undone.", "Dadurch wird dieses Journal dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.") ?>
+                <?= lang('journals.this_will_delete_this_journal_permanently_this_action_cannot_be_undone') ?>
             </p>
-            <form action="<?= ROOTPATH ?>/crud/journal/delete/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this journal?', 'Sind Sie sicher, dass Sie dieses Journal löschen möchten?') ?>');">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('Delete journal', 'Journal löschen') ?></button>
+            <form action="<?= ROOTPATH ?>/crud/journal/delete/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('journals.are_you_sure_you_want_to_delete_this_journal') ?>');">
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('journals.delete_journal') ?></button>
             </form>
         </div>
     <?php } ?>

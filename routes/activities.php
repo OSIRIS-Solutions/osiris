@@ -27,11 +27,11 @@ Route::get('/(activities|my-activities)', function ($page) {
     } elseif (isset($_GET['user'])) {
         $user = $_GET['user'];
         $breadcrumb = [
-            ['name' => lang("Activities of $user", "Aktivitäten von $user")]
+            ['name' => lang('activities.activities_of_user', replace: ['user' => $user])]
         ];
     } else {
         $breadcrumb = [
-            ['name' => lang("My activities", "Meine Aktivitäten")]
+            ['name' => lang('activities.my_activities')]
         ];
     }
 
@@ -44,7 +44,7 @@ Route::get('/advanced-search/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $query = $osiris->queries->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($query)) {
-        abortwith(404, lang('Query', "Abfrage"), '/activities/search');
+        abortwith(404, lang('activities.query'), '/activities/search');
     }
     $collection = $query['type'] ?? 'activities';
     header("Location: " . ROOTPATH . "/$collection/search?query=$id");
@@ -106,7 +106,7 @@ Route::get('/add-activity', function () {
     $draft = false;
     if (isset($_GET['draft']) && !empty($_GET['draft'])) {
         if (!$Settings->featureEnabled('drafts')) {
-            $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+            $_SESSION['msg'] = lang('activities.drafts_are_disabled');
             $_SESSION['msg_type'] = "error";
         } else {
             $draft = $osiris->activitiesDrafts->findOne(['_id' => $DB->to_ObjectID($_GET['draft'])]);
@@ -124,7 +124,7 @@ Route::get('/add-activity', function () {
 
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Add new", "Neu hinzufügen")]
+        ['name' => lang('activities.add_new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/add-activity.php";
@@ -137,7 +137,7 @@ Route::get('/activities/drafts', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('drafts')) {
-        $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+        $_SESSION['msg'] = lang('activities.drafts_are_disabled');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities");
         die();
@@ -158,7 +158,7 @@ Route::get('/activities/drafts', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Drafts", "Entwürfe")]
+        ['name' => lang('common.drafts')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/drafts.php";
@@ -170,7 +170,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('drafts')) {
-        $_SESSION['msg'] = lang("Drafts are disabled.", "Entwürfe sind deaktiviert.");
+        $_SESSION['msg'] = lang('activities.drafts_are_disabled');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities");
         die();
@@ -188,7 +188,7 @@ Route::get('/activities/drafts/(.*)', function ($id) {
 
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Drafts", "Entwürfe"), 'path' => "/activities/drafts"],
+        ['name' => lang('common.drafts'), 'path' => "/activities/drafts"],
         ['name' => $draft['title'] ?? $id]
     ];
     include BASEPATH . "/header.php";
@@ -214,7 +214,7 @@ Route::post('/crud/activities/add-activity', function () {
     $name = ucfirst($form['type']) . ": " . $name;
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("New from Import", "Neu aus Import")]
+        ['name' => lang('activities.new_from_import')]
     ];
 
     include BASEPATH . "/header.php";
@@ -228,7 +228,7 @@ Route::get('/activities/online-search', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Search in Pubmed", "Suche in Pubmed")]
+        ['name' => lang('common.search_in_pubmed')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/pubmed-search.php";
@@ -412,7 +412,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($doc, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $Format = new Document;
@@ -447,7 +447,7 @@ Route::get('/activities/edit-connections/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"],
-        ['name' => lang("Connections", "Verknüpfungen")]
+        ['name' => lang('activities.connections')]
     ];
 
     include BASEPATH . "/header.php";
@@ -477,7 +477,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
@@ -499,11 +499,11 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)', function ($id) {
 Route::get('/activities/locking', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('activities.lock')) {
-        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities', lang('Go back to activities', 'Zurück zu Aktivitäten'));
+        abortwith(403, lang('activities.you_do_not_have_permission_to_lock_activities'), '/activities', lang('activities.go_back_to_activities'));
     }
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Locking", "Sperren")]
+        ['name' => lang('activities.locking')]
     ];
 
     include BASEPATH . "/header.php";
@@ -521,7 +521,7 @@ Route::get('/activities/doublet/([a-zA-Z0-9]*)/([a-zA-Z0-9]*)', function ($id1, 
 
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Doublet", "Dublette")]
+        ['name' => lang('activities.doublet')]
     ];
 
     $form = [];
@@ -587,7 +587,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
 
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Copy", "Kopieren")]
+        ['name' => lang('activities.copy')]
     ];
 
     include BASEPATH . "/header.php";
@@ -616,7 +616,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
     $user_activity = $DB->isUserActivity($form, $user);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('You do not have permission to edit this activity.', 'Du hast keine Berechtigung, diese Aktivität zu bearbeiten.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $name = $form['title'] ?? $id;
@@ -625,9 +625,9 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
         ['name' => $name, 'path' => "/activities/view/$id"]
     ];
     if ($role == "authors") {
-        $breadcrumb[] = ['name' => lang("Authors", "Autoren")];
+        $breadcrumb[] = ['name' => lang('common.authors_all_activities')];
     } else {
-        $breadcrumb[] = ['name' => lang("Editors", "Editoren")];
+        $breadcrumb[] = ['name' => lang('activities.editors_activities')];
     }
 
     include BASEPATH . "/header.php";
@@ -643,7 +643,7 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
 Route::post('/crud/activities/create', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('activities.go_back_to_add_activity'));
     $collection = $osiris->activities;
     $activityType = $_POST['values']['type'];
 
@@ -656,7 +656,7 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['doi']) && !empty($values['doi'])) {
         $doi_exist = $collection->findOne(['doi' => new MongoDB\BSON\Regex('^' . preg_quote($values['doi']) . '$', 'i')]);
         if (!empty($doi_exist)) {
-            $_SESSION['msg'] = lang("DOI already exists.", "DOI existiert bereits.");
+            $_SESSION['msg'] = lang('activities.doi_already_exists');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/activities/view/$doi_exist[_id]");
             die;
@@ -667,7 +667,7 @@ Route::post('/crud/activities/create', function () {
     if (isset($values['pubmed']) && !empty($values['pubmed'])) {
         $pubmed_exist = $collection->findOne(['pubmed' => $values['pubmed']]);
         if (!empty($pubmed_exist)) {
-            $_SESSION['msg'] = lang("Pubmed-ID already exists.", "Pubmed-ID existiert bereits.");
+            $_SESSION['msg'] = lang('activities.pubmed_id_already_exists');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/activities/view/$pubmed_exist[_id]");
             die;
@@ -745,7 +745,7 @@ Route::post('/crud/activities/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang("Activity added successfully.", "Aktivität erfolgreich hinzugefügt.");
+        $_SESSION['msg'] = lang('activities.activity_added_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $red);
         die();
@@ -759,7 +759,7 @@ Route::post('/crud/activities/create', function () {
 
 Route::post('/crud/activities/save-draft', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('Go back to add activity', 'Zurück zum Hinzufügen einer Aktivität'));
+    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'), '/add-activity', lang('activities.go_back_to_add_activity'));
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     $collection = $osiris->activitiesDrafts;
 
@@ -776,10 +776,10 @@ Route::post('/crud/activities/save-draft', function () {
             ['$set' => $values]
         );
         if ($updateResult->getModifiedCount() == 0) {
-            $_SESSION['msg'] = lang("Draft could not be updated.", "Entwurf konnte nicht aktualisiert werden.");
+            $_SESSION['msg'] = lang('activities.draft_could_not_be_updated');
             $_SESSION['msg_type'] = "error";
         } else {
-            $_SESSION['msg'] = lang("Draft updated successfully.", "Entwurf erfolgreich aktualisiert.");
+            $_SESSION['msg'] = lang('activities.draft_updated_successfully');
             $_SESSION['msg_type'] = "success";
         }
         header("Location: " . ROOTPATH . "/activities/drafts/" . $draft_id);
@@ -789,12 +789,12 @@ Route::post('/crud/activities/save-draft', function () {
     $insertOneResult  = $collection->insertOne($values);
     $id = $insertOneResult->getInsertedId();
     if ($insertOneResult->getInsertedCount() == 0) {
-        $_SESSION['msg'] = lang("Draft could not be saved.", "Entwurf konnte nicht gespeichert werden.");
+        $_SESSION['msg'] = lang('activities.draft_could_not_be_saved');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities/drafts");
         die();
     }
-    $_SESSION['msg'] = lang("Draft saved successfully.", "Entwurf erfolgreich gespeichert.");
+    $_SESSION['msg'] = lang('activities.draft_saved_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/activities/drafts/" . $id);
 });
@@ -809,12 +809,12 @@ Route::post('/crud/activities/delete-draft/([A-Za-z0-9]*)', function ($id) {
     );
     $deletedCount = $updateResult->getDeletedCount();
     if ($deletedCount == 0) {
-        $_SESSION['msg'] = lang("Draft could not be deleted.", "Entwurf konnte nicht gelöscht werden.");
+        $_SESSION['msg'] = lang('activities.draft_could_not_be_deleted');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities/drafts");
         die();
     }
-    $_SESSION['msg'] = lang("Draft deleted.", "Entwurf gelöscht.");
+    $_SESSION['msg'] = lang('activities.draft_deleted');
     $_SESSION['msg_type'] = "success";
 
     header("Location: " . ROOTPATH . "/activities/drafts");
@@ -825,7 +825,7 @@ Route::post('/crud/activities/invite-draft/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     if (!isset($_POST['invitee']) || empty($_POST['invitee'])) {
-        $_SESSION['msg'] = lang("No invitee given.", "Kein Einzuladender angegeben.");
+        $_SESSION['msg'] = lang('activities.no_invitee_given');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities/draft/" . $id);
         die();
@@ -833,7 +833,7 @@ Route::post('/crud/activities/invite-draft/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $draft = $osiris->activitiesDrafts->findOne(['_id' => $id]);
     if (empty($draft)) {
-        $_SESSION['msg'] = lang("Draft not found.", "Entwurf nicht gefunden.");
+        $_SESSION['msg'] = lang('activities.draft_not_found');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/activities/drafts");
         die();
@@ -864,7 +864,7 @@ Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
             ['_id' => $id],
             ['$unset' => ['tags' => '']]
         );
-        $_SESSION['msg'] = lang("Tags deleted.", "Tags gelöscht.");
+        $_SESSION['msg'] = lang('activities.tags_deleted');
         $_SESSION['msg_type'] = "success";
     } else {
         $values = validateValues($_POST['values'], $DB);
@@ -872,7 +872,7 @@ Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
             ['_id' => $id],
             ['$set' => ['tags' => $values['tags']]]
         );
-        $_SESSION['msg'] = lang("Tags updated.", "Tags aktualisiert.");
+        $_SESSION['msg'] = lang('activities.tags_updated');
         $_SESSION['msg_type'] = "success";
     }
 
@@ -954,7 +954,7 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Activity updated successfully.", "Aktivität erfolgreich aktualisiert.");
+        $_SESSION['msg'] = lang('activities.activity_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -976,11 +976,11 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     }
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     if (!$user_activity && !$Settings->hasPermission('activities.delete')) {
-        abortwith(403, lang('You do not have permission to delete this activity.', 'Du hast keine Berechtigung, diese Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, lang('activities.you_do_not_have_permission_to_delete_this_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
     // check if locked
     if (($doc['locked'] ?? false) && !$Settings->hasPermission('activities.delete-locked')) {
-        abortwith(403, lang('You do not have permission to delete this locked activity.', 'Du hast keine Berechtigung, diese gesperrte Aktivität zu löschen.'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, lang('activities.you_do_not_have_permission_to_delete_this_locked_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
     }
 
     $updateResult = $osiris->activities->deleteOne(
@@ -988,7 +988,7 @@ Route::post('/crud/activities/delete/([A-Za-z0-9]*)', function ($id) {
     );
     $deletedCount = $updateResult->getDeletedCount();
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Activity deleted successfully.", "Aktivität erfolgreich gelöscht.");
+        $_SESSION['msg'] = lang('activities.activity_deleted_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -1025,7 +1025,7 @@ Route::post('/crud/activities/connections/(.*)', function ($id) {
         );
     }
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Connections updated successfully.", "Verknüpfungen erfolgreich aktualisiert.");
+        $_SESSION['msg'] = lang('activities.connections_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -1077,10 +1077,10 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
             $_SESSION['msg'] = (lang('error.file_upload_too_large', replace:['max' => '16 MB']));
             $_SESSION['msg_type'] = "error";
         } else if (file_exists($target_dir . $filename)) {
-            $_SESSION['msg'] = (lang("Sorry, file already exists.", "Die Datei existiert bereits. Um sie zu überschreiben, muss sie zunächst gelöscht werden."));
+            $_SESSION['msg'] = (lang('common.sorry_file_already_exists'));
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-            $_SESSION['msg'] = (lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen."));
+            $_SESSION['msg'] = (lang('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]));
             $_SESSION['msg_type'] = "success";
             $values = [
                 "filename" => $filename,
@@ -1107,11 +1107,11 @@ Route::post('/crud/activities/upload-files/(.*)', function ($id) {
                 $_SESSION['msg'] = ("$filename cannot be deleted due to an error.");
                 $_SESSION['msg_type'] = "error";
             } else {
-                $_SESSION['msg'] = (lang("$filename has been deleted.", "$filename wurde gelöscht."));
+                $_SESSION['msg'] = (lang('common.filename_has_been_deleted', replace: ['filename' => $filename]));
                 $_SESSION['msg_type'] = "success";
             }
         } else {
-            $_SESSION['msg'] = (lang("File $filename not found.", "Datei $filename nicht gefunden."));
+            $_SESSION['msg'] = (lang('activities.file_filename_not_found', replace: ['filename' => $filename]));
             $_SESSION['msg_type'] = "error";
         }
         $osiris->activities->updateOne(
@@ -1142,10 +1142,10 @@ Route::post('/crud/activities/update-tags/(.*)', function ($id) {
         );
     }
     if ($update->getModifiedCount() > 0) {
-        $_SESSION['msg'] = lang("Connections updated.", "Verbindungen aktualisiert.");
+        $_SESSION['msg'] = lang('activities.connections_updated');
         $_SESSION['msg_type'] = "success";
     } else {
-        $_SESSION['msg'] = lang("No changes made to connections.", "Keine Änderungen an den Verbindungen vorgenommen.");
+        $_SESSION['msg'] = lang('activities.no_changes_made_to_connections');
         $_SESSION['msg_type'] = "info";
     }
 
@@ -1174,10 +1174,10 @@ Route::post('/crud/activities/update-project-data/(.*)', function ($id) {
         );
     }
     if ($update->getModifiedCount() > 0) {
-        $_SESSION['msg'] = lang("Projects updated.", "Projekte aktualisiert.");
+        $_SESSION['msg'] = lang('activities.projects_updated');
         $_SESSION['msg_type'] = "success";
     } else {
-        $_SESSION['msg'] = lang("No changes made to projects.", "Keine Änderungen an den Projekten vorgenommen.");
+        $_SESSION['msg'] = lang('activities.no_changes_made_to_projects');
         $_SESSION['msg_type'] = "info";
     }
     header("Location: " . ROOTPATH . "/activities/view/$id");
@@ -1201,10 +1201,10 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
         );
     }
     if ($update->getModifiedCount() > 0) {
-        $_SESSION['msg'] = lang("Infrastructures updated.", "Infrastrukturen aktualisiert.");
+        $_SESSION['msg'] = lang('activities.infrastructures_updated');
         $_SESSION['msg_type'] = "success";
     } else {
-        $_SESSION['msg'] = lang("No changes made to infrastructures.", "Keine Änderungen an den Infrastrukturen vorgenommen.");
+        $_SESSION['msg'] = lang('activities.no_changes_made_to_infrastructures');
         $_SESSION['msg_type'] = "info";
     }
 
@@ -1277,10 +1277,10 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
     // renderAuthorUnitsMany(['_id' => $id]);
 
     if ($update->getModifiedCount() > 0) {
-        $_SESSION['msg'] = lang(ucfirst($type) . " updated.", ucfirst($type) . " aktualisiert.");
+        $_SESSION['msg'] = lang('activities.type_updated', replace: ['type' => ucfirst($type)]);
         $_SESSION['msg_type'] = "success";
     } else {
-        $_SESSION['msg'] = lang("No changes made to " . $type . ".", "Keine Änderungen an den " . $type . " vorgenommen.");
+        $_SESSION['msg'] = lang('activities.no_changes_made_to_type', replace: ['type' => $type]);
         $_SESSION['msg_type'] = "info";
     }
     header("Location: " . ROOTPATH . "/activities/view/$id");
@@ -1369,7 +1369,7 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     $DB->notifications(true);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Approval status updated.", "Status der Bestätigung aktualisiert.");
+        $_SESSION['msg'] = lang('activities.approval_status_updated');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -1426,7 +1426,7 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
     renderAuthorUnitsMany(['_id' => $id]);
 
     // $updateCount = $updateResult->getModifiedCount();
-    $_SESSION['msg'] = lang("You have claimed this authorship.", "Du hast diese Autorenschaft übernommen.");
+    $_SESSION['msg'] = lang('activities.you_have_claimed_this_authorship');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/activities/view/$id");
     die();
@@ -1441,7 +1441,7 @@ Route::post('/crud/activities/approve-all', function () {
     );
     // force update of user notifications
     $DB->notifications(true);
-    $_SESSION['msg'] = lang("All pending approvals have been approved.", "Alle ausstehenden Bestätigungen wurden bestätigt.");
+    $_SESSION['msg'] = lang('activities.all_pending_approvals_have_been_approved');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/issues");
 });
@@ -1497,7 +1497,7 @@ Route::post('/crud/activities/hide', function () {
 Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('activities.lock')) {
-        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities/view/' . $id);
+        abortwith(403, lang('activities.you_do_not_have_permission_to_lock_activities'), '/activities/view/' . $id);
     }
 
     // prepare id
@@ -1512,7 +1512,7 @@ Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
         ['$set' => ['locked' => !$locked]]
     );
 
-    $_SESSION['msg'] = $locked ? lang('Activity unlocked.', 'Aktivität entsperrt.') : lang('Activity locked.', 'Aktivität gesperrt.');
+    $_SESSION['msg'] = $locked ? lang('activities.activity_unlocked') : lang('activities.activity_locked');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/activities/view/$id");
 });
@@ -1520,12 +1520,12 @@ Route::post('/crud/activities/([A-Za-z0-9]*)/lock', function ($id) {
 Route::post('/crud/activities/lock', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('activities.lock')) {
-        abortwith(403, lang('You do not have permission to lock activities.', 'Du hast keine Berechtigung, Aktivitäten zu sperren.'), '/activities/view/' . $id);
+        abortwith(403, lang('activities.you_do_not_have_permission_to_lock_activities'), '/activities/view/' . $id);
     }
 
     $breadcrumb = [
         ['name' => lang('common.activities'), 'path' => "/activities"],
-        ['name' => lang("Locking", "Sperren")]
+        ['name' => lang('activities.locking')]
     ];
 
     include BASEPATH . "/header.php";
@@ -1557,11 +1557,8 @@ Route::post('/crud/activities/lock', function () {
             $changes += $updateResult->getModifiedCount();
         }
         // construct output message
-        $header = $lock ? lang('Locked activities.', 'Aktivitäten gesperrt.') : lang('Unlocked activities.', 'Aktivitäten entsperrt.');
-        $text = lang(
-            "Successfully changed the status of $changes activities.",
-            "Es wurde erfolgreich der Status von $changes Aktivitäten geändert."
-        );
+        $header = $lock ? lang('activities.locked_activities') : lang('activities.unlocked_activities');
+        $text = lang('activities.successfully_changed_the_status_of_changes_activities', replace: ['changes' => $changes]);
         printMsg($text, 'success', $header);
     } else {
         echo 'Nothing to do.';
@@ -1606,7 +1603,7 @@ Route::post('/crud/activities/connect', function () {
     ]);
     if (!empty($existing)) {
         if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-            $_SESSION['msg'] = lang("Connection already exists.", "Verbindung existiert bereits.");
+            $_SESSION['msg'] = lang('activities.connection_already_exists');
             $_SESSION['msg_type'] = "info";
             header("Location: " . $_POST['redirect']);
             die();
@@ -1614,7 +1611,7 @@ Route::post('/crud/activities/connect', function () {
         echo json_encode([
             'inserted' => 0,
             'id' => (string)$existing['_id'],
-            'message' => lang("Connection already exists.", "Verbindung existiert bereits.")
+            'message' => lang('activities.connection_already_exists')
         ]);
         die();
     }
@@ -1622,7 +1619,7 @@ Route::post('/crud/activities/connect', function () {
     $insertOneResult  = $osiris->activitiesConnections->insertOne($data);
     $id = $insertOneResult->getInsertedId();
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Activities connected successfully.", "Aktivitäten erfolgreich verbunden.");
+        $_SESSION['msg'] = lang('activities.activities_connected_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -1642,7 +1639,7 @@ Route::post('/crud/activities/disconnect', function () {
     $deleteResult = $osiris->activitiesConnections->deleteOne(['_id' => $connection_id]);
     $deletedCount = $deleteResult->getDeletedCount();
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Activities disconnected successfully.", "Aktivitäten erfolgreich getrennt.");
+        $_SESSION['msg'] = lang('activities.activities_disconnected_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -1667,7 +1664,7 @@ Route::post('/crud/activities/exclude-from-reports', function () {
         ['$set' => ["exclude_from_reports" => !$exclude]]
     );
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Activity report status updated.", "Status der Aktivität im Bericht aktualisiert.");
+        $_SESSION['msg'] = lang('activities.activity_report_status_updated');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();

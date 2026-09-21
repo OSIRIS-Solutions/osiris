@@ -81,20 +81,20 @@ if ($wf) {
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
-            <div class="clickmask" id="wf-mini-open" aria-label="<?= lang('Show workflow details', 'Workflow-Details anzeigen') ?>"></div>
+            <div class="clickmask" id="wf-mini-open" aria-label="<?= lang('activities.show_workflow_details') ?>"></div>
         </div>
     </a>
 
     <?php if ($isRejected && $user_activity) { ?>
         <div class="alert info m-20">
-            <?= lang('Your activity has been rejected for the following reason:', 'Ihre Aktivität wurde aus folgendem Grund abgelehnt:') ?>
+            <?= lang('activities.your_activity_has_been_rejected_for_the_following_reason') ?>
             <pre class="m-0 text-primary"><?= e($wf['rejectedDetails']['comment'] ?? '') ?></pre>
 
-            <?= lang('You can update your activity and resubmit it for review.', 'Sie können Ihre Aktivität aktualisieren und erneut zur Überprüfung einreichen.') ?>
+            <?= lang('activities.you_can_update_your_activity_and_resubmit_it_for_review') ?>
             <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-reply/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
-                <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('Your reply to the reviewer', 'Deine Antwort an die Prüfer:in') ?>"></textarea>
-                <button class="btn small success mt-5" type="submit"><?= lang('Send reply', 'Antwort senden') ?></button>
+                <textarea name="comment" class="form-control small" rows="3" placeholder="<?= lang('common.your_reply_to_the_reviewer') ?>"></textarea>
+                <button class="btn small success mt-5" type="submit"><?= lang('common.send_reply') ?></button>
                 <button class="btn small mt-5" type="button" onclick="$(this).parent().hide()"><?= lang('action.cancel') ?></button>
             </form>
         </div>
@@ -112,7 +112,7 @@ if ($wf) {
 
                 <div class="quality-control" id="quality-control" style="--workflow-width: <?= count($progress ?? []) * 14 ?>rem">
                     <?php if (!$wf): ?>
-                        <p class="text-muted"><?= lang('No workflow attached.', 'Kein Workflow verknüpft.') ?></p>
+                        <p class="text-muted"><?= lang('activities.no_workflow_attached') ?></p>
                     <?php else: ?>
                         <div class="wf-bar" id="wf-bar">
                             <?php foreach ($progress as $i => $s): ?>
@@ -138,7 +138,7 @@ if ($wf) {
                                     data-step-id="<?= e($s['id']) ?>"
                                     data-index="<?= intval($s['index']) ?>"
                                     data-required="<?= !empty($s['required']) ? '1' : '0' ?>"
-                                    <?= ($orgScope === 'same_org_only') ? 'title="' . lang('Restricted to reviewers from the same organizational unit', 'Nur Prüfer*innen aus der gleichen Organisationseinheit') . '"' : '' ?>>
+                                    <?= ($orgScope === 'same_org_only') ? 'title="' . lang('activities.restricted_to_reviewers_from_the_same_organizational_unit') . '"' : '' ?>>
                                     <div class="wf-circle <?= $cls ?> <?= $userCanApprove ? 'user-can-approve' : $orgScope ?>">
                                         <?php if ($isApproved): ?>
                                             <i class="ph ph-check wf-icon"></i>
@@ -160,10 +160,10 @@ if ($wf) {
                                     <?php $lbl = e($tplById[$sid]['label'] ?? $sid); ?>
                                     <div>
                                         <button class="btn text-success border-success btn-approve" data-step-id="<?= e($sid) ?>">
-                                            <i class="ph ph-check"></i> <?= lang('Approve', 'Freigeben') ?>: <?= $lbl ?>
+                                            <i class="ph ph-check"></i> <?= lang('common.approve') ?>: <?= $lbl ?>
                                         </button>
                                         <button class="btn text-danger border-danger btn-reject" data-step-id="<?= e($sid) ?>">
-                                            <i class="ph ph-x"></i> <?= lang('Reject', 'Zurückweisen') ?>
+                                            <i class="ph ph-x"></i> <?= lang('activities.reject') ?>
                                         </button>
                                     </div>
                                 <?php endforeach; ?>
@@ -173,18 +173,18 @@ if ($wf) {
 
                         <?php if ($isVerified): ?>
                             <p class="text-success">
-                                <?= lang('This activity has been verified.', 'Diese Aktivität wurde freigegeben.') ?>
+                                <?= lang('activities.this_activity_has_been_verified') ?>
                             </p>
                         <?php elseif ($isRejected):
                             $rejectionComment = $wf['rejectedDetails']['comment'] ?? '';
                         ?>
                             <p class="text-danger">
-                                <?= lang('This activity has been rejected.', 'Diese Aktivität wurde zurückgewiesen.') ?>
+                                <?= lang('activities.this_activity_has_been_rejected') ?>
                             </p>
 
                         <?php elseif (empty($actionableIds)): ?>
                             <p class="text-muted">
-                                <?= lang('You cannot approve any steps at the moment.', 'Du kannst momentan keine Schritte freigeben.') ?>
+                                <?= lang('activities.you_cannot_approve_any_steps_at_the_moment') ?>
                             </p>
                         <?php endif; ?>
 
@@ -193,11 +193,11 @@ if ($wf) {
                         // show rejection details if exists and user can approve and the step was rejected
                         if (!empty($wf['rejectedDetails']) && (!empty($actionableIds) || $user_activity) && in_array($wf['rejectedDetails']['stepId'], $actionableIds)) { ?>
                             <h5 class="mb-0">
-                                <?= lang('Rejection in this step:', 'Zurückweisung in diesem Schritt:') ?>
+                                <?= lang('activities.rejection_in_this_step') ?>
                             </h5>
                             <div class="rejection-chat">
                                 <div class="chat-bubble">
-                                    <b><?= lang('Rejected by', 'Zurückgewiesen von') ?> <?= $DB->getNameFromId($wf['rejectedDetails']['by'] ?? '') ?></b>
+                                    <b><?= lang('activities.rejected_by') ?> <?= $DB->getNameFromId($wf['rejectedDetails']['by'] ?? '') ?></b>
                                     <div class="text-muted small">
                                         <?= date('d.m.Y', strtotime($wf['rejectedDetails']['at'] ?? '')); ?>
                                     </div>
@@ -207,7 +207,7 @@ if ($wf) {
                                 </div>
                                 <?php if (!empty($wf['rejectedDetails']['reply'])) { ?>
                                     <div class="chat-bubble">
-                                        <b><?= lang('Reply by', 'Antwort von') ?> <?= $DB->getNameFromId($wf['rejectedDetails']['reply']['by'] ?? '') ?></b>
+                                        <b><?= lang('activities.reply_by') ?> <?= $DB->getNameFromId($wf['rejectedDetails']['reply']['by'] ?? '') ?></b>
                                         <div class="text-muted small">
                                             <?= date('d.m.Y', strtotime($wf['rejectedDetails']['reply']['at'] ?? '')); ?>
                                         </div>
@@ -219,8 +219,8 @@ if ($wf) {
 
                                 <!-- mark as resolved and delete rejectionDetails -->
                                 <?php if (!empty($actionableIds) || $wf['rejectedDetails']['by'] == $_SESSION['username']) { ?>
-                                    <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-resolve/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to mark this rejection as resolved? All comments will be deleted.', 'Möchten Sie diese Zurückweisung wirklich als erledigt markieren? Alle Kommentare werden gelöscht.') ?>');">
-                                        <button class="btn small mt-5" type="submit"><?= lang('Mark as resolved and delete comments', 'Als erledigt markieren und Kommentare löschen') ?></button>
+                                    <form action="<?= ROOTPATH ?>/crud/activities/workflow/reject-resolve/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('activities.are_you_sure_you_want_to_mark_this_rejection_as_resolved_all_comments_will') ?>');">
+                                        <button class="btn small mt-5" type="submit"><?= lang('activities.mark_as_resolved_and_delete_comments') ?></button>
                                     </form>
                                 <?php } ?>
 
@@ -231,8 +231,8 @@ if ($wf) {
 
                     <?php if ($Settings->hasPermission('workflows.reset')) { ?>
                         <br>
-                        <form action="<?= ROOTPATH ?>/crud/activities/workflow/reset/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to reset this workflow?', 'Möchten Sie diesen Workflow wirklich zurücksetzen?') ?>');">
-                            <button class="btn danger mt-5" type="submit"><?= lang('Reset workflow', 'Workflow zurücksetzen') ?></button>
+                        <form action="<?= ROOTPATH ?>/crud/activities/workflow/reset/<?= $id ?>" method="post" onsubmit="return confirm('<?= lang('activities.are_you_sure_you_want_to_reset_this_workflow') ?>');">
+                            <button class="btn danger mt-5" type="submit"><?= lang('activities.reset_workflow') ?></button>
                         </form>
                     <?php } ?>
 
@@ -280,7 +280,7 @@ if ($wf) {
 
         $(document).on('click', '.btn-reject', function() {
             const stepId = $(this).data('step-id');
-            const comment = prompt("<?= lang('Please enter a comment', 'Bitte Kommentar eingeben') ?>");
+            const comment = prompt("<?= lang('activities.please_enter_a_comment') ?>");
             if (comment === null) return;
             const $btns = $('.btn-approve,.btn-reject').prop('disabled', true);
             $.post('<?= ROOTPATH ?>/crud/activities/workflow/reject/' + encodeURIComponent(activityId), {

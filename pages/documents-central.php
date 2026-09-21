@@ -87,26 +87,26 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
 </style>
 
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-10">
-    <h1><i class="ph-duotone ph-files"></i> <?= lang('Documents', 'Dokumente') ?></h1>
+    <h1><i class="ph-duotone ph-files"></i> <?= lang('common.documents') ?></h1>
     <?php if ($managePerm ?? false) { ?>
-        <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary"><i class="ph ph-file-plus"></i> <?= lang('Manage central documents', 'Zentrale Dokumente verwalten') ?></a>
+        <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary"><i class="ph ph-file-plus"></i> <?= lang('common.manage_central_documents') ?></a>
     <?php } ?>
 </div>
 
 <?php if ((($centralPerm ?? false) || ($managePerm ?? false)) && ($connectPerm ?? false)) { ?>
     <div class="pills mb-20">
-        <a href="<?= ROOTPATH ?>/documents/central" class="btn active"><?= lang('Central documents', 'Zentrale Dokumente') ?></a>
-        <a href="<?= ROOTPATH ?>/documents/connected" class="btn"><?= lang('Connected documents', 'Verknüpfte Dokumente') ?></a>
+        <a href="<?= ROOTPATH ?>/documents/central" class="btn active"><?= lang('common.central_documents') ?></a>
+        <a href="<?= ROOTPATH ?>/documents/connected" class="btn"><?= lang('common.connected_documents') ?></a>
     </div>
 <?php } ?>
 
 <?php if (empty($documents)) { ?>
     <div class="box central-document-empty">
         <i class="ph-duotone ph-files"></i>
-        <h3 class="mt-0 mb-5"><?= lang('No central documents available yet', 'Noch keine zentralen Dokumente verfügbar') ?></h3>
-        <p class="text-muted mt-0 mb-20"><?= lang('Central documents will appear here after they have been uploaded.', 'Zentrale Dokumente erscheinen hier, sobald sie hochgeladen wurden.') ?></p>
+        <h3 class="mt-0 mb-5"><?= lang('documents.no_central_documents_available_yet') ?></h3>
+        <p class="text-muted mt-0 mb-20"><?= lang('documents.central_documents_will_appear_here_after_they_have_been_uploaded') ?></p>
         <?php if ($managePerm ?? false) { ?>
-            <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary"><i class="ph ph-upload-simple"></i> <?= lang('Upload document', 'Dokument hochladen') ?></a>
+            <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary"><i class="ph ph-upload-simple"></i> <?= lang('common.upload_document') ?></a>
         <?php } ?>
     </div>
 <?php } else { ?>
@@ -114,17 +114,17 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
         <div class="col-md-9 order-last order-md-first">
             <div class="central-document-toolbar">
                 <label class="central-document-search">
-                    <span class="sr-only"><?= lang('Search documents', 'Dokumente durchsuchen') ?></span>
+                    <span class="sr-only"><?= lang('documents.search_documents') ?></span>
                     <i class="ph ph-magnifying-glass"></i>
-                    <input type="search" class="form-control" id="central-document-search" placeholder="<?= lang('Search title, description, category or tags …', 'Titel, Beschreibung, Kategorie oder Schlagwörter durchsuchen …') ?>">
+                    <input type="search" class="form-control" id="central-document-search" placeholder="<?= lang('documents.search_title_description_category_or_tags') ?>">
                 </label>
                 <label class="central-document-sort">
-                    <span class="sr-only"><?= lang('Sort documents', 'Dokumente sortieren') ?></span>
+                    <span class="sr-only"><?= lang('documents.sort_documents') ?></span>
                     <select class="form-control" id="central-document-sort">
-                        <option value="date-desc"><?= lang('Newest first', 'Neueste zuerst') ?></option>
-                        <option value="date-asc"><?= lang('Oldest first', 'Älteste zuerst') ?></option>
-                        <option value="title-asc"><?= lang('Title A–Z', 'Titel A–Z') ?></option>
-                        <option value="title-desc"><?= lang('Title Z–A', 'Titel Z–A') ?></option>
+                        <option value="date-desc"><?= lang('documents.newest_first') ?></option>
+                        <option value="date-asc"><?= lang('documents.oldest_first') ?></option>
+                        <option value="title-asc"><?= lang('documents.title_a_z_documents_central') ?></option>
+                        <option value="title-desc"><?= lang('documents.title_z_a_documents_central') ?></option>
                     </select>
                 </label>
             </div>
@@ -137,7 +137,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             <div class="central-document-grid" id="central-document-grid">
                 <?php foreach ($documents as $document) {
                     $id = (string) $document['_id'];
-                    $title = trim((string) ($document['name'] ?? '')) ?: (string) ($document['filename'] ?? lang('Untitled document', 'Unbenanntes Dokument'));
+                    $title = trim((string) ($document['name'] ?? '')) ?: (string) ($document['filename'] ?? lang('common.untitled_document'));
                     $description = trim((string) ($document['description'] ?? ''));
                     $category = trim((string) ($document['category'] ?? ''));
                     $tags = array_values(array_filter(array_map(static fn($tag) => trim((string) $tag), DB::doc2Arr($document['tags'] ?? []))));
@@ -172,7 +172,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                                     <!-- <div class="central-document-pdf-preview" data-pdf-url="<?= e($fileUrl) ?>" aria-hidden="true"></div> -->
                                 <?php } ?>
                             <?php } ?>
-                            <a href="<?= e($fileUrl) ?>" target="_blank" rel="noopener" class="central-document-preview-link" aria-label="<?= e(lang('Open document', 'Dokument öffnen') . ': ' . $title) ?>"></a>
+                            <a href="<?= e($fileUrl) ?>" target="_blank" rel="noopener" class="central-document-preview-link" aria-label="<?= e(lang('documents.open_document') . ': ' . $title) ?>"></a>
                         </div>
 
                         <div class="central-document-body">
@@ -188,12 +188,12 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                             <div class="central-document-details">
                                 <span class="central-document-filename" title="<?= e($filename) ?>"><?= e($filename) ?></span>
                                 <span><?= e(strtoupper($extension)) ?> · <?= e($formatSize($document['size'] ?? 0)) ?> · <?= e($uploadedDate) ?></span>
-                                <?php if ($uploader !== '') { ?><span> · <?= lang('by', 'von') ?> <?= e($uploader) ?></span><?php } ?>
+                                <?php if ($uploader !== '') { ?><span> · <?= lang('common.by_documents_manage') ?> <?= e($uploader) ?></span><?php } ?>
                             </div>
                             <div class="central-document-footer">
-                                <a href="<?= e($fileUrl) ?>" target="_blank" rel="noopener" class="btn small primary"><i class="ph ph-arrow-square-out"></i> <?= lang('Open', 'Öffnen') ?></a>
-                                <button type="button" class="btn small ml-auto" onclick="copyTextToClipboard('<?= e($fileUrl) ?>')" title="<?= lang('Copy link to clipboard', 'Link in die Zwischenablage kopieren') ?>"><i class="ph ph-copy"></i></button>
-                                <a href="<?= e($fileUrl) ?>?download=1" class="btn small" title="<?= lang('Download', 'Herunterladen') ?>"><i class="ph ph-download-simple"></i></a>
+                                <a href="<?= e($fileUrl) ?>" target="_blank" rel="noopener" class="btn small primary"><i class="ph ph-arrow-square-out"></i> <?= lang('documents.open') ?></a>
+                                <button type="button" class="btn small ml-auto" onclick="copyTextToClipboard('<?= e($fileUrl) ?>')" title="<?= lang('documents.copy_link_to_clipboard') ?>"><i class="ph ph-copy"></i></button>
+                                <a href="<?= e($fileUrl) ?>?download=1" class="btn small" title="<?= lang('common.download') ?>"><i class="ph ph-download-simple"></i></a>
                             </div>
                         </div>
                     </article>
@@ -202,21 +202,21 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
 
             <div id="central-document-no-results" class="box central-document-empty d-none">
                 <i class="ph-duotone ph-magnifying-glass"></i>
-                <h3 class="mt-0 mb-5"><?= lang('No matching documents', 'Keine passenden Dokumente') ?></h3>
-                <p class="text-muted mt-0 mb-20"><?= lang('Change your search or reset the active filters.', 'Ändere die Suche oder setze die aktiven Filter zurück.') ?></p>
-                <button type="button" class="btn" id="central-document-reset-empty"><i class="ph ph-arrow-counter-clockwise"></i> <?= lang('Reset filters', 'Filter zurücksetzen') ?></button>
+                <h3 class="mt-0 mb-5"><?= lang('documents.no_matching_documents') ?></h3>
+                <p class="text-muted mt-0 mb-20"><?= lang('documents.change_your_search_or_reset_the_active_filters') ?></p>
+                <button type="button" class="btn" id="central-document-reset-empty"><i class="ph ph-arrow-counter-clockwise"></i> <?= lang('documents.reset_filters') ?></button>
             </div>
         </div>
 
         <div class="col-md-3 central-document-filter-column">
             <div class="filters content" id="central-document-filters">
                 <div class="title d-flex align-items-center justify-content-between">
-                    <span><?= lang('Filters', 'Filter') ?></span>
-                    <button type="button" class="btn link central-document-filter-clear" id="central-document-reset"><?= lang('Reset', 'Zurücksetzen') ?></button>
+                    <span><?= lang('documents.filters') ?></span>
+                    <button type="button" class="btn link central-document-filter-clear" id="central-document-reset"><?= lang('documents.reset') ?></button>
                 </div>
 
                 <?php if (!empty($categoryCounts)) { ?>
-                    <h6><?= lang('By category', 'Nach Kategorie') ?></h6>
+                    <h6><?= lang('common.by_category') ?></h6>
                     <div class="filter"><table class="table small simple central-document-filter-table">
                         <?php foreach ($categoryCounts as $key => $info) { ?>
                             <tr><td><a href="#" data-filter-kind="category" data-filter-value="<?= e($key) ?>"><span><?= e($info['label']) ?></span><span class="index"><?= e($info['count']) ?></span></a></td></tr>
@@ -225,7 +225,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                 <?php } ?>
 
                 <?php if (!empty($typeCounts)) { ?>
-                    <h6><?= lang('By file type', 'Nach Dateityp') ?></h6>
+                    <h6><?= lang('common.by_file_type') ?></h6>
                     <div class="filter"><table class="table small simple central-document-filter-table">
                         <?php foreach ($typeCounts as $extension => $count) { ?>
                             <tr><td><a href="#" data-filter-kind="fileType" data-filter-value="<?= e($extension) ?>"><span><i class="ph ph-<?= e(getFileIcon($extension)) ?>"></i> <?= e(strtoupper($extension)) ?></span><span class="index"><?= e($count) ?></span></a></td></tr>
@@ -234,7 +234,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                 <?php } ?>
 
                 <?php if (!empty($tagCounts)) { ?>
-                    <h6><?= lang('By tag', 'Nach Schlagwort') ?></h6>
+                    <h6><?= lang('documents.by_tag') ?></h6>
                     <div class="filter" style="max-height: 22rem; overflow-y: auto;"><table class="table small simple central-document-filter-table">
                         <?php foreach ($tagCounts as $key => $info) { ?>
                             <tr><td><a href="#" data-filter-kind="tag" data-filter-value="<?= e($key) ?>"><span><?= e($info['label']) ?></span><span class="index"><?= e($info['count']) ?></span></a></td></tr>
@@ -255,11 +255,11 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             const activeFilters = document.getElementById('central-document-active-filters');
             const noResults = document.getElementById('central-document-no-results');
             const filterLabels = <?= json_encode([
-                'category' => lang('Category', 'Kategorie'),
-                'fileType' => lang('File type', 'Dateityp'),
-                'tag' => lang('Tag', 'Schlagwort'),
-                'oneResult' => lang('1 document', '1 Dokument'),
-                'manyResults' => lang('%s documents', '%s Dokumente'),
+                'category' => lang('common.category'),
+                'fileType' => lang('common.file_type'),
+                'tag' => lang('documents.tag'),
+                'oneResult' => lang('documents.1_document'),
+                'manyResults' => lang('documents.s_documents'),
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
             const state = { category: '', fileType: '', tag: '', query: '' };
             const hash = readHash()
@@ -298,7 +298,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                     badge.append(document.createTextNode(filterLabels[kind] + ': ' + label));
                     const remove = document.createElement('button');
                     remove.type = 'button';
-                    remove.setAttribute('aria-label', '<?= e(lang('Remove filter', 'Filter entfernen')) ?>');
+                    remove.setAttribute('aria-label', '<?= e(lang('documents.remove_filter')) ?>');
                     remove.innerHTML = '&times;';
                     remove.addEventListener('click', function() {
                         state[kind] = '';
@@ -365,7 +365,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             //     if (preview.dataset.loaded) return;
             //     const frame = document.createElement('iframe');
             //     frame.src = preview.dataset.pdfUrl + '#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0';
-            //     frame.title = '<?= e(lang('PDF preview', 'PDF-Vorschau')) ?>';
+            //     frame.title = '<?= e(lang('documents.pdf_preview')) ?>';
             //     frame.tabIndex = -1;
             //     preview.append(frame);
             //     preview.dataset.loaded = 'true';

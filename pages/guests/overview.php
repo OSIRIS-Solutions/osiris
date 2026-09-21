@@ -5,7 +5,7 @@
 
 <h1>
     <i class="ph-duotone ph-users-rectangle"></i>
-    <?=lang('Guest Overview', 'Übersicht über anstehende Gäste')?>
+    <?=lang('guests.guest_overview')?>
 </h1>
 
 <svg id="gantt"></svg>

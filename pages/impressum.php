@@ -5,7 +5,7 @@
         $impress = file_get_contents(BASEPATH . '/pages/impressum.html');
     }
     if (empty($impress)) {
-        $impress = "<p>" . lang('No legal notice available.', 'Kein Impressum verfügbar.') . "</p>";
+        $impress = "<p>" . lang('common.no_legal_notice_available') . "</p>";
     }
     echo $impress;
 ?>

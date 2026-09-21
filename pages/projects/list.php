@@ -46,7 +46,7 @@ if (!$Settings->hasPermission('projects.view')) {
             ['supervisor' => $_SESSION['username']]
         ]
     ];
-    $pagetitle = lang('My projects', 'Meine Projekte');
+    $pagetitle = lang('projects.my_projects');
 }
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
@@ -107,7 +107,7 @@ $Vocabulary = new Vocabulary();
         </a>
         <a href="<?= ROOTPATH ?>/visualize/map" class="btn">
             <i class="ph ph-map-pin-line"></i>
-            <?= lang('Show on map', 'Karte') ?>
+            <?= lang('projects.show_on_map') ?>
         </a>
     </div>
     <a href="<?= ROOTPATH ?>/projects/search" class="btn">
@@ -118,7 +118,7 @@ $Vocabulary = new Vocabulary();
     <?php if ($Settings->canProjectsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/projects/new" class="">
             <i class="ph ph-plus"></i>
-            <?= lang('Add new project', 'Neues Projekt anlegen') ?>
+            <?= lang('projects.add_new_project') ?>
         </a>
     <?php } ?>
 
@@ -132,7 +132,7 @@ $Vocabulary = new Vocabulary();
         <div class="dropdown float-right">
             <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                 <i class="ph ph-sort-ascending"></i>
-                <?= lang('Sort', 'Sortieren') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                <?= lang('common.sort') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
                 <a class="item" onclick="sortTable(this, 3, 'asc')">Start date (ASC)</a>
@@ -152,7 +152,7 @@ $Vocabulary = new Vocabulary();
                 <tr>
                     <td class="text-center">
                         <i class="ph ph-spinner-third text-muted"></i>
-                        <?= lang('Loading projects', 'Lade Projekte') ?>
+                        <?= lang('projects.loading_projects') ?>
                     </td>
                 </tr>
             </tbody>
@@ -186,7 +186,7 @@ $Vocabulary = new Vocabulary();
 
 
             <h6>
-                <?= lang('By type', 'Nach Projekttyp') ?>
+                <?= lang('common.by_type') ?>
                 <a class="float-right" onclick="filterProjects('#filter-type .active', null, 1)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -210,7 +210,7 @@ $Vocabulary = new Vocabulary();
 
 
             <h6>
-                <?= lang('By timeline', 'Nach Zeitachse') ?>
+                <?= lang('projects.by_timeline') ?>
                 <a class="float-right" onclick="filterProjects('#filter-timeline .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -220,7 +220,7 @@ $Vocabulary = new Vocabulary();
                             <a data-type="ongoing" onclick="filterProjects(this, 'ongoing', 15)" class="item" id="ongoing-btn" style="color:var(--highlight-color);">
                                 <span>
                                     <i class="ph ph-calendar-check"></i>&nbsp;
-                                    <?= lang('Ongoing', 'Laufend') ?>
+                                    <?= lang('projects.ongoing') ?>
                                 </span>
                             </a>
                         </td>
@@ -230,7 +230,7 @@ $Vocabulary = new Vocabulary();
                             <a data-type="past" onclick="filterProjects(this, 'past', 15)" class="item" id="past-btn" style="color:var(--highlight-color);">
                                 <span>
                                     <i class="ph ph-calendar-x"></i>&nbsp;
-                                    <?= lang('Past', 'Vergangenheit') ?>
+                                    <?= lang('projects.past') ?>
                                 </span>
                             </a>
                         </td>
@@ -240,7 +240,7 @@ $Vocabulary = new Vocabulary();
                             <a data-type="future" onclick="filterProjects(this, 'future', 15)" class="item" id="future-btn" style="color:var(--highlight-color);">
                                 <span>
                                     <i class="ph ph-calendar-plus"></i>&nbsp;
-                                    <?= lang('Future', 'Zukünftig') ?>
+                                    <?= lang('projects.future') ?>
                                 </span>
                             </a>
                         </td>
@@ -250,7 +250,7 @@ $Vocabulary = new Vocabulary();
 
 
             <h6>
-                <?= lang('By funder', 'Nach Zuwendungsgeber') ?>
+                <?= lang('common.by_funder') ?>
                 <a class="float-right" onclick="filterProjects('#filter-funder .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -326,7 +326,7 @@ $Vocabulary = new Vocabulary();
 
 
             <h6>
-                <?= lang('By organisational unit', 'Nach Organisationseinheit') ?>
+                <?= lang('common.by_organisational_unit') ?>
                 <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -344,17 +344,17 @@ $Vocabulary = new Vocabulary();
             </div>
 
             <h6>
-                <?= lang('By subproject', 'Nach Teilprojekt') ?>
+                <?= lang('projects.by_subproject') ?>
                 <a class="float-right" onclick="filterProjects('#filter-subproject .active', null, 14)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
                 <table id="filter-subproject" class="table small simple">
                     <tr>
                         <td>
-                            <a data-type="false" onclick="filterProjects(this, '<?= lang('Main project', 'Hauptprojekt') ?>', 14)" class="item" id="subproject-false-btn">
+                            <a data-type="false" onclick="filterProjects(this, '<?= lang('projects.main_project') ?>', 14)" class="item" id="subproject-false-btn">
                                 <span>
                                     <i class="ph ph-git-commit"></i>&nbsp;
-                                    <?= lang('Main projects', 'Hauptprojekte') ?>
+                                    <?= lang('projects.main_projects') ?>
                                 </span>
                             </a>
                         </td>
@@ -364,7 +364,7 @@ $Vocabulary = new Vocabulary();
                             <a data-type="true" onclick="filterProjects(this, '<?= lang('common.subproject') ?>', 14)" class="item" id="subproject-true-btn">
                                 <span>
                                     <i class="ph ph-git-merge"></i>&nbsp;
-                                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                                    <?= lang('common.subprojects') ?>
                                 </span>
                             </a>
                         </td>
@@ -374,7 +374,7 @@ $Vocabulary = new Vocabulary();
 
             <!-- 
             <h6>
-                <?= lang('By time', 'Nach Zeitraum') ?>
+                <?= lang('common.by_time') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
 
@@ -386,7 +386,7 @@ $Vocabulary = new Vocabulary();
             </div>
             <div class="input-group mt-10">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('To', 'Bis') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.to_list') ?></label>
                 </div>
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div> -->
@@ -415,7 +415,7 @@ $Vocabulary = new Vocabulary();
             key: 'type'
         },
         {
-            title: lang('Funder', 'Mittelgeber'),
+            title: <?= json_encode(lang('common.funder_list'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'funder'
         },
         {
@@ -431,11 +431,11 @@ $Vocabulary = new Vocabulary();
             key: 'role'
         },
         {
-            title: lang('Applicant', 'Antragsteller'),
+            title: <?= json_encode(lang('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'applicant'
         },
         {
-            title: lang('Proposal-ID', 'Antrags-ID'),
+            title: <?= json_encode(lang('projects.proposal_id'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'proposal_id'
         },
         {
@@ -459,7 +459,7 @@ $Vocabulary = new Vocabulary();
             key: 'title'
         },
         {
-            title: lang('Staff', 'Mitarbeitende'),
+            title: <?= json_encode(lang('projects.staff'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'persons'
         },
         {
@@ -467,7 +467,7 @@ $Vocabulary = new Vocabulary();
             key: 'subproject'
         },
         {
-            title: lang('Timeline', 'Zeitachse'),
+            title: <?= json_encode(lang('projects.timeline'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'timeline'
         },
         {
@@ -493,17 +493,17 @@ $Vocabulary = new Vocabulary();
         // Legacy types
         if (data == 'Eigenfinanziert' || data == 'self-funded') {
             return `<span class="badge text-signal">
-                        <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
+                        <i class="ph ph-piggy-bank"></i>&nbsp;${<?= json_encode(lang('common.self_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Stipendium' || data == 'stipendiate') {
             return `<span class="badge text-success no-wrap">
-                        <i class="ph ph-tip-jar"></i>&nbsp;${lang('Stipendiate', 'Stipendium')}
+                        <i class="ph ph-tip-jar"></i>&nbsp;${<?= json_encode(lang('common.stipendiate'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Drittmittel' || data == 'third-party') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${lang('Third-party funded', 'Drittmittel')}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${<?= json_encode(lang('common.third_party_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
@@ -523,13 +523,13 @@ $Vocabulary = new Vocabulary();
         if (data == 'coordinator') {
             return `<span class="badge text-signal">
         <i class="ph ph-crown"></i>
-        ${lang('Coordinator', 'Koordinator')}
+        ${<?= json_encode(lang('common.coordinator'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
         </span>`
         }
         if (data == 'associated') {
             return `<span class="badge text-success">
         <i class="ph ph-address-book"></i>
-        ${lang('Associated', 'Beteiligt')}
+        ${<?= json_encode(lang('projects.associated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
         </span>`
         }
         return `<span class="badge text-muted">
@@ -696,7 +696,7 @@ $Vocabulary = new Vocabulary();
                     defaultContent: '',
                     searchable: true,
                     visible: false,
-                    header: lang('Funder', 'Drittmmittelgeber'),
+                    header: <?= json_encode(lang('common.funder_42a12979'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => renderFunder(row)
                 },
                 {
@@ -727,14 +727,14 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Applicant', 'Antragsteller')
+                    header: <?= json_encode(lang('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 },
                 {
                     target: 7,
                     data: 'proposal_id',
                     searchable: true,
                     visible: false,
-                    header: lang('Proposal-ID', 'Antrags-ID'),
+                    header: <?= json_encode(lang('projects.proposal_id'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     defaultContent: '-',
                 },
                 {
@@ -751,7 +751,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Topics', 'Forschungsbereiche'),
+                    header: <?= json_encode(lang('common.topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => {
                         if (topicsEnabled && Array.isArray(data)) {
                             return data.join(', ')
@@ -788,7 +788,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Staff', 'Mitarbeitende'),
+                    header: <?= json_encode(lang('projects.staff'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => {
                         if (Array.isArray(data)) {
                             return data.map(a => a.user).join(', ')
@@ -807,7 +807,7 @@ $Vocabulary = new Vocabulary();
                         if (data) {
                             return lang('common.subproject');
                         }
-                        return lang('Main project', 'Hauptprojekt');
+                        return <?= json_encode(lang('projects.main_project'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                     }
                 },
                 {
@@ -816,7 +816,7 @@ $Vocabulary = new Vocabulary();
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: lang('Timeline', 'Zeitachse'),
+                    header: <?= json_encode(lang('projects.timeline'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => renderTimeline(data, type, row)
                 },
                 {

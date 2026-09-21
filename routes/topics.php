@@ -28,7 +28,7 @@ Route::get('/topics', function () {
 Route::get('/topics/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang("You do not have permission to create a new topics.", "Du hast keine Berechtigung, Themen zu erstellen."), "/topics", lang('Go back to topics', 'Zurück zu Themen'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", lang('topics.go_back_to_topics'));
     }
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
@@ -69,7 +69,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang("You do not have permission to edit topics.", "Du hast keine Berechtigung, Themen zu bearbeiten."), "/topics/view/$id", lang('Go back to topic', 'Zurück zu dem Thema'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
     }
 
     global $form;
@@ -103,7 +103,7 @@ Route::post('/crud/topics/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang("You do not have permission to create a new topics.", "Du hast keine Berechtigung, Themen zu erstellen."), "/topics", lang('Go back to topics', 'Zurück zu Themen'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", lang('topics.go_back_to_topics'));
     }
 
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
@@ -116,7 +116,7 @@ Route::post('/crud/topics/create', function () {
     // check if topic id already exists:
     $topic_exist = $collection->findOne(['id' => $id]);
     if (!empty($topic_exist)) {
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('with this ID already exists.', 'mit dieser ID existiert bereits.');
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.with_this_id_already_exists');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/topics/new");
         die();
@@ -131,7 +131,7 @@ Route::post('/crud/topics/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang("has been created successfully.", "wurde erfolgreich erstellt.");
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.has_been_created_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $red);
         die();
@@ -148,7 +148,7 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang("You do not have permission to edit topics.", "Du hast keine Berechtigung, Themen zu bearbeiten."), "/topics/view/$id", lang('Go back to topic', 'Zurück zu dem Thema'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
     }
 
     $target_dir = BASEPATH . "/uploads/";
@@ -189,7 +189,7 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
                 ['_id' => $DB->to_ObjectID($id)],
                 ['$set' => $values]
             );
-            $_SESSION['msg'] = lang("The file $filename has been uploaded.", "Die Datei <q>$filename</q> wurde hochgeladen.");
+            $_SESSION['msg'] = lang('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]);
             $_SESSION['msg_type'] = "success";
         } else {
             $_SESSION['msg'] = lang('error.file_upload_generic');
@@ -200,10 +200,10 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
         if (file_exists($target_dir . $filename)) {
             // Use unlink() function to delete a file
             if (!unlink($target_dir . $filename)) {
-                $_SESSION['msg'] = lang("$filename cannot be deleted due to an error.", "$filename kann nicht gelöscht werden, da ein Fehler aufgetreten ist.");
+                $_SESSION['msg'] = lang('common.filename_cannot_be_deleted_due_to_an_error', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "error";
             } else {
-                $_SESSION['msg'] = lang("$filename has been deleted.", "$filename wurde gelöscht.");
+                $_SESSION['msg'] = lang('common.filename_has_been_deleted', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "success";
             }
         }
@@ -216,7 +216,7 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang("You do not have permission to edit topics.", "Du hast keine Berechtigung, Themen zu bearbeiten."), "/topics/view/$id", lang('Go back to topic', 'Zurück zu dem Thema'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
     }
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->topics;
@@ -233,7 +233,7 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang("has been updated successfully.", "wurde erfolgreich aktualisiert.");
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.has_been_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -250,7 +250,7 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.delete')) {
-        abortwith(403, lang("You do not have permission to delete topics.", "Du hast keine Berechtigung, Themen zu löschen."), "/topics", lang('Go back to topics', 'Zurück zu Themen'));
+        abortwith(403, lang('topics.you_do_not_have_permission_to_delete_topics'), "/topics", lang('topics.go_back_to_topics'));
     }
 
     $topic = $osiris->topics->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -285,7 +285,7 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang("Research topic has been deleted successfully.", "Forschungsbereich wurde erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang('topics.research_topic_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/topics");
 });

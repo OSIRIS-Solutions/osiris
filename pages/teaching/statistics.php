@@ -87,13 +87,13 @@ $all = $osiris->activities->count(
 
 <h1>
     <i class="ph-duotone ph-chart-line-up"></i>
-    <?= lang("Teaching statistics", "Statistiken zu Lehrveranstaltungen") ?>
+    <?= lang('teaching.teaching_statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/teaching">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to Teaching modules', 'Zurück zu Lehrveranstaltungen') ?>
+        <?= lang('teaching.back_to_teaching_modules') ?>
     </a>
 </div>
 
@@ -101,11 +101,11 @@ $all = $osiris->activities->count(
 <!-- UI-Änderung -->
 <div class="alert signal">
     <i class="ph ph-warning text-signal"></i>
-    <?= lang('All of the following statistics are based on the selected semester.', 'Alle unten aufgeführten Statistiken basieren auf dem ausgewählten Semester.') ?>
+    <?= lang('teaching.all_of_the_following_statistics_are_based_on_the_selected_semester') ?>
 
 
     <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-        <h6 class="mb-0 mt-5"><?= lang('Select semester', 'Semester auswählen') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= lang('teaching.select_semester') ?>:</h6>
         <select name="semester" class="form-control w-auto">
             <?php foreach ($semesters as $s): ?>
                 <option value="<?= $s ?>" <?= $s === $selectedSemester ? 'selected' : '' ?>><?= $s ?></option>
@@ -121,7 +121,7 @@ $all = $osiris->activities->count(
 
 <div id="statistics">
     <p class="lead">
-        <?= lang('Number of courses in the selected semester', 'Anzahl der Lehrveranstaltungen im gewählten Semester') ?>:
+        <?= lang('teaching.number_of_courses_in_the_selected_semester') ?>:
         <b class="badge signal"><?= count($teaching) ?></b>
         <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
     </p>
@@ -129,20 +129,20 @@ $all = $osiris->activities->count(
 
     <h2>
         <i class="ph ph-table"></i>
-        <?= lang('Teaching modules', 'Lehrveranstaltungen') ?>
+        <?= lang('common.teaching_modules') ?>
     </h2>
 
     <table class="table" id="teaching-modules-table">
         <thead>
             <tr>
                 <th>Modul</th>
-                <th><?= lang('Affiliation', 'Affiliation') ?></th>
-                <th><?= lang('Type', 'Art') ?></th>
+                <th><?= lang('common.affiliation') ?></th>
+                <th><?= lang('common.type_statistics') ?></th>
                 <th><?= lang('common.start_date') ?></th>
                 <th><?= lang('common.end_date') ?></th>
                 <th><?= lang('common.affiliated') ?></th>
-                <th><?= lang('SWS (total)', 'SWS (gesamt)') ?></th>
-                <th><?= lang('SWS', 'SWS') ?> (<?= $Settings->get('affiliation') ?>)</th>
+                <th><?= lang('teaching.sws_total') ?></th>
+                <th><?= lang('teaching.sws') ?> (<?= $Settings->get('affiliation') ?>)</th>
             </tr>
         </thead>
         <tbody>

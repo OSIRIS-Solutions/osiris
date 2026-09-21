@@ -37,7 +37,7 @@ $name = $data['name'];
 
 <div class="container-lg" id="infrastructure-page">
     <?php if (!$data): ?>
-        <p><?= lang("Infrastructure not found", "Infrastruktur nicht gefunden"); ?></p>
+        <p><?= lang('infrastructures.infrastructure_not_found'); ?></p>
     <?php else: ?>
 
         <div class="profile-header" style="display: flex; align-items: center">
@@ -62,7 +62,7 @@ $name = $data['name'];
         <div class="row row-eq-spacing">
             <div class="col-sm-8 order-sm-first order-last" id="about">
                 <?php if (!empty($data['description']) || !empty($data['description_de']) || !empty($data['link'])) { ?>
-                    <h3 id="about"><?= lang("About ".$name, "Über ".$name); ?></h3>
+                    <h3 id="about"><?= lang('portal.about_name', replace: ['name' => $name]); ?></h3>
 
                     <div class="mt-20">
                         <?= lang($data['description'], $data['description_de'] ?? null); ?>
@@ -70,7 +70,7 @@ $name = $data['name'];
                     <?php if (isset($data['link'])) { ?>
                         <a class="btn primary" href="<?= e($data['link']) ?>" target="_blank" rel="noopener noreferrer">
                             <i class="ph ph-globe"></i>
-                            <?= lang('Visit website', 'Webseite besuchen') ?>
+                            <?= lang('portal.visit_website_infrastructure') ?>
                         </a>
                     <?php } ?>
                 <?php } ?>
@@ -80,7 +80,7 @@ $name = $data['name'];
                 if (count($persons) > 0): ?>
 
                     <h3 id="staff">
-                        <?= lang("Staff managing ".$name, "Das Team hinter ".$name) ?>
+                        <?= lang('portal.staff_managing_name', replace: ['name' => $name]) ?>
                     </h3>
 
                     <div class="row row-eq-spacing">
@@ -120,7 +120,7 @@ $name = $data['name'];
                 <?php if (($data['n_activities'] ?? 0) > 0) { ?>
 
                     <h3 id="activities">
-                        <?= lang("Activities involving ".$name, "Aktivitäten, die ".$name." involvieren") ?>
+                        <?= lang('portal.activities_involving_name', replace: ['name' => $name]) ?>
                     </h3>
                     <div class="pb-10">
                         <table class="table datatable" id="activity-table"
@@ -129,7 +129,7 @@ $name = $data['name'];
                             data-lang="<?= lang('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('Type', 'Art')?></th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
                                     <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
                                 </tr>
                             </thead>
@@ -176,11 +176,11 @@ $name = $data['name'];
                 <?php if ($data['collaborative'] ?? false) { ?>
                     <div id="collaborative">
                         <h3>
-                            <?= lang('This is a collaborative infrastructure', 'Dies ist eine kollaborative Infrastruktur') ?>
+                            <?= lang('portal.this_is_a_collaborative_infrastructure') ?>
                         </h3>
 
                         <h6>
-                            <?= lang('Coordinated by', 'Koordiniert durch') ?>
+                            <?= lang('portal.coordinated_by') ?>
                         </h6>
                         <table class="table">
 
@@ -214,14 +214,14 @@ $name = $data['name'];
                         </table>
 
                         <h6>
-                            <?= lang('Together with the following partners', 'Zusammen mit den folgenden Partnern') ?>
+                            <?= lang('portal.together_with_the_following_partners') ?>
                         </h6>
                         <table class="table">
                             <tbody>
                                 <?php if (empty($data['collaborators'])) { ?>
                                     <tr>
                                         <td colspan="2">
-                                            <?= lang('No partners connected.', 'Keine Partner verknüpft.') ?>
+                                            <?= lang('infrastructures.no_partners_connected') ?>
                                         </td>
                                     </tr>
                                     <?php } else foreach ($data['collaborators'] as $org) {
@@ -259,13 +259,13 @@ $name = $data['name'];
             </div>
 
             <div class="col-sm-4 position-relative">
-                <h3><?= lang("Details", "Details"); ?></h3>
+                <h3><?= lang('common.details'); ?></h3>
                 <table class="table small">
                     <tbody>
                         <?php if (!empty($data['contact_email'])): ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang("Contact Email", "Kontakt E-Mail") ?></span>
+                                    <span class="key"><?= lang('common.contact_email') ?></span>
                                     <a href="mailto:<?= e($data['contact_email']) ?>"><?= e($data['contact_email']) ?></a>
                                 </td>
                             </tr>
@@ -273,7 +273,7 @@ $name = $data['name'];
 
                         <tr>
                             <td>
-                                <span class="key"><?= lang("Operating Period", "Betriebszeitraum") ?></span>
+                                <span class="key"><?= lang('portal.operating_period') ?></span>
                                 <?php
                                 echo fromToDate($data['start_date'], $data['end_date'] ?? null, true);
                                 ?>
@@ -299,7 +299,7 @@ $name = $data['name'];
                             <?php if (!empty($data['access'])): ?>
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang("Access", "Zugang"); ?></span>
+                                        <span class="key"><?= lang('infrastructures.access'); ?></span>
                                         <?= e($data['access']) ?>
                                     </td>
                                 </tr>
@@ -310,17 +310,17 @@ $name = $data['name'];
 
                 <nav class="on-this-page-nav">
                     <div class="content">
-                        <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
-                        <a href="#about"><?= lang('About '.$name, 'Über '.$name) ?>
+                        <div class="title"><?= lang('common.on_this_page') ?></div>
+                        <a href="#about"><?= lang('portal.about_name', replace: ['name' => $name]) ?>
                         </a>
                         <?php if (count($persons) > 0): ?>
-                            <a href="#staff"> <?= lang('Staff', 'Mitarbeitende') ?></a>
+                            <a href="#staff"> <?= lang('projects.staff') ?></a>
                         <?php endif; ?>
                         <?php if (($data['n_activities'] ?? 0) > 0): ?>
                             <a href="#activities"> <?= lang('common.activities') ?></a>
                         <?php endif; ?>
                         <?php if ($data['collaborative'] ?? false): ?>
-                            <a href="#collaborative"> <?= lang('Collaborative Infrastructure', 'Kollaborative Infrastruktur') ?></a>
+                            <a href="#collaborative"> <?= lang('portal.collaborative_infrastructure') ?></a>
                         <?php endif; ?>
                         </ul>
                     </div>

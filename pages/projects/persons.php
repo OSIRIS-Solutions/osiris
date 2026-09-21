@@ -30,7 +30,7 @@ $user_in_project = false;
 
     <h1>
         <i class="ph-duotone ph-users-three"></i>
-        <?= lang('Manage project staff', 'Projektmitglieder verwalten') ?>
+        <?= lang('projects.manage_project_staff') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/<?= $collection ?>/update-persons/<?= $id ?>" method="post">
@@ -155,11 +155,11 @@ $user_in_project = false;
                                     <?php } ?>
                                 </select>
                                 <div class="input-group-append">
-                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-user-plus"></i> <?= lang('Add person', 'Person hinzufügen') ?></button>
+                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-user-plus"></i> <?= lang('common.add_person') ?></button>
                                 </div>
                             </div>
                             <?php if (!$user_in_project) { ?>
-                                <button class="btn primary" id="self-add-btn" type="button" onclick="addProjectRow(true)"><i class="ph ph-user-plus"></i> <?= lang('Add yourself to the project', 'Füge dich selbst zum Projekt hinzu') ?></button>
+                                <button class="btn primary" id="self-add-btn" type="button" onclick="addProjectRow(true)"><i class="ph ph-user-plus"></i> <?= lang('projects.add_yourself_to_the_project') ?></button>
                             <?php } ?>
                         </div>
                     </td>
@@ -191,7 +191,7 @@ $user_in_project = false;
         const personSelect = $('#person-select');
         const username = self_add ? '<?= $_SESSION['username'] ?>' : personSelect.val();
         if (!username) {
-            toastError('<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>');
+            toastError('<?= lang('common.please_select_a_person') ?>');
             return;
         }
 
@@ -246,7 +246,7 @@ $user_in_project = false;
                 personSelect.find(`option[value="${username}"]`).remove();
             }
         }).fail(function() {
-            toastError('<?= lang('Failed to fetch user data', 'Fehler beim Abrufen der Nutzerdaten') ?>');
+            toastError('<?= lang('projects.failed_to_fetch_user_data') ?>');
         });
     }
 

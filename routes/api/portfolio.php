@@ -3122,7 +3122,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'activity' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('Research activity', 'Forschungsaktivität');
+                $featuredCard['type_label'] = lang('news.research_activity');
                 $featuredCard['icon'] = 'ph-article';
                 $featuredCard['title'] = ($doc['title'] ?? '');
                 $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');

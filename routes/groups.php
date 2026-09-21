@@ -159,7 +159,7 @@ Route::post('/crud/groups/create', function () {
     // check if group name already exists:
     $group_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($group_exist)) {
-        $_SESSION['msg'] = lang("Group ID does already exist.", "Gruppen-ID existiert bereits.");
+        $_SESSION['msg'] = lang('people.group_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/groups/new");
         die();
@@ -202,7 +202,7 @@ Route::post('/crud/groups/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang("Group created successfully.", "Gruppe erfolgreich erstellt.");
+        $_SESSION['msg'] = lang('people.group_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -343,7 +343,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Unit updated successfully.", "Einheit erfolgreich aktualisiert.");
+        $_SESSION['msg'] = lang('common.unit_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -364,52 +364,28 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang(
-            'You are not allowed to edit this unit.',
-            'Du darfst diese Einheit nicht bearbeiten.'
-        ));
+        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
-        redirectFromGroupImage($group['id'], lang(
-            'No image was uploaded.',
-            'Es wurde kein Bild hochgeladen.'
-        ), 'info');
+        redirectFromGroupImage($group['id'], lang('people.no_image_was_uploaded'), 'info');
     }
 
     if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $errorMessage = match ($_FILES['file']['error']) {
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang(
-                'The image is too large. A maximum of 16 MB is allowed.',
-                'Das Bild ist zu groß. Maximal 16 MB sind erlaubt.'
-            ),
-            UPLOAD_ERR_PARTIAL => lang(
-                'The image was only partially uploaded.',
-                'Das Bild wurde nur teilweise hochgeladen.'
-            ),
-            UPLOAD_ERR_NO_TMP_DIR => lang(
-                'The temporary upload directory is missing.',
-                'Der temporäre Upload-Ordner fehlt.'
-            ),
-            UPLOAD_ERR_CANT_WRITE => lang(
-                'The image could not be written to disk.',
-                'Das Bild konnte nicht auf die Festplatte geschrieben werden.'
-            ),
-            UPLOAD_ERR_EXTENSION => lang(
-                'A PHP extension stopped the upload.',
-                'Eine PHP-Erweiterung hat den Upload gestoppt.'
-            ),
-            default => lang('The image could not be uploaded.', 'Das Bild konnte nicht hochgeladen werden.'),
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'),
+            UPLOAD_ERR_PARTIAL => lang('common.the_image_was_only_partially_uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => lang('common.the_temporary_upload_directory_is_missing'),
+            UPLOAD_ERR_CANT_WRITE => lang('common.the_image_could_not_be_written_to_disk'),
+            UPLOAD_ERR_EXTENSION => lang('common.a_php_extension_stopped_the_upload'),
+            default => lang('people.the_image_could_not_be_uploaded'),
         };
         redirectFromGroupImage($group['id'], $errorMessage, 'error');
     }
 
     $file = $_FILES['file'];
     if ($file['size'] > 16000000) {
-        redirectFromGroupImage($group['id'], lang(
-            'The image is too large. A maximum of 16 MB is allowed.',
-            'Das Bild ist zu groß. Maximal 16 MB sind erlaubt.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'), 'error');
     }
 
     $allowedMimeTypes = [
@@ -420,35 +396,23 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
     $dimensions = @getimagesize($file['tmp_name']);
     if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
-        redirectFromGroupImage($group['id'], lang(
-            'Only JPEG, PNG and WebP images are allowed.',
-            'Es sind nur JPEG-, PNG- und WebP-Bilder erlaubt.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('common.only_jpeg_png_and_webp_images_are_allowed'), 'error');
     }
 
     [$width, $height] = $dimensions;
     if ($width * $height > 25000000) {
-        redirectFromGroupImage($group['id'], lang(
-            'The image resolution is too large. A maximum of 25 megapixels is allowed.',
-            'Die Bildauflösung ist zu groß. Maximal 25 Megapixel sind erlaubt.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('people.the_image_resolution_is_too_large_a_maximum_of_25_megapixels_is_allowed'), 'error');
     }
 
     if (!extension_loaded('gd') || !function_exists('imagewebp')) {
-        redirectFromGroupImage($group['id'], lang(
-            'Image processing is not available on this server. Please contact an administrator.',
-            'Die Bildverarbeitung ist auf diesem Server nicht verfügbar. Bitte kontaktiere die Administration.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('people.image_processing_is_not_available_on_this_server_please_contact_an_administ'), 'error');
     }
 
     $takenAt = trim($_POST['taken_at'] ?? '');
     if ($takenAt !== '') {
         $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
         if ($date === false || $date->format('Y-m-d') !== $takenAt) {
-            redirectFromGroupImage($group['id'], lang(
-                'The date is invalid.',
-                'Das Datum ist ungültig.'
-            ), 'error');
+            redirectFromGroupImage($group['id'], lang('people.the_date_is_invalid'), 'error');
         }
     } else {
         $takenAt = null;
@@ -457,28 +421,19 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     $imageId = bin2hex(random_bytes(12));
     $targetDirectory = BASEPATH . "/uploads/groups/$id";
     if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
-        redirectFromGroupImage($group['id'], lang(
-            'The upload directory could not be created.',
-            'Der Upload-Ordner konnte nicht erstellt werden.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('common.the_upload_directory_could_not_be_created'), 'error');
     }
 
     $extension = $allowedMimeTypes[$mime];
     $originalPath = "$targetDirectory/$imageId.$extension";
     $thumbnailPath = "$targetDirectory/$imageId-thumb.webp";
     if (!move_uploaded_file($file['tmp_name'], $originalPath)) {
-        redirectFromGroupImage($group['id'], lang(
-            'The image could not be saved.',
-            'Das Bild konnte nicht gespeichert werden.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('common.the_image_could_not_be_saved'), 'error');
     }
 
     if (!createGroupImageThumbnail($originalPath, $thumbnailPath, $mime)) {
         @unlink($originalPath);
-        redirectFromGroupImage($group['id'], lang(
-            'The image preview could not be created.',
-            'Die Bildvorschau konnte nicht erstellt werden.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('people.the_image_preview_could_not_be_created'), 'error');
     }
 
     $images = DB::doc2Arr($group['images'] ?? []);
@@ -508,16 +463,10 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     } catch (Throwable $exception) {
         @unlink($originalPath);
         @unlink($thumbnailPath);
-        redirectFromGroupImage($group['id'], lang(
-            'The image metadata could not be saved.',
-            'Die Bildinformationen konnten nicht gespeichert werden.'
-        ), 'error');
+        redirectFromGroupImage($group['id'], lang('people.the_image_metadata_could_not_be_saved'), 'error');
     }
 
-    redirectFromGroupImage($group['id'], lang(
-        'The image has been uploaded.',
-        'Das Bild wurde hochgeladen.'
-    ), 'success');
+    redirectFromGroupImage($group['id'], lang('people.the_image_has_been_uploaded'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', function ($id, $imageId) {
@@ -529,10 +478,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang(
-            'You are not allowed to edit this unit.',
-            'Du darfst diese Einheit nicht bearbeiten.'
-        ));
+        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     $imageExists = false;
@@ -548,10 +494,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
     if ($takenAt !== '') {
         $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
         if ($date === false || $date->format('Y-m-d') !== $takenAt) {
-            redirectFromGroupImage($group['id'], lang(
-                'The date is invalid.',
-                'Das Datum ist ungültig.'
-            ), 'error');
+            redirectFromGroupImage($group['id'], lang('people.the_date_is_invalid'), 'error');
         }
     } else {
         $takenAt = null;
@@ -568,10 +511,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
         ]]
     );
 
-    redirectFromGroupImage($group['id'], lang(
-        'The image information has been updated.',
-        'Die Bildinformationen wurden aktualisiert.'
-    ), 'success');
+    redirectFromGroupImage($group['id'], lang('people.the_image_information_has_been_updated'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', function ($id, $imageId) {
@@ -583,10 +523,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang(
-            'You are not allowed to edit this unit.',
-            'Du darfst diese Einheit nicht bearbeiten.'
-        ));
+        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     $selectedImage = null;
@@ -618,10 +555,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
         if (is_file($thumbnailPath)) @unlink($thumbnailPath);
     }
 
-    redirectFromGroupImage($group['id'], lang(
-        'The image has been deleted.',
-        'Das Bild wurde gelöscht.'
-    ), 'success');
+    redirectFromGroupImage($group['id'], lang('people.the_image_has_been_deleted'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
@@ -649,7 +583,7 @@ Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Unit deleted successfully.", "Einheit erfolgreich gelöscht.");
+        $_SESSION['msg'] = lang('common.unit_deleted_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -698,7 +632,7 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
         renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
     }
 
-    $_SESSION['msg'] = lang("Person added successfully.", "Person erfolgreich hinzugefügt.");
+    $_SESSION['msg'] = lang('people.person_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -715,7 +649,7 @@ Route::post('/crud/groups/removeperson/(.*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     renderAuthorUnitsMany(['authors.user' => $_POST['username']]);
 
-    $_SESSION['msg'] = lang("Person removed successfully.", "Person erfolgreich entfernt.");
+    $_SESSION['msg'] = lang('people.person_removed_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -736,7 +670,7 @@ Route::post('/crud/groups/editorperson/(.*)', function ($id) {
         ]
     );
 
-    $_SESSION['msg'] = lang("Editor rights updated successfully.", "Bearbeitungsrechte erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang('people.editor_rights_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -755,7 +689,7 @@ Route::post('/crud/groups/reorder/(.*)', function ($id) {
         $i++;
     }
 
-    $_SESSION['msg'] = lang("Group reordered successfully.", "Gruppe erfolgreich neu geordnet.");
+    $_SESSION['msg'] = lang('people.group_reordered_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/view/$id");
 });

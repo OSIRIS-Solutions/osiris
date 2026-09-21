@@ -21,7 +21,7 @@
     $title = $Settings->get('staff-keyword-name', 'Keywords');
 } else if ($collection == 'expertise') {
     $icon = 'dumbbell';
-    $title = lang('Expertise', 'Expertise');
+    $title = lang('common.expertise');
  }  
 
 $cursor = $osiris->persons->aggregate([
@@ -80,7 +80,7 @@ $cursor = $osiris->persons->aggregate([
         <tr class="expertise">
             <td class="">
                     <h3 class="mt-0"><?= strtoupper($doc['_id']) ?></h3>
-                    <small class="text-muted"><?= $doc['count'] ?> <?= lang('experts found:', 'Expert:innen gefunden:') ?></small><br>
+                    <small class="text-muted"><?= $doc['count'] ?> <?= lang('search.experts_found') ?></small><br>
                     <?php foreach ($doc['users'] as $u) { 
                         $color = 'var(--highlight-color) ';
                         $units = $Groups->getPersonUnit($u['username']);
@@ -96,7 +96,7 @@ $cursor = $osiris->persons->aggregate([
     <?php } ?>
     <tr id="not-found" style="display: none;">
         <td class="text-center">
-            <h3><?= lang('No results found.', 'Keine Ergebnisse gefunden.') ?></h3>
+            <h3><?= lang('search.no_results_found') ?></h3>
         </td>
     </tr>
 </table>

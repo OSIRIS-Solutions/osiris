@@ -33,11 +33,11 @@ if (!is_null($data)) {
 
 <div class="container w-800 mw-full">
     <h2>
-        <?= lang('Data fields for Infrastructures', 'Datenfelder für Infrastrukturen') ?>
+        <?= lang('admin.data_fields_for_infrastructures') ?>
     </h2>
 
     <p>
-        <?= lang('Here you can manage the data fields for the infrastructures.', 'Hier kannst du die Datenfelder für die Infrastrukturen verwalten.') ?>
+        <?= lang('admin.here_you_can_manage_the_data_fields_for_the_infrastructures') ?>
     </p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
@@ -50,7 +50,7 @@ if (!is_null($data)) {
             <thead>
                 <tr>
                     <th><?= lang('common.active') ?></th>
-                    <th><?= lang('Field name', 'Feldname') ?></th>
+                    <th><?= lang('common.field_name') ?></th>
                 </tr>
             </thead>
             <tbody id="data-fields">
@@ -108,9 +108,9 @@ if (!is_null($data)) {
         </table>
 
         <p class="text-muted">
-            <?= lang('To add more fields to the <b>annual statistics</b>, you can update', 'Um weitere Felder zu der <b>Jahresstatistik</b> hinzuzufügen, kannst du') ?>
-            <a href="<?= ROOTPATH ?>/admin/vocabulary#vocabulary-infrastructure-stats"><?= lang('the vocabulary for infrastructure statistics', 'das Vokabular für Infrastrukturstatistiken bearbeiten') ?></a>
-            <?= lang('and add the fields you want to use there.', 'und dort die Felder hinzufügen, die du verwenden möchtest.') ?>
+            <?= lang('admin.to_add_more_fields_to_the_annual_statistics_you_can_update') ?>
+            <a href="<?= ROOTPATH ?>/admin/vocabulary#vocabulary-infrastructure-stats"><?= lang('admin.the_vocabulary_for_infrastructure_statistics') ?></a>
+            <?= lang('admin.and_add_the_fields_you_want_to_use_there') ?>
         </p>
 
 

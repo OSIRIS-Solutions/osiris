@@ -861,7 +861,7 @@ function initActivities(selector, data = {}, highlights = []) {
                     columns: [3]
                 },
                 className: 'btn small',
-                text: `<i class="ph ph-clipboard"></i> ${lang('Copy', 'Kopieren')}`,
+                text: `<i class="ph ph-clipboard"></i> ${lang('activities.copy')}`,
                 title: null
             },
             {
@@ -872,13 +872,13 @@ function initActivities(selector, data = {}, highlights = []) {
                         header: function (data, columnIdx) {
                             // eigene Header-Texte definieren
                             const customHeaders = {
-                                0: lang('Category', 'Kategorie'),
-                                1: lang('Printed title', 'Gedruckter Titel'),
-                                2: lang('Start date', 'Startdatum'),
-                                3: lang('Type', 'Typ'),
-                                4: lang('Title', 'Titel'),
-                                5: lang('Authors', 'Autoren'),
-                                6: lang('Year', 'Jahr'),
+                                0: lang('common.category'),
+                                1: lang('common.printed_title'),
+                                2: lang('common.start_date'),
+                                3: lang('common.type'),
+                                4: lang('common.title'),
+                                5: lang('common.authors_all_activities'),
+                                6: lang('common.year'),
                             };
                             return customHeaders[columnIdx] || data;
                         }
@@ -886,7 +886,7 @@ function initActivities(selector, data = {}, highlights = []) {
                 },
                 className: 'btn small',
                 title: 'OSIRIS_activities',
-                text: `<i class="ph ph-file-xls"></i> ${lang('Excel', 'Excel')}`,
+                text: `<i class="ph ph-file-xls"></i> ${lang('activities.excel')}`,
                 title: null
             },
             {
@@ -896,9 +896,9 @@ function initActivities(selector, data = {}, highlights = []) {
                     // do not strip HTML tags in the links column
                     stripHtml: false
                 },
-                title: TITLE + ' - ' + lang('Activities', 'Aktivitäten'),
+                title: TITLE + ' - ' + lang('common.activities'),
                 className: 'btn small',
-                text: `<i class="ph ph-printer"></i> ${lang('Print', 'Drucken')}`,
+                text: `<i class="ph ph-printer"></i> ${lang('common.print')}`,
                 customize: function (win) {
                     // hier könntest du noch CSS ergänzen, wenn nötig
                     $(win.document.body)
@@ -927,7 +927,7 @@ function initActivities(selector, data = {}, highlights = []) {
             {
                 targets: 3,
                 data: 'search-text',
-                title: lang('Aktivitäten', 'Activities'),
+                title: lang('common.aktivit_aten'),
                 searchable: true,
                 visible: false,
                 header: 'Test'
@@ -986,7 +986,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-xls" title="${lang('Excel', 'Excel')}"></i>`,
+            text: `<i class="ph ph-file-xls" title="${lang('activities.excel')}"></i>`,
         },
         {
             extend: 'pdfHtml5',
@@ -995,7 +995,7 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             className: 'btn small',
             title: title,
-            text: `<i class="ph ph-file-pdf" title="${lang('PDF', 'PDF')}"></i>`,
+            text: `<i class="ph ph-file-pdf" title="${lang('common.pdf')}"></i>`,
         },
         {
             extend: 'print',
@@ -1006,14 +1006,14 @@ function downloadTableButtons(title = 'OSIRIS_data_export', columns = ':visible'
             },
             title: title,
             className: 'btn small',
-            text: `<i class="ph ph-printer" title="${lang('Print', 'Drucken')}"></i>`,
+            text: `<i class="ph ph-printer" title="${lang('common.print')}"></i>`,
         }
     ];
     if (colVis) {
         buttons.unshift({
             extend: 'colvis',
             className: 'btn small',
-            text: `<i class="ph ph-columns" title="${lang('Columns', 'Spalten')}"></i>`,
+            text: `<i class="ph ph-columns" title="${lang('common.columns')}"></i>`,
         });
     }
     return buttons;
@@ -1072,22 +1072,22 @@ function initProjects(selector, data = {}) {
             render: function (data) {
                 if (data == 'Eigenfinanziert') {
                     return `<span class="badge text-signal">
-                    <i class="ph ph-piggy-bank"></i>&nbsp;${lang('Self-funded', 'Eigenfinanziert')}
+                    <i class="ph ph-piggy-bank"></i>&nbsp;${lang('common.self_funded')}
                     </span>`
                 }
                 if (data == 'Stipendium') {
                     return `<span class="badge text-success no-wrap">
-                    <i class="ph ph-tip-jar"></i>&nbsp;${lang('Stipendiate', 'Stipendium')}
+                    <i class="ph ph-tip-jar"></i>&nbsp;${lang('common.stipendiate')}
                     </span>`
                 }
                 if (data == 'Drittmittel') {
                     return `<span class="badge text-danger">
-                    <i class="ph ph-hand-coins"></i>&nbsp;${lang('Third-party funded', 'Drittmittel')}
+                    <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.third_party_funded')}
                     </span>`
                 }
                 if (data == 'Teilprojekt') {
                     return `<span class="badge text-danger">
-                    <i class="ph ph-hand-coins"></i>&nbsp;${lang('Subproject', 'Teilprojekt')}
+                    <i class="ph ph-hand-coins"></i>&nbsp;${lang('common.subproject')}
                     </span>`
                 }
                 else {
@@ -1113,13 +1113,13 @@ function initProjects(selector, data = {}) {
             //         if (data == 'coordinator') {
             //             return `<span class="badge text-signal">
             //             <i class="ph ph-crown-simple"></i>
-            //             ${lang('Coordinator', 'Koordinator')}
+            //             ${lang('common.coordinator')}
             //             </span>`
             //         }
             //         if (data == 'associated') {
             //             return `<span class="badge text-success">
             //             <i class="ph ph-address-book"></i>
-            //             ${lang('Associated', 'Beteiligt')}
+            //             ${lang('projects.associated')}
             //             </span>`
             //         }
             //         return `<span class="badge text-muted">
@@ -1192,13 +1192,13 @@ function impactfactors(containerID, canvasID, data = {}) {
                             stacked: true,
                             title: {
                                 display: true,
-                                text: LABELS['impact'] ?? lang('Cite Factor', 'Cite Factor')
+                                text: LABELS['impact'] ?? lang('common.cite_factor')
                             },
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: lang('Number of publications', 'Anzahl Publikationen')
+                                text: lang('dashboard.number_of_publications')
                             },
                             ticks: {
                                 callback: function (value, index, ticks) {
@@ -1326,7 +1326,7 @@ function activitiesChart(containerID, canvasID, data = {}) {
                             stacked: false,
                             title: {
                                 display: true,
-                                text: lang('Years', 'Jahre')
+                                text: lang('activities.years')
                             }
                         },
                         y: {
@@ -1342,7 +1342,7 @@ function activitiesChart(containerID, canvasID, data = {}) {
                             },
                             title: {
                                 display: true,
-                                text: lang('Number of activities', 'Anzahl der Aktivitäten')
+                                text: lang('activities.number_of_activities')
                             }
                         }
                     },
@@ -1429,13 +1429,13 @@ function projectTimeline(selector, data = {}) {
                 .range([0, width]);
 
             const typeInfo = {
-                'PI': { color: '#f78104', label: lang('Pi', 'PI') },
-                'applicant': { color: '#B61F29', label: lang('Applicant', 'Antragsteller:in') },
-                'worker': { color: '#008083', label: lang('Worker', 'Projektmitarbeiter:in') },
-                'associate': { color: '#AAAAAA', label: lang('Associate', 'Beteiligte Person') },
-                'coordinator': { color: '#AAAAAA', label: lang('Scientific Coordinator', 'Wiss. Koordinator:in') },
-                'scholar': { color: '#008083', label: lang('Scholar', 'Stipenidat') },
-                'supervisor': { color: '#f78104', label: lang('Supervisor', 'Betreuende Person') },
+                'PI': { color: '#f78104', label: lang('common.pi') },
+                'applicant': { color: '#B61F29', label: lang('common.applicant_2bb625a2') },
+                'worker': { color: '#008083', label: lang('common.worker') },
+                'associate': { color: '#AAAAAA', label: lang('common.associate') },
+                'coordinator': { color: '#AAAAAA', label: lang('common.scientific_coordinator') },
+                'scholar': { color: '#008083', label: lang('common.scholar') },
+                'supervisor': { color: '#f78104', label: lang('projects.supervisor') },
             }
 
             var axisBottom = d3.axisBottom(timescale)
@@ -1480,7 +1480,7 @@ function projectTimeline(selector, data = {}) {
                 .attr('text-anchor', 'middle')
                 .style('fill', 'rgb(165, 122, 0)')
                 .style('font-size', "5px")
-                .html(lang('Current year', 'Aktuelles Jahr'))
+                .html(lang('common.current_year'))
 
 
             d3.selectAll("g>.tick>text")
@@ -1633,7 +1633,7 @@ function coauthorNetwork(selector, data = {}) {
             legend.append('div')
                 .style('font-weight', 'bold')
                 .attr('class', 'mb-5')
-                .text(lang("Departments", "Abteilungen"))
+                .text(lang('search.departments'))
 
             for (const dept in depts_in_use) {
                 if (Object.hasOwnProperty.call(depts_in_use, dept)) {
@@ -1675,7 +1675,7 @@ function spectrumTooltip() {
             filter: el.attr('data-filter') || null
         }
         data.score = parseFloat(data.score);
-        data.score = isNaN(data.score) ? lang('No score', 'Kein Score') : data.score.toFixed(2);
+        data.score = isNaN(data.score) ? lang('common.no_score') : data.score.toFixed(2);
         el.popover({
             placement: 'auto top',
             container: '#spectrum',
@@ -1686,7 +1686,7 @@ function spectrumTooltip() {
             html: true,
             content: function () {
                 var label = ''
-                var a = data.count == 1 ? lang('Activity', 'Aktivität') : lang('Activities', 'Aktivitäten')
+                var a = data.count == 1 ? lang('common.activity') : lang('common.activities')
                 if (data.count > 0) {
                     label += 'In '
                     if (data.filter) {
@@ -1700,7 +1700,7 @@ function spectrumTooltip() {
                     Score: ${data.score} %</br>
                     ${label}
                     <hr>
-                    <a href="${ROOTPATH}/spectrum/topic/${data.id}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-right"></i> ${lang('Spectrum page', 'Spektrum-Seite')}</a><br>
+                    <a href="${ROOTPATH}/spectrum/topic/${data.id}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-right"></i> ${lang('common.spectrum_page')}</a><br>
                     `;
             }
         });
@@ -1805,10 +1805,10 @@ function registerDownloadHandlers(svgNode, selector) {
     const container = $(selector);
     // container.addClass('position-relative');
     const downloadDiv = $(`<div class="download-buttons">
-        <button id="download-` + filename + `-svg" class="btn small link" title="${lang('Download SVG', 'SVG herunterladen')}">
+        <button id="download-` + filename + `-svg" class="btn small link" title="${lang('common.download_svg')}">
             <i class="ph ph-file-svg"></i> SVG
         </button>
-        <button id="download-` + filename + `-png" class="btn small link" title="${lang('Download PNG', 'PNG herunterladen')}">
+        <button id="download-` + filename + `-png" class="btn small link" title="${lang('common.download_png')}">
             <i class="ph ph-file-png"></i> PNG
         </button>
     </div>`);
@@ -2076,7 +2076,7 @@ function timelineChart(filter = {}, props = {}) {
             let typeInfo = response.data.info;
             let events = response.data.events;
             if (events.length === 0) {
-                $(selector).html('<div class="content text-muted text-center">' + lang('No activities found for this year.', 'Keine Aktivitäten für dieses Jahr gefunden.') + '</div>');
+                $(selector).html('<div class="content text-muted text-center">' + lang('events.no_activities_found_for_this_year') + '</div>');
                 return;
             }
             if (eventSelector) {
@@ -2140,15 +2140,15 @@ function sanitizeID(element, idlist = '#IDLIST li') {
     // check if selected ID is in list
     if (val == '') {
         $(element).addClass('is-invalid').removeClass('is-valid')
-        toastError(lang('ID cannot be empty.', 'ID darf nicht leer sein.'))
+        toastError(lang('common.id_cannot_be_empty'))
         $('#submitBtn').attr('disabled', true)
     } else if (list.includes(val) && val != original_val) {
         // give negative feedback to user and disable submit button
         $(element).addClass('is-invalid').removeClass('is-valid')
         if (val == 'new') {
-            toastError(lang('NEW is a reserved keyword.', 'NEW ist ein reserviertes Schlüsselwort.'))
+            toastError(lang('common.new_is_a_reserved_keyword'))
         } else {
-            toastError(lang('ID does already exist.', 'ID existiert bereits.'))
+            toastError(lang('common.id_does_already_exist'))
         }
         $('#submitBtn').attr('disabled', true)
     } else {

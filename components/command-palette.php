@@ -10,16 +10,16 @@
                     class="cp-input"
                     id="osCpInput"
                     type="text"
-                    placeholder="<?= lang('Search…', 'Suchen…') ?>"
+                    placeholder="<?= lang('navigation.search') ?>"
                     value="" />
                 <div class="cp-kbd" aria-hidden="true">
-                    <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('Ctrl', 'Strg') ?></span><span class="os-kbd">K</span>
+                    <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('common.ctrl') ?></span><span class="os-kbd">K</span>
                 </div>
             </div>
 
             <div class="cp-hint">
-                <span class="os-kbd">↑↓</span> <?= lang('Navigate', 'Navigieren') ?>
-                <span class="os-kbd">↵</span> <?= lang('Go', 'Los') ?>
+                <span class="os-kbd">↑↓</span> <?= lang('navigation.navigate') ?>
+                <span class="os-kbd">↵</span> <?= lang('navigation.go') ?>
                 <span class="os-kbd">Esc</span> <?= lang('action.close') ?>
             </div>
         </div>
@@ -28,8 +28,8 @@
         </div>
 
         <div class="cp-footer">
-            <span class="cp-footerLeft"><?= lang('OSIRIS Search', 'OSIRIS Suche') ?></span>
-            <span class="cp-footerRight"><?= lang('Type to search for users, groups, organizations and more...', 'Tippe, um nach Benutzern, Gruppen, Organisationen und mehr zu suchen...') ?></span>
+            <span class="cp-footerLeft"><?= lang('navigation.osiris_search') ?></span>
+            <span class="cp-footerRight"><?= lang('navigation.type_to_search_for_users_groups_organizations_and_more') ?></span>
         </div>
     </div>
 </div>

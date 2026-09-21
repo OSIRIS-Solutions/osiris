@@ -20,15 +20,15 @@ include_once BASEPATH . '/header-editor.php';
 
     <input type="hidden" name="guestaccount" value="1">
     <h3 class="title">
-        <?= lang('Create new user', 'Nutzer anlegen') ?>
+        <?= lang('common.create_new_user') ?>
     </h3>
 
     <div class="form-row row-eq-spacing">
         <div class="col floating-form">
             <input class="form-control" type="text" id="username" name="username" required placeholder="username">
-            <label class="required" for="username"><?= lang('Username', 'Nutzername') ?></label>
+            <label class="required" for="username"><?= lang('common.username_guest_account_add') ?></label>
             <small class="text-muted">
-                <?= lang('Please choose a username without spaces or special characters', 'Bitte wähle einen Benutzernamen ohne Leerzeichen oder Sonderzeichen ') ?>
+                <?= lang('common.please_choose_a_username_without_spaces_or_special_characters') ?>
             </small>
         </div>
 
@@ -44,7 +44,7 @@ include_once BASEPATH . '/header-editor.php';
             $title = $data['academic_title'] ?? '';
             ?>
             <select name="values[academic_title]" id="academic_title" class="form-control">
-                <option value="" <?= $title == '' ? 'selected' : '' ?>><?= lang('None', 'NA') ?></option>
+                <option value="" <?= $title == '' ? 'selected' : '' ?>><?= lang('common.none_guest_account_add') ?></option>
                 <option value="Dr." <?= $title == 'Dr.' ? 'selected' : '' ?>>Dr.</option>
                 <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option>
                 <option value="PD Dr." <?= $title == 'PD Dr.' ? 'selected' : '' ?>>PD Dr.</option>
@@ -65,12 +65,12 @@ include_once BASEPATH . '/header-editor.php';
     </div>
 
 
-    <h5><?= lang('Contact', 'Kontakt') ?></h5>
+    <h5><?= lang('common.contact') ?></h5>
     <div class="form-row row-eq-spacing">
 
         <div class="col-sm floating-form">
             <input type="text" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required placeholder="mail">
-            <label for="mail" class="required"><?= lang('Mail', 'E-Mail') ?></label>
+            <label for="mail" class="required"><?= lang('common.mail_guest_account_add') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
@@ -81,7 +81,7 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div class="form-group">
-        <h5><?= lang('Department', 'Abteilung') ?></h5>
+        <h5><?= lang('common.department') ?></h5>
 
         <?php
         $tree = $Groups->getHierarchyTree();
@@ -131,7 +131,7 @@ include_once BASEPATH . '/header-editor.php';
     </div>
 
     <div class="form-group">
-        <h5><?= lang('Current Position', 'Aktuelle Position') ?></h5>
+        <h5><?= lang('common.current_position') ?></h5>
         <?php
         $staff = $Settings->get('staff');
         $staffPos = $staff['positions'] ?? [];
@@ -151,7 +151,7 @@ include_once BASEPATH . '/header-editor.php';
         <?php } else { ?>
             <!-- select list from predifined pos -->
             <select name="values[position_both]" id="position" class="form-control">
-                <option value=""> -- <?= lang('no position selected', 'keine Position gewählt') ?> --- </option>
+                <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
                 <?php foreach ($staffPos as $pos) {
                     $en = $pos[0] ?? '-';
                     $de = $pos[1] ?? '-';
@@ -184,9 +184,9 @@ include_once BASEPATH . '/header-editor.php';
 
     <!-- valid until -->
     <div class="form-group">
-        <label for="valid-until"><?= lang('Valid until', 'Gültig bis') ?></label>
+        <label for="valid-until"><?= lang('common.valid_until') ?></label>
         <input type="date" id="valid-until" name="valid_until" class="form-control" value="<?= $data['valid_until'] ?? '' ?>">
-        <small class="form-text text-muted"><?= lang('Leave empty for unlimited validity.', 'Leer lassen für unbegrenzte Gültigkeit.') ?></small>
+        <small class="form-text text-muted"><?= lang('admin.leave_empty_for_unlimited_validity') ?></small>
     </div>
 
     <button type="submit" class="btn">Submit</button>

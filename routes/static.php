@@ -46,7 +46,7 @@ Route::get('/new-stuff', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('News', 'Neuigkeiten')]
+        ['name' => lang('common.news')]
     ];
 
     include BASEPATH . "/header.php";
@@ -58,7 +58,7 @@ Route::get('/new-stuff', function () {
 Route::get('/license', function () {
 
     $breadcrumb = [
-        ['name' => lang('License', 'Lizenz')]
+        ['name' => lang('common.license')]
     ];
 
     include_once BASEPATH . "/php/init.php";
@@ -71,7 +71,7 @@ Route::get('/license', function () {
 Route::get('/accessibility', function () {
 
     $breadcrumb = [
-        ['name' => lang('Accessibility', 'Barrierefreiheit')]
+        ['name' => lang('common.accessibility')]
     ];
 
     include_once BASEPATH . "/php/init.php";

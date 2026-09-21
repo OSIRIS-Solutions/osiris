@@ -90,12 +90,12 @@
 <div class="container" style="margin-bottom: 6rem;max-width: 80rem;">
     <a href="<?= ROOTPATH ?>/activities/view/<?= $id ?>" class="">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('Back to activity', 'Zurück zur Aktivität') ?>
+        <?= lang('activities.back_to_activity') ?>
     </a>
 
     <h1>
         <i class="ph-duotone ph-link" aria-hidden="true"></i>
-        <?= lang('Edit Connections', 'Verknüpfungen bearbeiten') ?>
+        <?= lang('activities.edit_connections') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/activities/connections/<?= $id ?>" method="post">
@@ -134,7 +134,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected projects', 'Verknüpfte Projekte') ?>:</th>
+                                <th><?= lang('common.connected_projects') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -162,12 +162,12 @@
                     <?php if ($full_permission) { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } else { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only <b>your own</b> projects are shown here. You cannot connect proposals.', 'Bemerkung: nur <b>deine eigenen</b> Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= lang('common.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } ?>
 
@@ -184,7 +184,7 @@
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                toastError('<?= lang('common.this_project_is_already_connected') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -237,7 +237,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected', 'Verknüpfte') ?> <?= $Settings->infrastructureLabel() ?>:</th>
+                                <th><?= lang('common.connected') ?> <?= $Settings->infrastructureLabel() ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -275,7 +275,7 @@
                         }
                         // check if infrastructure already exists
                         if ($('#infrastructure-list').find(`input[value="${infraId}"]`).length > 0) {
-                            toastError('<?= lang('This infrastructure is already connected', 'Diese Infrastruktur ist bereits verbunden') ?>');
+                            toastError('<?= lang('common.this_infrastructure_is_already_connected') ?>');
                             return;
                         }
                         row.append(`<td class="w-full">
@@ -305,7 +305,7 @@
 
                 <a class="btn primary mb-20" href="#connect-activities">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('Connect activity', 'Aktivität verknüpfen') ?>
+                    <?= lang('activities.connect_activity') ?>
                 </a>
 
                 <table class="table">
@@ -333,7 +333,7 @@
                                     <div><?= $activity['rendered']['web'] ?? '' ?></div>
                                 </td>
                                 <td class="w-50">
-                                    <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('Disconnect activity', 'Aktivität trennen') ?>" onclick="removeActivity('<?= $con['_id'] ?>')">
+                                    <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>" onclick="removeActivity('<?= $con['_id'] ?>')">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </td>
@@ -350,7 +350,7 @@
         <?php if ($Settings->featureEnabled('news', true)) { ?>
             <p class="text-muted font-size-12">
                 <i class="ph ph-info"></i>
-                <?= lang('Note: news cannot be connected here. To connect news, please go to the news section and connect the activity there.', 'Bemerkung: News können hier nicht verknüpft werden. Um News zu verknüpfen, gehe bitte in den News-Bereich und verbinde die Aktivität dort.') ?>
+                <?= lang('activities.note_news_cannot_be_connected_here_to_connect_news_please_go_to_the_news_se') ?>
             </p>
         <?php } ?>
         
@@ -377,12 +377,12 @@
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                    <?= lang('common.connect_activities') ?>
                 </h5>
                 <input type="hidden" name="source_id" value="<?= $id ?>">
                 <!-- relationship type -->
                 <div class="form-group">
-                    <label for="relationship-type"><?= lang('Relationship type', 'Beziehungsart') ?></label>
+                    <label for="relationship-type"><?= lang('common.relationship_type') ?></label>
                     <div class="form-group">
                         <div class="input-group">
                             <select name="relationship" id="relationship-type" class="form-control">
@@ -401,7 +401,7 @@
                                     <div class="custom-switch">
                                         <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
                                         <label for="swap-relationship-dir">
-                                            <?= lang('Swap direction', 'Richtung umdrehen') ?>
+                                            <?= lang('common.swap_direction') ?>
                                         </label>
                                     </div>
                                 </div>
@@ -412,21 +412,21 @@
                 </div>
                 <!-- input field with suggesting activities -->
                 <div class="form-group" id="activity-suggest">
-                    <label for="activity-suggested"><?= lang('Select an activity to connect', 'Wähle eine Aktivität zum Verknüpfen') ?></label>
-                    <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" placeholder="<?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?>">
+                    <label for="activity-suggested"><?= lang('common.select_an_activity_to_connect') ?></label>
+                    <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" placeholder="<?= lang('common.start_typing_to_search_for_activities') ?>">
 
                     <div class="form-group font-size-12">
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
-                            <label for="activity-suggest-author"><?= lang('Only show my activities', 'Nur meine Aktivitäten anzeigen') ?></label>
+                            <label for="activity-suggest-author"><?= lang('common.only_show_my_activities') ?></label>
                         </div>
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
-                            <label for="activity-suggest-unit"><?= lang('Show activities from my unit(s)', 'Aktivitäten meiner Einheit(en) anzeigen') ?></label>
+                            <label for="activity-suggest-unit"><?= lang('common.show_activities_from_my_unit_s') ?></label>
                         </div>
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
-                            <label for="activity-suggest-all"><?= lang('Show all activities', 'Alle Aktivitäten anzeigen') ?></label>
+                            <label for="activity-suggest-all"><?= lang('common.show_all_activities') ?></label>
                         </div>
                     </div>
                     <div class="suggestions on-focus"></div>
@@ -434,7 +434,7 @@
                 <input type="hidden" name="target_id" id="activity-selected" value="">
 
                 <button type="button" class="btn primary" onclick="connectActivity()">
-                    <?= lang('Connect', 'Verknüpfen') ?>
+                    <?= lang('common.connect') ?>
                 </button>
 
             </div>
@@ -491,7 +491,7 @@
             const relationship = $('#relationship-type').val();
             const reverse = $('#swap-relationship-dir').is(':checked');
             if (!target_id) {
-                alert('<?= lang('Please select an activity to connect', 'Bitte wähle eine Aktivität zum Verknüpfen aus') ?>');
+                alert('<?= lang('activities.please_select_an_activity_to_connect') ?>');
                 return;
             }
             console.log({
@@ -513,7 +513,7 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data.inserted > 0) {
-                        toastSuccess('<?= lang('Activity connected successfully', 'Aktivität erfolgreich verknüpft') ?>');
+                        toastSuccess('<?= lang('activities.activity_connected_successfully') ?>');
                         // add the new connection to the list of connected activities
                         // add connection to the list of connected activities
                         const label = $('#relationship-type option:selected').text();
@@ -525,7 +525,7 @@
                         <div>${$('#activity-suggested').val()}</div>
                         </td>
                         <td class="w-50">
-                        <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('Disconnect activity', 'Aktivität trennen') ?>">
+                        <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>">
                         <i class="ph ph-trash"></i>
                         </button>
                         </td>
@@ -542,12 +542,12 @@
                             toastError(data.message);
                             return;
                         }
-                        toastError('<?= lang('An error occurred while connecting the activity', 'Beim Verknüpfen der Aktivität ist ein Fehler aufgetreten') ?>');
+                        toastError('<?= lang('activities.an_error_occurred_while_connecting_the_activity') ?>');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr, status, error);
-                    toastError('<?= lang('An error occurred while connecting the activity', 'Beim Verknüpfen der Aktivität ist ein Fehler aufgetreten') ?>');
+                    toastError('<?= lang('activities.an_error_occurred_while_connecting_the_activity') ?>');
                 }
             });
 
@@ -555,7 +555,7 @@
         }
 
         function removeActivity(connection_id) {
-            if (!confirm('<?= lang('Are you sure you want to disconnect this activity?', 'Bist du sicher, dass du diese Aktivität trennen möchtest?') ?>')) {
+            if (!confirm('<?= lang('activities.are_you_sure_you_want_to_disconnect_this_activity') ?>')) {
                 return;
             }
             // submit the form via ajax
@@ -568,17 +568,17 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data.deleted > 0) {
-                        toastSuccess('<?= lang('Activity disconnected successfully', 'Aktivität erfolgreich getrennt') ?>');
+                        toastSuccess('<?= lang('activities.activity_disconnected_successfully') ?>');
                         // remove the connection from the list of connected activities
                         $(`#activity-${connection_id}`).remove();
                     } else {
                         console.log(data);
-                        toastError('<?= lang('An error occurred while disconnecting the activity', 'Beim Trennen der Aktivität ist ein Fehler aufgetreten') ?>');
+                        toastError('<?= lang('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr, status, error);
-                    toastError('<?= lang('An error occurred while disconnecting the activity', 'Beim Trennen der Aktivität ist ein Fehler aufgetreten') ?>');
+                    toastError('<?= lang('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
                 }
             });
         }

@@ -145,10 +145,10 @@ class Spectrum
                 <?php if ($count !== null) { ?>
                     <?php self::hint($count); ?>
                 <?php } elseif (isset($spectrum['manual'])) { ?>
-                    <small><?= lang('These topics were manually adjusted.', 'Diese Themen wurden manuell angepasst.') ?></small>
+                    <small><?= lang('spectrum.these_topics_were_manually_adjusted') ?></small>
                 <?php } else { ?>
-                    <small><?= lang('These topics are automatically assigned by OpenAlex.', 'Diese Themen werden automatisch von OpenAlex vergeben.') ?></small>
-                    <a href="<?= ROOTPATH ?>/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> <?= lang('Learn more', 'Erfahre mehr') ?></a>
+                    <small><?= lang('spectrum.these_topics_are_automatically_assigned_by_openalex') ?></small>
+                    <a href="<?= ROOTPATH ?>/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> <?= lang('spectrum.learn_more') ?></a>
                 <?php } ?>
             </div>
 
@@ -167,17 +167,11 @@ class Spectrum
     public static function hint($count)
     {
         echo '<small>';
-        echo lang(
-            'Research Spectrum is based on the analysis of ' . $count . ' publications in OSIRIS.',
-            'Das Forschungs-Spektrum basiert auf der Analyse von ' . $count . ' Publikationen in OSIRIS.'
-        );
+        echo lang('spectrum.research_spectrum_is_based_on_the_analysis_of_count_publications_in_osiris', replace: ['count' => $count]);
         if ($count <= 10) {
-            echo lang(
-                ' Since there are only a few publications in OSIRIS with an assigned spectrum, the results may be incomplete or biased.',
-                ' Da es nur wenige Publikationen in OSIRIS mit zugewiesenen Schwerpunkten gibt, können die Ergebnisse unvollständig sein oder verzerrt wirken.'
-            );
+            echo lang('spectrum.since_there_are_only_a_few_publications_in_osiris_with_an_assigned_spectrum');
         }
         echo '</small>';
-        echo '<a href="' . ROOTPATH . '/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> ' . lang('Learn more', 'Erfahre mehr') . '</a>';
+        echo '<a href="' . ROOTPATH . '/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> ' . lang('spectrum.learn_more') . '</a>';
     }
 }

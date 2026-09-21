@@ -72,7 +72,7 @@ class ActivityFields extends Fields
                     'columns',
                     'filter'
                 ],
-                'label' => lang('Print version', 'Printdarstellung'),
+                'label' => lang('activities.print_version'),
                 'type' => 'string'
             ],
             [
@@ -81,7 +81,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('Web version', 'Webdarstellung'),
+                'label' => lang('activities.web_version'),
                 'type' => 'string'
             ],
             [
@@ -90,7 +90,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('Icon', 'Icon'),
+                'label' => lang('admin.icon'),
                 'type' => 'string'
             ],
             [
@@ -158,7 +158,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Abstract', 'Abstract'),
+                'label' => lang('activities.abstract'),
                 'type' => 'string'
             ],
             [
@@ -167,7 +167,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('Authors', 'Autoren'),
+                'label' => lang('common.authors_all_activities'),
                 'type' => 'list',
             ],
             [
@@ -177,7 +177,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Author (first name)', 'Autor (Vorname)'),
+                'label' => lang('activities.author_first_name'),
                 'type' => 'string'
             ],
             [
@@ -187,7 +187,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Author (last name)', 'Autor (Nachname)'),
+                'label' => lang('activities.author_last_name'),
                 'type' => 'string'
             ],
             [
@@ -197,7 +197,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Author (username)', 'Autor (Username)'),
+                'label' => lang('activities.author_username'),
                 'type' => 'string'
             ],
             [
@@ -207,7 +207,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Author (position)', 'Autor (Position)'),
+                'label' => lang('activities.author_position'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['first', 'middle', 'last', 'corresponding']
@@ -216,7 +216,7 @@ class ActivityFields extends Fields
                 'id' => 'authors.approved',
                 'module_of' => $typeModules['authors'] ?? [],
                 'usage' => [],
-                'label' => lang('Author (approved)', 'Autor (Bestätigt)'),
+                'label' => lang('activities.author_approved'),
                 'type' => 'boolean',
             ],
             [
@@ -226,7 +226,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Author (affiliated)', 'Autor (Affiliated)'),
+                'label' => lang('activities.author_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -236,7 +236,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Author (unit)', 'Autor (Einheit)'),
+                'label' => lang('activities.author_unit'),
                 'type' => 'string'
             ],
             [
@@ -245,7 +245,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('Supervisors', 'Betreuende'),
+                'label' => lang('teaching.supervisors'),
                 'type' => 'list',
             ],
             [
@@ -255,7 +255,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Supervisor (first name)', 'Betreuende (Vorname)'),
+                'label' => lang('activities.supervisor_first_name'),
                 'type' => 'string'
             ],
             [
@@ -265,7 +265,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Supervisor (last name)', 'Betreuende (Nachname)'),
+                'label' => lang('activities.supervisor_last_name'),
                 'type' => 'string'
             ],
             [
@@ -275,14 +275,14 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Supervisor (username)', 'Betreuende (Username)'),
+                'label' => lang('activities.supervisor_username'),
                 'type' => 'string'
             ],
             [
                 'id' => 'supervisors.approved',
                 'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
                 'usage' => [],
-                'label' => lang('Supervisor (approved)', 'Betreuende (Bestätigt)'),
+                'label' => lang('activities.supervisor_approved'),
                 'type' => 'boolean',
             ],
             [
@@ -292,7 +292,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Supervisor (affiliated)', 'Betreuende (Affiliated)'),
+                'label' => lang('activities.supervisor_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -301,7 +301,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'filter',
                 ],
-                'label' => lang('Supervisor (unit)', 'Betreuende (Einheit)'),
+                'label' => lang('activities.supervisor_unit'),
                 'type' => 'string'
             ],
             [
@@ -311,7 +311,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Supervisor (SWS)', 'Betreuende (SWS)'),
+                'label' => lang('activities.supervisor_sws'),
                 'type' => 'integer'
             ],
             [
@@ -320,7 +320,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('Editor', 'Herausgeber'),
+                'label' => lang('activities.editor'),
                 'type' => 'list',
             ],
             [
@@ -330,7 +330,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Editor (first name)', 'Herausgeber (Vorname)'),
+                'label' => lang('activities.editor_first_name'),
                 'type' => 'string'
             ],
             [
@@ -340,7 +340,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Editor (last name)', 'Herausgeber (Nachname)'),
+                'label' => lang('activities.editor_last_name'),
                 'type' => 'string'
             ],
             [
@@ -350,7 +350,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Editor (username)', 'Herausgeber (Username)'),
+                'label' => lang('activities.editor_username'),
                 'type' => 'string'
             ],
             [
@@ -360,7 +360,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Editor (affiliated)', 'Herausgeber (Affiliated)'),
+                'label' => lang('activities.editor_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -370,7 +370,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Editor (unit)', 'Herausgeber (Einheit)'),
+                'label' => lang('activities.editor_unit'),
                 'type' => 'string'
             ],
             [
@@ -392,24 +392,24 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Affiliated positions', 'Affiliierte Positionen'),
+                'label' => lang('common.affiliated_positions'),
                 'type' => 'list',
                 'input' => 'select',
                 'values' => [
-                    'first' => lang('First author', 'Erstautor:in'),
-                    'last' => lang('Last author', 'Letztautor:in'),
-                    'first_and_last' => lang('First and last author', 'Erst- und Letztautor:in'),
-                    'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
-                    'middle' => lang('Middle author', 'Mittelautor:in'),
-                    'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                    'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
-                    'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
-                    'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
-                    'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
-                    'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
-                    'not_middle' => lang('Not middle author', 'Nicht Mittelautor:in'),
-                    'not_corresponding' => lang('Not corresponding author', 'Nicht korrespondierender Autor:in'),
-                    'not_first_or_last' => lang('Not first or last author', 'Nicht Erst- oder Letztautor:in')
+                    'first' => lang('common.first_author'),
+                    'last' => lang('common.last_author'),
+                    'first_and_last' => lang('common.first_and_last_author'),
+                    'first_or_last' => lang('common.first_or_last_author'),
+                    'middle' => lang('common.middle_author'),
+                    'single' => lang('common.one_single_affiliated_author'),
+                    'none' => lang('common.no_author_affiliated_view'),
+                    'all' => lang('common.all_authors_affiliated'),
+                    'corresponding' => lang('common.corresponding_author'),
+                    'not_first' => lang('common.not_first_author'),
+                    'not_last' => lang('common.not_last_author'),
+                    'not_middle' => lang('common.not_middle_author'),
+                    'not_corresponding' => lang('common.not_corresponding_author'),
+                    'not_first_or_last' => lang('common.not_first_or_last_author')
                 ]
             ],
             [
@@ -420,15 +420,15 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Cooperation type', 'Kooperationsform'),
+                'label' => lang('activities.cooperation_type'),
                 'type' => 'string',
                 'values' => [
-                    'individual' => lang('Individual (only one affiliated author)', 'Individuell (nur ein affiliierter Autor)'),
-                    'departmental' => lang('Departmental (cooperation within one department)', 'Abteilungsintern (Kooperation innerhalb einer Abteilung)'),
-                    'institutional' => lang('Institutional (cooperation between departments of the same institute)', 'Institutionell (Kooperation zwischen Abteilungen des gleichen Instituts)'),
-                    'contributing' => lang('Contributing (cooperation with other institutes with middle authorships)', 'Beitragend (Kooperation mit anderen Instituten mit Mittelautorenschaft)'),
-                    'leading' => lang('Leading (cooperation with other institutes with a corresponding role, first or last authorship)', 'Führend (Kooperation mit anderen Instituten mit einer korrespondierenden Rolle, Erst- oder Letztautorenschaft)'),
-                    'none' => lang('None (no author affiliated)', 'Kein:e Autor:in affiliiert')
+                    'individual' => lang('activities.individual_only_one_affiliated_author'),
+                    'departmental' => lang('activities.departmental_cooperation_within_one_department'),
+                    'institutional' => lang('activities.institutional_cooperation_between_departments_of_the_same_institute'),
+                    'contributing' => lang('activities.contributing_cooperation_with_other_institutes_with_middle_authorships'),
+                    'leading' => lang('activities.leading_cooperation_with_other_institutes_with_a_corresponding_role_first_o'),
+                    'none' => lang('activities.none_no_author_affiliated')
                 ],
                 'input' => 'select'
             ],
@@ -462,7 +462,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Magazine', 'Magazin'),
+                'label' => lang('activities.magazine'),
                 'type' => 'string'
             ],
             [
@@ -481,21 +481,21 @@ class ActivityFields extends Fields
                 'id' => 'history',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('History', 'Verlauf'),
+                'label' => lang('activities.history'),
                 'type' => 'list'
             ],
             [
                 'id' => 'workflow',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('Workflow', 'Workflow'),
+                'label' => lang('workflows.workflow'),
                 'type' => 'list'
             ],
             [
                 'id' => 'rendered',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('Rendered', 'Gerendert'),
+                'label' => lang('activities.rendered'),
                 'type' => 'list'
             ],
             [
@@ -506,7 +506,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'columns'
                 ],
-                'label' => lang('License', 'Lizenz'),
+                'label' => lang('common.license'),
                 'type' => 'string'
             ],
             [
@@ -529,7 +529,7 @@ class ActivityFields extends Fields
                     'columns'
                 ],
                 'type' => 'string',
-                'label' => lang('Lecture type', 'Vortragstyp'),
+                'label' => lang('activities.lecture_type'),
                 'input' => 'select',
                 'values' => ['short', 'long', 'repetition']
             ],
@@ -541,7 +541,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Editor type', 'Editortyp'),
+                'label' => lang('activities.editor_type'),
                 'type' => 'string'
             ],
             [
@@ -582,7 +582,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Publication type', 'Publikationstyp'),
+                'label' => lang('activities.publication_type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['article', 'book', 'chapter', 'preprint', 'magazine', 'dissertation', 'others']
@@ -627,7 +627,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Pages', 'Seiten'),
+                'label' => lang('activities.pages'),
                 'type' => 'string'
             ],
             [
@@ -660,7 +660,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Book title', 'Buchtitel'),
+                'label' => lang('activities.book_title'),
                 'type' => 'string'
             ],
             [
@@ -671,7 +671,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Publisher', 'Verlag'),
+                'label' => lang('journals.publisher'),
                 'type' => 'string'
             ],
             [
@@ -682,7 +682,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Location (Publisher)', 'Ort (Verlag)'),
+                'label' => lang('activities.location_publisher'),
                 'type' => 'string'
             ],
             [
@@ -713,7 +713,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Document type', 'Dokumententyp'),
+                'label' => lang('documents.document_type'),
                 'type' => 'string'
             ],
             [
@@ -724,7 +724,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Iteration (Misc)', 'Wiederholung (misc)'),
+                'label' => lang('activities.iteration_misc'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['once', 'annual']
@@ -737,15 +737,15 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Type of software', 'Art der Software'),
+                'label' => lang('activities.type_of_software'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'software' => lang('Software', 'Software'),
-                    'database' => lang('Database', 'Datenbank'),
-                    'dataset' => lang('Dataset', 'Datensatz'),
-                    'webtool' => lang('Webtool', 'Webtool'),
-                    'report' => lang('Report', 'Bericht')
+                    'software' => lang('activities.software'),
+                    'database' => lang('admin.database'),
+                    'dataset' => lang('activities.dataset'),
+                    'webtool' => lang('activities.webtool'),
+                    'report' => lang('reports.report')
                 ]
             ],
             [
@@ -756,7 +756,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Publication venue (Software)', 'Ort der Veröffentlichung (Software)'),
+                'label' => lang('activities.publication_venue_software'),
                 'type' => 'string'
             ],
             [
@@ -777,17 +777,17 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Category (students/guests)', 'Kategorie (Studenten/Gäste)'),
+                'label' => lang('activities.category_students_guests'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'guest scientist' => lang('Guest Scientist', 'Gastwissenschaftler:in'),
-                    'lecture internship' => lang('Lecture Internship', 'Pflichtpraktikum im Rahmen des Studium'),
-                    'student internship' => lang('Student Internship', 'Schülerpraktikum'),
+                    'guest scientist' => lang('common.guest_scientist'),
+                    'lecture internship' => lang('common.lecture_internship'),
+                    'student internship' => lang('common.student_internship'),
                     'other' => lang('common.other'),
-                    'doctoral thesis' => lang('Doctoral Thesis', 'Doktorand:in'),
-                    'master thesis' => lang('Master Thesis', 'Master-Thesis'),
-                    'bachelor thesis' => lang('Bachelor Thesis', 'Bachelor-Thesis')
+                    'doctoral thesis' => lang('activities.doctoral_thesis'),
+                    'master thesis' => lang('activities.master_thesis'),
+                    'bachelor thesis' => lang('activities.bachelor_thesis')
                 ]
             ],
             [
@@ -798,7 +798,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Thesis type', 'Art der Abschlussarbeit'),
+                'label' => lang('activities.thesis_type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('thesis')
@@ -811,7 +811,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Publication language', 'Publikationssprache'),
+                'label' => lang('activities.publication_language'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('pub-language')
@@ -828,9 +828,9 @@ class ActivityFields extends Fields
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'in progress' => lang('In Progress', 'In Bearbeitung'),
+                    'in progress' => lang('documents.in_progress'),
                     'completed' => lang('common.completed'),
-                    'aborted' => lang('Aborted', 'Abgebrochen')
+                    'aborted' => lang('error.aborted')
                 ]
             ],
             [
@@ -840,7 +840,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Name of guest', 'Name des Gastes'),
+                'label' => lang('guests.name_of_guest'),
                 'type' => 'string'
             ],
             [
@@ -850,7 +850,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Academic title of guest', 'Akad. Titel des Gastes'),
+                'label' => lang('activities.academic_title_of_guest'),
                 'type' => 'string'
             ],
             [
@@ -860,7 +860,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Details', 'Details'),
+                'label' => lang('common.details'),
                 'type' => 'string'
             ],
             [
@@ -904,7 +904,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Peer Reviewed', 'Peer Reviewed'),
+                'label' => lang('activities.peer_reviewed'),
                 'type' => 'boolean',
             ],
             [
@@ -961,7 +961,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Contribution to political and social consulting', 'Beitrag zur Politik- und Gesellschaftsberatung'),
+                'label' => lang('activities.contribution_to_political_and_social_consulting'),
                 'type' => 'string',
                 'values' => ['Gutachten', 'Positionspapier', 'Studie', 'Sonstiges', ''],
                 'input' => 'select'
@@ -985,7 +985,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Created by (Abbreviation)', 'Erstellt von (Kürzel)'),
+                'label' => lang('activities.created_by_abbreviation'),
                 'type' => 'string'
             ],
             [
@@ -995,7 +995,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Created at', 'Erstellt am'),
+                'label' => lang('activities.created_at_activity_fields'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1006,7 +1006,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Imported at', 'Importiert am'),
+                'label' => lang('activities.imported_at'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1017,7 +1017,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Updated at', 'Aktualisiert am'),
+                'label' => lang('activities.updated_at'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1029,7 +1029,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Updated by (Abbreviation)', 'Aktualisiert von (Kürzel)'),
+                'label' => lang('activities.updated_by_abbreviation'),
                 'type' => 'string'
             ],
             [
@@ -1040,7 +1040,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Reports: exclude', 'Berichte: ausschließen'),
+                'label' => lang('activities.reports_exclude'),
                 'type' => 'boolean',
             ],
             [
@@ -1051,7 +1051,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('User names', 'Nutzernamen'),
+                'label' => lang('activities.user_names'),
                 'type' => 'list'
             ],
             [
@@ -1061,7 +1061,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('Research spectrum (ID)', 'Forschungs-Spektrum (ID)'),
+                'label' => lang('activities.research_spectrum_id'),
                 'type' => 'string'
             ],
             [
@@ -1070,7 +1070,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'filter',
                 ],
-                'label' => lang('Project-ID', 'Projekt-ID'),
+                'label' => lang('activities.project_id'),
                 'type' => 'string'
             ]
         ];
@@ -1085,7 +1085,7 @@ class ActivityFields extends Fields
                 'filter',
                 'columns'
             ],
-            'label' => lang('Organizational unit', 'Organisationseinheit'),
+            'label' => lang('common.organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units
@@ -1136,13 +1136,13 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Workflow Status', 'Workflow-Status'),
+                'label' => lang('activities.workflow_status_activity_fields'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'verified' => lang('Verified', 'Verifiziert'),
+                    'verified' => lang('activities.verified'),
                     'rejected' => lang('common.rejected'),
-                    'in_progress' => lang('In Process', 'In Bearbeitung'),
+                    'in_progress' => lang('activities.in_process'),
                 ]
             ];
         }

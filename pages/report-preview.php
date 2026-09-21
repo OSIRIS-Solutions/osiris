@@ -18,11 +18,11 @@ $headers = [];
     <div class="row row-eq-spacing">
         <div class="col-md w-800 mw-full flex-grow-0 flex-reset">
             <div class="eyebrow">
-                <?= lang('Report Preview', 'Berichtsvorschau') ?>
+                <?= lang('reports.report_preview') ?>
             </div>
             <h1>
                 <i class="ph-duotone ph-clipboard-text"></i>
-                <?= $report['title'] ?? lang('Untitled Report', 'Unbenannter Bericht') ?>
+                <?= $report['title'] ?? lang('common.untitled_report') ?>
             </h1>
 
             <form action="" method="get">
@@ -38,11 +38,11 @@ $headers = [];
                         <?php } ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Start month', 'Start-Monat') ?></span>
+                                <span class="key"><?= lang('common.start_month_reports') ?></span>
                                 <input type="number" class="form-control" name="startmonth" id="startmonth" value="<?= $report['start'] ?>" required>
                             </td>
                             <td>
-                                <span class="key"><?= lang('Start year', 'Start-Jahr') ?></span>
+                                <span class="key"><?= lang('common.start_year') ?></span>
                                 <input type="number" class="form-control" name="year" id="year" value="<?= $year ?>" required>
                             </td>
                         </tr>
@@ -60,7 +60,7 @@ $headers = [];
                             <td colspan="2" class="text-right">
                                 <button type="submit" class="btn primary">
                                     <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-                                    <?= lang('Update preview', 'Vorschau aktualisieren') ?>
+                                    <?= lang('reports.update_preview') ?>
                                 </button>
                             </td>
                         </tr>
@@ -83,7 +83,7 @@ $headers = [];
             </div>
 
             <p class="text-muted">
-                <?= lang('<b>Note:</b> This is a preview of the report. The actual report may look different when exported. The selected UI language affects the language in the report.', '<b>Hinweis:</b> Dies ist eine Vorschau des Berichts. Der tatsächliche Bericht kann nach dem Export anders aussehen. Die ausgewählte UI-Sprache wirkt sich auf die Sprache im Report aus.') ?>
+                <?= lang('reports.note_this_is_a_preview_of_the_report_the_actual_report_may_look_different_w') ?>
             </p>
         </div>
 
@@ -91,7 +91,7 @@ $headers = [];
         <div class="col-md-3 d-none d-md-block">
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <div class="title"><?= lang('On this page', 'Auf dieser Seite') ?></div>
+                    <div class="title"><?= lang('common.on_this_page') ?></div>
 
                     <?php foreach ($Report->getHeaders() as $id => $header) { ?>
                         <a href="#<?= e($id) ?>"><?= $header ?></a>

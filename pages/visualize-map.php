@@ -20,11 +20,11 @@ if (!$Settings->featureEnabled('projects')) {
 ?>
     <div class="alert danger">
         <h3 class="title">
-            <?= lang('The collaborator map is not available.', 'Die Kooperations-Karte ist nicht verfügbar.') ?>
+            <?= lang('search.the_collaborator_map_is_not_available') ?>
         </h3>
 
         <p>
-            <?= lang('The collaborator map is based on project collaborations and thus requires the projects module to be enabled. Please contact your administrator.', 'Die Kooperations-Karte basiert auf Projekt-Kooperationen und benötigt daher das Projekte-Modul. Bitte kontaktiere deinen Administrator.') ?>
+            <?= lang('search.the_collaborator_map_is_based_on_project_collaborations_and_thus_requires_t') ?>
         </p>
     </div>
 <?php
@@ -83,7 +83,7 @@ if (empty($lat) || empty($lng)) {
 
     <h1>
         <i class="ph-duotone ph-map-pin"></i>
-        <?= lang('Project Map', 'Projekt-Karte') ?>
+        <?= lang('search.project_map') ?>
     </h1>
 
     <div class="row row-eq-spacing">
@@ -106,7 +106,7 @@ if (empty($lat) || empty($lng)) {
                     ?>
                         <tr>
                             <td>
-                                <?= lang('No collaborators connected.', 'Keine Partner verknüpft.') ?>
+                                <?= lang('common.no_collaborators_connected') ?>
                             </td>
                         </tr>
                     <?php
@@ -189,12 +189,12 @@ if (empty($lat) || empty($lng)) {
     <div class="btn-toolbar float-right">
         <a href="<?= ROOTPATH ?>/projects" class="btn secondary">
             <i class="ph ph-tree-structure"></i>
-            <?= lang('Go to all projects', 'Gehe zu allen Projekten') ?>
+            <?= lang('search.go_to_all_projects') ?>
         </a>
     </div>
     <h1>
         <i class="ph-duotone ph-map-pin"></i>
-        <?= lang('Collaboration map', 'Kooperations-Karte') ?>
+        <?= lang('search.collaboration_map') ?>
     </h1>
 
     <div id="map" class=""></div>

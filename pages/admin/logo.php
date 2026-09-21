@@ -19,17 +19,17 @@
     <div class="container w-400 mw-full">
         <h1>
             <i class="ph-duotone ph-image" aria-hidden="true"></i>
-            <?= lang('Logo', 'Logo') ?>
+            <?= lang('admin.logo') ?>
         </h1>
 
         <div class="box padded">
-            <b><?= lang('Current Logo', 'Derzeitiges Logo') ?>: <br></b>
+            <b><?= lang('admin.current_logo') ?>: <br></b>
             <?= $Settings->printLogo("img-fluid mt-20") ?>
         </div>
 
         <div class="custom-file mb-20" id="file-input-div">
             <input type="file" id="file-input" name="logo" data-default-value="<?= lang('common.no_file_chosen') ?>">
-            <label for="file-input"><?= lang('Upload a new logo', 'Lade ein neues Logo hoch') ?></label>
+            <label for="file-input"><?= lang('admin.upload_a_new_logo') ?></label>
             <br><small class="text-danger">Max. 2 MB.</small>
         </div>
 

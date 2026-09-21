@@ -26,7 +26,7 @@ if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/create";
     $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/fields";
-    $title = lang('New field', 'Neues Feld');
+    $title = lang('admin.new_field');
 }
 $affiliation = (strtolower($Settings->get('affiliation')));
 // keep only letters and numbers
@@ -45,16 +45,16 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
 
             <p>
-                <?= lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt.') ?>
+                <?= lang('admin.the_id_is_used_internally_to_save_data_for_this_data_field_in_the_database') ?>
             </p>
             <p>
-                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="used-ids">
-                <li class="font-weight-bold">--- <?= lang('OSIRIS Fields', 'OSIRIS-Felder') ?> ---</li>
+                <li class="font-weight-bold">--- <?= lang('admin.osiris_fields') ?> ---</li>
                 <?php
                 require_once BASEPATH . '/php/activity_fields.php';
                 $Fields = new ActivityFields();
@@ -69,7 +69,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
                     <li><?= $k ?></li>
                 <?php } ?>
-                <li class="font-weight-bold">--- <?= lang('Keywords', 'Schlüsselwörter') ?> ---</li>
+                <li class="font-weight-bold">--- <?= lang('admin.keywords') ?> ---</li>
                 <li>language</li>
                 <li>new</li>
             </ul>
@@ -97,7 +97,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
                 <small>
                     <a href="#unique"><i class="ph ph-info"></i>
-                        <?= lang('Important! Must be unique.', 'Wichtig! Die ID muss einzigartig sein.') ?>
+                        <?= lang('common.important_must_be_unique') ?>
                     </a>
                 </small>
             </div>
@@ -118,17 +118,17 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <div class="col-sm-6">
                     <label for="format">Format</label>
                     <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)">
-                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('Normal Text', 'Normaler Text') ?></option>
-                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('Long text', 'Langer Text') ?></option>
-                        <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= lang('Text with formatting', 'Text mit Formatierung') ?></option>
-                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('Integer', 'Ganzzahl') ?></option>
-                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('Float', 'Gleitkommazahl') ?></option>
-                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('Dropdown (Select from list)', 'Dropdown (Wähle aus einer Liste)') ?></option>
+                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('admin.normal_text') ?></option>
+                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('admin.long_text') ?></option>
+                        <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= lang('admin.text_with_formatting') ?></option>
+                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('admin.integer') ?></option>
+                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('admin.float') ?></option>
+                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('admin.dropdown_select_from_list') ?></option>
                         <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('common.date') ?></option>
-                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('Boolean (Yes/No)', 'Boolean (Ja/Nein)') ?></option>
-                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('Boolean (as checkbox)', 'Boolean (als Checkbox)') ?></option>
+                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('admin.boolean_yes_no') ?></option>
+                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('admin.boolean_as_checkbox') ?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
-                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= lang('Free text list (without predefined values)', 'Freitext-Liste (ohne vordefinierte Werte)') ?></option>
+                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= lang('admin.free_text_list_without_predefined_values') ?></option>
                         <!-- <option value="user">User</option> -->
                     </select>
                 </div>
@@ -141,7 +141,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 
             <fieldset id="values-field" <?= ($form['format'] ?? null) != 'list' ? 'style="display: none;"' : '' ?>>
-                <legend><?= lang('Possible values', 'Mögliche Werte') ?></legend>
+                <legend><?= lang('admin.possible_values') ?></legend>
                 <table class="table simple small">
                     <thead>
                         <tr>
@@ -196,7 +196,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                     <div class="custom-checkbox">
                         <input type="hidden" name="values[multiple]" value="0">
                         <input type="checkbox" name="values[multiple]" id="multiple" value="1" <?= ($form['multiple'] ?? 0) == 1 ? 'checked' : '' ?>>
-                        <label for="multiple"><?= lang('Multiple Select', 'Mehrfachauswahl möglich') ?></label>
+                        <label for="multiple"><?= lang('admin.multiple_select') ?></label>
                     </div>
                 </div>
 
@@ -204,10 +204,10 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                     <div class="custom-checkbox">
                         <input type="hidden" name="values[others]" value="0">
                         <input type="checkbox" name="values[others]" id="others" value="1" <?= ($form['others'] ?? 0) == 1 ? 'checked' : '' ?>>
-                        <label for="others"><?= lang('Allow text input as <em>Others</em>', 'Erlaube Text-Input als <em>Sonstiges</em>') ?></label>
+                        <label for="others"><?= lang('admin.allow_text_input_as_others') ?></label>
                     </div>
                     <small class="text-muted">
-                        <?= lang('Currently not supported in combination with multiple select.', 'Zurzeit noch nicht mit Mehrfachauswahl unterstützt.') ?>
+                        <?= lang('admin.currently_not_supported_in_combination_with_multiple_select') ?>
                     </small>
                 </div>
             </fieldset>
@@ -222,7 +222,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 <?php if (!empty($form['id'] ?? null)) { ?>
     <h3>
-        <?= lang('Entities that use this field', 'Entitäten, die dieses Feld verwenden') ?>
+        <?= lang('admin.entities_that_use_this_field') ?>
     </h3>
 
     <?php
@@ -269,7 +269,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('No activity type uses this field.', 'Keine Aktivitätstyp verwendet dieses Feld.') ?></em>
+                        <em class="text-muted"><?= lang('admin.no_activity_type_uses_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -286,7 +286,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('No project type uses this field.', 'Kein Projekttyp verwendet dieses Feld.') ?></em>
+                        <em class="text-muted"><?= lang('admin.no_project_type_uses_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -297,22 +297,22 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <td>
                     <?php if ($persons) { ?>
                         <i class="ph ph-check-circle text-success"></i>
-                        <?= lang('Persons use this field.', 'Personen verwenden dieses Feld.') ?>
+                        <?= lang('admin.persons_use_this_field') ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('Persons do not use this field.', 'Personen verwenden dieses Feld nicht.') ?></em>
+                        <em class="text-muted"><?= lang('admin.persons_do_not_use_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('Infrastructure', 'Infrastruktur') ?>
+                    <?= lang('common.infrastructure') ?>
                 </th>
                 <td>
                     <?php if ($infrastructure) { ?>
                         <i class="ph ph-check-circle text-success"></i>
-                        <?= lang('Infrastructures use this field.', 'Infrastrukturen verwenden dieses Feld.') ?>
+                        <?= lang('admin.infrastructures_use_this_field') ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('Infrastructures do not use this field.', 'Infrastrukturen verwenden dieses Feld nicht.') ?></em>
+                        <em class="text-muted"><?= lang('admin.infrastructures_do_not_use_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -326,14 +326,14 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
     <div class="alert danger mt-20">
         <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $form['_id'] ?>" method="post">
             <h5 class="title">
-                <?= lang('Delete this field', 'Dieses Feld löschen') ?>
+                <?= lang('admin.delete_this_field') ?>
             </h5>
             <p>
-                <?= lang('Are you sure you want to delete this field? This action cannot be undone.', 'Bist du sicher, dass du dieses Feld löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.') ?>
+                <?= lang('admin.are_you_sure_you_want_to_delete_this_field_this_action_cannot_be_undone') ?>
                 <br>
-                <?= lang('<b>Hint:</b> this won\'t automatically remove the field from all associated forms! Please make sure to do this before removing the field.', '<b>Hinweis:</b> Dies entfernt das Feld nicht automatisch aus allen zugehörigen Formularen! Bitte stelle sicher, dies vor dem Entfernen des Feldes zu tun.') ?>
+                <?= lang('admin.hint_this_won_t_automatically_remove_the_field_from_all_associated_forms_pl') ?>
                 <br>
-                <?= lang('<b>Hint:</b> We won\'t remove any data from activities.', '<b>Hinweis:</b> Wir werden keine Daten aus Aktivitäten entfernen.') ?>
+                <?= lang('admin.hint_we_won_t_remove_any_data_from_activities') ?>
             </p>
 
             <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('action.delete') ?></button>

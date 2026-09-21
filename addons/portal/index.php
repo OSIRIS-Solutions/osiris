@@ -9,12 +9,12 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Portfolio.php";
     if (! $Settings->featureEnabled('portal')) {
-        abortwith(500, lang('The Portfolio feature is not enabled.', 'Die Portfolio-Funktion ist nicht aktiviert.'), "/");
+        abortwith(500, lang('portal.the_portfolio_feature_is_not_enabled'), "/");
     }
     $Portfolio = new Portfolio(true);
     if ($section == 'portal') {
         if (!$Settings->featureEnabled('portal-public')) {
-            abortwith(500, lang('Public portal is disabled.', 'Öffentliches Portal ist deaktiviert.'), "/");
+            abortwith(500, lang('portal.public_portal_is_disabled'), "/");
         }
         $base = ROOTPATH . '/portal';
         $base = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $base;
@@ -44,8 +44,8 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     if ($data === null) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
-        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo "<h2 class='title'>" . lang('common.error') . "</h2>";
+        echo lang('portal.error_fetching_data');
         echo "<br>" . ($_SESSION['portfolio_error'] ?? 'Unknown error');
         echo "</div>";
         echo "</div>";
@@ -56,8 +56,8 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
     if (empty($data)) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
-        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("This dataset could not be found or is not publicly visible.", "Dieser Datensatz wurde nicht gefunden oder ist nicht öffentlich sichtbar.");
+        echo "<h2 class='title'>" . lang('common.error') . "</h2>";
+        echo lang('portal.this_dataset_could_not_be_found_or_is_not_publicly_visible');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";
@@ -73,10 +73,10 @@ Route::get('/(preview|portal)/(activity|person|profile|project|group|infrastruct
 Route::get('/(preview|portal)/(info|activities|publications|persons|projects|groups|infrastructures|topics)', function ($section, $pagename) {
     include_once BASEPATH . "/php/init.php";
     if (! $Settings->featureEnabled('portal')) {
-        abortwith(500, lang('The Portfolio feature is not enabled.', 'Die Portfolio-Funktion ist nicht aktiviert.'), "/");
+        abortwith(500, lang('portal.the_portfolio_feature_is_not_enabled'), "/");
     }
     if (!$Settings->featureEnabled('portal-public')) {
-        abortwith(500, lang('Public Portfolio is disabled.', 'Öffentliches Portfolio ist deaktiviert.'), "/");
+        abortwith(500, lang('portal.public_portfolio_is_disabled'), "/");
     }
     include_once BASEPATH . "/php/Portfolio.php";
     $Portfolio = new Portfolio(true);
@@ -91,7 +91,7 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
     // display correct breadcrumb
     global $breadcrumb;
     $breadcrumb = [
-        ['name' => lang('Portal', 'Portal'), 'path' => "/$section/info"],
+        ['name' => lang('portal.portal'), 'path' => "/$section/info"],
     ];
     switch ($pagename) {
         case 'activities':
@@ -103,7 +103,7 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
             break;
 
         case 'persons':
-            $breadcrumb[] = ['name' => lang('User', 'Personen'), 'path' => "/$section/persons"];
+            $breadcrumb[] = ['name' => lang('portal.user'), 'path' => "/$section/persons"];
             break;
 
         case 'projects':
@@ -129,12 +129,12 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
     // Call Portfolio API to get entity details
     $type = 'unit';
     $id = '0';
-    $data = $Portfolio->fetch_entity($type, $id, '', lang('de', 'de'));
+    $data = $Portfolio->fetch_entity($type, $id, '', lang('portal.de'));
     if ($data === null) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
-        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("Error fetching data.", "Fehler beim Abrufen der Daten.");
+        echo "<h2 class='title'>" . lang('common.error') . "</h2>";
+        echo lang('portal.error_fetching_data');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";
@@ -144,8 +144,8 @@ Route::get('/(preview|portal)/(info|activities|publications|persons|projects|gro
     if (empty($data)) {
         echo "<div class='container w-400 mw-full'>";
         echo "<div class='alert danger'>";
-        echo "<h2 class='title'>" . lang("Error", "Fehler") . "</h2>";
-        echo lang("This dataset could not be found or is not publicly visible.", "Dieser Datensatz wurde nicht gefunden oder ist nicht öffentlich sichtbar.");
+        echo "<h2 class='title'>" . lang('common.error') . "</h2>";
+        echo lang('portal.this_dataset_could_not_be_found_or_is_not_publicly_visible');
         echo "</div>";
         echo "</div>";
         include BASEPATH . "/footer.php";

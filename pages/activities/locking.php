@@ -34,14 +34,14 @@
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-lock"></i>
-        <?= lang('Lock a period', 'Zeitraum sperren') ?>
+        <?= lang('activities.lock_a_period') ?>
     </h1>
     <p>
-        <?= lang('You can lock a period once a report has been generated. All activities that were report-worthy during this period will be locked and can no longer be deleted or edited.', 'Du kannst einen Zeitraum sperren, sobald ein Report generiert wurde. Alle aktivitäten, die in diesem Zeitraum report-würdig waren, werden dann gesperrt und können nicht mehr gelöscht oder bearbeitet werden.') ?>
+        <?= lang('activities.you_can_lock_a_period_once_a_report_has_been_generated_all_activities_that') ?>
     </p>
 
     <p>
-        <?=lang('The following roles can still edit or delete locked activities:', 'Die folgenden Rollen können weiterhin gesperrte Aktivitäten bearbeiten oder löschen:')?>
+        <?=lang('activities.the_following_roles_can_still_edit_or_delete_locked_activities')?>
         <br>
         <b><?=lang('action.edit')?>:</b>
         <?php
@@ -65,7 +65,7 @@
 
 
     <p>
-        <?= lang('Activities that are not report-worthy (e.g. Online ahead of print, Activities without affiliated authors) will not be locked.', 'Aktivitäten, die nicht report-würdig sind (z.B. Online ahead of print, Akt. ohne affiliierte Autoren) werden nicht gesperrt.') ?>
+        <?= lang('activities.activities_that_are_not_report_worthy_e_g_online_ahead_of_print_activities') ?>
     </p>
 
     <div class="box padded">
@@ -74,7 +74,7 @@
             <div class="form-row row-eq-spacing">
                 <div class="col-sm">
                     <label class="required" for="start">
-                        <?= lang('Beginning', 'Anfang') ?>
+                        <?= lang('activities.beginning') ?>
                     </label>
                     <input type="date" class="form-control" name="start" id="start" value="<?= CURRENTYEAR ?>-01-01" required>
                 </div>
@@ -90,11 +90,11 @@
 
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--danger-color);">
                     <input type="radio" name="action" id="action-lock" value="lock" checked="">
-                    <label for="action-lock"><i class="ph ph-duotone ph-lock text-danger"></i> <?= lang('Lock', 'Sperren') ?></label>
+                    <label for="action-lock"><i class="ph ph-duotone ph-lock text-danger"></i> <?= lang('common.lock') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--success-color);">
                     <input type="radio" name="action" id="action-unlock" value="unlock">
-                    <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('Unlock', 'Entsperren') ?></label>
+                    <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('common.unlock') ?></label>
                 </div>
             </div>
             <button class="btn" type="submit"><?= lang('action.submit') ?></button>

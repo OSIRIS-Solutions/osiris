@@ -15,7 +15,7 @@ function addModule() {
         }
     });
     if (exists) {
-        toastError(lang('Module already exists.', 'Modul existiert bereits.'));
+        toastError(lang('admin.module_already_exists'));
         return;
     }
     

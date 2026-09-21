@@ -6,7 +6,7 @@
  * Migrates infrastructure statistics to a new collection format.
  */
 
-echo lang('I will now migrate the infrastructure statistics to a new more flexible format.', 'Ich werde nun die Infrastrukturdaten in ein neues, flexibleres Format migrieren.') . "<br>";
+echo lang('admin.i_will_now_migrate_the_infrastructure_statistics_to_a_new_more_flexible_for') . "<br>";
 
 $osiris->infrastructureStats->deleteMany([]);
 $infrastructures = $osiris->infrastructures->find([], ['statistics' => 1])->toArray();
@@ -37,8 +37,8 @@ if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
             ['key' => 'roles'],
             ['$set' => ['value' => $roles]]
         );
-        echo lang('I have added guest role to your settings. This role will be automatically assigned to the new guest accounts. It does not have any special permissions by default.', 'Ich habe die Gast-Rolle zu deiner Konfiguration hinzugefügt. Diese Rolle wird automatisch den neuen Gastkonten zugewiesen. Sie hat standardmäßig keine besonderen Berechtigungen.') . "<br>";
+        echo lang('admin.i_have_added_guest_role_to_your_settings_this_role_will_be_automatically_as') . "<br>";
     } else {
-        echo lang('A guest role already exists in your settings. It will be automatically assigned to the new guest accounts.', 'Eine Gast-Rolle existiert bereits in deiner Konfiguration. Sie wird automatisch den neuen Gastkonten zugewiesen.') . "<br>";
+        echo lang('admin.a_guest_role_already_exists_in_your_settings_it_will_be_automatically_assig') . "<br>";
     }
 }

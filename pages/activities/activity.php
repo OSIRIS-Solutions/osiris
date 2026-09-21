@@ -75,12 +75,9 @@ if ($edit_perm) {
         <?php if ($Settings->featureEnabled('projects') && !empty($projects)) { ?>
             <div class="alert success mb-20">
                 <h3 class="title">
-                    <?= lang('Projects connected', 'Projekte verknüpft') ?>
+                    <?= lang('activities.projects_connected') ?>
                 </h3>
-                <?= lang(
-                    'This activity was automatically connected to projects based on funding numbers. You can add more projects or remove the existing ones.',
-                    'Diese Aktivität wurde automatisch anhand von Fördernummern mit Projekten verknüpft. Du kannst weitere Projekte hinzufügen oder die bestehenden entfernen.'
-                ) ?>
+                <?= lang('activities.this_activity_was_automatically_connected_to_projects_based_on_funding_numb') ?>
                 <br>
                 <a href="#projects" class="btn success">
                     <i class="ph ph-tree-structure"></i>
@@ -106,9 +103,9 @@ if ($edit_perm) {
 
     <div class="btn-toolbar">
         <?php if ($doc['locked'] ?? false) { ?>
-            <span class="badge danger cursor-default mr-10 border-danger" data-toggle="tooltip" data-title="<?= lang('This activity has been locked.', 'Diese Aktivität wurde gesperrt.') ?>">
+            <span class="badge danger cursor-default mr-10 border-danger" data-toggle="tooltip" data-title="<?= lang('common.this_activity_has_been_locked') ?>">
                 <i class="ph ph-lock text-danger"></i>
-                <?= lang('Locked', 'Gesperrt') ?>
+                <?= lang('common.locked') ?>
             </span>
         <?php } ?>
 
@@ -117,12 +114,12 @@ if ($edit_perm) {
                 <?php if ($doc['locked'] ?? false) { ?>
                     <button class="btn text-success border-success mr-10" type="submit">
                         <i class="ph ph-lock-open"></i>
-                        <?= lang('Unlock', 'Entsperren') ?>
+                        <?= lang('common.unlock') ?>
                     </button>
                 <?php } else { ?>
                     <button class="btn text-danger border-danger mr-10" type="submit">
                         <i class="ph ph-lock"></i>
-                        <?= lang('Lock', 'Sperren') ?>
+                        <?= lang('common.lock') ?>
                     </button>
                 <?php } ?>
             </form>
@@ -138,7 +135,7 @@ if ($edit_perm) {
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
                 <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-copy"></i>
-                    <?= lang("Copy", "Kopie") ?>
+                    <?= lang('common.copy') ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('tags')) { ?>
@@ -161,7 +158,7 @@ if ($edit_perm) {
                     <div class="content">
                         <button class="btn primary outline" onclick="addToCart(this, '<?= $id ?>')">
                             <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
-                            <?= lang('Collect', 'Sammeln') ?>
+                            <?= lang('common.collect') ?>
                         </button>
                         <hr>
                         <form action="<?= ROOTPATH ?>/download" method="post">
@@ -170,21 +167,21 @@ if ($edit_perm) {
 
                             <div class="form-group">
 
-                                <?= lang('Highlight:', 'Hervorheben:') ?>
+                                <?= lang('common.highlight') ?>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-user" value="user" checked="checked">
-                                    <label for="highlight-user"><?= lang('Me', 'Mich') ?></label>
+                                    <label for="highlight-user"><?= lang('common.me') ?></label>
                                 </div>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-aoi" value="aoi">
-                                    <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang(' Authors', '-Autoren') ?></label>
+                                    <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang('common.authors') ?></label>
                                 </div>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-none" value="">
-                                    <label for="highlight-none"><?= lang('None', 'Nichts') ?></label>
+                                    <label for="highlight-none"><?= lang('common.none_download') ?></label>
                                 </div>
 
                             </div>
@@ -192,7 +189,7 @@ if ($edit_perm) {
 
                             <div class="form-group">
 
-                                <?= lang('File format:', 'Dateiformat:') ?>
+                                <?= lang('common.file_format') ?>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="format" id="format-word" value="word" checked="checked">
@@ -214,19 +211,19 @@ if ($edit_perm) {
 
         <div class="dropdown">
             <button class="btn" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                <?= lang('More Actions', 'Weitere Aktionen') ?> <i class="ph ph-dots-three-outline ml-5" aria-hidden="true"></i>
+                <?= lang('common.more_actions') ?> <i class="ph ph-dots-three-outline ml-5" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <!-- <h6 class="header">Header</h6> -->
                 <div class="content">
                     <a href="?view=new" class="btn block">
                         <i class="ph ph-lightning m-0"></i>
-                        <?= lang('Modern View', 'Moderne Ansicht') ?>
+                        <?= lang('activities.modern_view') ?>
                     </a>
                     <?php if (!in_array($doc['type'], ['publication'])) { ?>
                         <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn block">
                             <i class="ph ph-copy"></i>
-                            <?= lang("Copy", "Kopie") ?>
+                            <?= lang('common.copy') ?>
                         </a>
                     <?php } ?>
                 </div>
@@ -294,13 +291,10 @@ if ($edit_perm) {
     ?>
             <div class="alert danger mb-20">
                 <h3 class="title">
-                    <?= lang('No authors or editors', 'Keine Autoren oder Herausgeber') ?>
+                    <?= lang('common.no_authors_or_editors') ?>
                 </h3>
                 <p>
-                    <?= lang(
-                        'This activity has no authors or editors assigned. Please add at least one author or editor to this activity, otherwise it cannot be linked to persons.',
-                        'Diese Aktivität hat keine Autoren oder Herausgeber zugeordnet. Bitte füge mindestens einen Autor, Herausgeber oder Betreuenden zu dieser Aktivität hinzu, ansonsten lässt sie sich nicht mit Personen verknüpfen.'
-                    ) ?>
+                    <?= lang('common.this_activity_has_no_authors_or_editors_assigned_please_add_at_least_one_au') ?>
                 </p>
             </div>
     <?php
@@ -318,13 +312,10 @@ if ($edit_perm) {
     ?>
         <div class="alert danger mb-20">
             <h3 class="title">
-                <?= lang('No time specified', 'Keine Zeitangabe') ?>
+                <?= lang('common.no_time_specified') ?>
             </h3>
             <p>
-                <?= lang(
-                    'This activity has no time specified. Please add at least month and year to this activity, otherwise it cannot be properly assigned to a quarter and will be falsely sorted and shown.',
-                    'Diese Aktivität hat keine Zeitangabe. Bitte füge mindestens Monat und Jahr zu dieser Aktivität hinzu, ansonsten kann sie nicht richtig einem Quartal zugeordnet werden und wird falsch sortiert und angezeigt.'
-                ) ?>
+                <?= lang('common.this_activity_has_no_time_specified_please_add_at_least_month_and_year_to_t') ?>
             </p>
         </div>
     <?php
@@ -353,56 +344,56 @@ if ($edit_perm) {
             <?php
 
             if ($doc['affiliated'] ?? true) { ?>
-                <div class="badge success" data-toggle="tooltip" data-title="<?= lang('At least on author of this activity has an affiliation with the institute.', 'Mindestens ein Autor dieser Aktivität ist mit dem Institut affiliiert.') ?>">
+                <div class="badge success" data-toggle="tooltip" data-title="<?= lang('common.at_least_on_author_of_this_activity_has_an_affiliation_with_the_institute') ?>">
                     <!-- <i class="ph ph-handshake m-0"></i> -->
                     <?= lang('common.affiliated') ?>
                 </div>
             <?php } else { ?>
-                <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('None of the authors has an affiliation to the Institute.', 'Keiner der Autoren ist mit dem Institut affiliiert.') ?>">
+                <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('common.none_of_the_authors_has_an_affiliation_to_the_institute') ?>">
                     <!-- <i class="ph ph-hand-x m-0"></i> -->
-                    <?= lang('Not affiliated', 'Nicht affiliiert') ?>
+                    <?= lang('common.not_affiliated') ?>
                 </div>
             <?php } ?>
         </div>
 
         <!-- cooperative -->
         <div class="mr-10 badge bg-white">
-            <small><?= lang('Cooperation', 'Zusammenarbeit') ?>: </small>
+            <small><?= lang('activities.cooperation') ?>: </small>
             <br />
             <?php
             switch ($doc['cooperative'] ?? '-') {
                 case 'individual': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('Only one author', 'Nur ein Autor/eine Autorin') ?>">
-                        <?= lang('Individual', 'Einzelarbeit') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('common.only_one_author') ?>">
+                        <?= lang('common.individual') ?>
                     </span>
                 <?php
                     break;
                 case 'departmental': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('Authors from the same department of this institute', 'Autoren aus der gleichen Abteilung des Instituts') ?>">
-                        <?= lang('Departmental', 'Abteilungsübergreifend') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_the_same_department_of_this_institute') ?>">
+                        <?= lang('activities.departmental_activity') ?>
                     </span>
                 <?php
                     break;
                 case 'institutional': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('Authors from different departments but all from this institute', 'Autoren aus verschiedenen Abteilungen, aber alle vom Institut') ?>">
-                        <?= lang('Institutional', 'Institutionell') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_departments_but_all_from_this_institute') ?>">
+                        <?= lang('common.institutional') ?>
                     </span>
                 <?php
                     break;
                 case 'contributing': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('Authors from different institutes with us being middle authors', 'Autoren aus unterschiedlichen Instituten mit uns als Mittelautoren') ?>">
-                        <?= lang('Cooperative (Contributing)', 'Kooperativ (Beitragend)') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_institutes_with_us_being_middle_authors') ?>">
+                        <?= lang('common.cooperative_contributing') ?>
                     </span>
                 <?php
                     break;
                 case 'leading': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('Authors from different institutes with us being leading authors', 'Autoren aus unterschiedlichen Instituten mit uns als führenden Autoren') ?>">
-                        <?= lang('Cooperative (Leading)', 'Kooperativ (Führend)') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_institutes_with_us_being_leading_authors') ?>">
+                        <?= lang('common.cooperative_leading') ?>
                     </span>
                 <?php
                     break;
                 default: ?>
-                    <span class="badge block" data-toggle="tooltip" data-title="<?= lang('No author affiliated', 'Autor:innen sind nicht affiliiert') ?>">
+                    <span class="badge block" data-toggle="tooltip" data-title="<?= lang('common.no_author_affiliated') ?>">
                         <?= lang('common.none') ?>
                     </span>
             <?php
@@ -421,7 +412,7 @@ if ($edit_perm) {
         <?php } ?>
         <?php if ($doc['quartile'] ?? false) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Quartile', 'Quartil') ?>: </small>
+                <small><?= lang('common.quartile') ?>: </small>
                 <br />
                 <span class="quartile <?= $doc['quartile'] ?>"><?= $doc['quartile'] ?></span>
             </div>
@@ -431,9 +422,9 @@ if ($edit_perm) {
             $fetched_at = isset($openalex['fetched_at']) ? date('d.m.Y', strtotime($openalex['fetched_at'])) : '-';
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Citations', 'Zitationen') ?>: </small>
+                <small><?= lang('common.citations') ?>: </small>
                 <br />
-                <span class="badge" data-toggle="tooltip" data-title="<?= lang('Last updated', 'Zuletzt aktualisiert') ?>: <?= $fetched_at ?>"><?= $openalex['cited_by_count'] ?></span>
+                <span class="badge" data-toggle="tooltip" data-title="<?= lang('common.last_updated') ?>: <?= $fetched_at ?>"><?= $openalex['cited_by_count'] ?></span>
             </div>
         <?php } ?>
 
@@ -454,12 +445,12 @@ if ($edit_perm) {
             $doc['hide'] = $doc['hide'] ?? false;
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Online Visibility', 'Online-Sichtbarkeit') ?>: </small>
+                <small><?= lang('common.online_visibility') ?>: </small>
                 <br />
                 <?php if (!in_array($doc['subtype'], $visible_subtypes)) { ?>
-                    <span class="badge warning" data-toggle="tooltip" data-title="<?= lang('This activity subtype is not visible on the portal due to general settings of your institute.', 'Dieser Aktivitätstyp ist aufgrund genereller Instituts-Einstellungen im Portal nicht sichtbar.') ?>">
+                    <span class="badge warning" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_subtype_is_not_visible_on_the_portal_due_to_general_settings') ?>">
                         <i class="ph ph-eye-slash m-0"></i>
-                        <?= lang('Activity type not visible', 'Aktivitätstyp nicht sichtbar') ?>
+                        <?= lang('common.activity_type_not_visible') ?>
                     </span>
                 <?php } else if ($edit_perm) {
                     $highlighted_by = $osiris->persons->count(['highlighted' => strval($id), 'username' => ['$ne' => $_SESSION['username']]]);
@@ -467,12 +458,12 @@ if ($edit_perm) {
                     <div class="custom-switch d-inline-block">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
-                            <?= $doc['hide'] ? lang('Hidden', 'Versteckt') :  lang('Visible', 'Sichtbar')  ?>
+                            <?= $doc['hide'] ? lang('common.hidden') :  lang('common.visible')  ?>
                         </label>
                     </div>
 
                     <?php if ($highlighted_by > 0) { ?>
-                        <span data-toggle="tooltip" data-title="<?= lang('This activity is highlighted by ' . $highlighted_by . ' other person(s).', 'Diese Aktivität wurde von ' . $highlighted_by . ' weiteren Person(en) hervorgehoben.') ?>"><i class="ph ph-star text-signal"></i></span>
+                        <span data-toggle="tooltip" data-title="<?= lang('common.this_activity_is_highlighted_by_highlighted_by_other_person_s', replace: ['highlighted_by' => $highlighted_by]) ?>"><i class="ph ph-star text-signal"></i></span>
                     <?php } ?>
 
                     <script>
@@ -486,13 +477,13 @@ if ($edit_perm) {
                                 success: function(response) {
                                     var hide = $('#hide').prop('checked');
 
-                                    $('#hide-label').text(hide ? '<?= lang('Hidden', 'Versteckt') ?>' : '<?= lang('Visible', 'Sichtbar') ?>');
+                                    $('#hide-label').text(hide ? '<?= lang('common.hidden') ?>' : '<?= lang('common.visible') ?>');
                                     $('#highlight').prop('disabled', hide);
                                     if (hide) {
                                         $('#highlight').prop('checked', false);
-                                        $('#highlight-label').text('<?= lang('Normal', 'Normal') ?>');
+                                        $('#highlight-label').text('<?= lang('common.normal') ?>');
                                     }
-                                    toastSuccess(lang('Visibility status changed', 'Sichtbarkeitsstatus geändert'))
+                                    toastSuccess(<?= json_encode(lang('activities.visibility_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                                 },
                                 error: function(response) {
                                     console.log(response);
@@ -504,14 +495,14 @@ if ($edit_perm) {
 
                 <?php } else { ?>
                     <?php if ($doc['hide']) { ?>
-                        <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('This activity is hidden on the portal.', 'Diese Aktivität ist auf dem Portal versteckt.') ?>">
+                        <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_is_hidden_on_the_portal') ?>">
                             <i class="ph ph-eye-slash"></i>
-                            <?= lang('Hidden', 'Versteckt') ?>
+                            <?= lang('common.hidden') ?>
                         </span>
                     <?php } else { ?>
-                        <span class="badge success" data-toggle="tooltip" data-title="<?= lang('This activity is visible on the portal.', 'Diese Aktivität ist auf dem Portal sichtbar.') ?>">
+                        <span class="badge success" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_is_visible_on_the_portal') ?>">
                             <i class="ph ph-eye"></i>
-                            <?= lang('Visible', 'Sichtbar') ?>
+                            <?= lang('common.visible') ?>
                         </span>
                     <?php } ?>
                 <?php } ?>
@@ -528,12 +519,12 @@ if ($edit_perm) {
             }
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('Displayed in your profile', 'Darstellung in deinem Profil') ?>: </small>
+                <small><?= lang('activities.displayed_in_your_profile') ?>: </small>
                 <br />
                 <div class="custom-switch">
                     <input type="checkbox" id="highlight" <?= ($highlighted) ? 'checked' : '' ?> name="values[highlight]" onchange="fav()" <?= $disabled ? 'disabled' : '' ?>>
                     <label for="highlight" id="highlight-label">
-                        <?= $highlighted ? lang('Highlighted', 'Hervorgehoben') : lang('Normal', 'Normal') ?>
+                        <?= $highlighted ? lang('common.highlighted') : lang('common.normal') ?>
                     </label>
                 </div>
             </div>
@@ -548,8 +539,8 @@ if ($edit_perm) {
                         dataType: "json",
                         success: function(response) {
                             var highlight = $('#highlight').prop('checked');
-                            $('#highlight-label').text(highlight ? '<?= lang('Highlighted', 'Hervorgehoben') ?>' : '<?= lang('Normal', 'Normal') ?>');
-                            toastSuccess(lang('Highlight status changed', 'Hervorhebungsstatus geändert'))
+                            $('#highlight-label').text(highlight ? '<?= lang('common.highlighted') ?>' : '<?= lang('common.normal') ?>');
+                            toastSuccess(<?= json_encode(lang('activities.highlight_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                         },
                         error: function(response) {
                             console.log(response);
@@ -581,7 +572,7 @@ if ($edit_perm) {
         <?php if (count($doc['authors']) > 1) { ?>
             <a onclick="navigate('coauthors')" id="btn-coauthors" class="btn">
                 <i class="ph ph-users" aria-hidden="true"></i>
-                <?= lang('Coauthors', 'Koautoren') ?>
+                <?= lang('common.coauthors') ?>
                 <span class="index"><?= count($doc['authors']) ?></span>
             </a>
         <?php } ?>
@@ -606,7 +597,7 @@ if ($edit_perm) {
             <?php else : ?>
                 <a href="#projects" class="btn">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('Add projects', 'Projekt verknüpfen') ?>
+                    <?= lang('activities.add_projects') ?>
                 </a>
             <?php endif; ?>
         <?php } ?>
@@ -625,7 +616,7 @@ if ($edit_perm) {
             <?php else : ?>
                 <a href="#infrastructures" class="btn">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('Add infrastructures', 'Infrastrukturen') ?>
+                    <?= lang('activities.add_infrastructures') ?>
                 </a>
             <?php endif; ?>
         <?php } ?>
@@ -636,7 +627,7 @@ if ($edit_perm) {
         ?>
             <a onclick="navigate('files')" id="btn-files" class="btn">
                 <i class="ph ph-files" aria-hidden="true"></i>
-                <?= lang('Files', 'Dateien') ?>
+                <?= lang('common.files') ?>
                 <span class="index"><?= $count_files ?></span>
             </a>
         <?php endif; ?>
@@ -681,7 +672,7 @@ if ($edit_perm) {
             <?= lang('common.raw_data') ?>
         </h2>
 
-        <?= lang('Raw data as they are stored in the database.', 'Die Rohdaten, wie sie in der Datenbank gespeichert werden.') ?>
+        <?= lang('common.raw_data_as_they_are_stored_in_the_database') ?>
 
         <div class="box padded overflow-x-scroll">
             <pre><?= e(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
@@ -705,7 +696,7 @@ if ($edit_perm) {
                     <?php if (!in_array($doc['type'], ['publication'])) { ?>
                         <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-copy"></i>
-                            <?= lang("Add a copy", "Kopie anlegen") ?>
+                            <?= lang('activities.add_a_copy') ?>
                         </a>
                     <?php } ?>
 
@@ -715,13 +706,13 @@ if ($edit_perm) {
                         <div class="dropdown">
                             <button class="btn secondary" data-toggle="dropdown" type="button" id="update-end-date" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-calendar-check"></i>
-                                <?= lang('End activity', 'Beenden') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                                <?= lang('common.end_activity') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="update-end-date">
                                 <form action="<?= ROOTPATH . "/crud/activities/update/" . $id ?>" method="POST" class="content">
                                     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>">
                                     <div class="form-group">
-                                        <label for="date_end"><?= lang('Activity ended at:', 'Aktivität beendet am:') ?></label>
+                                        <label for="date_end"><?= lang('common.activity_ended_at') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
                                     <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
@@ -749,7 +740,7 @@ if ($edit_perm) {
                                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                             </button>
 
-                            <span class="key"><?= lang('Formatted entry', 'Formatierter Eintrag') ?></span>
+                            <span class="key"><?= lang('activities.formatted_entry') ?></span>
                             <div id="formatted"><?= $doc['rendered']['print'] ?></div>
                         </td>
                     </tr>
@@ -759,21 +750,21 @@ if ($edit_perm) {
                     ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Include in reports', 'In Berichten') ?>: </span>
+                                <span class="key"><?= lang('common.include_in_reports') ?>: </span>
                                 <div id="exclude-toggle" class="btn-group" role="group" aria-label="Exclude toggle">
                                     <button type="button" class="btn small <?= $exclude ? '' : 'active' ?>"
                                         id="btn-include" onclick="toggleExclude(false)"
-                                        data-toggle="tooltip" data-title="<?= lang('Will be included in all reports and analytics.', 'wird in allen Berichten und Analysen enthalten sein.') ?>"
+                                        data-toggle="tooltip" data-title="<?= lang('common.will_be_included_in_all_reports_and_analytics') ?>"
                                         style="--blue-color: var(--success-color); --blue-color-20: var(--success-color-20);">
                                         <i class="ph ph-check-circle"></i>
-                                        <?= lang('Include', 'Einbeziehen') ?>
+                                        <?= lang('common.include') ?>
                                     </button>
                                     <button type="button" class="btn small <?= $exclude ? 'active' : '' ?>"
                                         id="btn-exclude" onclick="toggleExclude(true)"
-                                        data-toggle="tooltip" data-title="<?= lang('Will be excluded from all reports and analytics.', 'Wird von allen Berichten und Analysen ausgeschlossen.') ?>"
+                                        data-toggle="tooltip" data-title="<?= lang('common.will_be_excluded_from_all_reports_and_analytics') ?>"
                                         style="--blue-color: var(--danger-color); --blue-color-20: var(--danger-color-20);">
                                         <i class="ph ph-prohibit"></i>
-                                        <?= lang('Exclude', 'Ausschließen') ?>
+                                        <?= lang('common.exclude') ?>
                                     </button>
                                 </div>
 
@@ -791,13 +782,13 @@ if ($edit_perm) {
                                             dataType: "json",
                                             success: function(response) {
                                                 if (!response.success) {
-                                                    toastError(lang('Failed to update the activity. Please try again.', 'Aktualisierung der Aktivität fehlgeschlagen. Bitte versuche es erneut.'));
+                                                    toastError(<?= json_encode(lang('common.failed_to_update_the_activity_please_try_again'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                     return;
                                                 }
                                                 if (exclude) {
-                                                    toastSuccess(lang('This activity is now excluded from reports and analytics.', 'Diese Aktivität ist jetzt von Berichten und Analysen ausgeschlossen.'));
+                                                    toastSuccess(<?= json_encode(lang('common.this_activity_is_now_excluded_from_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                 } else {
-                                                    toastSuccess(lang('This activity is now included in reports and analytics.', 'Diese Aktivität ist jetzt in Berichten und Analysen enthalten.'));
+                                                    toastSuccess(<?= json_encode(lang('common.this_activity_is_now_included_in_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                 }
                                             },
                                             error: function(response) {
@@ -828,7 +819,7 @@ if ($edit_perm) {
                         ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Teaching module', 'Lehrveranstaltung') ?></span>
+                                    <span class="key"><?= lang('common.teaching_module') ?></span>
 
                                     <a class="module " href="<?= ROOTPATH ?>/teaching#<?= $doc['module_id'] ?>">
                                         <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
@@ -871,7 +862,7 @@ if ($edit_perm) {
                                     <?php if (empty($conference)) { ?>
                                         <div><?= $doc['conference'] ?? '' ?></div>
                                         <span class="text-danger">
-                                            <?= lang('This event has been deleted.', 'Diese Veranstaltung wurde gelöscht.') ?>
+                                            <?= lang('common.this_event_has_been_deleted') ?>
                                         </span>
                                     <?php } else { ?>
 
@@ -892,7 +883,7 @@ if ($edit_perm) {
                                                 <li>
                                                     <a href="<?= $conference['url'] ?>" target="_blank">
                                                         <i class="ph ph-link"></i>
-                                                        <?= lang('Website', 'Website') ?>
+                                                        <?= lang('common.website') ?>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -942,7 +933,7 @@ if ($edit_perm) {
                                             </a>
                                     <?php }
                                     } else {
-                                        echo lang('No ' . $tagLabel . ' assigned yet.', 'Noch keine ' . $tagLabel . ' vergeben.');
+                                        echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
                                     }
                                     ?>
                                 </p>
@@ -957,7 +948,7 @@ if ($edit_perm) {
                     ?>
                         <tr>
                             <td>
-                                <span class="key text-danger"><?= lang('The following fields are not filled in', 'Die folgenden Felder sind nicht ausgefüllt') ?>:</span>
+                                <span class="key text-danger"><?= lang('common.the_following_fields_are_not_filled_in') ?>:</span>
                                 <?php foreach ($emptyModules as $key) { ?>
                                     <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
                                 <?php } ?>
@@ -971,7 +962,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && isset($doc['comment'])) : ?>
                         <tr class="text-muted">
                             <td>
-                                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('Only visible for authors and editors.', 'Nur sichtbar für Autoren und Editor-MA.') ?>">
+                                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('common.only_visible_for_authors_and_editors') ?>">
                                     <?= lang('common.comment') ?>:
                                 </span>
 
@@ -993,50 +984,41 @@ if ($edit_perm) {
                     // $in_quarter = inCurrentQuarter($doc['year'], $doc['month']);
                     if ($locked && !$Settings->hasPermission('activities.delete-locked')) : ?>
                         <p class="mt-0">
-                            <?= lang(
-                                'This activity has been locked because it was already used by reporters in a report. Due to the documentation and verification obligation, activities may not be easily changed or deleted after the report. However, if a change is necessary, please contact the responsible persons.',
-                                'Diese Aktivität wurde gesperrt, da sie bereits von den Berichterstattenden in einem Report verwendet wurde. Wegen der Dokumentations- und Nachweispflicht dürfen Aktivitäten nach dem Report nicht mehr so einfach verändert oder gelöscht werden. Sollte dennoch eine Änderung notwendig sein, meldet euch bitte bei den Verantwortlichen.'
-                            ) ?>
+                            <?= lang('activities.this_activity_has_been_locked_because_it_was_already_used_by_reporters_in_a') ?>
                         </p>
                     <?php
                     elseif ($Settings->hasPermission('activities.delete')) :
                     ?>
                         <p class="mt-0">
-                            <?= lang('You have permission to delete this activity:', 'Du hast die nötigen Rechte, um diese Aktivität zu löschen:') ?>
+                            <?= lang('activities.you_have_permission_to_delete_this_activity') ?>
                         </p>
                         <form action="<?= ROOTPATH ?>/crud/activities/delete/<?= $id ?>" method="post" class="d-inline-block ml-auto">
                             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities" ?>">
                             <button type="submit" class="btn danger">
                                 <i class="ph ph-trash"></i>
-                                <?= lang('Delete activity', 'Lösche Aktivität') ?>
+                                <?= lang('common.delete_activity') ?>
                             </button>
                         </form>
                     <?php elseif (!$user_activity) : ?>
 
                         <p class="mt-0">
-                            <?= lang(
-                                'This is not your own activity. If for any reason you want it changed or deleted, please contact the creator of the activity or the controlling.',
-                                'Dies ist nicht deine Aktivität. Wenn du aus irgendwelchen Gründen willst, dass sie verändert oder gelöscht wird, kontaktiere bitte den Urheber der Aktivität oder das Controlling.'
-                            ) ?>
+                            <?= lang('activities.this_is_not_your_own_activity_if_for_any_reason_you_want_it_changed_or_dele') ?>
                         </p>
 
                     <?php elseif ($user_activity && $Settings->hasPermission('activities.delete-own')) : ?>
                         <p class="mt-0">
                             <b>Info:</b>
-                            <?= lang(
-                                'This is your own activity and it has not been locked yet. You can delete it.',
-                                'Dies ist deine eigene Aktivität und sie ist noch nicht gesperrt worden. Du kannst sie also löschen.'
-                            ) ?>
+                            <?= lang('activities.this_is_your_own_activity_and_it_has_not_been_locked_yet_you_can_delete_it') ?>
                         </p>
                         <form action="<?= ROOTPATH ?>/crud/activities/delete/<?= $id ?>" method="post" class="d-inline-block ml-auto">
                             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities" ?>">
                             <button type="submit" class="btn danger">
                                 <i class="ph ph-trash"></i>
-                                <?= lang('Delete activity', 'Lösche Aktivität') ?>
+                                <?= lang('common.delete_activity') ?>
                             </button>
                             <br>
                             <small class="text-danger">
-                                <?= lang('Cannot be made undone.', 'Kann nicht rückgängig gemacht werden.') ?>
+                                <?= lang('activities.cannot_be_made_undone') ?>
                             </small>
                         </form>
                     <?php endif; ?>
@@ -1173,7 +1155,7 @@ if ($edit_perm) {
                         <thead>
                             <tr>
                                 <th><?= lang('common.person') ?></th>
-                                <!-- <th><?= lang('Details', 'Details') ?></th> -->
+                                <!-- <th><?= lang('common.details') ?></th> -->
                                 <?php if (!empty($thirdCol)): ?>
                                     <th><?= $thirdCol['label'] ?></th>
                                 <?php endif; ?>
@@ -1220,7 +1202,7 @@ if ($edit_perm) {
                                             <?php if ($isAffiliated): ?>
                                                 <span class="author-chip success"
                                                     data-toggle="tooltip"
-                                                    data-title="<?= lang('Author of the institution', 'Autor:in der Einrichtung') ?>">
+                                                    data-title="<?= lang('common.author_of_the_institution') ?>">
                                                     <i class="ph ph-handshake"></i>
                                                     <?= lang('common.affiliated') ?>
                                                 </span>
@@ -1230,16 +1212,16 @@ if ($edit_perm) {
                                                 <?php if ($author['approved']) { ?>
                                                     <span class="author-chip neutral"
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('Author approved this activity', 'Autor hat die Aktivität bestätigt') ?>">
+                                                        data-title="<?= lang('common.author_approved_this_activity') ?>">
                                                         <?= bool_icon(true) ?>
                                                         <?= lang('common.approved') ?>
                                                     </span>
                                                 <?php } else { ?>
                                                     <span class="author-chip neutral"
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('Author has not yet approved this activity', 'Autor hat die Aktivität noch nicht bestätigt') ?>">
+                                                        data-title="<?= lang('common.author_has_not_yet_approved_this_activity') ?>">
                                                         <?= bool_icon(false) ?>
-                                                        <?= lang('Pending', 'Ausstehend') ?>
+                                                        <?= lang('common.pending') ?>
                                                     </span>
                                                 <?php } ?>
 
@@ -1254,10 +1236,7 @@ if ($edit_perm) {
                                                         <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                             <div class="content font-size-12">
                                                                 <div class="d-block text-danger mb-10">
-                                                                    <?= lang(
-                                                                        'You claim that you are this author.<br> This activity will be added to your list and the author name will be added to your list of alternative names.',
-                                                                        'Du beanspruchst, dass du diese Person bist.<br> Du fügst diese Aktivität deiner Liste hinzu und den Namen zur Liste deiner alternativen Namen.'
-                                                                    ) ?>
+                                                                    <?= lang('common.you_claim_that_you_are_this_author_this_activity_will_be_added_to_your_list') ?>
                                                                 </div>
                                                                 <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
                                                                     <input type="hidden" name="role" value="<?= e($role) ?>">
@@ -1277,7 +1256,7 @@ if ($edit_perm) {
                                                 <div class="author-chip author-units">
                                                     <span class=""
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('Participating units', 'Beteiligte Einheiten') ?>">
+                                                        data-title="<?= lang('common.participating_units') ?>">
                                                         <i class="ph ph-users-three"></i>
                                                     </span>
                                                     <?php foreach ($author['units'] as $unit):
@@ -1304,27 +1283,27 @@ if ($edit_perm) {
                 <?php } ?>
 
                 <h3>
-                    <?= lang('Affiliated positions', 'Affiliierte Positionen') ?>
+                    <?= lang('common.affiliated_positions') ?>
                 </h3>
 
                 <?php
                 $positions = [
-                    'first' => lang('First author', 'Erstautor:in'),
-                    'last' => lang('Last author', 'Letztautor:in'),
-                    'first_and_last' => lang('First and last author', 'Erst- und Letztautor:in'),
-                    'first_or_last' => lang('First or last author', 'Erst- oder Letztautor:in'),
-                    'middle' => lang('Middle author', 'Mittelautor:in'),
-                    'single' => lang('One single affiliated author', 'Ein einzelner affiliierter Autor'),
-                    'none' => lang('No author affiliated', 'Kein:e Autor:in affiliiert'),
-                    'all' => lang('All authors affiliated', 'Alle Autoren affiliiert'),
-                    'corresponding' => lang('Corresponding author', 'Korrespondierender Autor:in'),
-                    'not_first' => lang('Not first author', 'Nicht Erstautor:in'),
-                    'not_last' => lang('Not last author', 'Nicht letzter Autor:in'),
-                    'not_middle' => lang('Not middle author', 'Nicht Mittelautor:in'),
-                    'not_corresponding' => lang('Not corresponding author', 'Nicht korrespondierender Autor:in'),
-                    'not_first_or_last' => lang('Not first or last author', 'Nicht Erst- oder Letztautor:in'),
-                    'not_first_and_last' => lang('Not first and last author', 'Nicht Erst- und Letztautor:in'),
-                    'unspecified' => lang('Unspecified (no position specified)', 'Unspezifiziert (keine Positionsangabe)'),
+                    'first' => lang('common.first_author'),
+                    'last' => lang('common.last_author'),
+                    'first_and_last' => lang('common.first_and_last_author'),
+                    'first_or_last' => lang('common.first_or_last_author'),
+                    'middle' => lang('common.middle_author'),
+                    'single' => lang('common.one_single_affiliated_author'),
+                    'none' => lang('common.no_author_affiliated_view'),
+                    'all' => lang('common.all_authors_affiliated'),
+                    'corresponding' => lang('common.corresponding_author'),
+                    'not_first' => lang('common.not_first_author'),
+                    'not_last' => lang('common.not_last_author'),
+                    'not_middle' => lang('common.not_middle_author'),
+                    'not_corresponding' => lang('common.not_corresponding_author'),
+                    'not_first_or_last' => lang('common.not_first_or_last_author'),
+                    'not_first_and_last' => lang('common.not_first_and_last_author'),
+                    'unspecified' => lang('common.unspecified_no_position_specified'),
                 ];
                 ?>
 
@@ -1334,11 +1313,11 @@ if ($edit_perm) {
                 <?php } ?>
                 <br>
                 <small class="text-muted">
-                    <?= lang('Automatically calculated', 'Automatisch berechnet') ?>
+                    <?= lang('common.automatically_calculated') ?>
                 </small>
 
                 <h3>
-                    <?= lang('Participating units', 'Beteiligte Einheiten') ?>
+                    <?= lang('common.participating_units') ?>
                 </h3>
                 <table class="table unit-table w-full">
                     <tbody>
@@ -1363,7 +1342,7 @@ if ($edit_perm) {
                         } else { ?>
                             <tr>
                                 <td>
-                                    <?= lang('No organisational unit connected', 'Keine Organisationseinheit verknüpft') ?>
+                                    <?= lang('common.no_organisational_unit_connected') ?>
                                 </td>
                             </tr>
                         <?php }
@@ -1384,7 +1363,7 @@ if ($edit_perm) {
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <h5 class="title">
-                        <?= lang('Connect projects', 'Projekte verknüpfen') ?>
+                        <?= lang('activities.connect_projects') ?>
                     </h5>
                     <div>
                         <?php
@@ -1424,7 +1403,7 @@ if ($edit_perm) {
                                 <form action="<?= ROOTPATH ?>/crud/activities/disconnect" method="post" class="d-inline-block ml-auto">
                                     <input type="hidden" name="connection_id" value="<?= $con['_id'] ?>">
                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
-                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= lang('Disconnect activity', 'Aktivität trennen') ?>">
+                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </form>
@@ -1435,14 +1414,14 @@ if ($edit_perm) {
                 <?php } ?>
             </table>
         <?php } else { ?>
-            <?= lang('No connected activities.', 'Noch keine Aktivitäten verknüpft.') ?>
+            <?= lang('activities.no_connected_activities') ?>
         <?php } ?>
 
         <?php if ($edit_perm) { ?>
 
             <div class="box padded">
                 <h3 class="title">
-                    <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                    <?= lang('common.connect_activities') ?>
                 </h3>
 
                 <form action="<?= ROOTPATH ?>/crud/activities/connect" method="post">
@@ -1450,7 +1429,7 @@ if ($edit_perm) {
                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
                     <!-- relationship type -->
                     <div class="form-group">
-                        <label for="relationship-type"><?= lang('Relationship type', 'Beziehungsart') ?></label>
+                        <label for="relationship-type"><?= lang('common.relationship_type') ?></label>
                         <div class="form-group">
                             <div class="input-group">
                                 <select name="relationship" id="relationship-type" class="form-control" required>
@@ -1469,7 +1448,7 @@ if ($edit_perm) {
                                         <div class="custom-switch">
                                             <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
                                             <label for="swap-relationship-dir">
-                                                <?= lang('Swap direction', 'Richtung umdrehen') ?>
+                                                <?= lang('common.swap_direction') ?>
                                             </label>
                                         </div>
                                     </div>
@@ -1480,21 +1459,21 @@ if ($edit_perm) {
                     </div>
                     <!-- input field with suggesting activities -->
                     <div class="form-group" id="activity-suggest">
-                        <label for="activity-suggested"><?= lang('Select an activity to connect', 'Wähle eine Aktivität zum Verknüpfen') ?></label>
-                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?>">
+                        <label for="activity-suggested"><?= lang('common.select_an_activity_to_connect') ?></label>
+                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= lang('common.start_typing_to_search_for_activities') ?>">
 
                         <div class="form-group font-size-12">
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
-                                <label for="activity-suggest-author"><?= lang('Only show my activities', 'Nur meine Aktivitäten anzeigen') ?></label>
+                                <label for="activity-suggest-author"><?= lang('common.only_show_my_activities') ?></label>
                             </div>
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
-                                <label for="activity-suggest-unit"><?= lang('Show activities from my unit(s)', 'Aktivitäten meiner Einheit(en) anzeigen') ?></label>
+                                <label for="activity-suggest-unit"><?= lang('common.show_activities_from_my_unit_s') ?></label>
                             </div>
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
-                                <label for="activity-suggest-all"><?= lang('Show all activities', 'Alle Aktivitäten anzeigen') ?></label>
+                                <label for="activity-suggest-all"><?= lang('common.show_all_activities') ?></label>
                             </div>
                         </div>
 
@@ -1506,7 +1485,7 @@ if ($edit_perm) {
                     <input type="hidden" name="target_id" id="activity-selected" required value="">
 
                     <button type="submit" class="btn primary">
-                        <?= lang('Connect', 'Verknüpfen') ?>
+                        <?= lang('common.connect') ?>
                     </button>
                 </form>
             </div>
@@ -1604,7 +1583,7 @@ if ($edit_perm) {
             <div class="btn-toolbar float-sm-right">
                 <a href="#projects" class="btn secondary mr-5">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang("Connect", "Verknüpfen") ?>
+                    <?= lang('common.connect') ?>
                 </a>
             </div>
 
@@ -1624,7 +1603,7 @@ if ($edit_perm) {
                 <?php } ?>
 
             <?php } else { ?>
-                <?= lang('No projects connected.', 'Noch keine Projekte verknüpft.') ?>
+                <?= lang('activities.no_projects_connected') ?>
             <?php } ?>
 
         </section>
@@ -1641,7 +1620,7 @@ if ($edit_perm) {
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <h5 class="title">
-                        <?= lang('Connect ' . $Settings->infrastructureLabel(), $Settings->infrastructureLabel() . ' verknüpfen') ?>
+                        <?= lang('activities.connect_settings', replace: ['Settings' => $Settings->infrastructureLabel()]) ?>
                     </h5>
                     <div>
                         <?php
@@ -1656,7 +1635,7 @@ if ($edit_perm) {
             <div class="btn-toolbar float-sm-right">
                 <a href="#infrastructures" class="btn secondary mr-5">
                     <i class="ph ph-cube-transparent"></i>
-                    <?= lang("Connect", "Verknüpfen") ?>
+                    <?= lang('common.connect') ?>
                 </a>
             </div>
 
@@ -1696,7 +1675,7 @@ if ($edit_perm) {
                 </table>
 
             <?php } else { ?>
-                <?= lang('No infrastructures connected.', 'Noch keine Infrastrukturen verknüpft.') ?>
+                <?= lang('common.no_infrastructures_connected') ?>
             <?php } ?>
 
         </section>
@@ -1707,7 +1686,7 @@ if ($edit_perm) {
     if ($upload_possible):
     ?>
         <section id="files" style="display: none; max-width: 60rem;">
-            <h2 class="title"><?= lang('Files', 'Dateien') ?></h2>
+            <h2 class="title"><?= lang('common.files') ?></h2>
             <?php
             // check for legacy files
             $legacy_files = $doc['files'] ?? array();
@@ -1734,10 +1713,7 @@ if ($edit_perm) {
                     <!-- hint to migrate -->
                     <div class="alert signal mt-20">
                         <b>Info:</b>
-                        <?= lang(
-                            'These are legacy files. Please re-upload them using the new document upload below or have an admin migrate them to benefit from the new features.',
-                            'Dies sind alte Dateien. Bitte lade sie mit dem neuen Dokumenten-Upload unten erneut hoch oder lasse sie von einem Admin migrieren, um von den neuen Funktionen zu profitieren.'
-                        ) ?>
+                        <?= lang('activities.these_are_legacy_files_please_re_upload_them_using_the_new_document_upload') ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -1746,7 +1722,7 @@ if ($edit_perm) {
                 <tbody>
                     <?php
                     if (empty($files)) {
-                        echo '<tr><td>' . lang('No documents available.', 'Keine Dokumente verfügbar.') . '</td></tr>';
+                        echo '<tr><td>' . lang('common.no_documents_available') . '</td></tr>';
                     } else {
                         foreach ($files as $file) {
                             $file_url = ROOTPATH . '/uploads/' . $file['_id'] . '.' . $file['extension'];
@@ -1780,7 +1756,7 @@ if ($edit_perm) {
                                                                 <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                                                             </div>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
+                                                            <button class="btn btn-block primary" type="submit"><?= lang('common.save_changes') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1792,7 +1768,7 @@ if ($edit_perm) {
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $file['_id'] ?>">
                                                     <div class="content">
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                                                            <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                                                            <span class="text-danger"><?= lang('common.do_you_want_to_delete_this_document') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                                                             <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
                                                         </form>
@@ -1813,7 +1789,7 @@ if ($edit_perm) {
                                         <div>
                                             <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                                             <br>
-                                            <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
+                                            <?= lang('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
                                             <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                                         </div>
                                     </div>
@@ -1829,12 +1805,12 @@ if ($edit_perm) {
             <?php if ($edit_perm) { ?>
                 <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
                     <h5 class="title font-size-16">
-                        <?= lang('Upload document', 'Dokument hochladen') ?>
+                        <?= lang('common.upload_document') ?>
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
                             <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
-                            <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
+                            <label for="upload-file" class="custom-file-label"><?= lang('common.choose_a_file') ?></label>
                             <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                     </div>
@@ -1862,7 +1838,7 @@ if ($edit_perm) {
 
                     uploadField.onchange = function() {
                         if (this.files[0].size > 16777216) {
-                            toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
+                            toastError(<?= json_encode(lang('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                             this.value = "";
                         };
                     };
@@ -1881,16 +1857,16 @@ if ($edit_perm) {
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('Connect ' . $tagLabel, $tagLabel . ' verknüpfen') ?>
+                    <?= lang('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
                 </h5>
                 <p>
-                    <?= lang('Currently connected ', 'Zurzeit ausgewählte ') . $tagLabel ?>:
+                    <?= lang('common.currently_connected') . $tagLabel ?>:
                     <?php
                     $tags = $doc['tags'] ?? [];
                     if (count($tags)) {
                         echo $Settings->printTags($tags, 'all-activities');
                     } else {
-                        echo lang('No ' . $tagLabel . ' assigned yet.', 'Noch keine ' . $tagLabel . ' vergeben.');
+                        echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
                     }
                     ?>
                 </p>
@@ -1916,7 +1892,7 @@ if ($edit_perm) {
             <?php if ($edit_perm) { ?>
                 <a href="#spectrum-editor" class="btn mt-20">
                     <i class="ph ph-edit"></i>
-                    <?= lang('Edit Spectrum', 'Spektrum bearbeiten') ?>
+                    <?= lang('common.edit_spectrum') ?>
                 </a>
             <?php } ?>
             <?php
@@ -1928,23 +1904,23 @@ if ($edit_perm) {
                 $fetched = $openalex['fetched_at'] ?? null;
             ?>
                 <p>
-                    <?= lang('No topics are assigned to this activity.', 'Zu dieser Aktivität sind keine Themen zugewiesen.') ?>
+                    <?= lang('common.no_topics_are_assigned_to_this_activity') ?>
                 </p>
                 <?php if ($manually) : ?>
                     <small class="d-block mt-5 text-muted">
-                        <?= lang('Topic data was last updated manually on', 'Die Themen wurden zuletzt manuell aktualisiert am') ?> <?= date('d.m.Y', strtotime($manually)) ?>
+                        <?= lang('common.topic_data_was_last_updated_manually_on') ?> <?= date('d.m.Y', strtotime($manually)) ?>
                     </small>
                 <?php
                 elseif ($fetched) : ?>
                     <small class="d-block mt-5 text-muted">
-                        <?= lang('Topic data was last updated on', 'Die Themen wurden zuletzt aktualisiert am') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
+                        <?= lang('common.topic_data_was_last_updated_on') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
                     </small>
                 <?php endif; ?>
                 <!-- if fetched is longer ago, show a button to fetch new data -->
                 <?php if (!$fetched || strtotime($fetched) < strtotime('-30 days')) : ?>
                     <button class="btn primary small mt-5" id="openalex-refresh-button" onclick="fetchOpenAlex('<?= $doc['doi'] ?>')">
                         <i class="ph ph-arrows-clockwise"></i>
-                        <?= lang('Fetch latest topics', 'Neueste Themen abrufen') ?>
+                        <?= lang('common.fetch_latest_topics') ?>
                     </button>
                 <?php endif; ?>
             <?php endif; ?>
@@ -1956,7 +1932,7 @@ if ($edit_perm) {
     <section id="coauthors" style="display:none">
         <h2>
             <i class="ph ph-graph" aria-hidden="true"></i>
-            <?= lang('Coauthors', 'Koautoren') ?>
+            <?= lang('common.coauthors') ?>
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
@@ -1982,12 +1958,12 @@ if ($edit_perm) {
             <?= lang('common.history') ?>
         </h2>
         <p>
-            <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
+            <?= lang('common.history_of_changes_to_this_activity') ?>
         </p>
 
         <?php
         if (empty($doc['history'] ?? [])) {
-            echo lang('No history available.', 'Keine Historie verfügbar.');
+            echo lang('common.no_history_available');
         } else {
             // require BASEPATH . "/php/TextDiff/TextDiff.php";
             // $latest = '';
@@ -2012,7 +1988,7 @@ if ($edit_perm) {
 
                         <?php
                         if (isset($h['source']) && !empty($h['source'])) {
-                            echo '<div><b>' . lang('Source:', 'Quelle:') . '</b>';
+                            echo '<div><b>' . lang('common.source') . '</b>';
                             echo ' <code>' . $h['source'] . '</code></div>';
                         }
                         if (isset($h['comment']) && !empty($h['comment'])) { ?>
@@ -2021,7 +1997,7 @@ if ($edit_perm) {
                         }
                         if (isset($h['changes']) && !empty($h['changes'])) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('Changes to the activity:', 'Änderungen an der Aktivität:') .
+                                lang('common.changes_to_the_activity') .
                                 '</div>';
                             echo '<table class="table w-auto small">';
                             foreach ($h['changes'] as $key => $change) {
@@ -2042,7 +2018,7 @@ if ($edit_perm) {
                             echo '</table>';
                         } else  if (isset($h['data']) && !empty($h['data'])) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('Status at this time point:', 'Status zu diesem Zeitpunkt:') .
+                                lang('common.status_at_this_time_point') .
                                 '</div>';
 
                             echo '<table class="table w-auto small">';
@@ -2056,7 +2032,7 @@ if ($edit_perm) {
                             }
                             echo '</table>';
                         } else if ($h['type'] == 'edited') {
-                            echo lang('No changes tracked.', 'Es wurden keine Änderungen verfolgt.');
+                            echo lang('common.no_changes_tracked');
                         }
                         ?>
                     </div>
@@ -2082,14 +2058,14 @@ if ($edit_perm) {
                             <span aria-hidden="true">&times;</span>
                         </a>
                         <h5 class="title">
-                            <?= lang('Add guests', 'Gäste hinzufügen') ?>
+                            <?= lang('activities.add_guests') ?>
                         </h5>
                         <div>
                             <h3>
-                                <?= lang('Add guests to this activity', 'Füge Gäste zu dieser Aktivität hinzu') ?>
+                                <?= lang('activities.add_guests_to_this_activity') ?>
                             </h3>
                             <p>
-                                <?= lang('You can add guests to this activity by entering their names and affiliations.', 'Du kannst Gäste zu dieser Aktivität hinzufügen, indem du ihre Namen und Zugehörigkeiten eingibst.') ?>
+                                <?= lang('activities.you_can_add_guests_to_this_activity_by_entering_their_names_and_affiliation') ?>
                             </p>
 
                             <form action="<?= ROOTPATH ?>/crud/activities/guests" method="post">
@@ -2098,8 +2074,8 @@ if ($edit_perm) {
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th><?= lang('Last', 'Nachname') ?></th>
-                                            <th><?= lang('First', 'Vorname') ?></th>
+                                            <th><?= lang('activities.last') ?></th>
+                                            <th><?= lang('activities.first') ?></th>
                                             <th><?= lang('Email') ?></th>
                                             <th></th>
                                         </tr>
@@ -2132,7 +2108,7 @@ if ($edit_perm) {
                                             <td colspan="5">
                                                 <button type="button" class="btn small" id="add-guest" onclick="addGuestRow()">
                                                     <i class="ph ph-plus"></i>
-                                                    <?= lang('Add guest', 'Gast hinzufügen') ?>
+                                                    <?= lang('activities.add_guest') ?>
                                                 </button>
                                             </td>
                                         </tr>
@@ -2141,7 +2117,7 @@ if ($edit_perm) {
 
                                 <button type="submit" class="btn primary">
                                     <i class="ph ph-save"></i>
-                                    <?= lang('Save guests', 'Gäste speichern') ?>
+                                    <?= lang('activities.save_guests') ?>
                                 </button>
 
                             </form>
@@ -2149,17 +2125,17 @@ if ($edit_perm) {
                             <div class="box">
                                 <div class="content">
                                     <h3>
-                                        <?= lang('Import guests from CSV', 'Gäste aus CSV importieren') ?>
+                                        <?= lang('activities.import_guests_from_csv') ?>
                                     </h3>
                                     <p>
-                                        <?= lang('You can import a list of guests from a CSV file.', 'Du kannst eine Liste von Gästen aus einer CSV-Datei importieren.') ?>
+                                        <?= lang('activities.you_can_import_a_list_of_guests_from_a_csv_file') ?>
                                     </p>
                                     <div class="custom-file">
                                         <input type="file" id="guest-file">
-                                        <label for="guest-file"><?= lang('Select file', 'Datei auswählen') ?></label>
+                                        <label for="guest-file"><?= lang('common.select_file') ?></label>
                                     </div>
                                     <small>
-                                        <?= lang('The file should contain columns for last name, first name and email address. A header row is required.', 'Die Datei sollte Spalten für Nachname, Vorname und E-Mail-Adresse enthalten. Eine Zeile mit Überschriften ist notwendig.') ?>
+                                        <?= lang('activities.the_file_should_contain_columns_for_last_name_first_name_and_email_address') ?>
                                     </small>
                                 </div>
 
@@ -2269,13 +2245,13 @@ if ($edit_perm) {
             ?>
                 <a href="#add-guests" class="btn primary">
                     <i class="ph ph-plus" aria-hidden="true"></i>
-                    <?= lang('Add guests', 'Gäste hinzufügen') ?>
+                    <?= lang('activities.add_guests') ?>
                 </a>
 
             <?php } ?>
 
             <p>
-                <?= lang('There are currently ' . count($guests) . ' guests involved in this activity.', 'Aktuell sind ' . count($guests) . ' Gäste an dieser Aktivität beteiligt.') ?>
+                <?= lang('activities.there_are_currently_guests_guests_involved_in_this_activity', replace: ['guests' => count($guests)]) ?>
             </p>
 
             <?php if ($user_activity || $Settings->hasPermission('guests.view')) {
@@ -2285,8 +2261,8 @@ if ($edit_perm) {
                 <table class="table mb-20">
                     <thead>
                         <tr>
-                            <th><?= lang('Last', 'Nachname') ?></th>
-                            <th><?= lang('First', 'Vorname') ?></th>
+                            <th><?= lang('activities.last') ?></th>
+                            <th><?= lang('activities.first') ?></th>
                             <th><?= lang('Email') ?></th>
                             <th><?= lang('Status') ?></th>
                         </tr>
@@ -2301,7 +2277,7 @@ if ($edit_perm) {
                                     <?php
                                     switch ($guest['status'] ?? 'new') {
                                         case 'pending':
-                                            echo '<span class="badge primary">' . lang('Pending', 'Ausstehend') . '</span>';
+                                            echo '<span class="badge primary">' . lang('common.pending') . '</span>';
                                             break;
                                         case 'approved':
                                             echo '<span class="badge success">' . lang('common.approved') . '</span>';
@@ -2323,7 +2299,7 @@ if ($edit_perm) {
                                             <input type="hidden" name="guest" value="<?= $guest['id'] ?>">
                                             <button type="submit" class="btn small">
                                                 <i class="ph ph-envelope" aria-hidden="true"></i>
-                                                <?= lang('Send email', 'E-Mail senden') ?>
+                                                <?= lang('activities.send_email') ?>
                                             </button>
                                         </form>
                                     <?php } ?>
@@ -2331,7 +2307,7 @@ if ($edit_perm) {
                                     <!-- show qr code -->
                                     <button type="button" class="btn small" data-toggle="modal" data-target="qr-<?= $guest['id'] ?>">
                                         <i class="ph ph-qr-code" aria-hidden="true"></i>
-                                        <?= lang('QR code', 'QR-Code') ?>
+                                        <?= lang('activities.qr_code') ?>
                                     </button>
 
                                 </td>
@@ -2360,7 +2336,7 @@ if ($edit_perm) {
                                     <span aria-hidden="true">&times;</span>
                                 </a>
                                 <h5 class="title">
-                                    <?= lang('QR code for ', 'QR-Code für ') . $guest['first'] . ' ' . $guest['last'] ?>
+                                    <?= lang('activities.qr_code_for') . $guest['first'] . ' ' . $guest['last'] ?>
                                 </h5>
                                 <div>
                                     <div style="background-color: white; display: inline-block;">
@@ -2380,7 +2356,7 @@ if ($edit_perm) {
                     <form action="<?= ROOTPATH ?>/crud/activities/guest-mail/<?= $id ?>" method="post">
                         <button type="submit" class="btn primary">
                             <i class="ph ph-envelope" aria-hidden="true"></i>
-                            <?= lang('Send email to new guests', 'Sende E-Mail an neue Gäste') ?>
+                            <?= lang('activities.send_email_to_new_guests') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -2388,7 +2364,7 @@ if ($edit_perm) {
 
             <?php } else { ?>
                 <p>
-                    <?= lang('You do not have permission to view the list of guests. Only authors of the activity and users with the `guests.view` permission can view the list.', 'Du hast keine Berechtigung, die Liste der Gäste einzusehen. Nur Autor:innen der Aktivität und Personen mit der `guests.view`-Berechtigung können die Liste sehen.') ?>
+                    <?= lang('activities.you_do_not_have_permission_to_view_the_list_of_guests_only_authors_of_the_a') ?>
                 </p>
             <?php } ?>
 

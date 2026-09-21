@@ -170,32 +170,32 @@ if ($topicsEnabled) {
 <div class="d-flex" id="project-badges">
 
     <div class="mr-10 badge bg-white">
-        <small><?= lang('Type of Projects', 'Art des Projekts') ?>: </small>
+        <small><?= lang('projects.type_of_projects') ?>: </small>
         <br />
         <?= $Project->getType() ?>
     </div>
 
     <div class="mr-10 badge bg-white">
-        <small><?= lang('Time frame', 'Zeitraum') ?>: </small>
+        <small><?= lang('projects.time_frame') ?>: </small>
         <br />
         <b><?= $Project->getDateRange() ?></b>
     </div>
 
     <div class="mr-10 badge bg-white">
-        <small><?= lang('Duration', 'Dauer') ?>: </small>
+        <small><?= lang('common.duration') ?>: </small>
         <br />
-        <b><?= $Project->getDuration() ?> <?= lang('Month', 'Monate') ?></b>
+        <b><?= $Project->getDuration() ?> <?= lang('projects.month') ?></b>
     </div>
 
     <div class="mr-10 badge bg-white">
-        <small><?= lang('Scope', 'Reichweite') ?>: </small>
+        <small><?= lang('projects.scope') ?>: </small>
         <br />
         <b>
             <?php
             if (!empty($collaborators)) {
                 echo  $scope['scope'] . ' (' . $scope['region'] . ')';
             } else {
-                echo lang('No collaborators', 'Keine Partner');
+                echo lang('projects.no_collaborators');
             }
             ?>
         </b>
@@ -203,17 +203,17 @@ if ($topicsEnabled) {
 
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <?php if ($project['public'] ?? true) { ?>
-            <div class="mr-10 badge success" data-toggle="tooltip" data-title="<?= lang('The approved project is shown in OSIRIS Portfolio.', 'Das bewilligte Projekt wird in OSIRIS Portfolio gezeigt.') ?>">
-                <small><?= lang('Visibility', 'Sichtbarkeit') ?>: </small>
+            <div class="mr-10 badge success" data-toggle="tooltip" data-title="<?= lang('projects.the_approved_project_is_shown_in_osiris_portfolio') ?>">
+                <small><?= lang('common.visibility') ?>: </small>
                 <br />
-                <i class="ph ph-globe m-0"></i> <?= lang('Shown', 'Gezeigt') ?>
+                <i class="ph ph-globe m-0"></i> <?= lang('common.shown') ?>
             </div>
         <?php } else { ?>
-            <div class="mr-10 badge danger" data-toggle="tooltip" data-title="<?= lang('This project is not shown in OSIRIS Portfolio.', 'Dieses Projekt wird nicht in OSIRIS Portfolio gezeigt.') ?>">
-                <small><?= lang('Visibility', 'Sichtbarkeit') ?>: </small>
+            <div class="mr-10 badge danger" data-toggle="tooltip" data-title="<?= lang('projects.this_project_is_not_shown_in_osiris_portfolio') ?>">
+                <small><?= lang('common.visibility') ?>: </small>
                 <br />
                 <i class="ph ph-globe-x m-0"></i>
-                <?= lang('Not shown', 'Nicht gezeigt') ?>
+                <?= lang('common.not_shown') ?>
             </div>
         <?php } ?>
     <?php } ?>
@@ -227,12 +227,12 @@ if ($topicsEnabled) {
         $whoIsNext = Nagoya::whoIsNext($proposal);
         if ($whoIsNext === 'researcher-required' && $user_project) { ?>
             <div class="alert danger mt-20">
-                <h5 class="title"><?= lang('Nagoya Protocol review', 'Nagoya-Protokoll Bewertung') ?></h5>
-                <?= lang('You are required to provide additional Nagoya Protocol information.', 'Sie sind verpflichtet, zusätzliche Nagoya-Protokoll Informationen bereitzustellen.') ?>
+                <h5 class="title"><?= lang('common.nagoya_protocol_review') ?></h5>
+                <?= lang('common.you_are_required_to_provide_additional_nagoya_protocol_information') ?>
                 <br>
                 <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>" class="btn danger">
                     <i class="ph ph-clipboard-text"></i>
-                    <?= lang('Provide information', 'Informationen bereitstellen') ?>
+                    <?= lang('common.provide_information') ?>
                 </a>
             </div>
         <?php } ?>
@@ -245,7 +245,7 @@ if ($topicsEnabled) {
 <nav class="pills mt-20 mb-0" id="project-nav">
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-        <?= lang('Project', 'Projektdetails') ?>
+        <?= lang('projects.project') ?>
     </a>
     <?php if ($is_subproject) {
         // collaborators are inherited from parent project
@@ -284,7 +284,7 @@ if ($topicsEnabled) {
     <?php } elseif ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
         <a id="btn-activities" class="btn" href="#add-activity">
             <i class="ph ph-plus-circle" aria-hidden="true"></i>
-            <?= lang('Connect Activities', 'Aktivitäten verknüpfen') ?>
+            <?= lang('projects.connect_activities') ?>
         </a>
     <?php } else { ?>
         <a id="btn-activities" class="btn disabled">
@@ -309,7 +309,7 @@ if ($topicsEnabled) {
         <?php if ($nagoyaRelevant) { ?>
             <button type="button" class="btn" onclick="navigate('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
                 <span><?= Nagoya::icon($proposal) ?></span>
-                <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+                <?= lang('common.nagoya_protocol') ?>
             </button>
         <?php } ?>
 
@@ -342,7 +342,7 @@ if ($topicsEnabled) {
 
         <div class="col-md-6">
             <h2>
-                <?= lang('Project details', 'Projektdetails') ?>
+                <?= lang('projects.project_details') ?>
             </h2>
 
             <div class="btn-toolbar mb-10">
@@ -364,15 +364,12 @@ if ($topicsEnabled) {
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdown-1">
                             <div class="content">
-                                <b class="text-danger"><?= lang('Attention', 'Achtung') ?>!</b><br>
+                                <b class="text-danger"><?= lang('common.attention') ?>!</b><br>
                                 <small>
-                                    <?= lang(
-                                        'The project is permanently deleted and the connection to all associated persons and activities is also removed. This cannot be undone.',
-                                        'Das Projekt wird permanent gelöscht und auch die Verbindung zu allen zugehörigen Personen und Aktivitäten entfernt. Dies kann nicht rückgängig gemacht werden.'
-                                    ) ?>
+                                    <?= lang('projects.the_project_is_permanently_deleted_and_the_connection_to_all_associated_per') ?>
                                 </small>
                                 <form action="<?= ROOTPATH ?>/crud/projects/delete/<?= $project['_id'] ?>" method="post">
-                                    <button class="btn btn-block danger" type="submit"><?= lang('Delete permanently', 'Permanent löschen') ?></button>
+                                    <button class="btn btn-block danger" type="submit"><?= lang('common.delete_permanently') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -387,10 +384,10 @@ if ($topicsEnabled) {
                     ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('Parent project', 'Übergeordnetes Projekt') ?></span>
+                                <span class="key"><?= lang('projects.parent_project') ?></span>
                                 <?php
                                 if (empty($parent)) {
-                                    echo lang('No parent project', 'Kein übergeordnetes Projekt');
+                                    echo lang('projects.no_parent_project');
                                 } else {
                                     $Parentproject->setProject($parent);
                                     echo $Parentproject->widgetLarge();
@@ -404,7 +401,7 @@ if ($topicsEnabled) {
                         <tr>
                             <td>
                                 <span class="key">
-                                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                                    <?= lang('common.subprojects') ?>
                                 </span>
                                 <?php if (count($children ?? []) > 0) {
                                     $SubProjectClass = new Project();
@@ -416,11 +413,11 @@ if ($topicsEnabled) {
                                 <?php if ($Settings->hasPermission('projects.add-subprojects')) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/subproject/<?= $id ?>" id="btn-collabs" class="btn">
                                         <i class="ph ph-plus-circle" aria-hidden="true"></i>
-                                        <?= lang('Add Subproject', 'Teilprojekt anlegen') ?>
+                                        <?= lang('projects.add_subproject') ?>
                                     </a>
                                 <?php } else { ?>
                                     <small class="text-muted">
-                                        <?= lang('You do not have permission to add subprojects.', 'Du hast keine Berechtigung, Teilprojekte anzulegen.') ?>
+                                        <?= lang('projects.you_do_not_have_permission_to_add_subprojects') ?>
                                     </small>
                                 <?php } ?>
                             </td>
@@ -460,7 +457,7 @@ if ($topicsEnabled) {
                     <?php } ?>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('Created by', 'Erstellt von') ?></span>
+                            <span class="key"><?= lang('common.created_by_view') ?></span>
                             <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
                                 echo 'System';
                             } else {
@@ -478,7 +475,7 @@ if ($topicsEnabled) {
         <div class="col-md-6">
 
             <h2>
-                <?= lang('Project staff', 'Projektmitarbeitende') ?>
+                <?= lang('projects.project_staff') ?>
             </h2>
 
 
@@ -498,7 +495,7 @@ if ($topicsEnabled) {
                     ?>
                         <tr>
                             <td>
-                                <?= lang('No persons connected.', 'Keine Personen verknüpft.') ?>
+                                <?= lang('common.no_persons_connected') ?>
                             </td>
                         </tr>
                     <?php
@@ -555,7 +552,7 @@ if ($topicsEnabled) {
                     } else { ?>
                         <tr>
                             <td>
-                                <?= lang('No units connected.', 'Keine Einheiten verknüpft.') ?>
+                                <?= lang('common.no_units_connected') ?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -586,7 +583,7 @@ if ($topicsEnabled) {
     <?php if ($is_subproject) { ?>
         <p class="text-primary">
             <i class="ph ph-info"></i>
-            <?= lang('Based on parent project', 'Basierend auf dem übergeordneten Projekt') ?>
+            <?= lang('projects.based_on_parent_project') ?>
         </p>
     <?php } ?>
 
@@ -602,7 +599,7 @@ if ($topicsEnabled) {
                     ?>
                         <tr>
                             <td>
-                                <?= lang('No collaborators connected.', 'Keine Partner verknüpft.') ?>
+                                <?= lang('common.no_collaborators_connected') ?>
                             </td>
                         </tr>
                     <?php
@@ -632,7 +629,7 @@ if ($topicsEnabled) {
             <div class="alert primary my-20">
 
                 <small class="text-muted float-right">
-                    <?= lang('Based on partners', 'Basierend auf Partnern') ?>
+                    <?= lang('projects.based_on_partners') ?>
                 </small>
 
                 <h5 class="title mb-0">
@@ -659,13 +656,13 @@ if ($topicsEnabled) {
             </div>
             <p>
                 <span class="circle-icon" style="background-color:#f78104"></span>
-                <?= lang('Coordinator', 'Koordinator') ?>
+                <?= lang('common.coordinator') ?>
                 <br>
                 <span class="circle-icon" style="background-color:#008083"></span>
                 Partner
                 <br>
                 <span class="circle-icon" style="background-color:#a6b1b1"></span>
-                <?= lang('Associated Partner', 'Assoziierter Partner') ?>
+                <?= lang('projects.associated_partner') ?>
             </p>
         </div>
     </div>
@@ -692,7 +689,7 @@ if ($topicsEnabled) {
         <?php if ($edit_perm || $Settings->hasPermission('projects.connect')) { ?>
             <a href="#add-activity" class="btn primary">
                 <i class="ph ph-plus"></i>
-                <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                <?= lang('common.connect_activities') ?>
             </a>
         <?php } ?>
 
@@ -710,21 +707,21 @@ if ($topicsEnabled) {
 
                         <div class="form-group">
 
-                            <?= lang('Highlight:', 'Hervorheben:') ?>
+                            <?= lang('common.highlight') ?>
 
                             <div class="custom-radio ml-10">
                                 <input type="radio" name="highlight" id="highlight-user" value="user" checked="checked">
-                                <label for="highlight-user"><?= lang('Me', 'Mich') ?></label>
+                                <label for="highlight-user"><?= lang('common.me') ?></label>
                             </div>
 
                             <div class="custom-radio ml-10">
                                 <input type="radio" name="highlight" id="highlight-aoi" value="aoi">
-                                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang(' Authors', '-Autoren') ?></label>
+                                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang('common.authors') ?></label>
                             </div>
 
                             <div class="custom-radio ml-10">
                                 <input type="radio" name="highlight" id="highlight-none" value="">
-                                <label for="highlight-none"><?= lang('None', 'Nichts') ?></label>
+                                <label for="highlight-none"><?= lang('common.none_download') ?></label>
                             </div>
 
                         </div>
@@ -732,7 +729,7 @@ if ($topicsEnabled) {
 
                         <div class="form-group">
 
-                            <?= lang('File format:', 'Dateiformat:') ?>
+                            <?= lang('common.file_format') ?>
 
                             <div class="custom-radio ml-10">
                                 <input type="radio" name="format" id="format-word" value="word" checked="checked">
@@ -841,7 +838,7 @@ if ($topicsEnabled) {
                     Spectrum::render($spectrum, $count_spectrum, '', '{"projects":"'.$id.'"}');
                 else : ?>
                     <p>
-                        <?= lang('No Research Spectrum is assigned to this unit.', 'Zu dieser Einheit ist kein Forschungs-Spektrum zugewiesen.') ?>
+                        <?= lang('common.no_research_spectrum_is_assigned_to_this_unit') ?>
                     </p>
                 <?php endif; ?>
             </div>
@@ -859,12 +856,12 @@ if ($topicsEnabled) {
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="modal-title">
-                    <?= lang('Edit image', 'Bild bearbeiten') ?>
+                    <?= lang('projects.edit_image') ?>
                 </h5>
 
                 <div class="form-group">
                     <p>
-                        <?= lang('Upload an image (e.g.) Logo for the project. The image will be displayed in the metadata.', 'Lade ein Bild (z.B. ein Logo) für das Projekt hoch, das bei den Metadaten auf der Projektseite gezeigt wird.') ?>
+                        <?= lang('common.upload_an_image_e_g_logo_for_the_project_the_image_will_be_displayed_in_the') ?>
                     </p>
                     <!-- show current image if any -->
                     <?php if (!empty($project['image'])) : ?>
@@ -875,8 +872,8 @@ if ($topicsEnabled) {
                         <input type="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                         <input type="hidden" name="type" value="image">
                         <div class="custom-file">
-                            <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('No image uploaded', 'Kein Bild hochgeladen') ?>">
-                            <label for="image"><?= lang('Upload image', 'Bild hochladen') ?></label>
+                            <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('common.no_image_uploaded') ?>">
+                            <label for="image"><?= lang('common.upload_image') ?></label>
                         </div>
                         <button class="btn primary mt-20">
                             <i class="ph ph-check"></i>
@@ -898,7 +895,7 @@ if ($topicsEnabled) {
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="modal-title">
-                    <?= lang('Connect activities', 'Aktivitäten verknüpfen') ?>
+                    <?= lang('common.connect_activities') ?>
                 </h5>
 
                 <form action="<?= ROOTPATH ?>/crud/projects/connect-activities" method="post" class="">
@@ -911,7 +908,7 @@ if ($topicsEnabled) {
                         <!-- <label for="activity-suggested"><?= lang('common.activity') ?></label> -->
                         <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="...">
                         <div class="suggestions on-focus">
-                            <div class="content"><?= lang('Start typing to search for activities', 'Beginne zu tippen, um Aktivitäten zu suchen') ?></div>
+                            <div class="content"><?= lang('common.start_typing_to_search_for_activities') ?></div>
                         </div>
                     </div>
                     <input type="hidden" name="activity" id="activity-selected" required value="">
@@ -1002,12 +999,12 @@ if ($topicsEnabled) {
         <?= lang('common.history') ?>
     </h2>
     <p>
-        <?= lang('History of changes to this activity.', 'Historie der Änderungen an dieser Aktivität.') ?>
+        <?= lang('common.history_of_changes_to_this_activity') ?>
     </p>
 
     <?php
     if (empty($project['history'] ?? [])) {
-        echo lang('No history available.', 'Keine Historie verfügbar.');
+        echo lang('common.no_history_available');
     } else {
     ?>
         <div class="history-list">
@@ -1018,13 +1015,13 @@ if ($topicsEnabled) {
                     <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
                     <h5 class="m-0">
                         <?php if ($h['type'] == 'created') {
-                            echo lang('Created by ', 'Erstellt von ');
+                            echo lang('common.created_by');
                         } else if ($h['type'] == 'edited') {
-                            echo lang('Edited by ', 'Bearbeitet von ');
+                            echo lang('common.edited_by');
                         } else if ($h['type'] == 'imported') {
-                            echo lang('Imported by ', 'Importiert von ');
+                            echo lang('common.imported_by');
                         } else {
-                            echo $h['type'] . lang(' by ', ' von ');
+                            echo $h['type'] . lang('common.by');
                         }
                         if (isset($h['user']) && !empty($h['user'])) {
                             echo '<a href="' . ROOTPATH . '/profile/' . $h['user'] . '">' . $DB->getNameFromId($h['user']) . '</a>';
@@ -1037,7 +1034,7 @@ if ($topicsEnabled) {
                     <?php
                     if (isset($h['changes']) && !empty($h['changes'])) {
                         echo '<div class="font-weight-bold mt-10">' .
-                            lang('Changes to the project:', 'Änderungen am Projekt:') .
+                            lang('common.changes_to_the_project') .
                             '</div>';
                         echo '<table class="table simple w-auto small border px-10">';
                         foreach ($h['changes'] as $key => $change) {
@@ -1058,7 +1055,7 @@ if ($topicsEnabled) {
                         echo '</table>';
                     } else  if (isset($h['data']) && !empty($h['data'])) {
                         echo '<div class="font-weight-bold mt-10">' .
-                            lang('Status at this time point:', 'Status zu diesem Zeitpunkt:') .
+                            lang('common.status_at_this_time_point') .
                             '</div>';
 
                         echo '<table class="table simple w-auto small border px-10">';
@@ -1072,7 +1069,7 @@ if ($topicsEnabled) {
                         }
                         echo '</table>';
                     } else if ($h['type'] == 'edited') {
-                        echo lang('No changes tracked.', 'Es wurden keine Änderungen verfolgt.');
+                        echo lang('common.no_changes_tracked');
                     }
                     ?>
                 </div>
@@ -1088,7 +1085,7 @@ if ($topicsEnabled) {
 ?>
     <section id="nagoya" style="display: none;">
         <h2 class="title">
-            <?= lang('Nagoya Protocol', 'Nagoya-Protokoll') ?>
+            <?= lang('common.nagoya_protocol') ?>
         </h2>
         <div class="box padded mt-0" id="nagoya-details" style="max-width: 90rem;">
             <?php
@@ -1105,7 +1102,7 @@ if ($topicsEnabled) {
         <?= lang('common.raw_data') ?>
     </h2>
     <p>
-        <?= lang('Raw data of this activity.', 'Rohdaten dieser Aktivität.') ?>
+        <?= lang('common.raw_data_of_this_activity') ?>
     </p>
 
     <div class="box padded overflow-x-scroll">

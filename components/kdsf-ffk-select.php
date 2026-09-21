@@ -135,7 +135,7 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
                     info.text(lang(item.scope_notes.en, item.scope_notes.de));
                 }
                 if (item.examples && item.examples.en !== undefined) {
-                    info.append('<br><b>'+lang('Examples', 'Beispiele')+': </b>'+ lang(item.examples.en, item.examples.de));
+                    info.append('<br><b>'+<?= json_encode(lang('activities.examples'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>+': </b>'+ lang(item.examples.en, item.examples.de));
                 }
                 li.append(checkbox, ' ' + lang(item.labels.en, item.labels.de) + ' ', tooltip,  info);
             }

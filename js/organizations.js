@@ -58,7 +58,7 @@ function getOrganization(name, ror = false) {
             var organizations = response.data
 
             if (organizations.length === 0) {
-                COMMENT.html(lang('No results found in our database. Start search in ROR…', 'Keine Ergebnisse in unserer Datenbank gefunden. Starte jetzt die Suche in ROR…'))
+                COMMENT.html(lang('organizations.no_results_found_in_our_database_start_search_in_ror'))
 
                 searchROR(name)
                 return
@@ -78,7 +78,7 @@ function suggestOrganization(data, create = false) {
     console.info('suggestOrganization')
     console.log(create);
     if (data.length === 0) {
-        COMMENT.html(lang('No results found', 'Keine Ergebnisse gefunden'))
+        COMMENT.html(lang('organizations.no_results_found'))
     } else {
         data.forEach((org) => {
             console.log(org);
@@ -102,7 +102,7 @@ function suggestOrganization(data, create = false) {
     let lastrow = $('<tr>')
     if (!create) {
         let rorbtn = $('<button type="button" class="btn">')
-        rorbtn.html(lang('Search in ROR', 'Suche in ROR'))
+        rorbtn.html(lang('organizations.search_in_ror'))
         rorbtn.on('click', function () {
             getOrganization(INPUT.val(), true);
         })
@@ -170,7 +170,7 @@ function selectOrganization(org, create = false, callback = null) {
                 } else {
                     // random id
                     callback(response)
-                    toastSuccess(lang('Organization added', 'Organisation angelegt'))
+                    toastSuccess(lang('organizations.organization_added'))
                 }
                 SUGGEST.empty()
                 INPUT.val('')
@@ -182,7 +182,7 @@ function selectOrganization(org, create = false, callback = null) {
         })
     } else {
         callback(org)
-        toastSuccess(lang('Organization connected', 'Organisation verknüpft'))
+        toastSuccess(lang('organizations.organization_connected'))
 
         SUGGEST.empty()
         INPUT.val('')
@@ -222,7 +222,7 @@ function getRORid(ror, msg = true) {
             }, true)
             $('#organizations-ror-id').val('')
             if (msg)
-                toastSuccess(lang('Organization added', 'Organisation hinzugefügt'))
+                toastSuccess(lang('organizations.organization_added_c9cb945d'))
         },
         error: function (response) {
             var errors = response.responseJSON.errors
@@ -349,7 +349,7 @@ function addOrganization() {
         }
     });
     if (!valid) {
-        toastWarning(lang('Please fill out all required fields.', 'Bitte füllen Sie alle Pflichtfelder aus.'))
+        toastWarning(lang('activities.please_fill_out_all_required_fields'))
         return;
     }
 
@@ -362,10 +362,10 @@ function getCoordinates(locationId = '#location', countryId = '#country', latId 
     console.log(loc);
 
     if (!loc || loc.length === 0) {
-        toastError(lang("Please provide a location first.", "Bitte geben Sie zuerst einen Standort ein."));
+        toastError(lang('organizations.please_provide_a_location_first'));
         return;
     }
-    let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(loc) + '&accept-language=' + lang('en', 'de');
+    let url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(loc) + '&accept-language=' + document.documentElement.lang;
     if ($(countryId).val() && $(countryId).val().length > 0) {
         url += '&countrycodes=' + $(countryId).val().toUpperCase();
     }
@@ -382,12 +382,12 @@ function getCoordinates(locationId = '#location', countryId = '#country', latId 
 
                 toastSuccess(lang("Location coordinates updated based on <b>" + name + "</b>.", "Standort-Koordinaten aktualisiert basierend auf <b>" + name + "</b>."));
             } else {
-                toastError(lang("Location not found. Please refine your search.", "Standort nicht gefunden. Bitte verfeinern Sie Ihre Suche."));
+                toastError(lang('organizations.location_not_found_please_refine_your_search'));
             }
         })
         .catch(error => {
             console.error('Error fetching location data:', error);
-            toastError(lang("An error occurred while fetching location data.", "Beim Abrufen der Standortdaten ist ein Fehler aufgetreten."));
+            toastError(lang('organizations.an_error_occurred_while_fetching_location_data'));
         });
 
 }

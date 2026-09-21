@@ -162,12 +162,12 @@ if ($process == 'project') {
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
             <p>
-                <?= lang('Each project type must have a unique ID with which it is linked to an activity.', 'Jeder Projekttyp muss eine einzigartige ID haben, mit der er zu einer Aktivität verknüpft wird.') ?>
+                <?= lang('admin.each_project_type_must_have_a_unique_id_with_which_it_is_linked_to_an_activ') ?>
             </p>
             <p>
-                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="IDLIST">
                 <?php foreach ($osiris->adminProjects->distinct('id') as $k) { ?>
@@ -183,15 +183,15 @@ if ($process == 'project') {
 </div>
 
 <h1>
-    <?= lang('Project Settings', 'Projekt-Einstellungen') ?>
+    <?= lang('common.project_settings') ?>
     >
     <span class="text-primary">
         <?php if ($stage == '1') { ?>
             <?= lang('common.general') ?>
         <?php } else if ($stage == '2') { ?>
-            <?= lang('Phases', 'Phasen') ?>
+            <?= lang('admin.phases') ?>
         <?php } else if ($stage == '3') { ?>
-            <?= lang('Subprojects', 'Teilprojekte') ?>
+            <?= lang('common.subprojects') ?>
         <?php } else { ?>
             <?= lang('common.new') ?>
         <?php } ?>
@@ -214,14 +214,14 @@ if ($process == 'project') {
         <div class="box">
             <div class="content">
                 <h2>
-                    <?= lang('General settings', 'Allgemeine Einstellungen') ?>
+                    <?= lang('common.general_settings') ?>
                 </h2>
 
                 <div class="row row-eq-spacing">
                     <div class="col-sm">
                         <label for="id" class="required">ID</label>
                         <input type="text" class="form-control" name="values[id]" required value="<?= $type == 'new' ? '' : $type ?>" data-value="<?= $type == 'new' ? '' : $type ?>" oninput="sanitizeID(this)">
-                        <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
+                        <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('common.must_be_unqiue') ?></a></small>
                     </div>
                     <div class="col-sm">
                         <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
@@ -257,27 +257,27 @@ if ($process == 'project') {
 
                 <div class="custom-checkbox mb-10 danger">
                     <input type="checkbox" id="disable" value="true" name="values[disabled]" <?= ($project['disabled'] ?? false) ? 'checked' : '' ?>>
-                    <label for="disable"><?= lang('Deactivate', 'Deaktivieren') ?></label>
+                    <label for="disable"><?= lang('common.deactivate') ?></label>
                 </div>
                 <span class="text-muted">
-                    <?= lang('Deactivated projects are retained for past activities, but no new ones can be added.', 'Deaktivierte Projektkategorien bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
+                    <?= lang('admin.deactivated_projects_are_retained_for_past_activities_but_no_new_ones_can_b') ?>
                 </span>
 
             </div>
             <hr>
             <div class="content">
                 <h5>
-                    <?= lang('Subprojects', 'Teilprojekte') ?>
+                    <?= lang('common.subprojects') ?>
                 </h5>
                 <div class="custom-checkbox my-10">
                     <input type="hidden" name="values[subprojects]" value="false">
                     <input type="checkbox" id="subprojects" value="true" name="values[subprojects]" <?= ($project['subprojects'] ?? false) ? 'checked' : '' ?>>
                     <label for="subprojects">
-                        <?= lang('This type of project can have subprojects.', 'Diese Art von Projekt kann Teilprojekte haben.') ?>
+                        <?= lang('admin.this_type_of_project_can_have_subprojects') ?>
                     </label>
                 </div>
                 <span class="text-muted">
-                    <?= lang('Subprojects are projects that are linked to a main project and are displayed in the project overview.', 'Teilprojekte sind Projekte, die mit einem Hauptprojekt verknüpft sind und in der Projektübersicht angezeigt werden.') ?>
+                    <?= lang('admin.subprojects_are_projects_that_are_linked_to_a_main_project_and_are_displaye') ?>
                 </span>
             </div>
             <hr>
@@ -288,10 +288,7 @@ if ($process == 'project') {
                 </h5>
 
                 <p class="text-muted">
-                    <?= lang(
-                        'A project can either be created directly or go through an submission phase first. Depending on the type of project, it makes sense to only include new projects as proposals or to omit the proposal phase completely. Financial data is not available for projects.',
-                        'Ein Projekt kann entweder direkt angelegt werden oder durchläuft zuerst eine Antragsphase. Je nach Art des Projekts ist es sinnvoll, neue Projekte nur als Antrag aufzunehmen oder die Anträge komplett wegzulassen. Finanzdaten sind allerdings für Projekte nicht verfügbar.'
-                    ) ?>
+                    <?= lang('admin.a_project_can_either_be_created_directly_or_go_through_an_submission_phase') ?>
                 </p>
 
 
@@ -299,7 +296,7 @@ if ($process == 'project') {
                     <div class="custom-radio">
                         <input type="radio" name="values[process]" id="proposal" value="proposal" required <?= $process == 'proposal' ? 'checked' : '' ?>>
                         <label for="proposal">
-                            <?= lang('All projects of this type must first be created as proposal', 'Alle Projekte dieser Art müssen zuerst als Antrag angelegt werden') ?>
+                            <?= lang('admin.all_projects_of_this_type_must_first_be_created_as_proposal') ?>
                         </label>
                     </div>
                 </div>
@@ -308,7 +305,7 @@ if ($process == 'project') {
                     <div class="custom-radio">
                         <input type="radio" name="values[process]" id="both" value="both" required <?= $process == 'proposal' ? 'checked' : '' ?>>
                         <label for="both">
-                            <?= lang('All projects of this type can be created directly or as proposal', 'Alle Projekte dieser Art können entweder direkt oder als Antrag angelegt werden') ?>
+                            <?= lang('admin.all_projects_of_this_type_can_be_created_directly_or_as_proposal') ?>
                         </label>
                     </div>
                 </div> -->
@@ -317,7 +314,7 @@ if ($process == 'project') {
                     <div class="custom-radio">
                         <input type="radio" name="values[process]" id="project" value="project" required <?= $process == 'project' ? 'checked' : '' ?>>
                         <label for="project">
-                            <?= lang('All projects of this type can be created directly, no proposals possible', 'Alle Projekte dieser Art werden direkt angelegt, keine Anträge möglich') ?>
+                            <?= lang('admin.all_projects_of_this_type_can_be_created_directly_no_proposals_possible') ?>
                         </label>
                     </div>
                 </div>
@@ -325,10 +322,10 @@ if ($process == 'project') {
             <hr>
             <div class="content">
                 <h5>
-                    <?= lang('Notifications', 'Benachrichtigungen') ?>
+                    <?= lang('admin.notifications') ?>
                 </h5>
 
-                <?= lang('Select role or user that should be notified when new proposals/projects of this type are <b>created</b>.', 'Wähle die Rolle oder den Benutzer, der benachrichtigt werden soll, wenn neue Anträge/Projekte dieses Typs <b>erstellt</b> werden.') ?>
+                <?= lang('admin.select_role_or_user_that_should_be_notified_when_new_proposals_projects_of') ?>
                 <div class="form-group">
                     <?php
                     $notification = $project['notification_created'] ?? '';
@@ -341,7 +338,7 @@ if ($process == 'project') {
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification  == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
                         <?php } ?>
-                        <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
+                        <option value="" disabled>--- <?= lang('admin.user') ?> ---</option>
                         <?php foreach ($osiris->persons->find([], ['sort' => ['last' => 1]]) as $u) { ?>
                             <option value="user:<?= $u['username'] ?>" <?= $notification  == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
                         <?php } ?>
@@ -349,12 +346,12 @@ if ($process == 'project') {
                     <div class="custom-checkbox mt-10">
                         <input type="hidden" name="values[notification_created_email]" value="0">
                         <input type="checkbox" id="notification_created_email" value="1" name="values[notification_created_email]" <?= ($project['notification_created_email'] ?? false) ? 'checked' : '' ?>>
-                        <label for="notification_created_email"><?= lang('Per Mail', 'Via Email') ?>*</label>
+                        <label for="notification_created_email"><?= lang('admin.per_mail') ?>*</label>
                     </div>
                 </div>
                 <hr>
 
-                <?= lang('Select role or user that should be notified when proposals/projects of this type are <b>changed</b>.', 'Wähle die Rolle oder den Benutzer, der benachrichtigt werden soll, wenn Anträge/Projekte dieses Typs <b>bearbeitet</b> werden.') ?>
+                <?= lang('admin.select_role_or_user_that_should_be_notified_when_proposals_projects_of_this') ?>
                 <div class="form-group">
                     <?php
                     $notification = $project['notification_changed'] ?? '';
@@ -366,7 +363,7 @@ if ($process == 'project') {
                         foreach ($Settings->get('roles') as $role) { ?>
                             <option value="role:<?= $role ?>" <?= $notification == ('role:' . $role) ? 'selected' : '' ?>><?= strtoupper($role) ?></option>
                         <?php } ?>
-                        <option value="" disabled>--- <?= lang('User', 'Nutzende') ?> ---</option>
+                        <option value="" disabled>--- <?= lang('admin.user') ?> ---</option>
                         <?php foreach ($osiris->persons->find([], ['sort' => ['last' => 1]]) as $u) { ?>
                             <option value="user:<?= $u['username'] ?>" <?= $notification == ('user:' . $u['username']) ? 'selected' : '' ?>><?= $u['last'] ?>, <?= $u['first'] ?></option>
                         <?php } ?>
@@ -374,12 +371,12 @@ if ($process == 'project') {
                     <div class="custom-checkbox mt-10">
                         <input type="hidden" name="values[notification_changed_email]" value="0">
                         <input type="checkbox" id="notification_changed_email" value="1" name="values[notification_changed_email]" <?= ($project['notification_changed_email'] ?? false) ? 'checked' : '' ?>>
-                        <label for="notification_changed_email"><?= lang('Per Mail', 'Via Email') ?>*</label>
+                        <label for="notification_changed_email"><?= lang('admin.per_mail') ?>*</label>
                     </div>
                 </div>
 
                 <p>
-                    * <?= lang('Before enabling emails here, please make sure that email settings are correctly set up and working in the general settings. If not, it may lead to problems.', 'Bevor du hier E-Mails aktivierst, stelle bitte sicher, dass die E-Mail-Einstellungen in den allgemeinen Einstellungen korrekt eingerichtet und funktionsfähig sind. Andernfalls kann es zu Problemen kommen.') ?>
+                    * <?= lang('admin.before_enabling_emails_here_please_make_sure_that_email_settings_are_correc') ?>
                 </p>
             </div>
 
@@ -393,7 +390,7 @@ if ($process == 'project') {
 
         <?php if ($stage <= $finished_stages) { ?>
             <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
-                <?= lang('Skip', 'Überspringen') ?>
+                <?= lang('admin.skip') ?>
             </a>
         <?php } ?>
 
@@ -418,7 +415,7 @@ if ($process == 'project') {
         ?>
             <div class="box phase" id="phase-<?= $phase_id ?>" data-id="<?= $phase_id ?>">
                 <div class="content">
-                    <!-- <b><?= lang('Data fields for', 'Datenfelder für') ?></b> -->
+                    <!-- <b><?= lang('admin.data_fields_for') ?></b> -->
                     <code class="code float-right text-<?= $phase['color'] ?? 'muted' ?>"><?= $phase_id ?></code>
                     <h2 class="title">
                         <div class="badge <?= $phase['color'] ?? 'muted' ?>"><?= lang($phase['name'], $phase['name_de']) ?></div>
@@ -430,10 +427,10 @@ if ($process == 'project') {
 
                     <p>
                         <b>
-                            <?= lang('Required fields', 'Pflichtfelder') ?>
+                            <?= lang('admin.required_fields') ?>
                         </b>
                         <br>
-                        <span class="text-muted"><?= lang('These fields are always required and cannot be deactivated.', 'Diese Felder sind immer erforderlich und können nicht deaktiviert werden.') ?></span>
+                        <span class="text-muted"><?= lang('admin.these_fields_are_always_required_and_cannot_be_deactivated') ?></span>
                     </p>
 
                     <div>
@@ -471,17 +468,17 @@ if ($process == 'project') {
 
                     <p>
                         <b>
-                            <?= lang('Optional fields', 'Optionale Felder') ?>
+                            <?= lang('admin.optional_fields') ?>
                         </b>
                         <br>
                         <span class="text-muted">
-                            <?= lang('You can mark a field as active by clicking on it and mark it as required by clicking again. Required fields are then marked in red with an asterisk (*).', 'Du kannst ein Feld als aktiv markieren, indem du darauf klickst, und es als erforderlich markieren, indem du erneut darauf klickst. Erforderliche Felder sind dann mit einem Sternchen (*) in rot gekennzeichnet.') ?>
+                            <?= lang('admin.you_can_mark_a_field_as_active_by_clicking_on_it_and_mark_it_as_required_by') ?>
                         </span>
                     </p>
                     <?php if ($phase_id == 'project' && $Settings->featureEnabled('portal')) { ?>
                         <p>
                             <b class="text-danger"><i class="ph ph-globe"></i> Portfolio</b>:
-                            <?= lang('If you want this type of project to be visible to the public via Portfolio or the Portfolio API, you must activate the "Consent to public presentation" field. If the corresponding check mark is set in the form, the project becomes publicly visible.', 'Wenn du möchtest, dass diese Art von Projekt für die Öffentlichkeit über Portfolio oder die Portfolio-API sichtbar ist, musst du das Feld "Zustimmung zu Öffentlichen Präsentation" aktivieren. Wenn der entsprechende Haken im Formular gesetzt wird, wird das Projekt öffentlich sichtbar.') ?>
+                            <?= lang('admin.if_you_want_this_type_of_project_to_be_visible_to_the_public_via_portfolio') ?>
                         </p>
                     <?php } else { ?>
                         <style>
@@ -509,7 +506,7 @@ if ($process == 'project') {
                             echo "<p>
                             <b>" . lang('common.custom_fields') . "</b>
                             <br>
-                            <span class='text-muted'>" . lang('These fields are created by you and can be used for any purpose.', 'Diese Felder wurden von dir und können für beliebige Zwecke verwendet werden.') . "</span>
+                            <span class='text-muted'>" . lang('admin.these_fields_are_created_by_you_and_can_be_used_for_any_purpose') . "</span>
                             </p>";
                             $custom = true;
                         }
@@ -537,7 +534,7 @@ if ($process == 'project') {
         <?php } ?>
 
         <a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= $type ?>">
-            <?= lang('Back without saving', 'Zurück ohne zu speichern') ?>
+            <?= lang('admin.back_without_saving') ?>
             <i class="ph ph-arrow-fat-line-left"></i>
         </a>
         <!-- <button type="submit" class="btn success">
@@ -553,7 +550,7 @@ if ($process == 'project') {
     <!-- 
     <?php if ($stage <= $finished_stages) { ?>
         <a href="<?= ROOTPATH ?>/admin/projects/<?= $stage + 1 ?>/<?= $id ?>" class="btn link">
-            <?= lang('Skip', 'Überspringen') ?>
+            <?= lang('admin.skip') ?>
         </a>
     <?php } ?> -->
 
@@ -591,15 +588,15 @@ if ($process == 'project') {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/admin/projects/delete/<?= $project['_id'] ?>" method="post">
                 <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-                <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
+                <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
             </form>
         </div>
     <?php } else { ?>
         <div class="alert danger mt-20">
-            <?= lang("Can't delete project type: $member proposals and/or projects associated.", "Kann Typ nicht löschen: $member Anträge und/oder Projekte zugeordnet.") ?><br>
+            <?= lang('admin.can_t_delete_project_type_member_proposals_and_or_projects_associated', replace: ['member' => $member]) ?><br>
             <a href='<?= ROOTPATH ?>/projects/search#{"$and":[{"type":"<?= $type ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
-                <?= lang('View projects', 'Projekte zeigen') ?>
+                <?= lang('admin.view_projects') ?>
             </a>
         </div>
     <?php } ?>

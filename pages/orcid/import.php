@@ -12,7 +12,7 @@
 $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
 
 if (!($user['orcid_validated'] ?? false)) {
-    echo '<div class="alert error">' . lang('Your ORCID is not yet validated. Please validate your ORCID before importing works.', 'Deine ORCID ist noch nicht validiert. Bitte validiere deine ORCID, bevor du Werke importierst.') . '</div>';
+    echo '<div class="alert error">' . lang('orcid.your_orcid_is_not_yet_validated_please_validate_your_orcid_before_importing') . '</div>';
     exit;
 }
 
@@ -32,13 +32,13 @@ if (isset($_POST['import'])) {
 try {
     $works_to_import = $orcid_parser->getWorksForImport();
 } catch (Exception $e) {
-    echo '<div class="alert error"><h3 class="title">' . lang('Error fetching works from ORCID ', 'Fehler beim Abrufen der Werke von ORCID ') . '</h3><pre class="overflow-auto">' . $e . '</pre></div>';
+    echo '<div class="alert error"><h3 class="title">' . lang('orcid.error_fetching_works_from_orcid') . '</h3><pre class="overflow-auto">' . $e . '</pre></div>';
     exit;
 }
 if ($works_to_import) { ?>
     <h1>
         <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
-        <?= lang('Ready to import', 'Bereit zum Importieren') ?>:
+        <?= lang('orcid.ready_to_import') ?>:
     </h1>
 
     <style>
@@ -103,13 +103,13 @@ if ($works_to_import) { ?>
             </p>
             <form method="post">
                 <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn success small">
-                    <?= lang('Import', 'Importieren') ?>
+                    <?= lang('orcid.import') ?>
                 </button>
             </form>
         </div>
     <?php }
 } else { ?>
     <div class="alert info">
-        <?= lang('No further works to import found', 'Keine weiteren Werke zum Importieren gefunden') ?>
+        <?= lang('orcid.no_further_works_to_import_found') ?>
     </div>
 <?php } ?>

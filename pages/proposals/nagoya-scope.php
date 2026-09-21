@@ -100,7 +100,7 @@ $utilizationOptions = [
     }
 </style>
 
-<h1 class="mb-3"><?= lang('Nagoya Compliance: Scope Analysis', 'Nagoya-Compliance: Scope Analyse') ?></h1>
+<h1 class="mb-3"><?= lang('projects.nagoya_compliance_scope_analysis') ?></h1>
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
@@ -109,7 +109,7 @@ $utilizationOptions = [
 </h2>
 
 <div class="mb-20">
-    <b><?= lang('Current Status', 'Aktueller Status') ?>:</b><br>
+    <b><?= lang('common.current_status') ?>:</b><br>
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
 </div>
 
@@ -117,13 +117,10 @@ $utilizationOptions = [
     <!-- thank you -->
     <div class="alert success">
         <div class="title">
-            <?= lang('Thank you!', 'Vielen Dank!') ?>
+            <?= lang('projects.thank_you') ?>
         </div>
         <strong>
-            <?= lang(
-                'The scope information has been submitted for ABS review. You will be notified once the review is complete.',
-                'Die Scope-Informationen wurden zur ABS-Prüfung eingereicht. Sie werden benachrichtigt, sobald die Prüfung abgeschlossen ist.'
-            ) ?>
+            <?= lang('projects.the_scope_information_has_been_submitted_for_abs_review_you_will_be_notifie') ?>
         </strong>
     </div>
 <?php } ?>
@@ -161,7 +158,7 @@ $utilizationOptions = [
                     <p class="text-primary">
                         <i class="ph ph-chat-circle-text"></i>
                         <b>
-                            <?= lang('ABS Review comment', 'Kommentar der ABS-Prüfung') ?>:
+                            <?= lang('projects.abs_review_comment') ?>:
                         </b>
                         <q><?= nl2br(e($country['review']['comment'])) ?></q>
                     </p>
@@ -187,14 +184,14 @@ $utilizationOptions = [
                         <div class="scope-group" data-index="<?= $gi ?>">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="title" onclick="$(this).toggleClass('open').parent().next('.scope-group-fields').toggleClass('hidden');">
-                                    <?= lang('Sample Collection', 'Probensammlung') ?> <?= $gi + 1 ?>
+                                    <?= lang('common.sample_collection') ?> <?= $gi + 1 ?>
                                 </h3>
                                 <?php if ($gi > 0): ?>
                                     <button type="button"
                                         class="btn small text-danger remove-scope-group"
                                         data-country="<?= e($cid) ?>">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('Remove Sample Collection', 'Probensammlung entfernen') ?>
+                                        <?= lang('projects.remove_sample_collection') ?>
                                     </button>
                                 <?php endif; ?>
                             </div>
@@ -202,17 +199,14 @@ $utilizationOptions = [
                                 <!-- Geographical scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('Geographical scope', 'Geographischer Scope') ?>
+                                        <?= lang('common.geographical_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'geo');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                            <?= lang('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang(
-                                            'Please describe regions, provinces or specific locations where samples were collected in this country.',
-                                            'Bitte Regionen, Provinzen oder konkrete Orte beschreiben, an denen Proben in diesem Land gesammelt wurden.'
-                                        ) ?>
+                                        <?= lang('projects.please_describe_regions_provinces_or_specific_locations_where_samples_were') ?>
                                     </small>
                                     <textarea
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][geo]"
@@ -223,17 +217,14 @@ $utilizationOptions = [
                                 <!-- Temporal scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('Temporal scope', 'Zeitlicher Scope') ?>
+                                        <?= lang('common.temporal_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'temporal');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                            <?= lang('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang(
-                                            'For example: 2018–2020; March 2023; multiple field trips between 2019 and 2022.',
-                                            'Zum Beispiel: 2018–2020; März 2023; mehrere Feldaufenthalte zwischen 2019 und 2022.'
-                                        ) ?>
+                                        <?= lang('projects.for_example_2018_2020_march_2023_multiple_field_trips_between_2019_and_2022') ?>
                                     </small>
                                     <div class="d-flex flex-wrap gap-10 align-items-end">
                                         <div class="mr-10">
@@ -252,7 +243,7 @@ $utilizationOptions = [
                                                     value="1" class="temporal_ongoing"
                                                     <?= !empty($g['temporal_ongoing']) ? 'checked' : '' ?>>
                                                 <span class="ml-5">
-                                                    <?= lang('Ongoing / still collecting samples', 'Laufend / Proben werden noch gesammelt') ?>
+                                                    <?= lang('projects.ongoing_still_collecting_samples') ?>
                                                 </span>
                                             </label>
                                         </div>
@@ -262,17 +253,14 @@ $utilizationOptions = [
                                 <!-- Material scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('Material scope', 'Material-Scope') ?>
+                                        <?= lang('common.material_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'material');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                            <?= lang('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang(
-                                            'Which types of samples are concerned? Please select one or more options. If something is missing, add it as a new term and describe details in the notes.',
-                                            'Welche Probentypen sind betroffen? Bitte eine oder mehrere Optionen wählen. Wenn etwas fehlt, eigenen Begriff hinzufügen und Details bei den Hinweisen ergänzen.'
-                                        ) ?>
+                                        <?= lang('projects.which_types_of_samples_are_concerned_please_select_one_or_more_options_if_s') ?>
                                     </small>
                                     <select
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][material][]"
@@ -302,17 +290,14 @@ $utilizationOptions = [
                                 <!-- Utilization scope -->
                                 <div class="form-group mb-0">
                                     <label class="font-weight-bold required">
-                                        <?= lang('Utilization scope', 'Nutzung / Utilisation-Scope') ?>
+                                        <?= lang('projects.utilization_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'utilization');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('Copy from above', 'Von oben kopieren') ?>
+                                            <?= lang('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang(
-                                            'How will the genetic resources be used? Please select one or more options. For other types of use, add your own terms and describe them in the notes.',
-                                            'Wie werden die genetischen Ressourcen genutzt? Bitte eine oder mehrere Optionen wählen. Für andere Nutzungsarten eigene Begriffe hinzufügen und in den Hinweisen beschreiben.'
-                                        ) ?>
+                                        <?= lang('projects.how_will_the_genetic_resources_be_used_please_select_one_or_more_options_fo') ?>
                                     </small>
                                     <select
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][utilization][]"
@@ -348,7 +333,7 @@ $utilizationOptions = [
                     class="btn primary add-scope-group"
                     data-country="<?= e($cid) ?>">
                     <i class="ph ph-plus"></i>
-                    <?= lang('Add Sample Collection', 'Probensammlung hinzufügen') ?>
+                    <?= lang('projects.add_sample_collection') ?>
                 </button>
 
                 <hr class="my-15">
@@ -356,13 +341,10 @@ $utilizationOptions = [
                 <!-- aTK (country-level) -->
                 <div class="form-group">
                     <label class="font-weight-bold">
-                        <?= lang('Associated traditional knowledge (aTK)', 'Assoziiertes traditionelles Wissen (aTK)') ?>
+                        <?= lang('common.associated_traditional_knowledge_atk') ?>
                     </label>
                     <small class="d-block text-muted mb-5">
-                        <?= lang(
-                            'Associated traditional knowledge (aTK) refers to knowledge, innovation, practices, and technologies developed by Indigenous peoples and local communities (IPLCs) and associated with the genetic resources.',
-                            'Assoziiertes traditionelles Wissen (aTK) bezieht sich auf das Wissen, Innovationen, Praktiken und Technologien, die von indigenen Völkern und lokalen Gemeinschaften (IPLCs) entwickelt wurden und mit den genetischen Ressourcen in Verbindung stehen.'
-                        ) ?>
+                        <?= lang('projects.associated_traditional_knowledge_atk_refers_to_knowledge_innovation_practic') ?>
                     </small>
                     <div class="mb-5">
                         <label class="inline-flex align-items-center">
@@ -373,10 +355,7 @@ $utilizationOptions = [
                                 onchange="$('#atk_details_<?= e($cid) ?>').toggleClass('hidden', !this.checked);"
                                 <?= !empty($scope['atk_used']) ? 'checked' : '' ?>>
                             <span class="ml-5">
-                                <?= lang(
-                                    'Traditional knowledge is involved for this country.',
-                                    'Für dieses Land ist traditionelles Wissen beteiligt.'
-                                ) ?>
+                                <?= lang('projects.traditional_knowledge_is_involved_for_this_country') ?>
                             </span>
                         </label>
                     </div>
@@ -385,17 +364,14 @@ $utilizationOptions = [
                         name="scope[<?= e($cid) ?>][atk_details]"
                         rows="2"
                         class="form-control <?= empty($scope['atk_used']) ? 'hidden' : '' ?>"
-                        placeholder="<?= lang('Please describe source, communities or agreements if applicable.', 'Bitte Quelle, beteiligte Communities oder Vereinbarungen beschreiben, falls zutreffend.') ?>"><?= e($scope['atk_details'] ?? '') ?></textarea>
+                        placeholder="<?= lang('projects.please_describe_source_communities_or_agreements_if_applicable') ?>"><?= e($scope['atk_details'] ?? '') ?></textarea>
                 </div>
 
                 <!-- Optional notes (country-level) -->
                 <div class="form-group">
-                    <label class="font-weight-bold"><?= lang('Additional notes (optional)', 'Weitere Hinweise (optional)') ?></label>
+                    <label class="font-weight-bold"><?= lang('projects.additional_notes_optional') ?></label>
                     <small class="d-block text-muted mb-5">
-                        <?= lang(
-                            'Please indicate any other relevant information on ABS, including explanations for custom materials or utilization types, or ongoing permit processes.',
-                            'Bitte geben Sie alle weiteren relevanten Informationen zu ABS an, einschließlich Erklärungen für eigene Material- oder Nutzungsbegriffe oder laufende Genehmigungsverfahren.'
-                        ) ?>
+                        <?= lang('projects.please_indicate_any_other_relevant_information_on_abs_including_explanation') ?>
                     </small>
                     <textarea
                         name="scope[<?= e($cid) ?>][notes]"
@@ -415,7 +391,7 @@ $utilizationOptions = [
 
         <button type="submit" name="action" value="submit" class="btn success">
             <i class="ph ph-paper-plane-tilt"></i>
-            <?= lang('Submit scope for ABS review', 'Scope-Analyse zur ABS-Prüfung einreichen') ?>
+            <?= lang('common.submit_scope_for_abs_review') ?>
         </button>
     </div>
 </form>
@@ -424,7 +400,7 @@ $utilizationOptions = [
 
     <hr class="my-20">
 
-    <h5><?= lang('Countries without ABS', 'Länder ohne ABS') ?>:</h5>
+    <h5><?= lang('projects.countries_without_abs') ?>:</h5>
     <?php foreach ($out_of_scope as $country): ?>
         <span class="badge bg-white border mr-5 mb-5">
             <i class="ph-duotone ph-globe-stand"></i>
@@ -433,10 +409,7 @@ $utilizationOptions = [
     <?php endforeach; ?>
 
     <p class="text-muted font-size-12">
-        <?= lang(
-            'Countries listed here have been marked as out of scope for ABS compliance. No further details are required.',
-            'Die hier aufgeführten Länder wurden als außerhalb des Geltungsbereichs der ABS-Compliance eingestuft. Es sind keine weiteren Angaben erforderlich.'
-        ) ?>
+        <?= lang('projects.countries_listed_here_have_been_marked_as_out_of_scope_for_abs_compliance_n') ?>
     </p>
 
 <?php } ?>
@@ -516,7 +489,7 @@ $utilizationOptions = [
             $clone.find('.btn.small.hidden').removeClass('hidden');
             // Index hochzählen
             $clone.attr('data-index', next);
-            $clone.find('strong').first().text('<?= lang('Scope block', 'Scope-Block') ?> ' + (next + 1));
+            $clone.find('strong').first().text('<?= lang('projects.scope_block') ?> ' + (next + 1));
 
             // alte Selectize-Controls entfernen
             $clone.find('.selectize-control').remove();
@@ -569,7 +542,7 @@ $utilizationOptions = [
             // Optional: neu durchnummerieren
             $wrap.find('.scope-group').each(function(idx) {
                 $(this).attr('data-index', idx);
-                $(this).find('strong').first().text('<?= lang('Scope block', 'Scope-Block') ?> ' + (idx + 1));
+                $(this).find('strong').first().text('<?= lang('projects.scope_block') ?> ' + (idx + 1));
                 $(this).find('[name]').each(function() {
                     this.name = this.name.replace(/\[groups]\[\d+]/, '[groups][' + idx + ']');
                 });

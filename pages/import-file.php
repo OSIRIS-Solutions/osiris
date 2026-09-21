@@ -38,13 +38,13 @@ use \LibRIS\RISReader;
 <div class="box box-signal">
     <div class="content">
         <h2 class="title">
-            <?= lang('Import activities from file', 'Importiere Aktivitäten aus einer Datei') ?>
+            <?= lang('common.import_activities_from_file') ?>
         </h2>
         <form action="<?= ROOTPATH ?>/crud/import/file" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
             <div class="custom-file mb-20" id="file-input-div" >
                 <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                <label for="file-input"><?= lang('Upload a BibTeX file', 'Lade eine BibTeX-Datei hoch') ?></label>
+                <label for="file-input"><?= lang('common.upload_a_bibtex_file') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>
             </div>
 

@@ -38,7 +38,7 @@ $pageactive = function ($p) use ($page) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= e(currentLanguage()) ?>">
 
 <head>
     <!-- Meta tags -->
@@ -128,6 +128,7 @@ $pageactive = function ($p) use ($page) {
             lengthMenu: [5, 10, 25, 50, 100],
         });
     </script>
+    <?php include BASEPATH . '/php/js_translations.php'; ?>
     <script src="<?= ROOTPATH ?>/js/osiris.js?<?= filemtime(BASEPATH . '/js/osiris.js') ?>"></script>
     <script src="<?= ROOTPATH ?>/js/script.js?<?= filemtime(BASEPATH . '/js/script.js') ?>"></script>
 
@@ -236,12 +237,12 @@ $pageactive = function ($p) use ($page) {
                         <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
 
                         <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
-                            <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
+                            <input type="hidden" name="language" value="<?= currentLanguage() === 'de' ? 'en' : 'de' ?>">
                             <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                             <button type="submit" class="btn primary block ">
                                 <i class="ph ph-translate" aria-hidden="true"></i>
                                 <span class="sr-only"><?= lang('header.change_language') ?></span>
-                                <?= lang('Deutsch', 'English') ?>
+                                <?= currentLanguage() === 'de' ? 'English' : 'Deutsch' ?>
                             </button>
                         </form>
                     </div>

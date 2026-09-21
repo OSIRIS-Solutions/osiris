@@ -20,7 +20,7 @@ foreach ($data as $doc) {
         <br>
         <?php if (isset($doc['id'])) { ?>
             <a href="<?= ROOTPATH ?>/activities/view/<?= $doc['id'] ?>" target="_blank">
-                <?= lang('Review', 'Überprüfen') ?>
+                <?= lang('import.review') ?>
             </a>
         <?php } else { ?>
             <a href="<?= $doc['link'] ?>" target="_blank" rel="noopener noreferrer"><?= $doc['link'] ?></a>

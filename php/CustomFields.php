@@ -229,7 +229,7 @@ class CustomFields
             <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
-                    placeholder="<?= lang('Search Wikidata ...', 'Wikidata durchsuchen ...') ?>">
+                    placeholder="<?= lang('common.search_wikidata') ?>">
 
                 <input type="hidden" name="values[<?= $module ?>][id]" class="wikidata-id" value="<?= $value['id'] ?? '' ?>">
                 <input type="hidden" name="values[<?= $module ?>][label]" class="wikidata-label" value="<?= $value['label'] ?? '' ?>">
@@ -283,7 +283,7 @@ class CustomFields
                         class="list-widget-input"
                         type="text"
                         autocomplete="off"
-                        placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                        placeholder="<?= lang('common.enter_value_and_press_enter') ?>" />
                 </div>
                 <?= $this->render_help($help) ?>
             </div>
@@ -386,7 +386,7 @@ class CustomFields
                 }
                 if ($field['others'] ?? false) {
                     // if nothing was selected but value is not empty, select others
-                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('Others (please specify)', 'Sonstiges (bitte angeben)') . ':</option>';
+                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('common.others_please_specify') . ':</option>';
                     // echo '</select>';
             ?>
             <?php
@@ -429,7 +429,7 @@ class CustomFields
                 }
 
                 .other-input::before {
-                    content: '<?= lang('Other', 'Weiteres') ?>';
+                    content: '<?= lang('common.other_CustomFields') ?>';
                     display: inline-block;
                 }
             </style>

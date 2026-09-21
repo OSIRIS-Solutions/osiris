@@ -72,9 +72,9 @@ $active = function ($field) use ($data_fields) {
 <h3 class="title">
     <?php
     if (empty($form) || !isset($form['_id'])) {
-        echo lang('New Infrastructure', 'Neue Infrastruktur');
+        echo lang('infrastructures.new_infrastructure');
     } else {
-        echo lang('Edit Infrastructure', 'Infrastruktur bearbeiten');
+        echo lang('infrastructures.edit_infrastructure');
     }
     ?>
 </h3>
@@ -87,7 +87,7 @@ $active = function ($field) use ($data_fields) {
             <input type="text" id="id" class="form-control" name="values[id]" required value="<?= uniqid() ?>" placeholder="ID is a required field">
             <label for="id" class="required">ID</label>
             <small class="text-muted">
-                <?= lang('It it recommended to choose something short you can recognize.', 'Es wird empfohlen, etwas Kurzes, Wiedererkennbares zu nehmen.') ?>
+                <?= lang('common.it_it_recommended_to_choose_something_short_you_can_recognize') ?>
             </small>
         <?php } else { ?>
             <small class="font-weight-bold">ID:</small><br>
@@ -98,7 +98,7 @@ $active = function ($field) use ($data_fields) {
     <div class="row row-eq-spacing">
         <div class="col-md-6">
             <label for="start_date" class="required">
-                <?= lang('Start', 'Anfang') ?> <span class="badge kdsf">KDSF-B-13-3</span>
+                <?= lang('common.start_edit') ?> <span class="badge kdsf">KDSF-B-13-3</span>
             </label>
             <input type="date" class="form-control" name="values[start_date]" id="start_date" required value="<?= $form['start_date'] ?? '' ?>">
         </div>
@@ -186,7 +186,7 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('infrastructure_type')) { ?>
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="infrastructure_type" class="required">
-                    <?= lang('Type of infrastructure', 'Art der Infrastruktur') ?>
+                    <?= lang('infrastructures.type_of_infrastructure') ?>
                     <span class="badge kdsf">KDSF-B-13-6</span>
                 </label>
                 <select name="values[infrastructure_type]" id="infrastructure_type" class="form-control" required>
@@ -201,7 +201,7 @@ $active = function ($field) use ($data_fields) {
         <?php if ($active('access')) { ?>
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="access" class="required">
-                    <?= lang('User Access', 'Art des Zugangs') ?>
+                    <?= lang('common.user_access') ?>
                     <span class="badge kdsf">KDSF-B-13-7</span>
                 </label>
                 <select name="values[access]" id="access" class="form-control" required>
@@ -219,7 +219,7 @@ $active = function ($field) use ($data_fields) {
      <?php if ($active('link')) { ?>
     <div class="form-group">
         <label for="link">
-            <?= lang('Website', 'Webseite') ?>
+            <?= lang('infrastructures.website') ?>
         </label>
         <input type="url" class="form-control" name="values[link]" id="link" value="<?= $form['link'] ?? '' ?>">
     </div>
@@ -229,7 +229,7 @@ $active = function ($field) use ($data_fields) {
      <?php if ($active('contact_email')) { ?>
     <div class="form-group">
         <label for="contact_email">
-            <?= lang('Contact Email', 'Kontakt E-Mail') ?>
+            <?= lang('common.contact_email') ?>
         </label>
         <input type="email" class="form-control" name="values[contact_email]" id="contact_email" value="<?= $form['contact_email'] ?? '' ?>">
     </div>
@@ -268,7 +268,7 @@ $active = function ($field) use ($data_fields) {
     <?php if ($active('collaborative')) { ?>
 
         <h5>
-            <?= lang('Collaborative research infrastructure', 'Verbundforschungsinfrastruktur') ?>
+            <?= lang('common.collaborative_research_infrastructure') ?>
         </h5>
 
         <?php
@@ -276,7 +276,7 @@ $active = function ($field) use ($data_fields) {
         ?>
         <div class="form-group">
             <label for="collaborative">
-                <?= lang('Is this a collaborative research infrastructure?', 'Ist dies eine Verbundforschungsinfrastruktur?') ?>
+                <?= lang('infrastructures.is_this_a_collaborative_research_infrastructure') ?>
                 <span class="badge kdsf">KDSF-B-13-12</span>
             </label>
             <div>
@@ -297,14 +297,14 @@ $active = function ($field) use ($data_fields) {
                 ?>
                 <div class="form-group my-10">
                     <label for="collaborators">
-                        <?= lang('Cooperation Partners', 'Ko-Betreiber:innen') ?>
+                        <?= lang('infrastructures.cooperation_partners') ?>
                         <span class="badge kdsf">KDSF-B-13-15</span>
                     </label>
                     <table class="table simple">
                         <thead>
                             <tr>
                                 <th><?= lang('common.name') ?></th>
-                                <th><?= lang('Coordinator', 'Koordinator') ?></th>
+                                <th><?= lang('common.coordinator') ?></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -312,7 +312,7 @@ $active = function ($field) use ($data_fields) {
                             <tr>
                                 <td>
                                     <b><?= $institute_name ?></b><br>
-                                    <small class="text-muted"><?= lang('This is your institute', 'Dies ist dein Institut') ?></small>
+                                    <small class="text-muted"><?= lang('infrastructures.this_is_your_institute') ?></small>
                                 </td>
                                 <td>
                                     <div class="custom-radio">
@@ -351,7 +351,7 @@ $active = function ($field) use ($data_fields) {
                     </table>
 
                     <div class="form-group mt-20 box padded bg-light">
-                        <label for="organization-search"><?= lang('Add Cooperation Partner', 'Ko-Betreiber:innen hinzufügen') ?></label>
+                        <label for="organization-search"><?= lang('infrastructures.add_cooperation_partner') ?></label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
                             <div class="input-group-append">
@@ -412,22 +412,22 @@ $active = function ($field) use ($data_fields) {
 
 
     <h5>
-        <?= lang('Configure Statistics', 'Statistiken konfigurieren') ?>
+        <?= lang('infrastructures.configure_statistics') ?>
     </h5>
 
     <div class="form-group">
 
         <label for="statistic_frequency">
-            <?= lang('How often do you collect statistics?', 'Wie oft erhebst du Statistiken?') ?>
+            <?= lang('infrastructures.how_often_do_you_collect_statistics') ?>
         </label>
         <select name="values[statistic_frequency]" id="statistic_frequency" class="form-control">
-            <option value="annual" <?= sel('statistic_frequency', 'annual') ?>><?= lang('Annual', 'Jährlich') ?></option>
-            <option value="quarterly" <?= sel('statistic_frequency', 'quarterly') ?>><?= lang('Quarterly', 'Vierteljährlich') ?></option>
-            <option value="monthly" <?= sel('statistic_frequency', 'monthly') ?>><?= lang('Monthly', 'Monatlich') ?></option>
-            <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('Irregularly', 'Unregelmäßig') ?></option>
+            <option value="annual" <?= sel('statistic_frequency', 'annual') ?>><?= lang('infrastructures.annual') ?></option>
+            <option value="quarterly" <?= sel('statistic_frequency', 'quarterly') ?>><?= lang('infrastructures.quarterly') ?></option>
+            <option value="monthly" <?= sel('statistic_frequency', 'monthly') ?>><?= lang('common.monthly') ?></option>
+            <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('infrastructures.irregularly') ?></option>
         </select>
         <small class="text-muted">
-            <?= lang('No matter how often you collect statistics, they will always be summed up to annual values for reporting purposes.', 'Egal, wie oft du Statistiken erhebst, sie werden für Berichtszwecke immer auf Jahreswerte aufsummiert.') ?>
+            <?= lang('infrastructures.no_matter_how_often_you_collect_statistics_they_will_always_be_summed_up_to') ?>
         </small>
     </div>
 
@@ -482,7 +482,7 @@ $active = function ($field) use ($data_fields) {
 
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <h5>
-            <?= lang('Portal Settings', 'Portal Einstellungen') ?>
+            <?= lang('common.portal_settings') ?>
         </h5>
 
         <div class="form-group">
@@ -493,7 +493,7 @@ $active = function ($field) use ($data_fields) {
             <div class="custom-checkbox">
                 <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
                 <label for="public">
-                    <?= lang('Show this infrastructure in the public Portfolio', 'Diese Infrastruktur im öffentlichen Portfolio anzeigen') ?>
+                    <?= lang('infrastructures.show_this_infrastructure_in_the_public_portfolio') ?>
                 </label>
             </div>
         </div>

@@ -90,7 +90,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     <?php if ($Settings->hasPermission('infrastructures.edit')) { ?>
         <a href="<?= ROOTPATH ?>/infrastructures/new">
             <i class="ph ph-plus"></i>
-            <?= lang('Add new infrastructure', 'Neue Infrastruktur anlegen') ?>
+            <?= lang('infrastructures.add_new_infrastructure') ?>
         </a>
     <?php } ?>
 </div>
@@ -107,7 +107,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <th><?= lang('common.end_date') ?></th>
                     <th><?= lang('common.category') ?></th>
                     <th><?= lang('common.type') ?></th>
-                    <th><?= lang('Access', 'Zugang') ?></th>
+                    <th><?= lang('infrastructures.access') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                 </tr>
             </thead>
@@ -116,7 +116,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <tr>
                         <td class="d-flex align-items-center">
                             <?php
-                            $Infrastructure->printLogo($infra, "infrastructure-logo", lang('Logo of', 'Logo von') . ' ' . $infra['name']);
+                            $Infrastructure->printLogo($infra, "infrastructure-logo", lang('infrastructures.logo_of') . ' ' . $infra['name']);
                             ?>
                             <div class="position-relative w-full">
                                 <h6 class="m-0">
@@ -169,7 +169,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
         </table>
 
         <?php if (!$Settings->hasPermission('infrastructures.view') && !$Settings->hasPermission('infrastructures.edit')) {
-            echo '<p class="text-muted">' . lang('You only have permission to view your own infrastructures.', 'Du hast nur die Berechtigung, deine eigenen Infrastrukturen zu sehen.') . '</p>';
+            echo '<p class="text-muted">' . lang('infrastructures.you_only_have_permission_to_view_your_own_infrastructures') . '</p>';
         } ?>
 
     </div>
@@ -184,7 +184,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
             <?php if ($active('type')) { ?>
                 <h6>
-                    <?= lang('By category', 'Nach Kategorie') ?>
+                    <?= lang('common.by_category') ?>
                     <a class="float-right" onclick="filterInfra('#filter-category .active', null, 4)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
@@ -208,7 +208,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
             <?php if ($active('infrastructure_type')) { ?>
                 <h6>
-                    <?= lang('By type', 'Nach Typ') ?>
+                    <?= lang('common.by_type_list') ?>
                     <a class="float-right" onclick="filterInfra('#filter-type .active', null, 5)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
@@ -232,7 +232,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
 
             <?php if ($active('access')) { ?>
                 <h6>
-                    <?= lang('By access', 'Nach Zugang') ?>
+                    <?= lang('infrastructures.by_access') ?>
                     <a class="float-right" onclick="filterInfra('#filter-access .active', null, 6)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">

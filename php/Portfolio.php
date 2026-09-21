@@ -321,7 +321,7 @@ class Portfolio extends Settings
             ];
         } else if ($usecase === 'portal') {
             $items[] = [
-                'name' => lang('Portal', 'Portal'),
+                'name' => lang('portal.portal'),
                 'path' => $base . '/info',
             ];
         } else {
@@ -335,7 +335,7 @@ class Portfolio extends Settings
 
                 case 'person':
                     $breadcrumb = [
-                        ['name' => lang('User', 'Personen'), 'path' => "/user/browse"],
+                        ['name' => lang('portal.user'), 'path' => "/user/browse"],
                         ['name' => $name, 'path' => "/profile/$id"],
                     ];
                     break;
@@ -369,7 +369,7 @@ class Portfolio extends Settings
         switch ($type) {
             case 'activity':
                 if ($data['type'] == 'publication') {
-                    $items[] = ['name' => lang('All Publications', "Alle Publikationen"), 'path' => $base . "/publications"];
+                    $items[] = ['name' => lang('portal.all_publications'), 'path' => $base . "/publications"];
                 } else {
                     $items[] = ['name' => lang('common.all_activities'), 'path' => $base . "/activities"];
                 }
@@ -377,12 +377,12 @@ class Portfolio extends Settings
                 break;
 
             case 'person':
-                $items[] = ['name' => lang('All Staff', 'Alle Mitarbeitende'), 'path' => $base . "/persons"];
+                $items[] = ['name' => lang('portal.all_staff'), 'path' => $base . "/persons"];
                 $items[] = ['name' => $data['displayname'] ?? $name, 'path' => $base . "/person/$id"];
                 break;
 
             case 'project':
-                $items[] = ['name' => lang('All Projects', 'Alle Projekte'), 'path' => $base . "/projects"];
+                $items[] = ['name' => lang('portal.all_projects'), 'path' => $base . "/projects"];
                 $items[] = ['name' => $name, 'path' => $base . "/projects/view/$id"];
                 break;
 
@@ -392,7 +392,7 @@ class Portfolio extends Settings
                 break;
 
             case 'infrastructure':
-                $items[] = ['name' => lang('All Infrastructures', 'Alle Infrastrukturen'), 'path' => $base . "/infrastructures"];
+                $items[] = ['name' => lang('portal.all_infrastructures'), 'path' => $base . "/infrastructures"];
                 $items[] = ['name' => $name, 'path' => $base . "/infrastructure/$id"];
                 break;
 

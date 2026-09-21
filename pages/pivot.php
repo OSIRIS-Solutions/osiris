@@ -19,7 +19,7 @@ $mode = $_GET['mode'] ?? 'standard';
 
 <h1>
     <i class="ph-duotone ph-table"></i>
-    <?= lang('Pivot tables and charts', 'Pivot-Tabellen und Diagramme') ?>
+    <?= lang('reports.pivot_tables_and_charts') ?>
     <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
 </h1>
 
@@ -35,10 +35,10 @@ $mode = $_GET['mode'] ?? 'standard';
 
 <div class="pills">
     <a href="?mode=standard" class="btn <?= $mode == 'standard' ? 'active' : '' ?>">
-        <?= lang('Standard', 'Standard') ?>
+        <?= lang('reports.standard') ?>
     </a>
     <a href="?mode=expanded" class="btn <?= $mode == 'expanded' ? 'active' : '' ?>">
-        <?= lang('Expanded', 'Erweitert') ?>
+        <?= lang('reports.expanded') ?>
     </a>
 </div>
 <?php if ($mode == 'standard') { ?>

@@ -24,13 +24,13 @@
                     </ul>
                     <?php if (count($data['authors']) > 10): ?>
                         <a href="#" onclick="$(this).prev().find('li').show(); $(this).remove();">
-                            <?= lang("Show all " . count($data['authors']) . " authors", "Alle " . count($data['authors']) . " Autoren anzeigen"); ?>
+                            <?= lang('portal.show_all_data_authors', replace: ['data' => count($data['authors'])]); ?>
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if (!empty($data['depts'])): ?>
-                    <h3 class="title"><?= lang("Departments", "Abteilungen") ?></h3>
+                    <h3 class="title"><?= lang('search.departments') ?></h3>
                     <p>
                         <?php foreach ($data['depts'] as $deptId => $d): ?>
                             <a href="<?= $base ?>/group/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
@@ -46,14 +46,14 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['connected_activities'])) { ?>
-                    <h3 class="title"><?= lang("Related Activities", "Verknüpfte Aktivitäten"); ?></h3>
+                    <h3 class="title"><?= lang('portal.related_activities_activity'); ?></h3>
                     <table class="table">
                         <tbody>
                             <?php foreach ($data['connected_activities'] as $conn) { ?>
                                 <tr>
                                     <td>
                                        <div class="font-size-16 mb-10">
-                                        <b><?=lang('This', 'Dies')?> <?= lang($conn['relationship']['en'], $conn['relationship']['de'] ?? null); ?></b><br />
+                                        <b><?=lang('portal.this')?> <?= lang($conn['relationship']['en'], $conn['relationship']['de'] ?? null); ?></b><br />
                                        </div>
                                         <div class="d-flex align-items-center">
                                             <div class="w-50">
@@ -93,7 +93,7 @@
 
                 <?php if (!empty($data['infrastructures'])): ?>
                     <h3 class="title">
-                        <?= lang("Associated Infrastructures", "Assoziierte Infrastrukturen"); ?>
+                        <?= lang('portal.associated_infrastructures'); ?>
                     </h3>
                     <div class="cards">
                         <?php foreach ($data['infrastructures'] as $infrastructure): ?>
@@ -110,7 +110,7 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['projects'])): ?>
-                    <h3 class="title"><?= lang("Associated Projects", "Assoziierte Projekte"); ?></h3>
+                    <h3 class="title"><?= lang('portal.associated_projects'); ?></h3>
                     <div class="cards">
                         <?php foreach ($data['projects'] as $project): ?>
                             <div class="card">
@@ -129,7 +129,7 @@
                 <?php endif; ?>
 
 
-                <h3><?= lang("Cite this activity", "Zitiere diese Aktivität"); ?></h3>
+                <h3><?= lang('portal.cite_this_activity'); ?></h3>
                 <nav class="pills">
                     <a class="btn active" onclick="nav('citation')">Citation</a>
                     <?php if (!empty($data['bibtex'])): ?>
@@ -191,10 +191,7 @@
         </div>
 
         <p id="disclaimer" class="text-muted">
-            <?= lang(
-                "The content on this page is maintained by the authors.",
-                "Die Inhalte auf dieser Seite werden von den Autor:innen selbst gepflegt."
-            ); ?>
+            <?= lang('portal.the_content_on_this_page_is_maintained_by_the_authors'); ?>
         </p>
         <script>
             function nav(id) {

@@ -190,24 +190,24 @@ if (isset($news) && isset($news['_id'])) {
 
 <h1>
     <i class="ph-duotone ph-megaphone"></i>
-    <?= isset($news) && isset($news['_id']) ? lang('Edit news item', 'Nachricht bearbeiten') : lang('Create news item', 'Nachricht erstellen') ?>
+    <?= isset($news) && isset($news['_id']) ? lang('news.edit_news_item') : lang('common.create_news_item') ?>
 </h1>
 
 <form action="<?= ROOTPATH ?><?= $form_action ?>" method="post" enctype="multipart/form-data">
     <?php if ($news_lang == 'one') { ?>
         <div class="box padded">
-            <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2 class="title">
+            <h2 class="title"><?= lang('news.news_content') ?></h2 class="title">
             <div class="form-group">
                 <label for="news-title" class="required"><?= lang('common.title') ?></label>
                 <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
-                <label for="news-teaser"><?= lang('Teaser', 'Teaser') ?></label>
+                <label for="news-teaser"><?= lang('news.teaser') ?></label>
                 <textarea name="news[teaser]" id="news-teaser" class="form-control" rows="3"><?= $news['teaser'] ?? '' ?></textarea>
-                <small class="text-muted"><?= lang('Optional short summary that will be shown in the news overview.', 'Optionale kurze Zusammenfassung, die in der Nachrichtenübersicht angezeigt wird.') ?></small>
+                <small class="text-muted"><?= lang('news.optional_short_summary_that_will_be_shown_in_the_news_overview') ?></small>
             </div>
             <div class="form-group mb-0">
-                <label for="content-editor"><?= lang('Content', 'Inhalt') ?></label>
+                <label for="content-editor"><?= lang('common.content') ?></label>
                 <div id="content-editor-quill"><?= $news['content'] ?? '' ?></div>
                 <textarea name="news[content]" id="content-editor" class="d-none" readonly><?= $news['content'] ?? '' ?></textarea>
                 <script>
@@ -227,13 +227,13 @@ if (isset($news) && isset($news['_id'])) {
                     </div>
 
                     <div class="form-group">
-                        <label for="news-teaser"><?= lang('Teaser', 'Teaser') ?></label>
+                        <label for="news-teaser"><?= lang('news.teaser') ?></label>
                         <textarea name="news[teaser]" id="news-teaser" class="form-control" rows="3"><?= $news['teaser'] ?? '' ?></textarea>
-                        <small class="text-muted"><?= lang('Optional short summary that will be shown in the news overview.', 'Optionale kurze Zusammenfassung, die in der Nachrichtenübersicht angezeigt wird.') ?></small>
+                        <small class="text-muted"><?= lang('news.optional_short_summary_that_will_be_shown_in_the_news_overview') ?></small>
                     </div>
 
                     <div class="form-group mb-0">
-                        <label for="content-editor"><?= lang('Content', 'Inhalt') ?></label>
+                        <label for="content-editor"><?= lang('common.content') ?></label>
                         <div id="content-editor-quill"><?= $news['content'] ?? '' ?></div>
                         <textarea name="news[content]" id="content-editor" class="d-none" readonly><?= $news['content'] ?? '' ?></textarea>
                         <script>
@@ -253,13 +253,13 @@ if (isset($news) && isset($news['_id'])) {
                     </div>
 
                     <div class="form-group">
-                        <label for="news-teaser-de"><?= lang('Teaser', 'Teaser') ?></label>
+                        <label for="news-teaser-de"><?= lang('news.teaser') ?></label>
                         <textarea name="news[teaser_de]" id="news-teaser-de" class="form-control" rows="3"><?= $news['teaser_de'] ?? '' ?></textarea>
-                        <small class="text-muted"><?= lang('Optional short summary that will be shown in the news overview.', 'Optionale kurze Zusammenfassung, die in der Nachrichtenübersicht angezeigt wird.') ?></small>
+                        <small class="text-muted"><?= lang('news.optional_short_summary_that_will_be_shown_in_the_news_overview') ?></small>
                     </div>
 
                     <div class="form-group mb-0">
-                        <label for="content_de-editor"><?= lang('Content', 'Inhalt') ?></label>
+                        <label for="content_de-editor"><?= lang('common.content') ?></label>
                         <div id="content_de-editor-quill"><?= $news['content_de'] ?? '' ?></div>
                         <textarea name="news[content_de]" id="content_de-editor" class="d-none" readonly><?= $news['content_de'] ?? '' ?></textarea>
                         <script>
@@ -274,7 +274,7 @@ if (isset($news) && isset($news['_id'])) {
     <!-- add activities -->
 
     <div class="box padded" id="activities">
-        <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title">
+        <h2 class="title"><?= lang('news.connected_people_and_research') ?></h2 class="title">
 
 
         <details class="collapse-panel person-panel" open>
@@ -283,8 +283,8 @@ if (isset($news) && isset($news['_id'])) {
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
-                    <select id="person-select" class="form-control" placeholder="<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>">
-                        <option value=""><?= lang('Please select a person', 'Bitte wähle eine Person aus') ?></option>
+                    <select id="person-select" class="form-control" placeholder="<?= lang('common.please_select_a_person') ?>">
+                        <option value=""><?= lang('common.please_select_a_person') ?></option>
                         <?php
                         $persons = $osiris->persons->find([], ['sort' => ['displayname' => 1], 'projection' => ['_id' => 1, 'displayname' => 1]])->toArray();
                         foreach ($persons as $s) { ?>
@@ -299,7 +299,7 @@ if (isset($news) && isset($news['_id'])) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected people', 'Verknüpfte Personen') ?>:</th>
+                            <th><?= lang('news.connected_people') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -330,12 +330,12 @@ if (isset($news) && isset($news['_id'])) {
                 const personId = $('#person-select').val();
                 const personName = $('#person-select option:selected').text();
                 if (!personId) {
-                    alert('<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>');
+                    alert('<?= lang('common.please_select_a_person') ?>');
                     return;
                 }
                 // Check if the person is already connected.
                 if ($('#person-list').find(`#person-${personId}`).length > 0) {
-                    toastError('<?= lang('This person is already connected', 'Diese Person ist bereits verbunden') ?>');
+                    toastError('<?= lang('news.this_person_is_already_connected') ?>');
                     return;
                 }
                 const row = $('<tr>')
@@ -360,7 +360,7 @@ if (isset($news) && isset($news['_id'])) {
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
-                    <input type="text" id="activity-search" class="form-control" placeholder="<?= lang('Search for an activity', 'Nach einer Aktivität suchen') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
+                    <input type="text" id="activity-search" class="form-control" placeholder="<?= lang('news.search_for_an_activity') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
                     <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('action.search') ?></button>
                 </div>
 
@@ -436,7 +436,7 @@ if (isset($news) && isset($news['_id'])) {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected projects', 'Verknüpfte Projekte') ?>:</th>
+                                <th><?= lang('common.connected_projects') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -468,12 +468,12 @@ if (isset($news) && isset($news['_id'])) {
                     <?php if ($full_permission) { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } else { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only <b>your own</b> projects are shown here. You cannot connect proposals.', 'Bemerkung: nur <b>deine eigenen</b> Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= lang('common.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } ?>
 
@@ -490,7 +490,7 @@ if (isset($news) && isset($news['_id'])) {
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                toastError('<?= lang('common.this_project_is_already_connected') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -535,8 +535,8 @@ if (isset($news) && isset($news['_id'])) {
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="event-select" class="form-control" placeholder="<?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?>">
-                            <option value=""><?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?></option>
+                        <select id="event-select" class="form-control" placeholder="<?= lang('news.please_select_an_event') ?>">
+                            <option value=""><?= lang('news.please_select_an_event') ?></option>
                             <?php
                             foreach ($event_list as $ev) { ?>
                                 <option value="<?= $ev['_id'] ?>">
@@ -555,7 +555,7 @@ if (isset($news) && isset($news['_id'])) {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected events', 'Verknüpfte Veranstaltungen') ?>:</th>
+                                <th><?= lang('news.connected_events') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -591,12 +591,12 @@ if (isset($news) && isset($news['_id'])) {
                             const eventId = $('#event-select').val();
                             const eventName = $('#event-select option:selected').text();
                             if (!eventId) {
-                                alert('<?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?>');
+                                alert('<?= lang('news.please_select_an_event') ?>');
                                 return;
                             }
                             // check if event already exists
                             if ($('#event-list').find(`#event-${eventId}`).length > 0) {
-                                toastError('<?= lang('This event is already connected', 'Diese Veranstaltung ist bereits verbunden') ?>');
+                                toastError('<?= lang('news.this_event_is_already_connected') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -656,7 +656,7 @@ if (isset($news) && isset($news['_id'])) {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected', 'Verknüpfte') ?> <?= $Settings->infrastructureLabel() ?>:</th>
+                                <th><?= lang('common.connected') ?> <?= $Settings->infrastructureLabel() ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -694,7 +694,7 @@ if (isset($news) && isset($news['_id'])) {
                         }
                         // check if infrastructure already exists
                         if ($('#infrastructure-list').find(`input[value="${infraId}"]`).length > 0) {
-                            toastError('<?= lang('This infrastructure is already connected', 'Diese Infrastruktur ist bereits verbunden') ?>');
+                            toastError('<?= lang('common.this_infrastructure_is_already_connected') ?>');
                             return;
                         }
                         row.append(`<td class="w-full">
@@ -722,17 +722,17 @@ if (isset($news) && isset($news['_id'])) {
         <div class="featured-editor mt-20 empty" id="featured-editor">
             <h3 class="featured-title">
                 <i class="ph-duotone ph-star"></i>
-                <?= lang('Featured entity', 'Hervorgehobene Entität') ?>
+                <?= lang('news.featured_entity') ?>
             </h3>
 
             <p class="text-muted mb-10" id="featured-empty-hint">
-                <?= lang('Connect at least one entity before choosing a featured entity.', 'Verknüpfe zuerst mindestens eine Entität, bevor du eine hervorhebst.') ?>
+                <?= lang('news.connect_at_least_one_entity_before_choosing_a_featured_entity') ?>
             </p>
 
             <div class="form-group mb-0">
                 <label for="featured-entity"><?= lang('common.entity') ?></label>
                 <select id="featured-entity" class="form-control" disabled>
-                    <option value=""><?= lang('No featured entity', 'Keine Hervorhebung') ?></option>
+                    <option value=""><?= lang('news.no_featured_entity') ?></option>
                 </select>
                 <input type="hidden" name="news[featured][type]" id="featured-type" value="<?= e($featured['type'] ?? '') ?>">
                 <input type="hidden" name="news[featured][id]" id="featured-id" value="<?= e($featured['id'] ?? '') ?>">
@@ -741,7 +741,7 @@ if (isset($news) && isset($news['_id'])) {
             <div id="featured-text-fields" class="mt-15" style="display:none;">
                 <?php if ($news_lang == 'one') { ?>
                     <div class="form-group mb-0">
-                        <label for="featured-text"><?= lang('Short description', 'Kurzbeschreibung') ?></label>
+                        <label for="featured-text"><?= lang('common.short_description') ?></label>
                         <textarea name="news[featured][text]" id="featured-text" class="form-control" rows="3" maxlength="240"><?= e($featured['text'] ?? '') ?></textarea>
                         <small class="character-count"><span>0</span>/240</small>
                     </div>
@@ -769,7 +769,7 @@ if (isset($news) && isset($news['_id'])) {
 
 
     <div class="box padded">
-        <h2 class="title"><?= lang('Additional options', 'Weitere Optionen') ?></h2 class="title">
+        <h2 class="title"><?= lang('news.additional_options') ?></h2 class="title">
 
         <div class="form-group">
             <label for="type" class="required">
@@ -786,17 +786,17 @@ if (isset($news) && isset($news['_id'])) {
         </div>
 
         <div class="form-group">
-            <label for="news-date" class="required"><?= lang('Publication Date', 'Veröffentlichungsdatum') ?></label>
+            <label for="news-date" class="required"><?= lang('news.publication_date') ?></label>
             <input type="date" name="news[date]" id="news-date" class="form-control w-auto" value="<?= $news['date'] ?? date('Y-m-d') ?>" required>
         </div>
 
         <div class="form-group">
-            <label for="news-visibility" class="required"><?= lang('Visibility', 'Sichtbarkeit') ?></label>
+            <label for="news-visibility" class="required"><?= lang('common.visibility') ?></label>
             <select name="news[visibility]" id="news-visibility" class="form-control w-auto" required>
-                <option value="internal" <?= (isset($news['visibility']) && $news['visibility'] == 'internal') ? 'selected' : '' ?>><?= lang('Internal', 'Intern') ?></option>
-                <option value="public" <?= (isset($news['visibility']) && $news['visibility'] == 'public') ? 'selected' : '' ?>><?= lang('Public', 'Öffentlich') ?></option>
+                <option value="internal" <?= (isset($news['visibility']) && $news['visibility'] == 'internal') ? 'selected' : '' ?>><?= lang('common.internal') ?></option>
+                <option value="public" <?= (isset($news['visibility']) && $news['visibility'] == 'public') ? 'selected' : '' ?>><?= lang('common.public') ?></option>
             </select>
-            <small class="text-muted"><?= lang('Public news will made public via Portfolio if this feature is enabled. Internal news are only visible within OSIRIS.', 'Öffentliche Nachrichten werden über das Portfolio veröffentlicht, wenn diese Funktion aktiviert ist. Interne Nachrichten sind nur innerhalb von OSIRIS sichtbar.') ?></small>
+            <small class="text-muted"><?= lang('news.public_news_will_made_public_via_portfolio_if_this_feature_is_enabled_inter') ?></small>
         </div>
 
         <?php if ($Settings->featureEnabled('topics')) { ?>
@@ -820,12 +820,12 @@ if (isset($news) && isset($news['_id'])) {
         const suggest = section.find('.suggestions');
         suggest.empty().show();
         if (val.length < 3) {
-            suggest.append(`<span class="d-block padded">${lang('Please type at least 3 characters', 'Mindestens 3 Zeichen erforderlich')}</span>`)
+            suggest.append(`<span class="d-block padded">${<?= json_encode(lang('common.please_type_at_least_3_characters'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>`)
             return;
         }
         $.get(ROOTPATH + '/api/activities-suggest/' + encodeURIComponent(val), function(data) {
             if (data.count == 0) {
-                suggest.append(`<span class="d-block padded">${lang('Nothing found', 'Nichts gefunden')}</span>`)
+                suggest.append(`<span class="d-block padded">${<?= json_encode(lang('common.nothing_found'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>`)
                 return;
             }
             data.data.forEach(function(d) {
@@ -838,7 +838,7 @@ if (isset($news) && isset($news['_id'])) {
                     event.preventDefault();
                     const activityId = $(this).data('id').toString();
                     if ($(`#activity-${activityId}`).length > 0) {
-                        toastError('<?= lang('This activity is already connected', 'Diese Aktivität ist bereits verbunden') ?>');
+                        toastError('<?= lang('news.this_activity_is_already_connected') ?>');
                         return;
                     }
 
@@ -901,7 +901,7 @@ if (isset($news) && isset($news['_id'])) {
             });
 
             featuredSelect.empty().append(
-                $('<option>', {value: '', text: <?= json_encode(lang('No featured entity', 'Keine Hervorhebung')) ?>})
+                $('<option>', {value: '', text: <?= json_encode(lang('news.no_featured_entity')) ?>})
             );
 
             Object.keys(typeLabels).forEach(function(type) {

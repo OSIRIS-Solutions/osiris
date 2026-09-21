@@ -62,7 +62,7 @@ if (!$permission) {
         <tfoot>
             <tr id="last-row">
                 <td colspan="2">
-                    <button class="btn small" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus text-success"></i> <?= lang('Add row', 'Zeile hinzufügen') ?></button>
+                    <button class="btn small" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus text-success"></i> <?= lang('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>
@@ -71,8 +71,8 @@ if (!$permission) {
 <?php if (!$permission) { ?>
     
     <p>
-        <?= lang('Note: only infrastructures in which you participate are shown here.', 'Bemerkung: hier werden nur Infrastrukturen gezeigt, an denen du beteiligt bist.') ?>
-        <a href="<?= ROOTPATH ?>/infrastructures" class="link"><?= lang('See all', 'Zeige alle') ?></a>
+        <?= lang('infrastructures.note_only_infrastructures_in_which_you_participate_are_shown_here') ?>
+        <a href="<?= ROOTPATH ?>/infrastructures" class="link"><?= lang('infrastructures.see_all') ?></a>
     </p>
 <?php } ?>
 

@@ -74,14 +74,14 @@ $Vocabulary = new Vocabulary();
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-megaphone"></i>
-        <?= lang('News', 'Nachrichten'); ?>
+        <?= lang('news.news'); ?>
     </h1>
 
     <?php if ($Settings->hasPermission('news.edit')) { ?>
         <div class="btn-toolbar mb-20">
             <a href="<?= ROOTPATH ?>/news/add" class="btn primary">
                 <i class="ph ph-plus"></i>
-                <?= lang('Create news item', 'Nachricht erstellen'); ?>
+                <?= lang('common.create_news_item'); ?>
             </a>
         </div>
     <?php } ?>
@@ -109,10 +109,10 @@ $Vocabulary = new Vocabulary();
                         // if in the future
                         if (strtotime($news['date']) > time()) { ?>
                             <span class="badge signal">
-                                <?= lang('Scheduled', 'Geplant') ?>
+                                <?= lang('news.scheduled') ?>
                             </span>
                         <?php } else { ?>
-                            <?= lang('Published', 'Veröffentlicht'); ?>
+                            <?= lang('news.published'); ?>
                         <?php } ?>
                         <?= lang('common.on') ?>
                         <?= date('d.m.Y', strtotime($news['date'])) ?>
@@ -121,16 +121,16 @@ $Vocabulary = new Vocabulary();
                     <?php if (isset($news['created_by'])) { ?>
                         &#x2219;
                         <span>
-                            <?= lang('by', 'von'); ?>
+                            <?= lang('common.by_documents_manage'); ?>
                             <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
                         </span>
                     <?php } ?>
                     <?php if ($news['visibility'] == 'public') { ?>
                         &#x2219;
-                        <?= lang('Public', 'Öffentlich') ?>
+                        <?= lang('common.public') ?>
                     <?php } elseif ($news['visibility'] == 'internal') { ?>
                         &#x2219;
-                        <?= lang('Internal', 'Intern') ?>
+                        <?= lang('common.internal') ?>
                     <?php } else { ?>
                     <?php } ?>
                 </p>

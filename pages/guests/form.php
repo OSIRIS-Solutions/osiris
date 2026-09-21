@@ -15,7 +15,7 @@
 
     <h1>
         <i class="ph ph-user-circle-plus text-osiris"></i>
-        <?= lang('Guest Forms', 'Gast anmelden') ?>
+        <?= lang('guests.guest_forms') ?>
     </h1>
     <form action="<?= ROOTPATH ?>/guests/save" method="post" class="">
         <p class="text-muted">ID: <?= $id ?></p>
@@ -25,13 +25,13 @@
             <div class="content">
 
                 <h5 class="title">
-                    <?= lang('Details of the stay', 'Details zum Aufenthalt') ?>
-                    <b class="text-danger float-right"><?= lang('provided by the supervisor', 'vom Betreuer auszufüllen') ?></b>
+                    <?= lang('guests.details_of_the_stay') ?>
+                    <b class="text-danger float-right"><?= lang('guests.provided_by_the_supervisor') ?></b>
                 </h5>
 
                 <div class="form-group" data-module="date-range">
                     <label class="required" for="date_start">
-                        <?= lang('Time frame of the stay', 'Dauer des Aufenthalts') ?>
+                        <?= lang('common.time_frame_of_the_stay') ?>
                     </label>
                     <div class="input-group" id="date-range-picker">
                         <div class="input-group-prepend">
@@ -40,7 +40,7 @@
                         <input type="date" class="form-control" name="values[start]" id="date_start" value="<?= valueFromDateArray($form['start'] ?? null) ?>" required>
 
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><?= lang('to', 'bis') ?></span>
+                            <span class="input-group-text"><?= lang('common.to') ?></span>
                         </div>
                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($form['end'] ?? null) ?>" required>
                     </div>
@@ -49,7 +49,7 @@
 
                 <div class="form-group">
                     <label class="required" for="username">
-                        <?= lang('Responsible Scientist at the ' . $Settings->get('affiliation'), 'Verantwortliche/r Wissenschaftler/in von ' . $Settings->get('affiliation')) ?>
+                        <?= lang('guests.responsible_scientist_at_the_affiliation', replace: ['affiliation' => $Settings->get('affiliation')]) ?>
                     </label>
                     <select class="form-control" id="username" name="values[user]" autocomplete="off" required>
                         <?php
@@ -62,7 +62,7 @@
                 <div class="form-group" data-module="title">
                     <div class="lang-<?= lang('common.this_language') ?>">
                         <label for="title" class="required">
-                            <?= lang('Title / Topic / Description', 'Titel / Thema / Beschreibung') ?>
+                            <?= lang('guests.title_topic_description') ?>
                         </label>
 
                         <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
@@ -76,33 +76,33 @@
                 <div class="form-row row-eq-spacing">
 
                     <div class="col-sm">
-                        <label for="category-guest" class="required"><?= lang('Purpose of stay', 'Zweck des Aufenthalts') ?>:</label>
+                        <label for="category-guest" class="required"><?= lang('common.purpose_of_stay') ?>:</label>
                         <select name="values[category]" id="category-guest" class="form-control" required>
                             <option value="">-- bitte ausfüllen --</option>
                             <option value="guest scientist" <?= ($form['category'] ?? '') == 'guest scientist' ? 'selected' : '' ?>>Gastwissenschaftler:in</option>
                             <option value="lecture internship" <?= ($form['category'] ?? '') == 'lecture internship' ? 'selected' : '' ?>>Pflichtpraktikum im Rahmen des Studium</option>
                             <option value="student internship" <?= ($form['category'] ?? '') == 'student internship' ? 'selected' : '' ?>>Schülerpraktikum</option>
-                            <option value="doctoral thesis" <?= ($form['category'] ?? '') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('Doctoral Thesis', 'Doktorarbeit') ?></option>
-                            <option value="master thesis" <?= ($form['category'] ?? '') == 'master thesis' ? 'selected' : '' ?>><?= lang('Master Thesis', 'Master-Arbeit') ?></option>
-                            <option value="bachelor thesis" <?= ($form['category'] ?? '') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('Bachelor Thesis', 'Bachelor-Arbeit') ?></option>
+                            <option value="doctoral thesis" <?= ($form['category'] ?? '') == 'doctoral thesis' ? 'selected' : '' ?>><?= lang('guests.doctoral_thesis') ?></option>
+                            <option value="master thesis" <?= ($form['category'] ?? '') == 'master thesis' ? 'selected' : '' ?>><?= lang('guests.master_thesis') ?></option>
+                            <option value="bachelor thesis" <?= ($form['category'] ?? '') == 'bachelor thesis' ? 'selected' : '' ?>><?= lang('guests.bachelor_thesis') ?></option>
                             <option value="other" <?= ($form['category'] ?? '') == 'other' ? 'selected' : '' ?>>Sonstiges</option>
                         </select>
                     </div>
                     <div class="col-sm">
-                        <label for="guest-payment" class="required"><?= lang('The visit is financed by', 'Die Finanzierung erfolgt') ?>:</label>
+                        <label for="guest-payment" class="required"><?= lang('common.the_visit_is_financed_by') ?>:</label>
                         <select name="values[payment]" id="guest-payment" class="form-control" required>
                             <option value="">-- bitte ausfüllen --</option>
-                            <option value="auf eigene Kosten" <?= ($form['payment'] ?? '') == 'auf eigene Kosten' ? 'selected' : '' ?>><?= lang('myself / my institute', 'auf eigene Kosten') ?></option>
-                            <option value="DSMZ" <?= ($form['payment'] ?? '') == 'DSMZ' ? 'selected' : '' ?>><?= lang('DSMZ', 'durch die DSMZ') ?></option>
-                            <option value="Alexander von Humboldt-Stiftung" <?= ($form['payment'] ?? '') == 'Alexander von Humboldt-Stiftung' ? 'selected' : '' ?>><?= lang('Alexander von Humboldt-Foundation', 'über die Alexander von Humboldt-Stiftung') ?></option>
-                            <option value="DAAD" <?= ($form['payment'] ?? '') == 'DAAD' ? 'selected' : '' ?>><?= lang('DAAD', 'über den DAAD') ?></option>
-                            <option value="sonstiges" <?= ($form['payment'] ?? '') == 'sonstiges' ? 'selected' : '' ?>><?= lang('Others (please comment)', 'Weiteres (bitte begründen)') ?></option>
+                            <option value="auf eigene Kosten" <?= ($form['payment'] ?? '') == 'auf eigene Kosten' ? 'selected' : '' ?>><?= lang('guests.myself_my_institute') ?></option>
+                            <option value="DSMZ" <?= ($form['payment'] ?? '') == 'DSMZ' ? 'selected' : '' ?>><?= lang('guests.dsmz') ?></option>
+                            <option value="Alexander von Humboldt-Stiftung" <?= ($form['payment'] ?? '') == 'Alexander von Humboldt-Stiftung' ? 'selected' : '' ?>><?= lang('guests.alexander_von_humboldt_foundation') ?></option>
+                            <option value="DAAD" <?= ($form['payment'] ?? '') == 'DAAD' ? 'selected' : '' ?>><?= lang('guests.daad') ?></option>
+                            <option value="sonstiges" <?= ($form['payment'] ?? '') == 'sonstiges' ? 'selected' : '' ?>><?= lang('guests.others_please_comment') ?></option>
                         </select>
                     </div>
 
                     <!-- if sonstiges is selected -->
                     <div class="col-sm" id="payment-comment" style="display: <?= ($form['payment'] ?? '') == 'sonstiges' ? 'block' : 'none' ?>">
-                        <label for="payment-comment"><?= lang('Comment', 'Begründung') ?>:</label>
+                        <label for="payment-comment"><?= lang('guests.comment') ?>:</label>
                         <input type="text" class="form-control" name="values[payment_comment]" id="payment-comment" value="<?= $form['payment_comment'] ?? '' ?>">
                     </div>
                     <script>
@@ -125,7 +125,7 @@
             <div class="content">
 
                 <h5 class="title">
-                    <?= lang('Guest information', 'Angaben zum Gast') ?>
+                    <?= lang('guests.guest_information') ?>
                     <span class="text-muted float-right">optional</span>
                 </h5>
 
@@ -150,7 +150,7 @@
                 </div>
                 <div class="row" data-module="person">
                     <div class="col-sm-6">
-                        <label for="guest-birthday" class="element-other"><?= lang('Date of Birth', 'Geburtstag') ?></label>
+                        <label for="guest-birthday" class="element-other"><?= lang('common.date_of_birth') ?></label>
                         <input type="date" class="form-control" name="values[guest][birthday]" id="guest-birthday" value="<?= $form['guest']['birthday'] ?? '' ?>">
                     </div>
                 </div>
@@ -160,7 +160,7 @@
             <div class="content">
 
                 <h5 class="title">
-                    <?= lang('Contact', 'Kontaktinformationen') ?>
+                    <?= lang('guests.contact') ?>
                     <!-- <span class="text-muted float-right">optional</span> -->
                 </h5>
 
@@ -170,12 +170,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guest-mail" class="element-other"><?= lang('E-Mail', 'E-Mail') ?></label>
+                    <label for="guest-mail" class="element-other"><?= lang('common.e_mail') ?></label>
                     <input type="text" class="form-control" name="values[guest][mail]" id="guest-mail" value="<?= $form['guest']['mail'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="guest-accomodation" class="element-other"><?= lang('Accomodation during stay', 'Unterkunftsadresse während des Aufenthalts') ?></label>
+                    <label for="guest-accomodation" class="element-other"><?= lang('common.accomodation_during_stay') ?></label>
                     <input type="text" class="form-control" name="values[guest][accomodation]" id="guest-accomodation" value="<?= $form['guest']['accomodation'] ?? '' ?>">
                 </div>
 
@@ -184,7 +184,7 @@
             <div class="content">
 
                 <h5 class="title">
-                    <?= lang('Company / University', 'Firma / Universität / Schule') ?>
+                    <?= lang('common.company_university') ?>
                     <!-- <span class="text-muted float-right">optional</span> -->
                 </h5>
 
@@ -194,7 +194,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guest-address" class="element-other"><?= lang('Address', 'Anschrift') ?></label>
+                    <label for="guest-address" class="element-other"><?= lang('common.address') ?></label>
                     <input type="text" class="form-control" name="values[affiliation][address]" id="guest-address" value="<?= $form['affiliation']['address'] ?? '' ?>">
                 </div>
 
@@ -208,9 +208,9 @@
         <button type="submit" class="btn secondary">
             <i class="ph ph-user-plus"></i>
             <?php if (empty($form)) {
-                echo lang('Save guest', 'Gast anlegen');
+                echo lang('guests.save_guest');
             } else {
-                echo lang('Save guest', 'Gast speichern');
+                echo lang('guests.save_guest_form');
             } ?>
         </button>
 

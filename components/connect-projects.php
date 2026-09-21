@@ -33,7 +33,7 @@ $project_list = $osiris->projects->find($filter, [
     <table class="table">
         <thead>
             <tr>
-                <th><?= lang('Connected projects', 'Verknüpfte Projekte') ?>:</th>
+                <th><?= lang('common.connected_projects') ?>:</th>
                 <th></th>
             </tr>
         </thead>
@@ -61,7 +61,7 @@ $project_list = $osiris->projects->find($filter, [
         </tbody>
     </table>
 
-    <p class="font-weight-bold"><?= lang('Connect other project', 'Verknüpfe weiteres Projekt') ?>:</p>
+    <p class="font-weight-bold"><?= lang('projects.connect_other_project') ?>:</p>
     <div class="input-group">
         <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
             <option value=""><?= lang('forms.project_select') ?></option>
@@ -71,19 +71,19 @@ $project_list = $osiris->projects->find($filter, [
             <?php } ?>
         </select>
         <div class="input-group-append">
-            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('Add project', 'Projekt hinzuf.') ?></button>
+            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('projects.add_project') ?></button>
         </div>
     </div>
 
     <?php if ($full_permission) { ?>
         <p class="text-muted">
             <i class="ph ph-info"></i>
-            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
         </p>
     <?php } else { ?>
         <p class="text-muted">
             <i class="ph ph-info"></i>
-            <?= lang('Note: only your own projects are shown here. You cannot connect proposals.', 'Bemerkung: nur deine eigenen Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+            <?= lang('projects.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
         </p>
     <?php } ?>
     <button class="btn secondary">
@@ -104,7 +104,7 @@ $project_list = $osiris->projects->find($filter, [
         }
         // check if project already exists
         if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-            toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+            toastError('<?= lang('common.this_project_is_already_connected') ?>');
             return;
         }
         row.append(`<td class="w-full">

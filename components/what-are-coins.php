@@ -4,27 +4,22 @@
 </h2>
 
 <h5>
-    <?= lang('What are coins?', 'Was sind Coins?') ?>
+    <?= lang('activities.what_are_coins') ?>
 </h5>
 <p class="">
-    <?=lang('You receive coins for research activities that you enter in OSIRIS. Your institute determines how many coins you receive for which activities.', 
-    'Ihr bekommt Coins für Forschungsaktivitäten, die ihr in OSIRIS eintragt. Wie viele Coins ihr für welche Aktivitäten bekommt, bestimmt dabei euer Institut.')?>
+    <?=lang('activities.you_receive_coins_for_research_activities_that_you_enter_in_osiris_your_ins')?>
 </p>
 
 <h5>
-    <?= lang('How do I get them?', 'Wie bekomme ich sie?') ?>
+    <?= lang('activities.how_do_i_get_them') ?>
 </h5>
 
 <p>
-    <?= lang(
-        'Very simple: you add scientific activities to OSIRIS. Whenever you publish, present a poster, give a talk, or complete a review, OSIRIS gives you coins for it (as long as you were an author of the ' . $Settings->get('affiliation') . '). If you want to find out how exactly the points are calculated, you hover over the coins of an activity. A tooltip will show you more information. For some activity types your role in the list of authors matters, since middle authors receive only half the amount. Some activity types are also calculated with factors such as the impact factors and SWS.',
-        'Ganz einfach: du fügst wissenschaftliche Aktivitäten zu OSIRIS hinzu. Wann immer du publizierst, ein Poster präsentierst, einen Vortrag hältst, oder ein Review abschließt, bekommst du von OSIRIS dafür Coins (solange du dabei Autor der ' . $Settings->get('affiliation') . ' warst). Wenn du herausfinden möchstest, wie genau sich die Punkte berechnen, kannst du mit dem Cursor auf die Coins einer Aktivität gehen. Ein Tooltip zeigt dir dann mehr Informationen. Bei einigen Aktivitäten spielt es zum Beispiel eine Rolle, auf welcher Position du in der Autorenliste bist. Mittelautoren erhalten nämlich nur die Hälfte der Coins. Bei manchen Aktivitäten kann die Menge an Coins auch mit anderen Faktoren wie dem Impact Factor oder den SWS berechnet werden.'
-    ) ?>
+    <?= lang('activities.very_simple_you_add_scientific_activities_to_osiris_whenever_you_publish_pr', replace: ['affiliation' => $Settings->get('affiliation')]) ?>
 </p>
 
 <p>
-    <?=lang('In the following table you can see an overview of the Coins.', 
-    'In der folgenden Tabelle siehst du eine Übersicht über die Coins.')?>
+    <?=lang('activities.in_the_following_table_you_can_see_an_overview_of_the_coins')?>
 </p>
 
 <table class="table simple small">

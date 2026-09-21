@@ -17,13 +17,13 @@
 
 <h1>
     <i class="ph-duotone ph-highlighter"></i>
-    <?= lang('My Reviews', 'Meine Überprüfungen') ?>
+    <?= lang('workflows.my_reviews') ?>
 </h1>
 
 <div class="">
     <div class="mb-10">
         <div class="input-group">
-            <input id="q" class="form-control" placeholder="<?= lang('Search', 'Suche') ?>">
+            <input id="q" class="form-control" placeholder="<?= lang('common.search') ?>">
             <div class="input-group-append">
                 <button class="btn" id="refresh"><i class="ph ph-arrow-clockwise"></i></button>
             </div>
@@ -32,7 +32,7 @@
 
     <div class="filters mb-10 d-flex align-items-center" style="gap:1rem;">
         <select id="f-category" class="form-control w-auto">
-            <option value=""><?= lang('All categories', 'Alle Kategorien') ?></option>
+            <option value=""><?= lang('workflows.all_categories') ?></option>
             <?php
             $cats = $osiris->adminCategories->find([], ['sort' => ['order' => 1]])->toArray();
             foreach ($cats as $cat) {
@@ -40,8 +40,8 @@
             }
             ?>
         </select>
-        <input type="date" id="f-since" class="form-control w-auto" placeholder="<?= lang('Since', 'Seit') ?>">
-        <label class="w-200 m-0"><input type="checkbox" id="f-scope" class="form-check-input"> <?= lang('Same OU only', 'Nur eigene OU') ?></label>
+        <input type="date" id="f-since" class="form-control w-auto" placeholder="<?= lang('workflows.since') ?>">
+        <label class="w-200 m-0"><input type="checkbox" id="f-scope" class="form-check-input"> <?= lang('workflows.same_ou_only') ?></label>
     </div>
 
     <table class="table" id="review-list">
@@ -57,7 +57,7 @@
     <div class="flex justify-between mt-10">
         <div id="pager"></div>
         <button class="btn success" id="batch-approve" disabled>
-            <i class="ph ph-check"></i> <?= lang('Approve selected', 'Auswahl freigeben') ?>
+            <i class="ph ph-check"></i> <?= lang('workflows.approve_selected') ?>
         </button>
     </div>
 </div>
@@ -89,7 +89,7 @@
         function render() {
             $tb.empty();
             if (!items.length) {
-                $tb.append('<tr><td colspan="7"><em><?= lang('Nothing to review', 'Nichts zu prüfen') ?></em></td></tr>');
+                $tb.append('<tr><td colspan="7"><em><?= lang('workflows.nothing_to_review') ?></em></td></tr>');
                 return;
             }
             for (const it of items) {
@@ -101,7 +101,7 @@
                 <p class="text-muted font-size-12 mb-0 d-flex align-items-center justify-content-between">
                     <span>
                         <b>${lang('common.completed')}</b>: ${it.completed} | 
-                        <b>${lang('Your Step', 'Dein Schritt')}</b>: ${it.step.label}
+                        <b>${<?= json_encode(lang('workflows.your_step'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</b>: ${it.step.label}
                     </span>
 
                     <span class="">
@@ -154,7 +154,7 @@
         $('#batch-approve').on('click', function() {
             const rows = $('.sel:checked').closest('tr').toArray();
             if (!rows.length) return;
-            if (!confirm('<?= lang('Approve all selected?', 'Alle ausgewählten freigeben?') ?>')) return;
+            if (!confirm('<?= lang('workflows.approve_all_selected') ?>')) return;
 
             // naive sequential (einfach halten)
             (async () => {

@@ -9,7 +9,7 @@
 
     <h1>
         <i class="ph-duotone ph-stack"></i>
-        <?= lang('Journal Settings', 'Journal Einstellungen') ?>
+        <?= lang('admin.journal_settings') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
@@ -19,7 +19,7 @@
         ?>
         <div class="box padded">
             <h2 class="title">
-                <?= lang('Label for journals', 'Bezeichnung für Journale') ?>
+                <?= lang('admin.label_for_journals') ?>
             </h2>
             <div class="row row-eq-spacing">
                 <div class="col-md-6 mt-10 mt-md-0">
@@ -36,10 +36,10 @@
         <div class="box padded">
 
             <h2 class="title">
-                <?= lang('Journal Metrics', 'Journal-Metriken') ?>
+                <?= lang('admin.journal_metrics') ?>
             </h2>
             <h3 class="font-size-14">
-                <?= lang('Disable automatic retrieval of journal metrics', 'Verhindere den automatischen Download von Journal-Metriken') ?>
+                <?= lang('admin.disable_automatic_retrieval_of_journal_metrics') ?>
             </h3>
             <?php
             $enabled = $Settings->featureEnabled('no-journal-metrics', false);
@@ -57,11 +57,11 @@
                 </label>
             </div>
             <p class="description">
-                <?= lang('Please note: the metrics are obtained from Scimago and are based on Scopus. If you want to obtain other impact factors and quartiles, you can switch off the automatic import. However, you will then have to maintain the data manually.', 'Bitte beachten: die Metriken werden von Scimago bezogen und richten sich nach Scopus. Wenn ihr andere Impact Faktoren und Quartile beziehen wollt, könnt ihr den automatischen Import ausschalten. Dann müsst ihr die Daten aber händisch pflegen.') ?>
+                <?= lang('admin.please_note_the_metrics_are_obtained_from_scimago_and_are_based_on_scopus_i') ?>
             </p>
 
             <h3 class="font-size-14">
-                <?=lang('Name of the main metrics field', 'Name des Hauptmetriken-Feldes') ?>
+                <?=lang('admin.name_of_the_main_metrics_field') ?>
             </h3>
 
             
@@ -99,7 +99,7 @@
             </h2>
 
             <p class="text-muted">
-                <?= lang('You can add custom fields to journals.', 'Du kannst benutzerdefinierte Felder zu Journalen hinzufügen.') ?>
+                <?= lang('admin.you_can_add_custom_fields_to_journals') ?>
             </p>
 
             <table class="table simple small mb-10">
@@ -107,7 +107,7 @@
                     <tr>
                         <th></th>
                         <th><?= lang('common.active') ?></th>
-                        <th><?= lang('Field name', 'Feldname') ?></th>
+                        <th><?= lang('common.field_name') ?></th>
                     </tr>
                 </thead>
                 <tbody id="data-fields">
@@ -149,7 +149,7 @@
                         <tr>
                             <td colspan="2">
                                 <p class="description">
-                                    <?= lang('No custom fields found.', 'Keine benutzerdefinierten Felder gefunden.') ?>
+                                    <?= lang('admin.no_custom_fields_found') ?>
                                 </p>
                             </td>
                         </tr>

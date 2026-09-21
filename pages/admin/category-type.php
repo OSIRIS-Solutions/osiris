@@ -36,7 +36,7 @@ if (!empty($form) && isset($form['_id'])) {
     $formaction .= "/crud/types/create";
     $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
     $url = ROOTPATH . "/admin/types/*";
-    $title = lang('New category', 'Neue Kategorie');
+    $title = lang('common.new_category');
     $member = 0;
 
     // check if type is the first in the category
@@ -74,12 +74,12 @@ if (!empty($form) && isset($form['_id'])) {
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
+            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
             <p>
-                <?= lang('Each category and each activity type must have a unique ID with which it is linked to an activity.', 'Jede Kategorie und jeder Aktivitätstyp muss eine einzigartige ID haben, mit der er zu einer Aktivität verknüpft wird.') ?>
+                <?= lang('common.each_category_and_each_activity_type_must_have_a_unique_id_with_which_it_is') ?>
             </p>
             <p>
-                <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
+                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="IDLIST">
                 <?php foreach ($osiris->adminTypes->distinct('id') as $k) { ?>
@@ -115,7 +115,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <?php } ?>
 
             <?php } else { ?>
-                <?= lang('New type of activity', 'Neuer Typ von Aktivität') ?>
+                <?= lang('admin.new_type_of_activity') ?>
             <?php } ?>
         </h4>
 
@@ -126,7 +126,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <input type="hidden" name="original_parent" value="<?= $type['parent'] ?>">
             <?php } ?>
 
-            <label for="parent" class="required"><?= lang('Category', 'Übergeordnete Kategorie') ?></label>
+            <label for="parent" class="required"><?= lang('admin.category') ?></label>
             <select name="values[parent]" id="parent" class="form-control" required>
                 <?php foreach ($osiris->adminCategories->find() as $cat) { ?>
                     <option value="<?= $cat['id'] ?>" <?= $type['parent'] == $cat['id'] ? 'selected' : '' ?>><?= lang($cat['name'], $cat['name_de']) ?></option>
@@ -145,7 +145,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <div class="col-sm-2">
                     <label for="id" class="required">ID</label>
                     <input type="text" class="form-control" name="values[id]" required value="<?= e($type['id']) ?>" data-value="<?= e($type['id']) ?>" oninput="sanitizeID(this)">
-                    <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('Must be unqiue', 'Muss einzigartig sein') ?></a></small>
+                    <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('common.must_be_unqiue') ?></a></small>
                 </div>
                 <div class="col-sm-2">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
@@ -185,7 +185,7 @@ if (!empty($form) && isset($form['_id'])) {
                 <div class="custom-checkbox">
                     <input type="checkbox" id="guest-question" value="1" name="values[guests]" <?= ($type['guests'] ?? false) ? 'checked' : '' ?>>
                     <label for="guest-question">
-                        <?= lang('Guests should be registered for this activity', 'Gäste sollen zu dieser Aktivität angemeldet werden können?') ?>
+                        <?= lang('admin.guests_should_be_registered_for_this_activity') ?>
                     </label>
                 </div>
             </div> -->
@@ -200,7 +200,7 @@ if (!empty($form) && isset($form['_id'])) {
                     <div class="custom-checkbox">
                         <input type="checkbox" id="portfolio-question" value="true" name="values[portfolio]" <?= $portfolio ? 'checked' : '' ?>>
                         <label for="portfolio-question">
-                            <?= lang('This type of activity should be visible in OSIRIS Portfolio.', 'Diese Art von Aktivität sollte in OSIRIS Portfolio sichtbar sein.') ?>
+                            <?= lang('admin.this_type_of_activity_should_be_visible_in_osiris_portfolio') ?>
                         </label>
                     </div>
                 </div>
@@ -211,7 +211,7 @@ if (!empty($form) && isset($form['_id'])) {
                     <div class="custom-checkbox">
                         <input type="checkbox" id="topics-question" value="1" name="values[topics-required]" <?= ($type['topics-required'] ?? false) ? 'checked' : '' ?>>
                         <label for="topics-question">
-                            <?= lang('Research Topics are a required field for this activity', 'Forschungsbereiche sind für diese Aktivität ein Pflichtfeld') ?>
+                            <?= lang('admin.research_topics_are_a_required_field_for_this_activity') ?>
                         </label>
                     </div>
                 </div>
@@ -225,7 +225,7 @@ if (!empty($form) && isset($form['_id'])) {
 
             <?php if ($new) { ?>
                 <div class="text-signal">
-                    <?= lang('Data fields can only be edited after saving the type.', 'Datenfelder können erst nach dem erstmaligen Speichern des Typs bearbeitet werden.') ?>
+                    <?= lang('admin.data_fields_can_only_be_edited_after_saving_the_type') ?>
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
@@ -235,7 +235,7 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } ?>
 
             <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
-                <?= lang('Field overview', 'Datenfelder-Übersicht') ?> <i class="ph ph-arrow-square-out ml-5"></i>
+                <?= lang('admin.field_overview') ?> <i class="ph ph-arrow-square-out ml-5"></i>
             </a>
 
             <div id="data-fields">
@@ -283,7 +283,7 @@ if (!empty($form) && isset($form['_id'])) {
                                 $icon = 'ph-paragraph';
                                 break;
                             case 'hr':
-                                $tooltip = lang('Divider', 'Trennlinie');
+                                $tooltip = lang('admin.divider');
                                 $icon = 'ph-minus';
                                 break;
                             case 'heading':
@@ -352,14 +352,14 @@ if (!empty($form) && isset($form['_id'])) {
                 <input type="text" class="form-control" name="values[template][subtitle]" value="<?= e($type['template']['subtitle'] ?? '{authors}') ?>">
             </div>
 
-            <?= lang('How to use templates:', 'Wie man Templates verwendet:') ?>
+            <?= lang('admin.how_to_use_templates') ?>
 
             <a href="<?= ROOTPATH ?>/admin/templates?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 link">
-                <?= lang('Template builder', 'Template-Baukasten') ?>
+                <?= lang('admin.template_builder') ?>
             </a>
 
             <a href="https://wiki.osiris-app.de/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
-                <?= lang('Documentation', 'Dokumentation') ?>
+                <?= lang('common.documentation') ?>
             </a>
             <style>
                 .cheat-sheet {
@@ -371,9 +371,9 @@ if (!empty($form) && isset($form['_id'])) {
                 }
             </style>
 
-            <a onclick="$(this).next().slideToggle();" class="ml-10"><?= lang('Show cheat sheet', 'Zeige die Cheat-Sheet') ?></a>
+            <a onclick="$(this).next().slideToggle();" class="ml-10"><?= lang('admin.show_cheat_sheet') ?></a>
             <div class="cheat-sheet">
-                <strong><?= lang('Available fields:', 'Verfügbare Felder:') ?></strong>
+                <strong><?= lang('admin.available_fields') ?></strong>
                 <ul class="list">
                     <?php
                     $available = array_unique($available);
@@ -383,12 +383,12 @@ if (!empty($form) && isset($form['_id'])) {
                     <?php } ?>
                 </ul>
                 <p>
-                    <?= lang('Please note that this list is not exhaustive, as some fields (e.g. authors) can be displayed with many different templates.', 'Bitte beachten Sie, dass diese Liste nicht vollständig ist, da einige Felder (z.B. Autoren) mit vielen verschiedenen Templates angezeigt werden können.') ?>
+                    <?= lang('admin.please_note_that_this_list_is_not_exhaustive_as_some_fields_e_g_authors_can') ?>
                 </p>
             </div>
             <br>
             <small class="text-muted">
-                * <?= lang('OSIRIS will display a max of 12 people (e.g. authors) in the subtitle, if you do not define the number (et al or ellipses) yourself.', 'OSIRIS zeigt maximal 12 Personen (z.B. Autoren) im Untertitel an, wenn Sie die Anzahl (et al oder Ellipses) nicht selbst definieren.') ?>
+                * <?= lang('admin.osiris_will_display_a_max_of_12_people_e_g_authors_in_the_subtitle_if_you_d') ?>
             </small>
         </div>
 
@@ -400,7 +400,7 @@ if (!empty($form) && isset($form['_id'])) {
             <label for="coins" class="font-weight-bold">Coins:</label>
             <input type="text" class="form-control" name="values[coins]" value="<?= $type['coins'] ?? '0' ?>">
             <span class="text-muted">
-                <?= lang('Please note that <q>middle</q> authors will receive half the amount.', 'Bitte beachten Sie, dass <q>middle</q>-Autoren nur die Hälfte der Coins bekommen.') ?>
+                <?= lang('admin.please_note_that_middle_authors_will_receive_half_the_amount') ?>
             </span>
         </div>
 
@@ -410,10 +410,10 @@ if (!empty($form) && isset($form['_id'])) {
         <div class="content">
             <div class="custom-checkbox mb-10 danger">
                 <input type="checkbox" id="disable-<?= $t ?>-<?= $st ?>" value="true" name="values[disabled]" <?= ($type['disabled'] ?? false) ? 'checked' : '' ?>>
-                <label for="disable-<?= $t ?>-<?= $st ?>"><?= lang('Deactivate', 'Deaktivieren') ?></label>
+                <label for="disable-<?= $t ?>-<?= $st ?>"><?= lang('common.deactivate') ?></label>
             </div>
             <span class="text-muted">
-                <?= lang('Deactivated types are retained for past activities, but no new ones can be added.', 'Deaktivierte Typen bleiben erhalten für vergangene Aktivitäten, es können aber keine neuen hinzugefügt werden.') ?>
+                <?= lang('admin.deactivated_types_are_retained_for_past_activities_but_no_new_ones_can_be_a') ?>
             </span>
         </div>
 
@@ -430,16 +430,16 @@ if (!empty($form) && isset($form['_id'])) {
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
                 <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-                <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
+                <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
             </form>
         </div>
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang("Can't delete type: $member activities associated.", "Kann Typ nicht löschen: $member Aktivitäten zugeordnet.") ?><br>
+            <?= lang('admin.can_t_delete_type_member_activities_associated', replace: ['member' => $member]) ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"subtype":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
-                <?= lang('View activities', 'Aktivitäten zeigen') ?>
+                <?= lang('common.view_activities') ?>
             </a>
 
         </div>
@@ -452,7 +452,7 @@ if (!empty($form) && isset($form['_id'])) {
 <!-- rerender only this type -->
 <a href='<?= ROOTPATH ?>/rerender?subtype=<?= $id ?>' target="_blank" class="text-primary">
     <i class="ph ph-arrow-clockwise"></i>
-    <?= lang('Rerender all activities of this type', 'Alle Aktivitäten dieses Typs neu rendern') ?>
+    <?= lang('admin.rerender_all_activities_of_this_type') ?>
 </a>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>

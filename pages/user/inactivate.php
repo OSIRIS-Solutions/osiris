@@ -24,17 +24,14 @@ if (!$user) {
 ?>
 
 <h1>
-    <?= lang('Inactivate', 'Inaktivieren von') ?>
+    <?= lang('people.inactivate') ?>
     <?= $data['name'] ?>
 </h1>
 
 <form action="<?= ROOTPATH ?>/crud/users/inactivate/<?= $user ?>" method="post">
 
     <p class="text-danger">
-        <?= lang(
-            'Be aware that all personal data will be deleted, except for the name and the username:',
-            'Sei dir bewusst, dass alle persönlichen Daten, abgesehen vom Namen und Nutzernamen gelöscht werden:'
-        ) ?>
+        <?= lang('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
     </p>
 
     <table class="table">
@@ -89,7 +86,7 @@ if (!$user) {
                     <td class="text-danger no-wrap">
                         <?php if ($delete) { ?>
                             <i class="ph ph-trash"></i>
-                            <?= lang('Delete', 'Wird gelöscht') ?>
+                            <?= lang('common.delete') ?>
                         <?php } ?>
 
                     </td>
@@ -105,7 +102,7 @@ if (!$user) {
                     </td>
                     <td class="text-danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('Delete', 'Wird gelöscht') ?>
+                        <?= lang('common.delete') ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -126,13 +123,10 @@ if (!$user) {
     )->toArray();
     if (count($running_projects) > 0) { ?>
         <h5>
-            <?= lang('Running Projects', 'Laufende Projekte') ?>
+            <?= lang('people.running_projects') ?>
         </h5>
         <p>
-            <?= lang(
-                'The user is assigned to the following <b>running projects</b>. Inactivating the user will not remove them from the projects but end the association.',
-                'Die Person ist den folgenden <b>laufenden Projekten</b> zugeordnet. Das Inaktivieren der Person wird sie nicht aus den Projekten entfernen, sondern die Zuordnung beenden.'
-            ) ?>
+            <?= lang('people.the_user_is_assigned_to_the_following_running_projects_inactivating_the_use') ?>
         </p>
         <ul class="list">
             <?php foreach ($running_projects as $project) { ?>
@@ -162,13 +156,10 @@ if (!$user) {
     )->toArray();
     if (count($ongoing_activities) > 0) { ?>
         <h5>
-            <?= lang('Ongoing Activities', 'Laufende Aktivitäten') ?>
+            <?= lang('people.ongoing_activities') ?>
         </h5>
         <p>
-            <?= lang(
-                'The user is involved as only person in the following <b>ongoing activities</b>. Inactivating the user will not remove them from the activities but end the activity.',
-                'Die Person ist an den folgenden <b>laufenden Aktivitäten</b> als einzige Person beteiligt. Das Inaktivieren der Person wird sie nicht aus den Aktivitäten entfernen, sondern die Laufzeit der Aktivität beenden.'
-            ) ?>
+            <?= lang('people.the_user_is_involved_as_only_person_in_the_following_ongoing_activities_ina') ?>
         </p>
         <ul class="list">
             <?php foreach ($ongoing_activities as $activity) { ?>
@@ -195,13 +186,10 @@ if (!$user) {
     )->toArray();
     if (count($ongoing_infrastructures) > 0) { ?>
         <h5>
-            <?= lang('Ongoing Infrastructures', 'Laufende Infrastrukturen') ?>
+            <?= lang('people.ongoing_infrastructures') ?>
         </h5>
         <p>
-            <?= lang(
-                'The user is involved in the following <b>ongoing infrastructures</b>. Inactivating the user will not remove them from the infrastructures but end the association.',
-                'Die Person ist an den folgenden <b>laufenden Infrastrukturen</b> beteiligt. Das Inaktivieren der Person wird sie nicht aus den Infrastrukturen entfernen, sondern die Zuordnung beenden.'
-            ) ?>
+            <?= lang('people.the_user_is_involved_in_the_following_ongoing_infrastructures_inactivating') ?>
         </p>
         <ul class="list">
             <?php foreach ($ongoing_infrastructures as $infrastructure) { ?>
@@ -218,15 +206,12 @@ if (!$user) {
 
 
     <p>
-        <?= lang(
-            'After inactivation, a hint will be displayed in the user profile, indicating that it is an inactive account.',
-            'Nach dem Inaktivieren wird ein Hinweis auf dem Nutzerprofil zu sehen sein, dass es sich um einen inaktiven Benutzeraccount handelt'
-        ) ?>
+        <?= lang('people.after_inactivation_a_hint_will_be_displayed_in_the_user_profile_indicating') ?>
     </p>
 
     <button class="btn danger">
         <i class="ph ph-trash"></i>
-        <?= lang('Inactivate', 'Inaktivieren') ?>
+        <?= lang('people.inactivate_inactivate') ?>
     </button>
 
 </form>

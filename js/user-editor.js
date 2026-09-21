@@ -26,7 +26,7 @@ function addName(evt, el) {
 
 function addResearchInterest(evt) {
     if ($('.research-interest').length >= 5) {
-        toastError(lang('Max. 5 research interests.', 'Maximal 5 Forschungsinteressen können angegeben werden.'));
+        toastError(lang('people.max_5_research_interests'));
         return;
     }
 
@@ -222,7 +222,7 @@ function validateEmail(element) {
     } else if (!regex.test(email)) {
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
-        return [false, lang('Please enter a valid email address.', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.')];
+        return [false, lang('people.please_enter_a_valid_email_address')];
     } else {
         $(element).removeClass('is-invalid');
         $(element).addClass('is-valid');
@@ -240,7 +240,7 @@ function validateTelephone(element) {
     } else if (!regex.test(telephone)) {
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
-        return [false, lang('Please enter a valid telephone number.', 'Bitte geben Sie eine gültige Telefonnummer ein.')];
+        return [false, lang('people.please_enter_a_valid_telephone_number')];
     } else {
         $(element).removeClass('is-invalid');
         $(element).addClass('is-valid');
@@ -307,7 +307,7 @@ function validatePassword(element){
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
     }
-    return [valid, lang('Password does not meet the requirements.', 'Das Passwort erfüllt nicht die Anforderungen.')];
+    return [valid, lang('people.password_does_not_meet_the_requirements')];
 }
 
 function validatePassword2(element){
@@ -321,13 +321,13 @@ function validatePassword2(element){
             return [true, ''];
         }
         else {
-            return [false, lang('Please repeat the password.', 'Bitte wiederholen Sie das Passwort.')];
+            return [false, lang('people.please_repeat_the_password')];
         }
     } else if (password !== password2) {
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
         $('#password2-wrong').show();
-        return [false, lang('Passwords do not match.', 'Die Passwörter stimmen nicht überein.')];
+        return [false, lang('people.passwords_do_not_match')];
     } else {
         $(element).removeClass('is-invalid');
         $(element).addClass('is-valid');
@@ -350,7 +350,7 @@ function validateGoogleScholar(element){
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
         $('#google-scholar-wrong').show();
-        return [false, lang('Google Scholar ID must be 12 characters long and can only contain letters and numbers.', 'Die Google Scholar ID muss 12 Zeichen lang sein und darf nur Buchstaben und Zahlen enthalten.')];
+        return [false, lang('people.google_scholar_id_must_be_12_characters_long_and_can_only_contain_letters_a')];
     } else {
         $(element).removeClass('is-invalid');
         $(element).addClass('is-valid');
@@ -375,7 +375,7 @@ function validateORCID(element) {
         $(element).addClass('is-invalid');
         $(element).removeClass('is-valid');
         $('#orcid-wrong').show();
-        return [false, lang('ORCID must be in the format 0000-0000-0000-0000', 'Die ORCID muss im Format 0000-0000-0000-0000 angegeben werden')];
+        return [false, lang('people.orcid_must_be_in_the_format_0000_0000_0000_0000')];
     } else {
         $(element).removeClass('is-invalid');
         $(element).addClass('is-valid');
@@ -457,28 +457,28 @@ function validateContact(element) {
         if (!emailPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
             $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid email address.', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.')];
+            return [false, lang('people.please_enter_a_valid_email_address')];
         }
     } else if (contactType === 'slack') {
         const slackPattern = /^[a-zA-Z0-9._-]+$/;
         if (!slackPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
             $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid Slack username.', 'Bitte geben Sie einen gültigen Slack-Benutzernamen ein.')];
+            return [false, lang('people.please_enter_a_valid_slack_username')];
         }
     } else if (contactType === 'matrix') {
         const matrixPattern = /^@.+:.+$/;
         if (!matrixPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
             $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid Matrix ID.', 'Bitte geben Sie eine gültige Matrix-ID ein.')];
+            return [false, lang('people.please_enter_a_valid_matrix_id')];
         }
     } else if (contactType === 'other') {
         const urlPattern = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
         if (!urlPattern.test(contactValue)) {
             $(element).toggleClass('is-invalid', true);
             $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid URL.', 'Bitte geben Sie eine gültige URL ein.')];
+            return [false, lang('people.please_enter_a_valid_url')];
         }
     }
 
@@ -506,7 +506,7 @@ function checkNewPassword() {
         return true;
     }
     else if (oldPassword.val() === '') {
-        toastError(lang('Please enter your old password to change your password.', 'Bitte geben Sie Ihr altes Passwort ein, um Ihr Passwort zu ändern.'));
+        toastError(lang('people.please_enter_your_old_password_to_change_your_password'));
         oldPassword.focus();
         oldPassword.addClass('is-invalid');
         return false;

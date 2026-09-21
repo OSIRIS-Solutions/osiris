@@ -65,7 +65,7 @@ function sendMail(
     try {
         $Mailer->send();
     } catch (PHPMailer\PHPMailer\Exception $e) {
-        $return = lang('Mail sending failed.', 'Mail konnte nicht gesendet werden.') . ' ' . $Mailer->ErrorInfo;
+        $return = lang('common.mail_sending_failed') . ' ' . $Mailer->ErrorInfo;
         // Log the error for debugging
         error_log("Mail sending failed: " . $return);
     }

@@ -6,7 +6,7 @@ $action = ROOTPATH . "/crud/conferences/add";
 $btn = lang('action.add_event');
 if (!empty($form ?? []) && isset($form['_id'])) {
     $action = ROOTPATH . "/crud/conferences/update/" . $form['_id'];
-    $btn = lang('Save event', 'Event speichern');
+    $btn = lang('events.save_event');
 }
 ?>
 
@@ -22,22 +22,19 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <blockquote>
         <i class="ph ph-info text-primary"></i>
-        <b><?= lang('Note:', 'Anmerkung:') ?></b>
-        <?= lang(
-            'Here you can create events such as conferences, workshops or other events. These are created centrally and can be viewed by other users. It is then easy to add contributions such as presentations or posters to these events. <b>An event is not an activity!</b> It is not assigned to a person and is not a service in itself. The event is only used for the central administration of events and for linking to contributions.',
-            'Hier kannst du Veranstaltungen, wie Konferenzen, Workshops oder andere Events anlegen. Diese werden zentral angelegt und können von anderen Nutzenden gesehen werden. Es ist danach einfach möglich, Beiträge wie zum Beispiel Vorträge oder Poster zu diesen Veranstaltungen hinzuzufügen. <b>Ein Event ist keine Aktivität!</b> Es wird keiner Person zugeordnet und ist auch an sich keine Leistung. Das Event dient lediglich der zentralen Verwaltung von Veranstaltungen und der Verknüpfung mit Beiträgen.'
-        ) ?>
+        <b><?= lang('common.note') ?></b>
+        <?= lang('events.here_you_can_create_events_such_as_conferences_workshops_or_other_events_th') ?>
     </blockquote>
 
     <form action="<?= $action ?>" method="post" id="conference-form">
 
         <div class="form-group floating-form">
             <input type="text" name="values[title]" required class="form-control" value="<?= e($form['title'] ?? '') ?>" placeholder="title">
-            <label for="title" class="required"><?= lang('(Short) Title', 'Kurztitel') ?></label>
+            <label for="title" class="required"><?= lang('common.short_title') ?></label>
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[title_full]" class="form-control" value="<?= e($form['title_full'] ?? '') ?>" placeholder="title_full">
-            <label for="title"><?= lang('Full Title', 'Kompletter Titel') ?></label>
+            <label for="title"><?= lang('common.full_title') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -84,7 +81,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             </div>
             <div class="col floating-form">
                 <select name="values[country]" class="form-control">
-                    <option value=""><?= lang('Select country', 'Land auswählen') ?></option>
+                    <option value=""><?= lang('common.select_country') ?></option>
                     <?php
                     $c = $form['country'] ?? '';
                     foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
@@ -112,7 +109,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <div class="form-group">
             <b>
-                <?= lang('Portal Settings', 'Portal Einstellungen') ?>
+                <?= lang('common.portal_settings') ?>
             </b>
                 <?php
                 $public = $form['public'] ?? true;
@@ -121,7 +118,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
                 <div class="custom-checkbox">
                     <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
                     <label for="public">
-                        <?= lang('Show this event in the public Portfolio', 'Dieses Event im öffentlichen Portfolio anzeigen') ?>
+                        <?= lang('events.show_this_event_in_the_public_portfolio') ?>
                     </label>
                 </div>
             </div>

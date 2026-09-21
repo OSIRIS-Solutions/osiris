@@ -1,6 +1,6 @@
 
 <h3>
-    <?=lang('Migrating to Version 1.8.0', 'Migriere zur Version 1.8.0')?>
+    <?=lang('admin.migrating_to_version_1_8_0')?>
 </h3>
 
 <p>
@@ -33,15 +33,9 @@ foreach ($projects as $project) {
     $updated++;
 }
 if ($N_ == 0) {
-    echo "<p>" . lang(
-        "No proposals found with grant_years field. No changes made.",
-        "Keine Anträge mit Drittmittel-Einnahmen gefunden. Es wurden keine Änderungen vorgenommen."
-    ) . "</p>";
+    echo "<p>" . lang('admin.no_proposals_found_with_grant_years_field_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang(
-        "Transformed grant_years field for " . $updated . " out of " . $N_ . " proposals.",
-        "Drittmittel-Einnahmen für " . $updated . " von " . $N_ . " Anträgen umgewandelt."
-    ) . "</p>";
+    echo "<p>" . lang('admin.transformed_grant_years_field_for_updated_out_of_n_proposals', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 ?>
@@ -65,7 +59,7 @@ $osiris->adminRights->insertOne([
 
 <p>
     <a href="<?=ROOTPATH?>/migrate/files" class="btn primary">
-        <?=lang('Start File Migration', 'Dateimigration starten')?>
+        <?=lang('admin.start_file_migration')?>
     </a>
 </p>
 

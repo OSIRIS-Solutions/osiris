@@ -6,10 +6,10 @@ Route::get('/nagoya', function () {
     include_once BASEPATH . "/php/Nagoya.php";
 
     if (!$Settings->hasPermission('nagoya.view')) {
-        abortwith(403, lang('You do not have permission to access the Nagoya area.', 'Du hast keine Berechtigung, den Nagoya-Bereich zu sehen.'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(403, lang('projects.you_do_not_have_permission_to_access_the_nagoya_area'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
     $breadcrumb = [
-        ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll')]
+        ['name' => lang('common.nagoya_protocol')]
     ];
 
     // alle Projekte mit nagoya.enabled = true
@@ -134,11 +134,11 @@ Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
     include_once BASEPATH . "/php/Nagoya.php";
 
     if (!$Settings->hasPermission('nagoya.view')) {
-        abortwith(403, lang('You do not have permission to access the Nagoya area.', 'Du hast keine Berechtigung, den Nagoya-Bereich zu sehen.'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(403, lang('projects.you_do_not_have_permission_to_access_the_nagoya_area'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
     $breadcrumb = [
-        ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll'), 'path' => '/nagoya'],
-        ['name' => lang('Country Overview', 'Länderübersicht')]
+        ['name' => lang('common.nagoya_protocol'), 'path' => '/nagoya'],
+        ['name' => lang('projects.country_overview')]
     ];
 
     $code = strtoupper(trim($code));
@@ -236,7 +236,7 @@ Route::get('/nagoya/country/([A-Za-z0-9_-]*)', function ($code) {
 Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('nagoya.view')) {
-        abortwith(403, lang('You do not have permission to access the Nagoya area.', 'Du hast keine Berechtigung, den Nagoya-Bereich zu sehen.'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(403, lang('projects.you_do_not_have_permission_to_access_the_nagoya_area'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);
@@ -251,7 +251,7 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Nagoya Review', 'Nagoya Bewertung')]
+        ['name' => lang('projects.nagoya_review')]
     ];
 
     include BASEPATH . "/header.php";
@@ -277,7 +277,7 @@ Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Edit Nagoya Countries', 'Nagoya-Länder bearbeiten')]
+        ['name' => lang('projects.edit_nagoya_countries')]
     ];
 
     include BASEPATH . "/header.php";
@@ -303,7 +303,7 @@ Route::get('/proposals/nagoya-scope/([A-Za-z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Nagoya Protocol', 'Nagoya-Protokoll')]
+        ['name' => lang('common.nagoya_protocol')]
     ];
 
     include BASEPATH . "/header.php";
@@ -318,7 +318,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Nagoya.php";
 
     if (!$Settings->hasPermission('nagoya.view')) {
-        abortwith(403, lang('You do not have permission to view this Nagoya evaluation.', 'Du hast keine Berechtigung, diese Nagoya-Bewertung zu sehen.'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(403, lang('projects.you_do_not_have_permission_to_view_this_nagoya_evaluation'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
 
     if (DB::is_ObjectID($id)) {
@@ -334,7 +334,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Nagoya Evaluation', 'Nagoya-Bewertung')]
+        ['name' => lang('common.nagoya_evaluation')]
     ];
 
     include BASEPATH . "/header.php";
@@ -361,7 +361,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Nagoya Permits', 'Nagoya-Genehmigungen')]
+        ['name' => lang('projects.nagoya_permits')]
     ];
 
     include BASEPATH . "/header.php";
@@ -403,7 +403,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
         ['name' => $project['name'], 'path' => "/proposals/view/$id"],
-        ['name' => lang('Nagoya Permits', 'Nagoya-Genehmigungen'), 'path' => "/proposals/nagoya-permits/$id"],
+        ['name' => lang('projects.nagoya_permits'), 'path' => "/proposals/nagoya-permits/$id"],
         ['name' => $DB->getCountry($country['code'], lang('common.field_name_language'))]
     ];
 
@@ -424,7 +424,7 @@ Route::post('/crud/nagoya/remove-country/([A-Za-z0-9]*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
-        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
 
     $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
@@ -458,7 +458,7 @@ Route::post('/crud/nagoya/remove-country/([A-Za-z0-9]*)', function ($id) {
     ];
 
     $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya, 'history' => $history]]);
-    $_SESSION['msg'] = lang("Country removed from Nagoya review.", "Land aus Nagoya-Bewertung entfernt.");
+    $_SESSION['msg'] = lang('projects.country_removed_from_nagoya_review');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id");
@@ -469,7 +469,7 @@ Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Nagoya.php";
     $countryCode = $_POST['countryCode'] ?? '';
     if ($countryCode === '') {
-        $_SESSION['msg'] = lang("No country code provided.", "Kein Ländercode angegeben.");
+        $_SESSION['msg'] = lang('projects.no_country_code_provided');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id");
         die;
@@ -479,14 +479,14 @@ Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
-        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
 
     $countries = DB::doc2Arr($project['nagoya']['countries'] ?? []);
     // check if already exists
     foreach ($countries as $c) {
         if (($c['code'] ?? '') === $countryCode) {
-            $_SESSION['msg'] = lang("Country is already added to Nagoya review.", "Land ist bereits zur Nagoya-Bewertung hinzugefügt.");
+            $_SESSION['msg'] = lang('projects.country_is_already_added_to_nagoya_review');
             $_SESSION['msg_type'] = 'error';
             header("Location: " . ROOTPATH . "/proposals/nagoya-countries/$id");
             die;
@@ -517,7 +517,7 @@ Route::post('/crud/nagoya/add-country/([A-Za-z0-9]*)', function ($id) {
     ];
 
     $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya, 'history' => $history]]);
-    $_SESSION['msg'] = lang("Country added to Nagoya review.", "Land zur Nagoya-Bewertung hinzugefügt.");
+    $_SESSION['msg'] = lang('projects.country_added_to_nagoya_review');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-countries-edit/$id");
@@ -528,7 +528,7 @@ Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Nagoya.php";
     if (!$Settings->hasPermission('nagoya.view')) {
-        abortwith(403, lang('You do not have permission to access the Nagoya area.', 'Du hast keine Berechtigung, den Nagoya-Bereich zu sehen.'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(403, lang('projects.you_do_not_have_permission_to_access_the_nagoya_area'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
     $ids      = $_POST['id'] ?? [];
     $nagoyaParty   = $_POST['nagoyaParty'] ?? [];
@@ -540,7 +540,7 @@ Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project) || empty($project['nagoya']['countries'] ?? null)) {
-        $_SESSION['msg'] = lang("Project not found or no Nagoya countries defined.", "Projekt nicht gefunden oder keine Nagoya-Länder definiert.");
+        $_SESSION['msg'] = lang('projects.project_not_found_or_no_nagoya_countries_defined');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/projects/view/$id");
         die;
@@ -587,7 +587,7 @@ Route::post('/crud/nagoya/review-abs-countries/([A-Za-z0-9]*)', function ($id) {
         ];
 
         $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya, 'history' => $history]]);
-        $_SESSION['msg'] = lang("Nagoya review saved.", "Nagoya-Bewertung gespeichert.");
+        $_SESSION['msg'] = lang('projects.nagoya_review_saved');
         $_SESSION['msg_type'] = 'success';
     } else {
         $_SESSION['msg'] = implode("; ", $errors);
@@ -610,7 +610,7 @@ Route::post('/crud/nagoya/notify-researchers', function () {
 
     $nagoya = DB::doc2Arr($project['nagoya']);
     if (($nagoya['status'] ?? 'unknown') !== 'researcher-input' || ($nagoya['review']['researcher-notified'] ?? false)) {
-        $_SESSION['msg'] = lang("Nagoya status is not valid for researcher notification.", "Der Nagoya-Status ist für die Benachrichtigung der Forschenden nicht gültig.");
+        $_SESSION['msg'] = lang('projects.nagoya_status_is_not_valid_for_researcher_notification');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/view/$project_id");
         die;
@@ -636,7 +636,7 @@ Route::post('/crud/nagoya/notify-researchers', function () {
     $nagoya['review']['researcher-notified'] = true;
     $osiris->proposals->updateOne(['_id' => $project['_id']], ['$set' => ['nagoya' => $nagoya]]);
 
-    $_SESSION['msg'] = lang("Researchers have been notified about the completed ABS review.", "Antragstellende wurden über die abgeschlossene ABS-Bewertung benachrichtigt.");
+    $_SESSION['msg'] = lang('projects.researchers_have_been_notified_about_the_completed_abs_review');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/proposals/view/$project_id");
 });
@@ -649,7 +649,7 @@ Route::post('/crud/nagoya/add-abs-scope/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
 
     $nagoya        = DB::doc2Arr($project['nagoya']);
@@ -776,10 +776,7 @@ Route::post('/crud/nagoya/add-abs-scope/([A-Za-z0-9]*)', function ($id) {
                 "/proposals/nagoya-evaluation/" . $id,
             );
         } else {
-            $_SESSION['msg'] = lang(
-                'Scope is not complete yet. Please fill all required fields before submitting.',
-                'Der Scope ist noch nicht vollständig. Bitte alle Pflichtfelder ausfüllen, bevor Sie einreichen.'
-            );
+            $_SESSION['msg'] = lang('projects.scope_is_not_complete_yet_please_fill_all_required_fields_before_submitting');
             $_SESSION['msg_type'] = 'error';
             header("Location: " . ROOTPATH . "/proposals/nagoya-scope/$id");
             exit;
@@ -817,7 +814,7 @@ Route::post('/crud/nagoya/add-abs-scope/([A-Za-z0-9]*)', function ($id) {
         ['$set' => ['nagoya' => $nagoya, 'history' => $history]]
     );
 
-    $_SESSION['msg'] = lang('Scope information saved.', 'Scope-Informationen gespeichert.');
+    $_SESSION['msg'] = lang('projects.scope_information_saved');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-scope/$id#nagoya");
@@ -831,7 +828,7 @@ Route::post('/crud/nagoya/evaluate-abs/([A-Za-z0-9]*)', function ($id) {
 
     // Optional: Permission check
     if (!$Settings->hasPermission('nagoya.view')) {
-        $_SESSION['msg'] = lang('You are not allowed to edit ABS evaluations.', 'Du darfst ABS-Bewertungen nicht bearbeiten.');
+        $_SESSION['msg'] = lang('projects.you_are_not_allowed_to_edit_abs_evaluations');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/view/$id#nagoya");
         exit;
@@ -841,7 +838,7 @@ Route::post('/crud/nagoya/evaluate-abs/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('Go back to proposal', 'Zurück zum Antrag'));
+        abortwith(404, lang('common.proposal'), "/proposals/view/$id", lang('projects.go_back_to_proposal'));
     }
 
     $nagoya      = DB::doc2Arr($project['nagoya']);
@@ -948,7 +945,7 @@ Route::post('/crud/nagoya/evaluate-abs/([A-Za-z0-9]*)', function ($id) {
         ['$set' => ['nagoya' => $nagoya, 'history' => $history]]
     );
 
-    $_SESSION['msg'] = lang('ABS evaluation saved.', 'ABS-Bewertung gespeichert.');
+    $_SESSION['msg'] = lang('projects.abs_evaluation_saved');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-evaluation/$id");
@@ -964,7 +961,7 @@ Route::post('/crud/nagoya/add-permit-note/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null)) {
-        $_SESSION['msg'] = lang('Proposalor nAntrag', 'Projekt nicht gefunden oder keine Nagoya-Informationen.');
+        $_SESSION['msg'] = lang('projects.proposalor_nantrag');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/view/$id");
         exit;
@@ -973,7 +970,7 @@ Route::post('/crud/nagoya/add-permit-note/([A-Za-z0-9]*)', function ($id) {
     $message   = trim($_POST['message'] ?? '');
 
     if ($message === '') {
-        $_SESSION['msg'] = lang('Note is empty.', 'Notiz ist leer.');
+        $_SESSION['msg'] = lang('projects.note_is_empty');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/nagoya-permits/$id?country=" . urlencode($countryId));
         exit;
@@ -1002,7 +999,7 @@ Route::post('/crud/nagoya/add-permit-note/([A-Za-z0-9]*)', function ($id) {
         ['$set' => ['nagoya' => $nagoya]]
     );
 
-    $_SESSION['msg'] = lang('Note added.', 'Notiz hinzugefügt.');
+    $_SESSION['msg'] = lang('projects.note_added');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-permits/$id/" . urlencode($countryId));
@@ -1020,7 +1017,7 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
     $project  = $osiris->proposals->findOne(['_id' => $mongo_id]);
 
     if (empty($project) || empty($project['nagoya'] ?? null) || !$countryId) {
-        $_SESSION['msg'] = lang('Project or country not found.', 'Projekt oder Land nicht gefunden.');
+        $_SESSION['msg'] = lang('projects.project_or_country_not_found');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/view/$id");
         exit;
@@ -1044,7 +1041,7 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
     }
 
     if ($countryIndex === null) {
-        $_SESSION['msg'] = lang('Country not found for this project.', 'Land wurde für dieses Projekt nicht gefunden.');
+        $_SESSION['msg'] = lang('projects.nagoya_country_not_found_for_this_project');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/proposals/view/$id");
         exit;
@@ -1141,7 +1138,7 @@ Route::post('/crud/nagoya/update-permits/([A-Za-z0-9]*)', function ($id) {
         ['$set' => ['nagoya' => $nagoya, 'history' => $history]]
     );
 
-    $_SESSION['msg'] = lang('Permit information saved.', 'Genehmigungsinformationen gespeichert.');
+    $_SESSION['msg'] = lang('projects.permit_information_saved');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/proposals/nagoya-permits/$id/" . urlencode($countryId));

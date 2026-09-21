@@ -28,21 +28,16 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     <div class="align-items-center container d-flex h-full">
         <div class="alert danger mb-20 w-full">
             <h3 class="title">
-                <?= lang('
-                OSIRIS has not been installed yet.', '
-                OSIRIS wurde noch nicht installiert.') ?>
+                <?= lang('common.osiris_has_not_been_installed_yet') ?>
             </h3>
 
             <p>
-                <b><?= lang('Warning', 'Achtung') ?>:</b>
-                <?= lang(
-                    'OSIRIS will be installed and set up automatically. This won\'t take long, but please make sure not to reload or close the page during the process.',
-                    'OSIRIS wird automatisch installiert und eingerichtet. Dies wird nicht lange dauern, aber bitte stelle sicher, dass du die Seite während des Prozesses nicht neu lädst oder schließt.'
-                ) ?>
+                <b><?= lang('common.warning') ?>:</b>
+                <?= lang('common.osiris_will_be_installed_and_set_up_automatically_this_won_t_take_long_but') ?>
             </p>
 
             <a href="<?= ROOTPATH ?>/install" class="btn danger">
-                <?= lang('Install OSIRIS', 'OSIRIS installieren') ?>
+                <?= lang('common.install_osiris') ?>
             </a>
         </div>
     </div>
@@ -86,7 +81,7 @@ $USER = $DB->initUser();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && (empty($USER) || !isset($USER['username']))) {
     $_SESSION['username'] = null;
     $_SESSION['loggedin'] = false;
-    $_SESSION['msg'] = lang('Your session has expired. Please log in again.', 'Deine Sitzung ist abgelaufen. Bitte logge dich erneut ein.');
+    $_SESSION['msg'] = lang('common.your_session_has_expired_please_log_in_again');
     $_SESSION['msg_type'] = "error";
     header("Location: " . ROOTPATH . '/user/login');
     die();

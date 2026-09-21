@@ -45,13 +45,13 @@ function searchActivities(index) {
         }
     })
     if (val.length < 3) {
-        suggest.append(`<span >${lang('Please type at least 3 characters', 'Mindestens 3 Zeichen erforderlich')}</span>`)
+        suggest.append(`<span >${lang('common.please_type_at_least_3_characters')}</span>`)
         return;
     }
     $.get(ROOTPATH+'/api/activities-suggest/' + val+ '?unit='+UNIT, function(data) {
         console.log(data);
         if (data.count == 0) {
-            suggest.append(`<span >${lang('Nothing found', 'Nichts gefunden')}</span>`)
+            suggest.append(`<span >${lang('common.nothing_found')}</span>`)
             return;
         }
         data.data.forEach(function(d) {
@@ -101,8 +101,8 @@ function addResearchrow(evt, parent) {
             </div>
         </div>
     </div>
-    ${lang('Please save once to add more information.', 'Bitte speichere einmal, um weitere Informationen hinzuzufügen.')}<br>
-    <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('Delete', 'Löschen')}</button>
+    ${lang('groups.please_save_once_to_add_more_information')}<br>
+    <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('action.delete')}</button>
 </div>
 
     `;

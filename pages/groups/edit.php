@@ -37,7 +37,7 @@ $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
 $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
 $url = ROOTPATH . "/groups/edit/" . $form['_id'];
-$title = lang('Edit group: ', 'Gruppe bearbeiten: ') . $id;
+$title = lang('common.edit_group') . $id;
 
 $level = $Groups->getLevel($id);
 
@@ -118,7 +118,7 @@ function sel($index, $value)
 <?php if ($form['inactive'] ?? false) { ?>
     <div>
         <span class="badge danger">
-            <?= lang('inactive', 'inaktiv') ?>
+            <?= lang('groups.inactive') ?>
         </span>
     </div>
 <?php } ?>
@@ -131,7 +131,7 @@ function sel($index, $value)
     </a>
     <a onclick="navigate('personnel')" id="btn-personnel" class="btn">
         <i class="ph ph-users" aria-hidden="true"></i>
-        <?= lang('Personnel', 'Personal') ?>
+        <?= lang('groups.personnel') ?>
     </a>
 
     <a onclick="navigate('research-interest')" id="btn-research-interest" class="btn">
@@ -151,7 +151,7 @@ function sel($index, $value)
 
     <section id="general">
 
-        <h3 class=""><?= lang('Name and description', 'Name und Beschreibung') ?></h3>
+        <h3 class=""><?= lang('groups.name_and_description') ?></h3>
         <div class="row row-eq-spacing mb-0">
             <div class="col-md-6">
                 <fieldset>
@@ -201,7 +201,7 @@ function sel($index, $value)
         <fieldset>
             <?php if ($Settings->featureEnabled('portal') && $level != 0) { ?>
                 <h5 class="mt-0">
-                    <?= lang('Visibility on Website', 'Darstellung auf der Webseite') ?>
+                    <?= lang('common.visibility_on_website') ?>
                 </h5>
 
                 <div class="form-group">
@@ -209,7 +209,7 @@ function sel($index, $value)
                     <div class="custom-switch">
                         <input type="checkbox" id="hide-check" <?= val('hide') ? 'checked' : '' ?> name="values[hide]" value="1">
                         <label for="hide-check">
-                            <?= lang('Hide group from public view', 'Gruppe <b>nicht</b> öffentlich anzeigen') ?>
+                            <?= lang('groups.hide_group_from_public_view_edit') ?>
                         </label>
                     </div>
                 </div>
@@ -222,7 +222,7 @@ function sel($index, $value)
                 <div class="custom-switch">
                     <input type="checkbox" id="inactive-check" <?= val('inactive') ? 'checked' : '' ?> name="values[inactive]" value="1">
                     <label for="inactive-check">
-                        <?= lang('Mark group as inactive', 'Gruppe als inaktiv markieren') ?>
+                        <?= lang('groups.mark_group_as_inactive') ?>
                     </label>
                 </div>
             </div>
@@ -230,17 +230,17 @@ function sel($index, $value)
             <div class="row row-eq-spacing mt-0">
                 <div class="col-md-2">
                     <label for="id" class="required">
-                        <?= lang('Acronym', 'Abkürzung') ?>
+                        <?= lang('common.acronym') ?>
                     </label>
                     <input type="text" class="form-control" name="values[id]" id="id" required value="<?= val('id') ?>" maxlength="9">
                 </div>
 
                 <div class="col-sm-5">
                     <label for="parent">
-                        <?= lang('Parent group', 'Übergeordnete Gruppe') ?>
+                        <?= lang('common.parent_group') ?>
                     </label>
                     <select class="form-control" name="values[parent]" id="parent" onchange="deptSelect(this.value)">
-                        <option value="" data-level="99"><?= lang('!!!Attention: No parent group chosen', '!!! Achtung: Keine übergeordnete Gruppe gewählt') ?></option>
+                        <option value="" data-level="99"><?= lang('common.attention_no_parent_group_chosen') ?></option>
                         <?php foreach ($Groups->groups as $d => $dept) { ?>
                             <option value="<?= $d ?>" <?= sel('parent', $d) ?> data-level="<?= $dept['level'] ?? $Groups->getLevel($d) ?>">
                                 <?= $dept['name'] != $d ? "$d: " : '' ?><?= $dept['name'] ?>
@@ -252,35 +252,35 @@ function sel($index, $value)
 
                 <div class="col-sm-5">
                     <label for="unit" class="required">
-                        <?= lang('Type of group', 'Art der Gruppe') ?>
+                        <?= lang('common.type_of_group') ?>
                     </label>
-                    <input type="text" class="form-control" name="values[unit]" id="unit" required value="<?= val('unit') ?>" placeholder="<?= lang('Double click to see suggestions', 'Doppelklick für Vorschläge') ?>" list="unit-list">
+                    <input type="text" class="form-control" name="values[unit]" id="unit" required value="<?= val('unit') ?>" placeholder="<?= lang('common.double_click_to_see_suggestions') ?>" list="unit-list">
                 </div>
 
             </div>
             <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
                 <label for="color" class=""><?= lang('common.color') ?></label>
                 <input type="color" class="form-control w-50" name="values[color]" required value="<?= val('color') ?>">
-                <span><?= lang('Note that only level 1 groups can have a color.', 'Bitte beachte, dass nur Level 1-Gruppen eine eigene Farbe haben können.') ?></span>
+                <span><?= lang('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
             </div>
 
             <!-- synonyms -->
             <div class="form-group">
                 <label for="synonyms">
-                    <?= lang('Synonyms', 'Synonyme') ?>
+                    <?= lang('common.synonyms') ?>
                 </label>
                 <?php
                 $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
                 ?>
 
                 <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= e(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
-                <small class="text-muted"><?= lang('Separate multiple synonyms with semi-colons.', 'Mehrere Synonyme mit Semikolons trennen.') ?></small>
+                <small class="text-muted"><?= lang('groups.separate_multiple_synonyms_with_semi_colons') ?></small>
             </div>
 
             <!-- cost center -->
             <div class="form-group">
                 <label for="costcenter">
-                    <?= lang('Cost Center', 'Kostenstelle') ?>
+                    <?= lang('groups.cost_center') ?>
                 </label>
                 <input type="text" class="form-control" name="values[costcenter]" id="costcenter" value="<?= val('costcenter') ?>">
             </div>
@@ -415,12 +415,12 @@ function sel($index, $value)
 
         </div>
         <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')">
-            <i class="ph ph-plus text-success"></i> <?= lang('Add research interest', 'Forschungsinteresse hinzufügen') ?>
+            <i class="ph ph-plus text-success"></i> <?= lang('groups.add_research_interest') ?>
         </button>
         <br>
 
         <h3>
-            <?= lang('Research Field Classification', 'Forschungsfeldklassifikation') ?>
+            <?= lang('groups.research_field_classification') ?>
         </h3>
         <?php
         include_once BASEPATH . "/components/kdsf-ffk-select.php";
@@ -436,9 +436,9 @@ function sel($index, $value)
 
     <section id="personnel" style="display:none;">
 
-        <h3><?= lang('Staff', 'Personal') ?></h3>
+        <h3><?= lang('common.staff') ?></h3>
         <h5>
-            <?= lang('Head(s)', 'Leitende Person(en)') ?>
+            <?= lang('common.head_s') ?>
         </h5>
         <div class="form-group">
             <!-- save empty -->
@@ -452,7 +452,7 @@ function sel($index, $value)
                         $name = $person['last'] . ', ' . $person['first'];
                         $active = $person['is_active'] ?? true;
                         if (!$active) {
-                            $name .= ' <small class="text-danger">(' . lang('inactive', 'inaktiv') . ')</small>';
+                            $name .= ' <small class="text-danger">(' . lang('groups.inactive') . ')</small>';
                         }
                     ?>
                         <div class='author'>
@@ -466,7 +466,7 @@ function sel($index, $value)
                 <div class="footer">
                     <div class="input-group d-inline-flex w-auto">
                         <select class="head-input form-control" id="head-select">
-                            <option value="" disabled selected><?= lang('Add head ...', 'Füge leitende Person hinzu ...') ?></option>
+                            <option value="" disabled selected><?= lang('common.add_head') ?></option>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) {
@@ -501,7 +501,7 @@ function sel($index, $value)
         <form action="<?= ROOTPATH ?>/crud/groups/delete/<?= $group['_id'] ?>" method="post">
             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/groups">
             <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-            <span class="ml-20"><?= lang('Warning! Cannot be undone.', 'Warnung, kann nicht rückgängig gemacht werden!') ?></span>
+            <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
         </form>
     </div>
 
@@ -509,15 +509,15 @@ function sel($index, $value)
 
 <section id="personnel-2" style="display:none;">
     <h5>
-        <?= lang('Directly associated persons', 'Direkt zugeordnete Personen') ?>
+        <?= lang('groups.directly_associated_persons') ?>
     </h5>
     <p>
-        <?= lang('These persons are directly associated with this group. Persons who belong to a sub-unit are shown in the overview, but are not visible here.', 'Diese Personen sind direkt mit dieser Gruppe verbunden. Personen, die einer Untereinheit angehören, werden in der Übersicht gezeigt, sind hier aber nicht zu sehen.') ?>
+        <?= lang('groups.these_persons_are_directly_associated_with_this_group_persons_who_belong_to') ?>
     </p>
 
     <a class="btn primary" href="#add-person-modal">
         <i class="ph ph-user-plus ph-fw"></i>
-        <?= lang('Add person', 'Person hinzufügen') ?>
+        <?= lang('common.add_person') ?>
     </a>
 
     <table class="table mt-20">
@@ -525,7 +525,7 @@ function sel($index, $value)
             <tr>
                 <th><?= lang('common.name') ?></th>
                 <th><?= lang('common.position') ?></th>
-                <th><?= lang('Since', 'seit') ?></th>
+                <th><?= lang('groups.since') ?></th>
                 <th><?= lang('common.actions') ?></th>
             </tr>
         </thead>
@@ -575,12 +575,12 @@ function sel($index, $value)
                         <?php if ($unit['start'] ?? false) { ?>
                             <?= date('d.m.Y', strtotime($unit['start'])) ?>
                         <?php } else { ?>
-                            <em class="text-muted"><?= lang('undefined', 'undefiniert') ?></em>
+                            <em class="text-muted"><?= lang('groups.undefined') ?></em>
                         <?php } ?>
                     </td>
                     <td>
                         <a href="<?= ROOTPATH ?>/profile/<?= $p['username'] ?>" class="btn small">
-                            <i class="ph ph-eye"></i> <?= lang('View', 'Ansehen') ?>
+                            <i class="ph ph-eye"></i> <?= lang('groups.view') ?>
                         </a>
                         <form action="<?= ROOTPATH ?>/crud/groups/removeperson/<?= $id ?>" method="post" class="d-inline">
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
@@ -591,13 +591,13 @@ function sel($index, $value)
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
                             <?php if ($has_editor_rights) { ?>
 
-                                <button class="btn muted small" disabled><i class="ph ph-shield-check"></i> <?= lang('Has admin rights', 'Hat Admin-Rechte') ?></button>
+                                <button class="btn muted small" disabled><i class="ph ph-shield-check"></i> <?= lang('groups.has_admin_rights') ?></button>
                             <?php } elseif ($unit['editor'] ?? false) { ?>
                                 <input type="hidden" name="action" value="remove">
-                                <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?></button>
+                                <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('groups.editor_rights') ?></button>
                             <?php } else { ?>
                                 <input type="hidden" name="action" value="add">
-                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('Editor rights', 'Editor-Rechte') ?>*</button>
+                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('groups.editor_rights') ?>*</button>
                             <?php } ?>
                         </form>
                     </td>
@@ -607,7 +607,7 @@ function sel($index, $value)
     </table>
 
     <small class="text-muted">
-        * <?= lang('Persons with editor rights can edit the group details, and add/remove other persons.', 'Personen mit Editor-Rechten können die Gruppendetails bearbeiten und andere Personen hinzufügen/entfernen.') ?>
+        * <?= lang('groups.persons_with_editor_rights_can_edit_the_group_details_and_add_remove_other') ?>
     </small>
 
 </section>
@@ -636,7 +636,7 @@ function sel($index, $value)
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2><?= lang('Add person', 'Person hinzufügen') ?></h2>
+            <h2><?= lang('common.add_person') ?></h2>
             <form action="<?= ROOTPATH ?>/crud/groups/addperson/<?= $id ?>" method="post">
 
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/groups/edit/<?= $id ?>#section-personnel">
@@ -645,7 +645,7 @@ function sel($index, $value)
                     <label for="person-username"><?= lang('common.person') ?></label>
                     <!-- select for distinct user names from DB -->
                     <select name="username" id="person-username" class="form-control" required>
-                        <option value="" disabled selected><?= lang('Select person', 'Person auswählen') ?></option>
+                        <option value="" disabled selected><?= lang('groups.select_person') ?></option>
                         <?php foreach ($osiris->persons->find(['is_active' => ['$ne' => false], 'units.unit' => ['$ne' => $id]], ['sort' => ['last' => 1]]) as $person) { ?>
                             <option value="<?= $person['username'] ?>"><?= $person['last'] . ', ' . $person['first'] ?></option>
                         <?php } ?>
@@ -661,7 +661,7 @@ function sel($index, $value)
                 </div>
 
                 <div class="form-group">
-                    <label for="scientific"><?= lang('Scientific', 'Wissenschaftlich') ?></label>
+                    <label for="scientific"><?= lang('common.scientific') ?></label>
                     <select class="form-control" id="scientific" name="scientific">
                         <option value="1"><?= lang('common.yes') ?></option>
                         <option value="0"><?= lang('common.no') ?></option>
@@ -670,13 +670,13 @@ function sel($index, $value)
 
                 <div id="person-affiliated" style="display: none;">
                     <p>
-                        <?= lang('This person is currently affiliated with the following units without end date:', 'Diese Person ist zurzeit zu folgenden Einheiten zugehörig (bei denen kein Enddatum angegeben ist):') ?>
+                        <?= lang('groups.this_person_is_currently_affiliated_with_the_following_units_without_end_da') ?>
                     </p>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th><?= lang('common.unit') ?></th>
-                                <th><?= lang('Since', 'seit') ?></th>
+                                <th><?= lang('groups.since') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -684,7 +684,7 @@ function sel($index, $value)
                     </table>
 
                     <p>
-                        <?= lang('Should the existing unit be retained or terminated?', 'Soll die vorhandene Einheit beibehalten oder beendet werden?') ?>
+                        <?= lang('groups.should_the_existing_unit_be_retained_or_terminated') ?>
                     </p>
 
                     <div class="form-group">
@@ -692,7 +692,7 @@ function sel($index, $value)
                             <input type="radio" name="change-or-add" id="person-add" value="add" checked="checked">
                             <label for="person-add">
                                 <b><?= lang('action.add') ?>:</b>
-                                <?= lang('Add this unit as additional unit and keep other units unchanged.', 'Füge diese Einheit der Person zusätzlich hinzu und behalte die vorhandenen Einheiten ungeändert.') ?>
+                                <?= lang('groups.add_this_unit_as_additional_unit_and_keep_other_units_unchanged') ?>
                             </label>
                         </div>
                     </div>
@@ -701,12 +701,12 @@ function sel($index, $value)
                         <div class="custom-radio">
                             <input type="radio" name="change-or-add" id="person-change" value="change">
                             <label for="person-change">
-                                <b><?= lang('Change', 'Wechseln') ?>:</b>
-                                <?= lang('Terminate existing units and add this unit as new.', 'Beende bestehende Einheiten und füge diese Einheit als neue hinzu.') ?>
+                                <b><?= lang('groups.change') ?>:</b>
+                                <?= lang('groups.terminate_existing_units_and_add_this_unit_as_new') ?>
                             </label>
                             <br>
                             <small class="text-danger" id="person-change-warning">
-                                <?= lang('Only possible when a starting date is set.', 'Nur möglich, wenn ein Anfangsdatum ausgewählt ist.') ?>
+                                <?= lang('groups.only_possible_when_a_starting_date_is_set') ?>
                             </small>
                         </div>
                     </div>

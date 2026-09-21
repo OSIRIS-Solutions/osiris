@@ -16,7 +16,7 @@
 Route::get('/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Visualisation', 'Visualisierung')]
+        ['name' => lang('search.visualisation')]
     ];
     // include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -26,18 +26,18 @@ Route::get('/visualize', function () {
 
 Route::get('/visualize/(\w*)', function ($page) {
     $names = [
-        "coauthors" => lang('Coauthor network', 'Koautoren-Netzwerk'),
-        "sunburst" => lang('Department overview', 'Abteilungs-Übersicht'),
-        "departments" => lang('Department network', 'Abteilungs-netzwerk'),
+        "coauthors" => lang('common.coauthor_network'),
+        "sunburst" => lang('common.department_overview'),
+        "departments" => lang('search.department_network'),
         "openaccess" => lang('Open Access'),
         "wordcloud" => lang('Word cloud'),
-        "map" => lang('Map', 'Karte'),
+        "map" => lang('common.map'),
     ];
     if (!array_key_exists($page, $names)) {
         die("404");
     }
     $breadcrumb = [
-        ['name' => lang('Visualisation', 'Visualisierung'), 'path' => "/visualize"],
+        ['name' => lang('search.visualisation'), 'path' => "/visualize"],
         ['name' => $names[$page]]
     ];
     include_once BASEPATH . "/php/init.php";
@@ -49,7 +49,7 @@ Route::get('/visualize/(\w*)', function ($page) {
 
 Route::get('/dashboard', function () {
     $breadcrumb = [
-        ['name' => lang('Dashboard')]
+        ['name' => lang('common.dashboard')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -62,7 +62,7 @@ Route::get('/dashboard', function () {
         include BASEPATH . "/pages/dashboard-controlling.php";
         include BASEPATH . "/pages/dashboard-scientist.php";
     } else {
-        echo '<h1 class="m-0">' . lang('Scientist', 'Wissenschaftler') . '-Dashboard</h1>';
+        echo '<h1 class="m-0">' . lang('search.scientist') . '-Dashboard</h1>';
         include BASEPATH . "/pages/dashboard-scientist.php";
     }
     include BASEPATH . "/footer.php";
@@ -72,7 +72,7 @@ Route::get('/dashboard', function () {
 Route::get('/pivot', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('Pivot Table', 'Pivot-Tabelle')]
+        ['name' => lang('search.pivot_table')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/pivot.php";

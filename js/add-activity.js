@@ -60,7 +60,7 @@ function togglePubType(type, callback = () => { }) {
             SELECTED_TYPE = data.type;
             console.log(SELECTED_TYPE)
             if (SELECTED_CAT === null || SELECTED_TYPE === null) {
-                toastWarning(lang("The type of this activity could not be found automatically. Please select the correct type manually.", "Der Typ dieser Aktivität konnte nicht automatisch ermittelt werden. Bitte wähle den korrekten Typ manuell aus."));
+                toastWarning(lang('activities.the_type_of_this_activity_could_not_be_found_automatically_please_select_th'));
                 return;
             }
 
@@ -274,7 +274,7 @@ function addAuthor(event, editor = false) {
 
         // check if author is empty
         if (data.trim() === '' || data.trim() === ',') {
-            toastError(lang('Author name cannot be empty.', 'Der Autorenname darf nicht leer sein.'));
+            toastError(lang('activities.author_name_cannot_be_empty'));
             return;
         }
         const match = (SCIENTISTS.indexOf(data) != -1)
@@ -282,10 +282,7 @@ function addAuthor(event, editor = false) {
         // console.log(data);
         if (value.length !== 2) {
             toastError(
-                lang(
-                    'Author name must be formatted like this: Lastname, Firstname. The Firstname can be empty but the comma is required.',
-                    'Der Autorenname muss folgendermassen formatiert sein: Nachname, Vorname. Der Vorname kann leer sein, das Komma wird jedoch benötigt.'
-                )
+                lang('activities.author_name_must_be_formatted_like_this_lastname_firstname_the_firstname_ca')
             )
             return;
         }
@@ -455,13 +452,13 @@ function verifyForm(event, form) {
     event.preventDefault()
 
     if (errors_invalid.length > 0) {
-        var msg = lang('The following fields are invalid: ', 'Die folgenden Felder sind ungültig: ');
+        var msg = lang('activities.the_following_fields_are_invalid');
         msg += errors_invalid.join(', ')
         toastError(msg)
     }
 
     if (errors_empty.length > 0) {
-        var msg = lang('The following fields cannot be empty: ', 'Die folgenden Felder dürfen nicht leer sein: ');
+        var msg = lang('activities.the_following_fields_cannot_be_empty');
         msg += errors_empty.join(', ')
         toastError(msg)
     }
@@ -491,7 +488,7 @@ function loadDrafts() {
             $('#drafts-modal #content').html(response)
         },
         error: function (response) {
-            $('#drafts-modal #content').html('<p>' + lang('Error loading drafts', 'Fehler beim Laden der Entwürfe') + '</p>')
+            $('#drafts-modal #content').html('<p>' + lang('activities.error_loading_drafts') + '</p>')
         }
     })
 }
@@ -523,8 +520,8 @@ function getTeaching(name) {
                 })
             });
             if (teaching.length === 0) {
-                SUGGEST.append('<tr><td colspan="3">' + lang('Module not found in OSIRIS.', 'Modul nicht in OSIRIS gefunden.') + '</tr></td>')
-                SUGGEST.append('<tr><td colspan="3"><a href="' + ROOTPATH + '/teaching#add-teaching" class="btn osiris">' + lang('Add new module', 'Neues Modul anlegen') + '</a></tr></td>')
+                SUGGEST.append('<tr><td colspan="3">' + lang('activities.module_not_found_in_osiris') + '</tr></td>')
+                SUGGEST.append('<tr><td colspan="3"><a href="' + ROOTPATH + '/teaching#add-teaching" class="btn osiris">' + lang('activities.add_new_module') + '</a></tr></td>')
                 window.location.replace('#teaching-select')
             } else {
                 teaching.forEach((j) => {
@@ -547,7 +544,7 @@ function getTeaching(name) {
                 })
                 if (teaching.length === 1) {
                     selectTeaching(teaching[0])
-                    toastSuccess(lang('Module <code class="code">' + teaching[0].title + '</code> selected.', 'Modul <code class="code">' + teaching[0].title + '</code> ausgewählt.'), lang('Module found', 'Modul gefunden'))
+                    toastSuccess(lang('Module <code class="code">' + teaching[0].title + '</code> selected.', 'Modul <code class="code">' + teaching[0].title + '</code> ausgewählt.'), lang('activities.module_found'))
                 } else {
                     window.location.replace('#teaching-select')
                 }
@@ -610,7 +607,7 @@ function doubletCheck() {
                 $('.loader').removeClass('show')
                 if (!doubletFound) {
                     doubletFound = true;
-                    // toastWarning(lang('Possible douplicate found.', 'Mögliche Dublette gefunden.'))
+                    // toastWarning(lang('activities.possible_douplicate_found'))
                 }
 
             } else {
@@ -713,7 +710,7 @@ function getJournal(name) {
                 })
             });
             if (journals.length === 0) {
-                SUGGEST.append('<tr><td colspan="3">' + lang('Journal not found in OSIRIS. Starting search in OpenAlex ...', 'Journal nicht in OSIRIS gefunden. Starte Suche im OpenAlex-Katalog ...') + '</tr></td>')
+                SUGGEST.append('<tr><td colspan="3">' + lang('activities.journal_not_found_in_osiris_starting_search_in_openalex') + '</tr></td>')
                 getJournalAlex(name)
                 window.location.replace('#journal-select')
             } else {
@@ -738,14 +735,14 @@ function getJournal(name) {
                 })
                 if (journals.length === 1) {
                     selectJournal(journals[0])
-                    toastSuccess(lang('Journal <code class="code">' + journals[0].journal + '</code> selected.', 'Journal <code class="code">' + journals[0].journal + '</code> ausgewählt.'), lang('Journal found', 'Journal gefunden'))
+                    toastSuccess(lang('Journal <code class="code">' + journals[0].journal + '</code> selected.', 'Journal <code class="code">' + journals[0].journal + '</code> ausgewählt.'), lang('activities.journal_found'))
                 } else {
                     window.location.replace('#journal-select')
                 }
             }
             var row = $('<tr>')
             var button = $('<button class="btn">')
-            button.html(lang('Search in OpenAlex Catalog', 'Suche im OpenAlex-Katalog'))
+            button.html(lang('activities.search_in_openalex_catalog'))
             button.on('click', function () {
                 getJournalAlex(name)
             })
@@ -887,7 +884,7 @@ function getJournalAlex(name) {
                 SUGGEST.append(row)
             })
             if (journals.length === 0) {
-                SUGGEST.append('<tr><td>' + lang('Journal not found in OpenAlex. Maybe you want to add a magazine article?', 'Journal nicht in OpenAlex gefunden. Wolltest du vielleicht einen Magazin-Artikel hinzufügen?') + '</tr></td>')
+                SUGGEST.append('<tr><td>' + lang('activities.journal_not_found_in_openalex_maybe_you_want_to_add_a_magazine_article') + '</tr></td>')
             }
 
             // console.log(journals);
@@ -978,7 +975,7 @@ function getJournalNLM(name) {
                         SUGGEST.append(row)
                     })
                     if (journals.length === 0) {
-                        SUGGEST.append('<tr><td>' + lang('Journal not found in NLM. Maybe you want to add a magazine article?', 'Journal nicht in NLM gefunden. Wolltest du vielleicht einen Magazin-Artikel hinzufügen?') + '</tr></td>')
+                        SUGGEST.append('<tr><td>' + lang('activities.journal_not_found_in_nlm_maybe_you_want_to_add_a_magazine_article') + '</tr></td>')
                     }
 
                     // console.log(journals);
@@ -1216,7 +1213,7 @@ function getDOI(doi) {
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning(lang('DOI was not found in CrossRef. I am looking in DataCite now.', 'DOI wurde nicht in CrossRef gefunden. Ich suche jetzt in DataCite.'))
+            toastWarning(lang('activities.doi_was_not_found_in_crossref_i_am_looking_in_datacite_now'))
             getDataciteDOI(doi)
         }
     })
@@ -1320,7 +1317,7 @@ function getOpenAlexDOI(doi) {
         error: function (response) {
             // toastError(response.responseText)
             $('.loader').removeClass('show')
-            toastWarning(lang('DOI was not found in OpenAlex. I am looking in DataCite now.', 'DOI wurde nicht in OpenAlex gefunden. Ich suche jetzt in DataCite.'))
+            toastWarning(lang('activities.doi_was_not_found_in_openalex_i_am_looking_in_datacite_now'))
             getDataciteDOI(doi)
         }
     })
@@ -1584,7 +1581,7 @@ function fillForm(pub) {
     //     funder
     // }
 
-    toastSuccess(lang('Publication data was successfully loaded.', 'Publikationsdaten wurden erfolgreich geladen.'))
+    toastSuccess(lang('activities.publication_data_was_successfully_loaded'))
 
 }
 
@@ -1666,7 +1663,7 @@ function selectEvent(id, event, start, end, location, country) {
     $('#country').val(country).addClass('is-valid')
 
 
-    $('#connected-conference').html(lang('Connected to ', 'Verknüpft mit ') + event)
+    $('#connected-conference').html(lang('activities.connected_to') + event)
 
     if ($('#event-select-dropdown').length > 0) {
         $('#event-select-dropdown').removeClass('show')
@@ -1704,7 +1701,7 @@ function addEvent() {
         }
     });
     if (!valid) {
-        toastWarning(lang('Please fill out all required fields.', 'Bitte füllen Sie alle Pflichtfelder aus.'))
+        toastWarning(lang('activities.please_fill_out_all_required_fields'))
         return;
     }
 
@@ -1732,7 +1729,7 @@ function addEvent() {
                 toastWarning(response.msg)
                 return;
             } else {
-                toastSuccess(lang('Event added successfully.', 'Veranstaltung erfolgreich hinzugefügt.'))
+                toastSuccess(lang('events.event_added_successfully'))
                 selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
                 // close modal
                 window.location.hash = '#event-select'

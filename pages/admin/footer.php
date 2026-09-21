@@ -36,13 +36,13 @@
     <div class="container w-800 mw-full" id="custom-footer">
         <h1>
             <i class="ph-duotone ph-scales"></i>
-            <?= lang('Footer contents', 'Inhalte im Footer') ?>
+            <?= lang('admin.footer_contents') ?>
         </h1>
         <p>
-            <?= lang('You can add custom link to the footer of your OSIRIS installation and manage general contents such as legal notice and privacy policy. This will be displayed on every page at the bottom.', 'Du kannst benutzerdefinierte Links zum Footer deiner OSIRIS-Installation hinzufügen und allgemeine Inhalte wie Impressum und Datenschutzerklärung verwalten. Diese werden auf jeder Seite am unteren Rand angezeigt.') ?>
+            <?= lang('admin.you_can_add_custom_link_to_the_footer_of_your_osiris_installation_and_manag') ?>
         </p>
 
-        <h2><?= lang('Legal Notice', 'Impressum') ?></h2>
+        <h2><?= lang('admin.legal_notice') ?></h2>
         <?php
         $impress = $Settings->get('impress');
         if (empty($impress)) {
@@ -59,7 +59,7 @@
                 quillEditor('impress');
             </script>
         </div>
-        <h2><?= lang('Privacy Policy', 'Datenschutzerklärung') ?></h2>
+        <h2><?= lang('admin.privacy_policy') ?></h2>
         <?php
         $privacy = $Settings->get('privacy');
         if (empty($privacy)) {
@@ -76,9 +76,9 @@
             </script>
         </div>
 
-        <h3><?= lang('Links', 'Links') ?></h3>
+        <h3><?= lang('common.links') ?></h3>
         <p>
-            <?= lang('You can add links to external resources that are relevant for your users. They will appear in the footer section <q>Links</q>.', 'Du kannst Links zu externen Ressourcen hinzufügen, die für deine Nutzer:innen relevant sind. Sie werden im Footer im Bereich <q>Links</q> angezeigt.') ?>
+            <?= lang('admin.you_can_add_links_to_external_resources_that_are_relevant_for_your_users_th') ?>
         </p>
 
         <?php
@@ -89,9 +89,9 @@
         <table class="table mb-20" id="footer-links-table">
             <thead>
                 <tr>
-                    <th><?= lang('Title (EN)', 'Titel (EN)') ?></th>
-                    <th><?= lang('Title (DE)', 'Titel (DE)') ?></th>
-                    <th><?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?></th>
+                    <th><?= lang('admin.title_en') ?></th>
+                    <th><?= lang('admin.title_de') ?></th>
+                    <th><?= lang('admin.link_url_complete') ?></th>
                     <th><?= lang('common.actions') ?></th>
                 </tr>
             </thead>
@@ -99,13 +99,13 @@
                 <?php foreach ($links as $link): ?>
                     <tr>
                         <td>
-                            <input type="text" class="form-control" name="footer_links[name][]" value="<?= e($link['name'] ?? '') ?>" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>">
+                            <input type="text" class="form-control" name="footer_links[name][]" value="<?= e($link['name'] ?? '') ?>" placeholder="<?= lang('admin.link_name_en') ?>">
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= e($link['name_de'] ?? '') ?>" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>">
+                            <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= e($link['name_de'] ?? '') ?>" placeholder="<?= lang('admin.link_name_de') ?>">
                         </td>
                         <td>
-                            <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>">
+                            <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= lang('admin.link_url_complete') ?>">
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button>
@@ -116,7 +116,7 @@
             <tfoot>
                 <tr>
                     <td colspan="4">
-                        <button type="button" class="btn btn-primary" onclick="addLink()"><?= lang('Add new link', 'Neuen Link hinzufügen') ?></button>
+                        <button type="button" class="btn btn-primary" onclick="addLink()"><?= lang('admin.add_new_link') ?></button>
                     </td>
                 </tr>
             </tfoot>
@@ -127,9 +127,9 @@
                 const tbody = $('#footer-links-table tbody');
                 const newRow = `
                             <tr>
-                                <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= lang('Link Name (EN)', 'Link-Name (EN)') ?>"></td>
-                                <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= lang('Link Name (DE)', 'Link-Name (DE)') ?>"></td>
-                                <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= lang('Link URL (complete)', 'Link-URL (vollständig)') ?>"></td>
+                                <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= lang('admin.link_name_en') ?>"></td>
+                                <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= lang('admin.link_name_de') ?>"></td>
+                                <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= lang('admin.link_url_complete') ?>"></td>
                                 <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button></td>
                             </tr>`;
                 tbody.append(newRow);

@@ -19,4 +19,38 @@ return [
     'register_contact_admin' => 'To register, please contact the administrator.',
     'token_invalid' => 'The provided AUTH token is not valid.',
     'token_valid' => 'The provided AUTH token is valid. You can now register.',
-    ];
+        'user_login' => 'User login',
+    'please_log_in_to_access_the_requested_page' => 'Please log in to access the requested page.',
+    'your_account_is_blocked_please_contact_the_administrator' => 'Your account is blocked. Please contact the administrator.',
+    'sorry_the_user_does_not_exist_please_contact_system_administrator' => 'Sorry, the user does not exist. Please contact system administrator!',
+    'username_is_required' => 'Username is required.',
+    'password_is_required' => 'Password is required.',
+    'invalid_or_expired_token' => 'Invalid or expired token.',
+    'reset_password_for_guest_account' => 'Reset password for guest account',
+    'confirm_new_password' => 'Confirm new password',
+    'passwords_match' => 'Passwords match',
+    'passwords_do_not_match' => 'Passwords do not match',
+    'password_cannot_be_empty' => 'Password cannot be empty.',
+    'password_successfully_reset_you_can_now_log_in_with_your_new_password' => 'Password successfully reset. You can now log in with your new password.',
+    'error_while_connecting_to_the_ldap_server' => 'Error while connecting to the LDAP server:',
+    'please_enter_your_username_and_password' => 'Please enter your username and password.',
+    'you_are_already_logged_in' => 'You are already logged in.',
+    'error_while_searching_for_the_user_in_ldap' => 'Error while searching for the user in LDAP.',
+    'user_not_found_in_ldap' => 'User not found in LDAP.',
+    'user_not_found_in_ldap_or_ldap_misconfigured' => 'User not found in LDAP or LDAP misconfigured.',
+    'login_failed_please_check_your_username_and_password' => 'Login failed. Please check your username and password.',
+    'guest_account_not_found_or_password_incorrect' => 'Guest-Account not found or password incorrect.',
+    'guest_account_has_expired' => 'Guest-Account has expired.',
+    'guest_account_has_no_password_please_contact_the_administrator' => 'Guest-Account has no password. Please contact the administrator.',
+    'the_provided_auth_token_is_not_valid' => 'The provided AUTH token is not valid.',
+    'the_provided_auth_token_is_valid_you_can_now_register' => 'The provided AUTH token is valid. You can now register.',
+    'password_reset_index' => 'Password reset',
+    'you_have_requested_a_password_reset_from_osiris_please_click_the_following' => 'You have requested a password reset from OSIRIS. Please click the following link to reset your password:',
+    'please_enter_your_email_address' => 'Please enter your email address.',
+    'this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi_the_use_of' => '
+            This OSIRIS instance is a demo with the fictional institute LISI.
+            The use of this app and therefore the provision of personal data is voluntary.
+            By using this site, you agree to our <a href="/impress" class="">privacy</a> policy.
+            User accounts will be deleted by the admin after an unspecified amount of time. If you want me to actively delete your data, contact me.
+            ',
+];

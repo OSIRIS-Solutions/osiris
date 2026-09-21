@@ -50,7 +50,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
         case 'activity':
             $entity = $DB->getActivity($featuredId);
             if ($entity) {
-                $featuredCard['type_label'] = lang('Research activity', 'Forschungsaktivität');
+                $featuredCard['type_label'] = lang('news.research_activity');
                 $featuredCard['icon'] = 'ph-article';
                 $featuredCard['title'] = strip_tags($entity['rendered']['plain'] ?? $entity['title'] ?? '');
                 $featuredCard['url'] = ROOTPATH . '/activities/view/' . $featuredId;
@@ -239,18 +239,18 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('Change news image', 'Nachrichtenbild ändern') ?>
+                    <?= lang('news.change_news_image') ?>
                 </h2>
 
                 <p>
-                    <?= lang('The image should ideally be 800 x 300 pixels. The maximum file size is 2 MB.', 'Das Bild sollte idealerweise 800 x 300 Pixel groß sein. Die maximale Dateigröße beträgt 2 MB.') ?>
+                    <?= lang('news.the_image_should_ideally_be_800_x_300_pixels_the_maximum_file_size_is_2_mb') ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
                         <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
-                        <label for="profile-input"><?= lang('Select new image', 'Wähle ein neues Bild') ?></label>
+                        <label for="profile-input"><?= lang('news.select_new_image') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
@@ -259,7 +259,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(lang("File is too large! Max. 2MB is supported!", "Die Datei ist zu groß! Max. 2MB werden unterstützt."));
+                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
@@ -275,7 +275,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('Delete current picture', 'Aktuelles Bild löschen') ?>
+                        <?= lang('common.delete_current_picture') ?>
                     </button>
                 </form>
             </div>
@@ -296,11 +296,11 @@ if ($Settings->hasPermission('news.edit')) { ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>
-                <?= lang('Change image', 'Bild ändern') ?>
+                <?= lang('news.change_image') ?>
             </a>
         <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
-            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this news item?', 'Sind Sie sicher, dass Sie diese Nachricht löschen möchten?') ?>');" class="d-inline ml-auto">
+            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('news.are_you_sure_you_want_to_delete_this_news_item') ?>');" class="d-inline ml-auto">
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
@@ -365,7 +365,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
     <h4>
         <i class="ph-duotone ph-link-simple"></i>
-        <?= lang('Connected Information', 'Verknüpfte Informationen') ?>
+        <?= lang('news.connected_information') ?>
     </h4>
     <div class="connections">
         <?php
@@ -412,7 +412,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         }
 
         if (empty($persons) && empty($projects) && empty($infrastructures) && empty($activities) && empty($events)) {
-            echo "<p>" . lang("No connected information found.", "Keine verknüpften Informationen gefunden.") . "</p>";
+            echo "<p>" . lang('news.no_connected_information_found') . "</p>";
         }
         ?>
 
@@ -447,7 +447,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?php if (!empty($infrastructures)): ?>
             <?php foreach ($infrastructures as $infrastructure): ?>
                 <div class="connection">
-                    <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang("Infrastructure", "Infrastruktur") ?></span>
+                    <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructure') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
                     </h5>
@@ -481,12 +481,12 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
     <div class="metadata">
         <div>
-            <?= lang('Published on', 'Veröffentlicht am') ?>
+            <?= lang('news.published_on') ?>
             <?= date('d.m.Y', strtotime($news['date'])) ?>
         </div>
         <?php if (isset($news['created_by'])) { ?>
             <div>
-                <?= lang('Created by', 'Erstellt von') ?>
+                <?= lang('common.created_by_view') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
                 <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['created'])) ?>
@@ -495,7 +495,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
         <?php if (isset($news['updated_by'])) { ?>
             <div>
-                <?= lang('Last updated by', 'Aktualisiert von') ?>
+                <?= lang('news.last_updated_by') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['updated_by']) ?>"><?= e($DB->getNameFromId($news['updated_by'])) ?></a>
                 <?= lang('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['updated'])) ?>
@@ -504,11 +504,11 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
         <?php if (($news['visibility'] ?? '') === 'public') { ?>
             <div>
-                <?= lang('Public', 'Öffentlich') ?>
+                <?= lang('common.public') ?>
             </div>
         <?php } else { ?>
             <div>
-                <?= lang('Internal', 'Intern') ?>
+                <?= lang('common.internal') ?>
             </div>
         <?php } ?>
 

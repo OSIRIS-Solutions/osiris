@@ -42,7 +42,7 @@ Route::get('/admin/users', function () {
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang("Users", "Nutzer:innen")]
+        ['name' => lang('admin.users')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
@@ -63,13 +63,13 @@ Route::get('/admin/guest-account', function () {
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
-        ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account']
+        ['name' => lang('admin.users'), 'path' => '/admin/users'],
+        ['name' => lang('people.guest_account'), 'path' => '/admin/guest-account']
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
     if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
-        echo "<div class='alert warning mb-10'>" . lang('Guest accounts can only be added when LDAP user management is enabled.', 'Gast-Accounts können nur hinzugefügt werden, wenn die LDAP-Nutzerverwaltung aktiviert ist.') . "</div>";
+        echo "<div class='alert warning mb-10'>" . lang('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
     } else {
         include BASEPATH . "/pages/admin/guest-account.php";
     }
@@ -85,14 +85,14 @@ Route::get('/admin/guest-account/add', function () {
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang("Users", "Nutzer:innen"), 'path' => '/admin/users'],
-        ['name' => lang("Guest Account", "Gast-Account"), 'path' => '/admin/guest-account'],
+        ['name' => lang('admin.users'), 'path' => '/admin/users'],
+        ['name' => lang('people.guest_account'), 'path' => '/admin/guest-account'],
         ['name' => lang('action.add')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
     if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
-        echo "<div class='alert warning mb-10'>" . lang('Guest accounts can only be added when LDAP user management is enabled.', 'Gast-Accounts können nur hinzugefügt werden, wenn die LDAP-Nutzerverwaltung aktiviert ist.') . "</div>";
+        echo "<div class='alert warning mb-10'>" . lang('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
     } else {
         include BASEPATH . "/pages/admin/guest-account-add.php";
     }
@@ -111,7 +111,7 @@ Route::get('/admin/roles/distribute', function () {
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.roles'), 'path' => '/admin/roles'],
-        ['name' => lang("Distribute roles", "Rollen verteilen")]
+        ['name' => lang('common.distribute_roles')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/distribute-roles.php";
@@ -122,7 +122,7 @@ Route::get('/admin/roles/distribute', function () {
 Route::get('/admin/templates', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang("Activities", "Aktivitäts-Typen"), 'path' => "/admin/categories"],
+        ['name' => lang('admin.activities'), 'path' => "/admin/categories"],
     ];
 
     $type = null;
@@ -137,7 +137,7 @@ Route::get('/admin/templates', function () {
             $template = $templates['print'];
         }
     }
-    $breadcrumb[] = ['name' => lang("Templates", "Vorlagen")];
+    $breadcrumb[] = ['name' => lang('common.templates')];
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/template-builder.php";
@@ -201,7 +201,7 @@ Route::get('/admin/doi-mappings', function () {
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang("DOI Mappings", "DOI Zuordnungen")]
+        ['name' => lang('admin.doi_mappings')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/doi-mappings.php";
@@ -286,7 +286,7 @@ Route::get('/admin/types/new', function () {
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang("New Type", "Neuer Typ")]
+        ['name' => lang('admin.new_type')]
     ];
     $t = $_GET['parent'] ?? '';
     $st = $t;
@@ -364,7 +364,7 @@ Route::get('/settings/activities', function () {
         $type = $osiris->adminTypes->findOne(['parent' => $t]);
     }
     if (empty($type)) {
-        echo return_rest(['error' => lang('Type not found. Please select the correct type manually.', 'Typ nicht gefunden. Bitte wähle den korrekten Typ manuell aus.')]);
+        echo return_rest(['error' => lang('admin.type_not_found_please_select_the_correct_type_manually')]);
         die();
     }
     $parent = $osiris->adminCategories->findone(['id' => $type['parent']]);
@@ -533,7 +533,7 @@ Route::get('/admin/projects/new', function () {
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('common.projects'), 'path' => '/admin/projects'],
-        ['name' => lang('New project type', 'Neuer Projekttyp') . ' - ' . $stage . '/2']
+        ['name' => lang('admin.new_project_type') . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/project.php";
@@ -546,13 +546,13 @@ Route::get('/admin/projects/new', function () {
 Route::get('/admin/resource-hub-image-map', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
-        ['name' => lang('Resource Hub', 'Ressourcen-Hub'), 'path' => '/admin/resource-hub'],
-        ['name' => lang('Arrange image map', 'Image-Map anordnen')],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('common.resource_hub'), 'path' => '/admin/resource-hub'],
+        ['name' => lang('admin.arrange_image_map')],
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/resource-hub-image-map.php";
@@ -563,7 +563,7 @@ Route::get('/admin/resource-hub-image-map', function () {
 Route::get('/admin/phpinfo', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     function getPhpinfo()
     {
@@ -579,8 +579,8 @@ Route::get('/admin/phpinfo', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
-        ['name' => lang('PHP Info', 'PHP Info')]
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('admin.php_info')]
     ];
     $phpinfo = getPhpinfo();
     include BASEPATH . "/header.php";
@@ -593,11 +593,11 @@ Route::get('/admin/phpinfo', function () {
 Route::get('/admin/osirisinfo', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
-        ['name' => lang('OSIRIS Info', 'OSIRIS Info')]
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('common.osiris_info')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/osiris-info.php";
@@ -612,7 +612,7 @@ Route::get('/admin/(.*)', function ($path) {
     }
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang(ucfirst($path), ucfirst($path))]
+        ['name' => ucfirst($path)]
     ];
     if (!file_exists(BASEPATH . "/pages/admin/$path.php")) {
         abortwith(404, lang('common.settings'), "/admin");
@@ -638,7 +638,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
@@ -647,10 +647,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
     $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
     if ($name === '' || mb_strlen($name) > 200 || empty($surfaces) || empty($scopes)) {
-        $_SESSION['msg'] = lang(
-            'Please provide a name and select at least one API area and permission.',
-            'Bitte gib einen Namen an und wähle mindestens einen API-Bereich und eine Berechtigung aus.'
-        );
+        $_SESSION['msg'] = lang('admin.please_provide_a_name_and_select_at_least_one_api_area_and_permission');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/api-clients');
         die();
@@ -658,7 +655,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     if ($expiresAt !== null) {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
         if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
-            $_SESSION['msg'] = lang('The expiration date is invalid.', 'Das Ablaufdatum ist ungültig.');
+            $_SESSION['msg'] = lang('admin.the_expiration_date_is_invalid');
             $_SESSION['msg_type'] = 'error';
             header('Location: ' . ROOTPATH . '/admin/api-clients');
             die();
@@ -675,10 +672,7 @@ Route::post('/crud/admin/api-clients/create', function () {
         $_SESSION['username'] ?? ''
     );
     $_SESSION['api_client_credentials'] = $credentials;
-    $_SESSION['msg'] = lang(
-        'API client created. Copy the secret now; it will not be shown again.',
-        'API-Client angelegt. Kopiere das Secret jetzt; es wird nicht erneut angezeigt.'
-    );
+    $_SESSION['msg'] = lang('admin.api_client_created_copy_the_secret_now_it_will_not_be_shown_again');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -688,14 +682,14 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
     $surfaces = ApiClient::filterSurfaces($_POST['surfaces'] ?? []);
     $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
     $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
     if ($name === '' || empty($surfaces) || empty($scopes)) {
-        $_SESSION['msg'] = lang('Name, API area, and permissions are required.', 'Name, API-Bereich und Berechtigungen sind erforderlich.');
+        $_SESSION['msg'] = lang('admin.name_api_area_and_permissions_are_required');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/api-clients');
         die();
@@ -703,7 +697,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
     if ($expiresAt !== null) {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
         if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
-            $_SESSION['msg'] = lang('The expiration date is invalid.', 'Das Ablaufdatum ist ungültig.');
+            $_SESSION['msg'] = lang('admin.the_expiration_date_is_invalid');
             $_SESSION['msg_type'] = 'error';
             header('Location: ' . ROOTPATH . '/admin/api-clients');
             die();
@@ -721,7 +715,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
             'updated_by' => $_SESSION['username'] ?? null,
         ]]
     );
-    $_SESSION['msg'] = lang('API client updated.', 'API-Client aktualisiert.');
+    $_SESSION['msg'] = lang('admin.api_client_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -730,7 +724,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
 Route::post('/crud/admin/api-clients/toggle/([a-z0-9_]+)', function ($clientId) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $enabled = filter_var($_POST['enabled'] ?? false, FILTER_VALIDATE_BOOLEAN);
     $osiris->apiClients->updateOne(
@@ -742,8 +736,8 @@ Route::post('/crud/admin/api-clients/toggle/([a-z0-9_]+)', function ($clientId) 
         ]]
     );
     $_SESSION['msg'] = $enabled
-        ? lang('API client enabled.', 'API-Client aktiviert.')
-        : lang('API client disabled.', 'API-Client deaktiviert.');
+        ? lang('admin.api_client_enabled')
+        : lang('admin.api_client_disabled');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -753,18 +747,15 @@ Route::post('/crud/admin/api-clients/rotate/([a-z0-9_]+)', function ($clientId) 
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $clients = new ApiClient($osiris);
     $secret = $clients->rotate($clientId);
     if ($secret === null) {
-        abortwith(404, lang('API client', 'API-Client'), '/admin/api-clients');
+        abortwith(404, lang('admin.api_client'), '/admin/api-clients');
     }
     $_SESSION['api_client_credentials'] = ['client_id' => $clientId, 'secret' => $secret];
-    $_SESSION['msg'] = lang(
-        'The API secret was rotated. The previous secret is no longer valid.',
-        'Das API-Secret wurde rotiert. Das vorherige Secret ist nicht mehr gültig.'
-    );
+    $_SESSION['msg'] = lang('admin.the_api_secret_was_rotated_the_previous_secret_is_no_longer_valid');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -773,10 +764,10 @@ Route::post('/crud/admin/api-clients/rotate/([a-z0-9_]+)', function ($clientId) 
 Route::post('/crud/admin/api-clients/delete/([a-z0-9_]+)', function ($clientId) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $osiris->apiClients->deleteOne(['client_id' => $clientId]);
-    $_SESSION['msg'] = lang('API client deleted.', 'API-Client gelöscht.');
+    $_SESSION['msg'] = lang('admin.api_client_deleted');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -793,25 +784,25 @@ function redirectFromResourceHubImage(string $message, string $type = 'error'): 
 Route::post('/crud/admin/resource-hub/image', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
     }
 
     $file = $_FILES['image'] ?? null;
     if ($file === null || $file['error'] !== UPLOAD_ERR_OK) {
         $error = $file['error'] ?? UPLOAD_ERR_NO_FILE;
         $message = match ($error) {
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('The image is too large. A maximum of 10 MB is allowed.', 'Das Bild ist zu groß. Maximal 10 MB sind erlaubt.'),
-            UPLOAD_ERR_PARTIAL => lang('The image was only partially uploaded.', 'Das Bild wurde nur teilweise hochgeladen.'),
-            UPLOAD_ERR_NO_TMP_DIR => lang('The temporary upload directory is missing.', 'Der temporäre Upload-Ordner fehlt.'),
-            UPLOAD_ERR_CANT_WRITE => lang('The image could not be written to disk.', 'Das Bild konnte nicht auf die Festplatte geschrieben werden.'),
-            UPLOAD_ERR_EXTENSION => lang('A PHP extension stopped the upload.', 'Eine PHP-Erweiterung hat den Upload gestoppt.'),
-            default => lang('Please select an image to upload.', 'Bitte wähle ein Bild zum Hochladen aus.'),
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'),
+            UPLOAD_ERR_PARTIAL => lang('common.the_image_was_only_partially_uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => lang('common.the_temporary_upload_directory_is_missing'),
+            UPLOAD_ERR_CANT_WRITE => lang('common.the_image_could_not_be_written_to_disk'),
+            UPLOAD_ERR_EXTENSION => lang('common.a_php_extension_stopped_the_upload'),
+            default => lang('admin.please_select_an_image_to_upload'),
         };
         redirectFromResourceHubImage($message);
     }
 
     if ((int) $file['size'] > 10 * 1024 * 1024) {
-        redirectFromResourceHubImage(lang('The image is too large. A maximum of 10 MB is allowed.', 'Das Bild ist zu groß. Maximal 10 MB sind erlaubt.'));
+        redirectFromResourceHubImage(lang('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'));
     }
 
     $allowedMimeTypes = [
@@ -822,30 +813,30 @@ Route::post('/crud/admin/resource-hub/image', function () {
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
     $dimensions = @getimagesize($file['tmp_name']);
     if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
-        redirectFromResourceHubImage(lang('Only JPEG, PNG and WebP images are allowed.', 'Es sind nur JPEG-, PNG- und WebP-Bilder erlaubt.'));
+        redirectFromResourceHubImage(lang('common.only_jpeg_png_and_webp_images_are_allowed'));
     }
 
     [$width, $height] = $dimensions;
     if ($width < 1200 || $height < 600) {
-        redirectFromResourceHubImage(lang('The image is too small. It must be at least 1200 × 600 pixels.', 'Das Bild ist zu klein. Es muss mindestens 1200 × 600 Pixel groß sein.'));
+        redirectFromResourceHubImage(lang('admin.the_image_is_too_small_it_must_be_at_least_1200_x_600_pixels'));
     }
     if ($width > 5000 || $height > 3000 || $width * $height > 15000000) {
-        redirectFromResourceHubImage(lang('The image is too large. It may be no larger than 5000 × 3000 pixels or 15 megapixels.', 'Das Bild ist zu groß. Es darf höchstens 5000 × 3000 Pixel beziehungsweise 15 Megapixel haben.'));
+        redirectFromResourceHubImage(lang('admin.the_image_is_too_large_it_may_be_no_larger_than_5000_x_3000_pixels_or_15_me'));
     }
     if ($width <= $height) {
-        redirectFromResourceHubImage(lang('Please use a landscape image.', 'Bitte verwende ein Bild im Querformat.'));
+        redirectFromResourceHubImage(lang('admin.please_use_a_landscape_image'));
     }
 
     $targetDirectory = BASEPATH . '/uploads/resource-hub';
     if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
-        redirectFromResourceHubImage(lang('The upload directory could not be created.', 'Der Upload-Ordner konnte nicht erstellt werden.'));
+        redirectFromResourceHubImage(lang('common.the_upload_directory_could_not_be_created'));
     }
 
     $extension = $allowedMimeTypes[$mime];
     $filename = bin2hex(random_bytes(12)) . '.' . $extension;
     $targetPath = $targetDirectory . '/' . $filename;
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        redirectFromResourceHubImage(lang('The image could not be saved.', 'Das Bild konnte nicht gespeichert werden.'));
+        redirectFromResourceHubImage(lang('common.the_image_could_not_be_saved'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -871,7 +862,7 @@ Route::post('/crud/admin/resource-hub/image', function () {
         );
     } catch (Throwable $exception) {
         @unlink($targetPath);
-        redirectFromResourceHubImage(lang('The image configuration could not be saved.', 'Die Bildkonfiguration konnte nicht gespeichert werden.'));
+        redirectFromResourceHubImage(lang('admin.the_image_configuration_could_not_be_saved'));
     }
 
     $oldFile = (string) ($oldImage['file'] ?? '');
@@ -880,13 +871,13 @@ Route::post('/crud/admin/resource-hub/image', function () {
         if ($oldPath !== $targetPath && is_file($oldPath)) @unlink($oldPath);
     }
 
-    redirectFromResourceHubImage(lang('The background image was uploaded successfully.', 'Das Hintergrundbild wurde erfolgreich hochgeladen.'), 'success');
+    redirectFromResourceHubImage(lang('admin.the_background_image_was_uploaded_successfully'), 'success');
 }, 'login');
 
 Route::post('/crud/admin/resource-hub/image/delete', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -900,7 +891,7 @@ Route::post('/crud/admin/resource-hub/image/delete', function () {
             ['$unset' => ['value.image-map.image' => true]]
         );
     } catch (Throwable $exception) {
-        redirectFromResourceHubImage(lang('The image configuration could not be removed.', 'Die Bildkonfiguration konnte nicht entfernt werden.'));
+        redirectFromResourceHubImage(lang('admin.the_image_configuration_could_not_be_removed'));
     }
 
     $file = (string) ($image['file'] ?? '');
@@ -909,13 +900,13 @@ Route::post('/crud/admin/resource-hub/image/delete', function () {
         if (is_file($path)) @unlink($path);
     }
 
-    redirectFromResourceHubImage(lang('The background image was removed.', 'Das Hintergrundbild wurde entfernt.'), 'success');
+    redirectFromResourceHubImage(lang('admin.the_background_image_was_removed'), 'success');
 }, 'login');
 
 Route::post('/crud/admin/resource-hub/image-map', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to manage the Resource Hub.', 'Du hast keine Berechtigung, den Ressourcen-Hub zu verwalten.'), '/', lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -925,7 +916,7 @@ Route::post('/crud/admin/resource-hub/image-map', function () {
     $image = DB::doc2Arr($imageMap['image'] ?? []);
 
     if (empty($cards) || empty($image['file'])) {
-        $_SESSION['msg'] = lang('Upload a background image and create at least one card first.', 'Lade zuerst ein Hintergrundbild hoch und erstelle mindestens eine Karte.');
+        $_SESSION['msg'] = lang('admin.upload_a_background_image_and_create_at_least_one_card_first');
         $_SESSION['msg_type'] = 'warning';
         header('Location: ' . ROOTPATH . '/admin/resource-hub#image-map-configuration');
         die;
@@ -958,13 +949,13 @@ Route::post('/crud/admin/resource-hub/image-map', function () {
             ['upsert' => true]
         );
     } catch (Throwable $exception) {
-        $_SESSION['msg'] = lang('The card positions could not be saved.', 'Die Kartenpositionen konnten nicht gespeichert werden.');
+        $_SESSION['msg'] = lang('admin.the_card_positions_could_not_be_saved');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
         die;
     }
 
-    $_SESSION['msg'] = lang('The card positions were saved.', 'Die Kartenpositionen wurden gespeichert.');
+    $_SESSION['msg'] = lang('admin.the_card_positions_were_saved');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
     die;
@@ -1127,7 +1118,7 @@ Route::post('/crud/admin/general', function () {
         $_SESSION['msg'] = $msg;
         $_SESSION['msg_type'] = 'error';
     } else {
-        $_SESSION['msg'] = lang('Settings saved successfully.', 'Einstellungen erfolgreich gespeichert.');
+        $_SESSION['msg'] = lang('admin.settings_saved_successfully');
         $_SESSION['msg_type'] = 'success';
     }
 
@@ -1178,7 +1169,7 @@ Route::post('/crud/admin/roles', function () {
         ]);
     }
 
-    $_SESSION['msg'] = lang('Settings saved successfully.', 'Einstellungen erfolgreich gespeichert.');
+    $_SESSION['msg'] = lang('admin.settings_saved_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/roles");
 }, 'login');
@@ -1192,7 +1183,7 @@ Route::post('/crud/admin/update-user-roles', function () {
 
     $roles = $_POST['roles'] ?? [];
     if (empty($roles) || !is_array($roles)) {
-        $_SESSION['msg'] = lang('No roles provided.', 'Keine Rollen angegeben.');
+        $_SESSION['msg'] = lang('admin.no_roles_provided');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/admin/roles/distribute");
         die;
@@ -1211,7 +1202,7 @@ Route::post('/crud/admin/update-user-roles', function () {
             ['$set' => ['roles' => array_map('strtolower', $r)]]
         );
     }
-    $_SESSION['msg'] = lang('Roles updated successfully.', 'Rollen erfolgreich aktualisiert.');
+    $_SESSION['msg'] = lang('admin.roles_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/roles/distribute");
     die;
@@ -1273,7 +1264,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     } else {
         $collection = $osiris->adminTypes;
         if (!isset($values['parent'])) {
-            $_SESSION['msg'] = lang('Type must have a parent category.', 'Typ muss eine übergeordnete Kategorie haben.');
+            $_SESSION['msg'] = lang('admin.type_must_have_a_parent_category');
             $_SESSION['msg_type'] = 'error';
             header("Location: " . ROOTPATH . "/types/new");
             die();
@@ -1283,7 +1274,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     // check if category ID already exists:
     $category_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang('Category ID does already exist.', 'Kategorie-ID existiert bereits.');
+        $_SESSION['msg'] = lang('admin.category_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/$col/new");
         die();
@@ -1302,7 +1293,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('Category created successfully.', 'Kategorie erfolgreich erstellt.');
+        $_SESSION['msg'] = lang('admin.category_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -1381,7 +1372,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('Category updated successfully.', 'Kategorie erfolgreich aktualisiert.');
+        $_SESSION['msg'] = lang('admin.category_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -1424,7 +1415,7 @@ Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('Category deleted successfully.', 'Kategorie erfolgreich gelöscht.');
+        $_SESSION['msg'] = lang('admin.category_deleted_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -1451,7 +1442,7 @@ Route::post('/crud/(categories|types)/update-order', function ($col) {
         );
     }
 
-    $_SESSION['msg'] = lang("Order updated", "Reihenfolge aktualisiert");
+    $_SESSION['msg'] = lang('common.order_updated');
     $_SESSION['msg_type'] = 'success';
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect']);
@@ -1497,7 +1488,7 @@ Route::post('/crud/admin/activity-fields', function () {
         ]]
     );
     // redirect back
-    $_SESSION['msg'] = lang("Activity form has been updated", "Aktivitätsformular wurde aktualisiert");
+    $_SESSION['msg'] = lang('admin.activity_form_has_been_updated');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/types/$type/fields");
     die();
@@ -1519,7 +1510,7 @@ Route::post('/crud/admin/mail-test', function () {
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
     if ($msg === null) {
-        $msg = lang('Test mail sent successfully.', 'Testmail erfolgreich versendet.');
+        $msg = lang('admin.test_mail_sent_successfully');
     }
     $_SESSION['msg'] = $msg;
     header("Location: " . ROOTPATH . "/admin/mail");
@@ -1535,7 +1526,7 @@ Route::post('/crud/admin/add-user', function () {
     }
 
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
-        $_SESSION['msg'] = lang("The username is already taken. Please try again.", "Der Nutzername ist bereits vergeben. Versuche es erneut.");
+        $_SESSION['msg'] = lang('error.username_already_taken');
         $_SESSION['msg_type'] = 'error';
         include BASEPATH . "/header.php";
         $form = $_POST;
@@ -1601,11 +1592,19 @@ Route::post('/crud/admin/add-user', function () {
     renderCurrentUnits(['username' => $username]);
 
     if (isset($_POST['guestaccount'])) {
-        $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> successfully created.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> erfolgreich erstellt.");
+        $_SESSION['msg'] = lang('admin.guest_account_created_successfully', replace: [
+            'rootpath' => ROOTPATH,
+            'username' => rawurlencode($username),
+            'displayname' => e($person['displayname']),
+        ]);
         $_SESSION['msg_type'] = 'success';
         header("Location: " . ROOTPATH . "/admin/guest-account");
     } else {
-        $_SESSION['msg'] = lang("User <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> successfully created.", "Benutzer <a href=\"" . ROOTPATH . "/profile/$username\">$person[displayname]</a> erfolgreich erstellt.");
+        $_SESSION['msg'] = lang('admin.user_created_successfully', replace: [
+            'rootpath' => ROOTPATH,
+            'username' => rawurlencode($username),
+            'displayname' => e($person['displayname']),
+        ]);
         $_SESSION['msg_type'] = 'success';
         header("Location: " . ROOTPATH . "/admin/users");
     }
@@ -1627,7 +1626,7 @@ Route::post('/crud/admin/projects/create', function () {
     // check if category ID already exists:
     $category_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang('Project ID does already exist.', 'Projekt-ID existiert bereits.');
+        $_SESSION['msg'] = lang('admin.project_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
@@ -1637,7 +1636,7 @@ Route::post('/crud/admin/projects/create', function () {
     // $id = $insertOneResult->getInsertedId();
     $id = $values['id'];
 
-    $_SESSION['msg'] = lang("Project <q>$id</q> successfully created.", "Projekt <q>$id</q> erfolgreich erstellt.");
+    $_SESSION['msg'] = lang('admin.project_id_successfully_created', replace: ['id' => $id]);
     header("Location: " . ROOTPATH . "/admin/projects/2/$id");
     die();
 });
@@ -1657,7 +1656,11 @@ Route::post('/crud/admin/guest-account/update', function () {
         ]]
     );
 
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully updated.", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich aktualisiert.");
+    $_SESSION['msg'] = lang('admin.guest_account_updated_successfully', replace: [
+        'rootpath' => ROOTPATH,
+        'username' => rawurlencode($_POST['username']),
+        'displayname' => e($_POST['username']),
+    ]);
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
@@ -1678,7 +1681,11 @@ Route::post('/crud/admin/guest-account/delete', function () {
         ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
         ['$pull' => ['roles' => 'guest']]
     );
-    $_SESSION['msg'] = lang("Guest account <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> successfully deleted. Please note that the profile has not been deleted or inactivated automatically!", "Gastkonto <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a> erfolgreich gelöscht. Bitte beachte, dass das Profil nicht automatisch gelöscht oder inaktiv gesetzt wurde!");
+    $_SESSION['msg'] = lang('admin.guest_account_deleted_successfully', replace: [
+        'rootpath' => ROOTPATH,
+        'username' => rawurlencode($_POST['username']),
+        'displayname' => e($_POST['username']),
+    ]);
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
@@ -1701,7 +1708,12 @@ Route::post('/crud/admin/guest-account/generate-link', function () {
         ['$set' => ['reset_token' => $token, 'reset_token_valid_until' => date('Y-m-d H:i:s', time() + 24 * 60 * 60)]]
     );
     $link = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . "://" . ($_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH . "/reset-guest-password?token=$token";
-    $_SESSION['msg'] = lang("Password reset link for <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a>: <a href=\"$link\">$link</a>", "Passwort-Zurücksetzen Link für <a href=\"" . ROOTPATH . "/profile/" . e($_POST['username']) . "\">" . e($_POST['username']) . "</a>: <a href=\"$link\">$link</a>");
+    $_SESSION['msg'] = lang('admin.password_reset_link_for_user', replace: [
+        'rootpath' => ROOTPATH,
+        'username' => rawurlencode($_POST['username']),
+        'displayname' => e($_POST['username']),
+        'link' => e($link),
+    ]);
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/guest-account");
     die();
@@ -1721,7 +1733,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
 
     $original = $collection->findOne(['_id' => $mongo_id]);
     if (empty($original)) {
-        abortwith(404, lang("Project type", "Projektart"), "/admin/projects");
+        abortwith(404, lang('admin.project_type'), "/admin/projects");
     }
     $name = lang($original['name'] ?? $original['id'], $original['name_de'] ?? null);
 
@@ -1752,7 +1764,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         );
 
         if (isset($values['disabled']) && $values['disabled']) {
-            $_SESSION['msg'] = lang("Deactivated project <q>$name</q> successfully saved.", "Deaktiviertes projekt <q>$name</q> erfolgreich gespeichert.");
+            $_SESSION['msg'] = lang('admin.deactivated_project_name_successfully_saved', replace: ['name' => $name]);
             header("Location: " . ROOTPATH . "/admin/projects");
             die;
         }
@@ -1768,7 +1780,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
                 ['_id' => $mongo_id],
                 ['$set' => $values]
             );
-            $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
+            $_SESSION['msg'] = lang('admin.project_name_successfully_saved', replace: ['name' => $name]);
             header("Location: " . ROOTPATH . "/admin/projects");
             die;
         }
@@ -1820,7 +1832,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         );
 
 
-        $_SESSION['msg'] = lang("Project <q>$name</q> successfully saved.", "Projekt <q>$name</q> erfolgreich gespeichert.");
+        $_SESSION['msg'] = lang('admin.project_name_successfully_saved', replace: ['name' => $name]);
         header("Location: " . ROOTPATH . "/admin/projects");
         // header("Location: " . ROOTPATH . "/admin/projects/3/$id");
         die;
@@ -1843,26 +1855,26 @@ Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
     // check if ID is in use
     $project = $collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        $_SESSION['msg'] = lang("Project <q>$id</q> could not be deleted as it does not exist.", "Projekt <q>$id</q> konnte nicht gelöscht werden, da es nicht existiert.");
+        $_SESSION['msg'] = lang('admin.project_id_could_not_be_deleted_as_it_does_not_exist', replace: ['id' => $id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
     $project_id = $project['id'];
 
     if ($osiris->projects->count(['type' => $project_id]) > 0) {
-        $_SESSION['msg'] = lang("Project <q>$project_id</q> could not be deleted, projects are still associated to this type.", "Projekt <q>$project_id</q> konnte nicht gelöscht werden, da Projekte noch mit diesem Typ verbunden sind.");
+        $_SESSION['msg'] = lang('admin.project_project_id_could_not_be_deleted_projects_are_still_associated_to_th', replace: ['project_id' => $project_id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
 
     $deleted = $collection->deleteOne(['_id' => $mongo_id]);
     if ($deleted->getDeletedCount() == 0) {
-        $_SESSION['msg'] = lang("Project <q>$project_id</q> could not be deleted.", "Projekt <q>$project_id</q> konnte nicht gelöscht werden.");
+        $_SESSION['msg'] = lang('admin.project_project_id_could_not_be_deleted', replace: ['project_id' => $project_id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
 
-    $_SESSION['msg'] = lang("Project <q>$project_id</q> successfully deleted.", "Projekt <q>$project_id</q> erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang('admin.project_project_id_successfully_deleted', replace: ['project_id' => $project_id]);
     header("Location: " . ROOTPATH . "/admin/projects");
     die();
 });
@@ -1884,10 +1896,7 @@ Route::post('/crud/admin/vocabularies/([a-z\-_]*)', function ($id) {
     // insert new vocabulary
     $osiris->adminVocabularies->insertOne($doc);
 
-    $_SESSION['msg'] = lang(
-        "Vocabulary <q>$id</q> successfully saved.",
-        "Vokabular <q>$id</q> erfolgreich gespeichert."
-    );
+    $_SESSION['msg'] = lang('admin.vocabulary_id_successfully_saved', replace: ['id' => $id]);
 
     $red = ROOTPATH . "/admin/vocabulary/$id";
     header("Location: " . $red);

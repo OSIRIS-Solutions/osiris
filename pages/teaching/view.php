@@ -34,7 +34,7 @@
      <div class="btn-toolbar">
          <a href="<?= ROOTPATH ?>/teaching/edit/<?= $module['_id'] ?>" class="btn">
              <i class="ph ph-edit"></i>
-             <?= lang('Edit Teaching Module', 'Lehrveranstaltung bearbeiten') ?>
+             <?= lang('common.edit_teaching_module') ?>
          </a>
      </div>
  <?php } ?>
@@ -43,7 +43,7 @@
  <table class="table">
      <tbody>
          <tr>
-             <th><?= lang('Module No.', 'Modulnummer') ?></th>
+             <th><?= lang('common.module_no') ?></th>
              <td><?= $module['module'] ?></td>
          </tr>
          <tr>
@@ -51,7 +51,7 @@
              <td><?= $module['title'] ?></td>
          </tr>
          <tr>
-             <th><?= lang('Teaching venue / University', 'Lehrort / Hochschule') ?></th>
+             <th><?= lang('common.teaching_venue_university') ?></th>
              <td>
                  <?php
                     $affiliation = '';
@@ -82,19 +82,19 @@
         if (count($activities) != 0) {
         ?>
          <h6>
-             <?= lang('Activities with supervisors', 'Aktivitäten mit Betreuenden') ?>
+             <?= lang('teaching.activities_with_supervisors') ?>
          </h6>
          <table class="table" id="supervisor-table">
              <thead>
                  <tr>
                      <th></th>
-                     <th><?= lang('Supervisors', 'Betreuende') ?></th>
+                     <th><?= lang('teaching.supervisors') ?></th>
                      <th><?= lang('common.category') ?></th>
                      <th><?= lang('common.start_date') ?></th>
                      <th><?= lang('common.end_date') ?></th>
-                     <th><?= lang('Affiliated', 'Zugehörig') ?></th>
-                     <th><?= lang('Total SWS', 'Gesamt SWS') ?></th>
-                     <th><?= lang('Affiliated SWS', 'Zugehörige SWS') ?></th>
+                     <th><?= lang('teaching.affiliated') ?></th>
+                     <th><?= lang('teaching.total_sws') ?></th>
+                     <th><?= lang('teaching.affiliated_sws') ?></th>
                  </tr>
              </thead>
              <tbody>
@@ -153,7 +153,7 @@
          </table>
 
          <h6>
-             <?= lang('All other activities', 'Alle anderen Aktivitäten') ?>
+             <?= lang('teaching.all_other_activities') ?>
          </h6>
 
          <table class="table" id="activities-table">
@@ -187,7 +187,7 @@
 
      <?php } else { ?>
 
-         <?= lang('No activities connected.', 'Keine Aktivitäten verknüpft.') ?>
+         <?= lang('common.no_activities_connected') ?>
 
      <?php } ?>
  </div>
@@ -205,7 +205,7 @@
              </form>
          <?php } else { ?>
              <div class="alert warning">
-                 <?= lang('Teaching module cannot be deleted because there are activities connected to it.', 'Die Lehrveranstaltung kann nicht gelöscht werden, da Aktivitäten mit ihr verknüpft sind.') ?>
+                 <?= lang('teaching.teaching_module_cannot_be_deleted_because_there_are_activities_connected_to') ?>
              </div>
          <?php } ?>
      </div>

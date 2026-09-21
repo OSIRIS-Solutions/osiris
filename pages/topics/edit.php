@@ -52,9 +52,9 @@ $topicLabel = $Settings->topicLabel();
 <h3 class="title">
     <?php
     if (empty($form) || !isset($form['_id'])) {
-        echo lang('New ' . $topicLabel, 'Neuer ' . $topicLabel);
+        echo lang('topics.new_topiclabel', replace: ['topicLabel' => $topicLabel]);
     } else {
-        echo lang('Edit ' . $topicLabel, $topicLabel . ' bearbeiten');
+        echo lang('topics.edit_topiclabel', replace: ['topicLabel' => $topicLabel]);
     }
     ?>
 </h3>
@@ -68,14 +68,14 @@ $topicLabel = $Settings->topicLabel();
                 <input type="text" id="id" class="form-control" name="values[id]" required value="<?= uniqid() ?>" placeholder="ID is a required field">
                 <label for="id" class="required">ID</label>
                 <small class="text-muted">
-                    <?= lang('It it recommended to choose something short you can recognize.', 'Es wird empfohlen, etwas Kurzes, Wiedererkennbares zu nehmen.') ?>
+                    <?= lang('common.it_it_recommended_to_choose_something_short_you_can_recognize') ?>
                 </small>
             <?php } else { ?>
                 <p class="mt-0">
                     ID: <code class="code"><?= $form['id'] ?></code>
                 </p>
                 <small class="text-muted d-block">
-                    <?= lang('ID cannot be changed.', 'Die ID kann nicht geändert werden.') ?>
+                    <?= lang('topics.id_cannot_be_changed') ?>
                 </small>
             <?php } ?>
         </div>
@@ -160,7 +160,7 @@ $topicLabel = $Settings->topicLabel();
         <div class="custom-switch">
             <input type="checkbox" id="inactive-check" <?= val('inactive') ? 'checked' : '' ?> name="values[inactive]" value="true">
             <label for="inactive-check">
-                <?= lang('Mark as inactive', 'Als inaktiv markieren') ?>
+                <?= lang('topics.mark_as_inactive') ?>
             </label>
         </div>
     </div>
@@ -181,10 +181,7 @@ $topicLabel = $Settings->topicLabel();
         <div id="delete" style="display: none;">
             <form action="<?= ROOTPATH ?>/crud/topics/delete/<?= $topic['_id'] ?>" method="post">
                 <p>
-                    <?= lang(
-                        'Do you really want to delete this ' . $topicLabel . '? If you delete, it will be removed from all connected persons, activities and projects.',
-                        'Möchten Sie diesen ' . $topicLabel . ' wirklich löschen? Falls du löscht wird er von allen verknüpften Elementen (Aktivitäten, Personen, Projekten) ebenfalls entfernt.'
-                    ) ?>
+                    <?= lang('topics.do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov', replace: ['topicLabel' => $topicLabel]) ?>
                 </p>
                 <button type="submit" class="btn danger"><?= lang('action.delete') ?></button>
             </form>

@@ -19,10 +19,10 @@ if (!isset($authPages[$page])) {
 }
 
 $authPageTitles = [
-    'login' => lang('Login | OSIRIS', 'Anmelden | OSIRIS'),
-    'forgot-password' => lang('Forgot password | OSIRIS', 'Passwort vergessen | OSIRIS'),
-    'register' => lang('Create account | OSIRIS', 'Account erstellen | OSIRIS'),
-    'reset-password' => lang('Reset password | OSIRIS', 'Passwort zurücksetzen | OSIRIS'),
+    'login' => lang('people.login_osiris'),
+    'forgot-password' => lang('people.forgot_password_osiris'),
+    'register' => lang('people.create_account_osiris'),
+    'reset-password' => lang('people.reset_password_osiris'),
 ];
 
 $affiliation = (string) $Settings->get('affiliation', '');
@@ -53,7 +53,7 @@ if (empty($privacyContent)) {
     $privacyContent = file_get_contents(BASEPATH . '/pages/privacy.html');
 }
 
-$pageLanguage = lang('en', 'de');
+$pageLanguage = lang('common.this_language');
 $accessibilityClasses = trim(implode(' ', [
     $_COOKIE['D3-accessibility-contrast'] ?? '',
     $_COOKIE['D3-accessibility-transitions'] ?? '',
@@ -66,7 +66,7 @@ $accessibilityClasses = trim(implode(' ', [
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?= e(lang('Log in to OSIRIS.', 'Bei OSIRIS anmelden.')) ?>">
+    <meta name="description" content="<?= e(lang('people.log_in_to_osiris')) ?>">
     <meta name="theme-color" content="<?= e($Settings->get('primary_color') ?? '#008083') ?>">
     <title><?= e($authPageTitles[$page]) ?></title>
     <link rel="icon" href="<?= ROOTPATH ?>/img/favicon.png">
@@ -853,12 +853,12 @@ $accessibilityClasses = trim(implode(' ', [
                 <?php include $authPages[$page]; ?>
 
                 <?php if ($Settings->featureEnabled('portal-public')) { ?>
-                    <div class="portal-divider"><span><?= lang('or', 'oder') ?></span></div>
+                    <div class="portal-divider"><span><?= lang('common.or_auth_page') ?></span></div>
                     <a class="portal-cta" href="<?= ROOTPATH ?>/portal/info">
                         <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
                         <span>
-                            <strong><?= lang('Open public portal', 'Öffentliches Portal öffnen') ?></strong>
-                            <small><?= lang('Discover research without logging in', 'Forschung ohne Anmeldung entdecken') ?></small>
+                            <strong><?= lang('people.open_public_portal') ?></strong>
+                            <small><?= lang('people.discover_research_without_logging_in') ?></small>
                         </span>
                         <i class="ph ph-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -867,36 +867,33 @@ $accessibilityClasses = trim(implode(' ', [
         </main>
 
         <footer class="footer">
-            <nav aria-label="<?= e(lang('Legal information', 'Rechtliche Informationen')) ?>">
-                <a href="https://osiris-app.de" target="_blank" rel="noopener noreferrer" class="link"><?= lang('About OSIRIS', 'Über OSIRIS') ?></a>
-                <button class="legal-trigger" type="button" data-dialog-open="accessibility-dialog"><?= lang('Accessibility', 'Barrierefreiheit') ?></button>
-                <button class="legal-trigger" type="button" data-dialog-open="impress-dialog"><?= lang('Legal notice', 'Impressum') ?></button>
-                <button class="legal-trigger" type="button" data-dialog-open="privacy-dialog"><?= lang('Privacy', 'Datenschutz') ?></button>
+            <nav aria-label="<?= e(lang('people.legal_information')) ?>">
+                <a href="https://osiris-app.de" target="_blank" rel="noopener noreferrer" class="link"><?= lang('common.about_osiris') ?></a>
+                <button class="legal-trigger" type="button" data-dialog-open="accessibility-dialog"><?= lang('common.accessibility') ?></button>
+                <button class="legal-trigger" type="button" data-dialog-open="impress-dialog"><?= lang('people.legal_notice') ?></button>
+                <button class="legal-trigger" type="button" data-dialog-open="privacy-dialog"><?= lang('people.privacy') ?></button>
             </nav>
 
             <form action="<?= ROOTPATH ?>/set-preferences" method="get">
-                <input type="hidden" name="language" value="<?= lang('de', 'en') ?>">
+                <input type="hidden" name="language" value="<?= lang('people.de') ?>">
                 <input type="hidden" name="redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
                 <button class="language" type="submit">
                     <i class="ph ph-translate" aria-hidden="true"></i>
-                    <?= lang('Deutsch', 'English') ?>
+                    <?= lang('people.deutsch') ?>
                 </button>
             </form>
         </footer>
 
         <dialog class="auth-dialog" id="accessibility-dialog" aria-labelledby="accessibility-title">
             <div class="dialog-header">
-                <h2 id="accessibility-title"><?= lang('Accessibility', 'Barrierefreiheit') ?></h2>
-                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('Close', 'Schließen')) ?>">
+                <h2 id="accessibility-title"><?= lang('common.accessibility') ?></h2>
+                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('action.close')) ?>">
                     <i class="ph ph-x" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="dialog-content">
                 <p>
-                    <?= lang(
-                        'OSIRIS is committed to making the platform accessible to everyone. You can adjust the display here.',
-                        'OSIRIS setzt sich dafür ein, die Plattform für alle Menschen zugänglich zu machen. Hier kannst du die Darstellung anpassen.'
-                    ) ?>
+                    <?= lang('people.osiris_is_committed_to_making_the_platform_accessible_to_everyone_you_can_a') ?>
                 </p>
                 <form action="<?= ROOTPATH ?>/set-preferences" method="get">
                     <input type="hidden" name="accessibility[check]">
@@ -904,46 +901,46 @@ $accessibilityClasses = trim(implode(' ', [
                     <div class="accessibility-options">
                         <label class="accessibility-option" for="auth-set-contrast">
                             <input id="auth-set-contrast" type="checkbox" name="accessibility[contrast]" value="high-contrast" <?= !empty($_COOKIE['D3-accessibility-contrast'] ?? '') ? 'checked' : '' ?>>
-                            <strong><?= lang('High contrast', 'Erhöhter Kontrast') ?></strong>
-                            <small><?= lang('Enhances contrast for better readability.', 'Erhöht den Kontrast für eine bessere Lesbarkeit.') ?></small>
+                            <strong><?= lang('header.high_contrast') ?></strong>
+                            <small><?= lang('people.enhances_contrast_for_better_readability') ?></small>
                         </label>
                         <label class="accessibility-option" for="auth-set-transitions">
                             <input id="auth-set-transitions" type="checkbox" name="accessibility[transitions]" value="without-transitions" <?= !empty($_COOKIE['D3-accessibility-transitions'] ?? '') ? 'checked' : '' ?>>
-                            <strong><?= lang('Reduce motion', 'Verringerte Bewegung') ?></strong>
-                            <small><?= lang('Reduces animations and motion effects.', 'Reduziert Animationen und Bewegungseffekte.') ?></small>
+                            <strong><?= lang('header.reduce_motion') ?></strong>
+                            <small><?= lang('people.reduces_animations_and_motion_effects') ?></small>
                         </label>
                         <label class="accessibility-option" for="auth-set-dyslexia">
                             <input id="auth-set-dyslexia" type="checkbox" name="accessibility[dyslexia]" value="dyslexia" <?= !empty($_COOKIE['D3-accessibility-dyslexia'] ?? '') ? 'checked' : '' ?>>
-                            <strong><?= lang('Dyslexia mode', 'Dyslexie-Modus') ?></strong>
-                            <small><?= lang('Uses a font designed for improved readability.', 'Verwendet eine Schriftart für eine verbesserte Lesbarkeit.') ?></small>
+                            <strong><?= lang('header.dyslexia_mode') ?></strong>
+                            <small><?= lang('people.uses_a_font_designed_for_improved_readability') ?></small>
                         </label>
                     </div>
-                    <button class="submit" type="submit"><?= lang('Apply settings', 'Einstellungen anwenden') ?></button>
+                    <button class="submit" type="submit"><?= lang('people.apply_settings') ?></button>
                 </form>
             </div>
         </dialog>
 
         <dialog class="auth-dialog" id="impress-dialog" aria-labelledby="impress-title">
             <div class="dialog-header">
-                <h2 id="impress-title"><?= lang('Legal notice', 'Impressum') ?></h2>
-                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('Close', 'Schließen')) ?>">
+                <h2 id="impress-title"><?= lang('people.legal_notice') ?></h2>
+                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('action.close')) ?>">
                     <i class="ph ph-x" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="dialog-content">
-                <?= $impressContent ?: '<p>' . lang('No legal notice available.', 'Kein Impressum verfügbar.') . '</p>' ?>
+                <?= $impressContent ?: '<p>' . lang('common.no_legal_notice_available') . '</p>' ?>
             </div>
         </dialog>
 
         <dialog class="auth-dialog" id="privacy-dialog" aria-labelledby="privacy-title">
             <div class="dialog-header">
-                <h2 id="privacy-title"><?= lang('Privacy', 'Datenschutz') ?></h2>
-                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('Close', 'Schließen')) ?>">
+                <h2 id="privacy-title"><?= lang('people.privacy') ?></h2>
+                <button class="dialog-close" type="button" data-dialog-close aria-label="<?= e(lang('action.close')) ?>">
                     <i class="ph ph-x" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="dialog-content">
-                <?= $privacyContent ?: '<p>' . lang('No privacy statement available.', 'Keine Datenschutzerklärung verfügbar.') . '</p>' ?>
+                <?= $privacyContent ?: '<p>' . lang('common.no_privacy_statement_available') . '</p>' ?>
             </div>
         </dialog>
     </div>
@@ -956,8 +953,8 @@ $accessibilityClasses = trim(implode(' ', [
                 input.type = showPassword ? 'text' : 'password';
                 this.setAttribute('aria-pressed', String(showPassword));
                 this.setAttribute('aria-label', showPassword
-                    ? <?= json_encode(lang('Hide password', 'Passwort ausblenden')) ?>
-                    : <?= json_encode(lang('Show password', 'Passwort anzeigen')) ?>
+                    ? <?= json_encode(lang('people.hide_password')) ?>
+                    : <?= json_encode(lang('common.show_password')) ?>
                 );
                 this.querySelector('i').className = showPassword ? 'ph ph-eye-slash' : 'ph ph-eye';
             });

@@ -24,7 +24,7 @@
 
 <h1>
     <i class="ph-duotone ph-user"></i>
-    <?= lang('Person data', 'Personendaten') ?>
+    <?= lang('admin.person_data') ?>
 </h1>
 
 
@@ -41,34 +41,34 @@ $persons = $osiris->adminPersons->find();
             <div class="box padded">
                 <h2 class="title" id="general">
                     <i class="ph-duotone ph-gear" aria-hidden="true"></i>
-                    <?= lang('General settings', 'Allgemeine Einstellungen') ?>
+                    <?= lang('common.general_settings') ?>
                 </h2>
                 <div class="form-group">
                     <label for="" class="font-weight-bold">
-                        <?= lang('Coins', 'Coins') ?>
+                        <?= lang('admin.coins') ?>
                     </label>
                     <?php
                     $coins = $Settings->featureEnabled('coins');
                     ?>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="coins-true" value="1" name="features[coins]" <?= $coins ? 'checked' : '' ?>>
-                        <label for="coins-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        <label for="coins-true"><?= lang('common.enabled_features') ?></label>
                     </div>
 
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="coins-false" value="0" name="features[coins]" <?= $coins ? '' : 'checked' ?>>
-                        <label for="coins-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        <label for="coins-false"><?= lang('common.disabled_features') ?></label>
                     </div>
 
                     <small class="d-block text-muted">
-                        <?= lang('Coins are not saved anywhere, but are calculated on-demand. If you deactivate coins globally, they will not be calculated at all and will not be shown anywhere.', 'Coins werden nirgendwo gespeichert, sondern on-demand berechnet. Wenn ihr Coins global ausschaltet, werden sie also gar nicht erst berechnet und nirgendwo gezeigt.') ?>
+                        <?= lang('admin.coins_are_not_saved_anywhere_but_are_calculated_on_demand_if_you_deactivate') ?>
                     </small>
 
                 </div>
 
                 <div class="form-group">
                     <label for="" class="font-weight-bold">
-                        <?= lang('Achievements', 'Errungenschaften') ?>
+                        <?= lang('common.achievements') ?>
                     </label>
                     <?php
                     $achievements = $Settings->featureEnabled('achievements');
@@ -76,12 +76,12 @@ $persons = $osiris->adminPersons->find();
 
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="achievements-true" value="1" name="features[achievements]" <?= $achievements ? 'checked' : '' ?>>
-                        <label for="achievements-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        <label for="achievements-true"><?= lang('common.enabled_features') ?></label>
                     </div>
 
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="achievements-false" value="0" name="features[achievements]" <?= $achievements ? '' : 'checked' ?>>
-                        <label for="achievements-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        <label for="achievements-false"><?= lang('common.disabled_features') ?></label>
                     </div>
 
                 </div>
@@ -89,7 +89,7 @@ $persons = $osiris->adminPersons->find();
 
                 <div class="form-group">
                     <label for="" class="font-weight-bold">
-                        <?= lang('User profile metrics', 'Metriken im Nutzerprofil') ?>
+                        <?= lang('admin.user_profile_metrics') ?>
                     </label>
                     <?php
                     $user_metrics = $Settings->featureEnabled('user-metrics');
@@ -97,62 +97,59 @@ $persons = $osiris->adminPersons->find();
 
                     <div class=" custom-radio d-inline-block ml-10">>
                         <input type="radio" id="user-metrics-true" value="1" name="features[user-metrics]" <?= $user_metrics ? 'checked' : '' ?>>
-                        <label for="user-metrics-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        <label for="user-metrics-true"><?= lang('common.enabled_features') ?></label>
                     </div>
 
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="user-metrics-false" value="0" name="features[user-metrics]" <?= $user_metrics ? '' : 'checked' ?>>
-                        <label for="user-metrics-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        <label for="user-metrics-false"><?= lang('common.disabled_features') ?></label>
                     </div>
 
                     <small class="d-block text-muted">
-                        <?= lang('If this function is switched off, user metrics (graphs) are only visible on your own profile page.', 'Wenn diese Funktion ausgeschaltet wird, sind Nutzermetriken (Graphen) nur noch auf der eigenen Profilseite sichtbar.') ?>
+                        <?= lang('admin.if_this_function_is_switched_off_user_metrics_graphs_are_only_visible_on_yo') ?>
                     </small>
 
                 </div>
 
                 <div class="form-group">
                     <label for="" class="font-weight-bold">
-                        <?= lang('Profile images', 'Profilbilder der Nutzenden') ?>
+                        <?= lang('admin.profile_images') ?>
                     </label>
                     <?php
                     $db_pictures = $Settings->featureEnabled('db_pictures');
                     ?>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="db_pictures-true" value="1" name="features[db_pictures]" <?= $db_pictures ? 'checked' : '' ?>>
-                        <label for="db_pictures-true"><?= lang('Save in database', 'In Datenbank speichern') ?></label>
+                        <label for="db_pictures-true"><?= lang('admin.save_in_database') ?></label>
                     </div>
 
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="db_pictures-false" value="0" name="features[db_pictures]" <?= $db_pictures ? '' : 'checked' ?>>
-                        <label for="db_pictures-false"><?= lang('Save in file system', 'Im Dateisystem speichern') ?></label>
+                        <label for="db_pictures-false"><?= lang('admin.save_in_file_system') ?></label>
                     </div>
 
                     <small class="d-block text-muted">
-                        <?= lang(
-                            'Saving the profile pictures in the database is recommended if the pictures are maintained exclusively via OSIRIS. If the images are saved in the file system, they can be uploaded more easily (into the folder <code>/img/users</code>) and, for example, updated automatically. However, they must then have the user name as the name and be in JPEG format!',
-                            'Die Profilbilder in der Datenbank zu speichern wird empfohlen, wenn die Bilder ausschließlich über OSIRIS gepflegt werden. Wenn die Bilder im Dateisystem gespeichert werden, kann man sie leichter anders hochladen (in den Ordner <code>/img/users</code>) und z.B. automatisch aktualisieren. Sie müssen dann aber den Username als Namen haben und im JPEG-Format sein!'
-                        ) ?>
+                        <?= lang('admin.saving_the_profile_pictures_in_the_database_is_recommended_if_the_pictures') ?>
                     </small>
                 </div>
 
                 <div class="form-group">
                     <label for="" class="font-weight-bold">
-                        <?= lang('Contact button in user profiles', 'Kontakt-Button in Benutzerprofilen') ?>
+                        <?= lang('admin.contact_button_in_user_profiles') ?>
                     </label>
                     <?php
                     $contactButton = $Settings->featureEnabled('contact-button');
                     ?>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-true" value="1" name="features[contact-button]" <?= $contactButton ? 'checked' : '' ?>>
-                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                        <label for="contact-button-true"><?= lang('common.enabled_features') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-false" value="0" name="features[contact-button]" <?= $contactButton ? '' : 'checked' ?>>
-                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                        <label for="contact-button-false"><?= lang('common.disabled_features') ?></label>
                     </div>
                     <small class="d-block text-muted">
-                        <?= lang('If this function is activated, a contact button will be displayed in the user profiles. The contact button can be configured individually for each user.', 'Wenn diese Funktion aktiviert ist, wird in den Benutzerprofilen ein Kontakt-Button angezeigt. Der Kontakt-Button kann für jeden Nutzer individuell konfiguriert werden.') ?>
+                        <?= lang('admin.if_this_function_is_activated_a_contact_button_will_be_displayed_in_the_use') ?>
                     </small>
                 </div>
                 <script>
@@ -180,8 +177,8 @@ $persons = $osiris->adminPersons->find();
                     <table class="table simple w-full small mb-10">
                         <thead>
                             <tr>
-                                <th><?= lang('Active', 'Aktiv') ?></th>
-                                <th><?= lang('Contact type', 'Kontakt-Typ') ?></th>
+                                <th><?= lang('common.active') ?></th>
+                                <th><?= lang('common.contact_type') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -193,7 +190,7 @@ $persons = $osiris->adminPersons->find();
                                         <input type="checkbox" name="general[contact-button][<?= $type ?>]" id="contact-button-<?= $type ?>" value="1" <?= $enabled ? 'checked' : '' ?>>
                                     </td>
                                     <td>
-                                        <?= lang(ucfirst($type), ucfirst($type)) ?>
+                                        <?= ucfirst($type) ?>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -207,18 +204,18 @@ $persons = $osiris->adminPersons->find();
                 <?php if (strtoupper(USER_MANAGEMENT) !== 'AUTH') { ?>
                     <div class="form-group">
                         <label for="">
-                            <?= lang('LDAP user synchronization', 'LDAP-Nutzersynchronisierung') ?>
+                            <?= lang('admin.ldap_user_synchronization') ?>
                         </label>
                         <?php
                         $sync = $Settings->featureEnabled('ldap-sync');
                         ?>
 
                         <div class="form-">
-                            <label for="ldap-sync-blacklist"><?= lang('Username Blacklist (separated by comma)', 'Username-Blacklist (Komma-getrennt)') ?></label>
+                            <label for="ldap-sync-blacklist"><?= lang('admin.username_blacklist_separated_by_comma') ?></label>
                             <textarea class="form-control small" name="general[ldap-sync-blacklist]" id="ldap-sync-blacklist"><?= $Settings->get('ldap-sync-blacklist') ?></textarea>
                         </div>
                         <div class="form-">
-                            <label for="ldap-sync-whitelist"><?= lang('Username whitelist (separated by comma)', 'Username-Whitelist (Komma-getrennt)') ?></label>
+                            <label for="ldap-sync-whitelist"><?= lang('admin.username_whitelist_separated_by_comma') ?></label>
                             <textarea class="form-control small" name="general[ldap-sync-whitelist]" id="ldap-sync-whitelist"><?= $Settings->get('ldap-sync-whitelist') ?></textarea>
                         </div>
 
@@ -257,7 +254,7 @@ $persons = $osiris->adminPersons->find();
                     <thead>
                         <tr>
                             <th><?= lang('common.active') ?></th>
-                            <th><?= lang('Field name', 'Feldname') ?></th>
+                            <th><?= lang('common.field_name') ?></th>
                         </tr>
                     </thead>
                     <tbody id="data-fields">
@@ -319,11 +316,11 @@ $persons = $osiris->adminPersons->find();
 
                 <h2 class="title" id="positions">
                     <i class="ph-duotone ph-tree-view" aria-hidden="true"></i>
-                    <?= lang('Possible Positions', 'Mögliche Positionen') ?>
+                    <?= lang('admin.possible_positions') ?>
                 </h2>
 
                 <p>
-                    <?= lang('Define the fields that are used as position for the staff members.', 'Definiere die Felder, die für die Mitarbeitenden verwendet werden.') ?>
+                    <?= lang('admin.define_the_fields_that_are_used_as_position_for_the_staff_members') ?>
                 </p>
 
                 <?php
@@ -336,29 +333,29 @@ $persons = $osiris->adminPersons->find();
                 <div class="form-group">
                     <div class="custom-radio">
                         <input type="radio" name="staff[free]" id="free-1" value="1" <?= $staffFree ? 'checked' : '' ?>>
-                        <label for="free-1"><?= lang('Free text', 'Freitext') ?></label>
+                        <label for="free-1"><?= lang('admin.free_text') ?></label>
                     </div>
                     <small class="d-block text-muted">
-                        <?= lang('If this option is selected, the staff members can enter their own position freely.', 'Wenn diese Option ausgewählt ist, können die Mitarbeitenden ihre Position frei eingeben.') ?>
+                        <?= lang('admin.if_this_option_is_selected_the_staff_members_can_enter_their_own_position_f') ?>
                     </small>
                 </div>
                 <div class="form-group">
                     <div class="custom-radio">
                         <input type="radio" name="staff[free]" id="free-0" value="0" <?= !$staffFree ? 'checked' : '' ?>>
-                        <label for="free-0"><?= lang('Defined selection', 'Definierte Liste') ?></label>
+                        <label for="free-0"><?= lang('admin.defined_selection') ?></label>
                     </div>
                     <small class="d-block text-muted">
-                        <?= lang('If this option is selected, the staff members can only select their position from the list you define below.', 'Wenn diese Option ausgewählt ist, können die Mitarbeitenden ihre Position nur aus der Liste auswählen, die du weiter unten definierst.') ?>
+                        <?= lang('admin.if_this_option_is_selected_the_staff_members_can_only_select_their_position') ?>
                     </small>
                 </div>
 
                 <hr>
 
                 <h5>
-                    <?= lang('Defined list of positions', 'Definierte Liste möglicher Positionen') ?>:
+                    <?= lang('admin.defined_list_of_positions') ?>:
                 </h5>
                 <small class="text-muted">
-                    <?= lang('This list will only be used if you select "Defined selection" above.', 'Diese Liste wird nur verwendet, wenn du "Definierte Liste" oben auswählst.') ?>
+                    <?= lang('admin.this_list_will_only_be_used_if_you_select_defined_selection_above') ?>
                 </small>
 
                 <table class="table simple small my-20">
@@ -417,17 +414,17 @@ $persons = $osiris->adminPersons->find();
             <div class="box padded">
                 <h2 class="title" id="keywords">
                     <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-                    <?= lang('Keywords', 'Schlagwörter') ?>
+                    <?= lang('admin.keywords_persons') ?>
                 </h2>
 
                 <p>
-                    <?= lang('Define keywords that the staff members can use. Whether this field is displayed in the user profile or not can be defined in the <q>Data fields</q> section.', 'Definiere Schlagworte, die für die Mitarbeitenden verwendet werden. Ob dieses Feld im Nutzerprofil angezeigt wird oder nicht, kann im Abschnitt <q>Datenfelder</q> definiert werden.') ?>
+                    <?= lang('admin.define_keywords_that_the_staff_members_can_use_whether_this_field_is_displa') ?>
                 </p>
 
                 <!-- input for name of this keyword -->
                 <div class="form-group">
                     <label for="keyword-name" class="font-weight-bold">
-                        <?= lang('Name of the keyword field', 'Name des Schlagwort-Feldes') ?>
+                        <?= lang('admin.name_of_the_keyword_field') ?>
                     </label>
                     <input type="text" name="general[staff-keyword-name]" id="keyword-name" class="form-control" value="<?= $Settings->get('staff-keyword-name', 'Keywords') ?>">
                 </div>
@@ -437,10 +434,10 @@ $persons = $osiris->adminPersons->find();
                 ?>
                 <div class="form-group">
                     <label for="staff-keywords" class="font-weight-bold">
-                        <?= lang('Defined list of keywords', 'Definierte Liste von Schlagworten') ?>:
+                        <?= lang('admin.defined_list_of_keywords') ?>:
                     </label>
                     <small class="d-block text-muted">
-                        <?= lang('Define a list of keywords that the staff members can use. Each keyword should be seperated by a new line.', 'Definiere eine Liste von Schlagworten, die die Mitarbeitenden verwenden können. Jedes Schlagwort sollte in einer neuen Zeile stehen.') ?>
+                        <?= lang('admin.define_a_list_of_keywords_that_the_staff_members_can_use_each_keyword_shoul') ?>
                     </small>
                     <textarea name="general[staff-keywords]" id="staff-keywords" class="form-control" rows="10"><?= implode(PHP_EOL, $keywords) ?></textarea>
                 </div>
@@ -466,12 +463,12 @@ $persons = $osiris->adminPersons->find();
     <div class="col-md-3 d-none d-md-block">
         <nav class="on-this-page-nav">
             <div class="content">
-                <div class="title"><?= lang('Features', 'Funktionen') ?></div>
+                <div class="title"><?= lang('admin.features') ?></div>
 
-                <a href="#general"><?= lang('General settings', 'Allgemeine Einstellungen') ?></a>
+                <a href="#general"><?= lang('common.general_settings') ?></a>
                 <a href="#datafields"><?= lang('common.data_fields') ?></a>
-                <a href="#positions"><?= lang('Possible Positions', 'Mögliche Positionen') ?></a>
-                <a href="#keywords"><?= lang('Keywords', 'Schlagwörter') ?></a>
+                <a href="#positions"><?= lang('admin.possible_positions') ?></a>
+                <a href="#keywords"><?= lang('admin.keywords_persons') ?></a>
             </div>
         </nav>
     </div>

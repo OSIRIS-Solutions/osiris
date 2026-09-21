@@ -11,7 +11,7 @@ $filesize = Settings::getMaxFileSize('16M');
         <span aria-hidden="true">&times;</span>
       </a>
       <h5 class="title">
-        <?= lang('Upload and edit files', 'Dateien hochladen und bearbeiten') ?>
+        <?= lang('activities.upload_and_edit_files') ?>
       </h5>
 
       <table class="table" id="files-table">
@@ -47,7 +47,7 @@ $filesize = Settings::getMaxFileSize('16M');
                             <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                           </div>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block primary" type="submit"><?= lang('Save changes', 'Änderungen speichern') ?></button>
+                          <button class="btn btn-block primary" type="submit"><?= lang('common.save_changes') ?></button>
                         </form>
                       </div>
                     </div>
@@ -59,7 +59,7 @@ $filesize = Settings::getMaxFileSize('16M');
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $file['_id'] ?>">
                       <div class="content">
                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                          <span class="text-danger"><?= lang('Do you want to delete this document?', 'Möchtest du dieses Dokument wirklich löschen?') ?></span>
+                          <span class="text-danger"><?= lang('common.do_you_want_to_delete_this_document') ?></span>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
                           <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
                         </form>
@@ -79,7 +79,7 @@ $filesize = Settings::getMaxFileSize('16M');
                   <div>
                     <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                     <br>
-                    <?= lang('Uploaded by', 'Hochgeladen von') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
+                    <?= lang('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
                     <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                   </div>
                 </div>
@@ -91,13 +91,13 @@ $filesize = Settings::getMaxFileSize('16M');
 
       <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
         <h5 class="title font-size-16">
-          <?= lang('Upload document', 'Dokument hochladen') ?>
+          <?= lang('common.upload_document') ?>
         </h5>
         <div class="form-group">
           <div class="custom-file">
             <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="<?= $filesize['bytes'] ?>" required>
-            <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
-            <br><small class="text-danger"><?= lang('Maximum file size: ' . $filesize['human'] . '.', 'Maximale Dateigröße: ' . $filesize['human'] . '.') ?></small>
+            <label for="upload-file" class="custom-file-label"><?= lang('common.choose_a_file') ?></label>
+            <br><small class="text-danger"><?= lang('common.maximum_file_size_filesize', replace: ['filesize' => $filesize['human']]) ?></small>
           </div>
         </div>
         <input type="hidden" name="values[type]" value="activities">
@@ -124,7 +124,7 @@ $filesize = Settings::getMaxFileSize('16M');
 
         uploadField.onchange = function() {
           if (this.files[0].size > 16777216) {
-            toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
+            toastError(<?= json_encode(lang('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
             this.value = "";
           };
         };
@@ -144,16 +144,16 @@ $filesize = Settings::getMaxFileSize('16M');
         <span aria-hidden="true">&times;</span>
       </a>
       <h5 class="title">
-        <?= lang('Connect ' . $tagLabel, $tagLabel . ' verknüpfen') ?>
+        <?= lang('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
       </h5>
       <p>
-        <?= lang('Currently connected ', 'Zurzeit ausgewählte ') . $tagLabel ?>:
+        <?= lang('common.currently_connected') . $tagLabel ?>:
         <?php
         $tags = $doc['tags'] ?? [];
         if (count($tags)) {
           echo $Settings->printTags($tags, 'all-activities');
         } else {
-          echo lang('No ' . $tagLabel . ' assigned yet.', 'Noch keine ' . $tagLabel . ' vergeben.');
+          echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
         }
         ?>
       </p>
@@ -190,32 +190,26 @@ $filesize = Settings::getMaxFileSize('16M');
         <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mb-20">
           <div class="modal-header">
             <h3 class="modal-title">
-              <?= lang('Edit research spectrum', 'Forschungsspektrum bearbeiten') ?>
+              <?= lang('activities.edit_research_spectrum') ?>
             </h3>
           </div>
 
           <div class="modal-body">
             <p class="text-muted">
-              <?= lang(
-                'The selected topics affect the research profiles of the associated researchers.',
-                'Die ausgewählten Themen beeinflussen das Forschungsspektrum der zugehörigen Personen.'
-              ) ?><br>
-              <?= lang(
-                'You can add up to <b>5 topics</b>.',
-                'Du kannst bis zu <b>5 Themen</b> hinzufügen.'
-              ) ?>
+              <?= lang('activities.the_selected_topics_affect_the_research_profiles_of_the_associated_research') ?><br>
+              <?= lang('activities.you_can_add_up_to_5_topics') ?>
             </p>
 
             <style>
               #spectrum-editor-list:empty::before {
-                content: "<?= lang('No topics selected yet.', 'Noch keine Themen ausgewählt.') ?>";
+                content: "<?= lang('activities.no_topics_selected_yet') ?>";
                 color: var(--muted-color);
                 font-style: italic;
               }
             </style>
 
             <h4>
-              <?= lang('Currently selected topics', 'Zurzeit ausgewählte Themen') ?>
+              <?= lang('activities.currently_selected_topics') ?>
             </h4>
             <input type="hidden" name="topics" value="">
             <div id="spectrum-editor-list"><?php foreach (($openalex['topics'] ?? []) as $topic) : ?>
@@ -244,10 +238,10 @@ $filesize = Settings::getMaxFileSize('16M');
           </div>
 
           <h4>
-            <?= lang('Add new topics', 'Neue Themen hinzufügen') ?>
+            <?= lang('activities.add_new_topics') ?>
           </h4>
           <div id="add-new-spectrum" class="nav-search mb-20">
-            <input type="text" id="spectrum-topics" placeholder="<?= lang('Search for topics', 'Suche nach Themen') ?>" class="form-control large" />
+            <input type="text" id="spectrum-topics" placeholder="<?= lang('activities.search_for_topics') ?>" class="form-control large" />
             <div class="suggestions on-focus"></div>
           </div>
 
@@ -265,9 +259,9 @@ $filesize = Settings::getMaxFileSize('16M');
           <hr>
           <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mt-20">
             <input type="hidden" name="restore" value="1">
-            <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('Are you sure you want to restore the automatic topics? This will remove all manually added topics.', 'Bist du sicher, dass du die automatischen Themen wiederherstellen möchtest? Dadurch werden alle manuell hinzugefügten Themen entfernt.') ?>')">
+            <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('activities.are_you_sure_you_want_to_restore_the_automatic_topics_this_will_remove_all') ?>')">
               <i class="ph ph-arrow-counter-clockwise"></i>
-              <?= lang('Restore automatic topics', 'Automatische Themen wiederherstellen') ?>
+              <?= lang('activities.restore_automatic_topics') ?>
             </button>
           </form>
         <?php } ?>
@@ -290,7 +284,7 @@ $filesize = Settings::getMaxFileSize('16M');
     $('#spectrum-topics').on('input', function() {
       var query = $(this).val();
       if (query.length < 3) {
-        $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang("Please enter at least 3 characters to search for topics.", "Bitte gib mindestens 3 Zeichen ein, um nach Themen zu suchen.") ?></div>');
+        $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang('activities.please_enter_at_least_3_characters_to_search_for_topics') ?></div>');
         return;
       }
 
@@ -302,7 +296,7 @@ $filesize = Settings::getMaxFileSize('16M');
         },
         success: function(response) {
           if (response.count === 0) {
-            $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang("No topics found.", "Keine Themen gefunden.") ?></div>');
+            $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang('activities.no_topics_found') ?></div>');
             return;
           }
 
@@ -319,7 +313,7 @@ $filesize = Settings::getMaxFileSize('16M');
       var currentTopics = $('#spectrum-editor-list .spectrum-topic').length;
       // maximum of 5 topics allowed
       if (currentTopics >= 5) {
-        toastError('<?= lang("You can only add up to 5 topics.", "Du kannst maximal 5 Themen hinzufügen.") ?>');
+        toastError('<?= lang('activities.you_can_only_add_up_to_5_topics') ?>');
         return;
       }
       var topicId = $(this).data('id');

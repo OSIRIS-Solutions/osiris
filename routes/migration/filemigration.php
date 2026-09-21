@@ -34,62 +34,56 @@ $summary = [
 
 <h2>
     <i class="ph ph-files"></i>
-    <?= lang(
-        "Migration of Activity Files to Uploads Collection",
-        "Migration von Aktivitätsdateien in die Uploads-Sammlung"
-    ) ?>
+    <?= lang('admin.migration_of_activity_files_to_uploads_collection') ?>
 </h2>
 
 
 <div class="alert info">
     <h4 class="title">
-        <?= lang("Note", "Hinweis") ?>
+        <?= lang('admin.note') ?>
     </h4>
-    <?=lang('It is unfortunately not possible to determine who originally uploaded the migrated documents and when this happened. Wherever possible, we add the author of the activity as the uploader and use the creation date of the file as the upload date. In all other cases, the username "migration" is used as the uploader and today\'s date as the upload date.', 'Es ist leider nicht möglich, bei den migrierten Dokumenten zu sagen, wer sie ursprünglich hochgeladen hat und wann dies geschehen ist. Wo immer möglich fügen wir die Verfasser:in der Aktivität als Hochladende hinzu und verwenden das Erstellungsdatum der Datei als Hochladedatum. In allen anderen Fällen wird der Benutzername "migration" als Hochladender verwendet und das heutige Datum als Hochladedatum.')?>
+    <?=lang('admin.it_is_unfortunately_not_possible_to_determine_who_originally_uploaded_the_m')?>
     <br>
-    <?=lang('It is also not possible to estimate the type of document for each migrated file. All documents are therefore only annotated as "file". This can be manually adjusted in the activities if necessary.', 'Außerdem ist es auch nicht möglich, abzuschätzen, um welche Art von Dokument es sich jeweils handelt. Alle Dokumente werden deshalb nur als "Datei" annotiert. Dies kann ggf. manuell in den Aktivitäten angepasst werden.')?>
+    <?=lang('admin.it_is_also_not_possible_to_estimate_the_type_of_document_for_each_migrated')?>
 </div>
 
 
 <p>
-    <?= lang(
-        $DRY_RUN ? "Dry run mode: no changes will be made. To perform actual migration, set Dry Run to false." : "Actual migration mode: changes will be made.",
-        $DRY_RUN ? "Trockenlaufmodus: Es werden keine Änderungen vorgenommen. Um die tatsächliche Migration durchzuführen, setzen Sie Dry Run auf false." : "Tatsächlicher Migrationsmodus: Es werden Änderungen vorgenommen."
-    ) ?>
+    <?= lang($DRY_RUN ? 'admin.dry_run_mode_description' : 'admin.actual_migration_mode_description') ?>
 </p>
 
 <form action="#" method="get">
     <div class="box padded" style="max-width: 40rem;">
         <h4 class="title">
             <i class="ph ph-gear"></i>
-            <?= lang("Migration Settings", "Migrations-Einstellungen") ?>
+            <?= lang('admin.migration_settings') ?>
         </h4>
         <div class="form-group">
-            <label for="dry_run"><?= lang('Run Settings', 'Migrationseinstellungen') ?></label>
+            <label for="dry_run"><?= lang('admin.run_settings') ?></label>
             <select id="dry_run" name="dry_run" class="form-control">
-                <option value="1" <?= $DRY_RUN ? 'selected' : '' ?>><?= lang("Dry Run (no changes)", "Trockenlauf (keine Änderungen)") ?></option>
-                <option value="0" <?= !$DRY_RUN ? 'selected' : '' ?>><?= lang("Perform Migration", "Migration durchführen") ?></option>
+                <option value="1" <?= $DRY_RUN ? 'selected' : '' ?>><?= lang('admin.dry_run_no_changes') ?></option>
+                <option value="0" <?= !$DRY_RUN ? 'selected' : '' ?>><?= lang('admin.perform_migration') ?></option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="delete_source"><?= lang("Handle Source Files", "Umgang mit Quelldateien") ?></label>
+            <label for="delete_source"><?= lang('admin.handle_source_files') ?></label>
             <select id="delete_source" name="delete_source" class="form-control">
-                <option value="0" <?= !$DELETE_SOURCE ? 'selected' : '' ?>><?= lang("Keep source files", "Quelldateien behalten") ?></option>
-                <option value="1" <?= $DELETE_SOURCE ? 'selected' : '' ?>><?= lang("Delete source files after migration", "Quelldateien nach der Migration löschen") ?></option>
+                <option value="0" <?= !$DELETE_SOURCE ? 'selected' : '' ?>><?= lang('admin.keep_source_files') ?></option>
+                <option value="1" <?= $DELETE_SOURCE ? 'selected' : '' ?>><?= lang('admin.delete_source_files_after_migration') ?></option>
             </select>
         </div>
         <div class="form-group">
-            <label for="verify_hash"><?= lang("Verify File Hash", "Datei-Hash überprüfen") ?></label>
+            <label for="verify_hash"><?= lang('admin.verify_file_hash') ?></label>
             <select id="verify_hash" name="verify_hash" class="form-control">
-                <option value="0" <?= !$VERIFY_HASH ? 'selected' : '' ?>><?= lang("Disabled (faster)", "Deaktiviert (schneller)") ?></option>
-                <option value="1" <?= $VERIFY_HASH ? 'selected' : '' ?>><?= lang("Enabled (safer, slower)", "Aktiviert (sicherer, langsamer)") ?></option>
+                <option value="0" <?= !$VERIFY_HASH ? 'selected' : '' ?>><?= lang('admin.disabled_faster') ?></option>
+                <option value="1" <?= $VERIFY_HASH ? 'selected' : '' ?>><?= lang('admin.enabled_safer_slower') ?></option>
             </select>
         </div>
 
         <div class="form-group">
             <button type="submit" class="btn primary">
-                <?= lang("Run Migration", "Migration ausführen") ?>
+                <?= lang('admin.run_migration') ?>
             </button>
         </div>
     </div>
@@ -101,7 +95,7 @@ $summary = [
     <div class="col order-last">
 
         <h2>
-            <?= lang("Migration Logs", "Migrationsprotokolle") ?>
+            <?= lang('admin.migration_logs') ?>
         </h2>
         <div class="box" id="migration-logs" style="max-height: 40rem; overflow: auto; background: #f9f9f9; padding: 1rem; border: 1px solid #ccc;">
             <pre><?php
@@ -365,39 +359,36 @@ $summary = [
     <div class="col col-md-3 order-first">
 
         <h2>
-            <?= lang("Summary", "Zusammenfassung") ?>
+            <?= lang('admin.summary') ?>
         </h2>
 
         <?php if ($DRY_RUN) { ?>
-            <p><?= lang(
-                    "Dry run completed. No changes were made. Review the logs above. To perform the actual migration, set Dry Run to false and run again.",
-                    "Der Trockenlauf ist abgeschlossen. Es wurden keine Änderungen vorgenommen. Überprüfen Sie die obigen Protokolle. Um die tatsächliche Migration durchzuführen, setzen Sie Dry Run auf false und führen Sie sie erneut aus."
-                ) ?></p>
+            <p><?= lang('admin.dry_run_completed_no_changes_were_made_review_the_logs_above_to_perform_the') ?></p>
         <?php } ?>
 
         <table class="table small">
             <tr>
-                <th><?= lang("Activities Processed", "Verarbeitete Aktivitäten") ?></th>
+                <th><?= lang('admin.activities_processed') ?></th>
                 <td><?= $summary['activities_processed'] ?></td>
             </tr>
             <tr>
-                <th><?= lang("Files Found", "Gefundene Dateien") ?></th>
+                <th><?= lang('admin.files_found') ?></th>
                 <td><?= $summary['files_found'] ?></td>
             </tr>
             <tr>
-                <th><?= lang("Files Migrated", "Migrierte Dateien") ?></th>
+                <th><?= lang('admin.files_migrated') ?></th>
                 <td><?= $summary['files_migrated'] ?></td>
             </tr>
             <tr>
-                <th><?= lang("Files Skipped", "Übersprungene Dateien") ?></th>
+                <th><?= lang('admin.files_skipped') ?></th>
                 <td><?= $summary['files_skipped'] ?></td>
             </tr>
             <tr>
-                <th><?= lang("Missing Source Files", "Fehlende Quelldateien") ?></th>
+                <th><?= lang('admin.missing_source_files') ?></th>
                 <td><?= $summary['missing_files'] ?></td>
             </tr>
             <tr>
-                <th><?= lang("Errors", "Fehler") ?></th>
+                <th><?= lang('admin.errors') ?></th>
                 <td><?= $summary['errors'] ?></td>
             </tr>
         </table>

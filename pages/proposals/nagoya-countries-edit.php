@@ -9,16 +9,16 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
 
 <h1>
     <i class="ph-duotone ph-globe"></i>
-    <?= lang('Edit Nagoya Countries', 'Nagoya-Länder bearbeiten') ?>
+    <?= lang('projects.edit_nagoya_countries') ?>
 </h1>
 
 <table class="table">
     <thead>
         <tr>
             <th><?= lang('common.country') ?></th>
-            <th><?= lang('Nagoya Evaluation', 'Nagoya-Bewertung') ?></th>
-            <th><?= lang('Scope Overview', 'Übersicht Umfang') ?></th>
-            <th><?= lang('ABS Classification', 'ABS-Klassifikation') ?></th>
+            <th><?= lang('common.nagoya_evaluation') ?></th>
+            <th><?= lang('projects.scope_overview_nagoya_countries_edit') ?></th>
+            <th><?= lang('projects.abs_classification') ?></th>
             <th><?= lang('common.actions') ?></th>
         </tr>
     </thead>
@@ -49,24 +49,24 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
             </td>
             <td class="small text-muted">
                 <?= $numGroups ?>
-                <?= lang('Sample collection(s)', 'Probensammlung(en)') ?>
+                <?= lang('common.sample_collection_s') ?>
                 <?php if ($nagoya_perm && !empty($review['comment'])): ?>
                     · <?= e($review['comment']) ?>
                 <?php endif; ?>
                 <?php if ($permTotal > 0): ?>
-                    <?= $permTotal ?> <?= lang('Permit(s)', 'Genehmigung(en)') ?>
+                    <?= $permTotal ?> <?= lang('common.permit_s') ?>
                     <?php if ($permOpen > 0): ?>
-                        (<?= $permOpen ?> <?= lang('open', 'offen') ?>)
+                        (<?= $permOpen ?> <?= lang('common.open') ?>)
                     <?php endif; ?>
                     <?php if ($permDocs > 0): ?>
-                        · <?= $permDocs ?> <?= lang('document(s)', 'Dokument(e)') ?>
+                        · <?= $permDocs ?> <?= lang('common.document_s') ?>
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
             <td>
                 <?php if ($labelABC): ?>
                     <span class="text-muted ml-5">
-                        <?= lang('ABS classification for this country', 'ABS-Klassifikation für dieses Land') ?>: <?= Nagoya::ABCbadge($labelABC) ?>
+                        <?= lang('common.abs_classification_for_this_country') ?>: <?= Nagoya::ABCbadge($labelABC) ?>
                     </span>
                 <?php endif; ?>
             </td>
@@ -80,18 +80,18 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
                             <form action="<?= ROOTPATH ?>/crud/nagoya/remove-country/<?= e($project['_id']) ?>" method="post" class="p-5">
                                 <input type="hidden" name="country_id" value="<?= e($countryId) ?>">
                                 <small class="text-muted">
-                                    <?= lang('Removing this country will also delete all associated scope groups and permits.', 'Das Entfernen dieses Landes löscht auch alle zugehörigen Umfangsgruppen und Genehmigungen.') ?>
+                                    <?= lang('projects.removing_this_country_will_also_delete_all_associated_scope_groups_and_perm') ?>
                                 </small>
-                                <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('Are you sure you want to remove this country from the Nagoya review?', 'Möchten Sie dieses Land wirklich aus der Nagoya-Bewertung entfernen?') ?>');">
+                                <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('projects.are_you_sure_you_want_to_remove_this_country_from_the_nagoya_review') ?>');">
                                     <i class="ph ph-trash"></i>
-                                    <?= lang('Remove country', 'Land entfernen') ?>
+                                    <?= lang('projects.remove_country') ?>
                                 </button>
                             </form>
                         </div>
                     </div>
                 <?php } else { ?>
                     <span class="text-muted">
-                        <?= lang('No actions available', 'Keine Aktionen verfügbar') ?>
+                        <?= lang('projects.no_actions_available') ?>
                     </span>
                 <?php } ?>
             </td>
@@ -102,14 +102,14 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
             <td colspan="5">
                 <form action="<?= ROOTPATH ?>/crud/nagoya/add-country/<?= $project['_id'] ?>" method="post">
                     <select id="add-nagoya-country" name="countryCode" class="form-control d-inline-block w-auto mr-10">
-                        <option value="" disabled selected><?= lang('Please select a country', 'Bitte wähle ein Land aus') ?></option>
+                        <option value="" disabled selected><?= lang('common.please_select_a_country') ?></option>
                         <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
                             <option value="<?= $iso ?>"><?= $name ?></option>
                         <?php } ?>
                     </select>
                     <button type="submit" class="btn success">
                         <i class="ph ph-plus"></i>
-                        <?= lang('Add country to Nagoya review', 'Land zur Nagoya-Bewertung hinzufügen') ?>
+                        <?= lang('projects.add_country_to_nagoya_review') ?>
                     </button>
                 </form>
             </td>
@@ -120,6 +120,6 @@ $nagoya_perm = $Settings->hasPermission('nagoya.view');
 
 <?php if (!$nagoya_perm) { ?>
     <p class="text-muted">
-        <?= lang('You can only remove countries from this list if they have not yet been evaluated. Please contact an administrator or compliance officer for further changes.', 'Sie können Länder nur dann aus dieser Liste entfernen, wenn sie noch nicht bewertet wurden. Bitte wenden Sie sich für weitere Änderungen an eine:n Administrator:in oder Compliance-Beauftragte.') ?>
+        <?= lang('projects.you_can_only_remove_countries_from_this_list_if_they_have_not_yet_been_eval') ?>
     </p>
 <?php } ?>

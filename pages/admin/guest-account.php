@@ -17,11 +17,11 @@
 
 <h1>
     <i class="ph-duotone ph-user-plus"></i>
-    <?= lang('Manage guest accounts', 'Gast-Accounts verwalten') ?>
+    <?= lang('common.manage_guest_accounts') ?>
 </h1>
 <a href="<?= ROOTPATH ?>/admin/guest-account/add" class="btn primary">
     <i class="ph ph-user-plus"></i>
-    <?= lang('Add guest account', 'Gast-Account hinzufügen') ?>
+    <?= lang('admin.add_guest_account') ?>
 </a>
 
 <?php
@@ -50,18 +50,18 @@ $accounts = $osiris->guestAccounts->aggregate([
 
 ])->toArray();
 if (empty($accounts)) {
-    echo "<p>" . lang('No guest accounts found.', 'Keine Gast-Accounts gefunden.') . "</p>";
+    echo "<p>" . lang('admin.no_guest_accounts_found') . "</p>";
 } else {
 ?>
 
     <table class="table" id="guest-accounts-table">
         <thead>
             <tr>
-                <th><?= lang('Username', 'Benutzername') ?></th>
+                <th><?= lang('common.username') ?></th>
                 <th><?= lang('common.name_first') ?></th>
                 <th><?= lang('common.name_last') ?></th>
-                <th><?= lang('Mail', 'E-Mail') ?></th>
-                <th><?= lang('Valid until', 'Gültig bis') ?></th>
+                <th><?= lang('common.mail_guest_account_add') ?></th>
+                <th><?= lang('common.valid_until') ?></th>
                 <th class="w-100"><?= lang('common.actions') ?></th>
             </tr>
         </thead>
@@ -80,7 +80,7 @@ if (empty($accounts)) {
                     <td><?= e($account['mail'] ?? '') ?></td>
                     <td>
                         <?php if (empty($account['valid_until'] ?? '')) { ?>
-                            <em><?= lang('Unlimited', 'Unbegrenzt') ?></em>
+                            <em><?= lang('common.unlimited') ?></em>
                         <?php } else { ?>
                             <span <?= $in_past ? 'class="text-danger"' : '' ?>><?= e($account['valid_until']) ?></span>
                         <?php } ?>
@@ -94,7 +94,7 @@ if (empty($accounts)) {
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/update" method="post">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <div class="form-group">
-                                        <label for="valid_until_<?= e($account['username']) ?>"><?= lang('Valid until', 'Gültig bis') ?></label>
+                                        <label for="valid_until_<?= e($account['username']) ?>"><?= lang('common.valid_until') ?></label>
                                         <input type="date" id="valid_until_<?= e($account['username']) ?>" name="valid_until" class="form-control" value="<?= isset($account['valid_until']) ? e($account['valid_until']) : '' ?>">
                                     </div>
                                     <button type="submit" class="btn primary mt-10">
@@ -111,12 +111,12 @@ if (empty($accounts)) {
                                     <i class="ph ph-link"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right p-10 w-400" aria-labelledby="dropdown-link-<?= e($account['username']) ?>">
-                                    <?= lang('Generate a link to set a new password for this guest account. The link will be valid for 24 hours.', 'Generieren Sie einen Link, um ein neues Passwort für diesen Gast-Account festzulegen. Der Link ist 24 Stunden gültig.') ?>
+                                    <?= lang('admin.generate_a_link_to_set_a_new_password_for_this_guest_account_the_link_will') ?>
                                     <form action="<?= ROOTPATH ?>/crud/admin/guest-account/generate-link" method="post" class="mt-10">
                                         <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                         <button type="submit" class="btn primary">
                                             <i class="ph ph-link"></i>
-                                            <?= lang('Generate link', 'Link generieren') ?>
+                                            <?= lang('admin.generate_link') ?>
                                         </button>
                                     </form>
                                 </div>
@@ -131,12 +131,12 @@ if (empty($accounts)) {
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/delete" method="post" class="d-inline">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <small>
-                                        <b><?= lang('Note:', 'Anmerkung:') ?></b>
-                                        <?= lang('Only the user account will be deleted. The corresponding profile will remain in the system. If the corresponding user name has been added to LDAP, the user will be able to log in again via LDAP. Otherwise, it will appear as removed in the LDAP synchronization, thus being deactivated by default. The "guest account" flag will also be removed.', 'Es wird nur der Benutzer-Account gelöscht. Das zugehörige Profil bleibt im System erhalten. Wenn der entsprechende Benutzername in LDAP hinzugefügt wurde, kann sich der Benutzer wieder über LDAP anmelden. Andernfalls erscheint er bei der LDAP-Synchronisation als entfernt und wird somit standardmäßig deaktiviert. Der Flag "Gästeaccount" wird ebenfalls entfern.') ?>
+                                        <b><?= lang('common.note') ?></b>
+                                        <?= lang('admin.only_the_user_account_will_be_deleted_the_corresponding_profile_will_remain') ?>
                                     </small><br>
                                     <button type="submit" class="btn danger" title="<?= lang('action.delete') ?>">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('Delete account', 'Account löschen') ?>
+                                        <?= lang('admin.delete_account') ?>
                                     </button>
                                 </form>
                             </div>

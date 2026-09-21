@@ -72,7 +72,7 @@ class Categories
     public function getName($id)
     {
         $cat = $this->getCategory($id);
-        if (empty($cat)) return lang('Unknown Category', 'Unbekannte Kategorie');
+        if (empty($cat)) return lang('common.unknown_category');
         return lang($cat['name'], $cat['name_de'] ?? null);
     }
 

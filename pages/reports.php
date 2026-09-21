@@ -90,11 +90,11 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
     <div class="btn-toolbar mb-20">
         <a href="<?= ROOTPATH ?>/admin/reports" class="btn primary ">
             <i class="ph ph-edit"></i>
-            <?= lang('Edit templates', 'Vorlagen bearbeiten') ?>
+            <?= lang('reports.edit_templates') ?>
         </a>
         <a href="<?= ROOTPATH ?>/admin/export-design" class="btn ">
             <i class="ph ph-palette"></i>
-            <?= lang('Export design', 'Export-Design') ?>
+            <?= lang('reports.export_design') ?>
         </a>
         <a href="#order" class="btn " data-toggle="modal">
             <i class="ph ph-list-numbers"></i>
@@ -105,12 +105,12 @@ $reports = $osiris->adminReports->find([], ['sort' => ['order' => 1]])->toArray(
 
 <?php
 if (empty($reports)) {
-    echo '<div class="alert alert-info">' . lang('No reports found.', 'Keine Berichte gefunden.') . '</div>';
+    echo '<div class="alert alert-info">' . lang('reports.no_reports_found') . '</div>';
 } else foreach ($reports as $report) { ?>
     <details class="collapse-panel mb-20">
         <summary class="collapse-header">
             <?php if ($Settings->hasPermission('report.templates')) { ?>
-                <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn btn-sm btn-secondary float-right" title="<?= lang('Edit report template', 'Report-Vorlage bearbeiten') ?>">
+                <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn btn-sm btn-secondary float-right" title="<?= lang('reports.edit_report_template') ?>">
                     <i class="ph ph-pencil" aria-hidden="true"></i>
                 </a>
             <?php } ?>
@@ -123,15 +123,15 @@ if (empty($reports)) {
 
                 <div class="form-row row-eq-spacing">
                     <div class="col-sm">
-                        <label for="format"><?= lang('Start year', 'Start-Jahr') ?></label>
+                        <label for="format"><?= lang('common.start_year') ?></label>
                         <input type="number" class="form-control" name="startyear" id="startyear" value="<?= CURRENTYEAR ?>" required>
                     </div>
                     <div class="col-sm">
-                        <label for="format"><?= lang('Start month', 'Start-Monat') ?></label>
+                        <label for="format"><?= lang('common.start_month_reports') ?></label>
                         <input type="number" class="form-control" name="startmonth" id="startmonth" value="<?= $report['start'] ?>" required>
                     </div>
                     <div class="col-sm">
-                        <label for="format"><?= lang('Duration in month', 'Dauer in Monaten') ?></label>
+                        <label for="format"><?= lang('reports.duration_in_month') ?></label>
                         <input type="number" class="form-control" name="duration" id="duration" value="<?= $report['duration'] ?>" required>
                     </div>
                 </div>
@@ -139,7 +139,7 @@ if (empty($reports)) {
                 $vars = DB::doc2Arr($report['variables'] ?? []);
                 if (!empty($vars)) { ?>
                     <fieldset>
-                        <legend><?= lang('Additional parameters', 'Zusätzliche Parameter') ?></legend>
+                        <legend><?= lang('reports.additional_parameters') ?></legend>
                         <?php foreach ($vars as $var) {  ?>
                             <div class="form-group">
                                 <label for="var[<?= ($var['key']) ?>]"><?= ($var['label'] ?? $var['key']) ?></label>
@@ -157,7 +157,7 @@ if (empty($reports)) {
                     </select>
                 </div>
 
-                <button class="btn" type="submit"><?= lang('Generate report', 'Report erstellen') ?></button>
+                <button class="btn" type="submit"><?= lang('reports.generate_report') ?></button>
 
             </form>
         </div>
@@ -170,20 +170,20 @@ if (empty($reports)) {
 <div class="box secondary">
     <div class="content">
 
-        <h5><?= lang('Export reports', 'Exportiere Berichte') ?></h5>
+        <h5><?= lang('reports.export_reports') ?></h5>
 
         <form action="<?= ROOTPATH ?>/reports/old" method="post">
 
             <div class="form-row row-eq-spacing-sm">
                 <div class="col-sm">
                     <label class="required" for="start">
-                        <?= lang('Beginning of report', 'Anfang des Reports') ?>
+                        <?= lang('reports.beginning_of_report') ?>
                     </label>
                     <input type="date" class="form-control" name="start" id="start" value="<?= CURRENTYEAR ?>-01-01" required>
                 </div>
                 <div class="col-sm">
                     <label class="required" for="end">
-                        <?= lang('End of report', 'Ende des Reports') ?>
+                        <?= lang('reports.end_of_report') ?>
                     </label>
                     <input type="date" class="form-control" name="end" id="end" value="<?= CURRENTYEAR ?>-06-30" required>
                 </div>
@@ -205,7 +205,7 @@ if (empty($reports)) {
                 </select>
             </div>
 
-            <button class="btn" type="submit"><?= lang('Generate report', 'Report erstellen') ?></button>
+            <button class="btn" type="submit"><?= lang('reports.generate_report') ?></button>
         </form>
 
     </div>

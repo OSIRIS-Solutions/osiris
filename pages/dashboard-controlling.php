@@ -17,7 +17,7 @@
  */
 ?>
 
-<h2><?= lang('Overview on the past four quarters', 'Überblick über die letzten vier Quartale') ?></h2>
+<h2><?= lang('dashboard.overview_on_the_past_four_quarters') ?></h2>
 
 
 <div class="row row-eq-spacing mb-0">
@@ -49,7 +49,7 @@
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
-                                // labels: ['<?= lang('common.approved') ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
+                                // labels: ['<?= lang('common.approved') ?>', '<?= lang('dashboard.approval_missing') ?>'],
                                 labels: <?= json_encode($d_labels) ?>,
                                 datasets: [{
                                     data: Object.values(raw_data),
@@ -119,7 +119,7 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
                         var myChart = new Chart(ctx, {
                             type: 'doughnut',
                             data: {
-                                labels: ['<?= lang('common.approved') ?>', '<?= lang("Approval missing", "Bestätigung fehlt") ?>'],
+                                labels: ['<?= lang('common.approved') ?>', '<?= lang('dashboard.approval_missing') ?>'],
                                 datasets: [{
                                     label: '# of Scientists',
                                     data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],
@@ -170,14 +170,14 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
 $Format = new Document(true);
 ?>
 
-<h2><?= lang('Newly added activities', 'Zuletzt hinzugefügte Aktivitäten') ?></h2>
+<h2><?= lang('dashboard.newly_added_activities') ?></h2>
 <div class="mt-20">
 
     <table class="table dataTable" id="activity-table">
         <thead>
             <tr>
-                <th><?= lang('Added', 'Hinzugefügt') ?></th>
-                <th><?= lang('By', 'Von') ?></th>
+                <th><?= lang('dashboard.added') ?></th>
+                <th><?= lang('dashboard.by') ?></th>
                 <th><?= lang('common.type') ?></th>
                 <th><?= lang('common.activity') ?></th>
                 <th></th>
@@ -190,7 +190,7 @@ $Format = new Document(true);
             $cursor = $osiris->activities->find($filter, $options);
 
             if (empty($cursor)) {
-                echo "<tr class='row-danger'><td colspan='3'>" . lang('No activities found.', 'Keine Publikationen gefunden.') . "</td></tr>";
+                echo "<tr class='row-danger'><td colspan='3'>" . lang('dashboard.no_activities_found') . "</td></tr>";
             } else foreach ($cursor as $i => $doc) {
                 $id = $doc['_id'];
                 if ($i >= 30) break;

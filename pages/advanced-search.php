@@ -62,9 +62,9 @@ if ($collection == 'projects' || $collection == 'proposals') {
 $field_by_id = array_column($FIELDS->fields, null, 'id');
 $aggregation_function_labels = [
     'count' => lang('common.count'),
-    'sum' => lang('Sum', 'Summe'),
-    'mean' => lang('Mean', 'Mittelwert'),
-    'median' => lang('Median', 'Median')
+    'sum' => lang('common.sum'),
+    'mean' => lang('search.mean'),
+    'median' => lang('common.median')
 ];
 
 $filters = array_filter($FIELDS->fields, function ($f) {
@@ -156,21 +156,21 @@ function printRules($rules)
             </a>
             <h2 class="title">
                 <?php if ($expert) { ?>
-                    <?= lang('Expert queries', 'Experten-Abfragen') ?>
+                    <?= lang('search.expert_queries') ?>
                 <?php } else { ?>
-                    <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
+                    <?= lang('search.saved_queries') ?>
                 <?php } ?>
             </h2>
 
 
             <div class="mb-20">
                 <button class="btn" aria-expanded="true" onclick="$(this).next().slideToggle();">
-                    <i class="ph ph-floppy-disk"></i> <?= lang('Save current query', 'Aktuelle Abfrage speichern') ?>
+                    <i class="ph ph-floppy-disk"></i> <?= lang('search.save_current_query') ?>
                 </button>
 
                 <div style="display:none;" class="box padded mt-10">
-                    <input type="text" class="form-control" id="query-name" placeholder="<?= lang('Name of query', 'Name der Abfrage') ?>">
-                    <button class="btn primary mt-10" onclick="saveQuery()"><?= lang('Save query', 'Abfrage speichern') ?></button>
+                    <input type="text" class="form-control" id="query-name" placeholder="<?= lang('search.name_of_query') ?>">
+                    <button class="btn primary mt-10" onclick="saveQuery()"><?= lang('search.save_query') ?></button>
                 </div>
             </div>
 
@@ -190,7 +190,7 @@ function printRules($rules)
             }
             $queries = $osiris->queries->find($filter)->toArray();
             if (empty($queries)) {
-                echo '<p>' . lang('You have not saved any queries yet.', 'Du hast noch keine Abfragen gespeichert.') . '</p>';
+                echo '<p>' . lang('search.you_have_not_saved_any_queries_yet') . '</p>';
             } else {
                 // sort by created by current user first, then by created date
                 usort($queries, function ($a, $b) {
@@ -204,7 +204,7 @@ function printRules($rules)
                 });
             ?>
 
-                <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('Search saved queries...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
+                <input type="search" class="form-control mb-10" id="query-search" placeholder="<?= lang('search.search_saved_queries') ?>" oninput="$('#saved-queries details').each(function() {
                     var summary = $(this).find('summary').text().toLowerCase();
                     var filter = $('#query-search').val().toLowerCase();
                     if (summary.indexOf(filter) > -1) {
@@ -225,9 +225,9 @@ function printRules($rules)
                             <summary class="collapse-header font-weight-bold d-flex justify-content-between align-items-center">
                                 <?= $query['name'] ?>
                                 <?php if ($query['global'] ?? false) { ?>
-                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= lang('Global', 'Global') ?></span>
+                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= lang('search.global') ?></span>
                                 <?php } elseif (isset($query['role'])) { ?>
-                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= lang('Role:', 'Rolle:') ?> <?= ucfirst($query['role']) ?></span>
+                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= lang('search.role') ?> <?= ucfirst($query['role']) ?></span>
                                 <?php } ?>
                             </summary>
                             <div class="collapse-content">
@@ -237,22 +237,22 @@ function printRules($rules)
                                 ?>
                                     <div class="dropdown float-right">
                                         <button class="btn" data-toggle="dropdown" type="button" id="dropdown-<?= $query_id ?>" aria-haspopup="true" aria-expanded="false">
-                                            <i class="ph ph-share-network"></i> <?= lang('Share', 'Teilen') ?>
+                                            <i class="ph ph-share-network"></i> <?= lang('common.share') ?>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-<?= $query_id ?>">
                                             <!-- share globally -->
                                             <div class="content">
                                                 <!-- copy Link with ID to clipboard -->
-                                                 <?=lang('Sharable link:', 'Teilbarer Link:')?>
+                                                 <?=lang('search.sharable_link')?>
                                                 <a class="" href="<?= $sharelink ?>" target="_blank">
                                                     <?= $sharelink ?>
                                                 </a>
-                                                <!-- <button class="btn link" onclick="copyQuery()" data-toggle="tooltip" data-title="<?= lang('Copy sharable linkto clipboard', 'Link zum Teilen in die Zwischenablage kopieren') ?>">
+                                                <!-- <button class="btn link" onclick="copyQuery()" data-toggle="tooltip" data-title="<?= lang('search.copy_sharable_linkto_clipboard') ?>">
                                                     <i class="ph ph-copy"></i>
                                                 </button> -->
                                                 <hr>
                                                 <button class="btn block mb-5" onclick="shareQuery('<?= $query['_id'] ?>', 'global')">
-                                                    <i class="ph ph-globe"></i> <?= lang('Share globally', 'Global teilen') ?>
+                                                    <i class="ph ph-globe"></i> <?= lang('search.share_globally') ?>
                                                 </button>
                                                 <hr>
                                                 <select class="form-control mb-5" id="role-select-<?= $query_id ?>">
@@ -261,7 +261,7 @@ function printRules($rules)
                                                     <?php } ?>
                                                 </select>
                                                 <button class="btn block" onclick="shareQuery('<?= $query_id ?>', 'role')">
-                                                    <i class="ph ph-shield-checkered"></i> <?= lang('Share with role', 'Mit Rolle teilen') ?>
+                                                    <i class="ph ph-shield-checkered"></i> <?= lang('search.share_with_role') ?>
                                                 </button>
                                             </div>
                                         </div>
@@ -270,7 +270,7 @@ function printRules($rules)
                                         function copyQuery() {
                                             var url = '<?= $currentURL ?>?query=<?= $query_id ?>';
                                             navigator.clipboard.writeText(url);
-                                            toastSuccess('<?= lang('Sharable link copied to clipboard.', 'Link zum Teilen in die Zwischenablage kopiert.') ?>');
+                                            toastSuccess('<?= lang('search.sharable_link_copied_to_clipboard') ?>');
                                         }
 
                                         function shareQuery(id, type) {
@@ -285,24 +285,24 @@ function printRules($rules)
                                                 data.role = role;
                                             }
                                             $.post(ROOTPATH + '/crud/queries', data, function(response) {
-                                                toastSuccess('<?= lang('Query shared successfully.', 'Abfrage erfolgreich geteilt.') ?>');
+                                                toastSuccess('<?= lang('search.query_shared_successfully') ?>');
                                             });
                                         }
                                     </script>
                                 <?php } ?>
-                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?? '' ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>', '<?= $query['aggregate_function'] ?? 'count' ?>', '<?= $query['aggregate_value'] ?? '' ?>')"><?= lang('Apply filter', 'Filter anwenden') ?></a>
+                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>', '<?= $query['aggregate'] ?? '' ?>', '<?= implode(';', DB::doc2Arr($query['columns'] ?? [])) ?>', '<?= $query['aggregate_function'] ?? 'count' ?>', '<?= $query['aggregate_value'] ?? '' ?>')"><?= lang('common.apply_filter') ?></a>
 
                                 <table class="table simple my-10">
 
                                     <?php if ($query['user'] != $_SESSION['username']) { ?>
                                         <tr>
-                                            <th><?= lang('Shared by', 'Geteilt von') ?>:</th>
+                                            <th><?= lang('search.shared_by') ?>:</th>
                                             <td><?= $DB->getNameFromId($query['user']) ?></td>
                                         </tr>
                                     <?php } ?>
 
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Rules', 'Regeln') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= lang('search.rules') ?>:</th>
                                         <?php if ($expert) { ?>
                                             <td>
                                                 <?= dump($rules) ?>
@@ -317,7 +317,7 @@ function printRules($rules)
                                     </tr>
 
                                     <tr>
-                                        <th><?= lang('Aggregate', 'Aggregieren') ?>:</th>
+                                        <th><?= lang('search.aggregate') ?>:</th>
                                         <td>
                                             <?php if (isset($query['aggregate']) && !empty($query['aggregate'])) { ?>
                                                 <?= $field_by_id[$query['aggregate']]['label'] ?? $query['aggregate'] ?>
@@ -329,12 +329,12 @@ function printRules($rules)
                                                 }
                                                 ?>
                                             <?php } else {
-                                                echo lang('No aggregation', 'Keine Aggregation angewendet');
+                                                echo lang('search.no_aggregation');
                                             } ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th><?= lang('Columns', 'Spalten') ?>:</th>
+                                        <th><?= lang('common.columns') ?>:</th>
                                         <td>
                                             <?php if (isset($query['columns']) && !empty($query['columns'])) {
                                                 $cols = DB::doc2Arr($query['columns']);
@@ -345,21 +345,21 @@ function printRules($rules)
                                             ?>
                                                 <?= implode(', ', $colLabels) ?>
                                             <?php } else {
-                                                echo lang('Default columns', 'Standard-Spalten');
+                                                echo lang('search.default_columns');
                                             } ?>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <th><?= lang('Created', 'Erstellt') ?>:</th>
+                                        <th><?= lang('common.created') ?>:</th>
                                         <td><?= date('d.m.Y H:i', strtotime($query['created'])) ?></td>
                                     </tr>
                                 </table>
 
                                 <?php if ($query['user'] != $_SESSION['username']) { ?>
-                                    <small class="text-muted"><?= lang('Only the creator of the query can delete or modify it.', 'Nur der Ersteller der Abfrage kann sie löschen oder bearbeiten.') ?></small>
+                                    <small class="text-muted"><?= lang('search.only_the_creator_of_the_query_can_delete_or_modify_it') ?></small>
                                 <?php } else { ?>
-                                    <a class="btn danger small text-right" onclick="deleteQuery('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('Delete Query', 'Abfrage löschen') ?></a>
+                                    <a class="btn danger small text-right" onclick="deleteQuery('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('search.delete_query') ?></a>
                                 <?php } ?>
                             </div>
                         </details>
@@ -387,10 +387,10 @@ function printRules($rules)
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('Filter code', 'Filter-Code') ?></h5>
+            <h5 class="title"><?= lang('search.filter_code') ?></h5>
 
             <p>
-                <?= lang('This filter is needed for example for generating report templates.', 'Dieser Filter wird zum Beispiel für die Erstellung von Berichtsvorlagen benötigt.') ?>
+                <?= lang('search.this_filter_is_needed_for_example_for_generating_report_templates') ?>
             </p>
             <!-- copy to clipboard -->
             <script>
@@ -419,7 +419,7 @@ function printRules($rules)
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('Select columns to display', 'Wähle Spalten zum Anzeigen aus') ?></h5>
+            <h5 class="title"><?= lang('search.select_columns_to_display') ?></h5>
             <style>
                 .input-group-text {
                     background-color: var(--primary-color-30);
@@ -433,7 +433,7 @@ function printRules($rules)
                         <i class="ph ph-magnifying-glass"></i>
                     </span>
                 </div>
-                <input type="search" class="form-control border-primary" id="column-search" placeholder="<?= lang('Search fields...', 'Felder suchen...') ?>" oninput="filterColumns()">
+                <input type="search" class="form-control border-primary" id="column-search" placeholder="<?= lang('search.search_fields') ?>" oninput="filterColumns()">
             </div>
 
             <div id="column-select">
@@ -483,7 +483,7 @@ function printRules($rules)
                             <?php } ?>
                             <?php foreach ($modules as $key) {
                                 if ($key == 'general') { ?>
-                                    <span data-toggle="tooltip" data-title="<?= lang('General field', 'Generelles Datenfeld') ?>">
+                                    <span data-toggle="tooltip" data-title="<?= lang('search.general_field') ?>">
                                         <i class="ph ph-globe text-muted"></i>
                                     </span>
                             <?php
@@ -498,7 +498,7 @@ function printRules($rules)
             </div>
             <div class="text-right mt-20">
                 <a href="#/" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
-                <a class="btn secondary" role="button" onclick="getResult()"><?= lang('Apply', 'Anwenden') ?></a>
+                <a class="btn secondary" role="button" onclick="getResult()"><?= lang('common.apply') ?></a>
             </div>
             <script>
                 function filterColumns() {
@@ -524,17 +524,17 @@ function printRules($rules)
 
 
 <div class="">
-    <a href="https://wiki.osiris-app.de/users/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('Manual', 'Anleitung') ?></a>
+    <a href="https://wiki.osiris-app.de/users/advanced-search/" class="btn tour float-sm-right" target="_blank"><i class="ph ph-question"></i> <?= lang('search.manual') ?></a>
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
         <?= lang('navigation.advanced_search') ?>
-        <?= lang('in', 'in') ?> <?= $colName ?? $collection ?>
+        <?= lang('search.in') ?> <?= $colName ?? $collection ?>
     </h1>
 
     <div class="box">
         <div class="content mb-0">
 
-            <h3 class="title"><?= lang('Filter', 'Filtern') ?></h3>
+            <h3 class="title"><?= lang('search.filter') ?></h3>
             <div id="builder" class="<?= $expert ? 'hidden' : '' ?>"></div>
 
             <?php if ($expert) { ?>
@@ -548,7 +548,7 @@ function printRules($rules)
                 <div class="content">
                     <a href="#column-select-modal">
                         <i class="ph ph-columns-plus-right"></i>
-                        <?= lang('Select Columns', 'Spalten auswählen') ?>
+                        <?= lang('search.select_columns') ?>
                     </a>
                     <!-- 
                     <div id="selected-columns">
@@ -556,18 +556,18 @@ function printRules($rules)
                     </div> -->
                 </div>
             </div>
-            <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
+            <div class="text-divider"><?= lang('common.or') ?></div>
             <div class="col">
                 <!-- Aggregations -->
                 <div class="content">
                     <a onclick="$('#aggregate-form').slideToggle()">
                         <i class="ph ph-squares-four"></i>
-                        <?= lang('Aggregate', 'Aggregieren') ?>
+                        <?= lang('search.aggregate') ?>
                     </a>
 
                     <div class="input-group" style="display:none;" id="aggregate-form">
-                        <select name="aggregate" id="aggregate" class="form-control w-auto" aria-label="<?= lang('Group by', 'Gruppieren nach') ?>" onchange="updateAggregationControls()">
-                            <option value=""><?= lang('Without aggregation (show all)', 'Ohne Aggregation (zeige alles)') ?></option>
+                        <select name="aggregate" id="aggregate" class="form-control w-auto" aria-label="<?= lang('search.group_by') ?>" onchange="updateAggregationControls()">
+                            <option value=""><?= lang('search.without_aggregation_show_all') ?></option>
                             <?php
                             $aggregate_filter = array_filter($FIELDS->fields, function ($f) {
                                 return in_array('aggregate', $f['usage'] ?? []);
@@ -579,14 +579,14 @@ function printRules($rules)
 
                         </select>
 
-                        <select name="aggregate_function" id="aggregate-function" class="form-control w-auto" aria-label="<?= lang('Calculation', 'Berechnung') ?>" onchange="updateAggregationControls()">
+                        <select name="aggregate_function" id="aggregate-function" class="form-control w-auto" aria-label="<?= lang('search.calculation') ?>" onchange="updateAggregationControls()">
                             <?php foreach ($aggregation_function_labels as $function => $label) { ?>
                                 <option value="<?= $function ?>"><?= $label ?></option>
                             <?php } ?>
                         </select>
 
-                        <select name="aggregate_value" id="aggregate-value" class="form-control w-auto" aria-label="<?= lang('Value field', 'Wertefeld') ?>" style="display:none;">
-                            <option value=""><?= lang('Select numeric value', 'Numerischen Wert auswählen') ?></option>
+                        <select name="aggregate_value" id="aggregate-value" class="form-control w-auto" aria-label="<?= lang('search.value_field') ?>" style="display:none;">
+                            <option value=""><?= lang('search.select_numeric_value') ?></option>
                             <?php
                             $numeric_aggregate_fields = array_filter($FIELDS->fields, function ($f) {
                                 return in_array($f['type'] ?? '', ['integer', 'double', 'number'], true)
@@ -611,21 +611,21 @@ function printRules($rules)
 
             <div class="btn-toolbar">
                 <?php if ($expert) { ?>
-                    <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('Apply', 'Anwenden') ?></button>
+                    <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('common.apply') ?></button>
 
-                    <a class="btn osiris" href="?"><i class="ph ph-lego"></i> <?= lang('Sandbox mode', 'Baukasten-Modus') ?></a>
+                    <a class="btn osiris" href="?"><i class="ph ph-lego"></i> <?= lang('search.sandbox_mode') ?></a>
 
                 <?php } else { ?>
-                    <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('Apply', 'Anwenden') ?></button>
-                    <a class="btn osiris" href="?expert"><i class="ph ph-magnifying-glass-plus"></i> <?= lang('Expert mode', 'Experten-Modus') ?></a>
+                    <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('common.apply') ?></button>
+                    <a class="btn osiris" href="?expert"><i class="ph ph-magnifying-glass-plus"></i> <?= lang('search.expert_mode') ?></a>
                 <?php } ?>
 
                 <a href="#saved-queries-modal" class="btn" role="button">
-                    <i class="ph ph-floppy-disk"></i> <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
+                    <i class="ph ph-floppy-disk"></i> <?= lang('search.saved_queries') ?>
                 </a>
 
                 <a href="#filter-code" class="btn" role="button">
-                    <i class="ph ph-code"></i> <?= lang('Show filter', 'Zeige Filter') ?>
+                    <i class="ph ph-code"></i> <?= lang('search.show_filter') ?>
                 </a>
 
             </div>
@@ -695,9 +695,9 @@ function printRules($rules)
             ],
             lang: {
                 operators: {
-                    exists: lang('exists', 'existiert'),
-                    not_exists: lang('not exists', 'existiert nicht'),
-                    contains_i: lang('contains (ignore case)', 'enthält (Groß-/Kleinschreibung ignorieren)')
+                    exists: <?= json_encode(lang('search.exists'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    not_exists: <?= json_encode(lang('search.not_exists'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    contains_i: <?= json_encode(lang('search.contains_ignore_case'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 }
             },
             mongoOperators: {
@@ -741,9 +741,9 @@ function printRules($rules)
         function aggregationResultLabel() {
             const functionLabels = {
                 count: lang('common.count'),
-                sum: lang('Sum', 'Summe'),
-                mean: lang('Mean', 'Mittelwert'),
-                median: lang('Median', 'Median')
+                sum: <?= json_encode(lang('common.sum'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                mean: <?= json_encode(lang('search.mean'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                median: <?= json_encode(lang('common.median'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
             };
             const aggregationFunction = $('#aggregate-function').val() || 'count';
             const valueLabel = $('#aggregate-value option:selected').text();
@@ -777,7 +777,7 @@ function printRules($rules)
             if (aggregate !== "") {
                 const aggregationFunction = $('#aggregate-function').val() || 'count';
                 data = data.map(row => ({
-                    value: row.value ?? '<em>' + lang('empty', 'leer') + '</em>',
+                    value: row.value ?? '<em>' + <?= json_encode(lang('search.empty'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</em>',
                     result: aggregationFunction === 'count' ? (row.count ?? 0) : (row.result ?? 0)
                 }));
 
@@ -855,7 +855,7 @@ function printRules($rules)
                     return r
                 });
                 if (selected_columns.length > 0) {
-                    toastWarning(lang('The following columns are not found in the result and are not shown:', 'Die folgenden Spalten waren im Ergebnis komplett leer und werden nicht gezeigt:') + ' <strong>' + selected_columns.join(', ') + '</strong>');
+                    toastWarning(<?= json_encode(lang('search.the_following_columns_are_not_found_in_the_result_and_are_not_shown'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <strong>' + selected_columns.join(', ') + '</strong>');
                 }
 
             }
@@ -889,7 +889,7 @@ function printRules($rules)
                 try {
                     var rules = JSON.parse(rules)
                 } catch (SyntaxError) {
-                    toastError(lang('Invalid JSON', 'Ungültiges JSON'))
+                    toastError(<?= json_encode(lang('search.invalid_json'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                     return
                 }
             } else {
@@ -910,7 +910,7 @@ function printRules($rules)
                 if (data.aggregate_function !== 'count') {
                     data.aggregate_value = $('#aggregate-value').val()
                     if (!data.aggregate_value) {
-                        toastWarning(lang('Please select a numeric value for the aggregation.', 'Bitte wähle einen numerischen Wert für die Aggregation aus.'))
+                        toastWarning(<?= json_encode(lang('search.please_select_a_numeric_value_for_the_aggregation'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                         return
                     }
                 }
@@ -1008,7 +1008,7 @@ function printRules($rules)
 
                 $('#saved-queries').append(`<a class="d-block" onclick="applyFilter('${data.id}', '${$('#aggregate').val()}', '${columns.join(';')}', '${$('#aggregate-function').val() || 'count'}', '${$('#aggregate-value').val()}')">${name}</a>`)
                 $('#query-name').val('')
-                toastSuccess(lang('Query saved successfully. Please reload the page to see it completely.', 'Abfrage erfolgreich gespeichert. Lade die Seite neu, um sie vollständig anzuzeigen.'))
+                toastSuccess(<?= json_encode(lang('search.query_saved_successfully_please_reload_the_page_to_see_it_completely'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                 $('#save-query-button').prop('disabled', false);
             })
         }

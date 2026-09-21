@@ -10,7 +10,7 @@ require_once BASEPATH . "/vendor/autoload.php";
 
 
 <h1>
-    <?= lang('Guest ', 'Gast') ?>
+    <?= lang('guests.guest') ?>
     <?php if (!empty($form['guest']) && !empty($form['guest']['last'])) { ?>
         <span class="text-osiris">
             <?= $form['guest']['academic_title'] ?? '-' ?>
@@ -25,10 +25,10 @@ require_once BASEPATH . "/vendor/autoload.php";
 <?php if ($form['cancelled'] ?? false) { ?>
     <div class="alert danger mb-20">
         <h4 class="title">
-            <?= lang('This guest has been cancelled', 'Dieser Gast wurde abgesagt') ?>
+            <?= lang('guests.this_guest_has_been_cancelled') ?>
         </h4>
         <p>
-            <?= lang('Cancelled by', 'Abgesagt durch') ?>
+            <?= lang('guests.cancelled_by') ?>
             <a href="<?= ROOTPATH ?>/profile/<?= $form['cancelled_by'] ?? '' ?>">
                 <?= $DB->getNameFromId($form['cancelled_by'] ?? '') ?>
             </a>
@@ -41,33 +41,33 @@ require_once BASEPATH . "/vendor/autoload.php";
 <div class="d-flex">
 
     <div class="mr-20 badge bg-white">
-        <small><?= lang('Responsible', 'Verantwortlich') ?>: </small>
+        <small><?= lang('guests.responsible') ?>: </small>
         <br />
         <b><a href="<?= ROOTPATH ?>/profile/<?= $form['supervisor']['user'] ?? '' ?>">
                 <?= $form['supervisor']['name'] ?? '-' ?>
             </a></b>
     </div>
     <div class="mr-20 badge bg-white">
-        <small><?= lang('Time frame of the stay', 'Dauer des Aufenthalts') ?>: </small>
+        <small><?= lang('common.time_frame_of_the_stay') ?>: </small>
         <br />
         <b><?= fromToDate($form['start'], $form['end'] ?? null) ?></b>
     </div>
 
     <div class="mr-20 badge bg-white">
-        <small><?= lang('Cancel guest', 'Gast absagen') ?> </small>
+        <small><?= lang('guests.cancel_guest') ?> </small>
         <br />
         <?php if ($form['cancelled'] ?? false) { ?>
             <form action="<?= ROOTPATH ?>/guests/cancel/<?= $id ?>" method="post">
                 <input type="hidden" name="cancel" value="0">
                 <button class="btn success small" type="submit">
-                    <i class="ph ph-calendar-check"></i> <?= lang('Revoke', 'Zurückziehen') ?>
+                    <i class="ph ph-calendar-check"></i> <?= lang('guests.revoke') ?>
                 </button>
             </form>
         <?php } else { ?>
             <form action="<?= ROOTPATH ?>/guests/cancel/<?= $id ?>" method="post">
                 <input type="hidden" name="cancel" value="1">
                 <button class="btn danger small" type="submit">
-                    <i class="ph ph-calendar-x"></i> <?= lang('Cancel', 'Absagen') ?>
+                    <i class="ph ph-calendar-x"></i> <?= lang('guests.cancel') ?>
                 </button>
             </form>
         <?php } ?>
@@ -75,21 +75,21 @@ require_once BASEPATH . "/vendor/autoload.php";
 
     <!-- Add possibility to prolong period -->
     <div class="mr-20 badge bg-white">
-        <small><?= lang('Prolong stay', 'Aufenthalt verlängern') ?> </small>
+        <small><?= lang('guests.prolong_stay') ?> </small>
         <br />
         <!--  dropdown -->
         <div class="dropdown">
             <button class="btn secondary small dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="ph ph-calendar-plus"></i> <?= lang('Prolong', 'Verlängern') ?>
+                <i class="ph ph-calendar-plus"></i> <?= lang('guests.prolong') ?>
             </button>
             <div class="dropdown-menu p-10" aria-labelledby="dropdownMenuButton">
                 <form action="<?= ROOTPATH ?>/guests/update/<?= $id ?>" method="post">
                 <div class="form-group">
-                <label for="end"><?=lang('New end date', 'Neues End-Datum')?></label>
+                <label for="end"><?=lang('guests.new_end_date')?></label>
                     <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($form['end'] ?? null) ?>" required>
                 </div>
                     <button class="btn secondary small" type="submit">
-                        <i class="ph ph-calendar-plus"></i> <?= lang('Prolong', 'Verlängern') ?>
+                        <i class="ph ph-calendar-plus"></i> <?= lang('guests.prolong') ?>
                     </button>
                 </form>
             </div>
@@ -141,7 +141,7 @@ require_once BASEPATH . "/vendor/autoload.php";
 
                         <form action="<?= ROOTPATH ?>/guests/synchronize/<?= $id ?>" method="post">
                             <button class="btn danger" type="submit">
-                                <?= lang('Refresh', 'Aktualisieren') ?>
+                                <?= lang('guests.refresh') ?>
                             </button>
                         </form>
                     </div>
@@ -180,7 +180,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Date of Birth', 'Geburtstag') ?></th>
+                    <th class="w-300"><?= lang('common.date_of_birth') ?></th>
                     <td>
                         <?= $form['guest']['birthday'] ?? '-' ?>
                     </td>
@@ -192,25 +192,25 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('E-Mail', 'E-Mail') ?></th>
+                    <th class="w-300"><?= lang('common.e_mail') ?></th>
                     <td>
                         <?= $form['guest']['mail'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Accomodation during stay', 'Unterkunftsadresse während des Aufenthalts') ?></th>
+                    <th class="w-300"><?= lang('common.accomodation_during_stay') ?></th>
                     <td>
                         <?= $form['guest']['accomodation'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Company / University', 'Firma / Universität / Schule') ?></th>
+                    <th class="w-300"><?= lang('common.company_university') ?></th>
                     <td>
                         <?= $form['affiliation']['name'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Address', 'Anschrift') ?></th>
+                    <th class="w-300"><?= lang('common.address') ?></th>
                     <td>
                         <?= $form['affiliation']['address'] ?? '-' ?>
                     </td>
@@ -222,15 +222,15 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Time frame of the stay', 'Dauer des Aufenthalts') ?></th>
+                    <th class="w-300"><?= lang('common.time_frame_of_the_stay') ?></th>
                     <td>
                         <?= format_date($form['start'] ?? null) ?>
-                        <?= lang('to', 'bis') ?>
+                        <?= lang('common.to') ?>
                         <?= format_date($form['end'] ?? null) ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Responsible Scientist', 'Verantwortliche/r Wissenschaftler/in') ?></th>
+                    <th class="w-300"><?= lang('guests.responsible_scientist') ?></th>
                     <td>
                         <a href="<?= ROOTPATH ?>/profile/<?= $form['supervisor']['user'] ?? '' ?>">
                             <?= $form['supervisor']['name'] ?? '-' ?>
@@ -244,13 +244,13 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Purpose of stay', 'Zweck des Aufenthalts') ?></th>
+                    <th class="w-300"><?= lang('common.purpose_of_stay') ?></th>
                     <td>
                         <?= $form['category'] ?? '-' ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('The visit is financed by', 'Die Finanzierung erfolgt') ?></th>
+                    <th class="w-300"><?= lang('common.the_visit_is_financed_by') ?></th>
                     <td>
                         <?= $form['payment'] ?? '-' ?>
                         <?php if (isset($form['payment_comment'])) { ?>
@@ -261,25 +261,25 @@ require_once BASEPATH . "/vendor/autoload.php";
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('General Agreement', 'Generelle Zustimmung') ?></th>
+                    <th class="w-300"><?= lang('guests.general_agreement') ?></th>
                     <td>
                         <?= bool_icon($form['legal']['general'] ?? false) ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Legal instructions for data protection', 'Rechtsbelehrung zum Datenschutz') ?></th>
+                    <th class="w-300"><?= lang('guests.legal_instructions_for_data_protection') ?></th>
                     <td>
                         <?= bool_icon($form['legal']['data_security'] ?? false) ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Legal instructions for data security', 'Rechtsbelehrung zur Datensicherheit') ?></th>
+                    <th class="w-300"><?= lang('guests.legal_instructions_for_data_security') ?></th>
                     <td>
                         <?= bool_icon($form['legal']['data_protection'] ?? false) ?>
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-300"><?= lang('Safety-Instructions for Short-Time Guests', 'Sicherheitsbelehrung für Kurzzeitgäste') ?></th>
+                    <th class="w-300"><?= lang('guests.safety_instructions_for_short_time_guests') ?></th>
                     <td>
                         <?= bool_icon($form['legal']['safety_instruction'] ?? false) ?>
                     </td>
@@ -289,7 +289,7 @@ require_once BASEPATH . "/vendor/autoload.php";
             </table>
 
             <div class="content">
-                <a href="<?= ROOTPATH ?>/guests/edit/<?= $id ?>" class="btn danger"><?= lang('Edit information', 'Formular bearbeiten') ?></a>
+                <a href="<?= ROOTPATH ?>/guests/edit/<?= $id ?>" class="btn danger"><?= lang('guests.edit_information') ?></a>
             </div>
         </div>
 
@@ -308,16 +308,16 @@ require_once BASEPATH . "/vendor/autoload.php";
                 <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <h4 class="title"><?= lang('Connect user', 'Nutzer verknüpfen') ?></h4>
+                <h4 class="title"><?= lang('guests.connect_user') ?></h4>
 
                 <form action="<?= ROOTPATH ?>/guests/update/<?= $id ?>" method="post">
 
                     <div class="form-group">
                         <label class="element-author" for="username">
-                            <?= lang('Select a person', 'Wähle eine Person') ?>
+                            <?= lang('guests.select_a_person') ?>
                         </label>
                         <select class="form-control" id="username" name="values[username]" autocomplete="off">
-                            <option value=""><?= lang('-- No user --', '-- Kein Nutzer --') ?></option>
+                            <option value=""><?= lang('guests.no_user') ?></option>
                             <?php
                             $persons = $osiris->persons->find(['username' => ['$ne' => null], 'last' => ['$ne' => '']], ['sort' => ['last' => 1]]);
                             foreach ($persons as $j) { ?>
@@ -325,7 +325,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                             <?php } ?>
                         </select>
                     </div>
-                    <button type="submit" class="btn secondary"><?= lang('Connect', 'Verknüpfen') ?></button>
+                    <button type="submit" class="btn secondary"><?= lang('common.connect') ?></button>
                 </form>
             </div>
         </div>
@@ -384,13 +384,13 @@ require_once BASEPATH . "/vendor/autoload.php";
                     <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h4 class="title"><?= lang('Upload document', 'Dokument hochladen') ?></h4>
+                    <h4 class="title"><?= lang('common.upload_document') ?></h4>
 
                     <form action="<?= ROOTPATH ?>/guests/upload-files/<?= $id ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                         <div class="custom-file mb-20" id="file-input-div" >
                             <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                            <label for="file-input"><?= lang('Append a file', 'Hänge eine Datei an') ?></label>
+                            <label for="file-input"><?= lang('guests.append_a_file') ?></label>
                             <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                         <button class="btn secondary">
@@ -404,7 +404,7 @@ require_once BASEPATH . "/vendor/autoload.php";
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 16777216) {
-                                toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
+                                toastError(<?= json_encode(lang('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
@@ -443,7 +443,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td><?= lang('No files uploaded', 'Noch keine Dateien hochgeladen') ?></td>
+                            <td><?= lang('guests.no_files_uploaded') ?></td>
                         </tr>
                     <?php endif; ?>
                 </table>
@@ -465,7 +465,7 @@ require_once BASEPATH . "/vendor/autoload.php";
                     <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close" href="#close-modal">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h4 class="title"><?= lang('Chip registration', 'Chip hinterlegen') ?></h4>
+                    <h4 class="title"><?= lang('guests.chip_registration') ?></h4>
 
                     <?php
                     $chip = $form['chip'] ?? '';
@@ -474,20 +474,20 @@ require_once BASEPATH . "/vendor/autoload.php";
                     <form action="<?= ROOTPATH ?>/guests/update/<?= $id ?>" method="post">
                         <div class="form-group">
                             <label class="element-author" for="chip">
-                                <?= lang('Chip number', 'Chipnummer') ?>
+                                <?= lang('guests.chip_number') ?>
                             </label>
                             <input type="text" class="form-control" id="chip" name="values[chip][number]" autocomplete="off" value="<?= $chip['number'] ?? '' ?>" required>
                         </div>
                         <div class="form-group">
                             <label class="element-author" for="registered">
-                                <?= lang('Registered at', 'Registriert am') ?>
+                                <?= lang('guests.registered_at') ?>
                             </label>
                             <input type="date" class="form-control" id="registered" name="values[chip][start]" autocomplete="off" value="<?= $chip['start'] ?? date('Y-m-d') ?>" required>
                         </div>
                         <hr>
                         <div class="form-group">
                             <label class="element-author" for="registered">
-                                <?= lang('Returned at', 'Zurückgegeben am') ?>
+                                <?= lang('guests.returned_at') ?>
                             </label>
                             <input type="date" class="form-control" id="registered" name="values[chip][end]" autocomplete="off" value="<?= $chip['end'] ?? '' ?>">
                         </div>

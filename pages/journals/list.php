@@ -37,7 +37,7 @@ if (empty($fields)) {
     <?php if ($Settings->hasPermission('journals.edit')) { ?>
         <a href="<?= ROOTPATH ?>/journal/add" class="btn primary">
             <i class="ph ph-stack-plus"></i>
-            <?= lang("Add $label", "$label hinzufügen") ?>
+            <?= lang('common.add_label', replace: ['label' => $label]) ?>
         </a>
         <a href="<?= ROOTPATH ?>/journals/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
@@ -46,7 +46,7 @@ if (empty($fields)) {
         <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
             <a href="<?= ROOTPATH ?>/journal/metrics">
                 <i class="ph ph-ranking"></i>
-                <?= lang('Check metrics', 'Metriken prüfen') ?>
+                <?= lang('common.check_metrics') ?>
             </a>
         <?php } ?>
     <?php } ?>

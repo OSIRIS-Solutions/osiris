@@ -26,7 +26,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 
 <h1>
     <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-    <?= lang('Coauthor network', 'Koautoren-Netzwerk') ?>
+    <?= lang('common.coauthor_network') ?>
 </h1>
 
 
@@ -44,7 +44,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 </form>
 
 <a class="link" href="<?= ROOTPATH ?>/profile/<?= $scientist ?>"><i class="ph ph-student"></i>
-    <?= lang('View scientist page of ', 'Zeige die Übersichtsseite von ') ?>
+    <?= lang('common.view_scientist_page_of') ?>
     <?= $selectedUser['displayname'] ?>
 </a>
 
@@ -102,7 +102,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
             legend.append('div')
                 .style('font-weight', 'bold')
                 .attr('class', 'mb-5')
-                .text(lang("Departments", "Abteilungen"))
+                .text(<?= json_encode(lang('search.departments'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
 
             for (const dept in depts_in_use) {
                 if (Object.hasOwnProperty.call(depts_in_use, dept)) {

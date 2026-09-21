@@ -35,7 +35,7 @@ class EventFields extends Fields
             [
                 "id" => "title_full",
                 "module_of" => ['general'],
-                "label" => lang("Full title", "Voller Titel"),
+                "label" => lang('events.full_title'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -101,7 +101,7 @@ class EventFields extends Fields
             [
                 "id" => "country",
                 "module_of" => ['general'],
-                "label" => lang("Country (ISO Code)", "Land (ISO-Code)"),
+                "label" => lang('events.country_iso_code'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',

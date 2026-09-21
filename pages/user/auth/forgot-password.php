@@ -1,19 +1,16 @@
 <a class="back-link" href="<?= ROOTPATH ?>/user/login">
     <i class="ph ph-arrow-left" aria-hidden="true"></i>
-    <?= lang('Back to login', 'Zurück zur Anmeldung') ?>
+    <?= lang('common.back_to_login') ?>
 </a>
 
-<h1 class="card-title" id="auth-title"><?= lang('Forgot password?', 'Passwort vergessen?') ?></h1>
+<h1 class="card-title" id="auth-title"><?= lang('common.forgot_password') ?></h1>
 <p class="card-copy">
-    <?= lang(
-        'Enter the email address associated with your account. We will send you a link to choose a new password.',
-        'Gib die E-Mail-Adresse deines Accounts ein. Wir senden dir einen Link, über den du ein neues Passwort festlegen kannst.'
-    ) ?>
+    <?= lang('people.enter_the_email_address_associated_with_your_account_we_will_send_you_a_lin') ?>
 </p>
 
 <form action="<?= ROOTPATH ?>/auth/forgot-password" method="post">
     <div class="form-group">
-        <label for="mail"><?= lang('Email address', 'E-Mail-Adresse') ?></label>
+        <label for="mail"><?= lang('common.email_address') ?></label>
         <div class="input-wrap">
             <i class="ph ph-envelope-simple" aria-hidden="true"></i>
             <input class="form-control" id="mail" type="email" name="mail" value="<?= e($_POST['mail'] ?? '') ?>" autocomplete="email" required autofocus>
@@ -21,7 +18,7 @@
     </div>
 
     <button class="submit" type="submit">
-        <span><?= lang('Request reset link', 'Link zum Zurücksetzen anfordern') ?></span>
+        <span><?= lang('people.request_reset_link') ?></span>
         <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
     </button>
 </form>

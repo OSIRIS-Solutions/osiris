@@ -132,10 +132,10 @@ function fetchOpenAlex(doi) {
             if (response.ok) {
             $('#openalex-refresh-button').hide()
             // insert text instead of button
-            $('#openalex-refresh-button').after('<span class="text-success">' + lang('OpenAlex was queried. Refresh the page to see updated data.', 'OpenAlex wurde abgefragt. Aktualisiere die Seite, um die aktualisierten Daten zu sehen.') + '</span>')
+            $('#openalex-refresh-button').after('<span class="text-success">' + lang('activities.openalex_was_queried_refresh_the_page_to_see_updated_data') + '</span>')
             } else {
                 $('#openalex-refresh-button').prop('disabled', false).removeClass('loading');
-                toastError(lang('Failed to fetch data from OpenAlex.', 'Daten konnten nicht von OpenAlex abgerufen werden.'));
+                toastError(lang('activities.failed_to_fetch_data_from_openalex'));
             }
 
         },

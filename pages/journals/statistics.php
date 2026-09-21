@@ -17,7 +17,7 @@
  */
 
 $label = $Settings->journalLabel();
-$phrase = lang('in the reporting year', 'im Reportjahr');
+$phrase = lang('common.in_the_reporting_year');
 $time_frame = '';
 
 // Journals do not have a reporting date. The selected period is applied to
@@ -31,8 +31,8 @@ if (
     $reportstart = date('Y-m-d', strtotime($_GET['reportstart']));
     $reportend = date('Y-m-d', strtotime($_GET['reportend']));
     $reportyear = intval(date('Y', strtotime($reportend)));
-    $phrase = lang('in the reporting period', 'im Reportzeitraum');
-    $time_frame = lang('Reporting period', 'Reportzeitraum') . ': '
+    $phrase = lang('common.in_the_reporting_period');
+    $time_frame = lang('common.reporting_period') . ': '
         . date('d.m.Y', strtotime($reportstart)) . ' – '
         . date('d.m.Y', strtotime($reportend));
 } else {
@@ -41,7 +41,7 @@ if (
         : CURRENTYEAR;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
-    $time_frame = lang('Reporting year', 'Reportjahr') . ': ' . $reportyear;
+    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
 }
 
 $report_end_year = intval(date('Y', strtotime($reportend)));
@@ -168,8 +168,8 @@ $number = function ($value, $decimals = 0) {
     return number_format(
         floatval($value),
         $decimals,
-        lang('.', ','),
-        lang(',', '.')
+        lang('journals.text_ff40038939'),
+        lang('journals.text_e6d7f55f20')
     );
 };
 
@@ -285,9 +285,9 @@ foreach ($journals as &$journal) {
 
     $oa = $journal['oa'] ?? null;
     if ($oa === true || (is_numeric($oa) && intval($oa) <= $report_end_year)) {
-        $oa_status = lang('Open Access', 'Open Access');
+        $oa_status = lang('journals.open_access');
     } elseif ($oa === false || (is_numeric($oa) && intval($oa) > $report_end_year)) {
-        $oa_status = lang('Not Open Access', 'Nicht Open Access');
+        $oa_status = lang('journals.not_open_access');
     } else {
         $oa_status = lang('common.unknown');
     }
@@ -308,7 +308,7 @@ foreach ($journals as &$journal) {
     $journal['statistics_quartile'] = $quartile;
     $add_distribution(
         $quartile_distribution,
-        $quartile ?? lang('No quartile', 'Kein Quartil'),
+        $quartile ?? lang('journals.no_quartile'),
         $publications
     );
 
@@ -564,37 +564,34 @@ foreach ($oa_distribution as $name => $counts) {
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang("$label statistics", "$label-Statistiken") ?>
+    <?= lang('journals.label_statistics', replace: ['label' => $label]) ?>
 </h1>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/journals">
         <i class="ph ph-arrow-left"></i>
-        <?= lang("Back to $label", "Zurück zu $label") ?>
+        <?= lang('journals.back_to_label', replace: ['label' => $label]) ?>
     </a>
 </div>
 
 <div class="alert signal">
     <i class="ph ph-info text-signal"></i>
-    <?= lang(
-        "Publications from the selected reporting period are combined with the current journal master data. Time-dependent Open Access information is evaluated at the end of the period; metrics use the latest available year up to that point.",
-        "Publikationen aus dem ausgewählten Reportzeitraum werden mit den aktuellen Journal-Stammdaten kombiniert. Zeitabhängige Open-Access-Angaben werden zum Ende des Zeitraums ausgewertet; Metriken verwenden das bis dahin aktuellste verfügbare Jahr."
-    ) ?>
+    <?= lang('journals.publications_from_the_selected_reporting_period_are_combined_with_the_curre') ?>
 
     <div class="row position-relative mt-10">
         <div class="col-sm p-10">
             <form action="<?= ROOTPATH ?>/journals/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('Change Reporting Year', 'Reportjahr ändern') ?>:</h6>
+                <h6 class="m-0"><?= lang('common.change_reporting_year') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" required>
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
             </form>
         </div>
 
-        <div class="text-divider"><?= lang('OR', 'ODER') ?></div>
+        <div class="text-divider"><?= lang('common.or') ?></div>
 
         <div class="col-sm p-10">
             <form action="<?= ROOTPATH ?>/journals/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('Change Reporting Period', 'Reportzeitraum ändern') ?>:</h6>
+                <h6 class="m-0"><?= lang('common.change_reporting_period') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required>
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required>
                 <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
@@ -618,46 +615,40 @@ foreach ($oa_distribution as $name => $counts) {
         <div class="tile">
             <span class="value"><?= $number($publication_count) ?></span>
             <span class="label">
-                <?= lang('Linked publications', 'Verknüpfte Publikationen') ?>
-            <small><?=lang('with ', 'mit ')?><?= $number($affiliated_count) ?> <?= lang('common.affiliated') ?></small>
+                <?= lang('journals.linked_publications') ?>
+            <small><?=lang('journals.with')?><?= $number($affiliated_count) ?> <?= lang('common.affiliated') ?></small>
             </span>
         </div>
         <div class="tile">
             <span class="value"><?= $number($used_journal_count) ?></span>
             <span class="label">
-                <?= lang("$label used", "Verwendete $label") ?>
+                <?= lang('journals.label_used', replace: ['label' => $label]) ?>
                 <small class="d-block">(<?= $number($total_journals) ?> <?= lang('common.total') ?>)</small>
             </span>
         </div>
         <div class="tile">
             <span class="value"><?= $number($average_publications, 1) ?></span>
-            <span class="label"><?= lang("Publications per $label", "Publikationen pro $label") ?></span>
+            <span class="label"><?= lang('journals.publications_per_label', replace: ['label' => $label]) ?></span>
         </div>
         <div class="tile">
             <span class="value"><?= $number($activity_count) ?></span>
-            <span class="label"><?= lang('Other activity types', 'Andere Aktivitätstypen') ?></span>
+            <span class="label"><?= lang('journals.other_activity_types') ?></span>
         </div>
     </div>
 
     <?php if ($missing_links > 0) { ?>
         <p class="alert warning my-20">
-            <?= lang(
-                "$missing_links publications reference a journal that no longer exists.",
-                "$missing_links Publikationen verweisen auf ein Journal, das nicht mehr existiert."
-            ) ?>
+            <?= lang('journals.missing_links_publications_reference_a_journal_that_no_longer_exists', replace: ['missing_links' => $missing_links]) ?>
         </p>
     <?php } ?>
 
     <?php if (empty($journals)) { ?>
         <p class="alert signal">
-            <?= lang(
-                'No publications linked to journals were found for this reporting period.',
-                'Für diesen Reportzeitraum wurden keine mit Journalen verknüpften Publikationen gefunden.'
-            ) ?>
+            <?= lang('journals.no_publications_linked_to_journals_were_found_for_this_reporting_period') ?>
         </p>
     <?php } else { ?>
 
-        <h2><?= lang("Most frequently used $label", "Meistgenutzte $label") ?></h2>
+        <h2><?= lang('journals.most_frequently_used_label', replace: ['label' => $label]) ?></h2>
 
         <div class="row row-eq-spacing">
             <div class="col-lg-7">
@@ -665,10 +656,10 @@ foreach ($oa_distribution as $name => $counts) {
                     <thead>
                         <tr>
                             <th><?= $label ?></th>
-                            <th><?= lang('Publisher', 'Verlag') ?></th>
-                            <th><?= lang('Open Access', 'Open Access') ?></th>
+                            <th><?= lang('journals.publisher') ?></th>
+                            <th><?= lang('journals.open_access') ?></th>
                             <th><?= lang('common.publications') ?></th>
-                            <th><?= lang('Other activities', 'Weitere Aktivitäten') ?></th>
+                            <th><?= lang('common.other_activities_statistics') ?></th>
                             <th><?= lang('common.affiliated') ?></th>
                         </tr>
                     </thead>
@@ -712,11 +703,11 @@ foreach ($oa_distribution as $name => $counts) {
         <br>
         <hr>
 
-        <h2><?= lang('Journal characteristics', 'Journal-Eigenschaften') ?></h2>
+        <h2><?= lang('journals.journal_characteristics') ?></h2>
 
         <div class="row row-eq-spacing">
             <div class="col-lg-6">
-                <h3><?= lang('Open Access', 'Open Access') ?></h3>
+                <h3><?= lang('journals.open_access') ?></h3>
                 <table class="table w-auto" id="journal-oa-table">
                     <thead>
                         <tr>
@@ -743,11 +734,11 @@ foreach ($oa_distribution as $name => $counts) {
 
         <div class="row row-eq-spacing">
             <div class="col-lg-6">
-                <h3><?= lang('Publishers', 'Verlage') ?></h3>
+                <h3><?= lang('journals.publishers') ?></h3>
                 <table class="table" id="journal-publisher-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Publisher', 'Verlag') ?></th>
+                            <th><?= lang('journals.publisher') ?></th>
                             <th><?= $label ?></th>
                             <th><?= lang('common.publications') ?></th>
                         </tr>
@@ -764,7 +755,7 @@ foreach ($oa_distribution as $name => $counts) {
                 </table>
             </div>
             <div class="col-lg-6">
-                <h3><?= lang('Countries', 'Länder') ?></h3>
+                <h3><?= lang('common.countries') ?></h3>
                 <table class="table" id="journal-country-table">
                     <thead>
                         <tr>
@@ -787,12 +778,9 @@ foreach ($oa_distribution as $name => $counts) {
         </div>
 
         <?php if (!empty($category_distribution)) { ?>
-            <h3><?= lang('Categories', 'Kategorien') ?></h3>
+            <h3><?= lang('common.categories') ?></h3>
             <p class="text-muted">
-                <?= lang(
-                    'A journal may occur in several categories. The totals can therefore exceed the number of journals and publications.',
-                    'Ein Journal kann mehreren Kategorien zugeordnet sein. Die Summen können daher höher als die Anzahl der Journale und Publikationen sein.'
-                ) ?>
+                <?= lang('journals.a_journal_may_occur_in_several_categories_the_totals_can_therefore_exceed_t') ?>
             </p>
             <table class="table" id="journal-category-table">
                 <thead>
@@ -818,23 +806,20 @@ foreach ($oa_distribution as $name => $counts) {
         <hr>
 
         <h2>
-            <?= lang('Journal metrics', 'Journal-Metriken') ?>
+            <?= lang('journals.journal_metrics') ?>
             <small class="text-muted"><?= $metric_year ?></small>
         </h2>
         <p class="text-muted">
-            <?= lang(
-                "Metrics are evaluated for $metric_year. Missing values are not included in averages.",
-                "Metriken werden für $metric_year ausgewertet. Fehlende Werte fließen nicht in Durchschnittswerte ein."
-            ) ?>
+            <?= lang('journals.metrics_are_evaluated_for_metric_year_missing_values_are_not_included_in_av', replace: ['metric_year' => $metric_year]) ?>
         </p>
 
         <div class="row row-eq-spacing">
             <div class="col-lg-6">
-                <h3><?= lang('Quartiles', 'Quartile') ?></h3>
+                <h3><?= lang('common.quartiles') ?></h3>
                 <table class="table w-auto" id="journal-quartile-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Quartile', 'Quartil') ?></th>
+                            <th><?= lang('common.quartile') ?></th>
                             <th><?= $label ?></th>
                             <th><?= lang('common.publications') ?></th>
                         </tr>
@@ -859,33 +844,30 @@ foreach ($oa_distribution as $name => $counts) {
                 <h3><?= $if_label ?></h3>
                 <?php if ($impact_summary === null) { ?>
                     <p class="alert secondary">
-                        <?= lang(
-                            "No $if_label values are available for $metric_year.",
-                            "Für $metric_year sind keine $if_label verfügbar."
-                        ) ?>
+                        <?= lang('journals.no_if_label_values_are_available_for_metric_year', replace: ['if_label' => $if_label, 'metric_year' => $metric_year]) ?>
                         <!-- TODO: change name of metric here later -->
                     </p>
                 <?php } else { ?>
                     <table class="table w-auto" id="journal-impact-table">
                         <tbody>
                             <tr>
-                                <td><?= lang("$label with value", "$label mit Wert") ?></td>
+                                <td><?= lang('journals.label_with_value', replace: ['label' => $label]) ?></td>
                                 <th><?= $number($impact_summary['count']) ?></th>
                             </tr>
                             <tr>
-                                <td><?= lang('Average per journal', 'Durchschnitt pro Journal') ?></td>
+                                <td><?= lang('journals.average_per_journal') ?></td>
                                 <th><?= $number($impact_summary['average'], 2) ?></th>
                             </tr>
                             <tr>
-                                <td><?= lang('Median', 'Median') ?></td>
+                                <td><?= lang('common.median') ?></td>
                                 <th><?= $number($impact_summary['median'], 2) ?></th>
                             </tr>
                             <tr>
-                                <td><?= lang('Publication-weighted average', 'Nach Publikationen gewichteter Durchschnitt') ?></td>
+                                <td><?= lang('journals.publication_weighted_average') ?></td>
                                 <th><?= $number($impact_summary['weighted_average'], 2) ?></th>
                             </tr>
                             <tr>
-                                <td><?= lang('Range', 'Spannweite') ?></td>
+                                <td><?= lang('journals.range') ?></td>
                                 <th>
                                     <?= $number($impact_summary['minimum'], 2) ?>
                                     –
@@ -904,10 +886,7 @@ foreach ($oa_distribution as $name => $counts) {
 
             <h2><?= lang('common.custom_fields') ?></h2>
             <p class="text-muted">
-                <?= lang(
-                    'The table contains the current custom-field values of all journals used in the reporting period.',
-                    'Die Tabelle enthält die aktuellen Custom-Field-Werte aller im Reportzeitraum verwendeten Journale.'
-                ) ?>
+                <?= lang('journals.the_table_contains_the_current_custom_field_values_of_all_journals_used_in') ?>
             </p>
 
             <div class="overflow-x-auto">
@@ -957,26 +936,23 @@ foreach ($oa_distribution as $name => $counts) {
             </div>
 
             <?php if (!empty($numeric_custom_fields)) { ?>
-                <h3><?= lang('Distribution of numeric fields', 'Verteilung numerischer Felder') ?></h3>
+                <h3><?= lang('journals.distribution_of_numeric_fields') ?></h3>
                 <p class="text-muted">
-                    <?= lang(
-                        'Each point represents one journal. Values from fields with different units should not be compared or added together.',
-                        'Jeder Punkt steht für ein Journal. Werte aus Feldern mit unterschiedlichen Einheiten sollten nicht miteinander verglichen oder addiert werden.'
-                    ) ?>
+                    <?= lang('journals.each_point_represents_one_journal_values_from_fields_with_different_units_s') ?>
                 </p>
                 <div id="journal-custom-numeric-chart" class="box p-5 m-0 journal-chart"></div>
 
-                <h3><?= lang('Summary of numeric fields', 'Zusammenfassung numerischer Felder') ?></h3>
+                <h3><?= lang('journals.summary_of_numeric_fields') ?></h3>
                 <table class="table" id="journal-custom-numeric-table">
                     <thead>
                         <tr>
-                            <th><?= lang('Field', 'Feld') ?></th>
+                            <th><?= lang('common.field') ?></th>
                             <th><?= $label ?></th>
-                            <th><?= lang('Linked publications', 'Verknüpfte Publikationen') ?></th>
-                            <th><?= lang('Minimum', 'Minimum') ?></th>
-                            <th><?= lang('Median', 'Median') ?></th>
-                            <th><?= lang('Average', 'Durchschnitt') ?></th>
-                            <th><?= lang('Maximum', 'Maximum') ?></th>
+                            <th><?= lang('journals.linked_publications') ?></th>
+                            <th><?= lang('journals.minimum') ?></th>
+                            <th><?= lang('common.median') ?></th>
+                            <th><?= lang('journals.average') ?></th>
+                            <th><?= lang('journals.maximum') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1029,7 +1005,7 @@ foreach ($oa_distribution as $name => $counts) {
     <script>
         $(document).ready(function() {
             $('#journal-ranking-table').DataTable({
-                buttons: downloadTableButtons('<?= lang('Journal ranking ', 'Journal-Ranking ') . $time_frame ?>'),
+                buttons: downloadTableButtons('<?= lang('journals.journal_ranking') . $time_frame ?>'),
                 pageLength: 5,
                 order: [
                     [3, 'desc']
@@ -1038,7 +1014,7 @@ foreach ($oa_distribution as $name => $counts) {
 
             if ($('#journal-custom-fields-table').length) {
                 $('#journal-custom-fields-table').DataTable({
-                    buttons: downloadTableButtons('<?= lang('Journal custom fields ', 'Journal-Benutzerdefinierte Felder ') . $time_frame ?>'),
+                    buttons: downloadTableButtons('<?= lang('journals.journal_custom_fields') . $time_frame ?>'),
                     pageLength: 10,
                     order: [
                         [1, 'desc']
@@ -1050,7 +1026,7 @@ foreach ($oa_distribution as $name => $counts) {
 
             if ($('#journal-custom-numeric-table').length) {
                 $('#journal-custom-numeric-table').DataTable({
-                    buttons: downloadTableButtons('<?= lang('Journal custom numeric fields ', 'Journal-Benutzerdefinierte numerische Felder ') . $time_frame ?>'),
+                    buttons: downloadTableButtons('<?= lang('journals.journal_custom_numeric_fields') . $time_frame ?>'),
                     paging: false,
                     searching: false,
                     info: false,
@@ -1062,7 +1038,7 @@ foreach ($oa_distribution as $name => $counts) {
 
             $('.journal-custom-categorical-table').each(function() {
                 $(this).DataTable({
-                    buttons: downloadTableButtons('<?= lang('Journal custom categorical field ', 'Journal-Benutzerdefiniertes kategoriales Feld ') . $time_frame ?>'),
+                    buttons: downloadTableButtons('<?= lang('journals.journal_custom_categorical_field') . $time_frame ?>'),
                     pageLength: 10,
                     order: [
                         [2, 'desc']
@@ -1077,7 +1053,7 @@ foreach ($oa_distribution as $name => $counts) {
             ].forEach(function(selector) {
                 if ($(selector).length) {
                     $(selector).DataTable({
-                        buttons: downloadTableButtons('<?= lang('Journal distribution ', 'Journal-Verteilung ') . $time_frame ?>'),
+                        buttons: downloadTableButtons('<?= lang('journals.journal_distribution') . $time_frame ?>'),
                         pageLength: 10,
                         order: [
                             [2, 'desc']
@@ -1098,7 +1074,7 @@ foreach ($oa_distribution as $name => $counts) {
                 hovertemplate: '%{y}: %{x}<extra></extra>'
             }], {
                 title: {
-                    text: lang('Top 15 journals', 'Top 15 Journale')
+                    text: <?= json_encode(lang('journals.top_15_journals'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 },
                 margin: {
                     t: 60,
@@ -1128,7 +1104,7 @@ foreach ($oa_distribution as $name => $counts) {
                 }
             }], {
                 title: {
-                    text: lang('Publications by Open Access status', 'Publikationen nach Open-Access-Status')
+                    text: <?= json_encode(lang('journals.publications_by_open_access_status'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 },
                 margin: {
                     t: 60,

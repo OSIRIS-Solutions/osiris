@@ -5,7 +5,7 @@
         $privacy = file_get_contents(BASEPATH . '/pages/privacy.html');
     }
     if (empty($privacy)) {
-        $privacy = "<p>" . lang('No privacy statement available.', 'Keine Datenschutzerklärung verfügbar.') . "</p>";
+        $privacy = "<p>" . lang('common.no_privacy_statement_available') . "</p>";
     }
     echo $privacy;
 ?>

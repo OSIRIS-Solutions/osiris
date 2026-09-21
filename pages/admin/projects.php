@@ -17,14 +17,14 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('Project Settings', 'Projekt-Einstellungen') ?>
+    <?= lang('common.project_settings') ?>
 </h1>
 
 
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/admin/projects/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('Add category', 'Kategorie hinzufügen') ?>
+        <?= lang('common.add_category') ?>
     </a>
 
     <a class="btn" href="<?= ROOTPATH ?>/admin/vocabulary">
@@ -47,7 +47,7 @@
             <?php if (isset($type['disabled']) && $type['disabled']) { ?>
                 <small class="badge danger ml-20">
                     <i class="ph ph-x-circle" aria-hidden="true"></i>
-                    <?= lang('Deactivated', 'Deaktiviert') ?>
+                    <?= lang('admin.deactivated') ?>
                 </small>
             <?php } ?>
         </a>

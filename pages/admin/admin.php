@@ -63,8 +63,8 @@
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/api-clients">
                 <i class="ph-duotone ph-key"></i>
-                <b><?= lang('API Clients', 'API-Clients') ?></b>
-                <p><?= lang('Manage API clients and their access', 'Verwalte API-Clients und deren Zugriff') ?></p>
+                <b><?= lang('common.api_clients') ?></b>
+                <p><?= lang('admin.manage_api_clients_and_their_access') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/announcements">
                 <i class="ph-duotone ph-megaphone"></i>
@@ -85,8 +85,8 @@
             <?php } ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
                 <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
-                <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
-                <p><?= lang('Settings for the Resource Hub', 'Einstellungen für den Ressourcen-Hub') ?></p>
+                <b><?= lang('common.resource_hub') ?></b>
+                <p><?= lang('admin.settings_for_the_resource_hub') ?></p>
             </a>
         </div>
     <?php endif; ?>
@@ -288,17 +288,17 @@
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="database-settings">
-            <h2><i class="ph-duotone ph-database"></i> <?= lang('Database', 'Datenbank') ?></h2>
+            <h2><i class="ph-duotone ph-database"></i> <?= lang('admin.database') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/rerender">
                 <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
-                <b><?= lang('Re-render', 'Neu rendern') ?></b>
-                <p><?= lang('Re-render all activities (may take some time)', 'Rendere alle Aktivitäten neu (kann einige Zeit dauern)') ?></p>
+                <b><?= lang('admin.re_render') ?></b>
+                <p><?= lang('admin.re_render_all_activities_may_take_some_time') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/rerender-units">
                 <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
-                <b><?= lang('Re-render Units', 'Einheiten neu rendern') ?></b>
-                <p><?= lang('Re-render all units', 'Rendere alle Einheiten neu') ?></p>
+                <b><?= lang('admin.re_render_units') ?></b>
+                <p><?= lang('admin.re_render_all_units') ?></p>
             </a>
 
         </div>
@@ -307,20 +307,20 @@
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="info-settings">
-            <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
+            <h2><i class="ph-duotone ph-info"></i> <?= lang('admin.information') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/osiris-info">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
-                <b><?= lang('OSIRIS Info', 'OSIRIS Info') ?></b>
-                <p><?= lang('View OSIRIS configuration information', 'Zeige OSIRIS-Konfigurationsinformationen an') ?></p>
+                <b><?= lang('common.osiris_info') ?></b>
+                <p><?= lang('admin.view_osiris_configuration_information') ?></p>
             </a>
         <div class="col-md-6 col-lg-4" id="info-settings">
-            <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
+            <h2><i class="ph-duotone ph-info"></i> <?= lang('admin.information') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
-                <b><?= lang('PHP Info', 'PHP Info') ?></b>
-                <p><?= lang('View PHP configuration information', 'Zeige PHP-Konfigurationsinformationen an') ?></p>
+                <b><?= lang('admin.php_info') ?></b>
+                <p><?= lang('admin.view_php_configuration_information') ?></p>
             </a>
         </div>
     <?php endif; ?>

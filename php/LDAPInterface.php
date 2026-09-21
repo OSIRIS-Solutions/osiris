@@ -93,7 +93,7 @@ class LDAPInterface
 
         if (!$this->bind) {
             $error = ldap_error($this->connection);
-            echo lang("Error while connecting to the LDAP server:", "Fehler bei der Verbindung mit dem LDAP-Server: ") . $error;
+            echo lang('auth.error_while_connecting_to_the_ldap_server') . $error;
             return false;
         }
         return true;
@@ -250,11 +250,11 @@ class LDAPInterface
     {
         $return = array("msg" => '', "success" => false, 'uniqueid' => null);
         if (empty($username) || empty($password)) {
-            $return['msg'] = lang("Please enter your username and password.", "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.");
+            $return['msg'] = lang('auth.please_enter_your_username_and_password');
             return $return;
         }
         if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-            $return['msg'] = lang("You are already logged in.", "Sie sind bereits angemeldet.");
+            $return['msg'] = lang('auth.you_are_already_logged_in');
             return $return;
         }
 
@@ -268,18 +268,18 @@ class LDAPInterface
         $filter = "(" . $this->userkey . "=" . ldap_escape($username, "", LDAP_ESCAPE_FILTER) . ")";
         $search = ldap_search($this->connection, LDAP_BASEDN, $filter, $this->attributes);
         if ($search === false) {
-            $return['msg'] = lang("Error while searching for the user in LDAP.", "Fehler bei der Suche nach dem Benutzer in LDAP.");
+            $return['msg'] = lang('auth.error_while_searching_for_the_user_in_ldap');
             return $return;
         }
 
         $result = ldap_get_entries($this->connection, $search);
         if ($result === false || $result['count'] == 0) {
-            $return['msg'] = lang("User not found in LDAP.", "Benutzer nicht in LDAP gefunden.");
+            $return['msg'] = lang('auth.user_not_found_in_ldap');
             return $return;
         }
         $result = $result[0];
         if (empty($result[$this->userkey][0])) {
-            $return['msg'] = lang("User not found in LDAP or LDAP misconfigured.", "Benutzer nicht in LDAP gefunden oder LDAP falsch konfiguriert.");
+            $return['msg'] = lang('auth.user_not_found_in_ldap_or_ldap_misconfigured');
             return $return;
         }
         $ldap_username = $result[$this->userkey][0];
@@ -313,7 +313,7 @@ class LDAPInterface
 
         // Step 3: User-Bind (zum Prüfen der Credentials)
         if (empty($bindIdentifier) || !$this->bind($bindIdentifier, $password)) {
-            $return['msg'] = lang("Login failed. Please check your username and password.", "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.");
+            $return['msg'] = lang('auth.login_failed_please_check_your_username_and_password');
             return $return;
         }
 

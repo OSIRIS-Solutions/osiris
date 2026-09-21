@@ -296,7 +296,7 @@ final class Nagoya
 
     // If module not enabled → green check (no ABS context)
     if (($n['enabled'] ?? false) === false) {
-      return '<i class="ph ph-check text-success" title="' . e(lang('Not ABS-relevant', 'Nicht ABS-relevant')) . '"></i>';
+      return '<i class="ph ph-check text-success" title="' . e(lang('projects.not_abs_relevant')) . '"></i>';
     }
 
     $status = $n['status'] ?? null;
@@ -317,7 +317,7 @@ final class Nagoya
     $n = $project['nagoya'] ?? [];
 
     if (($n['enabled'] ?? false) === false) {
-      return self::makeBadge('muted', 'ph-x-circle', lang('not ABS-relevant', 'nicht ABS-relevant'), $large);
+      return self::makeBadge('muted', 'ph-x-circle', lang('projects.not_abs_relevant_Nagoya'), $large);
     }
 
     $status = $n['status'] ?? null;
@@ -382,16 +382,16 @@ final class Nagoya
     // Base classes / text depending on ABS relevance
     $classes = 'badge small ';
     $icon    = 'ph ph-question';
-    $text    = lang('ABS unknown', 'ABS unbekannt');
+    $text    = lang('projects.abs_unknown');
 
     if ($abs === true) {
       $classes .= 'primary';
       $icon    = 'ph ph-shield-check';
-      $text    = lang('ABS-relevant', 'ABS-relevant');
+      $text    = lang('projects.abs_relevant');
     } elseif ($abs === false) {
       $classes .= 'muted';
       $icon    = 'ph ph-x-circle';
-      $text    = lang('Not ABS-relevant', 'Nicht ABS-relevant');
+      $text    = lang('projects.not_abs_relevant');
     }
 
     // A/B/C sublabel
@@ -406,12 +406,12 @@ final class Nagoya
       if ($hasNeeded || $hasRequested) {
         $permitHtml = sprintf(
           '<small class="badge warning ml-5">%s</small>',
-          e(lang('permits pending', 'Genehmigungen ausstehend'))
+          e(lang('projects.permits_pending_Nagoya'))
         );
       } elseif ($hasGranted) {
         $permitHtml = sprintf(
           '<small class="badge success ml-5">%s</small>',
-          e(lang('permits granted', 'Genehmigungen erteilt'))
+          e(lang('projects.permits_granted'))
         );
       }
     }
@@ -431,19 +431,19 @@ final class Nagoya
     switch ($status) {
       case 'needed':
         return '<span class="badge no-wrap danger"><i class="ph ph-seal-warning"></i> ' .
-          e(lang('Open', 'Offen')) . '</span>';
+          e(lang('infrastructures.open')) . '</span>';
       case 'requested':
         return '<span class="badge no-wrap signal"><i class="ph ph-seal-question"></i> ' .
-          e(lang('Requested', 'Beantragt')) . '</span>';
+          e(lang('common.requested')) . '</span>';
       case 'granted':
         return '<span class="badge no-wrap success"><i class="ph ph-seal-check"></i> ' .
-          e(lang('Granted', 'Erteilt')) . '</span>';
+          e(lang('common.granted')) . '</span>';
       case 'not-applicable':
         return '<span class="badge no-wrap muted"><i class="ph ph-seal"></i> ' .
-          e(lang('Not needed', 'Nicht benötigt')) . '</span>';
+          e(lang('projects.not_needed')) . '</span>';
       default:
         return '<span class="badge no-wrap muted"><i class="ph ph-seal-warning"></i> ' .
-          e(lang('Unknown status', 'Unbekannter Status')) . '</span>';
+          e(lang('projects.unknown_status')) . '</span>';
     }
   }
 
@@ -452,13 +452,13 @@ final class Nagoya
     switch ($label) {
       case 'A':
         return '<small class="badge danger ml-5" data-toggle="tooltip" data-title="' .
-          lang('Project within the scope of the EU ABS Regulation', 'Projekt im Geltungsbereich der EU-ABS-Verordnung') . '">A</small>';
+          lang('projects.project_within_the_scope_of_the_eu_abs_regulation') . '">A</small>';
       case 'B':
         return '<small class="badge signal ml-5" data-toggle="tooltip" data-title="' .
-          lang('Project out of the scope of the EU ABS Regulation but within the scope of ABS measures in provider countries', 'Projekt außerhalb des Geltungsbereichs der EU-ABS-Verordnung, aber innerhalb des Geltungsbereichs der ABS-Maßnahmen in den Herkunftsländern') . '">B</small>';
+          lang('projects.project_out_of_the_scope_of_the_eu_abs_regulation_but_within_the_scope_of_a') . '">B</small>';
       case 'C':
         return '<small class="badge muted ml-5" data-toggle="tooltip" data-title="' .
-          lang('Project out of the scope of both, the EU ABS regulation and the ABS measures in provider countries', 'Projekt außerhalb des Geltungsbereichs sowohl der EU-ABS-Verordnung als auch der ABS-Maßnahmen in den Herkunftsländern') . '">C</small>';
+          lang('projects.project_out_of_the_scope_of_both_the_eu_abs_regulation_and_the_abs_measures') . '">C</small>';
       default:
         return '';
     }

@@ -186,21 +186,18 @@ foreach ($chartData as $row) {
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('Spectrum Evolution', 'Entwicklung des Forschungs-Spektrums') ?>
+    <?= lang('spectrum.spectrum_evolution') ?>
 </h1>
 
 <p class="text-muted">
-    <?= lang(
-        'Shows how the thematic structure of publications changes over time. Only the 20 most common topics are shown.',
-        'Zeigt, wie sich die thematische Struktur der Publikationen im Zeitverlauf verändert. Es werden nur die 20 häufigsten Themen gezeigt.'
-    ) ?>
+    <?= lang('spectrum.shows_how_the_thematic_structure_of_publications_changes_over_time_only_the') ?>
 </p>
 
 <form method="get" class="box mb-4">
     <div class="px-20">
         <div class="row row-eq-spacing align-items-end">
             <div class="col-md-3">
-                <label class="form-label"><?= lang('Level', 'Ebene') ?></label>
+                <label class="form-label"><?= lang('spectrum.level') ?></label>
                 <select class="form-control" name="level">
                     <option value="domain" <?= $level === 'domain' ? 'selected' : '' ?>>Domain</option>
                     <option value="field" <?= $level === 'field' ? 'selected' : '' ?>>Field</option>
@@ -210,25 +207,25 @@ foreach ($chartData as $row) {
             </div>
 
             <div class="col-md-3">
-                <label class="form-label"><?= lang('Mode', 'Modus') ?></label>
+                <label class="form-label"><?= lang('common.mode') ?></label>
                 <select class="form-control" name="mode">
-                    <option value="relative" <?= $mode === 'relative' ? 'selected' : '' ?>><?= lang('Relative share', 'Relativer Anteil') ?></option>
-                    <option value="absolute" <?= $mode === 'absolute' ? 'selected' : '' ?>><?= lang('Absolute counts', 'Absolute Anzahl') ?></option>
+                    <option value="relative" <?= $mode === 'relative' ? 'selected' : '' ?>><?= lang('spectrum.relative_share') ?></option>
+                    <option value="absolute" <?= $mode === 'absolute' ? 'selected' : '' ?>><?= lang('spectrum.absolute_counts') ?></option>
                 </select>
             </div>
 
             <div class="col-md-2">
-                <label class="form-label"><?= lang('From year', 'Von Jahr') ?></label>
+                <label class="form-label"><?= lang('common.from_year') ?></label>
                 <input type="number" class="form-control" name="year_from" value="<?= e($yearFrom) ?>">
             </div>
 
             <div class="col-md-2">
-                <label class="form-label"><?= lang('To year', 'Bis Jahr') ?></label>
+                <label class="form-label"><?= lang('common.to_year') ?></label>
                 <input type="number" class="form-control" name="year_to" value="<?= e($yearTo) ?>">
             </div>
 
             <div class="col-md-2">
-                <button class="btn primary block"><?= lang('Apply filter', 'Filter anwenden') ?></button>
+                <button class="btn primary block"><?= lang('common.apply_filter') ?></button>
             </div>
         </div>
     </div>
@@ -241,15 +238,7 @@ foreach ($chartData as $row) {
         <div id="spectrum-evolution-chart"></div>
 
         <small class="text-muted">
-            <?= lang(
-                'In relative mode, the chart shows the share of each element in the annual research spectrum.
-In absolute mode, it shows the number of thematic assignments per year.
-Since OpenAlex assigns up to three topics per publication, these are topic assignments and not unique publication counts.',
-                'Im relativen Modus zeigt die Grafik den Anteil eines Elements am jährlichen Forschungs-Spektrum.
-Im absoluten Modus zeigt sie die Anzahl der thematischen Zuordnungen pro Jahr.
-Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Themenzuordnungen und nicht um eindeutige Publikationszahlen.
-'
-            ) ?>
+            <?= lang('spectrum.in_relative_mode_the_chart_shows_the_share_of_each_element_in_the_annual_re') ?>
         </small>
     </div>
 </div>
@@ -257,28 +246,25 @@ Da OpenAlex pro Publikation bis zu drei Themen zuordnet, handelt es sich um Them
 
 <div class="box mb-4">
     <div class="content">
-        <h3><?= lang('Heatmap', 'Heatmap') ?></h3>
+        <h3><?= lang('spectrum.heatmap') ?></h3>
         <div id="spectrum-evolution-heatmap"></div>
     </div>
 </div>
 
 
 
-<h3><?= lang('Trend overview', 'Trendübersicht') ?></h3>
+<h3><?= lang('spectrum.trend_overview') ?></h3>
 <small class="text-muted">
-    <?= lang(
-        'The table summarizes the change between the first and last year of the selected period.',
-        'Die Tabelle fasst die Veränderung zwischen dem ersten und letzten Jahr des gewählten Zeitraums zusammen.'
-    ) ?>
+    <?= lang('spectrum.the_table_summarizes_the_change_between_the_first_and_last_year_of_the_sele') ?>
 </small>
 
 <table class="table dataTable" id="spectrum-trend-table">
     <thead>
         <tr>
-            <th><?= lang('Element', 'Element') ?></th>
+            <th><?= lang('spectrum.element') ?></th>
             <th><?= lang('common.start') ?></th>
             <th><?= lang('common.end') ?></th>
-            <th><?= lang('Change', 'Veränderung') ?></th>
+            <th><?= lang('spectrum.change') ?></th>
             <th><?= lang('common.total') ?></th>
         </tr>
     </thead>

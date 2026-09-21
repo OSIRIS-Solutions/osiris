@@ -31,7 +31,7 @@ Route::get('/organizations/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     if (!$Settings->hasPermission('organizations.edit')) {
-        abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
+        abortwith(403, lang('organizations.you_do_not_have_permission_to_create_a_new_organization'), '/organizations', lang('organizations.go_back_to_organizations'));
     }
 
     $breadcrumb = [
@@ -76,7 +76,7 @@ Route::get('/organizations/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
+        abortwith(403, lang('organizations.you_do_not_have_permission_to_edit_this_organization'), '/organizations/view/' . $id, lang('organizations.go_back_to_organization'));
     }
 
     global $form;
@@ -108,7 +108,7 @@ Route::get('/organizations/map', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => lang('common.organizations'), 'path' => "/organizations"],
-        ['name' => lang("Map", "Karte")]
+        ['name' => lang('common.map')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/organizations/map.php";
@@ -123,7 +123,7 @@ Route::post('/crud/organizations/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        abortwith(403, lang('You do not have permission to create a new organization.', 'Du hast keine Berechtigung, eine neue Organisation zu erstellen.'), '/organizations', lang('Go back to organizations', 'Zurück zu Organisationen'));
+        abortwith(403, lang('organizations.you_do_not_have_permission_to_create_a_new_organization'), '/organizations', lang('organizations.go_back_to_organizations'));
     }
 
     if (!isset($_POST['values']) || empty($_POST['values'])) abortwith(500, lang('error.no_values'));
@@ -132,7 +132,7 @@ Route::post('/crud/organizations/create', function () {
     $values = validateValues($_POST['values'], $DB);
     if (empty($values['name'])) {
         echo json_encode([
-            'msg' => lang("Organization name is required.", "Organisationsname ist erforderlich."),
+            'msg' => lang('organizations.organization_name_is_required'),
             'status' => 'error'
         ]);
         die();
@@ -164,12 +164,12 @@ Route::post('/crud/organizations/create', function () {
     if (!empty($exist)) {
         if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
             $red = str_replace("*", strval($exist['_id']), $_POST['redirect']);
-            $_SESSION['msg'] = lang("Organization does already exist.", "Organisation existiert bereits.");
+            $_SESSION['msg'] = lang('organizations.organization_does_already_exist');
             $_SESSION['msg_type'] = "warning";
             header("Location: " . $red);
         } else {
             echo json_encode([
-                'msg' => lang("Organization does already exist and was connected.", "Organisation existiert bereits und wurde verknüpft."),
+                'msg' => lang('organizations.organization_does_already_exist_and_was_connected'),
                 'id' => strval($exist['_id']),
                 'ror' => $exist['ror'] ?? '',
                 'name' => $exist['name'],
@@ -188,7 +188,7 @@ Route::post('/crud/organizations/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $new_id, $_POST['redirect']);
-        $_SESSION['msg'] = lang("Organization has been created successfully.", "Organisation wurde erfolgreich erstellt.");
+        $_SESSION['msg'] = lang('organizations.organization_has_been_created_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $red);
         die();
@@ -208,7 +208,7 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.edit')) {
-        abortwith(403, lang('You do not have permission to edit this organization.', 'Du hast keine Berechtigung, diese Organisation zu bearbeiten.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
+        abortwith(403, lang('organizations.you_do_not_have_permission_to_edit_this_organization'), '/organizations/view/' . $id, lang('organizations.go_back_to_organization'));
     }
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->organizations;
@@ -225,7 +225,7 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang("Organization has been updated successfully.", "Organisation wurde erfolgreich aktualisiert.");
+        $_SESSION['msg'] = lang('organizations.organization_has_been_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -243,7 +243,7 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('organizations.delete')) {
-        abortwith(403, lang('You do not have permission to delete this organization.', 'Du hast keine Berechtigung, diese Organisation zu löschen.'), '/organizations/view/' . $id, lang('Go back to organization', 'Zurück zur Organisation'));
+        abortwith(403, lang('organizations.you_do_not_have_permission_to_delete_this_organization'), '/organizations/view/' . $id, lang('organizations.go_back_to_organization'));
     }
 
     // $organization = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -259,7 +259,7 @@ Route::post('/crud/organizations/delete/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $DB->to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang("Organisation has been deleted successfully.", "Organisation wurde erfolgreich gelöscht.");
+    $_SESSION['msg'] = lang('organizations.organisation_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/organizations");
 });
@@ -310,7 +310,7 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
                     'uploaded' => date('Y-m-d')
                 ]]]
             );
-            $_SESSION['msg'] = lang("Organisation logo uploaded successfully.", "Organisations-Logo erfolgreich hochgeladen.");
+            $_SESSION['msg'] = lang('organizations.organisation_logo_uploaded_successfully');
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/organizations/view/$id");
             die;
@@ -321,7 +321,7 @@ Route::post('/crud/organizations/upload-picture/(.*)', function ($id) {
             ['_id' => $mongo_id],
             ['$unset' => ['image' => ""]]
         );
-        $_SESSION['msg'] = lang("Organisation logo deleted.", "Organisations-Logo gelöscht.");
+        $_SESSION['msg'] = lang('organizations.organisation_logo_deleted');
         $_SESSION['msg_type'] = "success";
         header("Location: " . ROOTPATH . "/organizations/view/$id");
         die;
