@@ -1168,3 +1168,22 @@ function get_contrast_color($hexcolor)
     $brightness = ($r * 299 + $g * 587 + $b * 114) / 1000;
     return $brightness > 128 ? '#000000' : '#FFFFFF';
 }
+
+
+function badgeDeprecated()
+{ ?>
+    <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('admin.this_feature_is_deprecated_and_is_currently_not_maintained') ?>">
+        <i class="ph ph-warning"></i>
+        <?= lang('admin.deprecated') ?>
+    </span>
+<?php
+}
+
+function badgeBeta()
+{ ?>
+    <span class="badge signal" data-toggle="tooltip" data-title="<?= lang('admin.this_is_a_beta_feature_and_may_not_work_as_expected_use_at_your_own_risk') ?>">
+        <i class="ph ph-flask"></i>
+        <?= lang('admin.beta') ?>
+    </span>
+<?php
+}

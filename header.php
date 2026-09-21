@@ -267,24 +267,23 @@ $pageactive = function ($p) use ($page) {
             </ul>
 
             <!-- messages -->
-            <div class="dropdown modal-sm">
-                <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
-                    <i class="ph ph-translate"></i>
-                    <span class="sr-only"><?= lang('header.change_language') ?></span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
-                    <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
-                    <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
-                        <input type="hidden" name="language" value="<?= currentLanguage() === 'de' ? 'en' : 'de' ?>">
-                        <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
-                        <button type="submit" class="btn primary block ">
-                            <i class="ph ph-translate" aria-hidden="true"></i>
-                            <span class="sr-only"><?= lang('header.change_language') ?></span>
-                            <?= currentLanguage() === 'de' ? 'English' : 'Deutsch' ?>
-                        </button>
-                    </form>
+            <?php if (count($Settings->languages()) > 1) { ?>
+                <div class="dropdown modal-sm">
+                    <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
+                        <i class="ph ph-translate"></i>
+                        <span class="sr-only"><?= lang('header.change_language') ?></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
+                        <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
+                        <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
+                            <?php foreach ($Settings->languages() as $lang) { ?>
+                                <input type="submit" class="btn" value="<?= $lang ?>" name="language" <?= $lang == currentLanguage() ? 'disabled' : '' ?>>
+                            <?php } ?>
+                            <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
+                        </form>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
 
 
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>

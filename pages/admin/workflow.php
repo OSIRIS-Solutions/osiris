@@ -125,7 +125,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </table>
 
             <p class="text-sm text-muted">
-                * <?= lang('admin.multiple_steps_with_the_same_phase_number_are_executed_in_parallel_all_othe') ?><br>
+                * <?= lang('admin.workshop_step_explanation') ?><br>
             </p>
 
             <button type="submit" class="btn success" id="submitBtn">
@@ -289,7 +289,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
         </button>
         <div class="dropdown-menu" aria-labelledby="delete-workflow">
             <form action="<?= ROOTPATH ?>/crud/workflows/delete/<?= ($form['_id']) ?>" method="post" class="content">
-                <?= lang('admin.are_you_sure_you_want_to_delete_this_workflow_this_action_cannot_be_undone') ?>
+                <?= lang('admin.delete_workflow_question') ?>
                 <button type="submit" class="btn danger block">
                     <i class="ph ph-trash"></i>
                     <?= lang('admin.yes_delete_workflow') ?>

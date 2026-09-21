@@ -1,5 +1,9 @@
 <?php
 return [
+    'lang_de' => 'German',
+    'lang_en' => 'English',
+    'lang_it' => 'Italian',
+    
     'about_osiris' => 'About OSIRIS',
     'accessibility_options' => 'Accessibility Options',
     'accessibility' => 'Accessibility',

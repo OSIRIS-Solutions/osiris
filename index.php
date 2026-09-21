@@ -47,17 +47,17 @@ class Html
 
 function currentLanguage(): string
 {
-    global $USER;
+    global $USER, $Settings;
     $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) === 'de' ? 'de' : 'en';
     $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? ($USER['lang'] ?? $default);
 
-    $supported = ['en', 'de'];
+    $supported = $Settings !== null ? $Settings->languages() : ['en'];
     return in_array($language, $supported, true) ? $language : OSIRIS_BASE_LANGUAGE;
 }
 
 function lang(string $en, ?string $de = null, array $replace = []): string
 {
-    return $en; // test
+    // return $en; // test
     $language = currentLanguage();
 
     // Preserve the legacy two-language format: lang('Login', 'Anmelden')
@@ -151,10 +151,17 @@ Route::get('/set-preferences', function () {
 
     // Language settings and cookies
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('language', $_GET)) {
-        $_COOKIE['osiris-language'] = $_GET['language'] === 'en' ? 'en' : 'de';
+        $lang = $_GET['language'];
+        if (!in_array($lang, $Settings->languages())) {
+
+            $redirect = $_GET['redirect'] ?? ROOTPATH . '/';
+            header("Location: " . $redirect);
+            die;
+        }
+        $_COOKIE['osiris-language'] = $lang;
         $host = parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
         $domain = ($host != 'testserver') ? $host : false;
-        
+
         setcookie('osiris-language', $_COOKIE['osiris-language'], [
             'expires' => time() + 86400,
             'path' => ROOTPATH . '/',

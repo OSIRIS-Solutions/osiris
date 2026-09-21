@@ -2,9 +2,9 @@
 return [
     'lang_de' => 'Deutsch',
     'lang_en' => 'Englisch',
-    'lang_it' => 'Italienisch',
+    'lang_it' => 'Italiano',
 
-    'about_osiris' => 'Über OSIRIS',
+    'about_osiris' => 'Bla OSIRIS',
     'accessibility_options' => 'Barrierefreiheitsoptionen',
     'accessibility' => 'Barrierefreiheit',
     'action' => 'Aktion',

@@ -27,44 +27,49 @@
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
 
+        <h5>
+            <?= lang('admin.languages') ?>
+        </h5>
+
+        <?php
+        $installed_lang = [
+            'en',
+            'de',
+            'it',
+            ];
+        $langs = $Settings->languages();
+        if (!is_array($langs) || empty($langs)){
+            $langs = ['en', 'de'];
+        }
+        foreach ($installed_lang as $lang) { ?>
+            <div class="custom-checkbox mb-5">
+                <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked': '' ?>>
+                <label for="lang-select-<?= $lang ?>"><?= lang('common.lang_'. $lang) ?></label>
+            </div>
+        <?php } ?>
+
+        <span class="text-muted">
+            <?= lang('admin.language_description') ?>
+        </span>
+
+
+
+        <hr>
+        <h5>
+            <?= lang('admin.general_charts') ?>
+        </h5>
+
+
         <div class="form-group">
             <label for="name" class="required "><?= lang('admin.start_year') ?></label>
             <input type="year" class="form-control" name="general[startyear]" required value="<?= $Settings->get('startyear') ?? '2022' ?>">
             <span class="text-muted">
-                <?= lang('admin.the_start_year_defines_the_beginning_of_many_charts_in_osiris_it_is_possibl') ?>
+                <?= lang('admin.start_year_description') ?>
             </span>
         </div>
-        <div class="form-group">
-            <label for="apikey"><?= lang('API-Key') ?></label>
-            <div class="input-group">
-                <input type="text" class="form-control" name="general[apikey]" id="apikey" value="<?= $Settings->get('apikey') ?>">
-
-                <div class="input-group-append">
-                    <button type="button" class="btn" onclick="generateAPIkey()"><i class="ph ph-arrows-clockwise"></i> Generate</button>
-                </div>
-            </div>
-            <span class="text-muted">
-                <?= lang('admin.legacy_api_key_description', replace: ['rootpath' => ROOTPATH]) ?>
-            </span>
-        </div>
-
-        <script>
-            function generateAPIkey() {
-                let length = 50;
-                let result = '';
-                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                const charactersLength = characters.length;
-                let counter = 0;
-                while (counter < length) {
-                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-                    counter += 1;
-                }
-                $('#apikey').val(result)
-            }
-        </script>
 
         <hr>
-        <h5 class="mb-0">
+        <h5>
             <?= lang('admin.print_output_settings') ?>
         </h5>
         <div class="row row-eq-spacing mt-0">
@@ -104,12 +109,46 @@
                 <i class="ph ph-warning"></i>
                 <?= lang('admin.hint') ?>
             </b>
-            <?= lang('admin.you_have_to_rerender_all_activities_to_see_the_changes_you_can_do_this_here') ?>
+            <?= lang('admin.chages_require_rerender') ?>
             <a href="<?= ROOTPATH ?>/rerender" class="">
                 <?= lang('admin.render_all_activities') ?>.
             </a><br>
-            <?= lang('admin.this_might_take_a_while_please_be_patient_and_do_not_reload_the_page') ?>
+            <?= lang('admin.please_be_patient') ?>
         </p>
+
+        <hr>
+        <h5>
+            <?= lang('admin.general_api') ?>
+        </h5>
+        <div class="form-group">
+            <label for="apikey" class="d-flex justify-content-between"><?= lang('API-Key') ?> <?= badgeDeprecated() ?></label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="general[apikey]" id="apikey" value="<?= $Settings->get('apikey') ?>">
+
+                <div class="input-group-append">
+                    <button type="button" class="btn" onclick="generateAPIkey()"><i class="ph ph-arrows-clockwise"></i> Generate</button>
+                </div>
+            </div>
+            <span class="text-muted">
+                <?= lang('admin.legacy_api_key_description', replace: ['rootpath' => ROOTPATH]) ?>
+            </span>
+        </div>
+
+        <script>
+            function generateAPIkey() {
+                let length = 50;
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                const charactersLength = characters.length;
+                let counter = 0;
+                while (counter < length) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                    counter += 1;
+                }
+                $('#apikey').val(result)
+            }
+        </script>
+
 
 
         <button class="btn primary">

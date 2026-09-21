@@ -19,12 +19,15 @@ class Settings
     public $activityCategories = [];
     public $sidebarFavorites = [];
     private $dismissedAnnouncement = false;
+    private $languages = ['en', 'de'];
 
     function __construct($user = array())
     {
         // construct database object 
         $DB = new DB;
         $this->osiris = $DB->db;
+
+        $this->languages = DB::doc2arr($this->get('languages', ['en', 'de']));
 
         // set user roles
         if (isset($user['roles'])) {
@@ -77,6 +80,10 @@ class Settings
         if ($this->featureEnabled('topics')) {
             $this->topics =  $this->osiris->topics->find([], ['sort' => ['inactive' => 1]])->toArray();
         }
+    }
+
+    public function languages(){
+        return $this->languages;
     }
 
     /**
@@ -177,13 +184,8 @@ class Settings
             case 'startyear':
                 $req = $this->osiris->adminGeneral->findOne(['key' => 'startyear']);
                 return intval($req['value'] ?? 2020);
-            case 'departments':
-                dump("DEPARTMENTS sollten nicht mehr hierüber abgefragt werden.");
-                return '';
             case 'activities':
                 return $this->getActivities();
-                // case 'general':
-                //     return $s['general'];
             case 'features':
                 return $this->features;
             default:
