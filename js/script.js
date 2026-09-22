@@ -227,8 +227,18 @@ function getCookie(cname) {
     }
     return "";
 }
-function lang(en, de = null) {
-    if (de === null) return window.OSIRIS_JS_TRANSLATIONS?.[en] ?? en;
+function lang(en, de = null, replace = {}) {
+    if (de !== null && typeof de === 'object') {
+        replace = de;
+        de = null;
+    }
+    if (de === null) {
+        let result = window.OSIRIS_JS_TRANSLATIONS?.[en] ?? en;
+        Object.entries(replace).forEach(([key, value]) => {
+            result = result.replaceAll(`{{${key}}}`, String(value));
+        });
+        return result;
+    }
     var language = document.documentElement.lang || getCookie('osiris-language');
     if (language === undefined) return de;
     if (language == "en") return en;
@@ -504,7 +514,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
             }
             favlist.push(id)
             action = "add";
-            toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
+            toastInfo(lang('common.item_added_to_collection', { rootpath: ROOTPATH }))
             updateCart(true)
         }
         fav = favlist.join(',')
@@ -512,7 +522,7 @@ function addToCart(el, id) {//.addClass('animate__flip')
         fav = id
         action = "add";
         updateCart(true)
-        toastInfo(lang('Item added to your collection. <a class="link" href="' + ROOTPATH + '/cart">View collection</a>', 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="' + ROOTPATH + '/cart">Sammlung ansehen</a>'))
+        toastInfo(lang('common.item_added_to_collection', { rootpath: ROOTPATH }))
     }
     osirisJS.createCookie('osiris-cart', fav, 30)
     if (el === null) {

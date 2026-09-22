@@ -1,5 +1,12 @@
 <?php
 return [
+    'activities.event_selected',
+    'activities.journal_selected',
+    'activities.module_selected',
+    'activities.online_ahead_of_print',
+    'common.item_added_to_collection',
+    'common.partner',
+    'organizations.location_coordinates_updated',
     'action.delete',
     'activities.add_new_module',
     'activities.author_name_cannot_be_empty',

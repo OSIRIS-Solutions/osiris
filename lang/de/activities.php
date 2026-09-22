@@ -1,5 +1,8 @@
 <?php
 return [
+    'module_selected' => 'Modul <code class="code">{{title}}</code> ausgewählt.',
+    'journal_selected' => 'Journal <code class="code">{{journal}}</code> ausgewählt.',
+    'event_selected' => 'Veranstaltung "{{event}}" ausgewählt.',
     'continue_editing' => 'Weiter bearbeiten',
     'this_person_has_disabled_achievements_in_their_profile' => 'Diese Person hat Errungenschaften im Profil ausgeschaltet.',
     'unachieved' => '<em>Noch nicht erreicht.</em>',

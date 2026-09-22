@@ -1,5 +1,6 @@
 <?php
 return [
+    'location_coordinates_updated' => 'Location coordinates updated based on <b>{{name}}</b>.',
     'external_organisations' => 'External Organisations',
     'add_new_organisation' => 'Add new organisation',
     'change_organization_logo' => 'Change organization logo',

@@ -401,7 +401,7 @@ $cart = readCart();
             'key': 'unit'
         },
         {
-            title: lang('Online ahead of print'),
+            title: lang('activities.online_ahead_of_print'),
             'key': 'epub'
         },
         {

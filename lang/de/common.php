@@ -787,4 +787,6 @@ return [
     'september' => 'September',
     'version' => 'Version',
     'word_cloud' => 'Wortwolke',
+    'partner' => 'Partner',
+    'item_added_to_collection' => 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="{{rootpath}}/cart">Sammlung ansehen</a>',
 ];

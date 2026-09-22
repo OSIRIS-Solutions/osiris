@@ -534,7 +534,7 @@ $Vocabulary = new Vocabulary();
         }
         return `<span class="badge text-muted">
         <i class="ph ph-handshake"></i>
-        ${lang('Partner')}
+        ${lang('common.partner')}
         </span>`
     }
 

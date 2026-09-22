@@ -452,7 +452,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         }
         return `<span class="badge text-muted">
         <i class="ph ph-handshake"></i>
-        ${lang('Partner')}
+        ${lang('common.partner')}
         </span>`
     }
 

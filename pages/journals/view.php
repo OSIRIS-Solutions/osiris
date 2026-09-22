@@ -245,7 +245,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 }
             },
             language: {
-                "emptyTable": lang("No publications available for this <?= $label ?>.", "Für dieses <?= $label ?> sind noch keine Publikationen verfügbar."),
+                "emptyTable": <?= json_encode(lang('journals.no_publications_available', replace: ['label' => $label]), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             },
             "pageLength": 5,
             columnDefs: [{
@@ -304,7 +304,7 @@ if ($Settings->hasPermission('journals.edit')) { ?>
                 }
             },
             language: {
-                "emptyTable": lang("No other activities available for this <?= $label ?>.", "Für dieses <?= $label ?> sind keine weiteren Aktivitäten verfügbar."),
+                "emptyTable": <?= json_encode(lang('journals.no_other_activities_available', replace: ['label' => $label]), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             },
             "pageLength": 5,
             columnDefs: [{

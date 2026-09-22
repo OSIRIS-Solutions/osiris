@@ -544,7 +544,7 @@ function getTeaching(name) {
                 })
                 if (teaching.length === 1) {
                     selectTeaching(teaching[0])
-                    toastSuccess(lang('Module <code class="code">' + teaching[0].title + '</code> selected.', 'Modul <code class="code">' + teaching[0].title + '</code> ausgewählt.'), lang('activities.module_found'))
+                    toastSuccess(lang('activities.module_selected', { title: teaching[0].title }), lang('activities.module_found'))
                 } else {
                     window.location.replace('#teaching-select')
                 }
@@ -735,7 +735,7 @@ function getJournal(name) {
                 })
                 if (journals.length === 1) {
                     selectJournal(journals[0])
-                    toastSuccess(lang('Journal <code class="code">' + journals[0].journal + '</code> selected.', 'Journal <code class="code">' + journals[0].journal + '</code> ausgewählt.'), lang('activities.journal_found'))
+                    toastSuccess(lang('activities.journal_selected', { journal: journals[0].journal }), lang('activities.journal_found'))
                 } else {
                     window.location.replace('#journal-select')
                 }
@@ -1668,7 +1668,7 @@ function selectEvent(id, event, start, end, location, country) {
     if ($('#event-select-dropdown').length > 0) {
         $('#event-select-dropdown').removeClass('show')
     }
-    toastSuccess(lang('Event "' + event + '" selected.', 'Veranstaltung "' + event + '" ausgewählt.'))
+    toastSuccess(lang('activities.event_selected', { event }))
 
     // remove is_valid after 3 seconds
     setTimeout(function () {

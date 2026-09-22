@@ -1,5 +1,8 @@
 <?php
 return [
+    'no_label_found' => 'No {{label}} found',
+    'no_publications_available' => 'No publications available for this {{label}}.',
+    'no_other_activities_available' => 'No other activities available for this {{label}}.',
     'text_ff40038939' => '.',
     'text_e6d7f55f20' => ',',
     'open_access' => 'Open Access',

@@ -106,7 +106,7 @@ if (isset($_GET['year'])) {
                 let year = $("#year").val();
                 let total = $("#total").text();
                 if (total == 0) {
-                    $("#status").text("<?= lang("No {$label} found", "Keine {$label} gefunden") ?>");
+                    $("#status").text(<?= json_encode(lang('journals.no_label_found', replace: ['label' => $label]), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                     return;
                 }
                 $("#startBtn").attr("disabled", true);

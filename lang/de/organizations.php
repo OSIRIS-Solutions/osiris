@@ -1,5 +1,6 @@
 <?php
 return [
+    'location_coordinates_updated' => 'Standort-Koordinaten aktualisiert basierend auf <b>{{name}}</b>.',
     'external_organisations' => 'Externe Organisationen',
     'add_new_organisation' => 'Neue Organisation anlegen',
     'change_organization_logo' => 'Organisations-Logo ändern',

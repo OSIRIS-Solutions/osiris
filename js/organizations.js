@@ -380,7 +380,7 @@ function getCoordinates(locationId = '#location', countryId = '#country', latId 
                 $(lngId).val(place.lon);
                 const name = place.display_name;
 
-                toastSuccess(lang("Location coordinates updated based on <b>" + name + "</b>.", "Standort-Koordinaten aktualisiert basierend auf <b>" + name + "</b>."));
+                toastSuccess(lang('organizations.location_coordinates_updated', { name }));
             } else {
                 toastError(lang('organizations.location_not_found_please_refine_your_search'));
             }
