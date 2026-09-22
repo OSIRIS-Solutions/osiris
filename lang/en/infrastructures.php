@@ -83,4 +83,5 @@ return [
     'infrastructures_personnel_statistics' => 'Infrastructures - Personnel Statistics',
     'infrastructures_collaborative_infrastructures' => 'Infrastructures - Collaborative Infrastructures',
     'infrastructures_collaborative_partners' => 'Infrastructures - Collaborative Partners',
+    'reporter_required' => 'Reporter*',
 ];

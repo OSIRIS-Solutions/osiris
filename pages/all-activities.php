@@ -99,7 +99,7 @@ $cart = readCart();
                     <th>Start</th>
                     <th><?= lang('common.end') ?></th>
                     <th><?= lang('common.units') ?></th>
-                    <th><?= lang('Online ahead of print') ?></th>
+                    <th><?= lang('activities.online_ahead_of_print') ?></th>
                     <th><?= lang('common.type') ?></th>
                     <th><?= lang('activities.subtype') ?></th>
                     <th><?= lang('common.title') ?></th>

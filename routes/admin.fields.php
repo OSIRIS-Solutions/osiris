@@ -20,7 +20,7 @@ Route::get('/admin/fields', function () {
 
     $breadcrumb = [
         ['name' => lang('admin.manage_content'), 'path' => '/admin'],
-        ['name' => lang("Custom fields")]
+        ['name' => lang('common.custom_fields')]
     ];
 
     include BASEPATH . "/header.php";
@@ -57,7 +57,7 @@ Route::get('/admin/fields/(.*)', function ($id) {
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
         ['name' => lang('admin.manage_content'), 'path' => '/admin'],
-        ['name' => lang("Custom Fields"), 'path' => "/admin/fields"],
+        ['name' => lang('common.custom_fields'), 'path' => "/admin/fields"],
         ['name' => $name]
     ];
 

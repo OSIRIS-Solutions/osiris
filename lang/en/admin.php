@@ -892,5 +892,11 @@ return [
     'general_charts' => 'Graphs within OSIRIS',
     'general_api' => 'API Settings',
     'languages' => 'Languages',
-    'language_description' => 'Please select which languages your OSIRIS instance should support. You can change the order with drag and drop. The first language is used as a default.'
+    'language_description' => 'Please select which languages your OSIRIS instance should support.',
+    'language_override' => 'Overwrite language settings',
+    'api_key' => 'API-Key',
+    'osiris_portfolio' => 'OSIRIS Portfolio',
+    'secret_key' => 'Secret key',
+    'activity_not_found_using_default_example' => 'Sorry, the activity was not found in the database. We will use the default example.',
+    'invalid_activity_id' => 'The ID you entered is not valid. Please use a valid activity ID.',
 ];

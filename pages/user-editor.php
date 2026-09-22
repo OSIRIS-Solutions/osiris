@@ -1220,7 +1220,7 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('expertise')) { ?>
             <h2 class="title">
-                <?= lang('Expertise') ?>
+                <?= lang('common.expertise') ?>
             </h2>
             <!-- ensure to save empty expertise -->
             <input type="hidden" name="values[expertise]" value="">
@@ -1360,7 +1360,7 @@ $active = function ($field) use ($data_fields) {
     <section id="biography" style="display:none">
 
         <?php if ($active('cv')) { ?>
-            <h2 class="title"><?= lang('Curriculum Vitae') ?></h2>
+            <h2 class="title"><?= lang('common.curriculum_vitae') ?></h2>
 
             <!-- ensure to save empty cv -->
             <input type="hidden" name="values[cv]" value="">

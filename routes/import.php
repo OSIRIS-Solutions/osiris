@@ -2,7 +2,7 @@
 
 Route::get('/import', function () {
     $breadcrumb = [
-        ['name' => lang('Import')]
+        ['name' => lang('navigation.import')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -12,7 +12,7 @@ Route::get('/import', function () {
 
 Route::get('/import/googlescholar/(.*)', function ($scholar_id) {
     $breadcrumb = [
-        ['name' => lang('Import'), 'path' => '/import'],
+        ['name' => lang('navigation.import'), 'path' => '/import'],
         ['name' => lang('search.google_scholar')]
     ];
     include_once BASEPATH . "/php/init.php";
@@ -29,7 +29,7 @@ Route::get('/import/openalex', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('Import'), 'path' => '/import'],
+        ['name' => lang('navigation.import'), 'path' => '/import'],
         ['name' => 'OpenAlex']
     ];
     include_once BASEPATH . "/php/init.php";
@@ -151,7 +151,7 @@ Route::post('/import/google', function () {
 Route::post('/import/file', function () {
     // if ($page == 'users') 
     $breadcrumb = [
-        ['name' => lang('Import'), 'path' => '/import'],
+        ['name' => lang('navigation.import'), 'path' => '/import'],
         ['name' => lang('search.from_file')]
     ];
     include_once BASEPATH . "/php/init.php";

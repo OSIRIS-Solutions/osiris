@@ -41,7 +41,7 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['abstract'])): ?>
-                    <h3 class="title"><?= lang("Abstract"); ?></h3>
+                    <h3 class="title"><?= lang('activities.abstract'); ?></h3>
                     <p><?= $data['abstract']; ?></p>
                 <?php endif; ?>
 
@@ -76,14 +76,14 @@
                     <?php if (!empty($data['doi'])): ?>
                         <li>
                             <a href="https://doi.org/<?= $data['doi']; ?>" target="_blank">
-                                <?= lang("DOI"); ?>: <?= $data['doi']; ?>
+                                <?= lang('activities.doi'); ?>: <?= $data['doi']; ?>
                             </a>
                         </li>
                     <?php endif; ?>
                     <?php if (!empty($data['pubmed'])): ?>
                         <li>
                             <a href="https://pubmed.ncbi.nlm.nih.gov/<?= $data['pubmed']; ?>" target="_blank">
-                                <?= lang("PubMed"); ?>: <?= $data['pubmed']; ?>
+                                <?= lang('activities.pubmed'); ?>: <?= $data['pubmed']; ?>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -155,7 +155,7 @@
             </div>
 
             <div class="col-md-4">
-                <h3 class="title"><?= lang("Details"); ?></h3>
+                <h3 class="title"><?= lang('common.details'); ?></h3>
                 <table class="table" id="detail-table">
                     <tbody>
                         <!-- topics -->

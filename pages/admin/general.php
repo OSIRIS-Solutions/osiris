@@ -36,15 +36,19 @@
             'en',
             'de',
             'it',
-            ];
+        ];
         $langs = $Settings->languages();
-        if (!is_array($langs) || empty($langs)){
+        if (!is_array($langs) || empty($langs)) {
             $langs = ['en', 'de'];
         }
         foreach ($installed_lang as $lang) { ?>
-            <div class="custom-checkbox mb-5">
-                <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked': '' ?>>
-                <label for="lang-select-<?= $lang ?>"><?= lang('common.lang_'. $lang) ?></label>
+            <div class="custom-checkbox mb-5 d-flex">
+                <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked' : '' ?>>
+                <label for="lang-select-<?= $lang ?>"><?= lang('common.lang_' . $lang) ?></label>
+
+                <a href="<?= ROOTPATH ?>/admin/language-override/<?= $lang ?>" class="ml-auto">
+                    <?= lang('admin.language_override') ?>
+                </a>
             </div>
         <?php } ?>
 
@@ -121,7 +125,7 @@
             <?= lang('admin.general_api') ?>
         </h5>
         <div class="form-group">
-            <label for="apikey" class="d-flex justify-content-between"><?= lang('API-Key') ?> <?= badgeDeprecated() ?></label>
+            <label for="apikey" class="d-flex justify-content-between"><?= lang('admin.api_key') ?> <?= badgeDeprecated() ?></label>
             <div class="input-group">
                 <input type="text" class="form-control" name="general[apikey]" id="apikey" value="<?= $Settings->get('apikey') ?>">
 

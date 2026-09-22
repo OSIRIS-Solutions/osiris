@@ -63,7 +63,7 @@ if (empty($form) || !isset($form['_id'])) {
 
         <div class="form-group">
             <label for="ror">
-                <?= lang('ROR-ID') ?>
+                <?= lang('organizations.ror_id') ?>
                 <span class="badge kdsf">KDSF-B-15-1</span>
             </label>
 

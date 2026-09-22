@@ -110,7 +110,7 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
                     <canvas id="approved-<?= $q ?>"></canvas>
                     <div class="text-right mt-5">
                         <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $d['quarter'] ?>', y: '<?= $d['year'] ?>'})">
-                            <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
+                            <i class="ph ph-magnifying-glass-plus"></i> <?= lang('common.details') ?>
                         </button>
                     </div>
 

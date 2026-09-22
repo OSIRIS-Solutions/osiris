@@ -23,8 +23,8 @@
         <thead>
             <tr>
                 <th><?= lang('common.entity') ?></th>
-                <th><?= lang('Name') ?></th>
-                <th><?= lang('Link') ?></th>
+                <th><?= lang('common.name') ?></th>
+                <th><?= lang('common.link') ?></th>
                 <th></th>
             </tr>
         </thead>

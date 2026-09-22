@@ -605,6 +605,22 @@ Route::get('/admin/osirisinfo', function () {
 }, 'login');
 
 
+Route::get('/admin/language-override/(de|en|it|jp|es)', function ($lang) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+    }
+    $breadcrumb = [
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('common.lang_'.$lang)]
+    ];
+
+    include BASEPATH . "/header.php";
+    include_once BASEPATH . '/header-editor.php';
+    include BASEPATH . "/pages/admin/language-override.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {

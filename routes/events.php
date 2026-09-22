@@ -48,12 +48,12 @@ Route::get('/(conferences|deadlines)/new', function ($page) {
             abortwith(500, lang('events.deadlines_are_not_enabled'));
         }
         $breadcrumb = [
-            ['name' => lang('Deadlines'), 'path' => '/deadlines'],
+            ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
             ['name' => lang('deadlines.new_deadline')]
         ];
     } else {
         $breadcrumb = [
-            ['name' => lang('Events'), 'path' => '/conferences'],
+            ['name' => lang('common.events'), 'path' => '/conferences'],
             ['name' => lang('events.new_event')]
         ];
     }
@@ -82,7 +82,7 @@ Route::get('/conferences/view/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Events'), 'path' => '/conferences'],
+        ['name' => lang('common.events'), 'path' => '/conferences'],
         ['name' => $conference['title']]
     ];
 
@@ -106,7 +106,7 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Events'), 'path' => '/conferences'],
+        ['name' => lang('common.events'), 'path' => '/conferences'],
         ['name' => $form['title']]
     ];
 
@@ -158,7 +158,7 @@ Route::get('/deadlines/view/(.*)', function ($id) {
         abortwith(404, lang('events.deadline'), '/deadlines');
     }
     $breadcrumb = [
-        ['name' => lang('Deadlines'), 'path' => '/deadlines'],
+        ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
         ['name' => $deadline['title']]
     ];
 
@@ -182,7 +182,7 @@ Route::get('/deadlines/edit/(.*)', function ($id) {
     }
 
     $breadcrumb = [
-        ['name' => lang('Deadlines'), 'path' => '/deadlines'],
+        ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
         ['name' => $form['title']]
     ];
 

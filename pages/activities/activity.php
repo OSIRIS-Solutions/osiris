@@ -2076,7 +2076,7 @@ if ($edit_perm) {
                                             <th>ID</th>
                                             <th><?= lang('activities.last') ?></th>
                                             <th><?= lang('activities.first') ?></th>
-                                            <th><?= lang('Email') ?></th>
+                                            <th><?= lang('common.email') ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -2263,8 +2263,8 @@ if ($edit_perm) {
                         <tr>
                             <th><?= lang('activities.last') ?></th>
                             <th><?= lang('activities.first') ?></th>
-                            <th><?= lang('Email') ?></th>
-                            <th><?= lang('Status') ?></th>
+                            <th><?= lang('common.email') ?></th>
+                            <th><?= lang('common.status') ?></th>
                         </tr>
                     </thead>
                     <tbody>

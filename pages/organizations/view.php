@@ -237,7 +237,7 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('ROR') ?></span>
+                            <span class="key"><?= lang('organizations.ror') ?></span>
                             <?php if (!empty($organization['ror'] ?? '')) { ?>
                                 <a href="<?= $organization['ror'] ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="ph ph-arrow-square-out"></i>
@@ -249,7 +249,7 @@ if ($edit_perm) { ?>
                         </td>
 
                         <td>
-                            <span class="key"><?= lang('URL') ?></span>
+                            <span class="key"><?= lang('common.url') ?></span>
                             <?php if (!empty($organization['url'] ?? '')) {
                                 $url = $organization['url'];
                                 if (isset($url['value'])) {

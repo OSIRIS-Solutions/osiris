@@ -132,7 +132,7 @@
 
                 <div class="box padded">
                     <h4 class="title" id="portal">
-                        <?= lang('OSIRIS Portfolio') ?>
+                        <?= lang('admin.osiris_portfolio') ?>
                     </h4>
 
                     <p class="description">
@@ -627,7 +627,7 @@
                             <input type="text" class="form-control small col" name="general[guest-forms-server]" id="guest-forms-server" value="<?= $Settings->get('guest-forms-server') ?>">
                         </div>
                         <div class="row mt-10">
-                            <label for="guest-forms-secret-key" class="w-150 col flex-reset"><?= lang('Secret key') ?></label>
+                            <label for="guest-forms-secret-key" class="w-150 col flex-reset"><?= lang('admin.secret_key') ?></label>
                             <input type="text" class="form-control small col" name="general[guest-forms-secret-key]" id="guest-forms-secret-key" value="<?= $Settings->get('guest-forms-secret-key') ?>">
                         </div>
 
@@ -677,7 +677,7 @@
                     <div class="title"><?= lang('admin.features') ?></div>
 
                     <a href="#core-features"><?= lang('admin.core_features') ?></a>
-                    <a href="#portal" class="submenu"><?= lang('OSIRIS Portfolio') ?></a>
+                    <a href="#portal" class="submenu"><?= lang('admin.osiris_portfolio') ?></a>
                     <a href="#projects" class="submenu"><?= lang('admin.projects_and_proposals') ?></a>
                     <a href="#teaching-modules" class="submenu"><?= lang('common.teaching_modules') ?></a>
                     <a href="#research-topics" class="submenu"><?= lang('admin.research_topics') ?></a>

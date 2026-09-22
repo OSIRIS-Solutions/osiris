@@ -66,18 +66,18 @@
 
     <a href="<?= ROOTPATH ?>/docs/api">
         <i class="ph mr-10 text-secondary ph-code"></i>
-        <?= lang('API Docs') ?>
+        <?= lang('common.api_docs') ?>
     </a>
 
 
     <a href="<?= ROOTPATH ?>/docs/portfolio">
         <i class="ph mr-10 text-secondary ph-globe"></i>
-        <?= lang('Portfolio FAQ') ?>
+        <?= lang('common.portfolio_faq') ?>
     </a>
 
     <a href="<?= ROOTPATH ?>/docs/portfolio-api">
         <i class="ph mr-10 text-secondary ph-code"></i>
-        <?= lang('Portfolio API Docs') ?>
+        <?= lang('common.portfolio_api_docs') ?>
     </a>
 </div>
 

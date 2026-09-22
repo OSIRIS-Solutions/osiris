@@ -1027,14 +1027,14 @@ function format_month($month)
         1 => lang('common.january'),
         2 => lang('common.february'),
         3 => lang('common.march'),
-        4 => lang("April"),
+        4 => lang('common.april'),
         5 => lang('common.may'),
         6 => lang('common.june'),
         7 => lang('common.july'),
-        8 => lang("August"),
-        9 => lang("September"),
+        8 => lang('common.august'),
+        9 => lang('common.september'),
         10 => lang('common.october'),
-        11 => lang("November"),
+        11 => lang('common.november'),
         12 => lang('common.december')
     ];
     return $array[$month];

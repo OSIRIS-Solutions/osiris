@@ -451,7 +451,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('ISSN'),
+                'label' => lang('journals.issn'),
                 'type' => 'list'
             ],
             [
@@ -551,7 +551,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('DOI'),
+                'label' => lang('activities.doi'),
                 'type' => 'string'
             ],
             [
@@ -561,7 +561,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Link'),
+                'label' => lang('common.link'),
                 'type' => 'string'
             ],
             [
@@ -571,7 +571,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Pubmed-ID'),
+                'label' => lang('activities.pubmed_id'),
                 'type' => 'integer'
             ],
             [
@@ -607,7 +607,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Issue'),
+                'label' => lang('activities.issue'),
                 'type' => 'string'
             ],
             [
@@ -617,7 +617,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Volume'),
+                'label' => lang('activities.volume'),
                 'type' => 'string'
             ],
             [
@@ -648,7 +648,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Quartile'),
+                'label' => lang('common.quartile'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['Q1', 'Q2', 'Q3', 'Q4']
@@ -692,7 +692,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Edition'),
+                'label' => lang('activities.edition'),
                 'type' => 'string'
             ],
             [
@@ -702,7 +702,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('ISBN'),
+                'label' => lang('activities.isbn'),
                 'type' => 'string'
             ],
             [
@@ -766,7 +766,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Version'),
+                'label' => lang('common.version'),
                 'type' => 'string'
             ],
             [
@@ -824,7 +824,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Status (Thesis)'),
+                'label' => lang('activities.thesis_status'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
@@ -871,7 +871,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Event'),
+                'label' => lang('common.event'),
                 'type' => 'string'
             ],
             [
@@ -915,7 +915,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Open Access'),
+                'label' => lang('journals.open_access'),
                 'type' => 'boolean',
             ],
             [
@@ -926,7 +926,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Open Access Status'),
+                'label' => lang('activities.open_access_status'),
                 'type' => 'string',
                 'values' => ['gold', 'diamond', 'green', 'bronze', 'hybrid', 'open', 'closed'],
                 'input' => 'select'
@@ -939,7 +939,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Online ahead of print'),
+                'label' => lang('activities.online_ahead_of_print'),
                 'type' => 'boolean',
             ],
             [
@@ -950,7 +950,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Correction'),
+                'label' => lang('activities.correction'),
                 'type' => 'boolean',
             ],
             [
@@ -974,7 +974,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('Invited lecture'),
+                'label' => lang('activities.invited_lecture'),
                 'type' => 'boolean',
             ],
             [

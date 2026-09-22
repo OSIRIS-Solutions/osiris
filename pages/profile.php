@@ -777,7 +777,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_wordcloud > 0) { ?>
             <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
                 <i class="ph ph-cloud" aria-hidden="true"></i>
-                <?= lang('Word cloud')  ?>
+                <?= lang('common.word_cloud')  ?>
             </a>
         <?php } ?>
     <?php } ?>
@@ -795,7 +795,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="box h-full">
                 <div class="content">
                     <h4 class="title">
-                        <?= lang('Details') ?>
+                        <?= lang('common.details') ?>
                         <?php if ($currentuser) { ?>
                             <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>">
                                 <i class="ph ph-note-pencil ph-lg"></i>
@@ -959,7 +959,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('socials') && isset($scientist['socials'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Social media') ?></span>
+                                    <span class="key"><?= lang('people.social_media') ?></span>
                                     <?php
                                     foreach ($scientist['socials'] as $key => $val) { ?>
                                         <a class="btn primary" href="<?= $val ?>" target="_blank" rel="noopener noreferrer"> <i class="ph <?= socialLogo($key) ?>"></i></a>
@@ -970,7 +970,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <?php if ($active('expertise') && ($currentuser || !empty($scientist['expertise'] ?? array()))) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('Expertise') ?></span>
+                                    <span class="key"><?= lang('common.expertise') ?></span>
                                     <?php foreach ($scientist['expertise'] ?? array() as $key) { ?><a href="<?= ROOTPATH ?>/expertise?search=<?= $key ?>" class="badge primary mr-5 mb-5"><?= $key ?></a><?php } ?>
                                     <?php if ($currentuser) { ?> <a href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research" class=""><i class="ph ph-edit"></i></a> <?php } ?>
                                 </td>
@@ -1074,7 +1074,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
                     <?php if ($active('cv')) { ?>
                         <h4 class="title">
-                            <?= lang('Curriculum Vitae') ?>
+                            <?= lang('common.curriculum_vitae') ?>
                             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                                 <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
                                     <i class="ph ph-note-pencil ph-lg"></i>
@@ -1642,7 +1642,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <?php if ($Settings->featureEnabled('wordcloud')) { ?>
     <section id="wordcloud" style="display:none">
-        <h3 class=""><?= lang('Word cloud') ?></h3>
+        <h3 class=""><?= lang('common.word_cloud') ?></h3>
 
         <p class="text-muted">
             <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>

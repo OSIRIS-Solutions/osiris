@@ -793,7 +793,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     <?= lang('dashboard.last_quarter') ?>
                                 </h2>
                                 <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
-                                    <i class="ph ph-magnifying-glass-plus"></i> <?= lang('Details') ?>
+                                    <i class="ph ph-magnifying-glass-plus"></i> <?= lang('common.details') ?>
                                 </button>
                             </div>
                             <div class="progress">

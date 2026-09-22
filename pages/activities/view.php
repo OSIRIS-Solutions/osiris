@@ -391,17 +391,17 @@
                                 <div class="font-size-16 mt-10 mb-20">
                                     <?php if (!empty($doc['doi'])): ?>
                                         <a href="https://doi.org/<?= $doc['doi']; ?>" target="_blank" class="identifier">
-                                            <span class="label"><?= lang("DOI"); ?></span> <?= $doc['doi']; ?>
+                                            <span class="label"><?= lang('activities.doi'); ?></span> <?= $doc['doi']; ?>
                                         </a>
                                     <?php endif; ?>
                                     <?php if (!empty($doc['pubmed'])): ?>
                                         <a href="https://pubmed.ncbi.nlm.nih.gov/<?= $doc['pubmed']; ?>" target="_blank" class="identifier">
-                                            <span class="label"><?= lang("PubMed"); ?></span> <?= $doc['pubmed']; ?>
+                                            <span class="label"><?= lang('activities.pubmed'); ?></span> <?= $doc['pubmed']; ?>
                                         </a>
                                     <?php endif; ?>
                                     <?php if (!empty($doc['isbn'])): ?>
                                         <span class="identifier">
-                                            <span class="label"><?= lang("ISBN"); ?></span> <?= $doc['isbn']; ?>
+                                            <span class="label"><?= lang('activities.isbn'); ?></span> <?= $doc['isbn']; ?>
                                         </span>
                                     <?php endif; ?>
                                 </div>

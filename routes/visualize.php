@@ -29,8 +29,8 @@ Route::get('/visualize/(\w*)', function ($page) {
         "coauthors" => lang('common.coauthor_network'),
         "sunburst" => lang('common.department_overview'),
         "departments" => lang('search.department_network'),
-        "openaccess" => lang('Open Access'),
-        "wordcloud" => lang('Word cloud'),
+        "openaccess" => lang('journals.open_access'),
+        "wordcloud" => lang('common.word_cloud'),
         "map" => lang('common.map'),
     ];
     if (!array_key_exists($page, $names)) {

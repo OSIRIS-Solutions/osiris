@@ -68,7 +68,7 @@ $end = $form['end_date'] ?? '';
                     </span>
                 </th>
                 <th>
-                    <?= lang('Reporter*') ?>
+                    <?= lang('infrastructures.reporter_required') ?>
                 </th>
                 <th></th>
             </tr>

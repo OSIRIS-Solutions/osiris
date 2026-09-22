@@ -1869,7 +1869,7 @@ class Modules
                         <option value="preprint">Preprint (non refereed)</option>
                         <option value="conference"><?= lang('activities.conference_preceedings') ?></option>
                         <option value="magazine"><?= lang('activities.magazine_article_non_refereed') ?></option>
-                        <option value="dissertation"><?= lang('Thesis') ?></option>
+                        <option value="dissertation"><?= lang('activities.thesis') ?></option>
                         <option value="others"><?= lang('activities.others') ?></option>
                     </select>
                     <label for="pubtype" class="<?= $labelClass ?> floating-title">
@@ -2329,7 +2329,7 @@ class Modules
                         <option value="practical-seminar" <?= $this->val('category') == 'practical-seminar' ? 'selected' : '' ?>><?= lang('activities.practical_course_and_seminar') ?></option>
                         <option value="lecture-seminar" <?= $this->val('category') == 'lecture-seminar' ? 'selected' : '' ?>><?= lang('activities.lecture_and_seminar') ?></option>
                         <option value="lecture-practical-seminar" <?= $this->val('category') == 'lecture-practical-seminar' ? 'selected' : '' ?>><?= lang('activities.lecture_seminar_practical_course') ?></option>
-                        <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('Seminar') ?></option>
+                        <option value="seminar" <?= $this->val('category') == 'seminar' ? 'selected' : '' ?>><?= lang('activities.seminar') ?></option>
                         <option value="other" <?= $this->val('category') == 'other' ? 'selected' : '' ?>><?= lang('common.other') ?></option>
                     </select>
                     <label for="teaching-cat" class="<?= $labelClass ?> "><?= $label ?></label>
@@ -2855,7 +2855,7 @@ class Modules
                         <option value="0" <?= $this->val('invited_lecture', false) ? '' : 'selected' ?>><?= lang('common.no') ?></option>
                         <option value="1" <?= $this->val('invited_lecture', false) ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
                     </select>
-                    <label class="<?= $labelClass ?>" for="lecture_type"><?= lang('Invited lecture') ?></label>
+                    <label class="<?= $labelClass ?>" for="lecture_type"><?= lang('activities.invited_lecture') ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
             <?php

@@ -289,11 +289,11 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($count_publications > 0) { ?>
         <a onclick="navigate('graph')" id="btn-graph" class="btn">
             <i class="ph ph-graph" aria-hidden="true"></i>
-            <?= lang('Graph')  ?>
+            <?= lang('common.graph')  ?>
         </a>
         <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
             <i class="ph ph-cloud" aria-hidden="true"></i>
-            <?= lang('Word cloud')  ?>
+            <?= lang('common.word_cloud')  ?>
         </a>
     <?php } ?>
 
@@ -539,7 +539,7 @@ if ($Settings->featureEnabled('spectrum')) {
 <?php } ?>
 
 <section id="wordcloud" style="display:none">
-    <h3 class=""><?= lang('Word cloud') ?></h3>
+    <h3 class=""><?= lang('common.word_cloud') ?></h3>
 
     <p class="text-muted">
         <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>

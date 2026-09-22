@@ -19,7 +19,7 @@ Route::get('/download', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         // ['name' => 'Export', 'path' => "/export"], 
-        ['name' => lang("Download")]
+        ['name' => lang('common.download')]
     ];
 
     include BASEPATH . "/header.php";
@@ -380,7 +380,7 @@ Route::post('/download', function () {
             }
 
             if (isset($scientist['cv']) && !empty($scientist['cv'])) {
-                $section->addTitle(lang('Curriculum Vitae'), 2);
+                $section->addTitle(lang('common.curriculum_vitae'), 2);
 
                 $table = $section->addTable($table_style);
 

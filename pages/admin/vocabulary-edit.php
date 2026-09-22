@@ -50,7 +50,7 @@
                 <tr>
                     <th></th>
                     <th>
-                        <?= lang('ID') ?>
+                        <?= lang('common.id') ?>
                     </th>
                     <th>
                         <?= lang('common.value') ?> (EN)

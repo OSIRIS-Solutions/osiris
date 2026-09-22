@@ -893,5 +893,11 @@ return [
     'general_charts' => 'Grafiken innerhalb von OSIRIS',
     'general_api' => 'API-Einstellungen',
     'languages' => 'Sprachen',
-    'language_description' => 'Bitte wähle hier, welche Sprachen diese OSIRIS-Instanz unterstützen soll. Du kannst die Reihenfolge mittels Drag and Drop verändern. Die erste Sprache wird dabei als Default verwendet.'
+    'language_description' => 'Bitte wähle hier, welche Sprachen diese OSIRIS-Instanz unterstützen soll.',
+    'language_override' => 'Spracheinstellungen überschreiben',
+    'api_key' => 'API-Schlüssel',
+    'osiris_portfolio' => 'OSIRIS-Portfolio',
+    'secret_key' => 'Geheimer Schlüssel',
+    'activity_not_found_using_default_example' => 'Die Aktivität wurde leider nicht in der Datenbank gefunden. Es wird das Standardbeispiel verwendet.',
+    'invalid_activity_id' => 'Die eingegebene ID ist ungültig. Bitte verwende eine gültige Aktivitäts-ID.',
 ];

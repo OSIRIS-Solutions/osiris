@@ -52,4 +52,6 @@ return [
     'please_provide_a_location_first' => 'Please provide a location first.',
     'location_not_found_please_refine_your_search' => 'Location not found. Please refine your search.',
     'an_error_occurred_while_fetching_location_data' => 'An error occurred while fetching location data.',
+    'ror' => 'ROR',
+    'ror_id' => 'ROR-ID',
 ];

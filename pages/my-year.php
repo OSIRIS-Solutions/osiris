@@ -522,7 +522,7 @@ if (!$Settings->featureEnabled('coins')) {
                             'approval' => lang('activities.approval_needed'),
                             'epub' => 'Online ahead of print',
                             'students' => lang('activities.student_graduation'),
-                            'openend' => lang('Open-end'),
+                            'openend' => lang('common.open_end'),
                             'journal_id' => lang('activities.non_standardized_journal')
                         ];
 

@@ -52,4 +52,6 @@ return [
     'please_provide_a_location_first' => 'Bitte geben Sie zuerst einen Standort ein.',
     'location_not_found_please_refine_your_search' => 'Standort nicht gefunden. Bitte verfeinern Sie Ihre Suche.',
     'an_error_occurred_while_fetching_location_data' => 'Beim Abrufen der Standortdaten ist ein Fehler aufgetreten.',
+    'ror' => 'ROR',
+    'ror_id' => 'ROR-ID',
 ];

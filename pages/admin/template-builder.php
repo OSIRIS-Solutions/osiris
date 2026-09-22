@@ -23,13 +23,13 @@ $example = 'default';
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     if (!DB::is_ObjectID($_GET['id'])) {
-        echo lang('The ID you entered is not valid. Please use a valid activity ID.');
+        echo lang('admin.invalid_activity_id');
     } else {
         $new = $osiris->activities->findOne(
             ['_id' => DB::to_ObjectID($_GET['id'])]
         );
         if (empty($new)) {
-            echo lang("Sorry, the activity was not found in the database. We will use the default example.");
+            echo lang('admin.activity_not_found_using_default_example');
         } else {
             $form = $new;
             $example = strval($new['_id']);
@@ -42,7 +42,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         ['sort' => ['_id' => -1]]
     );
     if (empty($new)) {
-        echo lang("Sorry, the activity was not found in the database. We will use the default example.");
+        echo lang('admin.activity_not_found_using_default_example');
     } else {
         $form = $new;
         $example = strval($new['_id']);

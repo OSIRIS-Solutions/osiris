@@ -1386,7 +1386,7 @@ if ($is_subproject) {
 
             <?php if (array_key_exists('nagoya', $fields) && $Settings->featureEnabled('nagoya')) { ?>
                 <h5>
-                    <?= lang('Nagoya Protocol') ?>
+                    <?= lang('common.nagoya_protocol') ?>
                 </h5>
                 <?php
 

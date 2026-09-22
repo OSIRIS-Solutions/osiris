@@ -71,7 +71,7 @@ $if_label = $Settings->impactLabel();
 
 <table class="table" id="result-table">
     <tr>
-        <td><?= lang('Name') ?></td>
+        <td><?= lang('common.name') ?></td>
         <td class="font-weight-bold"><?= $data['journal'] ?></td>
     </tr>
     <tr>

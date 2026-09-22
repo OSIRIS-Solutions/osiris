@@ -83,4 +83,5 @@ return [
     'infrastructures_personnel_statistics' => 'Infrastrukturen - Personalstatistiken',
     'infrastructures_collaborative_infrastructures' => 'Infrastrukturen - Verbundinfrastrukturen',
     'infrastructures_collaborative_partners' => 'Infrastrukturen - Kooperationspartner',
+    'reporter_required' => 'Berichterstatter*',
 ];

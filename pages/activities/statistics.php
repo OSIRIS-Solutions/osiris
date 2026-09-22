@@ -301,7 +301,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
                     <th><?= lang('activities.count_of_affiliated') ?></th>
                     <th><?= lang('activities.count_of_online') ?><sup>1</sup></th>
                     <th><?= lang('activities.without_external') ?><sup>2</sup></th>
-                    <th><?= lang('Peer-reviewed') ?><sup>3</sup></th>
+                    <th><?= lang('activities.peer_reviewed_label') ?><sup>3</sup></th>
                 </tr>
             </thead>
             <tbody>

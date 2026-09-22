@@ -20,7 +20,7 @@
 
 <h1>
     <i class="ph-duotone ph-lock-open" aria-hidden="true"></i>
-    <?= lang('Open Access') ?>
+    <?= lang('journals.open_access') ?>
 </h1>
 
 <div class="row row-eq-spacing mt-0">

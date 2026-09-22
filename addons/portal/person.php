@@ -55,7 +55,7 @@
 
                 <?php if (!empty($data['cv'])): ?>
                     <h2 class="title" id="cv">
-                        <?= lang("Curriculum Vitae") ?>
+                        <?= lang('common.curriculum_vitae') ?>
                     </h2>
                     <div class="biography">
                         <?php foreach ($data['cv'] as $entry): if (!empty($entry['hide'])) continue ?>
@@ -470,7 +470,7 @@
                                 <a href="#research"><?= lang('common.research_interests') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['cv'])): ?>
-                                <a href="#cv"><?= lang("Curriculum Vitae") ?></a>
+                                <a href="#cv"><?= lang('common.curriculum_vitae') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['publications'])): ?>
                                 <a href="#publications"><?= lang('common.publications') ?></a>
