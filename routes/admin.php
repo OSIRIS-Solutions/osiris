@@ -612,6 +612,7 @@ Route::get('/admin/language-override/(de|en|it|jp|es)', function ($lang) {
     }
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('admin.languages'), 'path' => '/admin/languages'],
         ['name' => lang('common.lang_'.$lang)]
     ];
 

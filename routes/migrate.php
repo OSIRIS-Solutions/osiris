@@ -107,6 +107,19 @@ Route::get('/migrate/files', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/migrate/languages', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+    }
+
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/routes/migration/languages.php";
+    include BASEPATH . "/footer.php";
+});
+
 
 Route::get('/migrate/index', function () {
     include_once BASEPATH . "/php/init.php";

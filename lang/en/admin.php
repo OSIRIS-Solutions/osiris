@@ -895,6 +895,7 @@ return [
     'language_description' => 'Please select which languages your OSIRIS instance should support.',
     'language_override' => 'Overwrite language settings',
     'language_override_description' => 'Add only the texts you want to customize. All other texts continue to use the supplied translation. Texts containing HTML are not available for overrides yet.',
+    'language_override_count' => 'There are currently {{count}} overrides for this language.',
     'add_language_override' => 'Add language override',
     'select_language_key' => 'Search for a language key …',
     'language_key' => 'Language key',

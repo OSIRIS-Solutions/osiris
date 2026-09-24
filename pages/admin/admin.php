@@ -61,6 +61,11 @@
                 <b><?= lang('admin.features') ?></b>
                 <p><?= lang('admin.features_description') ?></p>
             </a>
+            <a class="card" href="<?= ROOTPATH ?>/admin/languages">
+                <i class="ph-duotone ph-translate"></i>
+                <b><?= lang('admin.languages') ?></b>
+                <p><?= lang('admin.language_description') ?></p>
+            </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/api-clients">
                 <i class="ph-duotone ph-key"></i>
                 <b><?= lang('common.api_clients') ?></b>

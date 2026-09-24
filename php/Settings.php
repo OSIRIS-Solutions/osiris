@@ -749,48 +749,45 @@ class Settings
 
     function infrastructureLabel()
     {
-        if (!$this->featureEnabled('infrastructures')) return '';
-        $settings = $this->get('infrastructures_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('common.infrastructures');
-        return lang($settings['en'], $settings['de'] ?? null);
+        // if (!$this->featureEnabled('infrastructures')) return '';
+        // $settings = $this->get('infrastructures_label');
+        // if (empty($settings) || !isset($settings['en'])) return lang('common.infrastructures');
+        // return lang($settings['en'], $settings['de'] ?? null);
+        return translate('common.infrastructures');
     }
 
     function topicLabel()
     {
-        if (!$this->featureEnabled('topics')) return '';
-        $settings = $this->get('topics_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
-        return lang($settings['en'], $settings['de'] ?? null);
+        // if (!$this->featureEnabled('topics')) return '';
+        // $settings = $this->get('topics_label');
+        // if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
+        // return lang($settings['en'], $settings['de'] ?? null);
+        return translate('common.research_topics');
     }
 
     function tagLabel()
     {
-        if (!$this->featureEnabled('tags')) return '';
-        $settings = $this->get('tags_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('common.tags');
-        return lang($settings['en'], $settings['de'] ?? null);
+        // if (!$this->featureEnabled('tags')) return '';
+        // $settings = $this->get('tags_label');
+        // if (empty($settings) || !isset($settings['en'])) return lang('common.tags');
+        // return lang($settings['en'], $settings['de'] ?? null);
+        return translate('common.tags');
     }
 
     function journalLabel()
     {
-        $settings = $this->get('journals_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
-        return lang($settings['en'], $settings['de'] ?? null);
+        // $settings = $this->get('journals_label');
+        // if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
+        // return lang($settings['en'], $settings['de'] ?? null);
+        return translate('common.journals');
     }
 
     function impactLabel()
     {
-        $settings = $this->get('impact_label');
-        if (empty($settings) || !isset($settings['en'])) return lang('Cite factor', 'Cite Factor');
-        return lang($settings['en'], $settings['de'] ?? null);
-    }
-
-    function tripLabel()
-    {
-        if (!$this->featureEnabled('trips')) return '';
-        $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
-        if (empty($arr) || !isset($arr['name'])) return lang('Research trips', 'Forschungsreisen');
-        return lang($arr['name'], $arr['name_de'] ?? null);
+        // $settings = $this->get('impact_label');
+        // if (empty($settings) || !isset($settings['en'])) return lang('Cite factor', 'Cite Factor');
+        // return lang($settings['en'], $settings['de'] ?? null);
+        return translate('common.cite_factor');
     }
 
     function resourceHubLabel(){
@@ -799,7 +796,17 @@ class Settings
         $label = $rh['label'] ?? [];
         if (empty($label) || !isset($label['en'])) return lang('Resource Hub', 'Ressourcen-Hub');
         return lang($label['en'], $label['de'] ?? null);
+        return translate('common.resource_hub');
     }
+
+    function tripLabel()
+    {
+        if (!$this->featureEnabled('trips')) return '';
+        $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
+        if (empty($arr) || !isset($arr['name'])) return translate('common.research_trips');
+        return lang($arr['name'], $arr['name_de'] ?? null);
+    }
+
 
     function resourceHubIcon(): string
     {

@@ -96,6 +96,7 @@ return [
     'reports' => 'Reports',
     'research_interest' => 'Research interest',
     'research_interests' => 'Research interest',
+    'research_topics' => 'Research Topics',
     'research_spectrum' => 'Research Spectrum',
     'research' => 'Research',
     'role' => 'Role',
