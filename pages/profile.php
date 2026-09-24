@@ -1011,12 +1011,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         </h4>
 
                         <?php if (isset($scientist['research']) && !empty($scientist['research'])) {
-                            $scientist['research_de'] = array_map(
-                                fn($val1, $val2) => empty($val1) ? $val2 : $val1,
-                                DB::doc2Arr($scientist['research_de'] ?? $scientist['research']),
-                                DB::doc2Arr($scientist['research'])
-                            );
-                            $research = lang($scientist['research'], $scientist['research_de'] ?? null);
+                            $research = DB::doc2Arr($scientist['research']);
+                            // $scientist['research_de'] = array_map(
+                            //     fn($val1, $val2) => empty($val1) ? $val2 : $val1,
+                            //     DB::doc2Arr($scientist['research_de'] ?? $scientist['research']),
+                            //     DB::doc2Arr($scientist['research'])
+                            // );
+                            // $research = lang($scientist['research'], $scientist['research_de'] ?? null);
                         ?>
                             <ul class="list">
                                 <?php foreach ($research as $key) { ?>

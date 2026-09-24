@@ -1,0 +1,20 @@
+<?php
+return [
+    "add_event" => "イベントを追加",
+    "add" => "追加",
+    "delete" => "削除",
+    "cancel" => "キャンセル",
+    "claim" => "申し込む",
+    "close" => "閉じる",
+    "continue" => "続ける",
+    "edit" => "編集",
+    "open_search" => "検索を開く",
+    "remove" => "削除",
+    "save" => "保存",
+    "search_in_osiris" => "OSIRISで検索",
+    "search" => "検索",
+    "submit" => "送信",
+    "update" => "更新",
+    "upload" => "アップロード",
+    "view_all" => "すべて表示",
+];
