@@ -314,8 +314,6 @@
                 <b><?= lang('common.osiris_info') ?></b>
                 <p><?= lang('admin.view_osiris_configuration_information') ?></p>
             </a>
-        <div class="col-md-6 col-lg-4" id="info-settings">
-            <h2><i class="ph-duotone ph-info"></i> <?= lang('admin.information') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>

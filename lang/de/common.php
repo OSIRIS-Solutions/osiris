@@ -1,9 +1,17 @@
 <?php
+
 return [
     'lang_de' => 'Deutsch',
     'lang_en' => 'Englisch',
     'lang_it' => 'Italienisch',
-
+    'lang_es' => 'Spanisch',
+    'lang_fr' => 'Französisch',
+    'lang_pt' => 'Portugiesisch',
+    'lang_nl' => 'Niederländisch',
+    'lang_sv' => 'Schwedisch',
+    'lang_jp' => 'Japanisch',
+    'lang_cn' => 'Chinesisch',
+    'lang_kr' => 'Koreanisch',
     'about_osiris' => 'Über OSIRIS',
     'accessibility_options' => 'Barrierefreiheitsoptionen',
     'accessibility' => 'Barrierefreiheit',

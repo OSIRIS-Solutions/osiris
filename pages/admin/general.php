@@ -36,6 +36,8 @@
             'en',
             'de',
             'it',
+            'jp',
+            'es'
         ];
         $langs = $Settings->languages();
         if (!is_array($langs) || empty($langs)) {

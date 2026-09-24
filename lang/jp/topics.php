@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'visualize_topic_network' => 'トピックネットワークを可視化する',
+    'add_new_topic' => '新しいトピックを追加',
+    'view_details' => '詳細を表示',
+    'upload_image' => '画像をアップロード',
+    'groups' => 'グループ',
+    'id_cannot_be_changed' => 'IDは変更できません。',
+    'mark_as_inactive' => '非アクティブとしてマーク',
+    'you_do_not_have_permission_to_create_a_new_topics' => '新しいトピックを作成する権限がありません。',
+    'go_back_to_topics' => 'トピックに戻る',
+    'you_do_not_have_permission_to_edit_topics' => 'トピックを編集する権限がありません。',
+    'go_back_to_topic' => 'トピックに戻る',
+    'with_this_id_already_exists' => 'このIDを持つものは既に存在します。',
+    'has_been_created_successfully' => 'が正常に作成されました。',
+    'has_been_updated_successfully' => 'が正常に更新されました。',
+    'you_do_not_have_permission_to_delete_topics' => 'トピックを削除する権限がありません。',
+    'research_topic_has_been_deleted_successfully' => '研究トピックが正常に削除されました。',
+    'no_research_spectrum_is_assigned_to_this_topiclabel' => 'この{{topicLabel}}には、Research Spectrumが割り当てられていません。',
+    'new_topiclabel' => '新しい{{topicLabel}}',
+    'edit_topiclabel' => '{{topicLabel}} を編集',
+    'do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov' => 'この{{topicLabel}}を本当に削除しますか？削除すると、関連付けられているすべての人物、アクティビティ、プロジェクトから削除されます。',
+    'number_of_projects' => 'プロジェクト数',
+];
