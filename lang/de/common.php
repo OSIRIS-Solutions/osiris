@@ -9,7 +9,7 @@ return [
     'lang_pt' => 'Portugiesisch',
     'lang_nl' => 'Niederländisch',
     'lang_sv' => 'Schwedisch',
-    'lang_jp' => 'Japanisch',
+    'lang_ja' => 'Japanisch',
     'lang_cn' => 'Chinesisch',
     'lang_kr' => 'Koreanisch',
     'about_osiris' => 'Über OSIRIS',

@@ -605,7 +605,7 @@ Route::get('/admin/osirisinfo', function () {
 }, 'login');
 
 
-Route::get('/admin/language-override/(de|en|it|jp|es)', function ($lang) {
+Route::get('/admin/language-override/(de|en|it|ja|es)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
@@ -622,7 +622,7 @@ Route::get('/admin/language-override/(de|en|it|jp|es)', function ($lang) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::post('/crud/admin/language-override/(de|en|it|jp|es)', function ($lang) {
+Route::post('/crud/admin/language-override/(de|en|it|ja|es)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));

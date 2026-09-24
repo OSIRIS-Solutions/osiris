@@ -8,7 +8,7 @@ return [
     'lang_pt' => 'Portuguese',
     'lang_nl' => 'Dutch',
     'lang_sv' => 'Swedish',
-    'lang_jp' => 'Japanese',
+    'lang_ja' => 'Japanese',
     'lang_cn' => 'Chinese',
     'lang_kr' => 'Korean',
     

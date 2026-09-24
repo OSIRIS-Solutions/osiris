@@ -36,7 +36,7 @@
             'en',
             'de',
             'it',
-            'jp',
+            'ja',
             'es'
         ];
         $langs = $Settings->languages();
