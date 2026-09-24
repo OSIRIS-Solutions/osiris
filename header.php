@@ -276,8 +276,10 @@ $pageactive = function ($p) use ($page) {
                     <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
                         <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
                         <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
-                            <?php foreach ($Settings->languages() as $lang) { ?>
-                                <input type="submit" class="btn" value="<?= $lang ?>" name="language" <?= $lang == currentLanguage() ? 'disabled' : '' ?>>
+                            <?php foreach ($Settings->languages() as $lang) { 
+                                $selected = $lang == currentLanguage();
+                                ?>
+                                <button type="submit" class="btn block mt-5 <?= $selected ? 'primary' : '' ?>" name="language" value="<?= htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') ?>" <?= $selected ? 'disabled' : '' ?>><?= lang('common.lang_' . $lang) ?></button>
                             <?php } ?>
                             <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                         </form>
