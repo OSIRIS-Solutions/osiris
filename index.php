@@ -83,6 +83,44 @@ function translate(string $key, array $replace = []): string
 }
 
 /**
+ * Resolve a localized content value for the requested or current language.
+ *
+ * Localized content is stored as an associative array, for example:
+ * ['en' => 'Research Group', 'de' => 'Forschungsgruppe'].
+ * Plain strings remain supported while existing data is migrated gradually.
+ */
+function localized($value, ?string $language = null, ?string $fallbackLanguage = null): string
+{
+    if (is_string($value) || is_numeric($value)) {
+        return (string) $value;
+    }
+
+    if ($value instanceof Traversable) {
+        $value = iterator_to_array($value);
+    }
+    if (!is_array($value)) {
+        return '';
+    }
+
+    $fallbackLanguage ??= OSIRIS_BASE_LANGUAGE;
+    $language ??= currentLanguage();
+
+    // The admin-only interface language "keys" has no equivalent for content.
+    if ($language === 'keys') {
+        $language = $fallbackLanguage;
+    }
+
+    foreach (array_unique([$language, $fallbackLanguage]) as $candidate) {
+        $translation = $value[$candidate] ?? null;
+        if ((is_string($translation) || is_numeric($translation)) && trim((string) $translation) !== '') {
+            return (string) $translation;
+        }
+    }
+
+    return '';
+}
+
+/**
  * Backwards-compatible wrapper for interface keys and legacy EN/DE calls.
  */
 function lang(string $en, ?string $de = null, array $replace = []): string
