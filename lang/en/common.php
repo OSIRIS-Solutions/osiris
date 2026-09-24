@@ -89,6 +89,7 @@ return [
     'proposals' => 'Proposals',
     'publications' => 'Publications',
     'raw_data' => 'Raw data',
+    'lang_keys' => 'Language keys',
     'register' => 'Register',
     'rejected' => 'Rejected',
     'report_an_issue' => 'Report an issue',

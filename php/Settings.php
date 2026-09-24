@@ -49,6 +49,10 @@ class Settings
             $this->roles[] = 'admin';
         }
         $this->roles = array_values(array_unique($this->roles));
+        if ($this->hasPermission('admin.see') && !in_array('keys', $this->languages, true)) {
+            // Admins can switch to raw translation keys for interface debugging.
+            $this->languages[] = 'keys';
+        }
 
         $catFilter = ['$or' => [
             ['visible_role' => ['$exists' => false]],

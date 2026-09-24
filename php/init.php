@@ -13,6 +13,15 @@ $DB = new DB;
 global $osiris;
 $osiris = $DB->db;
 
+// Database-backed language overrides are optional. The translation service is
+// created in index.php, but init.php is also used by a few standalone scripts.
+require_once BASEPATH . '/php/Language.php';
+global $Translations;
+if (!isset($Translations) || !$Translations instanceof Language) {
+    $Translations = new Language(BASEPATH . '/lang');
+}
+$Translations->useDatabase($osiris);
+
 // get installed OSIRIS version
 if (!defined('OSIRIS_VERSION')) {
     define('OSIRIS_VERSION', '0.0.0');

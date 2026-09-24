@@ -45,6 +45,9 @@ class Html
     ) {}
 }
 
+require_once BASEPATH . '/php/Language.php';
+$Translations = new Language(BASEPATH . '/lang');
+
 function currentLanguage(): string
 {
     global $USER, $Settings;
@@ -55,12 +58,38 @@ function currentLanguage(): string
     return in_array($language, $supported, true) ? $language : OSIRIS_BASE_LANGUAGE;
 }
 
+function replaceTranslationPlaceholders(string $translation, array $replace): string
+{
+    foreach ($replace as $key => $value) {
+        $replacement = $value instanceof Html ? $value->value : (string) $value;
+        $translation = str_replace('{{' . $key . '}}', $replacement, $translation);
+    }
+
+    return $translation;
+}
+
+/**
+ * Translate a versioned interface key.
+ */
+function translate(string $key, array $replace = []): string
+{
+    global $Translations;
+    if (!isset($Translations) || !$Translations instanceof Language) {
+        $Translations = new Language(BASEPATH . '/lang');
+    }
+
+    $result = $Translations->resolve($key, currentLanguage(), OSIRIS_BASE_LANGUAGE);
+    return replaceTranslationPlaceholders($result, $replace);
+}
+
+/**
+ * Backwards-compatible wrapper for interface keys and legacy EN/DE calls.
+ */
 function lang(string $en, ?string $de = null, array $replace = []): string
 {
-    // return $en; // test
     $language = currentLanguage();
 
-    // Preserve the legacy two-language format: lang('Login', 'Anmelden')
+    // Preserve the legacy two-language format: lang('Login', 'Anmelden').
     if ($de !== null) {
         return $language === 'de' ? $de : $en;
     }
@@ -70,28 +99,7 @@ function lang(string $en, ?string $de = null, array $replace = []): string
         return $en;
     }
 
-    [$fileName, $fieldName] = explode('.', $en, 2);
-    static $translations = [];
-    foreach (array_unique([$language, OSIRIS_BASE_LANGUAGE]) as $candidate) {
-        $cacheKey = "$candidate.$fileName";
-        if (!isset($translations[$cacheKey])) {
-            $file = __DIR__ . "/lang/$candidate/$fileName.php";
-            $translations[$cacheKey] = file_exists($file) ? require $file : [];
-        }
-        if (isset($translations[$cacheKey][$fieldName])) {
-            $result = $translations[$cacheKey][$fieldName];
-            break;
-        }
-    }
-
-    $result ??= $en;
-    foreach ($replace as $key => $value) {
-        $replacement = $value instanceof Html ? $value->value : (string) $value;
-
-        $result = str_replace('{{' . $key . '}}', $replacement, $result);
-    }
-
-    return $result;
+    return translate($en, $replace);
 }
 
 include_once BASEPATH . "/php/Route.php";

@@ -26,7 +26,7 @@ return [
     'don_t_show_again' => '再度表示しない',
     'remind_me_later' => '後でリマインドする',
     'upcoming_events' => '今後のイベント',
-    'upcoming_events_deadlines' => '今後のイベント&の締切',
+    'upcoming_events_deadlines' => '今後のイベント＆締切',
     'last_quarter' => '前四半期',
     'my_tasks' => '自分のタスク',
     'issues' => '号',

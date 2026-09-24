@@ -621,6 +621,56 @@ Route::get('/admin/language-override/(de|en|it|jp|es)', function ($lang) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+Route::post('/crud/admin/language-override/(de|en|it|jp|es)', function ($lang) {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+    }
+
+    require_once BASEPATH . '/php/LanguageOverrides.php';
+    $overrides = new LanguageOverrides($osiris, BASEPATH . '/lang');
+    $redirect = ROOTPATH . '/admin/language-override/' . $lang;
+
+    try {
+        $submittedToken = (string) ($_POST['csrf_token'] ?? '');
+        $sessionToken = (string) ($_SESSION['language_override_csrf'] ?? '');
+        if ($sessionToken === '' || !hash_equals($sessionToken, $submittedToken)) {
+            throw new InvalidArgumentException('language_override_invalid_data');
+        }
+        if (isset($_POST['delete'])) {
+            $key = (string) $_POST['delete'];
+            if (!isset($overrides->catalogue($lang)[$key])) {
+                throw new InvalidArgumentException('language_override_unknown_key');
+            }
+            $overrides->delete($lang, $key);
+            $_SESSION['msg'] = translate('admin.language_override_removed');
+        } else {
+            $values = $_POST['overrides'] ?? [];
+            if (!is_array($values)) {
+                throw new InvalidArgumentException('language_override_invalid_data');
+            }
+            foreach ($values as $key => $value) {
+                if (!is_string($key) || !is_string($value)) {
+                    throw new InvalidArgumentException('language_override_invalid_data');
+                }
+                $overrides->save($lang, $key, $value, (string) ($_SESSION['username'] ?? ''));
+            }
+            $_SESSION['msg'] = translate('admin.language_overrides_saved');
+        }
+        $_SESSION['msg_type'] = 'success';
+    } catch (InvalidArgumentException $exception) {
+        $_SESSION['msg'] = translate('admin.' . $exception->getMessage());
+        $_SESSION['msg_type'] = 'error';
+    } catch (Throwable $exception) {
+        error_log($exception->getMessage());
+        $_SESSION['msg'] = translate('admin.language_overrides_could_not_be_saved');
+        $_SESSION['msg_type'] = 'error';
+    }
+
+    header('Location: ' . $redirect);
+    die;
+}, 'login');
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {

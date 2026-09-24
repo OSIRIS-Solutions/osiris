@@ -147,7 +147,7 @@ return [
     'country_review_nagoya_proposal_dashboard' => '国別審査',
     'scope_details' => '範囲の詳細',
     'abs_evaluation_a_b_c' => 'ABS評価（A/B/C）',
-    'permits_documents' => '&の文書を許可',
+    'permits_documents' => '許可＆文書',
     'country_not_found_for_this_project' => 'このプロジェクトに対応する国が見つかりません。',
     'abs_permits_for' => 'ABS許可',
     'back_to_all_countries' => 'すべての国に戻る',
