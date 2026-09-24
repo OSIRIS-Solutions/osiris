@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'visualize_topic_network' => 'Visualizar la red de temas',
+    'add_new_topic' => 'Añadir un nuevo tema',
+    'view_details' => 'Ver detalles',
+    'upload_image' => 'Subir imagen',
+    'groups' => 'Grupos',
+    'id_cannot_be_changed' => 'El ID no se puede modificar.',
+    'mark_as_inactive' => 'Marcar como inactivo',
+    'you_do_not_have_permission_to_create_a_new_topics' => 'No tienes permiso para crear nuevos temas.',
+    'go_back_to_topics' => 'Volver a los temas',
+    'you_do_not_have_permission_to_edit_topics' => 'No tienes permiso para editar los temas.',
+    'go_back_to_topic' => 'Volver al tema',
+    'with_this_id_already_exists' => 'Ya existe uno con este ID.',
+    'has_been_created_successfully' => 'Se ha creado correctamente.',
+    'has_been_updated_successfully' => 'Se ha actualizado correctamente.',
+    'you_do_not_have_permission_to_delete_topics' => 'No tienes permiso para eliminar temas.',
+    'research_topic_has_been_deleted_successfully' => 'El tema de investigación se ha eliminado correctamente.',
+    'no_research_spectrum_is_assigned_to_this_topiclabel' => 'A este {{topicLabel}} no se le ha asignado ningún Research Spectrum.',
+    'new_topiclabel' => 'Nuevo {{topicLabel}}',
+    'edit_topiclabel' => 'Edita {{topicLabel}}',
+    'do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov' => '¿De verdad quieres eliminar este «{{topicLabel}}»? Si lo eliminas, se eliminará de todas las personas, actividades y proyectos relacionados.',
+    'number_of_projects' => 'Número de proyectos',
+];
