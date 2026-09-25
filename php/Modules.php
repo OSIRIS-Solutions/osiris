@@ -1555,6 +1555,9 @@ class Modules
                 echo '<select class="form-control" name="' . $name . '" id="' . $module . '" ' . $labelClass . ' ' . ($multiple ? 'multiple' : '') . '>';
                 if (!$req) {
                     echo '<option value="" ' . (empty($value) ? 'selected' : '') . '>-</option>';
+                } elseif (!$multiple && empty($value)) {
+                    // required single select without value: force an explicit choice instead of silently preselecting the first option
+                    echo '<option value="" disabled selected hidden>' . lang('-- Please select --', '-- Bitte auswählen --') . '</option>';
                 }
                 if ($value instanceof MongoDB\Model\BSONArray) {
                     $value = DB::doc2Arr($value);
