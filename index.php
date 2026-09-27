@@ -123,8 +123,15 @@ function localized($value, ?string $language = null, ?string $fallbackLanguage =
 /**
  * Backwards-compatible wrapper for interface keys and legacy EN/DE calls.
  */
-function lang(string $en, ?string $de = null, array $replace = []): string
+function lang($en, ?string $de = null, array $replace = []): string
 {
+    // Keep existing callers working while individual data structures migrate
+    // from name/name_de fields to localized content arrays.
+    if (is_array($en) || $en instanceof Traversable) {
+        return localized($en);
+    }
+
+    $en = (string) $en;
     $language = currentLanguage();
 
     // Preserve the legacy two-language format: lang('Login', 'Anmelden').

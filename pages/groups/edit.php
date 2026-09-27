@@ -56,9 +56,9 @@ function sel($index, $value)
 }
 
 ?>
-
-<script src="<?= ROOTPATH ?>/js/selectize.min.js"></script>
-<link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css">
+<?php
+include_once BASEPATH . '/header-editor.php';
+?>
 
 <style>
     section {
@@ -107,7 +107,6 @@ function sel($index, $value)
 <script>
     const UNIT = '<?= $id ?>';
 </script>
-<?php include_once BASEPATH . '/header-editor.php'; ?>
 <script src="<?= ROOTPATH ?>/js/groups-editor.js?v=<?= OSIRIS_BUILD ?>"></script>
 
 
@@ -152,49 +151,15 @@ function sel($index, $value)
     <section id="general">
 
         <h3 class=""><?= lang('groups.name_and_description') ?></h3>
-        <div class="row row-eq-spacing mb-0">
-            <div class="col-md-6">
-                <fieldset>
-                    <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
-                    <div class="form-group">
-                        <label for="name" class="required">
-                            <?= lang('forms.full_name') ?> (EN)
-                        </label>
-                        <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= val('name') ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description"><?= lang('common.description') ?> (EN)</label>
-
-                        <div id="description-quill"><?= $form['description'] ?? '' ?></div>
-                        <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('description');
-                        </script>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-md-6">
-                <fieldset>
-                    <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
-                    <div class="form-group">
-                        <label for="name_de" class="required">
-                            <?= lang('forms.full_name') ?> (DE)
-                        </label>
-                        <input type="text" class="form-control large" name="values[name_de]" id="name_de" required value="<?= val('name_de') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="description_de"><?= lang('common.description') ?> (DE)</label>
-
-                        <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
-                        <textarea name="values[description_de]" id="description_de" class="d-none" readonly><?= $form['description_de'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('description_de');
-                        </script>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
+        <fieldset>
+            <?php
+            localizedField($form, 'name', lang('forms.full_name'), [
+                'required' => true,
+                'class' => 'large',
+            ]);
+            localizedField($form, 'description', lang('common.description'), ['type' => 'richtext']);
+            ?>
+        </fieldset>
 
 
         <h3 class="mt-0"><?= lang('common.general') ?></h3>
@@ -243,7 +208,8 @@ function sel($index, $value)
                         <option value="" data-level="99"><?= lang('common.attention_no_parent_group_chosen') ?></option>
                         <?php foreach ($Groups->groups as $d => $dept) { ?>
                             <option value="<?= $d ?>" <?= sel('parent', $d) ?> data-level="<?= $dept['level'] ?? $Groups->getLevel($d) ?>">
-                                <?= $dept['name'] != $d ? "$d: " : '' ?><?= $dept['name'] ?>
+                                <?php $departmentName = localized($dept['name']); ?>
+                                <?= $departmentName != $d ? "$d: " : '' ?><?= e($departmentName) ?>
                             </option>
                         <?php } ?>
                     </select>

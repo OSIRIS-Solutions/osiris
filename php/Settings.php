@@ -86,8 +86,21 @@ class Settings
         }
     }
 
-    public function languages(){
+    public function languages()
+    {
         return $this->languages;
+    }
+
+    /**
+     * Languages available for localized content fields.
+     * The admin-only "keys" language is only used for interface debugging.
+     */
+    public function contentLanguages(): array
+    {
+        return array_values(array_filter(
+            $this->languages,
+            fn($language) => $language !== 'keys'
+        ));
     }
 
     /**

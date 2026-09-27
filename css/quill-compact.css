@@ -1,0 +1,76 @@
+.quill-compact {
+    position: relative;
+}
+
+.quill-compact-toggle {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    color: var(--muted-color-dark);
+    background-color: var(--box-bg-color);
+    border: var(--border-width) solid var(--divider-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-size: 1.6rem;
+}
+
+.quill-compact-toggle:hover,
+.quill-compact-toggle:focus,
+.quill-compact.is-toolbar-open .quill-compact-toggle {
+    color: var(--primary-color);
+    border-color: var(--primary-color-60);
+    outline: none;
+}
+
+.quill-compact > .ql-toolbar {
+    position: absolute;
+    top: 0.5rem;
+    right: 4.2rem;
+    z-index: 4;
+    display: none;
+    flex-wrap: wrap;
+    width: max-content;
+    max-width: calc(100% - 5rem);
+    padding: 0.4rem 0.5rem;
+    background-color: var(--box-bg-color);
+    border: var(--border-width) solid var(--divider-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.15);
+}
+
+.quill-compact.is-toolbar-open > .ql-toolbar {
+    display: flex;
+}
+
+.quill-compact > .ql-toolbar .ql-formats {
+    margin: 0 0.3rem;
+    white-space: nowrap;
+}
+
+.quill-compact > .ql-toolbar.ql-snow + .ql-container.ql-snow {
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.quill-compact > .ql-container .ql-editor {
+    min-height: 10rem;
+    padding-right: 4.5rem;
+}
+
+@media (max-width: 575px) {
+    .quill-compact.is-toolbar-pinned > .ql-toolbar {
+        top: 4.2rem;
+        right: 0.5rem;
+        left: 0.5rem;
+        width: auto;
+        max-width: none;
+    }
+}

@@ -1,3 +1,7 @@
+<?php
+// Make localized form fields available on every editor page.
+require_once BASEPATH . '/php/LocalizedFields.php';
+?>
 <!-- Editor scripts -->
 <!-- jQuery UI for Drag & Drop -->
 <script src="<?= ROOTPATH ?>/js/jquery-ui.min.js"></script>
@@ -7,12 +11,14 @@
 <script src="<?= ROOTPATH ?>/js/moment.min.js"></script>
 <!-- Quill for rich text editing -->
 <script src="<?= ROOTPATH ?>/js/quill.min.js?v=<?=OSIRIS_BUILD?>"></script>
+<link href="<?= ROOTPATH ?>/css/quill-compact.css?v=<?= OSIRIS_BUILD ?>" rel="stylesheet" />
 <!-- Selectize for enhanced select inputs -->
 <script src="<?= ROOTPATH ?>/js/selectize.min.js?v=<?=OSIRIS_BUILD?>"></script>
 <!-- Initialize List Widget -->
 <script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
 <!-- Custom styles for the header editor -->
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/selectize.css?v=<?=OSIRIS_BUILD?>">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/localized-fields.css?v=<?= OSIRIS_BUILD ?>">
 <style>
     /* Style for the drag handle */
     .handle {

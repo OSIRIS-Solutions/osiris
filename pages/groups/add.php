@@ -64,7 +64,8 @@ $title = lang('groups.new_group');
                         }
                     ?>
                         <option value="<?= $d ?>" data-level="<?= $l ?>" <?= $selected ? 'selected' : '' ?>>
-                            <?= $dept['name'] != $d ? "$d: " : '' ?><?= $dept['name'] ?>
+                            <?php $departmentName = localized($dept['name']); ?>
+                            <?= $departmentName != $d ? "$d: " : '' ?><?= e($departmentName) ?>
                         </option>
                     <?php } ?>
                 </select>

@@ -11,7 +11,9 @@ return [
     'lang_ja' => 'Japanese',
     'lang_cn' => 'Chinese',
     'lang_kr' => 'Korean',
-    
+    'default_language' => 'Default language',
+    'formatting' => 'Formatting',
+
     'about_osiris' => 'About OSIRIS',
     'accessibility_options' => 'Accessibility Options',
     'accessibility' => 'Accessibility',

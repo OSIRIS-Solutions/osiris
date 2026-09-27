@@ -49,6 +49,7 @@ return [
     'common.download_png',
     'common.download_svg',
     'common.error',
+    'common.formatting',
     'common.id_cannot_be_empty',
     'common.id_does_already_exist',
     'common.info_727698de',

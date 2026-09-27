@@ -12,6 +12,8 @@ return [
     'lang_ja' => '日本語',
     'lang_cn' => '中国語',
     'lang_kr' => '韓国語',
+    'default_language' => '既定の言語',
+    'formatting' => '書式設定',
     'about_osiris' => 'OSIRISについて',
     'accessibility_options' => 'アクセシビリティ設定',
     'accessibility' => 'アクセシビリティ',

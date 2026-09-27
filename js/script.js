@@ -47,7 +47,7 @@ function initQuill(element, controls = 'basic') {
         },
         formats: formats,
         placeholder: '',
-        theme: 'snow' // or 'bubble'
+        theme: 'snow'
     });
 
     quill.on('text-change', function () {
@@ -86,8 +86,32 @@ function initQuill(element, controls = 'basic') {
 
 }
 
-function quillEditor(selector) {
+function quillEditor(selector, mode = 'snow') {
     const maxImageSize = 1024 * 1024; // 1 MB
+    const editor = document.getElementById(selector + '-quill');
+    if (!editor) return null;
+
+    const compact = mode === 'compact';
+    let compactWrapper = null;
+    let compactToggle = null;
+
+    if (compact) {
+        compactWrapper = document.createElement('div');
+        compactWrapper.className = 'quill-compact';
+        editor.parentNode.insertBefore(compactWrapper, editor);
+        compactWrapper.appendChild(editor);
+
+        compactToggle = document.createElement('button');
+        compactToggle.type = 'button';
+        compactToggle.className = 'quill-compact-toggle';
+        compactToggle.setAttribute('aria-label', lang('common.formatting'));
+        compactToggle.setAttribute('title', lang('common.formatting'));
+        compactToggle.setAttribute('aria-expanded', 'false');
+        compactToggle.setAttribute('aria-haspopup', 'true');
+        compactToggle.innerHTML = '<i class="ph ph-text-aa" aria-hidden="true"></i>';
+        compactWrapper.insertBefore(compactToggle, editor);
+    }
+
     const quill = new Quill('#' + selector + '-quill', {
         modules: {
             toolbar: {
@@ -127,12 +151,236 @@ function quillEditor(selector) {
         },
         formats: ['italic', 'bold', 'underline', 'script', 'link', 'image', 'list', 'header'],
         placeholder: lang('common.start_typing_here'),
-        theme: 'snow', // or 'bubble' 
+        theme: 'snow',
     });
+
+    if (compact) initCompactQuill(quill, compactWrapper, compactToggle);
+
     quill.on('text-change', (delta, oldDelta, source) => {
-        document.getElementById(selector).value = quill.getSemanticHTML();
+        const input = document.getElementById(selector);
+        input.value = quill.getSemanticHTML();
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    return quill;
+}
+
+function closeCompactQuillToolbar(wrapper) {
+    if (!wrapper) return;
+
+    wrapper.classList.remove('is-toolbar-open', 'is-toolbar-pinned');
+    const toggle = wrapper.querySelector('.quill-compact-toggle');
+    const toolbar = wrapper.querySelector('.ql-toolbar');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toolbar?.setAttribute('aria-hidden', 'true');
+    toolbar?.style.removeProperty('top');
+    toolbar?.style.removeProperty('right');
+    toolbar?.style.removeProperty('left');
+}
+
+function openCompactQuillToolbar(wrapper, toolbar, toggle, pinned = false) {
+    document.querySelectorAll('.quill-compact.is-toolbar-open').forEach(openWrapper => {
+        if (openWrapper !== wrapper) closeCompactQuillToolbar(openWrapper);
+    });
+
+    wrapper.classList.add('is-toolbar-open');
+    wrapper.classList.toggle('is-toolbar-pinned', pinned);
+    toggle.setAttribute('aria-expanded', 'true');
+    toolbar.setAttribute('aria-hidden', 'false');
+
+    if (pinned) {
+        toolbar.style.removeProperty('top');
+        toolbar.style.removeProperty('right');
+        toolbar.style.removeProperty('left');
+    }
+}
+
+function positionCompactQuillToolbar(quill, wrapper, toolbar, range) {
+    const bounds = quill.getBounds(range.index, range.length);
+    if (!bounds) return;
+
+    const editorBounds = quill.container.getBoundingClientRect();
+    const wrapperBounds = wrapper.getBoundingClientRect();
+    const editorLeft = editorBounds.left - wrapperBounds.left;
+    const editorTop = editorBounds.top - wrapperBounds.top;
+    const gap = 8;
+
+    let left = editorLeft + bounds.left + bounds.width / 2 - toolbar.offsetWidth / 2;
+    left = Math.max(4, Math.min(left, wrapper.clientWidth - toolbar.offsetWidth - 4));
+
+    let top = editorTop + bounds.top - toolbar.offsetHeight - gap;
+    if (top < 0) top = editorTop + bounds.bottom + gap;
+
+    toolbar.style.top = `${top}px`;
+    toolbar.style.right = 'auto';
+    toolbar.style.left = `${left}px`;
+}
+
+function initCompactQuill(quill, wrapper, toggle) {
+    if (!quill || !wrapper || !toggle) return;
+
+    const toolbar = quill.getModule('toolbar')?.container;
+    if (!toolbar) return;
+
+    toolbar.id = `${quill.container.id}-toolbar`;
+    toolbar.setAttribute('aria-hidden', 'true');
+    toggle.setAttribute('aria-controls', toolbar.id);
+    let lastRange = { index: 0, length: 0 };
+
+    quill.on('selection-change', (range, oldRange, source) => {
+        if (range) lastRange = range;
+
+        if (range?.length > 0 && source === Quill.sources.USER) {
+            openCompactQuillToolbar(wrapper, toolbar, toggle);
+            positionCompactQuillToolbar(quill, wrapper, toolbar, range);
+        } else if (!wrapper.classList.contains('is-toolbar-pinned')) {
+            closeCompactQuillToolbar(wrapper);
+        }
+    });
+
+    toggle.addEventListener('mousedown', event => event.preventDefault());
+    toggle.addEventListener('click', () => {
+        const pinned = wrapper.classList.contains('is-toolbar-pinned');
+        if (pinned) {
+            closeCompactQuillToolbar(wrapper);
+            return;
+        }
+
+        openCompactQuillToolbar(wrapper, toolbar, toggle, true);
+        quill.focus({ preventScroll: true });
+        quill.setSelection(lastRange.index, lastRange.length, Quill.sources.API);
+    });
+
+    document.addEventListener('click', event => {
+        if (!wrapper.contains(event.target)) closeCompactQuillToolbar(wrapper);
+    });
+
+    wrapper.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        closeCompactQuillToolbar(wrapper);
+        toggle.focus();
     });
 }
+
+function initLocalizedQuill(editor) {
+    if (!editor || editor.dataset.initialized === 'true') return;
+
+    const input = editor.nextElementSibling;
+    if (!input || !input.id) return;
+
+    editor.localizedQuill = quillEditor(input.id, 'compact');
+    editor.dataset.initialized = 'true';
+}
+
+function localizedInputHasValue(input) {
+    if (!input) return false;
+
+    const value = input.value.trim();
+    const editorContainer = input.previousElementSibling;
+    const isRichText = editorContainer?.classList.contains('localized-quill')
+        || Boolean(editorContainer?.querySelector('.localized-quill'));
+    if (!isRichText) return value !== '';
+
+    const content = document.createElement('div');
+    content.innerHTML = value;
+    const text = (content.textContent || '').replace(/\u00a0/g, ' ').trim();
+    return text !== '' || content.querySelector('img, video, iframe') !== null;
+}
+
+function updateLocalizedLanguageStatus(input) {
+    const panel = input.closest('.localized-language-panel');
+    const field = panel?.closest('.localized-field');
+    if (!panel || !field) return;
+
+    const tab = field.querySelector(`.localized-language-tab[data-language="${panel.dataset.language}"]`);
+    if (!tab) return;
+
+    const hasValue = localizedInputHasValue(input);
+    tab.classList.toggle('has-value', hasValue);
+    tab.classList.toggle('is-empty', !hasValue);
+}
+
+function selectLocalizedLanguage(tab, focusField = true) {
+    const field = tab.closest('.localized-field');
+    if (!field) return;
+
+    const language = tab.dataset.language;
+    field.querySelectorAll('.localized-language-tab').forEach(item => {
+        const active = item === tab;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', active ? 'true' : 'false');
+        item.tabIndex = active ? 0 : -1;
+    });
+
+    let activePanel = null;
+    field.querySelectorAll('.localized-language-panel').forEach(panel => {
+        const active = panel.dataset.language === language;
+        panel.hidden = !active;
+        if (!active) panel.querySelectorAll('.quill-compact').forEach(closeCompactQuillToolbar);
+        if (active) activePanel = panel;
+    });
+
+    activePanel?.querySelectorAll('.localized-quill').forEach(initLocalizedQuill);
+    const fieldInput = activePanel?.querySelector('.localized-value');
+    const label = field.querySelector('.localized-field-heading > label');
+    if (label && fieldInput) label.htmlFor = fieldInput.id;
+    if (!focusField || !activePanel) return;
+
+    const input = activePanel.querySelector('.ql-editor, .localized-value:not(.d-none)');
+    input?.focus();
+}
+
+function prepareLocalizedFieldsForSubmit(form) {
+    form.querySelectorAll('.localized-field').forEach(field => {
+        field.querySelectorAll('.localized-language-panel').forEach(panel => {
+            const input = panel.querySelector('.localized-value');
+            if (!input) return;
+
+            const isBaseLanguage = panel.dataset.language === field.dataset.baseLanguage;
+            input.disabled = !isBaseLanguage && !localizedInputHasValue(input);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.localized-quill').forEach(editor => {
+        if (!editor.closest('[hidden]')) initLocalizedQuill(editor);
+    });
+    document.querySelectorAll('.localized-language-panel .localized-value')
+        .forEach(updateLocalizedLanguageStatus);
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => prepareLocalizedFieldsForSubmit(form));
+    });
+});
+
+document.addEventListener('input', event => {
+    if (event.target.matches('.localized-language-panel .localized-value')) {
+        updateLocalizedLanguageStatus(event.target);
+    }
+});
+
+document.addEventListener('keydown', event => {
+    const tab = event.target.closest('.localized-language-tab');
+    if (!tab || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+
+    const tabs = Array.from(tab.closest('.localized-language-tabs').querySelectorAll('.localized-language-tab'));
+    let index = tabs.indexOf(tab);
+    if (event.key === 'Home') index = 0;
+    else if (event.key === 'End') index = tabs.length - 1;
+    else index = (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+
+    event.preventDefault();
+    selectLocalizedLanguage(tabs[index], false);
+    tabs[index].focus();
+});
+
+document.addEventListener('invalid', event => {
+    const panel = event.target.closest('.localized-language-panel');
+    if (!panel?.hidden) return;
+
+    const field = panel.closest('.localized-field');
+    const tab = field?.querySelector(`.localized-language-tab[data-language="${panel.dataset.language}"]`);
+    if (tab) selectLocalizedLanguage(tab, false);
+}, true);
 
 
 function readHash() {
@@ -424,7 +672,7 @@ function loadModal(path, data = {}) {
                     },
                     formats: ['italic', 'underline'],
                     placeholder: '',
-                    theme: 'snow' // or 'bubble'
+                    theme: 'snow'
                 });
                 quill.on('text-change', function (delta, oldDelta, source) {
                     var delta = quill.getContents()
