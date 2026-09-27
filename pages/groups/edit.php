@@ -290,7 +290,7 @@ include_once BASEPATH . '/header-editor.php';
 
                     <div class="box">
                         <div class="header">
-                            <h4 class="m-0"><q><?= e($con['title'] ?? lang('common.research_interest')) ?></q></h4>
+                            <h4 class="m-0"><q><?= e(localized($con['title'] ?? lang('common.research_interest'))) ?></q></h4>
                             <div class="btn-group ml-auto">
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>
@@ -343,7 +343,7 @@ include_once BASEPATH . '/header-editor.php';
                             </table>
 
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for Activity" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
+                                <input type="text" class="form-control" placeholder="<?= lang('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
                                 <div class="input-group-append">
                                     <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('action.search') ?></button>
                                 </div>
@@ -357,7 +357,62 @@ include_once BASEPATH . '/header-editor.php';
             } ?>
 
         </div>
-        <button class="btn" type="button" onclick="addResearchrow(event, '#research-list')">
+
+        <?php
+        $templateIndex = '__INDEX__';
+        $templateForm = ['research' => [$templateIndex => []]];
+        $templateLanguageGroup = "research.$templateIndex";
+        ?>
+        <template id="research-row-template">
+            <div class="box">
+                <div class="header">
+                    <h4 class="m-0"><q><?= lang('common.research_interest') ?></q></h4>
+                    <div class="btn-group ml-auto">
+                        <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
+                        <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>
+                        <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <?php
+                    localizedField($templateForm, "research.$templateIndex.title", lang('common.title'), [
+                        'required' => true,
+                        'class' => 'large',
+                        'group' => $templateLanguageGroup,
+                    ]);
+                    localizedField($templateForm, "research.$templateIndex.subtitle", lang('common.subtitle'), [
+                        'group' => $templateLanguageGroup,
+                    ]);
+                    localizedField($templateForm, "research.$templateIndex.info", lang('common.description'), [
+                        'type' => 'richtext',
+                        'group' => $templateLanguageGroup,
+                    ]);
+                    ?>
+                </div>
+
+                <hr>
+
+                <div id="activities-<?= $templateIndex ?>" class="content">
+                    <h5><?= lang('common.connected_activities') ?></h5>
+
+                    <table class="table simple small">
+                        <tbody class="activity-list"></tbody>
+                    </table>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="<?= lang('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $templateIndex ?>'); event.preventDefault(); }">
+                        <div class="input-group-append">
+                            <button class="btn secondary" type="button" onclick="searchActivities('<?= $templateIndex ?>')"><?= lang('action.search') ?></button>
+                        </div>
+                    </div>
+
+                    <div class="suggestions" style="display:none;"></div>
+                </div>
+            </div>
+        </template>
+
+        <button class="btn" type="button" onclick="addResearchrow(event)">
             <i class="ph ph-plus text-success"></i> <?= lang('groups.add_research_interest') ?>
         </button>
         <br>

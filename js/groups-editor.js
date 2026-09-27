@@ -77,36 +77,41 @@ function searchActivities(index) {
 
 }
 
+let newResearchRowCount = 0;
 
-
-
-
-function addResearchrow(evt, parent) {
+function addResearchrow(evt) {
     evt.preventDefault();
-    // i is a random number between 100 and 1000
-    var i = Math.floor(Math.random() * 1000) + 100;
-    var el = `
-<div class="box padded">
-    <div class="row row-eq-spacing my-0">
-        <div class="col-md-6">
-            <h5 class="mt-0 ">English</h5>
-            <div class="form-group">
-                <input name="values[research][${i}][title]" type="text" class="form-control large" value="" placeholder="Title" required>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h5 class="mt-0 ">Deutsch</h5>
-            <div class="form-group">
-                <input name="values[research][${i}][title_de]" type="text" class="form-control large" value="" placeholder="Title">
-            </div>
-        </div>
-    </div>
-    ${lang('groups.please_save_once_to_add_more_information')}<br>
-    <button class="btn danger" type="button" onclick="$(this).closest('.box').remove()"><i class="ph ph-trash"></i> ${lang('action.delete')}</button>
-</div>
 
-    `;
-    $(parent).append(el);
+    const template = document.getElementById('research-row-template');
+    const list = document.getElementById('research-list');
+    if (!template || !list) return;
+
+    const index = `new-${Date.now().toString(36)}-${newResearchRowCount++}`;
+    const instance = document.createElement('template');
+    instance.innerHTML = template.innerHTML.split('__INDEX__').join(index).trim();
+
+    const row = instance.content.firstElementChild;
+    if (!row) return;
+    list.appendChild(row);
+
+    row.querySelectorAll('.localized-quill').forEach(editor => {
+        if (!editor.closest('[hidden]')) initLocalizedQuill(editor);
+    });
+    row.querySelectorAll('.localized-language-panel .localized-value')
+        .forEach(updateLocalizedLanguageStatus);
+    $(row).find('.activity-list').sortable({ handle: '.handle' });
+
+    const titleField = row.querySelector('.localized-field[data-localized-field$="-title"]');
+    const basePanel = Array.from(titleField?.querySelectorAll('.localized-language-panel') || [])
+        .find(panel => panel.dataset.language === titleField?.dataset.baseLanguage);
+    const titleInput = basePanel?.querySelector('.localized-value');
+    const heading = row.querySelector('.header q');
+
+    titleInput?.addEventListener('input', () => {
+        if (heading) heading.textContent = titleInput.value.trim() || lang('common.research_interest');
+    });
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    titleInput?.focus({ preventScroll: true });
 }
 
 // function toggleVisibility() {
