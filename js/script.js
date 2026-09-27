@@ -286,17 +286,37 @@ function localizedInputHasValue(input) {
     return text !== '' || content.querySelector('img, video, iframe') !== null;
 }
 
+function localizedGroupFields(field) {
+    if (!field) return [];
+
+    const group = field.dataset.localizedGroup;
+    if (!group) return [field];
+
+    const scope = field.closest('form') || document;
+    return Array.from(scope.querySelectorAll('.localized-field[data-localized-group]'))
+        .filter(item => item.dataset.localizedGroup === group);
+}
+
 function updateLocalizedLanguageStatus(input) {
     const panel = input.closest('.localized-language-panel');
     const field = panel?.closest('.localized-field');
     if (!panel || !field) return;
 
-    const tab = field.querySelector(`.localized-language-tab[data-language="${panel.dataset.language}"]`);
-    if (!tab) return;
+    const language = panel.dataset.language;
+    const fields = localizedGroupFields(field);
+    const hasValue = fields.some(item => {
+        const languagePanel = Array.from(item.querySelectorAll('.localized-language-panel'))
+            .find(candidate => candidate.dataset.language === language);
+        return localizedInputHasValue(languagePanel?.querySelector('.localized-value'));
+    });
 
-    const hasValue = localizedInputHasValue(input);
-    tab.classList.toggle('has-value', hasValue);
-    tab.classList.toggle('is-empty', !hasValue);
+    fields.forEach(item => {
+        item.querySelectorAll('.localized-language-tab').forEach(tab => {
+            if (tab.dataset.language !== language) return;
+            tab.classList.toggle('has-value', hasValue);
+            tab.classList.toggle('is-empty', !hasValue);
+        });
+    });
 }
 
 function selectLocalizedLanguage(tab, focusField = true) {
@@ -304,25 +324,35 @@ function selectLocalizedLanguage(tab, focusField = true) {
     if (!field) return;
 
     const language = tab.dataset.language;
-    field.querySelectorAll('.localized-language-tab').forEach(item => {
-        const active = item === tab;
-        item.classList.toggle('active', active);
-        item.setAttribute('aria-selected', active ? 'true' : 'false');
-        item.tabIndex = active ? 0 : -1;
-    });
-
+    const fields = localizedGroupFields(field);
     let activePanel = null;
-    field.querySelectorAll('.localized-language-panel').forEach(panel => {
-        const active = panel.dataset.language === language;
-        panel.hidden = !active;
-        if (!active) panel.querySelectorAll('.quill-compact').forEach(closeCompactQuillToolbar);
-        if (active) activePanel = panel;
+
+    fields.forEach(item => {
+        item.querySelectorAll('.localized-language-tab').forEach(languageTab => {
+            const active = languageTab.dataset.language === language;
+            languageTab.classList.toggle('active', active);
+            languageTab.setAttribute('aria-selected', active ? 'true' : 'false');
+            languageTab.tabIndex = active ? 0 : -1;
+        });
+        item.querySelectorAll('.localized-language-indicator [data-language]').forEach(indicator => {
+            indicator.hidden = indicator.dataset.language !== language;
+        });
+
+        let itemActivePanel = null;
+        item.querySelectorAll('.localized-language-panel').forEach(panel => {
+            const active = panel.dataset.language === language;
+            panel.hidden = !active;
+            if (!active) panel.querySelectorAll('.quill-compact').forEach(closeCompactQuillToolbar);
+            if (active) itemActivePanel = panel;
+        });
+
+        itemActivePanel?.querySelectorAll('.localized-quill').forEach(initLocalizedQuill);
+        const fieldInput = itemActivePanel?.querySelector('.localized-value');
+        const label = item.querySelector('.localized-field-heading > label');
+        if (label && fieldInput) label.htmlFor = fieldInput.id;
+        if (item === field) activePanel = itemActivePanel;
     });
 
-    activePanel?.querySelectorAll('.localized-quill').forEach(initLocalizedQuill);
-    const fieldInput = activePanel?.querySelector('.localized-value');
-    const label = field.querySelector('.localized-field-heading > label');
-    if (label && fieldInput) label.htmlFor = fieldInput.id;
     if (!focusField || !activePanel) return;
 
     const input = activePanel.querySelector('.ql-editor, .localized-value:not(.d-none)');
@@ -378,7 +408,9 @@ document.addEventListener('invalid', event => {
     if (!panel?.hidden) return;
 
     const field = panel.closest('.localized-field');
-    const tab = field?.querySelector(`.localized-language-tab[data-language="${panel.dataset.language}"]`);
+    const tab = localizedGroupFields(field)
+        .flatMap(item => Array.from(item.querySelectorAll('.localized-language-tab')))
+        .find(item => item.dataset.language === panel.dataset.language);
     if (tab) selectLocalizedLanguage(tab, false);
 }, true);
 

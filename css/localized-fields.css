@@ -10,6 +10,18 @@
     border-bottom: 0;
 }
 
+.localized-field[data-localized-group] {
+    margin-bottom: 0;
+    padding-right: 1.2rem;
+    padding-bottom: 1.8rem;
+    border-right: 0.3rem solid var(--primary-color-30);
+    border-bottom: 0;
+}
+
+.localized-field[data-localized-group]:last-child {
+    padding-bottom: 0;
+}
+
 .localized-field-heading {
     display: flex;
     align-items: flex-end;
@@ -27,6 +39,33 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.4rem;
+}
+
+.localized-language-indicator > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 4.8rem;
+    height: 2.2rem;
+    padding: 0 0.6rem;
+    color: var(--primary-color-dark);
+    background-color: var(--primary-color-10);
+    border-radius: 10rem;
+    font-size: 1rem;
+    line-height: 2.2rem;
+}
+
+.localized-language-indicator > span[hidden] {
+    display: none;
+}
+
+.localized-language-indicator .ph {
+    color: var(--primary-color);
+}
+
+.localized-language-indicator .localized-language-flag {
+    width: 1.4rem;
+    height: 1rem;
 }
 
 .localized-language-tab {

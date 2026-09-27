@@ -299,45 +299,22 @@ include_once BASEPATH . '/header-editor.php';
                         </div>
 
                         <div class="content">
-                            <div class="row row-eq-spacing">
-                                <div class="col-md-6">
-                                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                                    <div class="form-group floating-form">
-                                        <input name="values[research][<?= $i ?>][title]" type="text" class="form-control large" value="<?= e($con['title'] ?? '') ?>" placeholder="Title" required>
-                                        <label for="values[research][<?= $i ?>][title]" class="required"><?= lang('common.title') ?></label>
-                                    </div>
-                                    <div class="form-group floating-form">
-                                        <input name="values[research][<?= $i ?>][subtitle]" type="text" class="form-control" value="<?= e($con['subtitle'] ?? '') ?>" placeholder="Subtitle">
-                                        <label for="values[research][<?= $i ?>][subtitle]"><?= lang('common.subtitle') ?></label>
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <div id="info-<?= $i ?>-quill"><?= $con['info'] ?? '' ?></div>
-                                        <textarea name="values[research][<?= $i ?>][info]" id="info-<?= $i ?>" class="d-none" readonly><?= $con['info'] ?? '' ?></textarea>
-                                        <script>
-                                            quillEditor('info-<?= $i ?>');
-                                        </script>
-                                    </div>
 
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                                    <div class="form-group floating-form">
-                                        <input name="values[research][<?= $i ?>][title_de]" type="text" class="form-control large" value="<?= e($con['title_de'] ?? '') ?>" placeholder="Title">
-                                        <label for="values[research][<?= $i ?>][title_de]"><?= lang('common.title') ?></label>
-                                    </div>
-                                    <div class="form-group floating-form">
-                                        <input name="values[research][<?= $i ?>][subtitle_de]" type="text" class="form-control" value="<?= e($con['subtitle_de'] ?? '') ?>" placeholder="Subtitle">
-                                        <label for="values[research][<?= $i ?>][subtitle_de]"><?= lang('common.subtitle') ?></label>
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <div id="info_de-<?= $i ?>-quill"><?= $con['info_de'] ?? '' ?></div>
-                                        <textarea name="values[research][<?= $i ?>][info_de]" id="info_de-<?= $i ?>" class="d-none" readonly><?= $con['info_de'] ?? '' ?></textarea>
-                                        <script>
-                                            quillEditor('info_de-<?= $i ?>');
-                                        </script>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php
+                            $languageGroup = "research.$i";
+                            localizedField($form, "research.$i.title", lang('common.title'), [
+                                'required' => true,
+                                'class' => 'large',
+                                'group' => $languageGroup,
+                            ]);
+                            localizedField($form, "research.$i.subtitle", lang('common.subtitle'), [
+                                'group' => $languageGroup,
+                            ]);
+                            localizedField($form, "research.$i.info", lang('common.description'), [
+                                'type' => 'richtext',
+                                'group' => $languageGroup,
+                            ]);
+                            ?>
                         </div>
                         <hr>
                         <div id="activities-<?= $i ?>" class="content">
@@ -345,22 +322,22 @@ include_once BASEPATH . '/header-editor.php';
 
                             <table class="table simple small">
                                 <tbody class="activity-list">
-                                    
-                                <?php foreach ($con['activities'] ?? [] as $res) {
-                                    $doc = $DB->getActivity($res);
-                                ?>
-                                    <tr>
-                                        <td><i class="ph ph-dots-six-vertical handle"></i></td>
-                                        <td>
-                                            <?= $doc['rendered']['icon'] ?>
-                                            <?= $doc['rendered']['plain'] ?>
-                                            <input type="hidden" name="values[research][<?= $i ?>][activities][]" value="<?= $res ?>">
-                                        </td>
-                                        <td>
-                                            <button class="btn link text-danger small" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
+
+                                    <?php foreach ($con['activities'] ?? [] as $res) {
+                                        $doc = $DB->getActivity($res);
+                                    ?>
+                                        <tr>
+                                            <td><i class="ph ph-dots-six-vertical handle"></i></td>
+                                            <td>
+                                                <?= $doc['rendered']['icon'] ?>
+                                                <?= $doc['rendered']['plain'] ?>
+                                                <input type="hidden" name="values[research][<?= $i ?>][activities][]" value="<?= $res ?>">
+                                            </td>
+                                            <td>
+                                                <button class="btn link text-danger small" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
 
                             </table>
@@ -735,11 +712,10 @@ include_once BASEPATH . '/header-editor.php';
 
 
 <script>
-    
-                $(document).ready(function() {
-                    $('.activity-list').sortable({
-                        handle: ".handle",
-                        // change: function( event, ui ) {}
-                    });
-                })
+    $(document).ready(function() {
+        $('.activity-list').sortable({
+            handle: ".handle",
+            // change: function( event, ui ) {}
+        });
+    })
 </script>

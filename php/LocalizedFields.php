@@ -5,22 +5,36 @@
  *
  * Example:
  * localizedField($form, 'name', lang('forms.full_name'), ['required' => true]);
+ * localizedField($form, "research.$i.title", lang('common.title'), ['group' => "research.$i"]);
+ * localizedField($form, "research.$i.subtitle", lang('common.subtitle'), ['group' => "research.$i"]);
  *
  * Supported options:
  * - type: text (default) or richtext
  * - required: whether the base language is required
  * - class: additional classes for a text input
+ * - root: outer input name (default: values); null omits the outer name
+ * - group: fields with the same group share one language switcher
  */
 function localizedField($form, string $name, string $label, array $options = []): void
 {
     global $Settings;
+    static $renderedGroups = [];
 
     $baseLanguage = OSIRIS_BASE_LANGUAGE;
     $type = $options['type'] ?? 'text';
     $required = $options['required'] ?? false;
+    $root = array_key_exists('root', $options) ? $options['root'] : 'values';
+    if ($root !== null && !is_string($root)) {
+        throw new InvalidArgumentException('The localized field root must be a string or null.');
+    }
+    $group = $options['group'] ?? null;
+    if ($group !== null && (!is_string($group) || $group === '')) {
+        throw new InvalidArgumentException('The localized field group must be a non-empty string or null.');
+    }
     $inputClass = trim('form-control ' . ($options['class'] ?? ''));
     $translations = localizedFieldValues($form, $name, $baseLanguage);
     $configuredLanguages = $Settings->contentLanguages();
+    $path = localizedFieldPath($name);
 
     $languages = array_values(array_filter(
         array_unique(array_merge([$baseLanguage], $configuredLanguages, array_keys($translations))),
@@ -28,15 +42,22 @@ function localizedField($form, string $name, string $label, array $options = [])
     ));
 
     $fieldId = preg_replace('/[^A-Za-z0-9_-]/', '-', $name);
+    $showLanguageTabs = $group === null || !isset($renderedGroups[$group]);
+    $tabFieldId = $group === null ? $fieldId : ($renderedGroups[$group] ?? $fieldId);
+    if ($group !== null) {
+        $renderedGroups[$group] = $tabFieldId;
+    }
     ?>
     <div class="form-group localized-field"
          data-localized-field="<?= e($fieldId) ?>"
+         <?= $group === null ? '' : 'data-localized-group="' . e($group) . '"' ?>
          data-base-language="<?= e($baseLanguage) ?>">
         <div class="localized-field-heading">
             <label for="<?= e($fieldId . '-' . $baseLanguage) ?>" class="<?= $required ? 'required' : '' ?>">
                 <?= $label ?>
             </label>
-            <div class="localized-language-tabs" role="tablist" aria-label="<?= e($label) ?>">
+            <?php if ($showLanguageTabs) { ?>
+                <div class="localized-language-tabs" role="tablist" aria-label="<?= e($label) ?>">
                 <?php foreach ($languages as $language) {
                     $translation = $translations[$language] ?? '';
                     $hasValue = localizedValueHasContent($translation, $type);
@@ -68,7 +89,27 @@ function localizedField($form, string $name, string $label, array $options = [])
                         <span class="localized-language-status" aria-hidden="true"></span>
                     </button>
                 <?php } ?>
-            </div>
+                </div>
+            <?php } elseif ($group !== null) { ?>
+                <div class="localized-language-indicator" aria-live="polite">
+                    <?php foreach ($languages as $language) {
+                        $flag = localizedLanguageFlag($language);
+                        $isBaseLanguage = $language === $baseLanguage;
+                        $languageLabel = lang('common.lang_' . $language);
+                        ?>
+                        <span data-language="<?= e($language) ?>"
+                              aria-label="<?= e($languageLabel) ?>"
+                              title="<?= e($languageLabel) ?>"
+                              <?= $isBaseLanguage ? '' : 'hidden' ?>>
+                            <i class="ph ph-link-simple" aria-hidden="true"></i>
+                            <?php if ($flag !== null) { ?>
+                                <img src="<?= e($flag) ?>" class="localized-language-flag" alt="" aria-hidden="true">
+                            <?php } ?>
+                            <span aria-hidden="true"><?= e(strtoupper($language)) ?></span>
+                        </span>
+                    <?php } ?>
+                </div>
+            <?php } ?>
         </div>
 
         <div class="localized-language-panels">
@@ -80,10 +121,11 @@ function localizedField($form, string $name, string $label, array $options = [])
                      id="<?= e($fieldId . '-' . $language . '-panel') ?>"
                      data-language="<?= e($language) ?>"
                      role="tabpanel"
-                     aria-labelledby="<?= e($fieldId . '-' . $language . '-tab') ?>"
+                     aria-labelledby="<?= e($tabFieldId . '-' . $language . '-tab') ?>"
                      <?= $isBaseLanguage ? '' : 'hidden' ?>>
                     <?php renderLocalizedFieldInput(
-                        $name,
+                        $path,
+                        $root,
                         $fieldId,
                         $language,
                         $translation,
@@ -111,7 +153,29 @@ function localizedFieldValues($form, string $name, string $baseLanguage): array
         return [$baseLanguage => ''];
     }
 
-    $value = $form[$name] ?? null;
+    $path = localizedFieldPath($name);
+    $fieldName = array_pop($path);
+    $container = $form;
+
+    foreach ($path as $segment) {
+        if ($container instanceof Traversable) {
+            $container = iterator_to_array($container);
+        }
+        if (!is_array($container) || !array_key_exists($segment, $container)) {
+            $container = [];
+            break;
+        }
+        $container = $container[$segment];
+    }
+
+    if ($container instanceof Traversable) {
+        $container = iterator_to_array($container);
+    }
+    if (!is_array($container)) {
+        $container = [];
+    }
+
+    $value = $container[$fieldName] ?? null;
     if ($value instanceof Traversable) {
         $value = iterator_to_array($value);
     }
@@ -120,15 +184,44 @@ function localizedFieldValues($form, string $name, string $baseLanguage): array
     }
 
     $translations = [$baseLanguage => (string) ($value ?? '')];
-    $legacyPattern = '/^' . preg_quote($name, '/') . '_([a-z]{2}(?:-[A-Za-z]{2})?)$/';
+    $legacyPattern = '/^' . preg_quote($fieldName, '/') . '_([a-z]{2}(?:-[A-Za-z]{2})?)$/';
 
-    foreach ($form as $key => $legacyValue) {
+    foreach ($container as $key => $legacyValue) {
         if (!is_string($key) || !preg_match($legacyPattern, $key, $matches)) continue;
         if ($legacyValue === null || $legacyValue === '') continue;
         $translations[$matches[1]] = $legacyValue;
     }
 
     return $translations;
+}
+
+/**
+ * Convert a developer-friendly dot path into its individual form-name segments.
+ */
+function localizedFieldPath(string $name): array
+{
+    $path = explode('.', $name);
+    if ($name === '' || in_array('', $path, true)) {
+        throw new InvalidArgumentException('Localized field names must be non-empty dot paths.');
+    }
+
+    return $path;
+}
+
+/**
+ * Build a PHP-compatible input name from a field path and its language.
+ */
+function localizedFieldInputName(array $path, ?string $root, string $language): string
+{
+    $segments = array_merge($path, [$language]);
+    $root ??= '';
+
+    if ($root === '') {
+        $first = array_shift($segments);
+        return $first . implode('', array_map(fn($segment) => '[' . $segment . ']', $segments));
+    }
+
+    return $root . implode('', array_map(fn($segment) => '[' . $segment . ']', $segments));
 }
 
 function localizedLanguageFlag(string $language): ?string
@@ -156,7 +249,8 @@ function localizedValueHasContent($value, string $type): bool
 }
 
 function renderLocalizedFieldInput(
-    string $name,
+    array $path,
+    ?string $root,
     string $fieldId,
     string $language,
     $value,
@@ -165,7 +259,7 @@ function renderLocalizedFieldInput(
     bool $required
 ): void {
     $id = $fieldId . '-' . $language;
-    $inputName = 'values[' . $name . '][' . $language . ']';
+    $inputName = localizedFieldInputName($path, $root, $language);
 
     if ($type === 'richtext') { ?>
         <div class="localized-quill" id="<?= e($id) ?>-quill"><?= $value ?></div>
