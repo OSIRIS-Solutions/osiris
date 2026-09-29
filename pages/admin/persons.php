@@ -170,7 +170,10 @@ $persons = $osiris->adminPersons->find();
                 </script>
                 <?php
                 $standardContactTypes = ['mail' => "0", 'slack' => "0", 'teams' => "0", 'matrix' => "0", 'other' => "0"];
-                $contactSettings = $Settings->get('contact-button')->getArrayCopy();
+                $contactSettings = $Settings->get('contact-button');
+                if (!empty($contactSettings)){
+                    $contactSettings = DB::doc2Arr($contactSettings);
+                }
                 $contactTypes = array_merge($standardContactTypes, $contactSettings ?? []);
                 ?>
                 <div class="form-group" style="display: none;" id="contact-button-allowed">
