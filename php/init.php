@@ -96,6 +96,15 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && (empty($USER) || !i
     die();
 }
 
+global $LANGUAGES;
+$LANGUAGES = [
+    'en' => 'English',
+    'de' => 'Deutsch',
+    'it' => 'Italiano',
+    'jp' => '日本語',
+    'es' => 'Español',
+    'fr' => 'Français',
+];
 
 // Get organizational units (Groups)
 include_once BASEPATH . "/php/Groups.php";

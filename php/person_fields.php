@@ -328,8 +328,10 @@ class PersonFields extends Fields
                     ]
                 ];
         }
-        $units = $osiris->groups->find([], ['sort' => [lang('common.field_name_language') => 1]])->toArray();
-        $units = array_column($units, lang('common.field_name_language'), 'id');
+        $unitDocs = $osiris->groups->find([], ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]])->toArray();
+        $units = [];
+        foreach ($unitDocs as $unit) $units[$unit['id']] = localized($unit['name']);
+        asort($units, SORT_NATURAL | SORT_FLAG_CASE);
         $FIELDS[] = [
             'id' => 'units.unit',
             'module_of' => ['general'],

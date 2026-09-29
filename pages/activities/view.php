@@ -13,10 +13,7 @@
         foreach ($doc['units'] as $d) {
             $dept = $Groups->getGroup($d);
             if ($dept['level'] !== 1) continue;
-            $departments[$d] = [
-                'en' => $dept['name'],
-                'de' => $dept['name_de']
-            ];
+            $departments[$d] = localized($dept['name']);
         }
     }
     $abstract_fields = [];
@@ -457,7 +454,7 @@
                                     <p>
                                         <?php foreach ($departments as $deptId => $d): ?>
                                             <a href="<?= ROOTPATH ?>/groups/view/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
-                                                <?= lang($d['en'], $d['de'] ?? null); ?>
+                                                <?= e($d); ?>
                                             </a>
                                         <?php endforeach; ?>
                                     </p>
@@ -1303,7 +1300,7 @@
                                                                         $bgColor = $p['color']  . 'aa';
                                                                         $brightness = (hexdec(substr($bgColor, 1, 2)) * 0.299 + hexdec(substr($bgColor, 3, 2)) * 0.587 + hexdec(substr($bgColor, 5, 2)) * 0.114);
                                                                         $textColor = ($brightness > 150) ? '#000000' : '#FFFFFF';
-                                                                        $title = lang($unit['name'] ?? '', $unit['name_de'] ?? null);
+                                                                        $title = localized($unit['name'] ?? '');
                                                                     ?>
                                                                         <a class="author-unit" href="<?= ROOTPATH ?>/groups/view/<?= $u ?>" style="background-color: <?= $bgColor ?>; color: <?= $textColor ?>;"
                                                                             data-toggle="tooltip"

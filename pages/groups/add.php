@@ -28,6 +28,8 @@ $title = lang('groups.new_group');
 
 ?>
 
+<?php include_once BASEPATH . '/header-editor.php'; ?>
+
 <h3 class="title">
     <?= $title ?>
 </h3>
@@ -89,30 +91,9 @@ $title = lang('groups.new_group');
 
 
 
-    <div class="row row-eq-spacing mb-0">
-        <div class="col-md-6">
-            <fieldset>
-                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
-                <div class="form-group">
-                    <label for="name" class="required">
-                        <?= lang('forms.full_name') ?> (EN)
-                    </label>
-                    <input type="text" class="form-control" name="values[name]" id="name" required>
-                </div>
-            </fieldset>
-        </div>
-        <div class="col-md-6">
-            <fieldset>
-                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
-                <div class="form-group">
-                    <label for="name_de" class="required">
-                        <?= lang('forms.full_name') ?> (DE)
-                    </label>
-                    <input type="text" class="form-control" name="values[name_de]" id="name_de" required>
-                </div>
-            </fieldset>
-        </div>
-    </div>
+    <fieldset>
+        <?php localizedField([], 'name', lang('forms.full_name'), ['required' => true, 'class' => 'large']); ?>
+    </fieldset>
 
 
     <fieldset>

@@ -115,7 +115,7 @@ $user_in_project = false;
                                     $unit_id = $unit['unit'];
                                     $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
                                     $group = $Groups->getGroup($unit_id);
-                                    $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+                                    $unit['name'] = localized($group['name'] ?? 'Unit not found');
                             ?>
                                     <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
                                         <input type="checkbox"

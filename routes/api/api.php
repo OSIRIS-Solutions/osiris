@@ -687,7 +687,7 @@ Route::get('/api/user-units/(.*)', function ($id) {
         if (in_array($unit['unit'], $used_unit_ids)) continue; // skip duplicates
         $unit['in_past'] =  isset($unit['end']) && date('Y-m-d') > $unit['end'];
         $group = $Groups->getGroup($unit['unit']);
-        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+        $unit['name'] = apiLocalized($group['name'] ?? 'Unit not found');
         $used_unit_ids[] = $unit['unit'];
         $units[] = $unit;
     }

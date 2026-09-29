@@ -167,7 +167,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                         }
                                         $in_past = isset($unit['end']) && date('Y-m-d') > $unit['end'];
                                         $group = $Groups->getGroup($unit_id);
-                                        $unit['name'] = lang($group['name'] ?? 'Unit not found', $group['name_de'] ?? null);
+                                        $unit['name'] = localized($group['name'] ?? 'Unit not found');
                                         $used_unit_ids[] = $unit_id;
                             ?>
                                         <div class="custom-checkbox mb-5 <?= $in_past ? 'text-muted' : '' ?>">
@@ -233,7 +233,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
             <?php
             $all_units = $osiris->groups->find();
             foreach ($all_units as $s) { ?>
-                <option value="<?= $s['id'] ?>"><?= lang($s['name'], $s['name_de'] ?? '') ?> (<?= $s['id'] ?>)</option>
+                <option value="<?= $s['id'] ?>"><?= e(localized($s['name'])) ?> (<?= $s['id'] ?>)</option>
             <?php } ?>
         </datalist>
     </form>

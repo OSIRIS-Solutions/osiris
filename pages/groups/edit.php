@@ -156,8 +156,9 @@ include_once BASEPATH . '/header-editor.php';
             localizedField($form, 'name', lang('forms.full_name'), [
                 'required' => true,
                 'class' => 'large',
+                'group' => 'general'
             ]);
-            localizedField($form, 'description', lang('common.description'), ['type' => 'richtext']);
+            localizedField($form, 'description', lang('common.description'), ['type' => 'richtext', 'group' => 'general']);
             ?>
         </fieldset>
 
@@ -222,11 +223,10 @@ include_once BASEPATH . '/header-editor.php';
                     </label>
                     <input type="text" class="form-control" name="values[unit]" id="unit" required value="<?= val('unit') ?>" placeholder="<?= lang('common.double_click_to_see_suggestions') ?>" list="unit-list">
                 </div>
-
             </div>
             <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
                 <label for="color" class=""><?= lang('common.color') ?></label>
-                <input type="color" class="form-control w-50" name="values[color]" required value="<?= val('color') ?>">
+                <input type="color" class="form-control w-100" name="values[color]" required value="<?= val('color') ?>">
                 <span><?= lang('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
             </div>
 
@@ -616,6 +616,10 @@ include_once BASEPATH . '/header-editor.php';
 <datalist id="unit-list">
     <?php
     $units = $osiris->groups->distinct('unit');
+    $standard_keys = $Groups->getUnitKeys();
+    $standard_keys = array_map('ucfirst', $standard_keys);
+    $units = array_merge($units, $standard_keys);
+    $units = array_unique($units);
     foreach ($units as $u) { ?>
         <option><?= $u ?></option>
     <?php } ?>

@@ -32,20 +32,13 @@
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
 
         <?php
-        $installed_lang = [
-            'en',
-            'de',
-            'it',
-            'ja',
-            'es'
-        ];
         $langs = $Settings->languages();
         if (!is_array($langs) || empty($langs)) {
             $langs = ['en', 'de'];
         }
 
         $repository = new LanguageOverrides($osiris, BASEPATH . '/lang');
-        foreach ($installed_lang as $lang) {
+        foreach ($LANGUAGES as $lang => $language_name) {
             require_once BASEPATH . '/php/LanguageOverrides.php';
 
             $catalogue = $repository->catalogue($lang);
@@ -54,7 +47,7 @@
             <div class="box padded d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="title mt-0 font-size-18">
-                        <?= lang('common.lang_' . $lang) ?>
+                        <?= $language_name ?>
                     </h2>
                     <div class="custom-checkbox mb-10">
                         <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked' : '' ?>>

@@ -35,7 +35,7 @@ if (isset($group['head'])) {
 $users = array_column($persons, 'username');
 $synonyms = DB::doc2Arr($group['synonyms'] ?? []);
 
-$show_general = (isset($group['description']) || isset($group['description_de']) || !empty($group['images'] ?? []) || (isset($group['research']) && !empty($group['research'])));
+$show_general = (!empty(localized($group['description'] ?? [])) || !empty($group['images'] ?? []) || !empty($group['research'] ?? []));
 
 $edit_perm = ($Settings->hasPermission('units.add') || $Groups->editPermission($id));
 
@@ -187,7 +187,7 @@ if ($Settings->featureEnabled('wordcloud')) {
     </div>
 
     <h1>
-        <?= lang($group['name'] ?? '-', $group['name_de'] ?? null) ?>
+        <?= e(localized($group['name'] ?? '-')) ?>
     </h1>
     <h3 class="subtitle">
         <?= $Groups->getUnit($group['unit'] ?? null, 'name') ?>
@@ -295,7 +295,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                                 <?php foreach ($children as $child) { ?>
                                     <li class="cursor-pointer">
                                         <input type="hidden" name="order[]" value="<?= $child['_id'] ?>">
-                                        <?= $child['name'] ?>
+                                        <?= e(localized($child['name'])) ?>
                                     </li>
                                 <?php } ?>
                             </ul>
@@ -348,7 +348,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                                     <ul class="list">
                                         <?php foreach ($children as $child) { ?>
                                             <li>
-                                                <a href="<?= ROOTPATH ?>/groups/view/<?= $child['id'] ?>"><?= lang($child['name'], $child['name_de'] ?? null) ?></a><br>
+                                                <a href="<?= ROOTPATH ?>/groups/view/<?= $child['id'] ?>"><?= e(localized($child['name'])) ?></a><br>
                                                 <small class="text-muted"><?= $child['unit'] ?></small>
                                             </li>
                                         <?php } ?>
@@ -418,7 +418,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                     </div>
                 <?php } ?>
 
-                <?php if (isset($group['description']) || isset($group['description_de'])) { ?>
+                <?php if (!empty(localized($group['description'] ?? []))) { ?>
                     <style>
                         #description img {
                             width: 100%;
@@ -429,7 +429,7 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <?= lang('groups.about') ?>
                     </h5>
                     <div id="description">
-                        <?= lang($group['description'] ?? '-', $group['description_de'] ?? null) ?>
+                        <?= localized($group['description'] ?? '-') ?>
                     </div>
                 <?php } ?>
 
@@ -458,10 +458,10 @@ if ($Settings->featureEnabled('wordcloud')) {
                         <div class="box">
                             <div class="content">
                                 <h5 class="title">
-                                    <?= lang($r['title'], $r['title_de'] ?? null) ?>
+                                    <?= e(localized($r['title'] ?? '')) ?>
                                 </h5>
-                                <h6 class="subtitle font-size-16"><?= lang($r['subtitle'] ?? '', $r['subtitle_de'] ?? null) ?></h6>
-                                <?= lang($r['info'], $r['info_de'] ?? null) ?>
+                                <h6 class="subtitle font-size-16"><?= e(localized($r['subtitle'] ?? '')) ?></h6>
+                                <?= localized($r['info'] ?? '') ?>
                             </div>
                             <?php if (!empty($r['projects'] ?? null)) {
                                 echo '<hr>';

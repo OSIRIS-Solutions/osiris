@@ -24,55 +24,152 @@ class Groups
     public $tree = array();
     private $DB;
     private $osiris;
+
     private $UNITS = [
         'institute' => [
-            'name' => 'Institute',
-            'name_de' => 'Institut',
-            'head' => 'Directorate',
-            'head_de' => 'Direktorat',
+            'name' => [
+                'en' => 'Institute',
+                'de' => 'Institut',
+                'fr' => 'Institut',
+                'es' => 'Instituto',
+                'jp' => '研究所',
+                'it' => 'Istituto'
+            ],
+            'head' => [
+                'en' => 'Directorate',
+                'de' => 'Direktorat',
+                'fr' => 'Direction',
+                'es' => 'Dirección',
+                'jp' => '所長',
+                'it' => 'Direzione'
+            ]
         ],
         'department' => [
-            'name' => 'Department',
-            'name_de' => 'Abteilung',
-            'head' => 'Head of Department',
-            'head_de' => 'Abteilungsleitung',
+            'name' => [
+                'en' => 'Department',
+                'de' => 'Abteilung',
+                'fr' => 'Département',
+                'es' => 'Departamento',
+                'jp' => '部',
+                'it' => 'Dipartimento'
+            ],
+            'head' => [
+                'en' => 'Head of Department',
+                'de' => 'Abteilungsleitung',
+                'fr' => 'Direction du Département',
+                'es' => 'Dirección del Departamento',
+                'jp' => '部長',
+                'it' => 'Direzione del Dipartimento'
+            ]
         ],
         'group' => [
-            'name' => 'Group',
-            'name_de' => 'Gruppe',
-            'head' => 'Head of Group',
-            'head_de' => 'Arbeitsgruppenleitung',
+            'name' => [
+                'en' => 'Group',
+                'de' => 'Gruppe',
+                'fr' => 'Groupe',
+                'es' => 'Grupo',
+                'jp' => 'グループ',
+                'it' => 'Gruppo',
+            ],
+            'head' => [
+                'en' => 'Head of Group',
+                'de' => 'Arbeitsgruppenleitung',
+                'fr' => 'Direction du Groupe',
+                'es' => 'Dirección del Grupo',
+                'jp' => 'グループ長',
+                'it' => 'Direzione del Gruppo',
+            ]
         ],
         'research group' => [
-            'name' => 'Research Group',
-            'name_de' => 'Forschungsgruppe',
-            'head' => 'Head of Research Group',
-            'head_de' => 'Leitung der Forschungsgruppe',
+            'name' => [
+                'en' => 'Research Group',
+                'de' => 'Forschungsgruppe',
+                'fr' => 'Groupe de Recherche',
+                'es' => 'Grupo de Investigación',
+                'jp' => '研究グループ',
+                'it' => 'Gruppo di Ricerca',
+            ],
+            'head' => [
+                'en' => 'Head of Research Group',
+                'de' => 'Leitung der Forschungsgruppe',
+                'fr' => 'Direction du Groupe de Recherche',
+                'es' => 'Dirección del Grupo de Investigación',
+                'jp' => '研究グループ長',
+                'it' => 'Direzione del Gruppo di Ricerca',
+            ]
         ],
         'junior research group' => [
-            'name' => 'Junior Research Group',
-            'name_de' => 'Nachwuchsgruppe',
-            'head' => 'Head of Junior Research Group',
-            'head_de' => 'Leitung der Nachwuchsgruppe',
+            'name' => [
+                'en' => 'Junior Research Group',
+                'de' => 'Nachwuchsgruppe',
+                'fr' => 'Groupe de Recherche Junior',
+                'es' => 'Grupo de Investigación Junior',
+                'jp' => 'ジュニア研究グループ',
+                'it' => 'Gruppo di Ricerca Junior',
+            ],
+            'head' => [
+                'en' => 'Head of Junior Research Group',
+                'de' => 'Leitung der Nachwuchsgruppe',
+                'fr' => 'Direction du Groupe de Recherche Junior',
+                'es' => 'Dirección del Grupo de Investigación Junior',
+                'jp' => 'ジュニア研究グループ長',
+                'it' => 'Direzione del Gruppo di Ricerca Junior',
+            ]
         ],
         'infrastructure' => [
-            'name' => 'Infrastructure',
-            'name_de' => 'Infrastruktur',
-            'head' => 'Head of Infrastructure',
-            'head_de' => 'Leitung der Infrastruktur',
+            'name' => [
+                'en' => 'Infrastructure',
+                'de' => 'Infrastruktur',
+                'fr' => 'Infrastructure',
+                'es' => 'Infraestructura',
+                'jp' => 'インフラ',
+                'it' => 'Infrastruttura',
+            ],
+            'head' => [
+                'en' => 'Head of Infrastructure',
+                'de' => 'Leitung der Infrastruktur',
+                'fr' => 'Direction de l\'Infrastructure',
+                'es' => 'Dirección de la Infraestructura',
+                'jp' => 'インフラ責任者',
+                'it' => 'Direzione dell\'Infrastruttura',
+            ]
         ],
         'unit' => [
-            'name' => 'Unit',
-            'name_de' => 'Einheit',
-            'head' => 'Head of Unit',
-            'head_de' => 'Leitung der Organisationseinheit',
+            'name' => [
+                'en' => 'Unit',
+                'de' => 'Einheit',
+                'fr' => 'Unité',
+                'es' => 'Unidad',
+                'jp' => 'ユニット',
+                'it' => 'Unità',
+            ],
+            'head' => [
+                'en' => 'Head of Unit',
+                'de' => 'Leitung der Organisationseinheit',
+                'fr' => 'Direction de l\'Unité',
+                'es' => 'Dirección de la Unidad',
+                'jp' => 'ユニット長',
+                'it' => 'Direzione dell\'Unità',
+            ]
         ],
         'staff unit' => [
-            'name' => 'Staff Unit',
-            'name_de' => 'Stabsstelle',
-            'head' => 'Head of Staff Unit',
-            'head_de' => 'Leitung der Stabsstelle',
-        ],
+            'name' => [
+                'en' => 'Staff Unit',
+                'de' => 'Stabsstelle',
+                'fr' => 'Unité de Personnel',
+                'es' => 'Unidad de Personal',
+                'jp' => 'スタッフユニット',
+                'it' => 'Unità di Personale',
+            ],
+            'head' => [
+                'en' => 'Head of Staff Unit',
+                'de' => 'Leitung der Stabsstelle',
+                'fr' => 'Direction de l\'Unité de Personnel',
+                'es' => 'Dirección de la Unidad de Personal',
+                'jp' => 'スタッフユニット長',
+                'it' => 'Direzione dell\'Unità di Personale',
+            ]
+        ]
     ];
 
     function __construct()
@@ -84,10 +181,11 @@ class Groups
             [],
             [
                 'sort' => ['level' => 1, 'order' => 1, 'inactive' => 1],
-                'projection' => ['id' => 1, 'name' => 1, 'name_de' => 1, 'parent' => 1, 'unit' => 1, 'color' => 1, 'inactive' => 1, 'level' => 1, 'head' => 1]
+                'projection' => ['id' => 1, 'name' => 1, 'parent' => 1, 'unit' => 1, 'color' => 1, 'inactive' => 1, 'level' => 1, 'head' => 1]
             ]
         )->toArray();
         foreach ($groups as $g) {
+            $g = DB::doc2Arr($g);
             $this->groups[$g['id']] = $g;
         }
 
@@ -114,7 +212,7 @@ class Groups
                 }
                 $tree[] = [
                     'id' => $data[$i]['id'],
-                    'name' => lang($data[$i]['name'], $data[$i]['name_de'] ?? null),
+                    'name' => localized($data[$i]['name']),
                     'unit' => $data[$i]['unit'],
                     'color' => $color,
                     'level' => $depth,
@@ -154,15 +252,20 @@ class Groups
 
     public function findGroup($name)
     {
+        // global $Settings;
         if (empty($name)) return null;
-        $result = $this->osiris->groups->findOne([
+        $filter = [
             '$or' => [
                 ['id' => $name],
-                ['name' => $name],
-                ['name_de' => $name],
+                ['name.de' => $name],
+                ['name.en' => $name],
                 ['synonyms' => $name]
             ]
-        ]);
+        ];
+        // foreach ($Settings->contentLanguages() as $language) {
+        //     $filter['$or'][] = ["name.$language" => $name];
+        // }
+        $result = $this->osiris->groups->findOne($filter);
         if ($result) return DB::doc2Arr($result);
         return null;
     }
@@ -171,7 +274,7 @@ class Groups
     {
         $group = $this->getGroup($id);
         if (empty($group)) return lang('people.unknown_unit');
-        return lang($group['name'], $group['name_de'] ?? null);
+        return localized($group['name']);
     }
 
     public function getUnit($unit = null, $key = null)
@@ -181,20 +284,20 @@ class Groups
         if (isset($this->UNITS[$unit])) {
             $info = $this->UNITS[$unit];
         } else {
-            $info = [
-                'name' => ucfirst($unit),
-                'name_de' => ucfirst($unit),
-                'head' => 'Head of Unit',
-                'head_de' => 'Leitung der Organisationseinheit',
-            ];
+            $info = $this->UNITS['unit'];
+            $info['name'] = ucfirst($unit);
         }
         if ($key === null) return $info;
 
         if ($key == 'name')
-            return lang($info['name'], $info['name_de']);
+            return localized($info['name']);
         if ($key == 'head')
-            return lang($info['head'], $info['head_de']);
+            return localized($info['head']);
         return $info[$key] ?? '';
+    }
+
+    public function getUnitKeys(){
+        return array_keys($this->UNITS);
     }
 
     public function cssVar($id)
@@ -295,7 +398,7 @@ class Groups
             if ($datas[$i]['parent'] == $parent) {
                 $tree .= '<li>';
                 $tree .= "<a class='colorless' href='" . ROOTPATH . "/groups/view/" . $datas[$i]['id'] . "' >";
-                $tree .= lang($datas[$i]['name'], $datas[$i]['name_de'] ?? null);
+                $tree .= localized($datas[$i]['name']);
                 $tree .= "</a>";
                 $tree .= Groups::hierarchyList($datas, $datas[$i]['id'], $depth + 1);
                 $tree .= '</li>';
@@ -318,7 +421,7 @@ class Groups
         if ($ni === 0 || $depth > 1000) return ''; // Make sure not to have an endless recursion
         for ($i = 0; $i < $ni; $i++) {
             if ($datas[$i]['parent'] == $parent) {
-                $element = lang($datas[$i]['name'], $datas[$i]['name_de'] ?? null);
+                $element = localized($datas[$i]['name']);
                 if ($depth > 0) {
                     $element = str_repeat('-', $depth) . ' ' . $element;
                 }
@@ -492,10 +595,10 @@ class Groups
             $unit = $this->getUnit($group['unit'] ?? null);
             $result[] = [
                 'id' => $key,
-                'name_en' => $group['name'],
-                'name_de' => ($group['name_de'] ?? null),
-                'unit_en' => $unit['name'],
-                'unit_de' => $unit['name_de'],
+                'name_en' => localized($group['name'], 'en'),
+                'name_de' => localized($group['name'], 'de'),
+                'unit_en' => localized($unit['name'], 'en'),
+                'unit_de' => localized($unit['name'], 'de'),
                 'indent' => $indent,
                 'hasChildren' => !empty($subTree) ? true : false
             ];

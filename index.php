@@ -121,6 +121,62 @@ function localized($value, ?string $language = null, ?string $fallbackLanguage =
 }
 
 /**
+ * Language requested by an API consumer. "all" keeps complete language maps.
+ */
+function apiLanguage(): string
+{
+    global $Settings;
+
+    $language = strtolower(trim((string) ($_GET['lang'] ?? currentLanguage())));
+    if ($language === 'all') return 'all';
+
+    $available = isset($Settings) && $Settings instanceof Settings
+        ? $Settings->contentLanguages()
+        : [OSIRIS_BASE_LANGUAGE];
+
+    return in_array($language, $available, true) ? $language : OSIRIS_BASE_LANGUAGE;
+}
+
+/**
+ * Resolve localized content for API output, or return its complete map.
+ */
+function apiLocalized($value)
+{
+    if (apiLanguage() !== 'all') {
+        return localized($value, apiLanguage());
+    }
+    if ($value instanceof Traversable) {
+        $value = iterator_to_array($value);
+    }
+    return is_array($value) ? $value : [OSIRIS_BASE_LANGUAGE => (string) $value];
+}
+
+/**
+ * Localize selected document fields and remove their legacy *_de companions.
+ */
+function apiLocalizedFields(array $document, array $fields): array
+{
+    foreach ($fields as $field) {
+        $legacyField = $field . '_de';
+        if (!array_key_exists($field, $document) && !array_key_exists($legacyField, $document)) continue;
+
+        $value = $document[$field] ?? '';
+        $legacyGerman = $document[$legacyField] ?? null;
+        if (apiLanguage() === 'all' && !is_array($value) && !is_object($value)) {
+            $translations = [OSIRIS_BASE_LANGUAGE => (string) $value];
+            if ($legacyGerman !== null && $legacyGerman !== '') $translations['de'] = $legacyGerman;
+            $document[$field] = $translations;
+        } elseif (apiLanguage() === 'de' && $legacyGerman !== null && !is_array($value) && !is_object($value)) {
+            $document[$field] = $legacyGerman;
+        } else {
+            $document[$field] = apiLocalized($value);
+        }
+        unset($document[$legacyField]);
+    }
+    return $document;
+}
+
+/**
  * Backwards-compatible wrapper for interface keys and legacy EN/DE calls.
  */
 function lang($en, ?string $de = null, array $replace = []): string

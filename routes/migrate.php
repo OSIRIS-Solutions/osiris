@@ -120,6 +120,19 @@ Route::get('/migrate/languages', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/migrate/localization', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+    }
+
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/routes/migration/localization.php";
+    include BASEPATH . "/footer.php";
+});
+
 
 Route::get('/migrate/index', function () {
     include_once BASEPATH . "/php/init.php";
@@ -187,8 +200,8 @@ Route::get('/migrate/index', function () {
 
     /* groups (units) */
     ensureIndex($osiris->groups, ['id' => 1]);
-    ensureIndex($osiris->groups, ['name' => 1]);
-    ensureIndex($osiris->groups, ['name_de' => 1]);
+    ensureIndex($osiris->groups, ['name.en' => 1]);
+    ensureIndex($osiris->groups, ['name.de' => 1]);
 
     /* organizations */
     ensureIndex($osiris->organizations, ['name' => 1]);

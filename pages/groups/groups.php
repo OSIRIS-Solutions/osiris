@@ -157,7 +157,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                         } ?>
                         <h5>
                             <a href="<?= ROOTPATH ?>/groups/view/<?= $group['id'] ?>" class="title">
-                                <?= lang($group['name'], $group['name_de'] ?? null) ?>
+                                <?= e(localized($group['name'])) ?>
                             </a>
                         </h5>
 
@@ -172,7 +172,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 <hr>
                                 <div class="mb-0">
                                     <?php
-                                    $heads = $group['head'];
+                                    $heads = DB::doc2Arr($group['head']);
                                     if (is_string($heads)) $heads = [$heads];
                                     $heads = array_map([$DB, 'getNameFromId'], $heads);
                                     ?>
@@ -260,7 +260,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
     $g = array_map(function ($a) {
         return [
             'id' => $a['id'],
-            'name' => lang($a['name'], $a['name_de'] ?? null),
+            'name' => localized($a['name']),
             'unit' => $a['unit'],
             'head' => $a['head'],
             'color' => $a['color'],

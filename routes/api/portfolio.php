@@ -78,6 +78,30 @@ function rest($data, $count = 0, $status = 200)
     return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }
 
+/**
+ * Localize selected fields for the requested API language.
+ */
+function portfolio_localized_fields($document, array $fields)
+{
+    if ($document === null) return null;
+    return apiLocalizedFields(DB::doc2Arr($document), $fields);
+}
+
+function portfolio_localized_group($group)
+{
+    return portfolio_localized_fields($group, ['name', 'description']);
+}
+
+function portfolio_localized_unit_type($unit)
+{
+    return portfolio_localized_fields($unit, ['name', 'head']);
+}
+
+function portfolio_localized_research($research)
+{
+    return portfolio_localized_fields($research, ['title', 'subtitle', 'info']);
+}
+
 function help_getProject($osiris, $id)
 {
     if (DB::is_ObjectID($id)) {
@@ -280,6 +304,7 @@ Route::get('/portfolio/units', function () {
         // ['hide' => ['$ne' => true]],
         ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'parent' => 1, 'unit' => 1, 'level' => 1, 'hide' => 1, 'order' => 1]]
     )->toArray();
+    $result = array_map('portfolio_localized_group', $result);
     echo rest($result);
 });
 
@@ -306,7 +331,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
 
 
     $unit = $Groups->getUnit($group['unit'] ?? null);
-    $group['unit'] = $unit;
+    $group['unit'] = portfolio_localized_unit_type($unit);
 
     $uploadsUrl = rtrim(
         $Settings->getRequestScheme() . '://' . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH,
@@ -371,14 +396,15 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
         }
     }
 
-    $group['parent_details'] = $osiris->groups->findOne(
+    $group['parent_details'] = portfolio_localized_group($osiris->groups->findOne(
         ['id' => $group['parent']],
         ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'level' => 1, 'hide' => 1]]
-    );
+    ));
     $group['children'] = $osiris->groups->find(
         ['parent' => $group['id'], 'hide' => ['$ne' => true]],
         ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1, 'level' => 1, 'hide' => 1]]
     )->toArray();
+    $group['children'] = array_map('portfolio_localized_group', $group['children']);
 
     if (isset($group['topics']) && !empty($group['topics'])) {
         $topics = $osiris->topics->find(
@@ -391,14 +417,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     $research = [];
     if (isset($group['research'])) {
         foreach ($group['research'] as $key => $value) {
-            $res = [
-                'title' => $value['title'] ?? '',
-                'title_de' => $value['title_de'] ?? null,
-                'subtitle' => $value['subtitle'] ?? '',
-                'subtitle_de' => $value['subtitle_de'] ?? null,
-                'info' => $value['info'] ?? '',
-                'info_de' => $value['info_de'] ?? null,
-            ];
+            $res = portfolio_localized_research($value);
             if (!empty($value['activities'])) {
                 $res['activities'] = [];
                 foreach ($value['activities'] as $a) {
@@ -420,7 +439,8 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
     $numbers = [];
     $child_ids = $Groups->getChildren($id);
 
-    if (isset($group['description']) || isset($group['description_de']) || !empty($group['images'])) {
+    $group = portfolio_localized_group($group);
+    if (!empty($group['description']) || !empty($group['images'])) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
@@ -560,16 +580,7 @@ Route::get('/portfolio/unit/([^/]*)/research', function ($id) {
 
     $research = [];
     if (isset($group['research'])) foreach ($group['research'] as $key => $value) {
-        $res = [
-            'title' => $value['title'] ?? '',
-            'title_de' => $value['title_de'] ?? '',
-            'subtitle' => $value['subtitle'] ?? '',
-            'subtitle_de' => $value['subtitle_de'] ?? '',
-            // 'info' => (!empty($value['info'] ?? '') ? $parsedown->text($value['info']) : null),
-            'info' => $value['info'] ?? '',
-            // 'info_de' => (!empty($value['info_de'] ?? '') ? $parsedown->text($value['info_de']) : null)
-            'info_de' => $value['info_de'] ?? '',
-        ];
+        $res = portfolio_localized_research($value);
         if (!empty($value['activities'])) {
             $res['activities'] = [];
             foreach ($value['activities'] as $a) {
@@ -618,7 +629,7 @@ Route::get('/portfolio/unit/([^/]*)/numbers', function ($id) {
         DB::doc2Arr($group['images'] ?? []),
         fn($image) => !empty($image['public'])
     );
-    if (isset($group['description']) || isset($group['description_de']) || !empty($publicImages)) {
+    if (!empty(localized($group['description'] ?? [])) || !empty($publicImages)) {
         $numbers['general'] = 1;
     }
     if (!empty($group['research'] ?? null)) {
@@ -1175,7 +1186,7 @@ Route::get('/portfolio/topic/([^/]*)/units', function ($id) {
     // add head info and unit details
     foreach ($units as &$unit) {
         $u = $Groups->getUnit($unit['unit'] ?? null);
-        $unit['unit'] = $u;
+        $unit['unit'] = portfolio_localized_unit_type($u);
 
         $head = $unit['head'] ?? [];
         if (is_string($head)) $head = [$head];
@@ -1202,6 +1213,7 @@ Route::get('/portfolio/topic/([^/]*)/units', function ($id) {
                 ];
             }
         }
+        $unit = portfolio_localized_group($unit);
     }
     unset($unit);
     echo rest($units);
@@ -1268,10 +1280,7 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
             foreach ($person['depts'] as $d) {
                 $dept = $Groups->getGroup($d);
                 if ($dept['level'] !== 1) continue;
-                $row['depts'][$d] = [
-                    'en' => $dept['name'],
-                    'de' => $dept['name_de']
-                ];
+                $row['depts'][$d] = apiLocalized($dept['name']);
             }
         }
         $result[] = $row;
@@ -1359,10 +1368,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         foreach ($doc['units'] as $d) {
             $dept = $Groups->getGroup($d);
             if ($dept['level'] !== 1) continue;
-            $depts[$d] = [
-                'en' => $dept['name'],
-                'de' => $dept['name_de']
-            ];
+            $depts[$d] = apiLocalized($dept['name']);
         }
     }
     $result['depts'] = $depts;
@@ -1672,10 +1678,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
                 foreach ($Groups->deptHierarchies($person['depts']) as $d) {
                     $dept = $Groups->getGroup($d);
                     if ($dept['level'] !== 1) continue;
-                    $depts[$d] = [
-                        'en' => $dept['name'],
-                        'de' => $dept['name_de']
-                    ];
+                    $depts[$d] = apiLocalized($dept['name']);
                 }
             }
             $row['depts'] = $depts;
@@ -1868,6 +1871,14 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         $unit_ids = DB::doc2Arr($person['current_units']);
         $hierarchy = $Groups->getPersonHierarchyTree($unit_ids);
         $result['depts'] = $Groups->readableHierarchy($hierarchy);
+        foreach ($result['depts'] as &$department) {
+            $group = $Groups->getGroup($department['id']);
+            $unitType = $Groups->getUnit($group['unit'] ?? null);
+            $department['name'] = apiLocalized($group['name'] ?? $department['id']);
+            $department['unit'] = apiLocalized($unitType['name'] ?? '');
+            unset($department['name_en'], $department['name_de'], $department['unit_en'], $department['unit_de']);
+        }
+        unset($department);
     }
 
     $visibility = 'all';
@@ -2422,8 +2433,7 @@ Route::get('/portfolio/unit/([^/]*)/cooperation', function ($id) {
                 if (empty($g) || ($g['hide'] ?? false)) continue;
                 $labels[$d] = [
                     'id' => $d,
-                    'name' => $g['name'],
-                    'name_de' => $g['name_de'] ?? $g['name'],
+                    'name' => apiLocalized($g['name']),
                     'color' => $g['color'],
                     'count' => 0,
                     'selected' => ($id == $d)
@@ -2616,10 +2626,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
                 foreach ($units as $u) {
                     $dept = $Groups->getGroup($u[0]);
                     if ($dept['level'] === 1) {
-                        $row['depts'][$dept['id']] = [
-                            'en' => $dept['name'],
-                            'de' => $dept['name_de']
-                        ];
+                        $row['depts'][$dept['id']] = apiLocalized($dept['name']);
                     }
                 }
             }
@@ -3390,10 +3397,13 @@ Route::get('/portfolio/search-index', function () {
     );
     foreach ($data as $unit) {
         $unit = DB::doc2Arr($unit);
+        $searchNames = $unit['name'] instanceof Traversable
+            ? iterator_to_array($unit['name'])
+            : $unit['name'];
+        $unit = portfolio_localized_fields($unit, ['name']);
         $unit['search'] = $buildSearchText(
             $unit['id'] ?? null,
-            $unit['name'] ?? null,
-            $unit['name_de'] ?? null
+            is_array($searchNames) ? implode(' ', $searchNames) : $searchNames
         );
         $units[] = $unit;
     }
@@ -3594,7 +3604,7 @@ Route::get('/portfolio/spectrum', function () {
         ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1, 'name_de' => 1]]
     );
     foreach ($units as $unit) {
-        $unit = DB::doc2Arr($unit);
+        $unit = portfolio_localized_fields($unit, ['name']);
         if (empty($unit['id']) || $unit['id'] === $baseUnitId) continue;
         $unitMeta[$unit['id']] = $unit;
     }
@@ -3627,7 +3637,6 @@ Route::get('/portfolio/spectrum', function () {
         $topicsById[$topicId]['units'][] = [
             'id' => $unitId,
             'name' => $unitMeta[$unitId]['name'] ?? $unitId,
-            'name_de' => $unitMeta[$unitId]['name_de'] ?? null,
             'count' => intval($row['count'] ?? 0)
         ];
     }

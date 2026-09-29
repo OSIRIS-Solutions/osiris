@@ -399,7 +399,7 @@ if ($Settings->featureEnabled('spectrum')) {
                         <span class="text-muted"><?= $group['unit'] ?></span>
                         <h5>
                             <a href="<?= ROOTPATH ?>/groups/view/<?= $group['id'] ?>" class="title">
-                                <?= lang($group['name'], $group['name_de'] ?? null) ?>
+                                <?= e(localized($group['name'])) ?>
                             </a>
                         </h5>
 

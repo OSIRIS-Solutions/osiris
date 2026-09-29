@@ -278,8 +278,7 @@ function mcp_activity_result($document, $DB, $Groups, array &$personCache, array
             $unit = $Groups->getGroup($unitId);
             $unitCache[$unitId] = [
                 'id' => $unitId,
-                'name' => $unit['name'] ?? $unitId,
-                'name_de' => $unit['name_de'] ?? null,
+                'name' => apiLocalized($unit['name'] ?? $unitId),
             ];
         }
         $units[] = $unitCache[$unitId];
@@ -353,8 +352,7 @@ function mcp_person_units($value, $Groups): array
         $unit = $Groups->getGroup($unitId);
         $units[] = [
             'id' => $unitId,
-            'name' => $unit['name'] ?? $unitId,
-            'name_de' => $unit['name_de'] ?? null,
+            'name' => apiLocalized($unit['name'] ?? $unitId),
             'scientific' => (bool) ($assignment['scientific'] ?? false),
         ];
     }
@@ -460,15 +458,14 @@ Route::get('/api/mcp/instance', function () {
         'data' => [
             'instance' => [
                 'id' => $affiliation['id'] ?? $rootUnit['id'] ?? null,
-                'name' => $affiliation['name'] ?? $rootUnit['name'] ?? 'OSIRIS',
-                'name_de' => $rootUnit['name_de'] ?? null,
+                'name' => $affiliation['name'] ?? apiLocalized($rootUnit['name'] ?? 'OSIRIS'),
                 'osiris_version' => defined('OSIRIS_VERSION') ? OSIRIS_VERSION : null,
                 'base_url' => rtrim(
                     $Settings->getRequestScheme() . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ROOTPATH,
                     '/'
                 ),
-                'default_language' => 'en',
-                'available_languages' => ['en', 'de'],
+                'default_language' => OSIRIS_BASE_LANGUAGE,
+                'available_languages' => $Settings->contentLanguages(),
                 'timezone' => date_default_timezone_get(),
             ],
             'features' => [
@@ -586,15 +583,15 @@ Route::get('/api/mcp/units', function () {
         $regex = new \MongoDB\BSON\Regex(preg_quote($query, '/'), 'i');
         $filter['$or'] = [
             ['id' => ['$regex' => $regex]],
-            ['name' => ['$regex' => $regex]],
-            ['name_de' => ['$regex' => $regex]],
+            ['name.en' => ['$regex' => $regex]],
+            ['name.de' => ['$regex' => $regex]],
         ];
     }
 
     $groups = $osiris->groups->find(
         $filter,
         [
-            'sort' => ['level' => 1, 'order' => 1, 'name' => 1, 'id' => 1],
+            'sort' => ['level' => 1, 'order' => 1, 'name.en' => 1, 'id' => 1],
             'skip' => $offset,
             'limit' => $limit,
             'projection' => [
@@ -618,15 +615,13 @@ Route::get('/api/mcp/units', function () {
             if (!empty($pathGroup['id'])) {
                 $path[] = [
                     'id' => $pathGroup['id'],
-                    'name' => $pathGroup['name'] ?? $pathGroup['id'],
-                    'name_de' => $pathGroup['name_de'] ?? null,
+                    'name' => apiLocalized($pathGroup['name'] ?? $pathGroup['id']),
                 ];
             }
         }
         $units[] = [
             'id' => $group['id'],
-            'name' => $group['name'] ?? $group['id'],
-            'name_de' => $group['name_de'] ?? null,
+            'name' => apiLocalized($group['name'] ?? $group['id']),
             'type' => $group['unit'] ?? null,
             'parent_id' => $group['parent'] ?? null,
             'level' => $group['level'] ?? null,

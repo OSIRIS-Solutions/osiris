@@ -1060,10 +1060,10 @@ Route::get('/api/dashboard/department-network', function () {
             // Topics meta: adapt to your project
             $g = ($Topics[$id] ?? null);
         }
+        $name = $g['name'] ?? $id;
         $labels[] = [
             'id'      => $id,
-            'name'    => $g['name'] ?? $id,
-            'name_de' => $g['name_de'] ?? ($g['name'] ?? $id),
+            'name'    => $entity === 'units' ? apiLocalized($name) : $name,
             'color'   => $g['color'] ?? '#999999',
             'count'   => $soloById[$id] ?? 0,
             'totalCount' => $totalById[$id] ?? 0,
@@ -1175,8 +1175,7 @@ Route::get('/api/dashboard/author-network', function () {
                     if (!empty($p)) {
                         $units[] = [
                             'id' => $p['id'],
-                            'name' => $p['name'],
-                            'name_de' => $p['name_de'],
+                            'name' => apiLocalized($p['name']),
                             'color' => $p['color']
                         ];
                         break;
@@ -1334,7 +1333,7 @@ Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors)',
             $colors[] = '#cccccc95';
         } else {
             $group = $Groups->getGroup($key);
-            $labels[] = lang($group['name'], $group['name_de'] ?? null);
+            $labels[] = localized($group['name']);
             $colors[] = $group['color'] . 'aa';
         }
         $y[] = $value;
@@ -1528,6 +1527,16 @@ Route::get('/api/groups', function () {
     }
 
     $data = $osiris->groups->find()->toArray();
+    foreach ($data as &$group) {
+        $group = apiLocalizedFields(DB::doc2Arr($group), ['name', 'description']);
+        if (!empty($group['research'])) {
+            foreach ($group['research'] as &$research) {
+                $research = apiLocalizedFields(DB::doc2Arr($research), ['title', 'subtitle', 'info']);
+            }
+            unset($research);
+        }
+    }
+    unset($group);
 
     echo return_rest($data, count($data));
 });
@@ -1590,7 +1599,16 @@ Route::get('/api/groups/tree', function () {
         die;
     }
 
-    $tree = $Groups->tree;
+    $localizeTree = function (array $nodes) use (&$localizeTree, $Groups): array {
+        foreach ($nodes as &$node) {
+            $group = $Groups->getGroup($node['id']);
+            $node['name'] = apiLocalized($group['name'] ?? $node['name']);
+            $node['children'] = $localizeTree($node['children'] ?? []);
+        }
+        unset($node);
+        return $nodes;
+    };
+    $tree = $localizeTree($Groups->tree);
     echo return_rest($tree, count($tree));
 });
 
@@ -2243,8 +2261,8 @@ Route::get('/api/command-palette/search', function () {
             '$match' => [
                 '$or' => [
                     ['id'      => ['$regex' => $rxContain, '$options' => 'i']],
-                    ['name'    => ['$regex' => $rxContain, '$options' => 'i']],
-                    ['name_de' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['name.en' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['name.de' => ['$regex' => $rxContain, '$options' => 'i']],
                 ]
             ]
         ],
@@ -2254,13 +2272,13 @@ Route::get('/api/command-palette/search', function () {
                     '$cond' => [['$regexMatch' => ['input' => '$id', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
                 ],
                 '_cp_prefix_name' => [
-                    '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                    '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.en', '']], 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
                 ],
                 '_cp_prefix_name_de' => [
-                    '$cond' => [['$regexMatch' => ['input' => '$name_de', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                    '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.de', '']], 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
                 ],
                 '_cp_contain_name' => [
-                    '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxContain, 'options' => 'i']], 1, 0]
+                    '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.en', '']], 'regex' => $rxContain, 'options' => 'i']], 1, 0]
                 ],
             ]
         ],
@@ -2276,7 +2294,7 @@ Route::get('/api/command-palette/search', function () {
                 ]
             ]
         ],
-        ['$sort' => ['_cp_score' => -1, 'name' => 1, 'id' => 1]],
+        ['$sort' => ['_cp_score' => -1, 'name.en' => 1, 'id' => 1]],
         ['$limit' => 6],
         ['$project' => ['_id' => 1, 'id' => 1, 'name' => 1, '_cp_score' => 1]]
     ];
@@ -2286,7 +2304,7 @@ Route::get('/api/command-palette/search', function () {
 
     foreach ($cursor as $doc) {
         $mongoId = (string)$doc->_id;
-        $label = (string)($doc->name ?? $doc->id ?? $mongoId);
+        $label = localized(DB::doc2Arr($doc->name ?? [])) ?: (string)($doc->id ?? $mongoId);
 
         $items[] = [
             'id' => 'unit:' . $mongoId,

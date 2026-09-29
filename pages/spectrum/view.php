@@ -369,7 +369,7 @@ if ($level == 'topic') {
                     ['projection' => ['name' => 1]]
                 );
 
-                $u['name'] = $group['name'] ?? 'Unknown';
+                $u['name'] = localized($group['name'] ?? 'Unknown');
             }
             unset($u);
             ?>

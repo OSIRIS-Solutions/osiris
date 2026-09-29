@@ -161,7 +161,7 @@ $type = $_GET['type'] ?? 'publication';
             var colors = [];
             data = Object.values(data)
             data.forEach(element => {
-                labels.push(lang(element.name, element.name_de ?? null));
+                labels.push(element.name);
                 colors.push(element.color)
             });
 
