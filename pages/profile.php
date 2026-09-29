@@ -1028,11 +1028,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <p><?= lang('people.no_research_interests_stated') ?></p>
                         <?php } ?>
 
-                        <?php if (isset($scientist['research_profile'])) { ?>
+                        <?php if (!empty(localized($scientist['research_profile'] ?? []))) { ?>
                             <h6 class="title">
                                 <?= lang('people.research_profile') ?>
                             </h6>
-                            <?= lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null); ?>
+                            <?= localized($scientist['research_profile']); ?>
                         <?php } ?>
 
                     </div>
@@ -1102,20 +1102,20 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 
                     <?php if ($active('biography')) { ?>
-                        <?php if (isset($scientist['biography']) && !empty($scientist['biography'])) { ?>
+                        <?php if (!empty(localized($scientist['biography'] ?? []))) { ?>
                             <h6 class="title">
                                 <?= lang('common.biography') ?>
                             </h6>
-                            <p><?= lang($scientist['biography'], $scientist['biography_de'] ?? null); ?></p>
+                            <div class="biography"><?= localized($scientist['biography']); ?></div>
                         <?php } ?>
                     <?php } ?>
 
                     <?php if ($active('education')) { ?>
-                        <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                        <?php if (!empty(localized($scientist['education'] ?? []))) { ?>
                             <h6 class="title">
                                 <?= lang('common.education_profile') ?>
                             </h6>
-                            <p><?= lang($scientist['education'], $scientist['education_de'] ?? null); ?></p>
+                            <div class="biography"><?= localized($scientist['education']); ?></div>
                         <?php } ?>
                     <?php } ?>
 

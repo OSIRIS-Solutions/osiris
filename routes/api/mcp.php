@@ -190,6 +190,17 @@ function mcp_text($value, int $maxLength = 1000): string
     return mb_substr($text, 0, $maxLength);
 }
 
+function mcp_localized_text($value, int $maxLength = 1000)
+{
+    $localized = apiLocalized($value);
+    if (!is_array($localized)) return mcp_text($localized, $maxLength);
+
+    foreach ($localized as $language => $text) {
+        $localized[$language] = mcp_text($text, $maxLength);
+    }
+    return $localized;
+}
+
 function mcp_catalog_limit(): int
 {
     $limit = filter_var(
@@ -1063,9 +1074,10 @@ Route::get('/api/mcp/experts', function () {
         ['expertise' => ['$regex' => $regex]],
         ['research' => ['$regex' => $regex]],
         ['research_de' => ['$regex' => $regex]],
-        ['research_profile' => ['$regex' => $regex]],
-        ['research_profile_de' => ['$regex' => $regex]],
     ];
+    foreach ($Settings->contentLanguages() as $language) {
+        $expertiseClauses[] = ["research_profile.$language" => ['$regex' => $regex]];
+    }
     if (!empty($topicIds)) {
         $expertiseClauses[] = ['topics' => ['$in' => $topicIds]];
     }
@@ -1100,7 +1112,6 @@ Route::get('/api/mcp/experts', function () {
                 'research' => 1,
                 'research_de' => 1,
                 'research_profile' => 1,
-                'research_profile_de' => 1,
                 'topics' => 1,
             ],
         ]
@@ -1123,10 +1134,12 @@ Route::get('/api/mcp/experts', function () {
                 $evidence['topics'][] = $topicsById[$topicId];
             }
         }
-        foreach (['research_profile', 'research_profile_de'] as $field) {
-            $profile = mcp_text($person[$field] ?? '', 1000);
+        $profiles = DB::doc2Arr($person['research_profile'] ?? []);
+        if (!is_array($profiles)) $profiles = ['en' => $profiles];
+        foreach ($profiles as $language => $value) {
+            $profile = mcp_text($value, 1000);
             if ($profile !== '' && preg_match('/' . preg_quote($query, '/') . '/iu', $profile)) {
-                $evidence[$field] = $profile;
+                $evidence['research_profile'][$language] = $profile;
             }
         }
         $expert = mcp_person_summary($person, $Groups);
@@ -1136,8 +1149,7 @@ Route::get('/api/mcp/experts', function () {
             count($evidence['research_interests']) * 80 +
             count($evidence['research_interests_de']) * 80 +
             count($evidence['topics']) * 60 +
-            (isset($evidence['research_profile']) ? 40 : 0) +
-            (isset($evidence['research_profile_de']) ? 40 : 0) +
+            (!empty($evidence['research_profile']) ? 40 : 0) +
             count($evidence['openalex_topics']) * 10;
         $experts[] = $expert;
     }
@@ -1196,7 +1208,8 @@ Route::get('/api/mcp/persons/([^/]+)', function ($id) {
             'research' => 1,
             'research_de' => 1,
             'research_profile' => 1,
-            'research_profile_de' => 1,
+            'biography' => 1,
+            'education' => 1,
             'topics' => 1,
         ]]
     );
@@ -1217,10 +1230,9 @@ Route::get('/api/mcp/persons/([^/]+)', function ($id) {
         'de' => mcp_strings($person['research_de'] ?? []),
     ];
     $result['topics'] = mcp_person_topics($person['topics'] ?? [], $osiris);
-    $result['research_profile'] = [
-        'en' => mcp_text($person['research_profile'] ?? '', 2000),
-        'de' => mcp_text($person['research_profile_de'] ?? '', 2000),
-    ];
+    $result['research_profile'] = mcp_localized_text($person['research_profile'] ?? '', 2000);
+    $result['biography'] = mcp_localized_text($person['biography'] ?? '', 2000);
+    $result['education'] = mcp_localized_text($person['education'] ?? '', 2000);
 
     mcp_return_json([
         'status' => 200,

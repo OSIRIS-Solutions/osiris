@@ -408,24 +408,24 @@ Route::post('/download', function () {
                 }
             }
 
-            if (isset($scientist['research_profile']) && !empty($scientist['research_profile'])) {
+            if (!empty(localized($scientist['research_profile'] ?? []))) {
                 $section->addTitle(lang('people.research_profile'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
-                $line = clean_comment_export(lang($scientist['research_profile'], $scientist['research_profile_de'] ?? null), false);
+                $line = clean_comment_export(localized($scientist['research_profile']), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
             }
 
-            if (isset($scientist['biography']) && !empty($scientist['biography'])) {
+            if (!empty(localized($scientist['biography'] ?? []))) {
                 $section->addTitle(lang('common.biography'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
-                $line = clean_comment_export(lang($scientist['biography'], $scientist['biography_de'] ?? null), false);
+                $line = clean_comment_export(localized($scientist['biography']), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
             }
 
-            if (isset($scientist['education']) && !empty($scientist['education'])) {
+            if (!empty(localized($scientist['education'] ?? []))) {
                 $section->addTitle(lang('common.education_profile'), 2);
                 $paragraph = $section->addTextRun($styleParagraph);
-                $line = clean_comment_export(lang($scientist['education'], $scientist['education_de'] ?? null), false);
+                $line = clean_comment_export(localized($scientist['education']), false);
                 \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
             }
         }

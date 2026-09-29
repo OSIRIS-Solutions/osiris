@@ -9,6 +9,7 @@ class PersonFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $Settings = new Settings();
+        $contentLanguage = currentLanguage() === 'keys' ? OSIRIS_BASE_LANGUAGE : currentLanguage();
 
         $data = $Settings->get('person-data');
         $data = DB::doc2Arr($data);
@@ -247,7 +248,7 @@ class PersonFields extends Fields
                 "label" => lang('groups.research_interests'),
             ],
             [
-                "id" => "research_profile",
+                "id" => "research_profile.$contentLanguage",
                 "module_of" => $typeModules['research_profile'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -269,7 +270,7 @@ class PersonFields extends Fields
                 "label" => lang('people.cv'),
             ],
             [
-                "id" => "biography",
+                "id" => "biography.$contentLanguage",
                 "module_of" => $typeModules['biography'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -280,7 +281,7 @@ class PersonFields extends Fields
                 "label" => lang('common.biography'),
             ],
             [
-                "id" => "education",
+                "id" => "education.$contentLanguage",
                 "module_of" => $typeModules['education'] ?? [],
                 'usage' => [
                     'aggregate',

@@ -1325,32 +1325,7 @@ $active = function ($field) use ($data_fields) {
 
 
         <?php if ($active('research_profile')) { ?>
-            <h2 class="title"><?= lang('people.research_profile_user_editor') ?></h2>
-
-            <div class="row row-eq-spacing">
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="research_profile-editor-quill"><?= $data['research_profile'] ?? '' ?></div>
-                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $data['research_profile'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('research_profile-editor');
-                        </script>
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="research_profile_de-editor-quill"><?= $data['research_profile_de'] ?? '' ?></div>
-                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $data['research_profile_de'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('research_profile_de-editor');
-                        </script>
-                    </div>
-
-                </div>
-            </div>
+            <?php localizedField($data, 'research_profile', lang('people.research_profile_user_editor'), ['type' => 'richtext']); ?>
         <?php } ?>
 
     </section>
@@ -1526,63 +1501,13 @@ $active = function ($field) use ($data_fields) {
 
 
         <?php if ($active('biography')) { ?>
-            <h2 class="title"><?= lang('common.biography') ?></h2>
-
-            <div class="row row-eq-spacing my-0">
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="biography-editor-quill"><?= $data['biography'] ?? '' ?></div>
-                        <textarea name="values[biography]" id="biography-editor" class="d-none" readonly><?= $data['biography'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('biography-editor');
-                        </script>
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="biography_de-editor-quill"><?= $data['biography_de'] ?? '' ?></div>
-                        <textarea name="values[biography_de]" id="biography_de-editor" class="d-none" readonly><?= $data['biography_de'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('biography_de-editor');
-                        </script>
-                    </div>
-
-                </div>
-            </div>
+            <?php localizedField($data, 'biography', lang('common.biography'), ['type' => 'richtext']); ?>
         <?php } ?>
 
 
 
         <?php if ($active('education')) { ?>
-            <h2><?= lang('common.education_profile') ?></h2>
-
-            <div class="row row-eq-spacing my-0">
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="education-editor-quill"><?= $data['education'] ?? '' ?></div>
-                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $data['education'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('education-editor');
-                        </script>
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
-                    <div class="form-group mb-0">
-                        <div id="education_de-editor-quill"><?= $data['education_de'] ?? '' ?></div>
-                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $data['education_de'] ?? '' ?></textarea>
-                        <script>
-                            quillEditor('education_de-editor');
-                        </script>
-                    </div>
-
-                </div>
-            </div>
+            <?php localizedField($data, 'education', lang('common.education_profile'), ['type' => 'richtext']); ?>
         <?php } ?>
 
     </section>

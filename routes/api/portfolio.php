@@ -1780,6 +1780,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         echo rest('Person not found', 0, 404);
         die;
     }
+    $person = apiLocalizedFields(DB::doc2Arr($person), ['research_profile', 'biography', 'education']);
     $result = [
         'displayname' => $person['displayname'],
         'last' => $person['last'],
@@ -1790,14 +1791,9 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         'depts' => [],
         'cv' => $person['cv'] ?? [],
         'contact' => [],
-        'biography' => [
-            'en' => $person['biography'] ?? null,
-            'de' => $person['biography_de'] ?? null
-        ],
-        'research_profile' => [
-            'en' => $person['research_profile'] ?? null,
-            'de' => $person['research_profile_de'] ?? null
-        ]
+        'biography' => $person['biography'] ?? null,
+        'education' => $person['education'] ?? null,
+        'research_profile' => $person['research_profile'] ?? null,
     ];
 
     if (!($person['is_active'] ?? true)) {

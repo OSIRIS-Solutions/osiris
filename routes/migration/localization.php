@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Convert the bilingual group fields to language maps.
+ * Convert legacy bilingual content fields to language maps.
  *
  * The migration is idempotent: existing translations in the new structure win,
  * while legacy *_de values only fill an empty German translation.
@@ -91,5 +91,46 @@ migrationCard(
     'Gruppenlokalisierung migriert',
     "Group names, descriptions and research texts now use language maps. $unchanged documents were already up to date.",
     "Gruppennamen, Beschreibungen und Forschungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell.",
+    $updated
+);
+
+$updated = 0;
+$unchanged = 0;
+
+foreach ($osiris->persons->find() as $document) {
+    $person = DB::doc2Arr($document);
+    $set = [];
+    $unset = [];
+
+    foreach (['research_profile', 'biography', 'education'] as $field) {
+        $legacyField = $field . '_de';
+        if (!array_key_exists($field, $person) && !array_key_exists($legacyField, $person)) continue;
+
+        $localizedValue = $toLanguageMap($person[$field] ?? null, $person[$legacyField] ?? null);
+        if (($person[$field] ?? null) !== $localizedValue) {
+            $set[$field] = $localizedValue;
+        }
+        if (array_key_exists($legacyField, $person)) {
+            $unset[$legacyField] = '';
+        }
+    }
+
+    if (empty($set) && empty($unset)) {
+        $unchanged++;
+        continue;
+    }
+
+    $update = [];
+    if (!empty($set)) $update['$set'] = $set;
+    if (!empty($unset)) $update['$unset'] = $unset;
+    $osiris->persons->updateOne(['_id' => $person['_id']], $update);
+    $updated++;
+}
+
+migrationCard(
+    'Person profile localization migrated',
+    'Lokalisierung der Personenprofile migriert',
+    "Research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date.",
+    "Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell.",
     $updated
 );
