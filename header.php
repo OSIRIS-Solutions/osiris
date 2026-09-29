@@ -279,13 +279,13 @@ $pageactive = function ($p) use ($page) {
                         <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
                         <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                             <?php foreach ($Settings->languages() as $settings_lang) {
-                                $selected = $settings_lang == $currentLanguage;
-                                $name = $LANGUAGES[$settings_lang] ?? $settings_lang;
-                                if ($name == 'keys') {
-                                    $name = '<i class="ph ph-code"></i> ' . translate('common.lang_keys');
+                                $selected_lang = $settings_lang == $currentLanguage;
+                                $lang_name = $LANGUAGES[$settings_lang] ?? $settings_lang;
+                                if ($lang_name == 'keys') {
+                                    $lang_name = '<i class="ph ph-code"></i> ' . translate('common.lang_keys');
                                 }
                             ?>
-                                <button type="submit" class="btn block mt-5 <?= $selected ? 'primary' : '' ?>" name="language" value="<?= htmlspecialchars($settings_lang, ENT_QUOTES, 'UTF-8') ?>" <?= $selected ? 'disabled' : '' ?>><?= $name ?></button>
+                                <button type="submit" class="btn block mt-5 <?= $selected_lang ? 'primary' : '' ?>" name="language" value="<?= htmlspecialchars($settings_lang, ENT_QUOTES, 'UTF-8') ?>" <?= $selected_lang ? 'disabled' : '' ?>><?= $lang_name ?></button>
                             <?php } ?>
 
                             <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
