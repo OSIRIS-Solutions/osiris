@@ -101,7 +101,7 @@ $LANGUAGES = [
     'en' => 'English',
     'de' => 'Deutsch',
     'it' => 'Italiano',
-    'jp' => '日本語',
+    'ja' => '日本語',
     'es' => 'Español',
     'fr' => 'Français',
 ];
