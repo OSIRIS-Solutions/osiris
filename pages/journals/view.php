@@ -250,17 +250,20 @@ if ($Settings->hasPermission('journals.edit')) { ?>
             "pageLength": 5,
             columnDefs: [{
                     targets: 0,
-                    data: 'year'
+                    data: 'year',
+                    defaultContent: '-'
                 },
                 {
                     targets: 1,
-                    data: 'activity'
+                    data: 'activity',
+                    defaultContent: '-'
                 },
                 {
                     "targets": 2,
-                    "data": "name",
-                    "render": function(data, type, full, meta) {
-                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></a>`;
+                    "data": "id",
+                    defaultContent: '',
+                    "render": function(data) {
+                        return `<a href="${ROOTPATH}/activities/view/${data}"><i class="ph ph-arrow-fat-line-right"></a>`;
                     }
                 },
             ],
@@ -309,17 +312,20 @@ if ($Settings->hasPermission('journals.edit')) { ?>
             "pageLength": 5,
             columnDefs: [{
                     targets: 0,
-                    data: 'year'
+                    data: 'year',
+                    defaultContent: '-'
                 },
                 {
                     targets: 1,
-                    data: 'activity'
+                    data: 'activity',
+                    defaultContent: '-'
                 },
                 {
                     "targets": 2,
-                    "data": "name",
-                    "render": function(data, type, full, meta) {
-                        return `<a href="${ROOTPATH}/activities/view/${full.id}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
+                    "data": "id",
+                    "defaultContent": '',
+                    "render": function(data) {
+                        return `<a href="${ROOTPATH}/activities/view/${data}"><i class="ph ph-arrow-fat-line-right"></i></a>`;
                     },
                 },
             ],
