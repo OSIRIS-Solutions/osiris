@@ -262,7 +262,33 @@ Route::post('/auth/new-user', function () {
         die;
     }
 
-    if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
+    $username = $_POST['username'] ?? null;
+
+    if (!is_string($username)) {
+        http_response_code(400);
+        exit('Ungültiger Benutzername.');
+    }
+
+    $username = trim($username);
+
+    if ($username === '') {
+        http_response_code(400);
+        exit('Bitte einen Benutzernamen angeben.');
+    }
+    $password = $_POST['password'];
+    // sanitize password
+    if (!is_string($password)) {
+        http_response_code(400);
+        exit('Ungültiges Passwort.');
+    }
+    $password = trim($password);
+    if ($password === '') {
+        http_response_code(400);
+        exit('Bitte ein Passwort angeben.');
+    }
+    $person = $_POST['values'];
+
+    if ($osiris->persons->count(['username' => $username]) > 0) {
         $page = 'register';
         $registrationRequiresToken = false;
         $authMessages = [[
@@ -273,9 +299,6 @@ Route::post('/auth/new-user', function () {
         die;
     }
 
-    $person = $_POST['values'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
     $hash = password_hash($password, PASSWORD_DEFAULT);
     // move to a new collection
     $osiris->accounts->insertOne([
