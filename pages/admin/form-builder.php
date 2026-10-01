@@ -441,7 +441,19 @@ $tagLabels = [
                     <label for="load-form-select"><?= lang('Select form', 'Formular auswählen') ?></label>
                     <select id="load-form-select" class="form-control" name="copy" required>
                         <option value="" disabled selected><?= lang('Select a form', 'Ein Formular auswählen') ?></option>
-                        <?php foreach ($osiris->adminTypes->find() as $at): ?>
+                        <?php 
+                        $formTypes = $osiris->adminTypes->find(['id' => ['$ne' => $type['id']]])->toArray();
+                        $currentParent = $type['parent'] ?? null;
+                        usort($formTypes, static function ($a, $b) use ($currentParent) {
+                            $parentOrder = (($b['parent'] ?? null) === $currentParent)
+                                <=> (($a['parent'] ?? null) === $currentParent);
+                            return $parentOrder ?: strcasecmp(
+                                lang($a['name'], $a['name_de'] ?? null),
+                                lang($b['name'], $b['name_de'] ?? null)
+                            );
+                        });
+
+                        foreach ($formTypes as $at): ?>
                             <option value="<?= $at['id'] ?>"><?= lang($at['name'], $at['name_de'] ?? null) ?></option>
                         <?php endforeach; ?>
                     </select>

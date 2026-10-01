@@ -317,6 +317,48 @@ Route::get('/admin/types/new', function () {
 }, 'login');
 
 
+Route::get('/admin/types/(.*)/copy', function ($id) {
+    // just prefill the form
+
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $user = $_SESSION['username'];
+
+    $type = $osiris->adminTypes->findOne(['id' => $id]);
+    if (empty($type)) {
+        abortwith(404, lang("Type", "Typ"), "/admin/categories");
+    }
+    $name = lang($type['name'], $type['name_de']);
+
+    $t = $type['parent'];
+    $parent = $osiris->adminCategories->findOne(['id' => $t]);
+    $color = $parent['color'] ?? '#000000';
+    $st = $type['id'].'-copy';
+    $submember = [];
+
+    $breadcrumb = [
+        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang("Activities", "Aktivitäten"), 'path' => "/admin/categories"],
+        ['name' => lang('Copy of '.$parent['name'], 'Kopie von '. $parent['name_de']), 'path' => "/admin/categories/" . $t],
+        ['name' => $name]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($type);
+    unset($form['_id']);
+    unset($type['_id']);
+    $form['id'] = $st;
+    $type['id'] = $st;
+    $copy = $id;
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/category-type.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/admin/types/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
@@ -1128,6 +1170,15 @@ Route::post('/crud/(categories|types)/create', function ($col) {
         "authors*",
         "date*"
     ];
+
+    // if copy then copy modules and fields from copy
+    if ($col == 'types' && isset($_POST['copy'])){
+        $copy = $collection->findOne(['id' => $_POST['copy']], ['projection' => ['modules'=> 1, 'fields' => 1]]);
+        if (!empty($copy)){
+            $values['modules'] = $copy['modules'] ?? [];
+            $values['fields'] = $copy['fields'] ?? [];
+        }
+    }
 
     $insertOneResult  = $collection->insertOne($values);
     // $id = $insertOneResult->getInsertedId();
