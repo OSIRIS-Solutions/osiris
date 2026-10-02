@@ -1,3 +1,13 @@
+
+
+<time datetime="2026-10-02">02.10.2026</time>
+<a class="anchor" href="#version-2.1.2" id="version-2.1.2"></a>
+
+## Version 2.1.2
+
+Wir haben Probleme mit dem Autoren- und Einheiten-Matching von Aktivitäten behoben [#619](https://github.com/OSIRIS-Solutions/osiris/issues/619). Außerdem haben wir ein paar kleinere Verbesserungen bei Projekten vorgenommen und ein Problem mit dem Date-Template behoben [#603](https://github.com/OSIRIS-Solutions/osiris/issues/603).
+
+
 <time datetime="2026-08-18">18.08.2026</time>
 <a class="anchor" href="#version-2.1.1" id="version-2.1.1"></a>
 
