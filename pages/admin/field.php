@@ -280,7 +280,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <td>
                     <?php if (!empty($projects)) { ?>
                         <?php foreach ($projects as $p) { ?>
-                            <a href="<?= ROOTPATH ?>/admin/projects/<?= $p['id'] ?>" class="badge primary">
+                            <a href="<?= ROOTPATH ?>/admin/projects/2/<?= $p['id'] ?>" class="badge primary">
                                 <i class="ph ph-folder-open ph-<?= $p['icon'] ?? '' ?>"></i>
                                 <?= lang($p['name'] ?? $p['id'], $p['name_de'] ?? null) ?>
                             </a>
