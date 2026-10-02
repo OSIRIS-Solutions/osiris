@@ -896,24 +896,24 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = ($_SESSION['username']);
 
-    // add information on units
-    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
+    // Recompute affiliations for role changes and activity date changes.
+    if (array_intersect(['authors', 'editors', 'supervisors', 'start', 'year', 'month', 'day', 'start_date'], array_keys($values))) {
         // check if authors have been changed
         $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
         foreach (['authors', 'editors', 'supervisors'] as $role) {
             $old_arr = DB::doc2Arr($old[$role] ?? []);
-            // filter old authors without user
-            $old_arr = array_filter($old_arr, function ($a) {
-                return !empty($a['user']);
-            });
-            // avoid updating users if last and first name are the same
-            foreach ($old_arr as $o) {
-                if (empty($o['user'])) continue;
-                foreach ($values[$role] as $i => $a) {
-                    if ($o['last'] == $a['last'] && $o['first'] == $a['first']) {
-                        $values[$role][$i]['user'] = $o['user'];
-                        break;
-                    }
+            // Restore omitted accounts only when the name is unique on both sides.
+            $current = $values[$role] ?? [];
+            foreach ($current as $i => $a) {
+                if (!empty($a['user'])) continue;
+                $sameName = function ($person) use ($a) {
+                    return ($person['last'] ?? '') === ($a['last'] ?? '')
+                        && ($person['first'] ?? '') === ($a['first'] ?? '');
+                };
+                $matches = array_values(array_filter($old_arr, $sameName));
+                if (count($matches) === 1 && count(array_filter($current, $sameName)) === 1
+                    && !empty($matches[0]['user'])) {
+                    $values[$role][$i]['user'] = $matches[0]['user'];
                 }
             }
         }
