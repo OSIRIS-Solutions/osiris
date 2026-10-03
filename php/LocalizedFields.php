@@ -14,6 +14,9 @@
  * - class: additional classes for a text input
  * - root: outer input name (default: values); null omits the outer name
  * - group: fields with the same group share one language switcher
+ * - show_tabs: render the switcher even when another field already controls the group
+ * - hide_label: keep the label accessible but hide it visually
+ * - list: datalist id for text inputs; {language} is replaced with the language key
  */
 function localizedField($form, string $name, string $label, array $options = []): void
 {
@@ -23,6 +26,7 @@ function localizedField($form, string $name, string $label, array $options = [])
     $baseLanguage = OSIRIS_BASE_LANGUAGE;
     $type = $options['type'] ?? 'text';
     $required = $options['required'] ?? false;
+    $hideLabel = $options['hide_label'] ?? false;
     $root = array_key_exists('root', $options) ? $options['root'] : 'values';
     if ($root !== null && !is_string($root)) {
         throw new InvalidArgumentException('The localized field root must be a string or null.');
@@ -32,6 +36,10 @@ function localizedField($form, string $name, string $label, array $options = [])
         throw new InvalidArgumentException('The localized field group must be a non-empty string or null.');
     }
     $inputClass = trim('form-control ' . ($options['class'] ?? ''));
+    $list = $options['list'] ?? null;
+    if ($list !== null && !is_string($list)) {
+        throw new InvalidArgumentException('The localized field list must be a string or null.');
+    }
     $translations = localizedFieldValues($form, $name, $baseLanguage);
     $configuredLanguages = $Settings->contentLanguages();
     $path = localizedFieldPath($name);
@@ -42,10 +50,12 @@ function localizedField($form, string $name, string $label, array $options = [])
     ));
 
     $fieldId = preg_replace('/[^A-Za-z0-9_-]/', '-', $name);
-    $showLanguageTabs = $group === null || !isset($renderedGroups[$group]);
-    $tabFieldId = $group === null ? $fieldId : ($renderedGroups[$group] ?? $fieldId);
-    if ($group !== null) {
-        $renderedGroups[$group] = $tabFieldId;
+    $showLanguageTabs = ($options['show_tabs'] ?? false) || $group === null || !isset($renderedGroups[$group]);
+    $tabFieldId = $showLanguageTabs || $group === null
+        ? $fieldId
+        : ($renderedGroups[$group] ?? $fieldId);
+    if ($group !== null && !isset($renderedGroups[$group])) {
+        $renderedGroups[$group] = $fieldId;
     }
     ?>
     <div class="form-group localized-field"
@@ -53,7 +63,8 @@ function localizedField($form, string $name, string $label, array $options = [])
          <?= $group === null ? '' : 'data-localized-group="' . e($group) . '"' ?>
          data-base-language="<?= e($baseLanguage) ?>">
         <div class="localized-field-heading">
-            <label for="<?= e($fieldId . '-' . $baseLanguage) ?>" class="<?= $required ? 'required' : '' ?>">
+            <label for="<?= e($fieldId . '-' . $baseLanguage) ?>"
+                   class="<?= trim(($required ? 'required ' : '') . ($hideLabel ? 'sr-only' : '')) ?>">
                 <?= $label ?>
             </label>
             <?php if ($showLanguageTabs) { ?>
@@ -131,7 +142,8 @@ function localizedField($form, string $name, string $label, array $options = [])
                         $translation,
                         $type,
                         $inputClass,
-                        $required && $isBaseLanguage
+                        $required && $isBaseLanguage,
+                        $list === null ? null : str_replace('{language}', $language, $list)
                     ); ?>
                 </div>
             <?php } ?>
@@ -256,7 +268,8 @@ function renderLocalizedFieldInput(
     $value,
     string $type,
     string $inputClass,
-    bool $required
+    bool $required,
+    ?string $list = null
 ): void {
     $id = $fieldId . '-' . $language;
     $inputName = localizedFieldInputName($path, $root, $language);
@@ -273,6 +286,7 @@ function renderLocalizedFieldInput(
                name="<?= e($inputName) ?>"
                id="<?= e($id) ?>"
                value="<?= e($value) ?>"
+               <?= $list === null ? '' : 'list="' . e($list) . '"' ?>
                <?= $required ? 'required' : '' ?>>
     <?php }
 }

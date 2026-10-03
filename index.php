@@ -177,6 +177,25 @@ function apiLocalizedFields(array $document, array $fields): array
 }
 
 /**
+ * Localize every entry in a list of language maps.
+ */
+function apiLocalizedList($values): array
+{
+    if ($values instanceof Traversable) $values = iterator_to_array($values);
+    if (!is_array($values)) $values = [];
+
+    $result = [];
+    foreach ($values as $value) {
+        if ($value instanceof Traversable) $value = iterator_to_array($value);
+        if (!is_array($value)) continue;
+
+        $localizedValue = apiLocalized($value);
+        if ($localizedValue !== '' && $localizedValue !== []) $result[] = $localizedValue;
+    }
+    return $result;
+}
+
+/**
  * Backwards-compatible wrapper for interface keys and legacy EN/DE calls.
  */
 function lang($en, ?string $de = null, array $replace = []): string

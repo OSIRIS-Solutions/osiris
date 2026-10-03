@@ -1831,20 +1831,8 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     }
 
 
-    if ($person['research'] ?? false) {
-        $person['research_de'] = $person['research_de'] ?? [];
-        // $person['research_de'] = array_map(
-        //     fn($val1, $val2) => empty($val1) ? $val2 : $val1,
-        //     DB::doc2Arr($person['research_de'] ?? $person['research']),
-        //     DB::doc2Arr($person['research'])
-        // );
-        $result['research'] = [];
-        foreach ($person['research'] as $key => $value) {
-            $result['research'][] = [
-                'en' => $value,
-                'de' => $person['research_de'][$key] ?? null
-            ];
-        }
+    if (!empty($person['research'])) {
+        $result['research'] = apiLocalizedList($person['research']);
     }
 
     $user = $person['username'];

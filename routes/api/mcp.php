@@ -422,6 +422,11 @@ function mcp_matching_strings($value, string $query): array
 {
     $matches = [];
     foreach (DB::doc2Arr($value ?? []) as $item) {
+        if ($item instanceof Traversable) $item = iterator_to_array($item);
+        if (is_array($item)) {
+            $matches = array_merge($matches, mcp_matching_strings($item, $query));
+            continue;
+        }
         if (is_string($item) && preg_match('/' . preg_quote($query, '/') . '/iu', $item)) {
             $matches[] = mcp_text($item, 300);
         }
@@ -1072,10 +1077,10 @@ Route::get('/api/mcp/experts', function () {
 
     $expertiseClauses = [
         ['expertise' => ['$regex' => $regex]],
-        ['research' => ['$regex' => $regex]],
-        ['research_de' => ['$regex' => $regex]],
     ];
     foreach ($Settings->contentLanguages() as $language) {
+        if ($language === 'keys') continue;
+        $expertiseClauses[] = ["research.$language" => ['$regex' => $regex]];
         $expertiseClauses[] = ["research_profile.$language" => ['$regex' => $regex]];
     }
     if (!empty($topicIds)) {
@@ -1110,7 +1115,6 @@ Route::get('/api/mcp/experts', function () {
                 'units' => 1,
                 'expertise' => 1,
                 'research' => 1,
-                'research_de' => 1,
                 'research_profile' => 1,
                 'topics' => 1,
             ],
@@ -1125,7 +1129,6 @@ Route::get('/api/mcp/experts', function () {
         $evidence = [
             'expertise' => mcp_matching_strings($person['expertise'] ?? [], $query),
             'research_interests' => mcp_matching_strings($person['research'] ?? [], $query),
-            'research_interests_de' => mcp_matching_strings($person['research_de'] ?? [], $query),
             'topics' => [],
             'openalex_topics' => $openAlexByUser[$person['username']] ?? [],
         ];
@@ -1147,7 +1150,6 @@ Route::get('/api/mcp/experts', function () {
         $expert['_relevance'] =
             count($evidence['expertise']) * 100 +
             count($evidence['research_interests']) * 80 +
-            count($evidence['research_interests_de']) * 80 +
             count($evidence['topics']) * 60 +
             (!empty($evidence['research_profile']) ? 40 : 0) +
             count($evidence['openalex_topics']) * 10;
@@ -1206,7 +1208,6 @@ Route::get('/api/mcp/persons/([^/]+)', function ($id) {
             'orcid' => 1,
             'expertise' => 1,
             'research' => 1,
-            'research_de' => 1,
             'research_profile' => 1,
             'biography' => 1,
             'education' => 1,
@@ -1225,10 +1226,7 @@ Route::get('/api/mcp/persons/([^/]+)', function ($id) {
     $result = mcp_person_summary($person, $Groups);
     $result['orcid'] = $person['orcid'] ?? null;
     $result['expertise'] = mcp_strings($person['expertise'] ?? []);
-    $result['research_interests'] = [
-        'en' => mcp_strings($person['research'] ?? []),
-        'de' => mcp_strings($person['research_de'] ?? []),
-    ];
+    $result['research_interests'] = apiLocalizedList($person['research'] ?? []);
     $result['topics'] = mcp_person_topics($person['topics'] ?? [], $osiris);
     $result['research_profile'] = mcp_localized_text($person['research_profile'] ?? '', 2000);
     $result['biography'] = mcp_localized_text($person['biography'] ?? '', 2000);

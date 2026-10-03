@@ -554,6 +554,31 @@ Route::post('/crud/users/update/(.*)', function ($user) {
 
     $values = $_POST['values'];
     $values = validateValues($values, $DB);
+
+    if (isset($_POST['research_submitted'])) {
+        $allowedLanguages = array_values(array_unique(array_merge(
+            [OSIRIS_BASE_LANGUAGE],
+            array_filter($Settings->contentLanguages(), fn($language) => $language !== 'keys')
+        )));
+        $research = [];
+        foreach (DB::doc2Arr($values['research'] ?? []) as $entry) {
+            $entry = DB::doc2Arr($entry);
+            if (!is_array($entry)) continue;
+
+            $translations = [];
+            foreach ($allowedLanguages as $language) {
+                $translation = $entry[$language] ?? null;
+                if (!is_string($translation) && !is_numeric($translation)) continue;
+                $translation = trim((string) $translation);
+                if ($translation !== '') $translations[$language] = $translation;
+            }
+            if (empty($translations[OSIRIS_BASE_LANGUAGE])) continue;
+            $research[] = $translations;
+            if (count($research) === 5) break;
+        }
+        $values['research'] = $research;
+    }
+
     // separate personal and account information
     $person = $values;
     // $account = [];

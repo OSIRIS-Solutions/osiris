@@ -237,7 +237,7 @@ class PersonFields extends Fields
                 "label" => lang('people.hide_in_portfolio_person_fields'),
             ],
             [
-                "id" => "research",
+                "id" => "research.$contentLanguage",
                 "module_of" => $typeModules['research'] ?? [],
                 'usage' => [
                     'aggregate',

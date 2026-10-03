@@ -25,23 +25,38 @@ function addName(evt, el) {
 }
 
 function addResearchInterest(evt) {
-    if ($('.research-interest').length >= 5) {
+    const list = document.getElementById('research-interests');
+    const template = document.getElementById('research-interest-template');
+    if (!list || !template) return;
+
+    if (list.querySelectorAll(':scope > .research-interest').length >= 5) {
         toastError(lang('people.max_5_research_interests'));
         return;
     }
 
-    var tr = `
-            <tr class="research-interest">
-                <td>
-                    <input type="text" name="values[research][]" list="research-list" required class="form-control">
-                </td>
-                <td>
-                    <input type="text" name="values[research_de][]" list="research-list-de" class="form-control">
-                </td>
-                <td><a class="btn text-danger" onclick="$(this).closest('.research-interest').remove();"><i class="ph ph-trash"></i></a></td>
-            </tr>
-            `;
-    $('#research-interests').append(tr);
+    const activeLanguage = list.querySelector('.localized-language-tab.active')?.dataset.language;
+    const index = Number(list.dataset.nextIndex || 0);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = template.innerHTML.replaceAll('__INDEX__', String(index)).trim();
+    const row = wrapper.firstElementChild;
+    list.appendChild(row);
+    list.dataset.nextIndex = String(index + 1);
+
+    const tab = activeLanguage
+        ? Array.from(row.querySelectorAll('.localized-language-tab'))
+            .find(item => item.dataset.language === activeLanguage)
+        : row.querySelector('.localized-language-tab.active');
+    if (tab) selectLocalizedLanguage(tab, false);
+    row.querySelectorAll('.localized-value').forEach(updateLocalizedLanguageStatus);
+
+    const input = row.querySelector('.localized-language-panel:not([hidden]) .localized-value');
+    input?.focus();
+}
+
+function removeResearchInterest(button) {
+    const list = button.closest('#research-interests');
+    button.closest('.research-interest')?.remove();
+    list?.querySelectorAll('.localized-value').forEach(updateLocalizedLanguageStatus);
 }
 
 $(document).ready(function () {

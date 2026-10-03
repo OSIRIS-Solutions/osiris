@@ -66,6 +66,34 @@ $active = function ($field) use ($data_fields) {
         cursor: not-allowed;
         box-shadow: none;
     }
+
+    #research-interests {
+        margin-top: 1rem;
+    }
+
+    .research-interest {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: .8rem;
+        align-items: end;
+    }
+
+
+    .research-interest .localized-field {
+        min-width: 0;
+    }
+
+    .research-interest+.research-interest .localized-language-tabs {
+        display: none;
+    }
+
+    .research-interest+.research-interest .localized-field-heading {
+        display: none;
+    }
+
+    .research-interest-remove {
+        margin-bottom: 1.8rem;
+    }
 </style>
 
 <h1 class="mt-0">
@@ -549,14 +577,14 @@ $active = function ($field) use ($data_fields) {
                             if (confirm('<?= lang('people.are_you_sure_you_want_to_disconnect_your_orcid') ?>')) {
                                 // /crud/orcid/disconnect
                                 fetch('<?= ROOTPATH ?>/crud/orcid/disconnect', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        username: '<?= $data['username'] ?>'
-                                    })
-                                }).then(response => response.json())
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            username: '<?= $data['username'] ?>'
+                                        })
+                                    }).then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
                                             alert('<?= lang('people.orcid_disconnected_successfully') ?>');
@@ -691,9 +719,9 @@ $active = function ($field) use ($data_fields) {
             <h4>
                 <?= lang('people.contact_button') ?>
             </h4>
-            <?php 
-                $contact_button = $data['contact-button'] ?? false;
-                $contact_button_type = $data['contact-button-type'] ?? 'mail';
+            <?php
+            $contact_button = $data['contact-button'] ?? false;
+            $contact_button_type = $data['contact-button-type'] ?? 'mail';
             ?>
 
             <div class="form-group">
@@ -714,7 +742,7 @@ $active = function ($field) use ($data_fields) {
                     <div class="col-sm">
                         <label for="contact-button-type"><?= lang('common.contact_type') ?></label>
                         <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
-                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
+                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) {
                                 if (!$enabled) continue; ?>
                                 <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
                             <?php } ?>
@@ -722,7 +750,7 @@ $active = function ($field) use ($data_fields) {
                     </div>
                     <div class="col-sm">
                         <label for="contact"><?= lang('common.contact') ?></label>
-                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
+                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact" value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
                         <small class="text-muted" id="contact-button-input-help"></small>
                     </div>
                 </div>
@@ -747,7 +775,7 @@ $active = function ($field) use ($data_fields) {
                         if (type === 'mail' || type === 'teams') {
                             contactInput.attr('placeholder', '<?= lang('people.enter_email_address') ?>');
                             contactHelp.text('<?= lang('people.please_add_an_email_address_it_will_be_used_for_the_contact_button') ?>');
-                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
+                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams') && '<?= $data['contact'] ?? false ?>') {
                                 contactInput.val('<?= $data['contact'] ?? '' ?>');
                             } else if ('<?= $data['mail'] ?? false ?>') {
                                 contactInput.val('<?= $data['mail'] ?>');
@@ -786,7 +814,6 @@ $active = function ($field) use ($data_fields) {
                         }
                         validateContact(contactInput);
                     }
-
                 </script>
             </div>
         <?php } ?>
@@ -1270,55 +1297,82 @@ $active = function ($field) use ($data_fields) {
 
         <?php if ($active('research')) { ?>
             <h2 class="title">
-                <?= lang('common.research_interests') ?>
+                <?= lang('common.research_interests') ?> <small class="text-muted">Max. 5</small>
             </h2>
 
-            <!-- ensure to save empty research interests -->
-            <input type="hidden" name="values[research]" value="">
-            <small class="text-muted">Max. 5</small><br>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th><label for="research" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label></th>
-                        <th><label for="research_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="research-interests">
-                    <?php
-                    $data['research_de'] = $data['research_de'] ?? array();
-                    foreach (($data['research'] ?? array()) as $i => $n) {
-                        $n_de = $data['research_de'][$i] ?? '';
-                    ?>
-                        <tr class="research-interest">
-                            <td>
-                                <input type="text" name="values[research][]" value="<?= $n ?>" list="research-list" required class="form-control">
-                            </td>
-                            <td>
-                                <input type="text" name="values[research_de][]" value="<?= $n_de ?>" list="research-list-de" class="form-control">
-                            </td>
-                            <td><a class="btn text-danger" onclick="$(this).closest('.research-interest').remove();"><i class="ph ph-trash"></i></a></td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
+            <input type="hidden" name="research_submitted" value="1">
 
-            <button class="btn" type="button" onclick="addResearchInterest(event);">
+            <?php
+            $research = DB::doc2Arr($data['research'] ?? []);
+            if (!is_array($research)) $research = [];
+            $researchForm = ['research' => $research];
+            ?>
+            <div id="research-interests" data-next-index="<?= count($research) ?>">
+                <?php foreach ($research as $i => $translations) { ?>
+                    <div class="research-interest">
+                        <?php localizedField(
+                            $researchForm,
+                            "research.$i",
+                            lang('common.research_interests'),
+                            [
+                                'required' => true,
+                                'group' => 'person-research',
+                                'show_tabs' => true,
+                                'hide_label' => ($i > 0),
+                                'list' => 'research-list-{language}',
+                            ]
+                        ); ?>
+                        <button type="button" class="btn text-danger research-interest-remove"
+                            title="<?= e(lang('action.delete')) ?>"
+                            aria-label="<?= e(lang('action.delete')) ?>"
+                            onclick="removeResearchInterest(this)">
+                            <i class="ph ph-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <template id="research-interest-template">
+                <div class="research-interest">
+                    <?php localizedField(
+                        ['research' => ['__INDEX__' => []]],
+                        'research.__INDEX__',
+                        lang('common.research_interests'),
+                        [
+                            'required' => true,
+                            'group' => 'person-research',
+                            'show_tabs' => true,
+                            'hide_label' => true,
+                            'list' => 'research-list-{language}',
+                        ]
+                    ); ?>
+                    <button type="button" class="btn text-danger research-interest-remove"
+                        title="<?= e(lang('action.delete')) ?>"
+                        aria-label="<?= e(lang('action.delete')) ?>"
+                        onclick="removeResearchInterest(this)">
+                        <i class="ph ph-trash" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </template>
+
+            <button class="btn mb-20" type="button" onclick="addResearchInterest(event);">
                 <i class="ph ph-plus"></i>
             </button>
 
-            <datalist id="research-list">
-                <?php
-                foreach ($osiris->persons->distinct('research') as $d) { ?>
-                    <option><?= $d ?></option>
-                <?php } ?>
-            </datalist>
-            <datalist id="research-list-de">
-                <?php
-                foreach ($osiris->persons->distinct('research_de') as $d) { ?>
-                    <option><?= $d ?></option>
-                <?php } ?>
-            </datalist>
+            <?php foreach ($Settings->contentLanguages() as $language) {
+                if ($language === 'keys') continue;
+                $suggestions = DB::doc2Arr($osiris->persons->distinct("research.$language"));
+                $suggestions = array_values(array_unique(array_map(
+                    'strval',
+                    array_filter($suggestions, fn($suggestion) => is_string($suggestion) || is_numeric($suggestion))
+                )));
+            ?>
+                <datalist id="research-list-<?= e($language) ?>">
+                    <?php foreach ($suggestions as $suggestion) { ?>
+                        <option value="<?= e($suggestion) ?>"></option>
+                    <?php } ?>
+                </datalist>
+            <?php } ?>
 
 
         <?php } ?>

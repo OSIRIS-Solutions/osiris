@@ -96,6 +96,7 @@ migrationCard(
 
 $updated = 0;
 $unchanged = 0;
+$researchLengthMismatches = 0;
 
 foreach ($osiris->persons->find() as $document) {
     $person = DB::doc2Arr($document);
@@ -115,6 +116,36 @@ foreach ($osiris->persons->find() as $document) {
         }
     }
 
+    if (array_key_exists('research', $person) || array_key_exists('research_de', $person)) {
+        $research = DB::doc2Arr($person['research'] ?? []);
+        $researchGerman = DB::doc2Arr($person['research_de'] ?? []);
+        if (!is_array($research)) $research = [];
+        if (!is_array($researchGerman)) $researchGerman = [];
+
+        if (array_key_exists('research_de', $person) && count($research) !== count($researchGerman)) {
+            $researchLengthMismatches++;
+        }
+
+        $localizedResearch = [];
+        $researchCount = max(count($research), count($researchGerman));
+        for ($i = 0; $i < $researchCount; $i++) {
+            $translations = $toLanguageMap($research[$i] ?? null, $researchGerman[$i] ?? null);
+            $translations = array_filter(
+                $translations,
+                fn($translation) => (is_string($translation) || is_numeric($translation))
+                    && trim((string) $translation) !== ''
+            );
+            if (!empty($translations)) $localizedResearch[] = $translations;
+        }
+
+        if ($research !== $localizedResearch) {
+            $set['research'] = $localizedResearch;
+        }
+        if (array_key_exists('research_de', $person)) {
+            $unset['research_de'] = '';
+        }
+    }
+
     if (empty($set) && empty($unset)) {
         $unchanged++;
         continue;
@@ -130,7 +161,9 @@ foreach ($osiris->persons->find() as $document) {
 migrationCard(
     'Person profile localization migrated',
     'Lokalisierung der Personenprofile migriert',
-    "Research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date.",
-    "Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell.",
+    "Research interests, research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date."
+        . ($researchLengthMismatches > 0 ? " $researchLengthMismatches records had different EN/DE research list lengths; all existing entries were preserved by their position." : ''),
+    "Forschungsinteressen, Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell."
+        . ($researchLengthMismatches > 0 ? " Bei $researchLengthMismatches Datensätzen waren die EN/DE-Listen unterschiedlich lang; alle vorhandenen Einträge wurden anhand ihrer Position erhalten." : ''),
     $updated
 );

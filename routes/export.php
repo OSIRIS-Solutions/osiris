@@ -374,7 +374,7 @@ Route::post('/download', function () {
                 $section->addTitle(lang('common.research_interests'), 2);
                 foreach ($scientist['research'] as $key) {
                     $paragraph = $section->addListItemRun(0);
-                    $line = clean_comment_export($key, false);
+                    $line = clean_comment_export(localized($key), false);
                     \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line);
                 }
             }

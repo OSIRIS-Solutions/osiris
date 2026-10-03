@@ -523,6 +523,9 @@ Route::get('/api/users', function () {
     if (isset($_GET['full'])) {
         foreach ($result as &$person) {
             $person = apiLocalizedFields(DB::doc2Arr($person), ['research_profile', 'biography', 'education']);
+            if (array_key_exists('research', $person)) {
+                $person['research'] = apiLocalizedList($person['research']);
+            }
         }
         unset($person);
         echo return_rest($result, count($result));
@@ -655,6 +658,9 @@ Route::get('/api/users/(.*)', function ($id) {
     }
 
     $user = apiLocalizedFields(DB::doc2Arr($user), ['research_profile', 'biography', 'education']);
+    if (array_key_exists('research', $user)) {
+        $user['research'] = apiLocalizedList($user['research']);
+    }
     echo return_rest($user, 1);
 });
 
@@ -1147,7 +1153,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
             if (in_array(explode('.', $c)[0], $unwinds)) {
                 $unwind[] = ['$unwind' => '$' . explode('.', $c)[0]];
             }
-            if ($type === 'persons' && in_array(explode('.', $c)[0], ['research_profile', 'biography', 'education'], true)) {
+            if ($type === 'persons' && in_array(explode('.', $c)[0], ['research', 'research_profile', 'biography', 'education'], true)) {
                 $rootField = explode('.', $c)[0];
                 $projection[$rootField] = '$' . $rootField;
                 continue;

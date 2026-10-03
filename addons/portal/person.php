@@ -48,7 +48,7 @@
                     </h2>
                     <ul class="list">
                         <?php foreach ($data['research'] as $item): ?>
-                            <li><?= lang($item['en'] ?? $item, $item['de'] ?? null) ?></li>
+                            <li><?= e(is_array($item) ? localized($item) : $item) ?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
