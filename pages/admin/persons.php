@@ -19,6 +19,27 @@
     h2 i {
         color: var(--primary-color);
     }
+
+    .position-vocabulary-row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: .8rem;
+        align-items: end;
+        margin-bottom: 1.2rem;
+    }
+
+    .position-vocabulary-row .localized-field-heading {
+        justify-content: flex-end;
+    }
+
+    .position-vocabulary-row + .position-vocabulary-row .localized-field-heading {
+        display: none;
+    }
+
+    .position-vocabulary-row .handle,
+    .position-vocabulary-remove {
+        margin-bottom: 1.8rem;
+    }
 </style>
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
@@ -328,8 +349,12 @@ $persons = $osiris->adminPersons->find();
 
                 <?php
                 $staff = $Settings->get('staff');
-                $staffPos = $staff['positions'] ?? [];
+                $staffPos = array_map(
+                    fn($position) => DB::doc2Arr($position),
+                    DB::doc2Arr($staff['positions'] ?? [])
+                );
                 $staffFree = $staff['free'] ?? true;
+                $staffForm = ['positions' => $staffPos];
                 ?>
 
 
@@ -361,55 +386,45 @@ $persons = $osiris->adminPersons->find();
                     <?= lang('admin.this_list_will_only_be_used_if_you_select_defined_selection_above') ?>
                 </small>
 
-                <table class="table simple small my-20">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Position (english)</th>
-                            <th>Position (deutsch)</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="possible-positions">
-                        <?php foreach ($staffPos as $value) {
-                            if ($value instanceof \MongoDB\BSON\Document) {
-                                $value = DB::doc2Arr($value);
-                            }
-                            // dump type of value
-                            if (is_array($value) || is_object($value)) {
-                                $de = $value[1] ?? $value[0];
-                                $en = $value[0];
-                            } else {
-                                $en = $value;
-                                $de = $value;
-                            }
-                        ?>
-                            <tr>
-                                <td class="w-50">
-                                    <i class="ph ph-dots-six-vertical text-muted handle"></i>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="staff[positions][]" value="<?= $en ?>" required>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="staff[positions_de][]" value="<?= $de ?>">
-                                </td>
-                                <td>
-                                    <a onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                <div id="possible-positions" class="my-20" data-next-index="<?= count($staffPos) ?>">
+                    <?php foreach ($staffPos as $index => $position) { ?>
+                        <div class="position-vocabulary-row">
+                            <i class="ph ph-dots-six-vertical text-muted handle"></i>
+                            <?php localizedField($staffForm, "positions.$index", lang('common.position'), [
+                                'root' => 'staff',
+                                'required' => true,
+                                'group' => 'staff-positions',
+                                'show_tabs' => true,
+                                'hide_label' => true,
+                            ]); ?>
+                            <button type="button" class="btn text-danger position-vocabulary-remove"
+                                    aria-label="<?= e(lang('action.delete')) ?>"
+                                    onclick="removePositionRow(this)">
+                                <i class="ph ph-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    <?php } ?>
+                </div>
 
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="w-50 bg-white"></td>
-                            <td colspan="3" class="bg-white">
-                                <button class="btn" type="button" onclick="addValuesRow()"><i class="ph ph-plus-circle"></i></button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <template id="position-vocabulary-template">
+                    <div class="position-vocabulary-row">
+                        <i class="ph ph-dots-six-vertical text-muted handle"></i>
+                        <?php localizedField(['positions' => ['__INDEX__' => []]], 'positions.__INDEX__', lang('common.position'), [
+                            'root' => 'staff',
+                            'required' => true,
+                            'group' => 'staff-positions',
+                            'show_tabs' => true,
+                            'hide_label' => true,
+                        ]); ?>
+                        <button type="button" class="btn text-danger position-vocabulary-remove"
+                                aria-label="<?= e(lang('action.delete')) ?>"
+                                onclick="removePositionRow(this)">
+                            <i class="ph ph-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </template>
+
+                <button class="btn" type="button" onclick="addValuesRow()"><i class="ph ph-plus-circle"></i></button>
 
             </div>
 
@@ -488,21 +503,28 @@ $persons = $osiris->adminPersons->find();
 
 
     function addValuesRow() {
-        $('#possible-positions').append(`
-        <tr>
-            <td class="w-50">
-                <i class="ph ph-dots-six-vertical text-muted handle"></i>
-            </td>
-            <td>
-                <input type="text" class="form-control" name="staff[positions][]" required>
-            </td>
-            <td>
-                <input type="text" class="form-control" name="staff[positions_de][]">
-            </td>
-            <td>
-                <a onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></a>
-            </td>
-        </tr>
-    `);
+        const list = document.getElementById('possible-positions');
+        const template = document.getElementById('position-vocabulary-template');
+        const activeLanguage = list.querySelector('.localized-language-tab.active')?.dataset.language;
+        const index = Number(list.dataset.nextIndex || 0);
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = template.innerHTML.replaceAll('__INDEX__', String(index)).trim();
+        const row = wrapper.firstElementChild;
+        list.appendChild(row);
+        list.dataset.nextIndex = String(index + 1);
+
+        const tab = activeLanguage
+            ? Array.from(row.querySelectorAll('.localized-language-tab'))
+                .find(item => item.dataset.language === activeLanguage)
+            : row.querySelector('.localized-language-tab.active');
+        if (tab) selectLocalizedLanguage(tab, false);
+        row.querySelectorAll('.localized-value').forEach(updateLocalizedLanguageStatus);
+        row.querySelector('.localized-language-panel:not([hidden]) .localized-value')?.focus();
+    }
+
+    function removePositionRow(button) {
+        const list = button.closest('#possible-positions');
+        button.closest('.position-vocabulary-row')?.remove();
+        list?.querySelectorAll('.localized-value').forEach(updateLocalizedLanguageStatus);
     }
 </script>

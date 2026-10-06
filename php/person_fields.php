@@ -204,7 +204,7 @@ class PersonFields extends Fields
                 "label" => lang('common.internal_id')
             ],
             [
-                "id" => "position",
+                "id" => "position.$contentLanguage",
                 "module_of" => $typeModules['position'] ?? [],
                 'usage' => [
                     'aggregate',

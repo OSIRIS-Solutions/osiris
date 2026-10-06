@@ -249,7 +249,7 @@ $numbers = $data['numbers'] ?? [
                                             <?= $h['name'] ?>
                                         </h5>
                                         <small>
-                                            <?= lang($h['position'], $h['position_de'] ?? null) ?>
+                                            <?= e(localized($h['position'] ?? '')) ?>
                                         </small>
                                     </div>
                                 </a>
@@ -357,7 +357,7 @@ $numbers = $data['numbers'] ?? [
                                             </a>
                                         </h5>
                                         <small>
-                                            <?= lang($s['position'] ?? '', $s['position_de'] ?? null) ?>
+                                            <?= e(localized($s['position'] ?? '')) ?>
                                         </small>
                                     </div>
                                 </td>

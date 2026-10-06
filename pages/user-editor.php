@@ -327,43 +327,42 @@ $active = function ($field) use ($data_fields) {
 
             <?php if ($active('position')) { ?>
                 <div class="form-group">
-                    <label for="position">
-                        <h5><?= lang('common.current_position') ?></h5>
-                    </label>
-
                     <?php
                     $staff = $Settings->get('staff');
-                    $staffPos = $staff['positions'] ?? [];
+                    $staffPos = array_map(
+                        fn($position) => DB::doc2Arr($position),
+                        DB::doc2Arr($staff['positions'] ?? [])
+                    );
                     $staffFree = $staff['free'] ?? true;
                     ?>
                     <?php if ($staffFree) { ?>
-                        <div class="row row-eq-spacing my-0">
-                            <div class="col-md-6">
-                                <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                <input name="values[position]" id="position" type="text" class="form-control" value="<?= e($data['position'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
-                                <?php if (in_array('position', $ldap_fields)) {
-                                    echo $ldap_msg;
-                                } ?>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= e($data['position_de'] ?? '') ?>" <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
-                                <?php if (in_array('position', $ldap_fields)) {
-                                    echo $ldap_msg;
-                                } ?>
-                            </div>
-                        </div>
+                        <?php localizedField($data, 'position', lang('common.current_position'), [
+                            'disabled' => in_array('position', $ldap_fields),
+                        ]); ?>
+                        <?php if (in_array('position', $ldap_fields)) echo $ldap_msg; ?>
                     <?php } else { ?>
-                        <!-- select list from predifined pos -->
-                        <select name="values[position_both]" id="position" class="form-control">
+                        <?php
+                        $currentPosition = DB::doc2Arr($data['position'] ?? []);
+                        $selectedPosition = null;
+                        foreach ($staffPos as $index => $position) {
+                            if ($position == $currentPosition) $selectedPosition = (string) $index;
+                        }
+                        $hasCurrentPosition = localized($currentPosition) !== '';
+                        ?>
+                        <label for="position"><h5><?= lang('common.current_position') ?></h5></label>
+                        <select name="position_vocabulary" id="position" class="form-control"
+                                <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
                             <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
-                            <?php foreach ($staffPos as $pos) {
-                                $en = $pos[0] ?? '-';
-                                $de = $pos[1] ?? '-';
-                            ?>
-                                <option value="<?= $en ?>;;<?= $de ?>" <?= ($data['position'] ?? '') == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
+                            <?php if ($selectedPosition === null && $hasCurrentPosition) { ?>
+                                <option value="current" selected><?= e(localized($currentPosition)) ?></option>
+                            <?php } ?>
+                            <?php foreach ($staffPos as $index => $position) { ?>
+                                <option value="<?= $index ?>" <?= $selectedPosition === (string) $index ? 'selected' : '' ?>>
+                                    <?= e(localized($position)) ?>
+                                </option>
                             <?php } ?>
                         </select>
+                        <?php if (in_array('position', $ldap_fields)) echo $ldap_msg; ?>
                     <?php } ?>
 
                 </div>

@@ -1311,7 +1311,7 @@ $lastquarter = $Y . "Q" . $Q;
                             [
                                 'sort' => ['created' => -1],
                                 'limit' => 3,
-                                'projection' => ['username' => 1, 'displayname' => 1, 'position' => 1, 'position_de' => 1, 'created' => 1]
+                                'projection' => ['username' => 1, 'displayname' => 1, 'position' => 1, 'created' => 1]
                             ]
                         )->toArray();
                         ?>
@@ -1323,8 +1323,8 @@ $lastquarter = $Y . "Q" . $Q;
                                         <?= $colleague['displayname'] ?? $colleague['username'] ?>
                                     </div>
                                     <div class="info">
-                                        <?php if (!empty($colleague['position'] ?? null) || !empty($colleague['position_de'] ?? null)) { ?>
-                                            <?= lang($colleague['position'] ?? '', $colleague['position_de'] ?? null) ?>
+                                        <?php if (!empty(localized($colleague['position'] ?? null))) { ?>
+                                            <?= e(localized($colleague['position'])) ?>
                                             &#x2219;
                                         <?php } ?>
                                         <?= lang('dashboard.added_home') . time_elapsed_string($colleague['created']) ?>

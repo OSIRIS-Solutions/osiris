@@ -34,7 +34,7 @@
                     <?php if (!empty($data['inactive'])): ?>
                         <?= lang('people.former_employee') ?>
                     <?php else: ?>
-                        <?= lang($data['position'], $data['position_de'] ?? null) ?>
+                        <?= e(localized($data['position'] ?? '')) ?>
                     <?php endif; ?>
                 </p>
             </div>

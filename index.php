@@ -142,36 +142,26 @@ function apiLanguage(): string
  */
 function apiLocalized($value)
 {
+    if (is_string($value) || is_numeric($value)) {
+        return (string) $value;
+    }
     if (apiLanguage() !== 'all') {
         return localized($value, apiLanguage());
     }
     if ($value instanceof Traversable) {
         $value = iterator_to_array($value);
     }
-    return is_array($value) ? $value : [OSIRIS_BASE_LANGUAGE => (string) $value];
+    return is_array($value) ? $value : '';
 }
 
 /**
- * Localize selected document fields and remove their legacy *_de companions.
+ * Localize selected document fields.
  */
 function apiLocalizedFields(array $document, array $fields): array
 {
     foreach ($fields as $field) {
-        $legacyField = $field . '_de';
-        if (!array_key_exists($field, $document) && !array_key_exists($legacyField, $document)) continue;
-
-        $value = $document[$field] ?? '';
-        $legacyGerman = $document[$legacyField] ?? null;
-        if (apiLanguage() === 'all' && !is_array($value) && !is_object($value)) {
-            $translations = [OSIRIS_BASE_LANGUAGE => (string) $value];
-            if ($legacyGerman !== null && $legacyGerman !== '') $translations['de'] = $legacyGerman;
-            $document[$field] = $translations;
-        } elseif (apiLanguage() === 'de' && $legacyGerman !== null && !is_array($value) && !is_object($value)) {
-            $document[$field] = $legacyGerman;
-        } else {
-            $document[$field] = apiLocalized($value);
-        }
-        unset($document[$legacyField]);
+        if (!array_key_exists($field, $document)) continue;
+        $document[$field] = apiLocalized($document[$field]);
     }
     return $document;
 }
@@ -186,6 +176,10 @@ function apiLocalizedList($values): array
 
     $result = [];
     foreach ($values as $value) {
+        if (is_string($value) || is_numeric($value)) {
+            $result[] = (string) $value;
+            continue;
+        }
         if ($value instanceof Traversable) $value = iterator_to_array($value);
         if (!is_array($value)) continue;
 

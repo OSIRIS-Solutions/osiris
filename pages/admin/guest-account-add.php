@@ -131,32 +131,22 @@ include_once BASEPATH . '/header-editor.php';
     </div>
 
     <div class="form-group">
-        <h5><?= lang('common.current_position') ?></h5>
         <?php
         $staff = $Settings->get('staff');
-        $staffPos = $staff['positions'] ?? [];
+        $staffPos = array_map(
+            fn($position) => DB::doc2Arr($position),
+            DB::doc2Arr($staff['positions'] ?? [])
+        );
         $staffFree = $staff['free'] ?? true;
         ?>
         <?php if ($staffFree) { ?>
-            <div class="row row-eq-spacing my-0">
-                <div class="col-md-6">
-                    <label for="position" class="d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                    <input name="values[position]" id="position" type="text" class="form-control" value="<?= e($data['position'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label for="position_de" class="d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                    <input name="values[position_de]" id="position_de" type="text" class="form-control" value="<?= e($data['position_de'] ?? '') ?>">
-                </div>
-            </div>
+            <?php localizedField($data, 'position', lang('common.current_position')); ?>
         <?php } else { ?>
-            <!-- select list from predifined pos -->
-            <select name="values[position_both]" id="position" class="form-control">
+            <label for="position"><h5><?= lang('common.current_position') ?></h5></label>
+            <select name="position_vocabulary" id="position" class="form-control">
                 <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
-                <?php foreach ($staffPos as $pos) {
-                    $en = $pos[0] ?? '-';
-                    $de = $pos[1] ?? '-';
-                ?>
-                    <option value="<?= $en ?>;;<?= $de ?>" <?= ($data['position'] ?? '') == $en ? 'selected' : '' ?>><?= $en ?> // <?= $de ?></option>
+                <?php foreach ($staffPos as $index => $position) { ?>
+                    <option value="<?= $index ?>"><?= e(localized($position)) ?></option>
                 <?php } ?>
             </select>
         <?php } ?>

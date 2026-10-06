@@ -701,8 +701,7 @@ return [
     'connect_taglabel' => 'Connect {{tagLabel}}',
     'files_may_be_up_to_filesizelimit_in_size' => 'Files may be up to {{fileSizeLimit}} in size.',
     'ida_integration' => 'IDA-Integration',
-    'osiris_has_not_been_installed_yet' => '
-                OSIRIS has not been installed yet.',
+    'osiris_has_not_been_installed_yet' => 'OSIRIS has not been installed yet.',
     'warning' => 'Warning',
     'osiris_will_be_installed_and_set_up_automatically_this_won_t_take_long_but' => 'OSIRIS will be installed and set up automatically. This won\'t take long, but please make sure not to reload or close the page during the process.',
     'install_osiris' => 'Install OSIRIS',

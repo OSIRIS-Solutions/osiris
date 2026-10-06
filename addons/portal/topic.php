@@ -236,7 +236,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                             <?= $h['name'] ?>
                                         </h5>
                                         <small>
-                                            <?= lang($h['position'], $h['position_de'] ?? null) ?>
+                                            <?= e(localized($h['position'] ?? '')) ?>
                                         </small>
                                     </div>
                                 </a>
@@ -281,7 +281,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                             </a>
                                         </h5>
                                         <small>
-                                            <?= lang($s['position'] ?? '', $s['position_de'] ?? null) ?>
+                                            <?= e(localized($s['position'] ?? '')) ?>
                                         </small>
                                     </div>
                                 </td>

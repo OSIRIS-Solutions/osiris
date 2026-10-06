@@ -16,6 +16,7 @@
  * - group: fields with the same group share one language switcher
  * - show_tabs: render the switcher even when another field already controls the group
  * - hide_label: keep the label accessible but hide it visually
+ * - disabled: disable all language inputs
  * - list: datalist id for text inputs; {language} is replaced with the language key
  */
 function localizedField($form, string $name, string $label, array $options = []): void
@@ -27,6 +28,7 @@ function localizedField($form, string $name, string $label, array $options = [])
     $type = $options['type'] ?? 'text';
     $required = $options['required'] ?? false;
     $hideLabel = $options['hide_label'] ?? false;
+    $disabled = $options['disabled'] ?? false;
     $root = array_key_exists('root', $options) ? $options['root'] : 'values';
     if ($root !== null && !is_string($root)) {
         throw new InvalidArgumentException('The localized field root must be a string or null.');
@@ -143,7 +145,8 @@ function localizedField($form, string $name, string $label, array $options = [])
                         $type,
                         $inputClass,
                         $required && $isBaseLanguage,
-                        $list === null ? null : str_replace('{language}', $language, $list)
+                        $list === null ? null : str_replace('{language}', $language, $list),
+                        $disabled
                     ); ?>
                 </div>
             <?php } ?>
@@ -153,8 +156,7 @@ function localizedField($form, string $name, string $label, array $options = [])
 }
 
 /**
- * Normalize the current language map and the legacy field / field_<language> structure.
- * Legacy values are only considered until the main field contains a language map.
+ * Normalize the current language map. Plain strings are treated as base-language values.
  */
 function localizedFieldValues($form, string $name, string $baseLanguage): array
 {
@@ -195,16 +197,7 @@ function localizedFieldValues($form, string $name, string $baseLanguage): array
         return $value;
     }
 
-    $translations = [$baseLanguage => (string) ($value ?? '')];
-    $legacyPattern = '/^' . preg_quote($fieldName, '/') . '_([a-z]{2}(?:-[A-Za-z]{2})?)$/';
-
-    foreach ($container as $key => $legacyValue) {
-        if (!is_string($key) || !preg_match($legacyPattern, $key, $matches)) continue;
-        if ($legacyValue === null || $legacyValue === '') continue;
-        $translations[$matches[1]] = $legacyValue;
-    }
-
-    return $translations;
+    return [$baseLanguage => (string) ($value ?? '')];
 }
 
 /**
@@ -269,7 +262,8 @@ function renderLocalizedFieldInput(
     string $type,
     string $inputClass,
     bool $required,
-    ?string $list = null
+    ?string $list = null,
+    bool $disabled = false
 ): void {
     $id = $fieldId . '-' . $language;
     $inputName = localizedFieldInputName($path, $root, $language);
@@ -279,6 +273,7 @@ function renderLocalizedFieldInput(
         <textarea name="<?= e($inputName) ?>"
                   id="<?= e($id) ?>"
                   class="d-none localized-value"
+                  <?= $disabled ? 'disabled' : '' ?>
                   readonly><?= e($value) ?></textarea>
     <?php } else { ?>
         <input type="text"
@@ -287,6 +282,7 @@ function renderLocalizedFieldInput(
                id="<?= e($id) ?>"
                value="<?= e($value) ?>"
                <?= $list === null ? '' : 'list="' . e($list) . '"' ?>
+               <?= $disabled ? 'disabled' : '' ?>
                <?= $required ? 'required' : '' ?>>
     <?php }
 }

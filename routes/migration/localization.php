@@ -44,8 +44,9 @@ foreach ($osiris->groups->find() as $document) {
         $legacyField = $field . '_de';
         if (!array_key_exists($field, $group) && !array_key_exists($legacyField, $group)) continue;
 
-        $localizedValue = $toLanguageMap($group[$field] ?? null, $group[$legacyField] ?? null);
-        if (($group[$field] ?? null) !== $localizedValue) {
+        $currentValue = DB::doc2Arr($group[$field] ?? null);
+        $localizedValue = $toLanguageMap($currentValue, $group[$legacyField] ?? null);
+        if ($currentValue !== $localizedValue) {
             $set[$field] = $localizedValue;
         }
         if (array_key_exists($legacyField, $group)) {
@@ -55,6 +56,8 @@ foreach ($osiris->groups->find() as $document) {
 
     if (isset($group['research'])) {
         $research = DB::doc2Arr($group['research']);
+        if (!is_array($research)) $research = [];
+        $research = array_map(fn($item) => DB::doc2Arr($item), $research);
         $migratedResearch = [];
         foreach ($research as $item) {
             $item = DB::doc2Arr($item);
@@ -94,6 +97,55 @@ migrationCard(
     $updated
 );
 
+$staffUpdated = 0;
+$staffDocument = $osiris->adminGeneral->findOne(['key' => 'staff']);
+if (!empty($staffDocument)) {
+    $staff = DB::doc2Arr($staffDocument['value'] ?? []);
+    $positions = DB::doc2Arr($staff['positions'] ?? []);
+    if (!is_array($positions)) $positions = [];
+    $positions = array_map(fn($position) => DB::doc2Arr($position), $positions);
+
+    $localizedPositions = [];
+    foreach ($positions as $position) {
+        $position = DB::doc2Arr($position);
+        $hasLanguageKeys = is_array($position) && !empty(array_filter(
+            array_keys($position),
+            fn($key) => is_string($key) && preg_match('/^[a-z]{2}(?:-[A-Za-z]{2})?$/', $key)
+        ));
+        if ($hasLanguageKeys) {
+            $translations = $position;
+        } elseif (is_array($position)) {
+            $translations = $toLanguageMap($position[0] ?? null, $position[1] ?? null);
+        } else {
+            $translations = $toLanguageMap($position);
+        }
+        $translations = array_filter(
+            $translations,
+            fn($translation) => (is_string($translation) || is_numeric($translation))
+                && trim((string) $translation) !== ''
+        );
+        if (!empty($translations)) $localizedPositions[] = $translations;
+    }
+
+    if ($positions !== $localizedPositions) {
+        $osiris->adminGeneral->updateOne(
+            ['_id' => $staffDocument['_id']],
+            ['$set' => ['value.positions' => $localizedPositions]]
+        );
+        $staffUpdated = 1;
+    }
+}
+
+migrationCard(
+    'Position vocabulary localized',
+    'Positionsvokabular lokalisiert',
+    'The optional position vocabulary now uses language maps.',
+    'Das optionale Positionsvokabular verwendet jetzt Sprachobjekte.',
+    $staffUpdated,
+    'configuration updated',
+    'Konfiguration aktualisiert'
+);
+
 $updated = 0;
 $unchanged = 0;
 $researchLengthMismatches = 0;
@@ -103,12 +155,13 @@ foreach ($osiris->persons->find() as $document) {
     $set = [];
     $unset = [];
 
-    foreach (['research_profile', 'biography', 'education'] as $field) {
+    foreach (['position', 'research_profile', 'biography', 'education'] as $field) {
         $legacyField = $field . '_de';
         if (!array_key_exists($field, $person) && !array_key_exists($legacyField, $person)) continue;
 
-        $localizedValue = $toLanguageMap($person[$field] ?? null, $person[$legacyField] ?? null);
-        if (($person[$field] ?? null) !== $localizedValue) {
+        $currentValue = DB::doc2Arr($person[$field] ?? null);
+        $localizedValue = $toLanguageMap($currentValue, $person[$legacyField] ?? null);
+        if ($currentValue !== $localizedValue) {
             $set[$field] = $localizedValue;
         }
         if (array_key_exists($legacyField, $person)) {
@@ -121,6 +174,7 @@ foreach ($osiris->persons->find() as $document) {
         $researchGerman = DB::doc2Arr($person['research_de'] ?? []);
         if (!is_array($research)) $research = [];
         if (!is_array($researchGerman)) $researchGerman = [];
+        $research = array_map(fn($item) => DB::doc2Arr($item), $research);
 
         if (array_key_exists('research_de', $person) && count($research) !== count($researchGerman)) {
             $researchLengthMismatches++;
@@ -161,9 +215,9 @@ foreach ($osiris->persons->find() as $document) {
 migrationCard(
     'Person profile localization migrated',
     'Lokalisierung der Personenprofile migriert',
-    "Research interests, research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date."
+    "Positions, research interests, research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date."
         . ($researchLengthMismatches > 0 ? " $researchLengthMismatches records had different EN/DE research list lengths; all existing entries were preserved by their position." : ''),
-    "Forschungsinteressen, Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell."
+    "Positionen, Forschungsinteressen, Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell."
         . ($researchLengthMismatches > 0 ? " Bei $researchLengthMismatches Datensätzen waren die EN/DE-Listen unterschiedlich lang; alle vorhandenen Einträge wurden anhand ihrer Position erhalten." : ''),
     $updated
 );

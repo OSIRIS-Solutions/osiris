@@ -522,7 +522,7 @@ Route::get('/api/users', function () {
 
     if (isset($_GET['full'])) {
         foreach ($result as &$person) {
-            $person = apiLocalizedFields(DB::doc2Arr($person), ['research_profile', 'biography', 'education']);
+            $person = apiLocalizedFields(DB::doc2Arr($person), ['position', 'research_profile', 'biography', 'education']);
             if (array_key_exists('research', $person)) {
                 $person['research'] = apiLocalizedList($person['research']);
             }
@@ -535,12 +535,16 @@ Route::get('/api/users', function () {
     $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
     $table = [];
     foreach ($result as $user) {
+        $localizedPosition = apiLocalized($user['position'] ?? '');
+        $positionText = is_array($localizedPosition)
+            ? localized($localizedPosition)
+            : $localizedPosition;
         $subtitle = "";
         if (isset($user['is_active']) && !$user['is_active']) {
             $subtitle = '<span class="badge text-danger">' . lang('common.former_employee') . '</span>';
         } elseif (isset($_GET['subtitle'])) {
             if ($_GET['subtitle'] == 'position') {
-                $subtitle = lang($user['position'] ?? '', $user['position_de'] ?? null);
+                $subtitle = e($positionText);
             } else {
                 $subtitle = $user[$_GET['subtitle']] ?? '';
             }
@@ -579,7 +583,7 @@ Route::get('/api/users', function () {
                 'name' => $user['first'] . " " . $user['last'],
                 'first' => $user['first'],
                 'last' => $user['last'],
-                'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
+                'position' => $localizedPosition,
                 'mail' => $user['mail'] ?? '',
             ];
             foreach ($columns as $col) {
@@ -608,7 +612,7 @@ Route::get('/api/users', function () {
                 'names' => !empty($user['names'] ?? null) ? implode(', ', DB::doc2Arr($user['names'])) : '',
                 'first' => $user['first'],
                 'last' => $user['last'],
-                'position' => lang($user['position'] ?? '', $user['position_de'] ?? null),
+                'position' => $localizedPosition,
                 'mail' => $user['mail'] ?? '',
                 'telephone' => $user['telephone'] ?? '',
                 'orcid' => $user['orcid'] ?? '',
@@ -657,7 +661,7 @@ Route::get('/api/users/(.*)', function ($id) {
         die;
     }
 
-    $user = apiLocalizedFields(DB::doc2Arr($user), ['research_profile', 'biography', 'education']);
+    $user = apiLocalizedFields(DB::doc2Arr($user), ['position', 'research_profile', 'biography', 'education']);
     if (array_key_exists('research', $user)) {
         $user['research'] = apiLocalizedList($user['research']);
     }
@@ -1153,7 +1157,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
             if (in_array(explode('.', $c)[0], $unwinds)) {
                 $unwind[] = ['$unwind' => '$' . explode('.', $c)[0]];
             }
-            if ($type === 'persons' && in_array(explode('.', $c)[0], ['research', 'research_profile', 'biography', 'education'], true)) {
+            if ($type === 'persons' && in_array(explode('.', $c)[0], ['position', 'research', 'research_profile', 'biography', 'education'], true)) {
                 $rootField = explode('.', $c)[0];
                 $projection[$rootField] = '$' . $rootField;
                 continue;

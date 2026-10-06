@@ -390,8 +390,7 @@ Route::get('/portfolio/unit/([^/]*)', function ($id) {
                 'id' => strval($p['_id']),
                 'name' => $p['displayname'],
                 'img' => $img,
-                'position' => $p['position'],
-                'position_de' => $p['position_de'] ?? null,
+                'position' => apiLocalized($p['position'] ?? ''),
             ];
         }
     }
@@ -1149,8 +1148,7 @@ Route::get('/portfolio/(unit|topic)/([^/]*)/staff', function ($context, $id) {
         $row = [
             'displayname' => ($person['first'] ?? '') . ' ' . $person['last'],
             'academic_title' => $person['academic_title'],
-            'position' => $person['position'],
-            'position_de' => $person['position_de'],
+            'position' => apiLocalized($person['position'] ?? ''),
             // 'depts' => $units,
             'lastname' => $person['last'],
             'firstname' => $person['first'] ?? ''
@@ -1208,8 +1206,7 @@ Route::get('/portfolio/topic/([^/]*)/units', function ($id) {
                     'id' => strval($p['_id']),
                     'name' => $p['displayname'],
                     'img' => $img,
-                    'position' => $p['position'],
-                    'position_de' => $p['position_de'] ?? null,
+                    'position' => apiLocalized($p['position'] ?? ''),
                 ];
             }
         }
@@ -1264,8 +1261,7 @@ Route::get('/portfolio/project/([^/]*)/staff', function ($id) {
         $row = [
             'displayname' => $person['displayname'],
             'academic_title' => $person['academic_title'],
-            'position' => $person['position'],
-            'position_de' => $person['position_de'],
+            'position' => apiLocalized($person['position'] ?? ''),
             'depts' => []
         ];
         // if ($person['public_image'] ?? false) {
@@ -1786,8 +1782,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
         'last' => $person['last'],
         'first' => $person['first'],
         'academic_title' => $person['academic_title'],
-        'position' => $person['position'],
-        'position_de' => $person['position_de'] ?? null,
+        'position' => apiLocalized($person['position'] ?? ''),
         'depts' => [],
         'cv' => $person['cv'] ?? [],
         'contact' => [],
@@ -2593,8 +2588,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
             $row = [
                 'displayname' => $person['displayname'],
                 'academic_title' => $person['academic_title'],
-                'position' => $person['position'],
-                'position_de' => $person['position_de'],
+                'position' => apiLocalized($person['position'] ?? ''),
                 'depts' => [],
                 'since' => $startyear
             ];
@@ -2890,12 +2884,17 @@ Route::get('/portfolio/persons', function () {
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
-                'position_de' => 1,
                 'depts' => 1,
                 'is_active' => 1,
             ]
         ]
     )->toArray();
+
+    foreach ($persons as &$person) {
+        $person = DB::doc2Arr($person);
+        $person['position'] = apiLocalized($person['position'] ?? '');
+    }
+    unset($person);
 
     echo rest($persons);
 });
@@ -3133,7 +3132,6 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
                     'displayname' => 1,
                     'academic_title' => 1,
                     'position' => 1,
-                    'position_de' => 1,
                 ]
             ]);
             if (empty($doc)) continue;
@@ -3141,9 +3139,11 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
                 $featuredCard['type_label'] = lang('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = ($doc['displayname'] ?? '');
-                $featuredCard['subtitle'] = ($doc['position'] ?? '');
+                $featuredCard['subtitle'] = apiLocalized($doc['position'] ?? '');
             } else {
-                $persons[] = DB::doc2Arr($doc);
+                $person = DB::doc2Arr($doc);
+                $person['position'] = apiLocalized($person['position'] ?? '');
+                $persons[] = $person;
             }
         }
         $news['persons'] = $persons;
@@ -3350,17 +3350,19 @@ Route::get('/portfolio/search-index', function () {
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
-                'position_de' => 1
             ]
         ]
     );
     foreach ($data as $person) {
         $person = DB::doc2Arr($person);
+        $person['position'] = apiLocalized($person['position'] ?? '');
+        $positionSearch = is_array($person['position'])
+            ? implode(' ', $person['position'])
+            : $person['position'];
         $person['search'] = $buildSearchText(
             $person['displayname'] ?? null,
             $person['academic_title'] ?? null,
-            $person['position'] ?? null,
-            $person['position_de'] ?? null
+            $positionSearch
         );
         $persons[] = $person;
     }
@@ -3640,7 +3642,6 @@ Route::get('/portfolio/spectrum', function () {
                 'displayname' => 1,
                 'academic_title' => 1,
                 'position' => 1,
-                'position_de' => 1
             ]
         ]
     );
@@ -3680,8 +3681,7 @@ Route::get('/portfolio/spectrum', function () {
             'id' => $person['id'] ?? null,
             'displayname' => $person['displayname'] ?? $username,
             'academic_title' => $person['academic_title'] ?? null,
-            'position' => $person['position'] ?? null,
-            'position_de' => $person['position_de'] ?? null,
+            'position' => apiLocalized($person['position'] ?? ''),
             'count' => intval($row['count'] ?? 0)
         ];
     }

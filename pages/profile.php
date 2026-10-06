@@ -230,7 +230,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div class="text-muted"><?= $scientist['academic_title'] ?? '' ?></div>
         <h1 class="mt-0"><?= $name ?></h1>
         <h5 class="subtitle">
-            <?= lang($scientist['position'] ?? '', $scientist['position_de'] ?? null) ?>
+            <?= e(localized($scientist['position'] ?? '')) ?>
             <?php if ($scientist['hide'] ?? false) { ?>
                 <small class="badge danger" data-toggle="tooltip" data-title="<?= lang('people.this_person_does_not_wish_to_be_found_in_portfolio') ?>">
                     <i class="ph ph-globe-x m-0"></i>

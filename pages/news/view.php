@@ -373,7 +373,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
         if (!empty($news['persons'] ?? null)) {
             $personIds = DB::to_ObjectIDs($news['persons']);
             $persons = $osiris->persons->find(['_id' => ['$in' => $personIds]], [
-                'projection' => ['_id' => 1, 'displayname' => 1, 'username' => 1, 'position' => 1, 'position_de' => 1],
+                'projection' => ['_id' => 1, 'displayname' => 1, 'username' => 1, 'position' => 1],
                 'sort' => ['displayname' => 1]
             ])->toArray();
         }
@@ -423,7 +423,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                     <h5>
                         <a href="<?= ROOTPATH ?>/profile/<?= $person['_id']; ?>"> <?= $person['displayname']; ?> </a>
                     </h5>
-                    <p><?= lang($person['position'] ?? '', $person['position_de'] ?? null) ?></p>
+                    <p><?= e(localized($person['position'] ?? '')) ?></p>
                 </div>
             <?php } ?>
         <?php endif; ?>

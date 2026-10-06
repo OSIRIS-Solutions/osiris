@@ -555,6 +555,20 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     $values = $_POST['values'];
     $values = validateValues($values, $DB);
 
+    if (isset($values['position']) && is_array($values['position'])) {
+        $allowedLanguages = array_values(array_unique(array_merge(
+            [OSIRIS_BASE_LANGUAGE],
+            $Settings->contentLanguages()
+        )));
+        $values['position'] = array_filter(
+            $values['position'],
+            fn($value, $language) => in_array($language, $allowedLanguages, true)
+                && (is_string($value) || is_numeric($value))
+                && trim((string) $value) !== '',
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
+
     if (isset($_POST['research_submitted'])) {
         $allowedLanguages = array_values(array_unique(array_merge(
             [OSIRIS_BASE_LANGUAGE],
@@ -667,12 +681,16 @@ Route::post('/crud/users/update/(.*)', function ($user) {
             );
         }
     }
-    if (isset($values['position_both'])) {
-        $pos = explode(";;", $values['position_both']);
-        $person['position'] = $pos[0];
-        $person['position_de'] = trim($pos[1] ?? '');
-        if (empty($person['position_de'])) {
-            $person['position_de'] = null;
+    if (array_key_exists('position_vocabulary', $_POST) && $_POST['position_vocabulary'] !== 'current') {
+        $positionSelection = $_POST['position_vocabulary'];
+        $positionIndex = filter_var($_POST['position_vocabulary'], FILTER_VALIDATE_INT);
+        $staff = $Settings->get('staff');
+        $positions = DB::doc2Arr($staff['positions'] ?? []);
+        if ($positionSelection === '') {
+            $person['position'] = [];
+        } elseif ($positionIndex !== false && isset($positions[$positionIndex])) {
+            $position = DB::doc2Arr($positions[$positionIndex]);
+            if (is_array($position)) $person['position'] = $position;
         }
     }
 

@@ -363,7 +363,7 @@ Route::post('/download', function () {
             $ReportTemplate->addReportFooter($section, lang('reports.curriculum_vitae_of') . $scientist['displayname'] . " – " . date('d.m.Y'));
 
             $section->addTitle($scientist['displayname'], 1);
-            $section->addTitle(lang($scientist['position'] ?? '', $scientist['position_de'] ?? null), 3);
+            $section->addTitle(localized($scientist['position'] ?? ''), 3);
 
             // add break
             $section->addTextBreak(1, $styleParagraphCenter);

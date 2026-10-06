@@ -1133,15 +1133,23 @@ Route::post('/crud/admin/general', function () {
             $staff['free'] = boolval($_POST['staff']['free']);
         }
         if (isset($_POST['staff']['positions']) && !empty($_POST['staff']['positions'])) {
-            $en = $_POST['staff']['positions'];
-            $de = $_POST['staff']['positions_de'] ?? $en;
-
             $staff['positions'] = [];
-            foreach ($en as $i => $e) {
-                $staff['positions'][] = [
-                    $e,
-                    $de[$i] ?? $e
-                ];
+            $languages = array_values(array_unique(array_merge(
+                [OSIRIS_BASE_LANGUAGE],
+                $Settings->contentLanguages()
+            )));
+            foreach ($_POST['staff']['positions'] as $position) {
+                if (!is_array($position)) continue;
+                $translations = [];
+                foreach ($languages as $language) {
+                    $value = $position[$language] ?? null;
+                    if (!is_string($value) && !is_numeric($value)) continue;
+                    $value = trim((string) $value);
+                    if ($value !== '') $translations[$language] = $value;
+                }
+                if (!empty($translations[OSIRIS_BASE_LANGUAGE])) {
+                    $staff['positions'][] = $translations;
+                }
             }
         }
         $osiris->adminGeneral->deleteOne(['key' => 'staff']);
@@ -1603,6 +1611,29 @@ Route::post('/crud/admin/add-user', function () {
     }
 
     $person = $_POST['values'];
+    if (isset($person['position']) && is_array($person['position'])) {
+        $allowedLanguages = array_values(array_unique(array_merge(
+            [OSIRIS_BASE_LANGUAGE],
+            $Settings->contentLanguages()
+        )));
+        $person['position'] = array_filter(
+            $person['position'],
+            fn($value, $language) => in_array($language, $allowedLanguages, true)
+                && (is_string($value) || is_numeric($value))
+                && trim((string) $value) !== '',
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
+    if (array_key_exists('position_vocabulary', $_POST)) {
+        $person['position'] = [];
+        $positionIndex = filter_var($_POST['position_vocabulary'], FILTER_VALIDATE_INT);
+        $staff = $Settings->get('staff');
+        $positions = DB::doc2Arr($staff['positions'] ?? []);
+        if ($positionIndex !== false && isset($positions[$positionIndex])) {
+            $position = DB::doc2Arr($positions[$positionIndex]);
+            if (is_array($position)) $person['position'] = $position;
+        }
+    }
     $person['username'] = $_POST['username'];
 
     $username = $person['username'];

@@ -567,7 +567,7 @@ include_once BASEPATH . '/header-editor.php';
                             <i class="ph ph-clipboard-text text-primary"></i>
                         <?php } ?>
 
-                        <?= $p['position'] ?? '' ?>
+                        <?= e(localized($p['position'] ?? '')) ?>
                     </td>
                     <td>
                         <?php if ($unit['start'] ?? false) { ?>
