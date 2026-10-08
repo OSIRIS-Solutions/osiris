@@ -37,24 +37,6 @@ if (isset($_POST['skip'])) {
     exit;
 }
 
-try {
-    $all_works = $orcid_parser->getWorksForImport();
-    $skipped_docs = $user['skipped_orcid_works'] ?? [];
-    // Convert MongoDB BSONArray to a regular PHP array
-    if ($skipped_docs instanceof \MongoDB\Model\BSONArray) {
-        $skipped_docs = $skipped_docs->getArrayCopy();
-    }
-    $skipped_works = [];
-    $works_to_import = [];
-    foreach ($all_works as $doc) {
-        $putCode = $doc['orcid_put_code'] ?? null;
-        if ($putCode!==null && $skipped_docs && in_array($putCode, $skipped_docs)) {
-            $skipped_works[] = $doc;
-        } else {
-            $works_to_import[] = $doc;
-        }
-    }
-
 if (isset($_POST['skip'])) {
     $work = json_decode($_POST['skip'], true);
     $orcid_parser->skipWork($work['orcid_put_code']);
@@ -92,7 +74,6 @@ if (!empty($works_to_import)) { ?>
         <?= lang('Ready to import', 'Bereit zum Importieren') ?>:
     </h1>
 
-    <?php    
     <?php    
     foreach ($works_to_import as $doc) {
         $type = $doc['type'] ?? '';
@@ -144,13 +125,8 @@ if (!empty($works_to_import)) { ?>
                 <button type="submit" name="skip" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn secondary small">
                     <?= lang('Skip', 'Überspringen') ?>
                 </button>
-                <button type="submit" name="skip" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn secondary small">
-                    <?= lang('Skip', 'Überspringen') ?>
-                </button>
             </form>
         </div>
-    <?php } ?>
-<?php } else { ?>
     <?php } ?>
 <?php } else { ?>
     <div class="alert info">
