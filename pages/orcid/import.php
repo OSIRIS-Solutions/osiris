@@ -37,14 +37,6 @@ if (isset($_POST['skip'])) {
     exit;
 }
 
-if (isset($_POST['skip'])) {
-    $work = json_decode($_POST['skip'], true);
-    $orcid_parser->skipWork($work['orcid_put_code']);
-    # reload page
-    header('Location: ' . ROOTPATH . '/orcid/import');
-    exit;
-}
-
 try {
     $all_works = $orcid_parser->getWorksForImport();
     $skipped_docs = $user['skipped_orcid_works'] ?? [];
