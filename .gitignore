@@ -18,3 +18,4 @@ upload.sh
 .DS_Store
 *conflicted copy*.*
 dump
+src/
