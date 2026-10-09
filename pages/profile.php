@@ -744,6 +744,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             'rendered.users' => $user,
             'module_id' => ['$ne' => null]
         ]],
+        ['$sort' => ['start_date' => -1]],
         [
             '$group' => [
                 '_id' => '$module_id',
