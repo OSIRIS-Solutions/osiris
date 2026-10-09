@@ -656,7 +656,10 @@ class Project extends Vocabulary
             // start proposed is in ISO
             return Document::format_date($this->project['start_proposed']);
         }
-
+        if (!isset($this->project['start']) || !isset($this->project['start']['year'])) {
+            // no start date set
+            return lang('unknown', 'unbekannt');
+        }
         return sprintf('%02d', $this->project['start']['month']) . "/" . $this->project['start']['year'];
     }
     public function getEndDate()
