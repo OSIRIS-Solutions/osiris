@@ -132,6 +132,7 @@
             <?php
             switch (strtoupper(USER_MANAGEMENT)) {
                 case 'AUTH':
+                case 'OAUTH':
             ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/authentication">
                         <i class="ph-duotone ph-users"></i>

@@ -84,14 +84,28 @@
             </div>
         <?php } ?>
     </form>
-<?php } elseif ($userManagement === 'OAUTH') { ?>
-    <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
-        <span><?= e(lang('Log in with ' . OAUTH, 'Mit ' . OAUTH . ' anmelden')) ?></span>
-        <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
-    </a>
-<?php } else { ?>
+<?php } elseif ($userManagement !== 'OAUTH') { ?>
     <div class="alert" role="alert">
         <i class="ph ph-warning-circle" aria-hidden="true"></i>
         <div><?= lang('User management is not configured.', 'Das User-Management ist nicht konfiguriert.') ?></div>
     </div>
+<?php } ?>
+
+
+<?php if (osirisOAuthEnabled() || $userManagement === 'OAUTH') { ?>
+    <?php if ($oauthError = osirisOAuthConfigurationError()) { ?>
+        <div class="alert" role="alert">
+            <i class="ph ph-warning-circle" aria-hidden="true"></i>
+            <div><?= e($oauthError) ?></div>
+        </div>
+    <?php } else { ?>
+        <?php if ($userManagement === 'AUTH') { ?>
+            <hr>
+            <p class="secondary-action"><?= lang('or use single sign-on', 'oder Single Sign-On verwenden') ?></p>
+        <?php } ?>
+        <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
+            <span><?= e(lang('Log in with ' . osirisOAuthLabel(), 'Mit ' . osirisOAuthLabel() . ' anmelden')) ?></span>
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
+        </a>
+    <?php } ?>
 <?php } ?>

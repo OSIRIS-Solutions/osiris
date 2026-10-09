@@ -1,3 +1,4 @@
+<?php $registrationIsSso = $registrationIsSso ?? false; ?>
 <a class="back-link" href="<?= ROOTPATH ?>/user/login">
     <i class="ph ph-arrow-left" aria-hidden="true"></i>
     <?= lang('Back to login', 'Zurück zur Anmeldung') ?>
@@ -34,20 +35,25 @@
         ) ?>
     </p>
 
-    <?php $registrationData = $_POST['values'] ?? []; ?>
-    <form action="<?= ROOTPATH ?>/auth/new-user<?= !empty($registrationToken) ? '?token=' . urlencode($registrationToken) : '' ?>" method="post">
-        <?php if (!empty($registrationToken)) { ?>
+    <?php $registrationData = $registrationData ?? ($_POST['values'] ?? []); ?>
+    <form action="<?= ROOTPATH ?><?= e($registrationAction ?? '/auth/new-user') ?>" method="post">
+        <?php if ($registrationIsSso) { ?>
+            <input type="hidden" name="csrf" value="<?= e($registrationCsrf) ?>">
+            <input type="hidden" name="action" value="create">
+        <?php } ?>
+        <?php if (!$registrationIsSso && !empty($registrationToken)) { ?>
             <input type="hidden" name="token" value="<?= e($registrationToken) ?>">
         <?php } ?>
 
-        <div class="form-grid form-grid--2">
+        <div class="form-grid <?= $registrationIsSso ? '' : 'form-grid--2' ?>">
             <div class="form-group">
                 <label class="required" for="register-username"><?= lang('Username', 'Nutzername') ?></label>
                 <div class="input-wrap">
                     <i class="ph ph-user" aria-hidden="true"></i>
-                    <input class="form-control" id="register-username" type="text" name="username" value="<?= e($_POST['username'] ?? '') ?>" autocomplete="username" required autofocus>
+                    <input class="form-control" id="register-username" type="text" name="username" value="<?= e($registrationUsername ?? ($_POST['username'] ?? '')) ?>" autocomplete="username" required autofocus>
                 </div>
             </div>
+            <?php if (!$registrationIsSso) { ?>
             <div class="form-group">
                 <label class="required" for="register-password"><?= lang('Password', 'Passwort') ?></label>
                 <div class="input-wrap">
@@ -58,6 +64,7 @@
                     </button>
                 </div>
             </div>
+            <?php } ?>
         </div>
 
         <div class="form-grid form-grid--name">
@@ -83,7 +90,7 @@
         <div class="form-grid form-grid--2">
             <div class="form-group">
                 <label class="required" for="register-mail"><?= lang('Email address', 'E-Mail-Adresse') ?></label>
-                <input class="form-control" id="register-mail" type="email" name="values[mail]" value="<?= e($registrationData['mail'] ?? '') ?>" autocomplete="email" required>
+                <input class="form-control" id="register-mail" type="email" name="values[mail]" value="<?= e($registrationData['mail'] ?? '') ?>" autocomplete="email" <?= $registrationIsSso && $registrationMailLocked ? 'readonly' : '' ?> required>
             </div>
             <div class="form-group">
                 <label for="telephone"><?= lang('Telephone', 'Telefon') ?></label>
@@ -114,6 +121,25 @@
             <span><?= lang('I am a scientist', 'Ich bin Wissenschaftler:in') ?></span>
         </label>
 
+        <?php if ($registrationIsSso) { ?>
+            <div class="form-group">
+                <label for="registration-units"><?= lang('Organisational units', 'Organisationseinheiten') ?></label>
+                <select class="form-control" id="registration-units" name="units[]" multiple size="4">
+                    <?php foreach ($Groups->groups as $group) { if (!empty($group['inactive'])) continue; ?>
+                        <option value="<?= e((string) $group['id']) ?>" <?= in_array((string) $group['id'], $registrationUnits, true) ? 'selected' : '' ?>><?= e($group[lang('name', 'name_de')] ?? $group['name']) ?></option>
+                    <?php } ?>
+                </select>
+                <small><?= lang('You can select several units. If you select “I am a scientist”, these affiliations are recorded as scientific. You can refine them later in your profile.', 'Du kannst mehrere Einheiten auswählen. Wenn du „Ich bin Wissenschaftler:in“ auswählst, werden diese Zugehörigkeiten als wissenschaftlich erfasst. Du kannst sie später im Profil genauer bearbeiten.') ?></small>
+            </div>
+            <?php if ($registrationTokenRequired) { ?>
+                <div class="form-group">
+                    <label class="required" for="sso-registration-token"><?= lang('AUTH token', 'AUTH-Token') ?></label>
+                    <input class="form-control" id="sso-registration-token" name="token" type="password" value="<?= e($registrationToken) ?>" autocomplete="off" required>
+                    <small><?= lang('Enter the registration token provided by your administrator.', 'Gib das Registrierungstoken ein, das du von der Administration erhalten hast.') ?></small>
+                </div>
+            <?php } ?>
+        <?php } ?>
+
         <?php if ($affiliation === 'LISI') { ?>
             <div class="demo">
                 <strong>Demo:</strong>
@@ -128,5 +154,8 @@
             <span><?= lang('Create account', 'Account erstellen') ?></span>
             <i class="ph ph-user-plus" aria-hidden="true"></i>
         </button>
+        <?php if ($registrationIsSso) { ?>
+            <p class="secondary-action"><button class="btn" type="submit" name="action" value="cancel" formnovalidate><?= lang('Cancel', 'Abbrechen') ?></button></p>
+        <?php } ?>
     </form>
 <?php } ?>

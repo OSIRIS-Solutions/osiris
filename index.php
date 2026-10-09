@@ -49,8 +49,10 @@ function lang($en, $de = null)
 include_once BASEPATH . "/php/Route.php";
 
 Route::get('/', function () {
-    if (isset($_GET['code']) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
-        header("Location: " . ROOTPATH . "/user/oauth-callback?code=" . $_GET['code']);
+    if ((isset($_GET['code']) || isset($_GET['error'])) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
+        // Legacy root callback must preserve state and provider cancellation.
+        $callback = array_intersect_key($_GET, array_flip(['code', 'state', 'error']));
+        header("Location: " . ROOTPATH . "/user/oauth-callback?" . http_build_query($callback));
         exit();
     }
     include_once BASEPATH . "/php/init.php";
@@ -86,7 +88,7 @@ if (empty($_SESSION['loggedin']) && !empty($_COOKIE['osiris-remember'])) {
         if ($remember && password_verify($token, $remember['token_hash'])) {
             $USER = $osiris->persons->findOne(['username' => $remember['username']]);
 
-            if ($USER) {
+            if ($USER && !osirisOAuthLinked($USER)) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $USER['username'];
                 $_SESSION['name'] = $USER['displayname'];

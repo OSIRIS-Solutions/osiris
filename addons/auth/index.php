@@ -45,7 +45,7 @@ Route::post('/auth/forgot-password', function () {
 
     if (!empty($_POST['mail'])) {
         $user = $osiris->persons->findOne(['mail' => $_POST['mail']]);
-        if (empty($user)) {
+        if (empty($user) || osirisOAuthLinked($user)) {
             $_SESSION['msg'] = lang('If the mail address is correct, you will receive an email with further instructions.', 'Wenn die Mail-Adresse korrekt ist, erhältst du eine E-Mail mit weiteren Anweisungen.');
             $_SESSION['msg_type'] = 'success';
             header("Location: " . ROOTPATH . "/auth/forgot-password");
@@ -104,6 +104,7 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
     }
     $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($user_id)]);
     $person = DB::doc2Arr($person);
+    if (osirisOAuthLinked($person)) abortwith(403, lang('Password reset is disabled for SSO accounts.', 'Passwort-Reset ist für SSO-Konten deaktiviert.'));
     if (empty($person)) {
         header("Location: " . ROOTPATH . "/user/browse");
         die;
@@ -129,6 +130,9 @@ Route::post('/auth/admin-reset-password', function () {
         die;
     }
     $id = DB::to_ObjectID($_POST['id']);
+    if (osirisOAuthLinked($osiris->persons->findOne(['_id' => $id]))) {
+        abortwith(403, lang('Password reset is disabled for SSO accounts.', 'Passwort-Reset ist für SSO-Konten deaktiviert.'));
+    }
     $hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
     $osiris->accounts->updateOne(
         ['username' => $osiris->persons->findOne(['_id' => $id])['username']],
@@ -169,7 +173,7 @@ Route::get('/auth/reset-password', function () {
     // check if hash is valid
     $hash = $_GET['hash'] ?? '';
     $account = $osiris->accounts->findOne(['hash' => $hash]);
-    if (empty($account)) {
+    if (empty($account) || osirisOAuthLinked($osiris->persons->findOne(['username' => $account['username']]))) {
         $_SESSION['msg'] = lang('The link is not valid. Please request a new password reset.', 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
@@ -213,7 +217,7 @@ Route::post('/auth/reset-password', function () {
     // check everything again, just to be sure
     $hash = $_POST['hash'];
     $account = $osiris->accounts->findOne(['hash' => $hash]);
-    if (empty($account)) {
+    if (empty($account) || osirisOAuthLinked($osiris->persons->findOne(['username' => $account['username']]))) {
         $_SESSION['msg'] = lang('The link is not valid. Please request a new password reset.', 'Der Link ist nicht gültig. Bitte fordere einen neuen Passwort zurücksetzen an.');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
@@ -287,6 +291,9 @@ Route::post('/auth/new-user', function () {
         exit('Bitte ein Passwort angeben.');
     }
     $person = $_POST['values'];
+    foreach (array_keys($person) as $key) {
+        if ($key === 'sso' || str_starts_with($key, 'sso.')) unset($person[$key]);
+    }
 
     if ($osiris->persons->count(['username' => $username]) > 0) {
         $page = 'register';

@@ -471,7 +471,7 @@ $active = function ($field) use ($data_fields) {
         <h4 class="title"><?= lang('Contact', 'Kontakt') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
-            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) ? 'disabled' : '' ?> onblur="validateEmail(this)">
+            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) || osirisOAuthLinked($data) ? 'disabled' : '' ?> onblur="validateEmail(this)">
             <?php if (in_array('mail', $ldap_fields)) {
                 echo $ldap_msg;
             } ?>
@@ -806,6 +806,18 @@ $active = function ($field) use ($data_fields) {
 
 
     <section id="account" style="display:none;">
+        <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && osirisOAuthEnabled()
+            && $data['username'] === ($_SESSION['username'] ?? '')
+            && ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']) { ?>
+            <h5><?= e(osirisOAuthLabel()) ?></h5>
+            <?php if (osirisOAuthLinked($data)) { ?>
+                <p><?= lang('This profile uses single sign-on. Local password login is disabled.', 'Dieses Profil verwendet Single Sign-On. Die lokale Passwortanmeldung ist deaktiviert.') ?></p>
+            <?php } else { ?>
+                <p><?= lang('Link your existing profile and switch to single sign-on.', 'Verknüpfe dein bestehendes Profil und wechsle zu Single Sign-On.') ?></p>
+                <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= lang('Link single sign-on', 'Single Sign-On verknüpfen') ?></a>
+            <?php } ?>
+        <?php } ?>
+
         <h2 class="title">
             <?= lang('Account settings', 'Account-Einstellungen') ?>
         </h2>
@@ -821,7 +833,7 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <?php if (
-            USER_MANAGEMENT == 'AUTH' &&
+            USER_MANAGEMENT == 'AUTH' && !osirisOAuthLinked($data) &&
             $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
         ) { ?>
 

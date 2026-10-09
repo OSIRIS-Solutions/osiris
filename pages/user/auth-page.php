@@ -10,6 +10,8 @@
 $page = $page ?? 'login';
 $authPages = [
     'login' => BASEPATH . '/pages/user/auth/login.php',
+    'oauth-link' => BASEPATH . '/pages/user/auth/oauth-link.php',
+    'oauth-choice' => BASEPATH . '/pages/user/auth/oauth-choice.php',
     'forgot-password' => BASEPATH . '/pages/user/auth/forgot-password.php',
     'register' => BASEPATH . '/pages/user/auth/register.php',
     'reset-password' => BASEPATH . '/pages/user/auth/reset-password.php',
@@ -20,6 +22,8 @@ if (!isset($authPages[$page])) {
 
 $authPageTitles = [
     'login' => lang('Login | OSIRIS', 'Anmelden | OSIRIS'),
+    'oauth-link' => lang('Link single sign-on | OSIRIS', 'Single Sign-On verknüpfen | OSIRIS'),
+    'oauth-choice' => lang('Choose profile | OSIRIS', 'Profil auswählen | OSIRIS'),
     'forgot-password' => lang('Forgot password | OSIRIS', 'Passwort vergessen | OSIRIS'),
     'register' => lang('Create account | OSIRIS', 'Account erstellen | OSIRIS'),
     'reset-password' => lang('Reset password | OSIRIS', 'Passwort zurücksetzen | OSIRIS'),

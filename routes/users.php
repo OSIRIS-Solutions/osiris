@@ -554,9 +554,19 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     $values = validateValues($values, $DB);
     // separate personal and account information
     $person = $values;
+    // Authentication identity can only be changed by the dedicated linking flow.
+    foreach (array_keys($person) as $key) {
+        if ($key === 'sso' || str_starts_with($key, 'sso.')) unset($person[$key]);
+    }
     // $account = [];
     // get old value for rendering
     $old = $DB->getPerson($user);
+    if (osirisOAuthLinked($old)) {
+        unset($person['mail']);
+        if (!empty($_POST['password'])) {
+            abortwith(403, lang('Password changes are disabled for SSO accounts.', 'Passwortänderungen sind für SSO-Konten deaktiviert.'));
+        }
+    }
 
     // update name information
     if (isset($values['last']) && isset($values['first'])) {

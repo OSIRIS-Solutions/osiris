@@ -4,6 +4,12 @@ function login($username, $password)
     global $osiris;
     $return = array("msg" => '', "success" => false);
     
+    require_once BASEPATH . '/php/OAuth.php';
+    if (osirisOAuthLinked($osiris->persons->findOne(['username' => $username]))) {
+        $return['msg'] = lang('Please use single sign-on for this account.', 'Bitte nutze Single Sign-On für dieses Konto.');
+        return $return;
+    }
+
     // find user
     $USER = $osiris->accounts->findOne(['username' => $username]);
 
