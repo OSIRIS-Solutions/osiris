@@ -19,3 +19,6 @@ upload.sh
 *conflicted copy*.*
 dump
 src
+
+# Local Python virtual environments
+.venv/

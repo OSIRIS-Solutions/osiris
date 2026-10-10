@@ -4,11 +4,12 @@ Backfill OpenAlex metadata for OSIRIS activities with a DOI.
 
 Logic:
 - If activity has no openalex block: fetch + store.
+- Retry previous errors on the next run without discarding existing metadata.
 - If openalex.fetched_at is older than 30 days: refresh.
 - Otherwise: skip.
 
-Prepared for potential API key usage (optional):
-- Set OPENALEX_API_KEY env var (currently sent as header; can be changed later).
+Optional API key: set ApiKey in the [OpenAlex] section of config.ini.
+The key is sent as an Authorization bearer token.
 """
 
 from __future__ import annotations
@@ -120,7 +121,7 @@ def fetch_openalex_by_doi(doi: str, api_key: Optional[str], timeout: Tuple[int, 
     }
 
     if api_key:
-        headers["X-API-Key"] = api_key 
+        headers["Authorization"] = f"Bearer {api_key}"
 
     try:
         r = requests.get(url, headers=headers, timeout=timeout)
@@ -130,7 +131,12 @@ def fetch_openalex_by_doi(doi: str, api_key: Optional[str], timeout: Tuple[int, 
             return None, "rate_limited"
         if r.status_code < 200 or r.status_code >= 300:
             return None, f"http_{r.status_code}"
-        return r.json(), None
+        data = r.json()
+        if not isinstance(data, dict) or not data.get("id"):
+            return None, "invalid_response"
+        return data, None
+    except ValueError:
+        return None, "invalid_json"
     except requests.RequestException as e:
         return None, f"request_error:{e.__class__.__name__}"
 
@@ -138,6 +144,8 @@ def fetch_openalex_by_doi(doi: str, api_key: Optional[str], timeout: Tuple[int, 
 def should_refresh(doc: dict, cutoff: datetime) -> bool:
     oa = doc.get("openalex")
     if not oa or not isinstance(oa, dict):
+        return True
+    if oa.get("status") == "error":
         return True
     fetched_at = parse_dt(oa.get("fetched_at"))
     if not fetched_at:
@@ -168,7 +176,7 @@ def main() -> int:
     mongo_uri = config['Database']['Connection']
     mongo_db = config['Database']['Database']
 
-    api_key = config['OpenAlex']['ApiKey'].strip() or None
+    api_key = config.get('OpenAlex', 'ApiKey', fallback='').strip() or None
     
     coll_name = "activities"
 
@@ -224,15 +232,19 @@ def main() -> int:
             time.sleep(5)
             continue
 
-        oa_block: Dict[str, Any]
-        if not data or not data.get("id"):
-            if err == "not_found":
-                not_found += 1
-            else:
-                errors += 1
+        if err and err != "not_found":
+            errors += 1
+            print(f"OpenAlex fetch failed: {err}; retry on next run", file=sys.stderr)
+            # Keep the existing block and fetched_at unchanged so this document
+            # remains eligible for the next daily run.
+            time.sleep(sleep_s)
+            continue
 
+        oa_block: Dict[str, Any]
+        if err == "not_found":
+            not_found += 1
             oa_block = {
-                "status": "not_found" if err == "not_found" else "error",
+                "status": "not_found",
                 "doi": doi,
                 "error": err,
                 "fetched_at": nowIsoShort,
