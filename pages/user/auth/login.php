@@ -100,8 +100,8 @@
         </div>
     <?php } else { ?>
         <?php if ($userManagement === 'AUTH') { ?>
-            <hr>
-            <p class="secondary-action"><?= lang('or use single sign-on', 'oder Single Sign-On verwenden') ?></p>
+            <div class="auth-divider"><span><?= lang('or', 'oder') ?></span></div>
+            <!-- <p class="sso-caption"><?= lang('Use single sign-on', 'Single Sign-On verwenden') ?></p> -->
         <?php } ?>
         <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
             <span><?= e(lang('Log in with ' . osirisOAuthLabel(), 'Mit ' . osirisOAuthLabel() . ' anmelden')) ?></span>

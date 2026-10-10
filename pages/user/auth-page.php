@@ -398,7 +398,7 @@ $accessibilityClasses = trim(implode(' ', [
         .osiris-login .submit:focus-visible,
         .osiris-login .link:focus-visible,
         .osiris-login .back-link:focus-visible,
-        .osiris-login .portal-cta:focus-visible,
+        .osiris-login .portal-card:focus-visible,
         .osiris-login .institute:focus-visible,
         .osiris-login .footer a:focus-visible,
         .osiris-login .language:focus-visible,
@@ -483,7 +483,28 @@ $accessibilityClasses = trim(implode(' ', [
             margin-top: 2.4rem;
         }
 
-        .osiris-login .portal-divider {
+        .osiris-login .auth-layout {
+            display: grid;
+            align-items: center;
+            gap: 3rem;
+            width: 100%;
+            max-width: 52rem;
+        }
+
+        .osiris-login .auth-layout--wide {
+            max-width: 76rem;
+        }
+
+        .osiris-login .auth-layout--portal {
+            grid-template-columns: minmax(0, 1fr) 28rem;
+            max-width: 83rem;
+        }
+
+        .osiris-login .auth-layout--portal.auth-layout--wide {
+            max-width: 107rem;
+        }
+
+        .osiris-login .auth-divider {
             display: flex;
             align-items: center;
             gap: 1.2rem;
@@ -493,73 +514,84 @@ $accessibilityClasses = trim(implode(' ', [
             text-transform: uppercase;
         }
 
-        .osiris-login .portal-divider::before,
-        .osiris-login .portal-divider::after {
+        .osiris-login .auth-divider::before,
+        .osiris-login .auth-divider::after {
             flex: 1;
             height: 1px;
             background: #dce4e3;
             content: '';
         }
 
-        .osiris-login .portal-cta {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 1.3rem;
-            width: 100%;
-            min-height: 6.4rem;
-            padding: 1rem 1.3rem;
-            border: 1px solid var(--primary-color-30);
-            border-radius: 1.2rem;
-            color: var(--primary-color-dark);
-            background: var(--primary-color-20);
-            text-align: left;
-            text-decoration: none;
-            transition: border-color .2s, background .2s, transform .2s;
+        .osiris-login .sso-caption {
+            margin: 0 0 1rem;
+            color: var(--login-muted);
+            font-size: 1.4rem;
+            text-align: center;
         }
 
-        .osiris-login .portal-cta > i:first-child {
+        .osiris-login .portal-card {
+            display: block;
+            min-width: 0;
+            padding: 2.6rem;
+            border: 1px solid var(--primary-color-30);
+            border-radius: 2.2rem;
+            color: var(--login-ink);
+            background: linear-gradient(145deg, var(--login-surface), var(--primary-color-10));
+            box-shadow: 0 1.2rem 3.6rem rgba(20, 55, 57, .07);
+            backdrop-filter: blur(18px);
+            text-decoration: none;
+            transition: border-color .2s, box-shadow .2s, transform .2s;
+        }
+
+        .osiris-login .portal-card > i {
             display: grid;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 1rem;
-            color: #fff;
-            background: var(--primary-color);
-            font-size: 2.2rem;
+            width: 5rem;
+            height: 5rem;
+            margin-bottom: 2rem;
+            border-radius: 1.4rem;
+            color: var(--primary-color-dark);
+            background: var(--primary-color-20);
+            font-size: 2.8rem;
             place-items: center;
         }
 
-        .osiris-login .portal-cta strong,
-        .osiris-login .portal-cta small {
+        .osiris-login .portal-card strong {
             display: block;
+            font-size: 2.2rem;
+            font-weight: 650;
+            line-height: 1.25;
         }
 
-        .osiris-login .portal-cta strong {
-            font-size: 1.45rem;
-            line-height: 1.3;
-        }
-
-        .osiris-login .portal-cta small {
-            margin-top: .15rem;
+        .osiris-login .portal-card p {
+            margin: 1rem 0 2.2rem;
             color: var(--login-muted);
-            font-size: 1.2rem;
-            font-weight: 400;
-            line-height: 1.3;
+            font-size: 1.45rem;
+            line-height: 1.5;
         }
 
-        .osiris-login .portal-cta > i:last-child {
-            font-size: 1.9rem;
+        .osiris-login .portal-card-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            color: var(--primary-color-dark);
+            font-size: 1.45rem;
+            font-weight: 650;
+        }
+
+        .osiris-login .portal-card-action i {
+            font-size: 2rem;
             transition: transform .2s;
         }
 
-        .osiris-login .portal-cta:hover {
+        .osiris-login .portal-card:hover {
             border-color: var(--primary-color);
-            color: var(--primary-color-dark);
-            background: var(--primary-color-30);
-            transform: translateY(-1px);
+            color: var(--login-ink);
+            box-shadow: 0 1.8rem 4rem rgba(20, 55, 57, .12);
+            transform: translateY(-2px);
         }
 
-        .osiris-login .portal-cta:hover > i:last-child {
+        .osiris-login .portal-card:hover .portal-card-action i {
             transform: translateX(.3rem);
         }
 
@@ -723,6 +755,16 @@ $accessibilityClasses = trim(implode(' ', [
                 padding-block: 1rem 4rem;
             }
 
+            .osiris-login .auth-layout--portal {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 2rem;
+            }
+
+            .osiris-login .portal-card {
+                padding: 2.2rem;
+            }
+
+
             .osiris-login .main::before {
                 left: 2rem;
                 box-shadow: calc(100vw - 6rem) 38rem 0 -.35rem var(--primary-color);
@@ -795,7 +837,8 @@ $accessibilityClasses = trim(implode(' ', [
             background: #fff;
         }
 
-        .osiris-login.high-contrast .card {
+        .osiris-login.high-contrast .card,
+        .osiris-login.high-contrast .portal-card {
             border: 2px solid #000;
             box-shadow: none;
         }
@@ -841,7 +884,12 @@ $accessibilityClasses = trim(implode(' ', [
                 <circle class="network-node" cx="870" cy="135" r="6" />
             </svg>
 
-            <section class="card <?= $page === 'register' && empty($registrationRequiresToken) ? 'card--wide' : '' ?>" aria-labelledby="auth-title">
+            <?php
+            $showPortal = $Settings->featureEnabled('portal-public');
+            $wideAuthCard = $page === 'register' && empty($registrationRequiresToken);
+            ?>
+            <div class="auth-layout <?= $showPortal ? 'auth-layout--portal' : '' ?> <?= $wideAuthCard ? 'auth-layout--wide' : '' ?>">
+            <section class="card <?= $wideAuthCard ? 'card--wide' : '' ?>" aria-labelledby="auth-title">
                 <?php foreach ($authMessages as $message) {
                     $message = is_array($message) ? $message : ['text' => $message, 'type' => 'error'];
                     $messageType = $message['type'] ?? 'error';
@@ -856,18 +904,20 @@ $accessibilityClasses = trim(implode(' ', [
 
                 <?php include $authPages[$page]; ?>
 
-                <?php if ($Settings->featureEnabled('portal-public')) { ?>
-                    <div class="portal-divider"><span><?= lang('or', 'oder') ?></span></div>
-                    <a class="portal-cta" href="<?= ROOTPATH ?>/portal/info">
-                        <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
-                        <span>
-                            <strong><?= lang('Open public portal', 'Öffentliches Portal öffnen') ?></strong>
-                            <small><?= lang('Discover research without logging in', 'Forschung ohne Anmeldung entdecken') ?></small>
-                        </span>
-                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
-                    </a>
-                <?php } ?>
             </section>
+
+            <?php if ($showPortal) { ?>
+                <a class="portal-card" href="<?= ROOTPATH ?>/portal/info">
+                    <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+                    <strong><?= lang('Public portal', 'Öffentliches Portal') ?></strong>
+                    <p><?= lang('Discover research without logging in.', 'Forschung ohne Anmeldung entdecken.') ?></p>
+                    <span class="portal-card-action">
+                        <span><?= lang('Open portal', 'Portal öffnen') ?></span>
+                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                    </span>
+                </a>
+            <?php } ?>
+            </div>
         </main>
 
         <footer class="footer">
