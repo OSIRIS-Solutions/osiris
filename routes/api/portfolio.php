@@ -39,9 +39,9 @@ function rest($data, $count = 0, $status = 200)
         $count = count($data);
     }
 
-    if (!empty($limit) && $count > $limit && is_array($data)) {
-        $offset = intval($_GET['offset'] ?? 0) || 0;
-        $data = array_slice($data, $offset, min($limit, $count - $offset));
+    if ($limit > 0 && $count > 0 && is_array($data)) {
+        $offset = max(0, intval($_GET['offset'] ?? 0));
+        $data = array_slice($data, $offset, $limit);
         $result += array(
             'limit' => $limit,
             'offset' => $offset
