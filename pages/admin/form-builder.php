@@ -1332,7 +1332,7 @@ $tagLabels = [
             }
 
             // check if an author field is present
-            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
+            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "supervisor-thesis-details", "editor"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
                 toastError(lang('The form must contain at least one person field.', 'Das Formular muss mindestens ein Personen-Feld enthalten.'));

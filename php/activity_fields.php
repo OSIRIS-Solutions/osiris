@@ -241,7 +241,7 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'columns'
                 ],
@@ -250,7 +250,7 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors.first',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'aggregate',
                     'filter'
@@ -260,7 +260,7 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors.last',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'aggregate',
                     'filter'
@@ -270,7 +270,7 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors.user',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'aggregate',
                     'filter'
@@ -280,14 +280,14 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors.approved',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [],
                 'label' => lang('Supervisor (approved)', 'Betreuende (Bestätigt)'),
                 'type' => 'boolean',
             ],
             [
                 'id' => 'supervisors.aoi',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'aggregate',
                     'filter'
@@ -297,11 +297,22 @@ class ActivityFields extends Fields
             ],
             [
                 'id' => 'supervisors.units',
-                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
+                'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? $typeModules['supervisor-thesis-details'] ?? [],
                 'usage' => [
                     'filter',
                 ],
                 'label' => lang('Supervisor (unit)', 'Betreuende (Einheit)'),
+                'type' => 'string'
+            ],
+            [
+                'id' => 'supervisors.affiliation',
+                'module_of' => $typeModules['supervisor-thesis-details'] ?? [],
+                'usage' => [
+                    'aggregate',
+                    'filter',
+                    'columns'
+                ],
+                'label' => lang('Supervisor (affiliation)', 'Betreuende (Affiliation)'),
                 'type' => 'string'
             ],
             [

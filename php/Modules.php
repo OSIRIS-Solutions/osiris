@@ -918,6 +918,19 @@ class Modules
             "tags" => ['authors', 'people', 'publication'],
             "section" => "authors",
         ],
+        "supervisor-thesis-details" => [
+            "fields" => ["authors"],
+            "name" => "Supervisor (Thesis)",
+            "name_de" => "Betreuer:in (Abschlussarbeit)",
+            "label" => "Supervisor of the thesis",
+            "label_de" => "Betreuende der Abschlussarbeit",
+            "description" => "A comprehensive table for supervisors of a thesis, with individual input fields for supervisors, including first and last name, position, username, an affiliation checkbox, the role, affiliation and academic title. Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but for theses.",
+            "description_de" => "Eine umfassende Tabelle für Betreuer:innen einer Abschlussarbeit, mit individuellen Eingabefeldern für Betreuer:innen, einschließlich Vor- und Nachname, Position, Benutzername, einer Affiliation-Checkbox, der Rolle, Einrichtung und akademischem Titel. Unterstützt mehrere Betreuer:innen, Drag-and-Drop und Auto-Suggest im Benutzernamenfeld. Ähnlich dem Modul 'author-table', aber für Abschlussarbeiten.",
+            "width" => 0,
+            "portfolio" => "impossible",
+            "tags" => ['authors', 'people', 'publication'],
+            "section" => "authors",
+        ],
         "teaching-category" => [
             "fields" => ["category" => 'practical-lecture'],
             "name" => "Teaching Category",
@@ -2284,6 +2297,164 @@ class Modules
                             tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
                             tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
+                            var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
+                            var roles = {
+                                'supervisor': lang('Supervisor', 'Betreuer'),
+                                'first-reviewer': lang('First reviewer', 'Erster Gutachter'),
+                                'second-reviewer': lang('Second reviewer', 'Zweiter Gutachter'),
+                                'third-reviewer': lang('Third reviewer', 'Dritter Gutachter'),
+                                'committee-member': lang('Committee member', 'Ausschussmitglied'),
+                                'chair': lang('Chair', 'Vorsitzender'),
+                                'mentor': lang('Mentor', 'Mentor'),
+                                'other': lang('Other', 'Sonstiges')
+                            }
+                            for (const [key, value] of Object.entries(roles)) {
+                                select.append('<option value="' + key + '">' + value + '</option>')
+                            }
+                            tr.append($('<td>').append(select))
+                            var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
+                                $(this).closest('tr').remove();
+                            });
+                            tr.append($('<td>').append(btn))
+                            $('#supervisors').append(tr)
+                        }
+                    </script>
+
+                    <datalist id="user-list-thesis">
+                        <?php
+                        foreach ($this->userlist as $s) { ?>
+                            <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+                        <?php } ?>
+                    </datalist>
+
+                </div>
+            <?php
+                break;
+
+            case "supervisor-thesis-details":
+                $supervisors = $this->val('supervisors', []);
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="supervisor-thesis-details">
+                    <label for="supervisor" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+
+                    <?php if (!$req) { ?>
+                        <input type="hidden" name="values[supervisors]" value="">
+                    <?php } ?>
+
+                    <div class="module p-0">
+                        <table class="table simple small">
+                            <thead>
+                                <tr>
+                                    <th><?= lang('Username', 'Benutzername') ?></th>
+                                    <th><?= lang('Last name', 'Nachname') ?></th>
+                                    <th><?= lang('First name', 'Vorname') ?></th>
+                                    <th><?= lang('Academic title', 'Akademischer Titel') ?></th>
+                                    <th><?= lang('Affiliation', 'Affiliation ') ?></th>
+                                    <th><?= lang('Affiliated', 'Affiliiert') ?></th>
+                                    <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="supervisors">
+                                <?php
+                                $i = 0;
+                                foreach ($supervisors as $i => $author) {
+                                    $role = $author['role'] ?? 'supervisor';
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <input name="values[supervisors][<?= $i ?>][user]" type="text" class="form-control" list="user-list-thesis" value="<?= $author['user'] ?>" onchange="selectUsernameSupervisor(this)">
+                                        </td>
+                                        <td>
+                                            <input name="values[supervisors][<?= $i ?>][last]" type="text" class="form-control" value="<?= $author['last'] ?>" required>
+                                        </td>
+                                        <td>
+                                            <input name="values[supervisors][<?= $i ?>][first]" type="text" class="form-control" value="<?= $author['first'] ?>">
+                                        </td>
+                                        <td>
+                                            <input name="values[supervisors][<?= $i ?>][academic_title]" type="text" class="form-control" value="<?= $author['academic_title'] ?? '' ?>">
+                                        </td>
+                                        <td>
+                                            <input name="values[supervisors][<?= $i ?>][affiliation]" type="text" class="form-control" value="<?= $author['affiliation'] ?? '' ?>">
+                                        </td>
+                                        <td>
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" id="checkbox-<?= $i ?>" name="values[supervisors][<?= $i ?>][aoi]" value="1" <?= (($author['aoi'] ?? 0) == '1' ? 'checked' : '') ?>>
+                                                <label for="checkbox-<?= $i ?>" class="blank"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select name="values[supervisors][<?= $i ?>][role]" class="form-control">
+                                                <option value="supervisor" <?= ($role == 'supervisor' ? 'selected' : '') ?>><?= lang('Supervisor', 'Betreuer') ?></option>
+                                                <option value="first-reviewer" <?= ($role == 'first-reviewer' ? 'selected' : '') ?>><?= lang('First reviewer', 'Erster Gutachter') ?></option>
+                                                <option value="second-reviewer" <?= ($role == 'second-reviewer' ? 'selected' : '') ?>><?= lang('Second reviewer', 'Zweiter Gutachter') ?></option>
+                                                <option value="third-reviewer" <?= ($role == 'third-reviewer' ? 'selected' : '') ?>><?= lang('Third reviewer', 'Dritter Gutachter') ?></option>
+                                                <option value="committee-member" <?= ($role == 'committee-member' ? 'selected' : '') ?>><?= lang('Committee member', 'Ausschussmitglied') ?></option>
+                                                <option value="chair" <?= ($role == 'chair' ? 'selected' : '') ?>><?= lang('Chair', 'Vorsitzender') ?></option>
+                                                <option value="mentor" <?= ($role == 'mentor' ? 'selected' : '') ?>><?= lang('Mentor', 'Mentor') ?></option>
+                                                <option value="other" <?= ($role == 'other' ? 'selected' : '') ?>><?= lang('Other', 'Sonstiges') ?></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <button class="btn text-secondary" type="button" onclick="addSupervisorRow()"><i class="ph ph-plus"></i></button>
+                                            <small class="text-muted">
+                                                <?= lang('Selecting a user name will fill in the first and last name fields automatically.', 'Die Auswahl eines Benutzernamens füllt die Felder für Vor- und Nachname automatisch aus.') ?>
+                                            </small>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <?= $this->render_help($help) ?>
+                    <script>
+                        function removeSupervisorRow(el) {
+                            // check if row is the only one left
+                            if ($(el).closest('tbody').find('tr').length > 1) {
+                                $(el).closest('tr').remove()
+                            } else {
+                                toastError(lang('At least one supervisor is needed.', 'Mindestens ein Betreuer muss angegeben werden.'))
+                            }
+                        }
+
+                        function selectUsernameSupervisor(el) {
+                            let username = el.value
+                            let user = $('#user-list-thesis option[value="' + username + '"]')
+                            if (!user || user === undefined || user.length === 0) return;
+
+                            console.log(user);
+                            let name = user.html()
+                            name = name.replace(/\(.+\)/, ''); // remove username in brackets
+                            name = name.split(', ')
+                            if (name.length !== 2) return;
+
+                            let tr = $(el).closest('tr')
+                            console.log(tr);
+                            tr.find('td:nth-child(2) input').val(name[0])
+                            tr.find('td:nth-child(3) input').val(name[1])
+                            tr.find('td:nth-child(4) input').prop('checked', true)
+                        }
+
+                        var counter = <?= $i ?>;
+
+                        function addSupervisorRow() {
+                            counter++;
+                            var tr = $('<tr>')
+                            tr.append('<td> <input name="values[supervisors][' + counter + '][user]" type="text" class="form-control" list="user-list-thesis" onchange="selectUsernameSupervisor(this)"> </td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][academic_title]" type="text" class="form-control"></td>')
+                            tr.append('<td><input name="values[supervisors][' + counter + '][affiliation]" type="text" class="form-control" ></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
                             var select = $('<select name="values[supervisors][' + counter + '][role]" class="form-control">');
                             var roles = {

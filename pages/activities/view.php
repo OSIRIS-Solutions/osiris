@@ -1160,7 +1160,7 @@
                                 ?>
                             </p>
                             <?php
-                            $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+                            $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'supervisor-thesis-details','editor'];
                             $authorTypes = [];
                             foreach ($typeFields as $field_id => $props) {
                                 if (!in_array($field_id, $authorModules, true)) continue;
@@ -1175,7 +1175,7 @@
                                         'label' => 'SWS',
                                         'value' => fn($a) => 'SWS <b>' . ($a['sws'] ?? 0) . '</b>',
                                     ];
-                                } elseif ($supervisorThesis) {
+                                } elseif ($supervisorThesis || $supervisorThesisDetails) {
                                     $thirdCol = [
                                         'label' => lang('Role', 'Rolle'),
                                         'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
@@ -1322,6 +1322,14 @@
                                                                     <?php endforeach; ?>
                                                                 </div>
                                                             <?php endif; ?>
+                                                            
+                                                            <?php if (!empty($author['academic_title'])): ?>
+                                                                <div>
+                                                                    <span class="author-chip neutral" data-toggle="tooltip" data-title="<?= lang('Academic Title', 'Akademischer Titel') ?>">
+                                                                        <?= $author['academic_title'] ?>
+                                                                    </span>
+                                                                </div>
+                                                            <?php endif; ?>
 
                                                             <?php if (!empty($thirdCol)): ?>
                                                                 <div>
@@ -1330,8 +1338,16 @@
                                                                     </span>
                                                                 </div>
                                                             <?php endif; ?>
-                                                        </div>
 
+                                                            <?php if (!empty($author['affiliation'])): ?>
+                                                                <div>
+                                                                    <span class="author-chip neutral" data-toggle="tooltip" data-title="<?= lang('Affiliation', 'Affiliation') ?>">
+                                                                        <?= $author['affiliation'] ?>
+                                                                    </span>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        
                                                         <?php if (!$hasUser && !$user_activity): ?>
                                                             <span class="claim-action">
                                                                 <div class="dropdown d-inline-block">

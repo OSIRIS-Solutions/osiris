@@ -260,7 +260,7 @@ class Document extends Settings
     public static function author_role_from_field(string $field_id): ?string
     {
         return match ($field_id) {
-            'supervisor', 'supervisor-thesis' => 'supervisors',
+            'supervisor', 'supervisor-thesis', 'supervisor-thesis-details' => 'supervisors',
             'editor' => 'editors',
             'authors', 'author-table', 'scientist' => 'authors',
             default => null,

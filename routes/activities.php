@@ -294,6 +294,7 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
     $ongoing = false;
     $sws = false;
     $supervisorThesis = false;
+    $supervisorThesisDetails = false;
 
     $typeArr = $Format->typeArr;
     $upload_possible = $typeArr['upload'] ?? true;
@@ -307,6 +308,10 @@ Route::get('/activities/view/([a-zA-Z0-9]*)', function ($id) {
         if ($m == 'date-range-ongoing') $ongoing = true;
         if ($m == 'supervisor') $sws = true;
         if ($m == 'supervisor-thesis') $supervisorThesis = true;
+        if ($m == 'supervisor-thesis-details') {
+            $supervisorThesis = true;
+            $supervisorThesisDetails = true;
+        }
     }
     $visible_subtypes = $Settings->getActivitiesPortfolio(true);
 
