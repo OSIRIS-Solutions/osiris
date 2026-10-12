@@ -309,6 +309,12 @@
                 <b><?= lang('PHP Info', 'PHP Info') ?></b>
                 <p><?= lang('View PHP configuration information', 'Zeige PHP-Konfigurationsinformationen an') ?></p>
             </a>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/logs">
+                <i class="ph-duotone ph-file-text" aria-hidden="true"></i>
+                <b><?= lang('Import Logs', 'Importprotokolle') ?></b>
+                <p><?= lang('View import logs', 'Zeige Importprotokolle an') ?></p>
+            </a>
         </div>
     <?php endif; ?>
 </div>

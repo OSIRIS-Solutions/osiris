@@ -18,4 +18,7 @@ upload.sh
 .DS_Store
 *conflicted copy*.*
 dump
-src/
+src
+logs/*
+# Local Python virtual environments
+.venv/
