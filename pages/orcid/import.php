@@ -29,41 +29,44 @@ if (isset($_POST['import'])) {
     exit;
 }
 
+if (isset($_POST['skip'])) {
+    $work = json_decode($_POST['skip'], true);
+    $orcid_parser->skipWork($work['orcid_put_code']);
+    # reload page
+    header('Location: ' . ROOTPATH . '/orcid/import');
+    exit;
+}
+
 try {
-    $works_to_import = $orcid_parser->getWorksForImport();
+    $all_works = $orcid_parser->getWorksForImport();
+    $skipped_docs = $user['skipped_orcid_works'] ?? [];
+    // Convert MongoDB BSONArray to a regular PHP array
+    if ($skipped_docs instanceof \MongoDB\Model\BSONArray) {
+        $skipped_docs = $skipped_docs->getArrayCopy();
+    }
+    $skipped_works = [];
+    $works_to_import = [];
+    foreach ($all_works as $doc) {
+        $putCode = $doc['orcid_put_code'] ?? null;
+        if ($putCode!==null && $skipped_docs && in_array($putCode, $skipped_docs)) {
+            $skipped_works[] = $doc;
+        } else {
+            $works_to_import[] = $doc;
+        }
+    }
+
 } catch (Exception $e) {
     echo '<div class="alert error"><h3 class="title">' . lang('Error fetching works from ORCID ', 'Fehler beim Abrufen der Werke von ORCID ') . '</h3><pre class="overflow-auto">' . $e . '</pre></div>';
     exit;
 }
-if ($works_to_import) { ?>
+
+if (!empty($works_to_import)) { ?>
     <h1>
         <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
         <?= lang('Ready to import', 'Bereit zum Importieren') ?>:
     </h1>
 
-    <style>
-        .metadata {
-            font-size: small;
-        }
-
-        .metadata i {
-            margin-right: 0.25rem;
-            color: var(--primary-color);
-        }
-
-        .box h2 {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
-        }
-
-        .box p {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-    </style>
-
-    <?php
+    <?php    
     foreach ($works_to_import as $doc) {
         $type = $doc['type'] ?? '';
         $subtype = $doc['subtype'] ?? '';
@@ -97,19 +100,110 @@ if ($works_to_import) { ?>
 
             </ul>
             <p class="font-size-12 text-muted">
-                <?php foreach ($doc['authors'] as $author) { ?>
-                    <span><?= $author['first'] ?? '', ' ', $author['last'] ?? '', ', ' ?></span>
-                <?php } ?>
+                <span>
+                    <?php
+                    $authors = $doc['authors'] instanceof \MongoDB\Model\BSONArray ? $doc['authors']->getArrayCopy(): $doc['authors'];
+                    echo implode(', ', array_map(
+                        fn($author) => trim(($author['first'] ?? '') . ' ' . ($author['last'] ?? '')),
+                        $authors
+                    ));
+                    ?>
+                </span>
             </p>
             <form method="post">
                 <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn success small">
                     <?= lang('Import', 'Importieren') ?>
                 </button>
+                <button type="submit" name="skip" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn secondary small">
+                    <?= lang('Skip', 'Überspringen') ?>
+                </button>
             </form>
         </div>
-    <?php }
-} else { ?>
+    <?php } ?>
+<?php } else { ?>
     <div class="alert info">
         <?= lang('No further works to import found', 'Keine weiteren Werke zum Importieren gefunden') ?>
     </div>
 <?php } ?>
+
+<?php if(!empty($skipped_works)) { ?>
+    <br>
+    <button class="btn secondary small" type="button" onclick="document.querySelector('.skipped-works').style.display = document.querySelector('.skipped-works').style.display === 'none' ? 'block' : 'none';">
+        <?= lang('Show skipped works', 'Übersprungene Werke anzeigen') . ' ' . '[' . count($skipped_works) . ']' ?> 
+    </button>
+    <div class="skipped-works" style="display:none;">
+        <?php    
+        foreach ($skipped_works as $doc) {
+            $type = $doc['type'] ?? '';
+            $subtype = $doc['subtype'] ?? '';
+        ?>
+            <div class="box padded">
+                <ul class="breadcrumb category" style="--highlight-color:var(--primary-color);">
+                    <li><?= $Settings->title($type) ?></li>
+                    <li><?= $Settings->title(null, $doc['subtype']) ?></li>
+                </ul>
+                <h2><?= $doc['title'] ?></h2>
+                <ul class="metadata horizontal">
+                    <?php if (isset($doc['start_date'])) { ?>
+                        <li class="time">
+                            <i class="ph ph-calendar"></i>
+                            <?= format_date($doc['start_date']) ?>
+                        </li>
+                    <?php } ?>
+
+                    <?php if (!empty($doc['journal'] ?? null)) { ?>
+                        <li class="journal">
+                            <i class="ph ph-newspaper"></i>
+                            <?= $doc['journal'] ?>
+                        </li>
+                    <?php } ?>
+                    <?php if (isset($doc['doi'])) { ?>
+                        <li class="doi">
+                            <i class="ph ph-link"></i>
+                            <a href="https://doi.org/<?= $doc['doi'] ?>" target="_blank" rel="noopener noreferrer" class="colorless link"><?= $doc['doi'] ?></a>
+                        </li>
+                    <?php } ?>
+
+                </ul>
+                <p class="font-size-12 text-muted">
+                    <span>
+                        <?php
+                        $authors = $doc['authors'] instanceof \MongoDB\Model\BSONArray ? $doc['authors']->getArrayCopy(): $doc['authors'];
+                        echo implode(', ', array_map(
+                            fn($author) => trim(($author['first'] ?? '') . ' ' . ($author['last'] ?? '')),
+                            $authors
+                        ));
+                        ?>
+                    </span>
+                </p>
+                <form method="post">
+                    <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn success small">
+                        <?= lang('Import', 'Importieren') ?>
+                    </button>
+                </form>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+
+<style>
+    .metadata {
+        font-size: small;
+    }
+
+    .metadata i {
+        margin-right: 0.25rem;
+        color: var(--primary-color);
+    }
+
+    .box h2 {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+    }
+
+    .box p {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
