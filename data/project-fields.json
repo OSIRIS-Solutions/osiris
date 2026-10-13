@@ -192,7 +192,8 @@
     "kdsf": "KDSF-B-3-6",
     "scope": {
       "project": false,
-      "proposed": false
+      "proposed": false,
+      "approved": false
     },
     "order": 18
   },
@@ -314,7 +315,8 @@
     "kdsf": null,
     "scope": {
       "project": false,
-      "proposed": false
+      "proposed": false,
+      "approved": false
     },
     "order": 27
   },
@@ -325,7 +327,8 @@
     "kdsf": null,
     "scope": {
       "project": false,
-      "proposed": false
+      "proposed": false,
+      "approved": false
     },
     "order": 27
   },
