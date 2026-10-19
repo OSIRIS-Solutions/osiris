@@ -1,6 +1,6 @@
 <?php
 // ORCID settings page
-function maskSecret(string $secret, int $visible = 5): string
+function maskSecret(string $secret, int $visible = 6): string
 {
     $length = strlen($secret);
 
@@ -69,7 +69,7 @@ function maskSecret(string $secret, int $visible = 5): string
         </div>
         <div class="form-group">
             <label for="client_secret">Client Secret</label>
-            <input type="float" class="form-control" name="general[orcid][client_secret]" value="<?= maskSecret($orcid['client_secret'] ?? '', 5) ?>">
+            <input type="float" class="form-control" name="general[orcid][client_secret]" value="<?= maskSecret($orcid['client_secret'] ?? '', 6) ?>">
         </div>
         <div class="form-group">
             <label for="orcid_api"><?= lang('Choose ORCID API', 'Wähle ORCID API') ?></label>
