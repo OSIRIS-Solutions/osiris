@@ -599,6 +599,19 @@ class Modules
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
         ],
+        "ipc" => [
+            "fields" => ["ipc" => ["A01B", "C07D 13/01"]],
+            "name" => "Patent IPC",
+            "name_de" => "Patent IPC",
+            "label" => "Patent IPC",
+            "label_de" => "Patent IPC",
+            "description" => "A field for the International Patent Classification (IPC) of a patent. This field is used to categorize patents according to their technical content. May contain multiple IPC codes, separated by comma.",
+            "description_de" => "Ein Feld für die Internationale Patentklassifikation (IPC) eines Patents. Dieses Feld wird verwendet, um Patente nach ihrem technischen Inhalt zu kategorisieren. Kann mehrere IPC-Codes enthalten, die durch Komma getrennt sind.",
+            "width" => 12,
+            "portfolio" => true,
+            "tags" => ['patent'],
+            "section" => "bibliography",
+        ],
         "peer-reviewed" => [
             "fields" => ["peer-reviewed" => true],
             "name" => "Peer-Reviewed",
@@ -3180,6 +3193,30 @@ class Modules
                     <label for="pages" class="<?= $labelClass ?>"><?= $label ?></label>
                     <?= $this->render_help($help) ?>
                 </div>
+            <?php
+                break;
+
+            case "ipc":
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="ipc">
+                    <label for="ipc-input" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div id="ipc" class="list-widget" data-name="values[ipc][]">
+                        <input
+                            id="ipc-input"
+                            class="list-widget-input"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="<?= lang('Enter value and press Enter', 'Wert eingeben und Enter drücken') ?>" />
+                    </div>
+                    <?= $this->render_help($help) ?>
+                </div>
+                <script>
+                    function validate_ipc(ipc){
+                        const regex = /^[A-H]\d{2}[A-Z]\s*\d{1,3}\/\d{2,4}$/i;
+                        return regex.test(event.target.value);
+                    }
+                    initListWidget($("#ipc"), <?= json_encode($this->val('ipc', [])) ?>, validate_ipc);
+                </script>
             <?php
                 break;
 
