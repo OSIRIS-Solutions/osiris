@@ -7,7 +7,7 @@ RewriteEngine on
 RewriteBase /
 
 # Deliver the folder or file directly if it exists on the server
-RewriteRule ^(css|img|js|uploads|settings.json|manifest.json)($|/) - [L]
+RewriteRule ^(css|img|js|uploads|settings\.json|manifest\.json|robots\.txt)($|/) - [L]
 
 # Push every request to index.php
 RewriteRule ^(.*)$ index.php [QSA]
