@@ -353,6 +353,47 @@ function val($index, $default = '')
 
                 </tbody>
             </table>
+            <!-- show frequently used modules -->
+            <div id="frequently-used-modules" class="my-10">
+                <?php
+                // 
+                $fum = $osiris->activities->aggregate([
+                    ['$match' => ['module_id' => ['$ne' => null]]],
+                    [
+                        '$group' => [
+                            '_id' => '$module_id',
+                            'totalCount' => ['$sum' => 1],
+                            'authorCount' => [
+                                '$sum' => [
+                                    '$cond' => [
+                                        [
+                                            '$in' => [
+                                                $_SESSION['username'],
+                                                ['$ifNull' => ['$rendered.users', []]]
+                                            ]
+                                        ],
+                                        1,
+                                        0
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    ['$sort' => ['authorCount' => -1, 'totalCount' => -1, '_id' => 1]],
+                    ['$limit' => 5]
+                ])->toArray();
+                foreach ($fum as $module) {
+                    $module = $osiris->teaching->findOne(['_id' => DB::to_ObjectID($module['_id'])]);
+                    $m = [
+                        'module' => $module['module'] ?? '',
+                        'id' => $module['_id'] ?? '',
+                        'affiliation' => $module['affiliation'] ?? '',
+                        'title' => $module['title'] ?? ''
+                    ];
+                    echo "<a class='badge primary mr-5 mb-5' onclick='selectTeaching(" . json_encode($m) . ");'>{$module['module']}: {$module['title']}</a>";
+                }
+                ?>
+            </div>
         </div>
     </div>
 </div>
