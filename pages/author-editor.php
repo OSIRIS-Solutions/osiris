@@ -20,7 +20,8 @@
 $ongoing = false;
 $sws = false;
 $supervisorThesis = false;
-
+$supervisorDetails = false;
+$n_row = 7;
 
 $Format = new Document;
 $Format->setDocument($form);
@@ -31,8 +32,20 @@ $typeModules = DB::doc2Arr($subtypeArr['modules'] ?? array());
 foreach ($typeModules as $m) {
     if (str_ends_with($m, '*')) $m = str_replace('*', '', $m);
     if ($m == 'date-range-ongoing') $ongoing = true;
-    if ($m == 'supervisor') $sws = true;
-    if ($m == 'supervisor-thesis') $supervisorThesis = true;
+    if ($m == 'supervisor') {
+        $sws = true;
+        $n_row++;
+    }
+    if ($m == 'supervisor-thesis') {
+        $supervisorThesis = true;
+        $n_row++;
+    }
+    if ($m == 'supervisor-thesis-details') {
+        $supervisorThesis = true;
+        $supervisorDetails = true;
+        $n_row++;
+        $n_row++;
+    }
 }
 
 $authors = DB::doc2Arr($form[$role] ?? []);
@@ -87,6 +100,10 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                     <?php endif; ?>
                     <th><?= $Settings->get('affiliation') ?></th>
                     <th><?= lang('Units', 'Einheiten') ?> *</th>
+                    <?php if ($supervisorDetails) { ?>
+                        <th><?= lang('Title', 'Titel') ?></th>
+                        <th><?= lang('Affiliation', 'Einrichtung') ?></th>
+                    <?php } ?>
                     <th></th>
                 </tr>
             </thead>
@@ -198,6 +215,16 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                 </div>
                             </div>
                         </td>
+                        <?php if ($supervisorDetails) { ?>
+                            <td>
+                                <input name="authors[<?= $i ?>][academic_title]" type="text" class="form-control academic_title" value="<?= $author['academic_title'] ?>">
+                            </td>
+
+                            <td>
+                                <input name="authors[<?= $i ?>][affiliation]" type="text" class="form-control affiliation" value="<?= $author['affiliation'] ?>">
+                            </td>
+                        <?php } ?>
+
                         <td>
                             <button class="btn text-danger" type="button" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash"></i></button>
                         </td>
@@ -207,7 +234,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
             <tfoot>
                 <tr id="last-row">
                     <td></td>
-                    <td colspan="7">
+                    <td colspan="<?= $n_row ?>">
                         <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= lang('Add author', 'Autor hinzufügen') ?></button>
                     </td>
                 </tr>

@@ -921,7 +921,7 @@ class Modules
         "supervisor-thesis-details" => [
             "fields" => ["authors"],
             "name" => "Supervisor (Thesis)",
-            "name_de" => "Betreuer:in (Abschlussarbeit)",
+            "name_de" => "Betreuer:in (mit Details)",
             "label" => "Supervisor of the thesis",
             "label_de" => "Betreuende der Abschlussarbeit",
             "description" => "A comprehensive table for supervisors of a thesis, with individual input fields for supervisors, including first and last name, position, username, an affiliation checkbox, the role, affiliation and academic title. Supports multiple supervisors, drag-and-drop, and auto-suggest on username field. Similar to the 'author-table' module, but for theses.",
@@ -2349,7 +2349,7 @@ class Modules
                                     <th><?= lang('Username', 'Benutzername') ?></th>
                                     <th><?= lang('Last name', 'Nachname') ?></th>
                                     <th><?= lang('First name', 'Vorname') ?></th>
-                                    <th><?= lang('Academic title', 'Akademischer Titel') ?></th>
+                                    <th><?= lang('Title', 'Titel') ?></th>
                                     <th><?= lang('Affiliation', 'Affiliation ') ?></th>
                                     <th><?= lang('Affiliated', 'Affiliiert') ?></th>
                                     <th><?= lang('Role', 'Rolle') ?> <span class="text-danger">*</span></th>
