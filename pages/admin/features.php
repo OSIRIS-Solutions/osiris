@@ -599,6 +599,8 @@
                         ?>
                     </div>
 
+                    <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('Manage news outlets and Portfolio output', 'News-Outlets und Portfolio-Ausgabe verwalten') ?></a></p>
+
                     <div class="form-group">
                         <?php
                         $news_lang = $Settings->get('news-language', 'both');

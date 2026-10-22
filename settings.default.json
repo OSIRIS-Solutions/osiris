@@ -454,6 +454,7 @@
             "guests.view" : [false, false, true, true, true],
             "journals.edit" : [false, false, false, true, true],
             "nagoya.view" : [false, false, false, false, true],
+            "news.outlets" : [false, false, false, false, true],
             "projects.add" : [false, false, false, true, true],
             "projects.delete-own" : [false, true, false, false, false],
             "projects.delete" : [false, false, false, true, true],

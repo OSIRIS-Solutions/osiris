@@ -476,6 +476,11 @@
                 "en": "Add and edit news"
             },
             {
+                "id": "news.outlets",
+                "de": "News-Outlets und deren Portfolio-Ausgabe verwalten",
+                "en": "Manage news outlets and their Portfolio output"
+            },
+            {
                 "id": "news.delete",
                 "de": "Nachrichten löschen",
                 "en": "Delete news"

@@ -242,7 +242,7 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             'topics' => $id
         ];
         $news = $osiris->news->find(
-            $filter,
+            $Settings->getNewsPortfolioFilter($filter),
             [
                 'sort' => ['date' => -1],
                 'projection' => [
@@ -1528,7 +1528,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             'activities' => $id
         ];
         $news = $osiris->news->find(
-            $filter,
+            $Settings->getNewsPortfolioFilter($filter),
             [
                 'sort' => ['date' => -1],
                 'projection' => [
@@ -1731,7 +1731,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
             'projects' => $id
         ];
         $news = $osiris->news->find(
-            $filter,
+            $Settings->getNewsPortfolioFilter($filter),
             [
                 'sort' => ['date' => -1],
                 'projection' => [
@@ -2057,7 +2057,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             'persons' => $id
         ];
         $news = $osiris->news->find(
-            $filter,
+            $Settings->getNewsPortfolioFilter($filter),
             [
                 'sort' => ['date' => -1],
                 'projection' => [
@@ -2698,7 +2698,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
             'infrastructures' => $id
         ];
         $news = $osiris->news->find(
-            $filter,
+            $Settings->getNewsPortfolioFilter($filter),
             [
                 'sort' => ['date' => -1],
                 'projection' => [
@@ -3028,7 +3028,7 @@ Route::get('/portfolio/news', function () {
         'date' => ['$lte' => date('Y-m-d')]
     ];
     $news = $osiris->news->find(
-        $filter,
+        $Settings->getNewsPortfolioFilter($filter),
         [
             'sort' => ['date' => -1],
             'projection' => [
@@ -3062,7 +3062,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
         'visibility' => 'public',
     ];
     $news = $osiris->news->findOne(
-        $filter,
+        $Settings->getNewsPortfolioFilter($filter),
         [
             'projection' => [
                 '_id' => 0,

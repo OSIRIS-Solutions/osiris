@@ -403,7 +403,7 @@ class SidebarNav
                         'active' => ['^/admin($|/)'],
                         'feature' => null,
                         'default' => false,
-                        'permission' => 'admin.see|user.synchronize|report.templates',
+                        'permission' => 'admin.see|user.synchronize|report.templates|news.outlets',
                         'favoritable' => false,
                         'hasSearch' => false
                     ],

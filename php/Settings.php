@@ -192,6 +192,21 @@ class Settings
                 return $default;
         }
     }
+    /** News outlet definitions, including the independent original contribution. */
+    function getNewsOutlets(): array
+    {
+        require_once __DIR__ . '/NewsOutlets.php';
+        return NewsOutlets::read($this->get('news-outlets', []));
+    }
+
+    /** Apply the institution's source selection in addition to news visibility. */
+    function getNewsPortfolioFilter(array $filter): array
+    {
+        if ($this->getNewsOutlets()['original_portfolio']) return $filter;
+        // Every stored news item has an _id; this also protects direct detail requests.
+        return ['$and' => [$filter, ['_id' => ['$exists' => false]]]];
+    }
+
     function set($key, $value)
     {
         $this->osiris->adminGeneral->updateOne(
