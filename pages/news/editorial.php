@@ -3,6 +3,7 @@
 /** Only users with the editorial right see draft texts and editorial controls. */
 if (!$Settings->hasPermission('news.editorial')) return;
 require_once BASEPATH . '/php/NewsEditorial.php';
+require_once BASEPATH . '/php/NewsReview.php';
 include_once BASEPATH . '/header-editor.php';
 include_once BASEPATH . '/components/news-editor-style.php';
 $editorialConfiguration = $Settings->getNewsOutlets();
@@ -25,6 +26,11 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
         <div class="alert warning"><?= lang('This news is internal only. Editorial outlet work is unavailable until the author changes this selection.', 'Diese News ist nur intern. Die Bearbeitung von Outlet-Beiträgen ist erst möglich, wenn die Autorin oder der Autor diese Auswahl ändert.') ?></div>
     <?php } ?>
 
+    <?php include BASEPATH . '/pages/news/review-controls.php'; ?>
+
+    <h3><?= lang('Editorial outlets', 'Redaktionelle Outlets') ?></h3>
+
+    <div class="collapse-group mb-20">
     <?php foreach (NewsRequests::rows($editorialConfiguration, $news) as $row) {
         $request = $row['request'];
         if ($request === null) continue;
@@ -37,10 +43,13 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
         $canEditContribution = !$editorialInternalOnly && $contribution !== null && in_array($status, ['in_progress', 'ready'], true);
         $sourceChanged = $contribution !== null && (int) ($news['original_revision'] ?? 1) > (int) ($contribution['original_revision'] ?? 1);
     ?>
-        <details class="collapse-panel mb-20" id="editorial-outlet-<?= e($outletId) ?>" <?= in_array($status, ['requested', 'in_progress'], true) ? 'open' : '' ?>>
-            <summary class="collapse-header">
+        <details class="collapse-panel" id="editorial-outlet-<?= e($outletId) ?>" <?= in_array($status, ['requested', 'in_progress'], true) ? 'open' : '' ?>>
+            <summary class="collapse-header d-flex">
                 <?= e($outletName) ?>
-                <span class="badge"><?= e(NewsRequests::statusLabel($status)) ?></span>
+                <span class="<?= NewsRequests::statusClass($status) ?>">
+                    <i class="ph <?= NewsRequests::statusIcon($status) ?>"></i>
+                    <?= e(NewsRequests::statusLabel($status)) ?>
+                </span>
             </summary>
             <div class="collapse-content">
                 <?php if (($request['source'] ?? 'author') === 'editorial') { ?>
@@ -49,6 +58,14 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
                 <?php if (empty($outlet['active'])) { ?><p class="text-muted"><?= lang('This outlet is no longer available for new requests. Existing work is retained.', 'Dieses Outlet ist für neue Anfragen deaktiviert. Vorhandene Bearbeitungen bleiben erhalten.') ?></p><?php } ?>
                 <?php if (!empty($request['decline_reason'])) { ?>
                     <p><b><?= lang('Reason for declining:', 'Ablehnungsgrund:') ?></b> <?= e($request['decline_reason']) ?></p>
+                <?php } ?>
+                <?php if ($status === 'released') { ?><p class="text-success"><?= e(NewsReview::releaseLabel($request['release_mode'])) ?></p><?php } ?>
+                <?php if (!$editorialInternalOnly && in_array($status, ['approved', 'released'], true)) { ?>
+                    <form action="<?= $editorialAction ?>" method="post">
+                        <?php $editorialHiddenFields($outletId); ?>
+                        <button class="btn" name="action" value="revise"><?= lang('Edit version again', 'Fassung erneut bearbeiten') ?></button>
+                        <p class="text-muted"><?= lang('Editing again removes the confirmation or release for this outlet. You can request a new review afterwards.', 'Die erneute Bearbeitung hebt die Bestätigung oder Freigabe für dieses Outlet auf. Danach kannst du eine neue Prüfung anfordern.') ?></p>
+                    </form>
                 <?php } ?>
                 <?php if (!$editorialInternalOnly && $status === 'requested') { ?>
                     <form action="<?= $editorialAction ?>" method="post">
@@ -136,6 +153,7 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
             </div>
         </details>
     <?php } ?>
+</div>
 
     <?php $additionalOutlets = array_filter($editorialConfiguration['outlets'], static fn($outlet) => !empty($outlet['active']) && !isset($editorialRequests[$outlet['id']])); ?>
     <?php if (!$editorialInternalOnly && $additionalOutlets) { ?>
@@ -158,7 +176,7 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
     <?php } ?>
 
     <details class="collapse-panel mb-20" id="editorial-connections">
-        <summary class="collapse-header"><?= lang('Edit shared connections', 'Gemeinsame Verknüpfungen bearbeiten') ?></summary>
+        <summary class="collapse-header d-flex"><?= lang('Edit shared connections', 'Gemeinsame Verknüpfungen bearbeiten') ?></summary>
         <div class="collapse-content">
             <p class="text-muted"><?= lang('These connections apply to the whole news item and all its outlet contributions.', 'Diese Verknüpfungen gelten für die gesamte News und alle Outlet-Beiträge.') ?></p>
             <form action="<?= $editorialAction ?>" method="post">
@@ -174,7 +192,7 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
     <?php $editorialHistory = array_reverse(NewsEditorial::history($news)); ?>
     <?php if ($editorialHistory) { ?>
         <details class="collapse-panel mb-20">
-            <summary class="collapse-header"><?= lang('Editorial history', 'Redaktionsverlauf') ?></summary>
+            <summary class="collapse-header d-flex"><?= lang('Editorial history', 'Redaktionsverlauf') ?></summary>
             <div class="collapse-content">
                 <table class="table small">
                     <thead><tr><th><?= lang('When / who', 'Wann / wer') ?></th><th><?= lang('Change', 'Änderung') ?></th></tr></thead>
@@ -185,6 +203,7 @@ $editorialHiddenFields = static function (?string $outletId = null) use ($news) 
                                 <td><?= e(NewsEditorial::actionLabel($event['action'])) ?>
                                     <?php if (isset($event['outlet_id'])) { ?> · <?= e(NewsRequests::label($editorialOutlets[$event['outlet_id']]['name'] ?? ['en' => $event['outlet_id']])) ?><?php } ?>
                                     <?php if (isset($event['reason'])) { ?><br><?= e($event['reason']) ?><?php } ?>
+                                    <?php if (isset($event['comment'])) { ?><br><?= nl2br(e($event['comment'])) ?><?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>

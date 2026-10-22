@@ -3,11 +3,11 @@
         z-index: 90;
     }
 
-    .collapse-panel {
+    .connections .collapse-panel {
         margin-bottom: 2rem;
     }
 
-    .collapse-content {
+    .connections .collapse-content {
         background-color: white;
     }
 
@@ -17,15 +17,14 @@
         font-weight: bold;
     }
 
-    .collapse-header,
-    .collapse-panel[open] .collapse-header {
+    .connections .collapse-header,
+    .connections .collapse-panel[open] .collapse-header {
         color: var(--primary-color);
         border-color: var(--primary-color);
         background-color: var(--primary-color-20);
     }
-
-    .collapse-header:hover,
-    .collapse-panel[open] .collapse-header:hover {
+    .connections .collapse-header:hover,
+    .connections .collapse-panel[open] .collapse-header:hover {
         background-color: var(--primary-color-30);
     }
 
@@ -62,6 +61,13 @@
         --primary-color-20: #8e81d033;
         --primary-color-30: #8e81d03d;
     }
+
+    .collapse-header span {
+        margin-left: auto;
+        align-items: center;
+        font-size: 1.4rem;
+    }
+
 
     .featured-editor {
         border: var(--border-width) solid var(--primary-color);

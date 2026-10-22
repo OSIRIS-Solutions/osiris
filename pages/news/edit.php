@@ -113,7 +113,11 @@ if (isset($news) && isset($news['_id'])) {
         <br>
     <?php } ?>
 
-    <?php include BASEPATH . '/pages/news/connections-editor.php'; ?>
+    <div class="box padded" id="activities">
+        <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title">
+        <?php include BASEPATH . '/pages/news/connections-editor.php'; ?>
+    </div>
+
 
     <?php
     $outletSelectionMode = 'edit';

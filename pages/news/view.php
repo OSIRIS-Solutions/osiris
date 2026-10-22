@@ -525,6 +525,7 @@ if (NewsRequests::canEdit($news, $Settings)) { ?>
     </div>
 
 
+    <?php include BASEPATH . '/pages/news/review.php'; ?>
     <?php if ($Settings->hasPermission('news.editorial')) include BASEPATH . '/pages/news/editorial.php'; ?>
 
     <?php if (isset($_GET['verbose']) && $Settings->hasPermission('news.editorial')) {

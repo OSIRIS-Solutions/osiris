@@ -3,9 +3,8 @@ $news_lang = $Settings->get('news-language', 'one');
 ?>
     <!-- add activities -->
 
-    <div class="box padded" id="activities">
-        <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title">
-
+    <div class="connections">
+        <!-- <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title"> -->
 
         <details class="collapse-panel person-panel" open>
             <summary class="collapse-header">

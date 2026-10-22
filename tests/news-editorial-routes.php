@@ -6,6 +6,7 @@ $testRoot = sys_get_temp_dir() . '/osiris-editorial-test-' . bin2hex(random_byte
 mkdir($testRoot . '/php', 0700, true);
 symlink(BASEPATH . '/php/NewsRequests.php', $testRoot . '/php/NewsRequests.php');
 symlink(BASEPATH . '/php/NewsEditorial.php', $testRoot . '/php/NewsEditorial.php');
+symlink(BASEPATH . '/php/NewsReview.php', $testRoot . '/php/NewsReview.php');
 symlink(BASEPATH . '/routes', $testRoot . '/routes');
 file_put_contents($testRoot . '/php/init.php', '<?php $Settings = $GLOBALS["Settings"]; $DB = $GLOBALS["DB"]; $osiris = $GLOBALS["osiris"];');
 
@@ -83,11 +84,53 @@ try {
     $changedSourcePost['editorial']['source_reviewed'] = '1';
     $reviewed = requestRoute(array_replace($base, ['news' => $connections['news'], 'post' => $changedSourcePost]));
     check($reviewed['error'] === null && $reviewed['news']['editorial_contributions'][0]['original_revision'] === 2, 'Acknowledge the current source version explicitly.');
+    $reviewRoute = static function ($news, $action, $input = [], $actor = 'editor', $permissions = ['news.editorial'], $overrides = []) use ($base) {
+        return requestRoute(array_replace($base, ['news' => $news, 'actor' => $actor, 'permissions' => $permissions,
+            'post' => ['csrf_token' => 'token', 'news_revision' => $news['revision'], 'action' => $action, 'editorial' => $input]], $overrides));
+    };
+    $reviewRequest = $reviewRoute($ready['news'], 'request_review');
+    check($reviewRequest['error'] === null && $reviewRequest['news']['outlet_requests'][0]['status'] === 'pending_approval', 'Request an author review of prepared outlets.');
+    check(count($reviewRequest['messages']) === 1 && $reviewRequest['messages'][0]['group'] === 'user:author', 'Notify the author once for the entire batch.');
+    $reviewInput = ['review_id' => $reviewRequest['news']['author_reviews'][0]['id']];
+    $authorApproval = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', []);
+    check($authorApproval['error'] === null && $authorApproval['news']['outlet_requests'][0]['status'] === 'approved', 'The actual author can confirm without news-edit or editorial permissions.');
+    check(count($authorApproval['messages']) === 1 && $authorApproval['messages'][0]['group'] === 'right:news.editorial', 'Notify the editorial team after author confirmation.');
+    $foreignResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'other', ['news.editorial']);
+    check($foreignResponse['error']['code'] === 403 && !$foreignResponse['write_attempted'] && $foreignResponse['messages'] === [], 'Another editor cannot impersonate the author.');
+    $feedbackResponse = $reviewRoute($reviewRequest['news'], 'request_changes', $reviewInput + ['comment' => 'Please correct the date.'], 'author', []);
+    check($feedbackResponse['error'] === null && $feedbackResponse['news']['author_reviews'][0]['comment'] === 'Please correct the date.' && $feedbackResponse['news']['outlet_requests'][0]['status'] === 'in_progress', 'Return the batch to editing with the author comment.');
+    check(count($feedbackResponse['messages']) === 1 && $feedbackResponse['messages'][0]['group'] === 'right:news.editorial', 'Change requests notify the editorial inbox.');
+    $badFeedback = $reviewRoute($reviewRequest['news'], 'request_changes', $reviewInput, 'author', []);
+    check($badFeedback['error']['code'] === 400 && !$badFeedback['write_attempted'] && !$badFeedback['messages'], 'Reject empty feedback before writing or notifying.');
+    $directRelease = $reviewRoute($ready['news'], 'release');
+    check($directRelease['error'] === null && $directRelease['news']['outlet_requests'][0]['release_mode'] === 'without_review', 'Editors can release directly without requesting author review.');
+    $confirmedRelease = $reviewRoute($authorApproval['news'], 'release');
+    check($confirmedRelease['error'] === null && $confirmedRelease['news']['outlet_requests'][0]['release_mode'] === 'author_approved', 'Record release after author confirmation.');
+    $unconfirmedBypass = $reviewRoute($reviewRequest['news'], 'release');
+    check($unconfirmedBypass['error']['code'] === 400 && !$unconfirmedBypass['write_attempted'], 'A pending review needs deliberate bypass confirmation.');
+    $bypass = $reviewRoute($reviewRequest['news'], 'release', ['confirm_without_response' => '1']);
+    check($bypass['error'] === null && $bypass['news']['author_reviews'][0]['status'] === 'closed_without_response' && $bypass['news']['outlet_requests'][0]['release_mode'] === 'without_response', 'Close without response and record the release mode.');
+    $lateReply = $reviewRoute($bypass['news'], 'approve_review', $reviewInput, 'author', []);
+    check($lateReply['error']['code'] === 400 && !$lateReply['write_attempted'] && !$lateReply['messages'], 'A late response cannot alter the completed release.');
+    $reviewRace = $reviewRoute($ready['news'], 'request_review', [], 'editor', ['news.editorial'], ['race' => true]);
+    check($reviewRace['error']['code'] === 409 && !$reviewRace['messages'] && $reviewRace['news'] === $ready['news'], 'Never send a notification when a concurrent change prevented the review write.');
+    $cancel = $reviewRoute($reviewRequest['news'], 'cancel_review', $reviewInput);
+    check($cancel['error'] === null && $cancel['news']['outlet_requests'][0]['status'] === 'ready' && $cancel['messages'][0]['group'] === 'user:author', 'Editors can end a pending review and notify the author.');
+    $revise = $reviewRoute($confirmedRelease['news'], 'revise', ['outlet_id' => $website['id']]);
+    check($revise['error'] === null && $revise['news']['outlet_requests'][0]['status'] === 'in_progress' && !isset($revise['news']['outlet_requests'][0]['release_mode']), 'Explicit revision invalidates the current release.');
+    $forbiddenRelease = $reviewRoute($ready['news'], 'release', [], 'author', ['news.edit-own']);
+    check($forbiddenRelease['error']['code'] === 403 && !$forbiddenRelease['write_attempted'], 'Authors do not gain editorial release permission.');
+    $forgedResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', [], ['post' => ['action' => 'approve_review', 'csrf_token' => 'forged']]);
+    check($forgedResponse['error']['code'] === 403 && !$forgedResponse['write_attempted'], 'Author responses require a valid CSRF token.');
+    $staleReviewPost = ['csrf_token' => 'token', 'action' => 'approve_review', 'news_revision' => 0, 'editorial' => $reviewInput];
+    $staleResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', [], ['post' => $staleReviewPost]);
+    check($staleResponse['error']['code'] === 409 && !$staleResponse['write_attempted'], 'Stale author forms cannot overwrite newer changes.');
     echo "News editorial route checks passed.\n";
 } finally {
     unlink($testRoot . '/php/init.php');
     unlink($testRoot . '/php/NewsRequests.php');
     unlink($testRoot . '/php/NewsEditorial.php');
+    unlink($testRoot . '/php/NewsReview.php');
     unlink($testRoot . '/routes');
     rmdir($testRoot . '/php');
     rmdir($testRoot);

@@ -55,7 +55,7 @@ rejects(fn() => NewsEditorial::apply('save', $draft, $original, $initial, 'edito
 rejects(fn() => NewsEditorial::apply('add', ['outlet_id' => $newsletter['id']], array_merge($news, ['internal_only' => true]), $initial, 'editor', $now), 'Respect internal-only selection.');
 rejects(fn() => NewsEditorial::apply('save', array_replace($draft, ['content' => ['de' => ['forged']]]), $news, $initial, 'editor', $now), 'Reject malformed localized text.');
 rejects(fn() => NewsEditorial::apply('save', array_replace($draft, ['title' => ['en' => str_repeat('x', 241)]]), $news, $initial, 'editor', $now), 'Enforce title lengths.');
-foreach (['pending_approval', 'approved', 'published', 'unknown'] as $status) {
+foreach (['pending_approval', 'approved', 'released', 'published', 'unknown'] as $status) {
     $protected = $news;
     $protected['outlet_requests'][0]['status'] = $status;
     rejects(fn() => NewsEditorial::apply('save', $draft, $protected, $initial, 'editor', $now), 'Protect ' . $status . ' from this draft editor.');

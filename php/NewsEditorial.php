@@ -47,6 +47,12 @@ class NewsEditorial
             'ready' => lang('Editorial work completed', 'Redaktionell fertiggestellt'),
             'decline' => lang('Outlet declined', 'Outlet abgelehnt'),
             'connections' => lang('Shared connections updated', 'Gemeinsame Verknüpfungen aktualisiert'),
+            'request_review' => lang('Author review requested', 'Autorenprüfung angefordert'),
+            'approve_review' => lang('Versions confirmed by the author', 'Fassungen von Autor:in bestätigt'),
+            'request_changes' => lang('Author requested changes', 'Änderung von Autor:in angefragt'),
+            'cancel_review' => lang('Author review ended', 'Autorenprüfung beendet'),
+            'release' => lang('Prepared outlets released', 'Vorbereitete Outlets freigegeben'),
+            'revise' => lang('Outlet reopened for revision', 'Outlet zur Überarbeitung geöffnet'),
             default => lang('Editorial change', 'Redaktionelle Änderung'),
         };
     }

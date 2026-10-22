@@ -117,8 +117,41 @@ class NewsRequests
             'ready' => lang('Ready', 'Fertig vorbereitet'),
             'pending_approval' => lang('Awaiting author review', 'Wartet auf Autorenprüfung'),
             'approved' => lang('Approved', 'Bestätigt'),
+            'released' => lang('Editorially released', 'Redaktionell freigegeben'),
             'published' => lang('Published', 'Veröffentlicht'),
             default => lang('Managed by the editorial team', 'In redaktioneller Bearbeitung'),
+        };
+    }
+
+    public static function statusClass(string $status): string
+    {
+        return match ($status) {
+            'requested' => 'badge',
+            'withdrawn' => 'badge muted',
+            'declined' => 'badge danger',
+            'in_progress' => 'badge signal',
+            'ready' => 'badge success',
+            'pending_approval' => 'badge signal',
+            'approved' => 'badge success',
+            'released' => 'badge success',
+            'published' => 'badge success',
+            default => 'badge',
+        };
+    }
+
+    public static function statusIcon(string $status): string
+    {
+        return match ($status) {
+            'requested' => 'ph-hourglass',
+            'withdrawn' => 'ph-x-circle',
+            'declined' => 'ph-x-circle',
+            'in_progress' => 'ph-spinner',
+            'ready' => 'ph-check-circle',
+            'pending_approval' => 'ph-spinner',
+            'approved' => 'ph-check-circle',
+            'released' => 'ph-check-circle',
+            'published' => 'ph-check-circle',
+            default => 'ph-circle',
         };
     }
 

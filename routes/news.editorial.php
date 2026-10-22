@@ -1,11 +1,13 @@
 <?php
 
 require_once BASEPATH . '/php/NewsEditorial.php';
+require_once BASEPATH . '/php/NewsReview.php';
 
 Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . '/php/init.php';
     if (!$Settings->featureEnabled('news', true)) abortwith(500, lang('News are not enabled.', 'News sind nicht aktiviert.'));
-    if (!$Settings->hasPermission('news.editorial')) {
+    $authorAction = in_array($_POST['action'] ?? null, ['approve_review', 'request_changes'], true);
+    if (!$authorAction && !$Settings->hasPermission('news.editorial')) {
         abortwith(403, lang('You do not have editorial permission.', 'Du hast keine Redaktionsberechtigung.'));
     }
     if (!NewsRequests::validCsrf($_POST['csrf_token'] ?? null)) {
@@ -14,6 +16,9 @@ Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$news) abortwith(404, lang('News item not found.', 'Nachricht nicht gefunden.'));
     $news = DB::doc2Arr($news);
+    if ($authorAction && !NewsRequests::isAuthor($news)) {
+        abortwith(403, lang('Only the author can respond to this review.', 'Nur die Autorin oder der Autor kann auf diese Prüfung antworten.'));
+    }
     $revision = filter_var($_POST['news_revision'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
     if ($revision === false || $revision !== (int) ($news['revision'] ?? 0)) {
         abortwith(409, lang('This news item has changed. Reload it before saving again.', 'Diese News wurde zwischenzeitlich geändert. Bitte lade sie vor dem erneuten Speichern neu.'));
@@ -46,6 +51,8 @@ Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
                 $history[] = ['action' => 'connections', 'actor' => $_SESSION['username'], 'at' => date('c')];
                 $fields['editorial_history'] = $history;
             }
+        } elseif (in_array($action, ['request_review', 'approve_review', 'request_changes', 'cancel_review', 'release', 'revise'], true)) {
+            $fields = NewsReview::apply($action, $input, $news, $Settings->getNewsOutlets(), $_SESSION['username'], $Settings->hasPermission('news.editorial'), date('c'));
         } else {
             $fields = NewsEditorial::apply($action, $input, $news, $Settings->getNewsOutlets(), $_SESSION['username'], date('c'));
         }
@@ -58,9 +65,17 @@ Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
     if ($result->getMatchedCount() !== 1) {
         abortwith(409, lang('This news item has changed. Reload it before saving again.', 'Diese News wurde zwischenzeitlich geändert. Bitte lade sie vor dem erneuten Speichern neu.'));
     }
-    $_SESSION['msg'] = lang('Editorial changes saved.', 'Redaktionelle Änderungen gespeichert.');
+    NewsReview::notify($DB, $action, array_merge($news, $fields));
+    $_SESSION['msg'] = match ($action) {
+        'request_review' => lang('Author review requested.', 'Autorenprüfung angefordert.'),
+        'approve_review' => lang('Versions confirmed.', 'Fassungen bestätigt.'),
+        'request_changes' => lang('Change request sent to the editorial team.', 'Änderungswunsch an die Redaktion gesendet.'),
+        'cancel_review' => lang('Author review ended.', 'Autorenprüfung beendet.'),
+        'release' => lang('Prepared outlets released.', 'Vorbereitete Outlets freigegeben.'),
+        default => lang('Editorial changes saved.', 'Redaktionelle Änderungen gespeichert.'),
+    };
     $_SESSION['msg_type'] = 'success';
-    $anchor = $action === 'connections' ? 'editorial-connections' : 'news-editorial';
+    $anchor = $authorAction ? 'news-author-review' : ($action === 'connections' ? 'editorial-connections' : 'news-editorial');
     header('Location: ' . ROOTPATH . '/news/view/' . e($id) . '#' . $anchor);
     exit;
 }, 'login');
