@@ -2,7 +2,7 @@
 FROM composer:2 AS composer
 
 # Build-Stage for dependencies
-FROM php:8.1-cli AS build_dependencies
+FROM php:8.4-cli AS build_dependencies
 
 # Install composer and necessary dependencies
 RUN apt-get update && apt-get install -y git unzip
@@ -18,7 +18,7 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --no-interaction --no-dev
 
 # Main-Image
-FROM php:8.1-cli
+FROM php:8.4-cli
 
 # Author label
 LABEL authors="Paul C. Gaida"
@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure ldap \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install ldap zip gd \
-    && pecl install mongodb-1.21.0 \
+    && pecl install mongodb-2.4.1 \
     && docker-php-ext-enable mongodb \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \

@@ -2,7 +2,7 @@
 FROM composer:2 AS composer
 
 # Build-Stage for dependencies
-FROM php:8.1-fpm-alpine AS build_dependencies
+FROM php:8.4-fpm-alpine AS build_dependencies
 
 # Install composer and necessary dependencies
 RUN apk add --no-cache git unzip
@@ -18,7 +18,7 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --no-interaction --no-dev
 
 # Main-Image
-FROM php:8.1-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Author label
 LABEL authors="Paul C. Gaida"
@@ -38,7 +38,7 @@ RUN apk update && apk add --no-cache \
     && docker-php-ext-configure ldap \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install ldap zip gd \
-    && pecl install mongodb-1.21.0 \
+    && pecl install mongodb-2.4.1 \
     && docker-php-ext-enable mongodb
 
 RUN printf "upload_max_filesize=16M\npost_max_size=18M\nmemory_limit=256M\n" > /usr/local/etc/php/conf.d/osiris-uploads.ini
