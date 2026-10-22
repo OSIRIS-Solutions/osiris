@@ -2,7 +2,7 @@
 FROM composer:2 AS composer
 
 # Build-Stage for dependencies
-FROM php:8.1-fpm-alpine AS build_dependencies
+FROM php:8.4-fpm-alpine AS build_dependencies
 
 # Install composer and necessary dependencies
 RUN apk add --no-cache git unzip
@@ -18,7 +18,7 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --no-interaction --no-dev
 
 # Main-Image
-FROM php:8.1-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Author label
 LABEL authors="Paul C. Gaida"
