@@ -1334,6 +1334,14 @@ class Modules
             echo '<b>Module <code>' . $module . '</code> is not defined. </b>';
             return;
         }
+        if (!empty($field['conditional']) && empty($props['_conditional_input'])) {
+            ConditionalFields::render($field, $this->form, $req, $props, function () use ($module, $req, $props) {
+                $props['_conditional_input'] = true;
+                $props['width'] = 12;
+                $this->custom_field($module, $req, $props);
+            });
+            return;
+        }
         $width = $field['width'] ?? 12;
         // $width = 12 / $width;
         $labelClass = ($req ? "required" : "");

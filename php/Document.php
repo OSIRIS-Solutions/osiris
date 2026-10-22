@@ -1782,6 +1782,7 @@ class Document extends Settings
 
     public function customVal($field)
     {
+        if (!empty($field['conditional']) && ConditionalFields::answer($field, $this->doc) !== true) return '';
         $format = $field['format'] ?? '';
         $default = $field['default'] ?? '';
         if (!array_key_exists($field['id'], $this->doc)) return $default;

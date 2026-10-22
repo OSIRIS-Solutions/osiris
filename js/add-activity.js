@@ -370,6 +370,7 @@ function verifyForm(event, form) {
     form.find(':input[name]').each(function () {
         //retrieve field name and value from the DOM
         var input = $(this)
+        if (input.is(':disabled')) return;
         var selector = input
         if (input.attr('id') == 'title') {
             selector = $('.title-editor')
@@ -436,6 +437,7 @@ function verifyForm(event, form) {
 
     // more marked modules:
     $('.data-module.required').each(function () {
+        if ($(this).closest('fieldset:disabled').length) return;
         console.log($(this).find(':input[name]'));
         if ($(this).find(':input[name]:not(:disabled)').length === 0) {
             $(this).addClass('is-invalid').removeClass('is-valid')

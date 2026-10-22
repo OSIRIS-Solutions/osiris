@@ -39,6 +39,7 @@ class CustomFields
         $field = $this->fields[$module] ?? null;
         if (!isset($field)) return $default;
 
+        if (!empty($field['conditional']) && ConditionalFields::answer($field, $this->form) !== true) return '';
         $format = $field['format'] ?? '';
         if (!array_key_exists($field['id'], $this->form)) return $default;
 
@@ -124,6 +125,14 @@ class CustomFields
         $field = $this->DB->db->adminFields->findOne(['id' => $module]);
         if (!isset($field)) {
             echo '<b>Data field <code>' . $module . '</code> is not defined. </b>';
+            return;
+        }
+        if (!empty($field['conditional']) && empty($props['_conditional_input'])) {
+            ConditionalFields::render($field, $this->form, $req, $props, function () use ($module, $req, $props) {
+                $props['_conditional_input'] = true;
+                $props['width'] = 12;
+                $this->custom_field($module, $req, $props);
+            });
             return;
         }
         $width = $field['width'] ?? 12;

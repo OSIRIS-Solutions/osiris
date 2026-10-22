@@ -277,7 +277,8 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->infrastructures;
 
-    $values = validateValues($_POST['values'], $DB);
+    $old = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $values = validateValues($_POST['values'], $DB, $old);
     if (isset($values['collaborative'])) {
         $values['collaborative'] = $values['collaborative'] == 'yes' ? true : false;
         if (isset($values['collaborators'])) {
@@ -300,7 +301,7 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $updateResult = $collection->updateOne(
         ['_id' => $id],
-        ['$set' => $values]
+        ConditionalFields::update($values)
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {

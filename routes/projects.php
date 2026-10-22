@@ -703,7 +703,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         abortwith(404, $collection == 'projects' ? lang('Project', 'Projekt') : lang('Project proposal', 'Projektantrag'), "/$collection");
     }
 
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, $project);
     // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
@@ -875,7 +875,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     $updateResult = $osiris->$collection->updateOne(
         ['_id' => $id],
-        ['$set' => $values]
+        ConditionalFields::update($values)
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {

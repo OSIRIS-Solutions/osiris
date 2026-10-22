@@ -19,3 +19,4 @@ upload.sh
 *conflicted copy*.*
 dump
 src/
+logs/*

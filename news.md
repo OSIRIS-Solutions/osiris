@@ -1,5 +1,19 @@
 
 
+<time datetime="2026-10-22">22.10.2026</time>
+<a class="anchor" href="#version-2.1.3" id="version-2.1.3"></a>
+
+## Version 2.1.3
+
+### Bedingte Eingaben für benutzerdefinierte Felder
+
+Benutzerdefinierten Feldern kann nun eine frei beschriftbare **Ja/Nein-Frage** vorgeschaltet werden. Das eigentliche Eingabefeld wird nur bei „Ja“ angezeigt. So lässt sich beispielsweise bei einer archivierten Publikation gezielt eine Abkürzung abfragen. Die Funktion ergänzt die vorhandenen Feldtypen und kann auch für bestehende Felder aktiviert werden. Bei Pflichtfeldern muss die Frage beantwortet und bei „Ja“ zusätzlich ein Wert eingegeben werden. Die Ja/Nein-Antwort lässt sich unabhängig vom Feldwert in der **erweiterten Suche** filtern.
+
+### Erweiterte Angaben für Betreuende
+
+Bei Betreuenden von Abschlussarbeiten können nun zusätzlich der **akademische Titel** (z. B. Prof. oder Dr.) und die **Einrichtung** hinterlegt werden. Die Einrichtung kann unabhängig von der Kennzeichnung der eigenen Institutszugehörigkeit angegeben werden, sodass auch externe Zugehörigkeiten erfasst werden können. Dazu ist das neue Feld `supervisor-thesis-details` vorgesehen.
+
+
 <time datetime="2026-10-02">02.10.2026</time>
 <a class="anchor" href="#version-2.1.2" id="version-2.1.2"></a>
 

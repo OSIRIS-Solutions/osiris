@@ -213,7 +213,8 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->organizations;
 
-    $values = validateValues($_POST['values'], $DB);
+    $old = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $values = validateValues($_POST['values'], $DB, $old);
     // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
@@ -221,7 +222,7 @@ Route::post('/crud/organizations/update/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $updateResult = $collection->updateOne(
         ['_id' => $id],
-        ['$set' => $values]
+        ConditionalFields::update($values)
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {

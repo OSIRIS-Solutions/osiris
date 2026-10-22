@@ -1631,8 +1631,7 @@ if ($is_subproject) {
                 $('#submit-btn').on('click', function(e) {
                     e.preventDefault();
                     if (validateForm()) {
-                        // form.off('submit');
-                        form.submit();
+                        form[0].requestSubmit();
                     }
                 });
 
@@ -1640,6 +1639,7 @@ if ($is_subproject) {
                     let errors = [];
                     required_keys.forEach(key => {
                         $(form).find(`[name='values[${key}]']`).each(function() {
+                            if ($(this).is(':disabled')) return;
                             if ($(this).val() == '') {
                                 errors.push(key)
                                 $(this).addClass('is-invalid')

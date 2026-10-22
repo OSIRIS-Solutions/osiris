@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/ConditionalFields.php";
+
 
 // implement newer functions in case they don't exist
 if (!function_exists('str_contains')) {
@@ -35,7 +37,7 @@ function e($value): string
 }
 
 // helper functions for all CRUD methods
-function validateValues($values, $DB)
+function validateValues($values, $DB, $old = [], $nested = false)
 {
     if (!is_array($values)) return $values;
     $first = max(intval($values['first_authors'] ?? 1), 1);
@@ -131,7 +133,7 @@ function validateValues($values, $DB)
             }
             $values[$key] = $countries;
         } else if (is_array($value)) {
-            $values[$key] = validateValues($value, $DB);
+            $values[$key] = validateValues($value, $DB, [], true);
         } else if ($key == 'issn') {
             if (empty($value)) {
                 $values[$key] = array();
@@ -236,7 +238,7 @@ function validateValues($values, $DB)
     }
     // dump($values);
     // die;
-    return $values;
+    return $nested ? $values : ConditionalFields::normalize($values, $DB, $old);
 }
 
 function shortenName($name, $maxLength = 30)

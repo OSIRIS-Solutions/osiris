@@ -48,7 +48,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             <h5 class="title"><?= lang('ID must be unique', 'Die ID muss einzigartig sein.') ?></h5>
 
             <p>
-                <?= lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt.') ?>
+                <?= lang('The ID is used internally to save data for this data field in the database. Furthermore, it will be used in templates to display the data. Therefore, it must be unique and may only contain lowercase letters (a-z), numbers (0-9), and hyphens (-). Spaces and special characters are not allowed. The suffix --confirmed is reserved for Yes/No answers.', 'Die ID wird intern verwendet, um Daten für dieses Datenfeld in der Datenbank zu speichern. Außerdem wird sie in Vorlagen verwendet, um die Daten anzuzeigen. Daher muss sie einzigartig sein und darf nur Kleinbuchstaben (a-z), Zahlen (0-9) und Bindestriche (-) enthalten. Leerzeichen und Sonderzeichen sind nicht erlaubt. Der Zusatz --confirmed ist für Ja/Nein-Antworten reserviert.') ?>
             </p>
             <p>
                 <?= lang('As the ID must be unique, the following previously used IDs and keywords (new) cannot be used as IDs:', 'Da die ID einzigartig sein muss, können folgende bereits verwendete IDs und Schlüsselwörter (new) nicht als ID verwendet werden:') ?>
@@ -139,6 +139,30 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </div>
 
 
+
+            <div class="form-group mt-20">
+                <div class="custom-checkbox">
+                    <input type="hidden" name="values[conditional]" value="0">
+                    <input type="checkbox" name="values[conditional]" id="conditional" value="1" <?= !empty($form['conditional']) ? 'checked' : '' ?>
+                        onchange="$('#conditional-settings').toggle(this.checked).prop('disabled', !this.checked)">
+                    <label for="conditional"><?= lang('Show input only after answering Yes', 'Eingabe erst nach Ja anzeigen') ?></label>
+                </div>
+                <small class="text-muted"><?= lang('Adds a Yes/No question before this field, wherever it is used. With No, no field value is saved.', 'Ergänzt vor diesem Feld eine Ja/Nein-Frage, überall dort, wo es verwendet wird. Bei Nein wird kein Feldwert gespeichert.') ?></small>
+            </div>
+            <fieldset id="conditional-settings" <?= empty($form['conditional']) ? 'style="display: none;" disabled' : '' ?>>
+                <legend><?= lang('Yes/No question', 'Ja/Nein-Frage') ?></legend>
+                <div class="row row-eq-spacing">
+                    <div class="col-sm-6">
+                        <label for="condition-label">EN</label>
+                        <input type="text" class="form-control" name="values[condition_label]" id="condition-label" value="<?= e($form['condition_label'] ?? '') ?>" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="condition-label-de">DE</label>
+                        <input type="text" class="form-control" name="values[condition_label_de]" id="condition-label-de" value="<?= e($form['condition_label_de'] ?? '') ?>">
+                    </div>
+                </div>
+                <small class="text-muted"><?= lang('For required fields, the question must be answered. With Yes, the field value is also required. Existing values are treated as Yes.', 'Bei Pflichtfeldern muss die Frage beantwortet werden. Bei Ja ist auch die Eingabe verpflichtend. Bereits vorhandene Werte werden als Ja behandelt.') ?></small>
+            </fieldset>
 
             <fieldset id="values-field" <?= ($form['format'] ?? null) != 'list' ? 'style="display: none;"' : '' ?>>
                 <legend><?= lang('Possible values', 'Mögliche Werte') ?></legend>

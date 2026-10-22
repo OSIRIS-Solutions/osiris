@@ -551,12 +551,11 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     $values = $_POST['values'];
-    $values = validateValues($values, $DB);
+    $old = $DB->getPerson($user);
+    $values = validateValues($values, $DB, $old);
     // separate personal and account information
     $person = $values;
     // $account = [];
-    // get old value for rendering
-    $old = $DB->getPerson($user);
 
     // update name information
     if (isset($values['last']) && isset($values['first'])) {
@@ -656,7 +655,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
 
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],
-        ['$set' => $person]
+        ConditionalFields::update($person)
     );
 
     if (isset($person['hide'])) {

@@ -83,6 +83,11 @@ Route::post('/crud/fields/create', function () {
 
     $values = validateValues($_POST['values'], $DB);
 
+    // Reserve the generated answer key so it cannot overwrite another custom field.
+    if (str_ends_with($values['id'], '--confirmed') || (!empty($values['conditional']) && $osiris->adminFields->findOne(['id' => $values['id'] . '--confirmed']))) {
+        abortwith(400, lang('The suffix --confirmed is reserved for Yes/No answers. Please choose another field ID.', 'Der Zusatz --confirmed ist für Ja/Nein-Antworten reserviert. Bitte wähle eine andere Feld-ID.'));
+    }
+
     if (isset($values['values']) && !empty($values['values'])) {
         $en = $values['values'];
         $de = $values['values_de'] ?? $en;
@@ -121,6 +126,12 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
     $values = validateValues($_POST['values'], $DB);
     $values['id'] = $id;
 
+    // Reserve the generated answer key so it cannot overwrite another custom field.
+    if (str_ends_with($values['id'], '--confirmed') || (!empty($values['conditional']) && $osiris->adminFields->findOne(['id' => $values['id'] . '--confirmed']))) {
+        abortwith(400, lang('The suffix --confirmed is reserved for Yes/No answers. Please choose another field ID.', 'Der Zusatz --confirmed ist für Ja/Nein-Antworten reserviert. Bitte wähle eine andere Feld-ID.'));
+    }
+
+
     
     if (isset($values['values']) && !empty($values['values'])) {
         $en = $values['values'];
@@ -135,6 +146,8 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
         }
     }
 
+    $old = $osiris->adminFields->findOne(['id' => $id]);
+    ConditionalFields::initializeAnswers($values, $old, $osiris);
     $updateResult = $osiris->adminFields->updateOne(
         ['id' => $id],
         ['$set' => $values]

@@ -110,6 +110,18 @@ class Fields
             }
 
             $FIELDS[] = $f;
+            if (!empty($field['conditional'])) {
+                $question = lang($field['condition_label'] ?? '', $field['condition_label_de'] ?? null);
+                if (trim($question) === '') $question = lang($field['name'], $field['name_de'] ?? null);
+                $FIELDS[] = [
+                    'id' => $field['id'] . '--confirmed',
+                    'module_of' => $f['module_of'],
+                    'usage' => ['filter'],
+                    'label' => $question . ' (' . $field['id'] . '--confirmed)',
+                    'type' => 'boolean',
+                    'custom' => true
+                ];
+            }
         }
         return $FIELDS;
     }

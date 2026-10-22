@@ -774,7 +774,8 @@ Route::post('/crud/activities/save-draft', function () {
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     $collection = $osiris->activitiesDrafts;
 
-    $values = validateValues($_POST['values'], $DB);
+    $old = empty($_POST['values']['draft_id']) ? [] : $collection->findOne(['_id' => $DB->to_ObjectID($_POST['values']['draft_id'])]);
+    $values = validateValues($_POST['values'], $DB, $old);
 
     $values['created'] = date('Y-m-d');
     $values['created_by'] = ($_SESSION['username']);
@@ -784,7 +785,7 @@ Route::post('/crud/activities/save-draft', function () {
         unset($values['draft_id']);
         $updateResult = $collection->updateOne(
             ['_id' => $draft_id],
-            ['$set' => $values]
+            ConditionalFields::update($values)
         );
         if ($updateResult->getModifiedCount() == 0) {
             $_SESSION['msg'] = lang("Draft could not be updated.", "Entwurf konnte nicht aktualisiert werden.");
@@ -897,7 +898,8 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
     $collection = $osiris->activities;
-    $values = validateValues($_POST['values'], $DB);
+    $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $values = validateValues($_POST['values'], $DB, $old);
 
     if (isset($_POST['minor']) && $_POST['minor'] == 1) {
         unset($values['authors']);
@@ -910,7 +912,6 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     // Recompute affiliations for role changes and activity date changes.
     if (array_intersect(['authors', 'editors', 'supervisors', 'start', 'year', 'month', 'day', 'start_date'], array_keys($values))) {
         // check if authors have been changed
-        $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
         foreach (['authors', 'editors', 'supervisors'] as $role) {
             $old_arr = DB::doc2Arr($old[$role] ?? []);
             // Restore omitted accounts only when the name is unique on both sides.
@@ -950,7 +951,7 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     $id = $DB->to_ObjectID($id);
     $updateResult = $collection->updateOne(
         ['_id' => $id],
-        ['$set' => $values]
+        ConditionalFields::update($values)
     );
 
     renderActivities(['_id' => $id]);

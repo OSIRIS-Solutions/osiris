@@ -521,7 +521,8 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     $values = $_POST['values'];
-    $values = validateValues($values, $DB);
+    $old = $osiris->journals->findOne(['_id' => $DB->to_ObjectID($id)]);
+    $values = validateValues($values, $DB, $old);
 
     $collection = $osiris->journals;
     $mongoid = $DB->to_ObjectID($id);
@@ -605,7 +606,7 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
 
         $updateResult = $collection->updateOne(
             ['_id' => $mongoid],
-            ['$set' => $values]
+            ConditionalFields::update($values)
         );
     }
 
