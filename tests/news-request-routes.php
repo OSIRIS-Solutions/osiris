@@ -5,6 +5,8 @@ require __DIR__ . '/news-requests.php';
 $testRoot = sys_get_temp_dir() . '/osiris-news-test-' . bin2hex(random_bytes(6));
 mkdir($testRoot . '/php', 0700, true);
 symlink(BASEPATH . '/php/NewsRequests.php', $testRoot . '/php/NewsRequests.php');
+symlink(BASEPATH . '/php/NewsEditorial.php', $testRoot . '/php/NewsEditorial.php');
+symlink(BASEPATH . '/routes', $testRoot . '/routes');
 file_put_contents($testRoot . '/php/init.php', '<?php $Settings = $GLOBALS["Settings"]; $DB = $GLOBALS["DB"]; $osiris = $GLOBALS["osiris"];');
 
 function requestRoute(array $input): array
@@ -104,6 +106,8 @@ try {
 } finally {
     unlink($testRoot . '/php/init.php');
     unlink($testRoot . '/php/NewsRequests.php');
+    unlink($testRoot . '/php/NewsEditorial.php');
+    unlink($testRoot . '/routes');
     rmdir($testRoot . '/php');
     rmdir($testRoot);
 }

@@ -3,6 +3,16 @@
 /** Configuration shared by news administration and Portfolio output. */
 class NewsOutlets
 {
+    public const TEXT_FIELDS = ['title', 'teaser', 'content'];
+
+    /** Existing outlets keep their title and contribution fields without a migration. */
+    public static function fields(array $outlet): array
+    {
+        if (!array_key_exists('fields', $outlet)) return ['title', 'content'];
+        $selected = self::toArray($outlet['fields']);
+        return array_values(array_filter(self::TEXT_FIELDS, static fn($field) => in_array($field, $selected, true)));
+    }
+
     private static function toArray($value): array
     {
         if (!is_iterable($value)) return [];
@@ -20,6 +30,7 @@ class NewsOutlets
             foreach (['name', 'description'] as $field) {
                 $outlet[$field] = self::toArray($outlet[$field] ?? []);
             }
+            $outlet['fields'] = self::fields($outlet);
             $outlets[] = $outlet;
         }
         return [
@@ -90,11 +101,21 @@ class NewsOutlets
             if ($name['en'] === '') {
                 throw new InvalidArgumentException(lang('Please enter a name for every outlet.', 'Bitte gib für jedes Outlet einen Namen ein.'));
             }
+            $fields = $row['fields'] ?? ['title', 'content'];
+            if (!is_array($fields) || !$fields) {
+                throw new InvalidArgumentException(lang('Select at least one text field for every outlet.', 'Wähle für jedes Outlet mindestens ein Textfeld aus.'));
+            }
+            foreach ($fields as $field) {
+                if (!is_string($field) || !in_array($field, self::TEXT_FIELDS, true)) {
+                    throw new InvalidArgumentException(lang('Invalid outlet text field.', 'Ungültiges Outlet-Textfeld.'));
+                }
+            }
             $seenIds[] = $id;
             $outlets[] = [
                 'id' => $id,
                 'name' => $name,
                 'description' => self::localizedText($row['description'] ?? [], 500),
+                'fields' => self::fields(['fields' => $fields]),
                 'active' => self::flag($row['active'] ?? false),
                 'portfolio' => self::flag($row['portfolio'] ?? false),
                 'order' => count($outlets),

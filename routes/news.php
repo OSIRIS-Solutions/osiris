@@ -425,3 +425,6 @@ Route::post('/crud/news/delete', function () {
         abortwith(500, lang('Failed to delete news item.', "Die Löschung der Nachricht ist fehlgeschlagen."));
     }
 });
+
+
+include_once BASEPATH . '/routes/news.editorial.php';

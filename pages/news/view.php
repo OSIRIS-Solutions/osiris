@@ -302,6 +302,9 @@ if (NewsRequests::canEdit($news, $Settings)) { ?>
                 <?= lang('Change image', 'Bild ändern') ?>
             </a>
         <?php } ?>
+        <?php if ($Settings->hasPermission('news.editorial')) { ?>
+            <a class="btn" href="#news-editorial"><i class="ph ph-pencil-line" aria-hidden="true"></i> <?= lang('Editorial team', 'Redaktion') ?></a>
+        <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
             <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this news item?', 'Sind Sie sicher, dass Sie diese Nachricht löschen möchten?') ?>');" class="d-inline ml-auto">
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
@@ -522,7 +525,9 @@ if (NewsRequests::canEdit($news, $Settings)) { ?>
     </div>
 
 
-    <?php if (isset($_GET['verbose'])) {
+    <?php if ($Settings->hasPermission('news.editorial')) include BASEPATH . '/pages/news/editorial.php'; ?>
+
+    <?php if (isset($_GET['verbose']) && $Settings->hasPermission('news.editorial')) {
         dump($news);
     } ?>
 

@@ -38,6 +38,20 @@ check($website['description'] === ['en' => 'For the institute website', 'de' => 
 check($newsletter['description'] === ['en' => '', 'de' => ''], 'Include both language keys for optional fields.');
 check(!isset($website['name_de']) && !isset($website['description_de']), 'Use language keys instead of separate translation fields.');
 check($website['portfolio'] && !$newsletter['portfolio'], 'Portfolio output is independent per outlet.');
+check($website['fields'] === ['title', 'content'], 'Existing outlets default to the previous editorial fields.');
+$fieldConfiguration = NewsOutlets::normalize(['outlets' => [
+    array_replace($website, ['fields' => ['content', 'teaser', 'title', 'content']]),
+    array_replace($newsletter, ['fields' => ['content']]),
+]], $initial);
+check($fieldConfiguration['outlets'][0]['fields'] === ['title', 'teaser', 'content'], 'Store selected text fields in display order without duplicates.');
+check($fieldConfiguration['outlets'][1]['fields'] === ['content'], 'Allow an outlet with only a contribution.');
+foreach (['', [], ['unknown'], [['content']]] as $invalidFields) {
+    rejects(fn() => NewsOutlets::normalize(['outlets' => [array_replace($website, ['fields' => $invalidFields]), $newsletter]], $initial), 'Reject empty or invalid editorial field selections.');
+}
+$legacyWebsite = $website;
+unset($legacyWebsite['fields']);
+check(NewsOutlets::read(['outlets' => [$legacyWebsite]])['outlets'][0]['fields'] === ['title', 'content'], 'Read older saved configuration without a migration.');
+check(NewsOutlets::fields(['fields' => new MongoDB\Model\BSONArray(['teaser', 'content'])]) === ['teaser', 'content'], 'Read MongoDB field lists.');
 
 $updated = NewsOutlets::normalize([
     'original_portfolio' => '0',
@@ -110,6 +124,8 @@ foreach (['en' => 'Website', 'de' => 'Webseite'] as $testLanguage => $expectedTi
     check(str_contains($html, 'name="configuration[outlets][0][name][en]" value="Website"'), 'Render the English name field.');
     check(str_contains($html, 'name="configuration[outlets][0][name][de]" value="Webseite"'), 'Render the German name field.');
     check(str_contains($html, 'name="configuration[outlets][0][description][de]" rows="2" maxlength="500">Für die Institutswebseite</textarea>'), 'Render the localized description.');
+    check(str_contains($html, 'name="configuration[outlets][0][fields][]" value="content" checked'), 'Render selected editorial fields.');
+    check(str_contains($html, 'name="configuration[outlets][0][fields][]" value="teaser" >'), 'Leave new teaser fields optional for existing outlets.');
 }
 
 echo "News outlet checks passed.\n";

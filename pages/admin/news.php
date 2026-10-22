@@ -50,6 +50,17 @@ $renderOutlet = static function (array $outlet, string $key) {
                 </div>
             </div>
         </div>
+        <fieldset class="form-group">
+            <legend><?= lang('Editorial text fields', 'Redaktionelle Textfelder') ?></legend>
+            <p class="text-muted"><?= lang('Select the fields available to editors for this outlet. Existing texts are retained when a field is hidden.', 'Wähle aus, welche Felder die Redaktion für dieses Outlet bearbeiten kann. Bereits gespeicherte Texte bleiben beim Ausblenden eines Feldes erhalten.') ?></p>
+            <input type="hidden" name="configuration[outlets][<?= $key ?>][fields]" value="">
+            <?php foreach (['title' => lang('Title', 'Titel'), 'teaser' => lang('Teaser', 'Teaser'), 'content' => lang('Contribution', 'Beitrag')] as $field => $label) { ?>
+                <div class="custom-checkbox mb-10">
+                    <input type="checkbox" id="outlet-<?= $key ?>-field-<?= $field ?>" name="configuration[outlets][<?= $key ?>][fields][]" value="<?= $field ?>" <?= in_array($field, NewsOutlets::fields($outlet), true) ? 'checked' : '' ?>>
+                    <label for="outlet-<?= $key ?>-field-<?= $field ?>"><?= $label ?></label>
+                </div>
+            <?php } ?>
+        </fieldset>
         <div class="custom-checkbox mb-10">
             <input type="hidden" name="configuration[outlets][<?= $key ?>][active]" value="0">
             <input type="checkbox" id="outlet-<?= $key ?>-active" name="configuration[outlets][<?= $key ?>][active]" value="1" <?= !empty($outlet['active']) ? 'checked' : '' ?>>
@@ -91,7 +102,7 @@ $renderOutlet = static function (array $outlet, string $key) {
         <p class="text-muted" id="news-outlets-empty" <?= empty($configuration['outlets']) ? '' : 'hidden' ?>><?= lang('No editorial outlets have been configured yet.', 'Es wurden noch keine redaktionellen Outlets eingerichtet.') ?></p>
         <button type="button" class="btn" id="add-news-outlet"><i class="ph ph-plus" aria-hidden="true"></i> <?= lang('Add outlet', 'Outlet hinzufügen') ?></button>
 
-        <div class="alert primary mt-20">
+        <div class="alert primary my-20">
             <?= lang('Portfolio receives the sources selected here. For new news with outlets, this replaces the individual public/internal setting. The internal-only selection always prevents Portfolio output. Older originals retain their previous release until their outlet selection is changed. Output of editorial outlet texts will follow with the editorial workflow.', 'Portfolio erhält die hier ausgewählten Quellen. Bei neuen News mit Outlets ersetzt dies die einzelne Einstellung öffentlich/intern. Die Auswahl Nur intern verhindert die Portfolio-Ausgabe immer. Ältere Originalbeiträge behalten ihre bisherige Freigabe, bis ihre Outlet-Auswahl geändert wird. Die Ausgabe redaktioneller Outlet-Texte folgt mit dem Redaktionsworkflow.') ?>
         </div>
         <button type="submit" class="btn primary"><i class="ph ph-floppy-disk" aria-hidden="true"></i> <?= lang('Save', 'Speichern') ?></button>
