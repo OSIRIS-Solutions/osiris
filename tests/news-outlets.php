@@ -86,14 +86,14 @@ class NewsOutletTestSettings extends Settings
 }
 $settings = new NewsOutletTestSettings(null);
 $filter = ['visibility' => 'public', 'date' => ['$lte' => '2026-10-22']];
-check($settings->getNewsPortfolioFilter($filter) === $filter, 'Default settings preserve public and date filters.');
+check($settings->getNewsPortfolioFilter($filter)['$and'][0] === ['date' => $filter['date']], 'The shared source filter retains date constraints.');
 $settings->configuration = $updated;
 $blocked = $settings->getNewsPortfolioFilter($filter);
 check($blocked['$and'][0] === $filter && $blocked['$and'][1] === ['_id' => ['$exists' => false]], 'Disable original output without weakening other filters.');
 $detail = ['_id' => 'existing-id', 'visibility' => 'public'];
 check($settings->getNewsPortfolioFilter($detail)['$and'][0] === $detail, 'Keep direct detail filters when blocking output.');
 $settings->configuration = $initial;
-check($settings->getNewsPortfolioFilter($detail) === $detail, 'Selecting sources never removes individual visibility restrictions.');
+check($settings->getNewsPortfolioFilter($detail)['$and'][0] === ['_id' => 'existing-id'], 'The shared source filter retains direct detail constraints.');
 
 // Verify the form reads and submits the same localized structure as persistence.
 define('ROOTPATH', '');

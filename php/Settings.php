@@ -199,12 +199,17 @@ class Settings
         return NewsOutlets::read($this->get('news-outlets', []));
     }
 
-    /** Apply the institution's source selection in addition to news visibility. */
+    /** Portfolio sources control new originals; old originals retain their release. */
     function getNewsPortfolioFilter(array $filter): array
     {
-        if ($this->getNewsOutlets()['original_portfolio']) return $filter;
-        // Every stored news item has an _id; this also protects direct detail requests.
-        return ['$and' => [$filter, ['_id' => ['$exists' => false]]]];
+        if (!$this->getNewsOutlets()['original_portfolio']) {
+            return ['$and' => [$filter, ['_id' => ['$exists' => false]]]];
+        }
+        unset($filter['visibility']);
+        return ['$and' => [$filter, ['internal_only' => ['$ne' => true]], ['$or' => [
+            ['publication_mode' => 'outlets'],
+            ['publication_mode' => ['$ne' => 'outlets'], 'visibility' => 'public'],
+        ]]]];
     }
 
     function set($key, $value)

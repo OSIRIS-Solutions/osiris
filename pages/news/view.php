@@ -15,6 +15,7 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+require_once BASEPATH . '/php/NewsRequests.php';
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $news = DB::doc2Arr($news);
@@ -229,7 +230,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
 </style>
 
 <?php
-if ($Settings->hasPermission('news.edit')) { ?>
+if (NewsRequests::canEdit($news, $Settings)) { ?>
     <!-- Modal for updating the profile picture -->
     <div class="modal modal-lg" id="change-picture" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -247,6 +248,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= e(NewsRequests::csrfToken()) ?>">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
                         <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
@@ -272,6 +274,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
                 <hr>
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post">
+                    <input type="hidden" name="csrf_token" value="<?= e(NewsRequests::csrfToken()) ?>">
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
@@ -289,7 +292,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
     <div class="btn-toolbar pb-20">
         <span class="badge type <?= $news['type'] ?? 'other' ?> mr-10"><?= $Vocabulary->getValue('news-category', $news['type'] ?? 'other') ?></span>
 
-        <?php if ($Settings->hasPermission('news.edit')) { ?>
+        <?php if (NewsRequests::canEdit($news, $Settings)) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
                 <?= lang('Edit', 'Bearbeiten') ?>
@@ -362,6 +365,14 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?= lang($news['content'] ?? '', $news['content_de'] ?? null) ?>
     </div>
 
+
+    <?php if (NewsRequests::isAuthor($news) || $Settings->hasPermission('news.editorial') || NewsRequests::canEdit($news, $Settings)) {
+        $outletSelectionMode = 'view';
+        include BASEPATH . '/pages/news/outlets.php';
+        if (!empty($news['original_updated_at'])) { ?>
+            <p class="text-muted"><?= lang('Original last updated:', 'Original zuletzt geändert:') ?> <?= e(date('d.m.Y H:i', strtotime($news['original_updated_at']))) ?></p>
+        <?php }
+    } ?>
 
     <h4>
         <i class="ph-duotone ph-link-simple"></i>
@@ -502,13 +513,9 @@ if ($Settings->hasPermission('news.edit')) { ?>
             </div>
         <?php } ?>
 
-        <?php if (($news['visibility'] ?? '') === 'public') { ?>
+        <?php if (!NewsRequests::workflowAvailable($Settings->getNewsOutlets(), $news)) { ?>
             <div>
-                <?= lang('Public', 'Öffentlich') ?>
-            </div>
-        <?php } else { ?>
-            <div>
-                <?= lang('Internal', 'Intern') ?>
+                <?= ($news['visibility'] ?? '') === 'public' ? lang('Public', 'Öffentlich') : lang('Internal', 'Intern') ?>
             </div>
         <?php } ?>
 

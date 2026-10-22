@@ -1,17 +1,43 @@
 <?php
 /** Shared request selection and read-only summary. No editorial text is stored here. */
-$outletRows = NewsRequests::rows($Settings->getNewsOutlets(), DB::doc2Arr($news ?? []));
+$outletConfiguration = $Settings->getNewsOutlets();
+$outletNews = DB::doc2Arr($news ?? []);
+$outletRows = NewsRequests::rows($outletConfiguration, $outletNews);
+$internalOnly = NewsRequests::internalOnly($outletNews);
+$showInternalOnly = NewsRequests::workflowAvailable($outletConfiguration, $outletNews) &&
+    ($outletConfiguration['original_portfolio'] || $internalOnly);
 $canSelectOutlets = ($outletSelectionMode ?? 'view') === 'edit' &&
     (!isset($news['_id']) || NewsRequests::isAuthor(DB::doc2Arr($news)));
+if (!$canSelectOutlets) {
+    $outletRows = array_filter($outletRows, static fn($row) => $row['request'] !== null);
+}
 ?>
 <?php if ($canSelectOutlets) { ?>
     <input type="hidden" name="news[outlet_selection]" value="1">
+    <?php if (NewsRequests::workflowAvailable($outletConfiguration, $outletNews)) { ?>
+        <input type="hidden" name="news[internal_only]" value="0">
+        <input type="hidden" name="news[publication_choice_changed]" value="0" id="news-publication-choice-changed">
+    <?php } ?>
 <?php } ?>
-<?php if ($outletRows) { ?>
+<?php if ($outletRows || ($showInternalOnly && ($canSelectOutlets || $internalOnly))) { ?>
     <div class="box padded" id="news-outlet-requests">
         <h2 class="title"><i class="ph-duotone ph-newspaper" aria-hidden="true"></i> <?= lang('Outlet requests', 'Outlet-Anfragen') ?></h2>
         <?php if ($canSelectOutlets) { ?>
-            <p class="text-muted"><?= lang('For which outlets would you like the editorial team to prepare this news? The selection is optional and does not publish any outlet contributions. Your original news appears internally as usual.', 'Für welche Outlets soll die Redaktion diese News aufbereiten? Die Auswahl ist freiwillig und veröffentlicht keine Outlet-Beiträge. Deine ursprüngliche News erscheint wie gewohnt intern.') ?></p>
+            <p class="text-muted"><?= lang('For which outlets would you like to suggest this news? The editorial team prepares suitable contributions.', 'Für welche Outlets möchtest du diese News vorschlagen? Die Redaktion bereitet passende Beiträge vor.') ?></p>
+        <?php } ?>
+        <?php if ($showInternalOnly && $canSelectOutlets) { ?>
+            <div class="form-group">
+                <div class="custom-checkbox">
+                    <input type="checkbox" name="news[internal_only]" id="news-internal-only" value="1" <?= $internalOnly ? 'checked' : '' ?> <?= NewsRequests::canChooseInternalOnly($outletNews) ? '' : 'disabled' ?>>
+                    <label for="news-internal-only"><?= lang('Internal only', 'Nur intern') ?></label>
+                </div>
+                <small class="text-muted d-block"><?= lang('Only show this news in OSIRIS. Do not send it to Portfolio or request editorial outlet contributions.', 'Diese News nur in OSIRIS zeigen. Keine Ausgabe an Portfolio und keine redaktionellen Outlet-Beiträge beantragen.') ?></small>
+                <?php if (!NewsRequests::canChooseInternalOnly($outletNews)) { ?>
+                    <small class="text-muted d-block"><?= lang('Editorial work has already started. Contact the editorial team to stop these contributions.', 'Die redaktionelle Bearbeitung hat bereits begonnen. Bitte kontaktiere die Redaktion, um diese Beiträge zu stoppen.') ?></small>
+                <?php } ?>
+            </div>
+        <?php } elseif ($internalOnly) { ?>
+            <p><span class="badge"><?= lang('Internal only', 'Nur intern') ?></span></p>
         <?php } ?>
         <?php foreach ($outletRows as $row) {
             $outlet = $row['outlet'];
@@ -53,6 +79,12 @@ $canSelectOutlets = ($outletSelectionMode ?? 'view') === 'edit' &&
         <?php } ?>
         <?php if ($canSelectOutlets) { ?>
             <small class="text-muted"><?= lang('You can change your requests until the editorial team starts processing them. You can still edit your original news afterwards.', 'Du kannst deine Anfragen ändern, solange die Redaktion sie noch nicht bearbeitet hat. Deinen Originalbeitrag kannst du auch danach weiterhin bearbeiten.') ?></small>
+            <?php if (isset($news['_id']) && !NewsRequests::usesOutletWorkflow($outletNews)) { ?>
+                <small class="text-muted d-block"><?= lang('For this older news item, the original retains its previous release until you change the selection here.', 'Bei dieser älteren News behält der Originalbeitrag seine bisherige Freigabe, bis du die Auswahl hier änderst.') ?></small>
+            <?php } ?>
         <?php } ?>
     </div>
+<?php } ?>
+<?php if ($canSelectOutlets && NewsRequests::workflowAvailable($outletConfiguration, $outletNews)) { ?>
+    <script src="<?= ROOTPATH ?>/js/news-requests.js?v=<?= OSIRIS_BUILD ?>"></script>
 <?php } ?>

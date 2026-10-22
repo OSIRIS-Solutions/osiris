@@ -3,6 +3,66 @@
 /** Author requests are independent of original news content and editorial texts. */
 class NewsRequests
 {
+    public static function usesOutletWorkflow(array $news): bool
+    {
+        return ($news['publication_mode'] ?? null) === 'outlets';
+    }
+
+    public static function workflowAvailable(array $configuration, array $news = []): bool
+    {
+        // Deactivating outlets for new requests must not change existing publication rules.
+        return !empty($configuration['outlets']) || self::usesOutletWorkflow($news);
+    }
+
+    public static function internalOnly(array $news): bool
+    {
+        if (array_key_exists('internal_only', $news)) return $news['internal_only'] === true;
+        if (self::usesOutletWorkflow($news) || ($news['visibility'] ?? '') === 'public') return false;
+        // Legacy requests remain visible without automatically releasing their original.
+        foreach (self::read($news) as $request) {
+            if (!in_array($request['status'] ?? '', ['withdrawn', 'declined'], true)) return false;
+        }
+        return isset($news['_id']);
+    }
+
+    public static function canChooseInternalOnly(array $news): bool
+    {
+        if (self::internalOnly($news)) return true;
+        foreach (self::read($news) as $request) {
+            if (self::locked($request) && !in_array($request['status'] ?? '', ['withdrawn', 'declined'], true)) return false;
+        }
+        return true;
+    }
+
+    /** Old originals keep their release until the author changes the outlet selection. */
+    public static function publicationFields(array $input, array $configuration, ?array $news = null): array
+    {
+        $available = self::workflowAvailable($configuration, $news ?? []);
+        $changed = ($input['publication_choice_changed'] ?? null) === '1';
+        if ($available && ($news === null || self::usesOutletWorkflow($news) || $changed || ($input['internal_only'] ?? null) === '1')) {
+            $value = $input['internal_only'] ?? (self::internalOnly($news ?? []) ? '1' : '0');
+            if (!in_array($value, ['0', '1'], true)) {
+                throw new InvalidArgumentException(lang('Invalid outlet selection.', 'Ungültige Outlet-Auswahl.'));
+            }
+            $internalOnly = $value === '1';
+            if ($internalOnly && !self::canChooseInternalOnly($news ?? [])) {
+                throw new InvalidArgumentException(lang('The editorial team has already started work. Contact them to stop the outlet contributions.', 'Die Redaktion hat bereits mit der Bearbeitung begonnen. Bitte kontaktiere sie, um die Outlet-Beiträge zu stoppen.'));
+            }
+            if ($internalOnly && !empty($input['outlets'])) {
+                throw new InvalidArgumentException(lang('Choose either internal only or editorial outlets.', 'Wähle entweder nur intern oder redaktionelle Outlets.'));
+            }
+            return ['publication_mode' => 'outlets', 'internal_only' => $internalOnly];
+        }
+        if ($news !== null && $available) {
+            return ['visibility' => $news['visibility'] ?? 'internal'];
+        }
+        $visibility = $input['visibility'] ?? $news['visibility'] ?? 'internal';
+        if (!in_array($visibility, ['internal', 'public'], true)) {
+            throw new InvalidArgumentException(lang('Invalid news visibility.', 'Ungültige News-Sichtbarkeit.'));
+        }
+        return ['visibility' => $visibility];
+    }
+
     public static function canCreate(Settings $settings): bool
     {
         return isset($_SESSION['username']) && ($settings->hasPermission('news.add') || $settings->hasPermission('news.edit'));

@@ -13,6 +13,7 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+require_once BASEPATH . '/php/NewsRequests.php';
 $news_lang = $Settings->get('news-language', 'one');
 
 include_once BASEPATH . "/header-editor.php";
@@ -194,6 +195,8 @@ if (isset($news) && isset($news['_id'])) {
 </h1>
 
 <form action="<?= ROOTPATH ?><?= $form_action ?>" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?= e(NewsRequests::csrfToken()) ?>">
+    <input type="hidden" name="news[revision]" value="<?= (int) ($news['revision'] ?? 0) ?>">
     <?php if ($news_lang == 'one') { ?>
         <div class="box padded">
             <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2 class="title">
@@ -269,6 +272,7 @@ if (isset($news) && isset($news['_id'])) {
                 </div>
             </div>
         </div>
+        <br>
     <?php } ?>
 
     <!-- add activities -->
@@ -768,6 +772,11 @@ if (isset($news) && isset($news['_id'])) {
     </div>
 
 
+    <?php
+    $outletSelectionMode = 'edit';
+    include BASEPATH . '/pages/news/outlets.php';
+    ?>
+
     <div class="box padded">
         <h2 class="title"><?= lang('Additional options', 'Weitere Optionen') ?></h2 class="title">
 
@@ -790,14 +799,7 @@ if (isset($news) && isset($news['_id'])) {
             <input type="date" name="news[date]" id="news-date" class="form-control w-auto" value="<?= $news['date'] ?? date('Y-m-d') ?>" required>
         </div>
 
-        <div class="form-group">
-            <label for="news-visibility" class="required"><?= lang('Visibility', 'Sichtbarkeit') ?></label>
-            <select name="news[visibility]" id="news-visibility" class="form-control w-auto" required>
-                <option value="internal" <?= (isset($news['visibility']) && $news['visibility'] == 'internal') ? 'selected' : '' ?>><?= lang('Internal', 'Intern') ?></option>
-                <option value="public" <?= (isset($news['visibility']) && $news['visibility'] == 'public') ? 'selected' : '' ?>><?= lang('Public', 'Öffentlich') ?></option>
-            </select>
-            <small class="text-muted"><?= lang('Public news will made public via Portfolio if this feature is enabled. Internal news are only visible within OSIRIS.', 'Öffentliche Nachrichten werden über das Portfolio veröffentlicht, wenn diese Funktion aktiviert ist. Interne Nachrichten sind nur innerhalb von OSIRIS sichtbar.') ?></small>
-        </div>
+        <?php include BASEPATH . '/pages/news/publication.php'; ?>
 
         <?php if ($Settings->featureEnabled('topics')) { ?>
             <?php $Settings->topicChooser(DB::doc2Arr($news['topics'] ?? []), 'news[topics]') ?>

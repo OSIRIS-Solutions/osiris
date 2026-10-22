@@ -798,6 +798,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 
 
+<?php
+if (isset($_GET['verbose'])) {
+    dump($scientist, true);
+}
+?>
 
 
 <section id="general">
@@ -1670,11 +1675,3 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
     </section>
 <?php } ?>
-
-
-
-<?php
-if (isset($_GET['verbose'])) {
-    dump($scientist, true);
-}
-?>

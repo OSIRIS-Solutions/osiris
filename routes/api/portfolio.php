@@ -237,7 +237,6 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
 
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
-            'visibility' => 'public',
             'date' => ['$lte' => date('Y-m-d')],
             'topics' => $id
         ];
@@ -1523,7 +1522,6 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
 
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
-            'visibility' => 'public',
             'date' => ['$lte' => date('Y-m-d')],
             'activities' => $id
         ];
@@ -1726,7 +1724,6 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
 
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
-            'visibility' => 'public',
             'date' => ['$lte' => date('Y-m-d')],
             'projects' => $id
         ];
@@ -2052,7 +2049,6 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
 
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
-            'visibility' => 'public',
             'date' => ['$lte' => date('Y-m-d')],
             'persons' => $id
         ];
@@ -2693,7 +2689,6 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
 
     if ($Settings->featureEnabled('news', true)) {
         $filter = [
-            'visibility' => 'public',
             'date' => ['$lte' => date('Y-m-d')],
             'infrastructures' => $id
         ];
@@ -3024,7 +3019,6 @@ Route::get('/portfolio/news', function () {
         die;
     }
     $filter = [
-        'visibility' => 'public',
         'date' => ['$lte' => date('Y-m-d')]
     ];
     $news = $osiris->news->find(
@@ -3059,7 +3053,6 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
     }
     $filter = [
         '_id' => $DB->to_ObjectID($id),
-        'visibility' => 'public',
     ];
     $news = $osiris->news->findOne(
         $Settings->getNewsPortfolioFilter($filter),

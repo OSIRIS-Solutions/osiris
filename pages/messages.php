@@ -26,6 +26,11 @@ usort($messages, function ($a, $b) {
 });
 
 $types = [
+    'news' => [
+        'en' => 'News',
+        'de' => 'News',
+        'icon' => 'newspaper'
+    ],
     'project' => [
         'en' => 'Project',
         'de' => 'Projekt',

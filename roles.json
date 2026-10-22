@@ -471,6 +471,21 @@
         "icon": "newspaper",
         "fields": [
             {
+                "id": "news.add",
+                "de": "News anlegen und Outlets beantragen",
+                "en": "Create news and request outlets"
+            },
+            {
+                "id": "news.edit-own",
+                "de": "Eigene News und offene Outlet-Anfragen bearbeiten",
+                "en": "Edit own news and open outlet requests"
+            },
+            {
+                "id": "news.editorial",
+                "de": "News redaktionell bearbeiten und Outlet-Anfragen in der Inbox erhalten",
+                "en": "Edit editorial news contributions and receive outlet requests in the inbox"
+            },
+            {
                 "id": "news.edit",
                 "de": "Nachrichten hinzufügen und bearbeiten",
                 "en": "Add and edit news"

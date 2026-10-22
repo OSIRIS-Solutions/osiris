@@ -58,7 +58,7 @@ $renderOutlet = static function (array $outlet, string $key) {
         <div class="custom-checkbox">
             <input type="hidden" name="configuration[outlets][<?= $key ?>][portfolio]" value="0">
             <input type="checkbox" id="outlet-<?= $key ?>-portfolio" name="configuration[outlets][<?= $key ?>][portfolio]" value="1" <?= !empty($outlet['portfolio']) ? 'checked' : '' ?>>
-            <label for="outlet-<?= $key ?>-portfolio"><?= lang('Include approved public contributions in Portfolio output', 'Freigegebene öffentliche Beiträge in die Portfolio-Ausgabe aufnehmen') ?></label>
+            <label for="outlet-<?= $key ?>-portfolio"><?= lang('Include approved contributions in Portfolio output', 'Freigegebene Beiträge in die Portfolio-Ausgabe aufnehmen') ?></label>
         </div>
         <?php if ($saved) { ?>
             <p class="text-muted font-size-12 mb-0"><?= lang('ID', 'Kennung') ?>: <code><?= $text('id') ?></code></p>
@@ -79,7 +79,7 @@ $renderOutlet = static function (array $outlet, string $key) {
             <div class="custom-checkbox">
                 <input type="hidden" name="configuration[original_portfolio]" value="0">
                 <input type="checkbox" id="original-portfolio" name="configuration[original_portfolio]" value="1" <?= !empty($configuration['original_portfolio']) ? 'checked' : '' ?>>
-                <label for="original-portfolio"><?= lang('Include public original contributions in Portfolio output', 'Öffentliche Originalbeiträge in die Portfolio-Ausgabe aufnehmen') ?></label>
+                <label for="original-portfolio"><?= lang('Include original contributions in Portfolio output', 'Originalbeiträge in die Portfolio-Ausgabe aufnehmen') ?></label>
             </div>
         </div>
 
@@ -92,7 +92,7 @@ $renderOutlet = static function (array $outlet, string $key) {
         <button type="button" class="btn" id="add-news-outlet"><i class="ph ph-plus" aria-hidden="true"></i> <?= lang('Add outlet', 'Outlet hinzufügen') ?></button>
 
         <div class="alert primary mt-20">
-            <?= lang('Portfolio selection does not publish a news item. Original contributions must also be explicitly public. Output of editorial outlet texts will follow with the editorial workflow. Links to people, activities and other content are shared by the whole news item.', 'Die Portfolio-Auswahl veröffentlicht keine News. Originalbeiträge müssen zusätzlich ausdrücklich öffentlich sein. Die Ausgabe redaktioneller Outlet-Texte folgt mit dem Redaktionsworkflow. Verknüpfungen zu Personen, Aktivitäten und weiteren Inhalten gelten gemeinsam für die gesamte News.') ?>
+            <?= lang('Portfolio receives the sources selected here. For new news with outlets, this replaces the individual public/internal setting. The internal-only selection always prevents Portfolio output. Older originals retain their previous release until their outlet selection is changed. Output of editorial outlet texts will follow with the editorial workflow.', 'Portfolio erhält die hier ausgewählten Quellen. Bei neuen News mit Outlets ersetzt dies die einzelne Einstellung öffentlich/intern. Die Auswahl Nur intern verhindert die Portfolio-Ausgabe immer. Ältere Originalbeiträge behalten ihre bisherige Freigabe, bis ihre Outlet-Auswahl geändert wird. Die Ausgabe redaktioneller Outlet-Texte folgt mit dem Redaktionsworkflow.') ?>
         </div>
         <button type="submit" class="btn primary"><i class="ph ph-floppy-disk" aria-hidden="true"></i> <?= lang('Save', 'Speichern') ?></button>
         <a class="btn" href="<?= ROOTPATH ?>/admin/news"><?= lang('Reload', 'Neu laden') ?></a>

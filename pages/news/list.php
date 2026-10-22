@@ -1,5 +1,8 @@
 <?php
 
+require_once BASEPATH . '/php/NewsRequests.php';
+$newsOutletConfiguration = $Settings->getNewsOutlets();
+
 /**
  * News list page
  * 
@@ -77,7 +80,7 @@ $Vocabulary = new Vocabulary();
         <?= lang('News', 'Nachrichten'); ?>
     </h1>
 
-    <?php if ($Settings->hasPermission('news.edit')) { ?>
+    <?php if (NewsRequests::canCreate($Settings)) { ?>
         <div class="btn-toolbar mb-20">
             <a href="<?= ROOTPATH ?>/news/add" class="btn primary">
                 <i class="ph ph-plus"></i>
@@ -125,10 +128,10 @@ $Vocabulary = new Vocabulary();
                             <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
                         </span>
                     <?php } ?>
-                    <?php if ($news['visibility'] == 'public') { ?>
+                    <?php if (!NewsRequests::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'public') { ?>
                         &#x2219;
                         <?= lang('Public', 'Öffentlich') ?>
-                    <?php } elseif ($news['visibility'] == 'internal') { ?>
+                    <?php } elseif (!NewsRequests::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'internal') { ?>
                         &#x2219;
                         <?= lang('Internal', 'Intern') ?>
                     <?php } else { ?>
