@@ -35,7 +35,7 @@ define('USER_MANAGEMENT', 'AUTH');
 
 
 // define trusted base URL
-define("BASE_URL", "https://osiris.example.com");
+define("BASE_URL", "http://localhost:8080");
 
 // define DB connection
 define("DB_NAME", "osiris");

@@ -582,13 +582,12 @@ $active = function ($field) use ($data_fields) {
 
                 <?php
                 if ($data['username'] == $_SESSION['username'] && $Settings->featureEnabled('orcid')) {
-                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                 ?>
                     <small class="text-muted">
                         <?= lang('or', 'oder') ?>
                     </small>
                     <br>
-                    <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
+                    <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= BASE_URL . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
                         <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
                     </a>
