@@ -112,7 +112,7 @@ class CommandPalette
                 "priority" => 10
             ],
             [
-                "url" => "/new-stuff",
+                "url" => "/news",
                 "type" => "Navigation",
                 "icon" => "bell-ringing",
                 "label" => lang("News", "Neuigkeiten"),
