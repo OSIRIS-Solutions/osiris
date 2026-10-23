@@ -119,54 +119,6 @@ class SidebarNav
                         'hasSearch' => true
                     ],
                     [
-                        'id' => 'events',
-                        'label' => lang('Events', 'Events'),
-                        'icon' => 'calendar-dots',
-                        'url' => '/conferences', // legacy
-                        'active' => ['^/conferences($|/)'],
-                        'feature' => 'events',
-                        'default' => true,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => true
-                    ],
-                    [
-                        'id' => 'calendar',
-                        'label' => lang('Calendar', 'Kalender'),
-                        'icon' => 'calendar',
-                        'url' => '/calendar',
-                        'active' => ['^/calendar($|/)'],
-                        'feature' => 'calendar',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'teaching-modules',
-                        'label' => lang('Teaching Modules', 'Lehrveranstaltungen'),
-                        'icon' => 'chalkboard-simple',
-                        'url' => '/teaching',
-                        'active' => ['^/teaching($|/)'],
-                        'feature' => 'teaching-modules',
-                        'default' => true,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'topics',
-                        'label' => $this->settings->topicLabel(),
-                        'icon' => 'puzzle-piece',
-                        'url' => '/topics',
-                        'active' => ['^/topics($|/)'],
-                        'feature' => 'topics',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
                         'id' => 'infrastructures',
                         'label' => $this->settings->infrastructureLabel(),
                         'icon' => 'cube-transparent',
@@ -221,6 +173,18 @@ class SidebarNav
                         'hasSearch' => false
                     ],
                     [
+                        'id' => 'topics',
+                        'label' => $this->settings->topicLabel(),
+                        'icon' => 'puzzle-piece',
+                        'url' => '/topics',
+                        'active' => ['^/topics($|/)'],
+                        'feature' => 'topics',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
                         'id' => 'organizations',
                         'label' => lang('Organisations', 'Organisationen'),
                         'icon' => 'building',
@@ -232,6 +196,60 @@ class SidebarNav
                         'favoritable' => true,
                         'hasSearch' => false
                     ]
+                ]
+            ],
+            [
+                'id' => 'news-events',
+                'label' => lang('News & Events', 'News & Events'),
+                'items' => [
+                    [
+                        'id' => 'news',
+                        'label' => lang('News', 'News'),
+                        'icon' => 'newspaper',
+                        'url' => '/news',
+                        'active' => ['^/news($|/)'],
+                        'feature' => 'news',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'events',
+                        'label' => lang('Events', 'Events'),
+                        'icon' => 'calendar-dots',
+                        'url' => '/conferences', // legacy
+                        'active' => ['^/conferences($|/)'],
+                        'feature' => 'events',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => true
+                    ],
+                    [
+                        'id' => 'calendar',
+                        'label' => lang('Calendar', 'Kalender'),
+                        'icon' => 'calendar',
+                        'url' => '/calendar',
+                        'active' => ['^/calendar($|/)'],
+                        'feature' => 'calendar',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'teaching-modules',
+                        'label' => lang('Teaching Modules', 'Lehrveranstaltungen'),
+                        'icon' => 'chalkboard-simple',
+                        'url' => '/teaching',
+                        'active' => ['^/teaching($|/)'],
+                        'feature' => 'teaching-modules',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
                 ]
             ],
             [

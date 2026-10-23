@@ -491,6 +491,11 @@
                 "en": "Add and edit news"
             },
             {
+                "id": "news.export",
+                "de": "News-Berichte als HTML oder Word exportieren",
+                "en": "Export news reports as HTML or Word"
+            },
+            {
                 "id": "news.outlets",
                 "de": "News-Outlets und deren Portfolio-Ausgabe verwalten",
                 "en": "Manage news outlets and their Portfolio output"

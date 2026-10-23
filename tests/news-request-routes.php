@@ -1,29 +1,8 @@
 <?php
 
 // Run with: php tests/news-request-routes.php (no database or web server required).
-require __DIR__ . '/news-requests.php';
-$testRoot = sys_get_temp_dir() . '/osiris-news-test-' . bin2hex(random_bytes(6));
-mkdir($testRoot . '/php', 0700, true);
-symlink(BASEPATH . '/php/NewsRequests.php', $testRoot . '/php/NewsRequests.php');
-symlink(BASEPATH . '/php/NewsEditorial.php', $testRoot . '/php/NewsEditorial.php');
-symlink(BASEPATH . '/php/NewsReview.php', $testRoot . '/php/NewsReview.php');
-symlink(BASEPATH . '/routes', $testRoot . '/routes');
-file_put_contents($testRoot . '/php/init.php', '<?php $Settings = $GLOBALS["Settings"]; $DB = $GLOBALS["DB"]; $osiris = $GLOBALS["osiris"];');
-
-function requestRoute(array $input): array
-{
-    global $testRoot, $initial;
-    $input += ['root' => $testRoot, 'configuration' => $initial, 'permissions' => ['news.add', 'news.edit-own']];
-    $process = proc_open([PHP_BINARY, __DIR__ . '/fixtures/news-request-route.php'], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes);
-    fwrite($pipes[0], json_encode($input, JSON_THROW_ON_ERROR));
-    fclose($pipes[0]);
-    $result = stream_get_contents($pipes[1]);
-    $errors = stream_get_contents($pipes[2]);
-    fclose($pipes[1]); fclose($pipes[2]);
-    $exit = proc_close($process);
-    check($exit === 0 && $errors === '', 'Route fixture failed: ' . $errors);
-    return json_decode($result, true, 512, JSON_THROW_ON_ERROR);
-}
+require __DIR__ . '/fixtures/news.php';
+$testRoot = news_test_route_root();
 
 try {
     $post = ['csrf_token' => 'token', 'news' => ['title' => 'New infrastructure', 'content' => 'An update', 'date' => '2026-10-22', 'outlets' => [$website['id'], $newsletter['id']]]];
@@ -56,7 +35,7 @@ try {
     $locked = requestRoute(array_replace($base, ['news' => $lockedNews, 'post' => $updatePost]));
     check($locked['news']['outlet_requests'][0] === $lockedNews['outlet_requests'][0] && $locked['news']['editorial_contributions'] === $lockedNews['editorial_contributions'], 'Saving the original never overwrites existing editorial work.');
     check($locked['messages'] === [], 'Omitted locked checkboxes are preserved silently.');
-    $stale = requestRoute(array_replace($base, ['news' => $changed['news'], 'post' => $updatePost]));
+    $stale = requestRoute(array_replace($base, ['news' => $changed['news'], 'form_news' => $base['news'], 'post' => $updatePost]));
     check($stale['error']['code'] === 409 && !$stale['write_attempted'] && $stale['messages'] === [], 'Reject stale forms before writing or notifying.');
     $race = requestRoute($base + ['post' => $updatePost, 'race' => true]);
     check($race['error']['code'] === 409 && $race['news'] === $base['news'] && $race['messages'] === [], 'Handle a concurrent editorial write atomically.');
@@ -105,11 +84,5 @@ try {
     check($image['error']['code'] === 403 && !$image['write_attempted'], 'Protect original images with the same ownership permissions.');
     echo "News request route checks passed.\n";
 } finally {
-    unlink($testRoot . '/php/init.php');
-    unlink($testRoot . '/php/NewsRequests.php');
-    unlink($testRoot . '/php/NewsEditorial.php');
-    unlink($testRoot . '/php/NewsReview.php');
-    unlink($testRoot . '/routes');
-    rmdir($testRoot . '/php');
-    rmdir($testRoot);
+    news_test_remove_root($testRoot);
 }

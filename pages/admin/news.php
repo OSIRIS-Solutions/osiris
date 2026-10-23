@@ -61,6 +61,7 @@ $renderOutlet = static function (array $outlet, string $key) {
                 </div>
             <?php } ?>
         </fieldset>
+        <h4><?= lang('Availability and output', 'Verfügbarkeit und Ausgabe') ?></h4>
         <div class="custom-checkbox mb-10">
             <input type="hidden" name="configuration[outlets][<?= $key ?>][active]" value="0">
             <input type="checkbox" id="outlet-<?= $key ?>-active" name="configuration[outlets][<?= $key ?>][active]" value="1" <?= !empty($outlet['active']) ? 'checked' : '' ?>>
@@ -69,20 +70,18 @@ $renderOutlet = static function (array $outlet, string $key) {
         <div class="custom-checkbox">
             <input type="hidden" name="configuration[outlets][<?= $key ?>][portfolio]" value="0">
             <input type="checkbox" id="outlet-<?= $key ?>-portfolio" name="configuration[outlets][<?= $key ?>][portfolio]" value="1" <?= !empty($outlet['portfolio']) ? 'checked' : '' ?>>
-            <label for="outlet-<?= $key ?>-portfolio"><?= lang('Include approved contributions in Portfolio output', 'Freigegebene Beiträge in die Portfolio-Ausgabe aufnehmen') ?></label>
+            <label for="outlet-<?= $key ?>-portfolio"><?= lang('Show released contributions in Portfolio', 'Freigegebene Fassungen in Portfolio anzeigen') ?></label>
         </div>
-        <?php if ($saved) { ?>
-            <p class="text-muted font-size-12 mb-0"><?= lang('ID', 'Kennung') ?>: <code><?= $text('id') ?></code></p>
-        <?php } ?>
     </div>
 <?php }; ?>
 
-<div class="container w-800 mw-full">
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/news-workflow.css?v=<?= OSIRIS_BUILD ?>">
+<div class="container w-800 mw-full news-workflow">
     <h1><i class="ph-duotone ph-newspaper" aria-hidden="true"></i> <?= lang('News outlets', 'News-Outlets') ?></h1>
     <p><?= lang('Define the outlets for editorial news contributions and select which sources may be included in Portfolio output.', 'Lege die Outlets für redaktionelle News-Beiträge fest und wähle aus, welche Quellen in die Portfolio-Ausgabe aufgenommen werden dürfen.') ?></p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/news" method="post" id="news-outlets-form">
-        <input type="hidden" name="csrf_token" value="<?= e($_SESSION['news_outlets_csrf']) ?>">
+        <input type="hidden" name="csrf_token" value="<?= e(csrf_token('news_outlets')) ?>">
         <input type="hidden" name="revision" value="<?= e($revision) ?>">
         <div class="box padded">
             <h2 class="title"><?= lang('Original contribution', 'Originalbeitrag') ?></h2>
@@ -103,7 +102,7 @@ $renderOutlet = static function (array $outlet, string $key) {
         <button type="button" class="btn" id="add-news-outlet"><i class="ph ph-plus" aria-hidden="true"></i> <?= lang('Add outlet', 'Outlet hinzufügen') ?></button>
 
         <div class="alert primary my-20">
-            <?= lang('Portfolio receives the sources selected here. For new news with outlets, this replaces the individual public/internal setting. The internal-only selection always prevents Portfolio output. Older originals retain their previous release until their outlet selection is changed. Output of editorial outlet texts will follow with the editorial workflow.', 'Portfolio erhält die hier ausgewählten Quellen. Bei neuen News mit Outlets ersetzt dies die einzelne Einstellung öffentlich/intern. Die Auswahl Nur intern verhindert die Portfolio-Ausgabe immer. Ältere Originalbeiträge behalten ihre bisherige Freigabe, bis ihre Outlet-Auswahl geändert wird. Die Ausgabe redaktioneller Outlet-Texte folgt mit dem Redaktionsworkflow.') ?>
+            <?= lang('Portfolio receives the sources selected here. For new news with outlets, this replaces the individual public/internal setting. The internal-only selection always prevents Portfolio output. Older originals retain their previous release until their outlet selection is changed. Editorial outlet texts are included only after their editorial release.', 'Portfolio erhält die hier ausgewählten Quellen. Bei neuen News mit Outlets ersetzt dies die einzelne Einstellung öffentlich/intern. Die Auswahl Nur intern verhindert die Portfolio-Ausgabe immer. Ältere Originalbeiträge behalten ihre bisherige Freigabe, bis ihre Outlet-Auswahl geändert wird. Redaktionelle Outlet-Texte werden erst nach ihrer redaktionellen Freigabe ausgegeben.') ?>
         </div>
         <button type="submit" class="btn primary"><i class="ph ph-floppy-disk" aria-hidden="true"></i> <?= lang('Save', 'Speichern') ?></button>
         <a class="btn" href="<?= ROOTPATH ?>/admin/news"><?= lang('Reload', 'Neu laden') ?></a>

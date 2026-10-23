@@ -1,25 +1,7 @@
 <?php
 
 // Run with: php tests/news-outlets.php (no database required).
-define('BASEPATH', dirname(__DIR__));
-define('DB_STRING', 'mongodb://localhost:27017');
-require_once BASEPATH . '/php/NewsOutlets.php';
-require_once BASEPATH . '/php/Settings.php';
-
-function lang($en, $de = null) { return ($GLOBALS['testLanguage'] ?? 'en') === 'de' ? ($de ?? $en) : $en; }
-function check(bool $condition, string $message): void
-{
-    if (!$condition) throw new RuntimeException($message);
-}
-function rejects(callable $action, string $message): void
-{
-    try {
-        $action();
-    } catch (InvalidArgumentException $exception) {
-        return;
-    }
-    throw new RuntimeException($message);
-}
+require __DIR__ . '/fixtures/news.php';
 
 $defaults = NewsOutlets::read(null);
 check($defaults === ['original_portfolio' => true, 'outlets' => []], 'Preserve existing Portfolio behavior.');
@@ -92,27 +74,18 @@ $mongoValue = new MongoDB\Model\BSONDocument([
 ]);
 check(NewsOutlets::read($mongoValue) === ['original_portfolio' => false, 'outlets' => [$website, $newsletter]], 'Read nested MongoDB documents.');
 
-class NewsOutletTestSettings extends Settings
-{
-    public $configuration;
-    public function __construct($configuration) { $this->configuration = $configuration; }
-    public function get($key, $default = null) { return $this->configuration ?? $default; }
-}
 $settings = new NewsOutletTestSettings(null);
 $filter = ['visibility' => 'public', 'date' => ['$lte' => '2026-10-22']];
 check($settings->getNewsPortfolioFilter($filter)['$and'][0] === ['date' => $filter['date']], 'The shared source filter retains date constraints.');
 $settings->configuration = $updated;
 $blocked = $settings->getNewsPortfolioFilter($filter);
-check($blocked['$and'][0] === $filter && $blocked['$and'][1] === ['_id' => ['$exists' => false]], 'Disable original output without weakening other filters.');
+check($blocked['$and'][0] === ['date' => $filter['date']] && $blocked['$and'][2]['$or'][0]['outlet_requests']['$elemMatch']['status'] === ['$in' => ['approved', 'released']], 'Keep date constraints and admit only released Portfolio outlets when original output is disabled.');
 $detail = ['_id' => 'existing-id', 'visibility' => 'public'];
-check($settings->getNewsPortfolioFilter($detail)['$and'][0] === $detail, 'Keep direct detail filters when blocking output.');
+check($settings->getNewsPortfolioFilter($detail)['$and'][0] === ['_id' => 'existing-id'], 'Keep direct detail filters independently of the original source.');
 $settings->configuration = $initial;
 check($settings->getNewsPortfolioFilter($detail)['$and'][0] === ['_id' => 'existing-id'], 'The shared source filter retains direct detail constraints.');
 
 // Verify the form reads and submits the same localized structure as persistence.
-define('ROOTPATH', '');
-define('OSIRIS_BUILD', 'test');
-function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 $configuration = NewsOutlets::read($mongoValue);
 $revision = NewsOutlets::revision($configuration);
 $_SESSION['news_outlets_csrf'] = 'test';

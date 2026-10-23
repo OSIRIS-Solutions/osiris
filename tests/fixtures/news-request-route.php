@@ -4,8 +4,14 @@
 $fixture = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
 define('BASEPATH', $fixture['root']);
 define('ROOTPATH', '');
+define('OSIRIS_BUILD', 'test');
 $_SESSION = ['username' => $fixture['actor'] ?? 'author', 'news_csrf' => 'token'];
 $_POST = $fixture['post'] ?? [];
+$_GET = $fixture['get'] ?? [];
+if (!empty($fixture['capture_output'])) {
+    require dirname(__DIR__, 2) . '/vendor/autoload.php';
+    ob_start();
+}
 function lang($en, $de = null) { return $en; }
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function abortwith($code, $message = '', ...$unused) { throw new RuntimeException($message, $code); }
@@ -22,6 +28,7 @@ class DB
     public array $messages = [];
     public static function doc2Arr($value) { return $value ?? []; }
     public static function to_ObjectID($value) { return $value; }
+    public function getNameFromId($id) { return $id; }
     public function addMessages($group, $en, $de = null, $type = 'general', $link = null)
     {
         $this->messages[] = compact('group', 'en', 'de', 'type', 'link');
@@ -38,7 +45,9 @@ class NewsFixtureCollection
 {
     public $document;
     public bool $writeAttempted = false;
+    public int $writeAttempts = 0;
     public function __construct($document) { $this->document = $document; }
+    public function find($filter = [], $options = []) { return $this->document ? [$this->document] : []; }
     public function findOne($filter)
     {
         return ($this->document['_id'] ?? null) === ($filter['_id'] ?? null) ? $this->document : null;
@@ -52,6 +61,12 @@ class NewsFixtureCollection
     public function updateOne($filter, $update)
     {
         $this->writeAttempted = true;
+        $this->writeAttempts++;
+        if (!empty($GLOBALS['fixture']['race_once']) && $this->writeAttempts === 1) {
+            $this->document = array_merge($this->document, $GLOBALS['fixture']['race_once']);
+            $this->document['revision'] = (int) ($this->document['revision'] ?? 0) + 1;
+            return new NewsFixtureResult(0);
+        }
         if (!empty($GLOBALS['fixture']['race'])) return new NewsFixtureResult(0);
         if (($filter['_id'] ?? null) !== ($this->document['_id'] ?? null)) return new NewsFixtureResult(0);
         if (array_key_exists('revision', $filter)) {
@@ -77,7 +92,8 @@ $error = null;
 require dirname(__DIR__, 2) . '/php/Route.php';
 require dirname(__DIR__, 2) . '/routes/news.php';
 register_shutdown_function(function () use ($osiris, $DB, &$error) {
-    echo json_encode(['news' => $osiris->news->document, 'messages' => $DB->messages, 'error' => $error, 'write_attempted' => $osiris->news->writeAttempted], JSON_THROW_ON_ERROR);
+    $output = !empty($GLOBALS['fixture']['capture_output']) ? base64_encode(ob_get_clean()) : null;
+    echo json_encode(['output' => $output, 'news' => $osiris->news->document, 'messages' => $DB->messages, 'error' => $error, 'write_attempted' => $osiris->news->writeAttempted, 'write_attempts' => $osiris->news->writeAttempts], JSON_THROW_ON_ERROR);
 });
 try {
     foreach (Route::getAll() as $route) {

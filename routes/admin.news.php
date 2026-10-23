@@ -1,14 +1,14 @@
 <?php
 
+require_once dirname(__DIR__) . '/php/csrf.php';
+
 /** News outlet administration. Keep the original news independent of editorial outlets. */
 Route::get('/admin/news', function () {
     include_once BASEPATH . '/php/init.php';
     if (!$Settings->hasPermission('admin.see') && !$Settings->hasPermission('news.outlets')) {
         abortwith(403, lang('You do not have permission to manage news outlets.', 'Du hast keine Berechtigung, News-Outlets zu verwalten.'));
     }
-    if (empty($_SESSION['news_outlets_csrf'])) {
-        $_SESSION['news_outlets_csrf'] = bin2hex(random_bytes(32));
-    }
+    csrf_token('news_outlets');
     $configuration = $Settings->getNewsOutlets();
     $revision = NewsOutlets::revision($configuration);
     $outletForm = $_SESSION['news_outlets_form'] ?? null;
@@ -31,8 +31,7 @@ Route::post('/crud/admin/news', function () {
     if (!$Settings->hasPermission('admin.see') && !$Settings->hasPermission('news.outlets')) {
         abortwith(403, lang('You do not have permission to manage news outlets.', 'Du hast keine Berechtigung, News-Outlets zu verwalten.'));
     }
-    $token = $_POST['csrf_token'] ?? null;
-    if (!is_string($token) || empty($_SESSION['news_outlets_csrf']) || !hash_equals($_SESSION['news_outlets_csrf'], $token)) {
+    if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news_outlets')) {
         abortwith(403, lang('The form has expired. Reload the settings.', 'Das Formular ist abgelaufen. Bitte lade die Einstellungen neu.'));
     }
     $input = $_POST['configuration'] ?? [];

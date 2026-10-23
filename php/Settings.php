@@ -199,17 +199,11 @@ class Settings
         return NewsOutlets::read($this->get('news-outlets', []));
     }
 
-    /** Portfolio sources control new originals; old originals retain their release. */
+    /** Include enabled originals and news with released Portfolio outlet contributions. */
     function getNewsPortfolioFilter(array $filter): array
     {
-        if (!$this->getNewsOutlets()['original_portfolio']) {
-            return ['$and' => [$filter, ['_id' => ['$exists' => false]]]];
-        }
-        unset($filter['visibility']);
-        return ['$and' => [$filter, ['internal_only' => ['$ne' => true]], ['$or' => [
-            ['publication_mode' => 'outlets'],
-            ['publication_mode' => ['$ne' => 'outlets'], 'visibility' => 'public'],
-        ]]]];
+        require_once __DIR__ . '/Portfolio.php';
+        return Portfolio::newsFilter($filter, $this->getNewsOutlets());
     }
 
     function set($key, $value)

@@ -1,6 +1,6 @@
 <?php
 
-require_once BASEPATH . "/php/NewsRequests.php";
+require_once BASEPATH . "/php/NewsEditorial.php";
 
 /**
  * Normalize entity connections submitted by the news editor.
@@ -81,7 +81,7 @@ Route::get('/news/add', function () {
         abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
     }
 
-    if (!NewsRequests::canCreate($Settings)) {
+    if (!NewsEditorial::canCreate($Settings)) {
         abortwith(403, lang('You do not have permission to create news items.', "Sie haben keine Berechtigung, News zu erstellen."));
     }
 
@@ -132,7 +132,7 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     }
 
     $news = DB::doc2Arr($news);
-    if (!NewsRequests::canEdit($news, $Settings)) {
+    if (!NewsEditorial::canEdit($news, $Settings)) {
         abortwith(403, lang('You do not have permission to edit this news item.', 'Du hast keine Berechtigung, diese News zu bearbeiten.'));
     }
 
@@ -155,11 +155,11 @@ Route::post('/crud/news/create', function () {
         abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
     }
 
-    if (!NewsRequests::canCreate($Settings)) {
+    if (!NewsEditorial::canCreate($Settings)) {
         abortwith(403, lang('You do not have permission to create news items.', "Sie haben keine Berechtigung, News zu erstellen."));
     }
 
-    if (!NewsRequests::validCsrf($_POST['csrf_token'] ?? null)) {
+    if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
         abortwith(403, lang('The form has expired. Reload the news form.', 'Das Formular ist abgelaufen. Bitte lade das News-Formular neu.'));
     }
     $data = $_POST['news'] ?? [];
@@ -173,7 +173,7 @@ Route::post('/crud/news/create', function () {
 
     $configuration = $Settings->getNewsOutlets();
     try {
-        $publication = NewsRequests::publicationFields($data, $configuration);
+        $publication = NewsEditorial::publicationFields($data, $configuration);
     } catch (InvalidArgumentException $exception) {
         abortwith(400, $exception->getMessage());
     }
@@ -209,7 +209,7 @@ Route::post('/crud/news/create', function () {
     $newsItem['original_revision'] = 1;
     $newsItem['original_updated_at'] = date('c');
     try {
-        $changes = NewsRequests::reconcile($data['outlets'] ?? [], $configuration, $newsItem, $_SESSION['username'], date('c'), 1);
+        $changes = NewsEditorial::reconcileRequests($data['outlets'] ?? [], $configuration, $newsItem, $_SESSION['username'], date('c'));
     } catch (InvalidArgumentException $exception) {
         abortwith(400, $exception->getMessage());
     }
@@ -217,7 +217,7 @@ Route::post('/crud/news/create', function () {
     $result = $osiris->news->insertOne($newsItem);
 
     if ($result->getInsertedCount() === 1) {
-        NewsRequests::notify($DB, $newsItem, (string) $result->getInsertedId(), $changes, $configuration);
+        NewsEditorial::notifyRequests($DB, $newsItem, (string) $result->getInsertedId(), $changes, $configuration);
         header('Location: ' . ROOTPATH . '/news/view/' . e($result->getInsertedId()));
         exit;
     } else {
@@ -233,94 +233,96 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
         abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
     }
 
-    $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
-    if (!$news) abortwith(404, lang('News item not found.', 'Nachricht nicht gefunden.'));
-    $news = DB::doc2Arr($news);
-    if (!NewsRequests::canEdit($news, $Settings)) {
-        abortwith(403, lang('You do not have permission to edit this news item.', 'Du hast keine Berechtigung, diese News zu bearbeiten.'));
-    }
-
-    if (!NewsRequests::validCsrf($_POST['csrf_token'] ?? null)) {
-        abortwith(403, lang('The form has expired. Reload the news form.', 'Das Formular ist abgelaufen. Bitte lade das News-Formular neu.'));
-    }
-    $data = $_POST['news'] ?? [];
-    if (!is_array($data)) abortwith(400, lang('Invalid news data.', 'Ungültige News-Daten.'));
-    $connections = normalize_news_connections($data);
-
-    // basic validation
-    if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
-        abortwith(400, lang('Please fill in all required fields.', "Bitte füllen Sie alle erforderlichen Felder aus."));
-    }
-
-    if (!NewsRequests::isAuthor($news) && (isset($data['internal_only']) || isset($data['publication_choice_changed']))) {
-        abortwith(403, lang('Only the author can change the outlet selection here.', 'Nur die Autorin oder der Autor kann hier die Outlet-Auswahl ändern.'));
-    }
-    $configuration = $Settings->getNewsOutlets();
-    try {
-        $publication = NewsRequests::publicationFields($data, $configuration, $news);
-    } catch (InvalidArgumentException $exception) {
-        abortwith(400, $exception->getMessage());
-    }
-
-    $newsItem = [
-        'type' => $data['type'] ?? null,
-        'title' => $data['title'],
-        'title_de' => $data['title_de'] ?? null,
-        'teaser' => $data['teaser'] ?? null,
-        'teaser_de' => $data['teaser_de'] ?? null,
-        'content' => $data['content'] ?? null,
-        'content_de' => $data['content_de'] ?? null,
-        'date' => $data['date'],
-        'persons' => $connections['persons'],
-        'activities' => $connections['activities'],
-        'projects' => $connections['projects'],
-        'events' => $connections['events'],
-        'infrastructures' => $connections['infrastructures'],
-        'featured' => normalize_news_featured($data, $connections),
-        'topics' => ($data['topics'] ?? []),
-        'updated_by' => $_SESSION['username'],
-        'updated' => date('Y-m-d')
-    ];
-    $newsItem = array_merge($newsItem, $publication);
-    // replace empty strings with null to avoid storing empty fields
-    foreach ($newsItem as $key => $value) {
-        if (is_string($value) && trim($value) === '') {
-            $newsItem[$key] = null;
+    for ($attempt = 0; $attempt < 3; $attempt++) {
+        $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
+        if (!$news) abortwith(404, lang('News item not found.', 'Nachricht nicht gefunden.'));
+        $news = DB::doc2Arr($news);
+        if (!NewsEditorial::canEdit($news, $Settings)) {
+            abortwith(403, lang('You do not have permission to edit this news item.', 'Du hast keine Berechtigung, diese News zu bearbeiten.'));
         }
-    }
 
-    $revision = filter_var($data['revision'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
-    if ($revision === false || $revision !== (int) ($news['revision'] ?? 0)) {
-        abortwith(409, lang('This news item has changed. Reload it before saving again.', 'Diese News wurde zwischenzeitlich geändert. Bitte lade sie vor dem erneuten Speichern neu.'));
-    }
-    $originalChanged = false;
-    foreach ($newsItem as $key => $value) {
-        if (in_array($key, ['updated_by', 'updated'], true)) continue;
-        if (DB::doc2Arr($news[$key] ?? null) != $value) $originalChanged = true;
-    }
-    $newsItem['original_revision'] = (int) ($news['original_revision'] ?? 1) + ($originalChanged ? 1 : 0);
-    if ($originalChanged) $newsItem['original_updated_at'] = date('c');
-    $newsItem['revision'] = $revision + 1;
-    $changes = ['requests' => NewsRequests::read($news), 'added' => [], 'withdrawn' => []];
-    if (NewsRequests::isAuthor($news) && isset($data['outlet_selection'])) {
+        if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
+            abortwith(403, lang('The form has expired. Reload the news form.', 'Das Formular ist abgelaufen. Bitte lade das News-Formular neu.'));
+        }
+        $data = $_POST['news'] ?? [];
+        if (!is_array($data)) abortwith(400, lang('Invalid news data.', 'Ungültige News-Daten.'));
+        $connections = normalize_news_connections($data);
+
+        // basic validation
+        if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
+            abortwith(400, lang('Please fill in all required fields.', "Bitte füllen Sie alle erforderlichen Felder aus."));
+        }
+
+        if (!NewsEditorial::isAuthor($news) && (isset($data['internal_only']) || isset($data['publication_choice_changed']))) {
+            abortwith(403, lang('Only the author can change the outlet selection here.', 'Nur die Autorin oder der Autor kann hier die Outlet-Auswahl ändern.'));
+        }
+        $configuration = $Settings->getNewsOutlets();
         try {
-            $changes = NewsRequests::reconcile($data['outlets'] ?? [], $configuration, $news, $_SESSION['username'], date('c'), $newsItem['original_revision']);
+            $publication = NewsEditorial::publicationFields($data, $configuration, $news);
         } catch (InvalidArgumentException $exception) {
             abortwith(400, $exception->getMessage());
         }
-        $newsItem['outlet_requests'] = $changes['requests'];
-    } elseif (isset($data['outlets']) || isset($data['outlet_selection'])) {
-        abortwith(403, lang('Only the author can change outlet requests here.', 'Nur die Autorin oder der Autor kann hier Outlet-Anfragen ändern.'));
+
+        $newsItem = [
+            'type' => $data['type'] ?? null,
+            'title' => $data['title'],
+            'title_de' => $data['title_de'] ?? null,
+            'teaser' => $data['teaser'] ?? null,
+            'teaser_de' => $data['teaser_de'] ?? null,
+            'content' => $data['content'] ?? null,
+            'content_de' => $data['content_de'] ?? null,
+            'date' => $data['date'],
+            'persons' => $connections['persons'],
+            'activities' => $connections['activities'],
+            'projects' => $connections['projects'],
+            'events' => $connections['events'],
+            'infrastructures' => $connections['infrastructures'],
+            'featured' => normalize_news_featured($data, $connections),
+            'topics' => ($data['topics'] ?? []),
+            'updated_by' => $_SESSION['username'],
+            'updated' => date('Y-m-d')
+        ];
+        $newsItem = array_merge($newsItem, $publication);
+        // replace empty strings with null to avoid storing empty fields
+        foreach ($newsItem as $key => $value) {
+            if (is_string($value) && trim($value) === '') {
+                $newsItem[$key] = null;
+            }
+        }
+
+        if (!is_string($data['edit_token'] ?? null) || !hash_equals(NewsEditorial::editToken($news, 'original'), $data['edit_token'])) {
+            abortwith(409, lang('The original has changed. Keep your draft and reload before saving again.', 'Der Originalbeitrag wurde inzwischen geändert. Sichere deinen Entwurf und lade ihn vor dem erneuten Speichern neu.'));
+        }
+        $originalChanged = false;
+        foreach ($newsItem as $key => $value) {
+            if (in_array($key, ['updated_by', 'updated'], true)) continue;
+            if (DB::doc2Arr($news[$key] ?? null) != $value) $originalChanged = true;
+        }
+        $newsItem['original_revision'] = (int) ($news['original_revision'] ?? 1) + ($originalChanged ? 1 : 0);
+        if ($originalChanged) $newsItem['original_updated_at'] = date('c');
+        $newsItem['revision'] = (int) ($news['revision'] ?? 0) + 1;
+        $changes = ['requests' => NewsEditorial::requests($news), 'added' => [], 'withdrawn' => []];
+        if (NewsEditorial::isAuthor($news) && isset($data['outlet_selection'])) {
+            try {
+                $changes = NewsEditorial::reconcileRequests($data['outlets'] ?? [], $configuration, $news, $_SESSION['username'], date('c'));
+            } catch (InvalidArgumentException $exception) {
+                abortwith(400, $exception->getMessage());
+            }
+            $newsItem['outlet_requests'] = $changes['requests'];
+        } elseif (isset($data['outlets']) || isset($data['outlet_selection'])) {
+            abortwith(403, lang('Only the author can change outlet requests here.', 'Nur die Autorin oder der Autor kann hier Outlet-Anfragen ändern.'));
+        }
+        // The database revision protects the read/write window, not unrelated form scopes.
+        $filter = ['_id' => DB::to_ObjectID($id), 'revision' => array_key_exists('revision', $news) ? $news['revision'] : ['$exists' => false]];
+        $update = ['$set' => $newsItem];
+        if (NewsEditorial::usesOutletWorkflow($newsItem)) $update['$unset'] = ['visibility' => ''];
+        $result = $osiris->news->updateOne($filter, $update);
+        if ($result->getMatchedCount() === 1) break;
     }
-    // Future editorial writes must also increment revision to protect against stale forms.
-    $filter = ['_id' => DB::to_ObjectID($id), 'revision' => array_key_exists('revision', $news) ? $news['revision'] : ['$exists' => false]];
-    $update = ['$set' => $newsItem];
-    if (NewsRequests::usesOutletWorkflow($newsItem)) $update['$unset'] = ['visibility' => ''];
-    $result = $osiris->news->updateOne($filter, $update);
     if ($result->getMatchedCount() !== 1) {
-        abortwith(409, lang('This news item has changed. Reload it before saving again.', 'Diese News wurde zwischenzeitlich geändert. Bitte lade sie vor dem erneuten Speichern neu.'));
+        abortwith(409, lang('The news is being edited simultaneously. Keep your draft and try again.', 'Die News wird gleichzeitig bearbeitet. Sichere deinen Entwurf und versuche es erneut.'));
     }
-    NewsRequests::notify($DB, array_merge($news, $newsItem), $id, $changes, $configuration);
+    NewsEditorial::notifyRequests($DB, array_merge($news, $newsItem), $id, $changes, $configuration);
     header('Location: ' . ROOTPATH . '/news/view/' . e($id));
 });
 
@@ -334,10 +336,10 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
     if (empty($news)) {
         abortwith(404, lang('News item', 'Nachricht'), '/news');
     }
-    if (!NewsRequests::canEdit(DB::doc2Arr($news), $Settings)) {
+    if (!NewsEditorial::canEdit(DB::doc2Arr($news), $Settings)) {
         abortwith(403, lang('You do not have permission to edit this news item.', 'Du hast keine Berechtigung, diese News zu bearbeiten.'));
     }
-    if (!NewsRequests::validCsrf($_POST['csrf_token'] ?? null)) {
+    if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
         abortwith(403, lang('The form has expired. Reload the news item.', 'Das Formular ist abgelaufen. Bitte lade die News neu.'));
     }
     if (isset($_FILES["file"])) {
@@ -428,3 +430,5 @@ Route::post('/crud/news/delete', function () {
 
 
 include_once BASEPATH . '/routes/news.editorial.php';
+
+include_once BASEPATH . '/routes/news.reporting.php';

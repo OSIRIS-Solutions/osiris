@@ -11,7 +11,7 @@
         background-color: white;
     }
 
-    .collapse-header {
+    .connections .collapse-header {
         cursor: pointer;
         font-size: 1.8rem;
         font-weight: bold;
@@ -62,7 +62,7 @@
         --primary-color-30: #8e81d03d;
     }
 
-    .collapse-header span {
+    .connections .collapse-header span {
         margin-left: auto;
         align-items: center;
         font-size: 1.4rem;
@@ -136,34 +136,5 @@
         background-color: #f0f0f0;
     }
 
-    /* .suggestions {
-        color: #464646;
-        margin: 10px auto;
-        top: 100%;
-        left: 0;
-        max-height: 19.2rem;
-        overflow: auto;
-        bottom: -3px;
-        width: 100%;
-        box-sizing: border-box;
-        min-width: 12rem;
-        background-color: white;
-        border: var(--border-width) solid #afafaf;
-        z-index: 100;
-        -webkit-transition: opacity 0.4s linear;
-        transition: opacity 0.4s linear;
-    }
 
-    .suggestions a {
-        display: block;
-        padding: 0.5rem;
-        border-bottom: var(--border-width) solid #afafaf;
-        color: #464646;
-        text-decoration: none;
-        width: 100%;
-    }
-
-    .suggestions a:hover {
-        background-color: #f0f0f0;
-    } */
 </style>

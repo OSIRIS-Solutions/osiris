@@ -175,13 +175,6 @@
     <?php if ($adminPerm || $newsOutletsPerm) : ?>
         <div class="col-md-6 col-lg-4" id="content-settings">
             <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('Data Model & Content', 'Datenmodell & Inhalte') ?></h2>
-            <?php if ($newsOutletsPerm) { ?>
-                <a class="card" href="<?= ROOTPATH ?>/admin/news">
-                    <i class="ph-duotone ph-newspaper" aria-hidden="true"></i>
-                    <b><?= lang('News outlets', 'News-Outlets') ?></b>
-                    <p><?= lang('Manage editorial outlets and their Portfolio output', 'Verwalte redaktionelle Outlets und deren Portfolio-Ausgabe') ?></p>
-                </a>
-            <?php } ?>
             <?php if ($adminPerm) { ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                 <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
@@ -209,6 +202,14 @@
                 <b><?= lang('Journals', 'Zeitschriften') ?></b>
                 <p><?= lang('Manage data fields of journals', 'Verwalte Datenfelder von Zeitschriften') ?></p>
             </a>
+            <?php } ?> 
+
+            <?php if ($newsOutletsPerm) { ?>
+                <a class="card" href="<?= ROOTPATH ?>/admin/news">
+                    <i class="ph-duotone ph-newspaper" aria-hidden="true"></i>
+                    <b><?= lang('News outlets', 'News-Outlets') ?></b>
+                    <p><?= lang('Manage editorial outlets and their Portfolio output', 'Verwalte redaktionelle Outlets und deren Portfolio-Ausgabe') ?></p>
+                </a>
             <?php } ?>
         </div><?php endif; ?>
 

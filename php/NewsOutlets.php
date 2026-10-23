@@ -40,6 +40,12 @@ class NewsOutlets
         ];
     }
 
+    public static function label($localized): string
+    {
+        $localized = self::toArray($localized);
+        return lang($localized['en'] ?? '', ($localized['de'] ?? '') !== '' ? $localized['de'] : null);
+    }
+
     public static function revision(array $configuration): string
     {
         return hash('sha256', json_encode($configuration, JSON_THROW_ON_ERROR));

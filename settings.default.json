@@ -457,6 +457,7 @@
             "news.add" : [false, true, false, true, true],
             "news.edit-own" : [false, true, false, true, true],
             "news.editorial" : [false, false, false, true, true],
+            "news.export" : [false, false, false, true, true],
             "news.outlets" : [false, false, false, false, true],
             "projects.add" : [false, false, false, true, true],
             "projects.delete-own" : [false, true, false, false, false],

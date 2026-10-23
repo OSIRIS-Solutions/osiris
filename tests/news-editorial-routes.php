@@ -1,14 +1,8 @@
 <?php
 
 // Run with: php tests/news-editorial-routes.php (no database required).
-require __DIR__ . '/news-request-routes.php';
-$testRoot = sys_get_temp_dir() . '/osiris-editorial-test-' . bin2hex(random_bytes(6));
-mkdir($testRoot . '/php', 0700, true);
-symlink(BASEPATH . '/php/NewsRequests.php', $testRoot . '/php/NewsRequests.php');
-symlink(BASEPATH . '/php/NewsEditorial.php', $testRoot . '/php/NewsEditorial.php');
-symlink(BASEPATH . '/php/NewsReview.php', $testRoot . '/php/NewsReview.php');
-symlink(BASEPATH . '/routes', $testRoot . '/routes');
-file_put_contents($testRoot . '/php/init.php', '<?php $Settings = $GLOBALS["Settings"]; $DB = $GLOBALS["DB"]; $osiris = $GLOBALS["osiris"];');
+require __DIR__ . '/fixtures/news.php';
+$testRoot = news_test_route_root();
 
 try {
     $source = $created['news'];
@@ -25,6 +19,11 @@ try {
     $draft = requestRoute(array_replace($base, ['news' => $start['news'], 'post' => $draftPost]));
     check($draft['error'] === null && $draft['news']['editorial_contributions'][0]['content']['de'] === 'Ausführlicher Beitrag für die Webseite', 'Persist a separate localized contribution.');
     check($draft['news']['title'] === $source['title'] && !$draft['news']['internal_only'] && $draft['news']['original_revision'] === 1, 'Ignore forged original fields and metadata.');
+    $richPost = $draftPost;
+    $richPost['editorial']['format'] = 'html';
+    $richPost['editorial']['content'] = ['de' => '<p><strong>Formatted contribution</strong><script>alert(1)</script></p>'];
+    $richDraft = requestRoute(array_replace($base, ['news' => $start['news'], 'post' => $richPost]));
+    check($richDraft['error'] === null && $richDraft['news']['editorial_contributions'][0]['format'] === 'html' && $richDraft['news']['editorial_contributions'][0]['content']['de'] === '<p><strong>Formatted contribution</strong></p>', 'Persist supported Quill HTML while removing executable markup through the real route.');
     $configured = $initial;
     $configured['outlets'][0]['fields'] = ['title', 'teaser', 'content'];
     $teaserPost = $draftPost;
@@ -55,7 +54,7 @@ try {
     }
     $csrf = requestRoute($base + ['post' => array_replace($startPost, ['csrf_token' => 'invalid'])]);
     check($csrf['error']['code'] === 403 && !$csrf['write_attempted'], 'Reject forged editorial forms.');
-    $stale = requestRoute(array_replace($base, ['news' => $ready['news'], 'post' => $startPost]));
+    $stale = requestRoute(array_replace($base, ['news' => $ready['news'], 'form_news' => $base['news'], 'post' => $startPost]));
     check($stale['error']['code'] === 409 && !$stale['write_attempted'], 'Reject stale editorial forms.');
     $race = requestRoute($base + ['post' => $startPost, 'race' => true]);
     check($race['error']['code'] === 409 && $race['news'] === $source, 'Concurrent author changes cannot be overwritten.');
@@ -80,8 +79,7 @@ try {
     $changedSourcePost = $readyPost;
     $changedSourcePost['news_revision'] = 5;
     $sourceChanged = requestRoute(array_replace($base, ['news' => $connections['news'], 'post' => $changedSourcePost]));
-    check($sourceChanged['error']['code'] === 400 && !$sourceChanged['write_attempted'], 'Require reviewing source changes before completing a contribution again.');
-    $changedSourcePost['editorial']['source_reviewed'] = '1';
+    check($sourceChanged['error'] === null, 'Original edits do not block completion of independent outlet texts.');
     $reviewed = requestRoute(array_replace($base, ['news' => $connections['news'], 'post' => $changedSourcePost]));
     check($reviewed['error'] === null && $reviewed['news']['editorial_contributions'][0]['original_revision'] === 2, 'Acknowledge the current source version explicitly.');
     $reviewRoute = static function ($news, $action, $input = [], $actor = 'editor', $permissions = ['news.editorial'], $overrides = []) use ($base) {
@@ -93,8 +91,14 @@ try {
     check(count($reviewRequest['messages']) === 1 && $reviewRequest['messages'][0]['group'] === 'user:author', 'Notify the author once for the entire batch.');
     $reviewInput = ['review_id' => $reviewRequest['news']['author_reviews'][0]['id']];
     $authorApproval = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', []);
-    check($authorApproval['error'] === null && $authorApproval['news']['outlet_requests'][0]['status'] === 'approved', 'The actual author can confirm without news-edit or editorial permissions.');
+    check($authorApproval['error'] === null && $authorApproval['news']['outlet_requests'][0]['status'] === 'released', 'The actual author can confirm without news-edit or editorial permissions.');
     check(count($authorApproval['messages']) === 1 && $authorApproval['messages'][0]['group'] === 'right:news.editorial', 'Notify the editorial team after author confirmation.');
+    $originalEdit = requestRoute(['route' => '/crud/news/update/([a-f0-9]{24})', 'args' => [$id], 'actor' => 'author',
+        'news' => $authorApproval['news'], 'permissions' => ['news.edit-own'], 'post' => ['csrf_token' => 'token', 'news' => [
+            'title' => $source['title'], 'date' => $source['date'], 'content' => 'A later edit to the original only.', 'revision' => $authorApproval['news']['revision'],
+        ]]]);
+    check($originalEdit['error'] === null && $originalEdit['messages'] === [], 'Editing the original after approval sends no new editorial notification.');
+    check($originalEdit['news']['outlet_requests'] === $authorApproval['news']['outlet_requests'] && $originalEdit['news']['editorial_contributions'] === $authorApproval['news']['editorial_contributions'], 'An original edit preserves every outlet release and its text.');
     $foreignResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'other', ['news.editorial']);
     check($foreignResponse['error']['code'] === 403 && !$foreignResponse['write_attempted'] && $foreignResponse['messages'] === [], 'Another editor cannot impersonate the author.');
     $feedbackResponse = $reviewRoute($reviewRequest['news'], 'request_changes', $reviewInput + ['comment' => 'Please correct the date.'], 'author', []);
@@ -104,8 +108,8 @@ try {
     check($badFeedback['error']['code'] === 400 && !$badFeedback['write_attempted'] && !$badFeedback['messages'], 'Reject empty feedback before writing or notifying.');
     $directRelease = $reviewRoute($ready['news'], 'release');
     check($directRelease['error'] === null && $directRelease['news']['outlet_requests'][0]['release_mode'] === 'without_review', 'Editors can release directly without requesting author review.');
-    $confirmedRelease = $reviewRoute($authorApproval['news'], 'release');
-    check($confirmedRelease['error'] === null && $confirmedRelease['news']['outlet_requests'][0]['release_mode'] === 'author_approved', 'Record release after author confirmation.');
+    $confirmedRelease = $authorApproval;
+    check($authorApproval['news']['outlet_requests'][0]['release_mode'] === 'author_approved' && !isset($authorApproval['news']['outlet_requests'][0]['released_revision']), 'Author approval directly records the final release.');
     $unconfirmedBypass = $reviewRoute($reviewRequest['news'], 'release');
     check($unconfirmedBypass['error']['code'] === 400 && !$unconfirmedBypass['write_attempted'], 'A pending review needs deliberate bypass confirmation.');
     $bypass = $reviewRoute($reviewRequest['news'], 'release', ['confirm_without_response' => '1']);
@@ -123,15 +127,10 @@ try {
     $forgedResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', [], ['post' => ['action' => 'approve_review', 'csrf_token' => 'forged']]);
     check($forgedResponse['error']['code'] === 403 && !$forgedResponse['write_attempted'], 'Author responses require a valid CSRF token.');
     $staleReviewPost = ['csrf_token' => 'token', 'action' => 'approve_review', 'news_revision' => 0, 'editorial' => $reviewInput];
-    $staleResponse = $reviewRoute($reviewRequest['news'], 'approve_review', $reviewInput, 'author', [], ['post' => $staleReviewPost]);
-    check($staleResponse['error']['code'] === 409 && !$staleResponse['write_attempted'], 'Stale author forms cannot overwrite newer changes.');
+    $editedOriginal = array_replace($reviewRequest['news'], ['revision' => 99, 'original_revision' => 6, 'content' => 'A later original edit']);
+    $staleResponse = $reviewRoute($editedOriginal, 'approve_review', $reviewInput, 'author', [], ['post' => $staleReviewPost]);
+    check($staleResponse['error'] === null && $staleResponse['news']['content'] === 'A later original edit' && $staleResponse['news']['revision'] === 100, 'An author can approve unchanged outlet texts from an older form while preserving later original edits.');
     echo "News editorial route checks passed.\n";
 } finally {
-    unlink($testRoot . '/php/init.php');
-    unlink($testRoot . '/php/NewsRequests.php');
-    unlink($testRoot . '/php/NewsEditorial.php');
-    unlink($testRoot . '/php/NewsReview.php');
-    unlink($testRoot . '/routes');
-    rmdir($testRoot . '/php');
-    rmdir($testRoot);
+    news_test_remove_root($testRoot);
 }

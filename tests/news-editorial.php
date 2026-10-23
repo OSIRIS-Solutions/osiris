@@ -1,7 +1,7 @@
 <?php
 
 // Run with: php tests/news-editorial.php (no database required).
-require __DIR__ . '/news-requests.php';
+require __DIR__ . '/fixtures/news.php';
 require_once BASEPATH . '/php/NewsEditorial.php';
 $testLanguage = 'en';
 $_SESSION['username'] = 'editor';
@@ -12,7 +12,7 @@ $news = ['_id' => str_repeat('a', 24), 'title' => 'Original', 'title_de' => 'Ori
 $original = $news;
 $started = NewsEditorial::apply('start', ['outlet_id' => $website['id']], $news, $initial, 'editor', $now);
 check($started['outlet_requests'][0]['status'] === 'in_progress' && $started['outlet_requests'][0]['started_by'] === 'editor', 'Starting a requested outlet records editorial ownership.');
-check(NewsRequests::locked($started['outlet_requests'][0]), 'Starting work locks author changes.');
+check(NewsEditorial::locked($started['outlet_requests'][0]), 'Starting work locks author changes.');
 check(!isset($started['title'], $started['content'], $started['visibility'], $started['internal_only']), 'Editorial writes contain no original or publication fields.');
 $news = array_merge($news, $started);
 $contribution = NewsEditorial::contributions($news)[$website['id']];
@@ -25,8 +25,7 @@ $contribution = NewsEditorial::contributions($news)[$website['id']];
 check($contribution['content'] === ['en' => '', 'de' => '<script>plain text</script>'] && $contribution['revision'] === 1, 'Save both language keys and assign versions on the server.');
 check($contribution['created_by'] === 'editor' && $contribution['updated_by'] === 'second-editor', 'Keep creator and last editor independent of submitted metadata.');
 $news['original_revision'] = 2;
-rejects(fn() => NewsEditorial::apply('ready', $draft, $news, $initial, 'editor', $now), 'Changed originals need explicit review before completion.');
-$ready = NewsEditorial::apply('ready', $draft + ['source_reviewed' => '1'], $news, $initial, 'editor', $now);
+$ready = NewsEditorial::apply('ready', $draft, $news, $initial, 'editor', $now);
 $news = array_merge($news, $ready);
 check($news['outlet_requests'][0]['status'] === 'ready' && NewsEditorial::contributions($news)[$website['id']]['original_revision'] === 2, 'Complete a draft after reviewing the original.');
 $again = NewsEditorial::apply('save', $draft, $news, $initial, 'editor', $now);

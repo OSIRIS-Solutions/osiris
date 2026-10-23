@@ -13,7 +13,7 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
-require_once BASEPATH . '/php/NewsRequests.php';
+require_once BASEPATH . '/php/NewsEditorial.php';
 $news_lang = $Settings->get('news-language', 'one');
 
 include_once BASEPATH . "/header-editor.php";
@@ -25,6 +25,8 @@ if (isset($news) && isset($news['_id'])) {
     $form_action = '/crud/news/update/' . e($news['_id']);
 }
 ?>
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/news-workflow.css?v=<?= OSIRIS_BUILD ?>">
+
 <?php include_once BASEPATH . '/components/news-editor-style.php'; ?>
 
 <h1>
@@ -33,11 +35,13 @@ if (isset($news) && isset($news['_id'])) {
 </h1>
 
 <form action="<?= ROOTPATH ?><?= $form_action ?>" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="csrf_token" value="<?= e(NewsRequests::csrfToken()) ?>">
-    <input type="hidden" name="news[revision]" value="<?= (int) ($news['revision'] ?? 0) ?>">
+    <input type="hidden" name="csrf_token" value="<?= e(csrf_token('news')) ?>">
+    <?php if (isset($news['_id'])) { ?>
+        <input type="hidden" name="news[edit_token]" value="<?= e(NewsEditorial::editToken(DB::doc2Arr($news), 'original')) ?>">
+    <?php } ?>
     <?php if ($news_lang == 'one') { ?>
         <div class="box padded">
-            <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2 class="title">
+            <h2 class="title"><?= lang('News content', 'Nachrichteninhalt') ?></h2>
             <div class="form-group">
                 <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
                 <input type="text" name="news[title]" id="news-title" class="form-control large" value="<?= $news['title'] ?? '' ?>" required>
@@ -60,7 +64,7 @@ if (isset($news) && isset($news['_id'])) {
         <div class="row row-eq-spacing">
             <div class="col-md-6">
                 <div class="box padded h-full">
-                    <h2 class="title d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h2 class="title">
+                    <h2 class="title d-flex">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h2>
 
                     <div class="form-group">
                         <label for="news-title" class="required"><?= lang('Title', 'Titel') ?></label>
@@ -86,7 +90,7 @@ if (isset($news) && isset($news['_id'])) {
 
             <div class="col-md-6">
                 <div class="box padded h-full">
-                    <h2 class="title d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h2 class="title">
+                    <h2 class="title d-flex">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h2>
 
                     <div class="form-group">
                         <label for="news-title-de"><?= lang('Title', 'Titel') ?></label>
@@ -114,7 +118,7 @@ if (isset($news) && isset($news['_id'])) {
     <?php } ?>
 
     <div class="box padded" id="activities">
-        <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title">
+        <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2>
         <?php include BASEPATH . '/pages/news/connections-editor.php'; ?>
     </div>
 
@@ -125,7 +129,7 @@ if (isset($news) && isset($news['_id'])) {
     ?>
 
     <div class="box padded">
-        <h2 class="title"><?= lang('Additional options', 'Weitere Optionen') ?></h2 class="title">
+        <h2 class="title"><?= lang('Additional options', 'Weitere Optionen') ?></h2>
 
         <div class="form-group">
             <label for="type" class="required">

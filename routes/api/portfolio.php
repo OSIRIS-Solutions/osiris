@@ -14,6 +14,8 @@
  * @license     MIT
  */
 
+require_once BASEPATH . '/php/Portfolio.php';
+
 function portfolio_apikey_check($key)
 {
     global $Settings;
@@ -240,21 +242,10 @@ Route::get('/portfolio/topic/([^/]*)', function ($id) {
             'date' => ['$lte' => date('Y-m-d')],
             'topics' => $id
         ];
-        $news = $osiris->news->find(
+        $news = Portfolio::newsListing($osiris->news->find(
             $Settings->getNewsPortfolioFilter($filter),
-            [
-                'sort' => ['date' => -1],
-                'projection' => [
-                    '_id' => 0,
-                    'id' => ['$toString' => '$_id'],
-                    'title' => 1,
-                    'title_de' => 1,
-                    'teaser' => 1,
-                    'teaser_de' => 1,
-                    'date' => 1
-                ]
-            ]
-        )->toArray();
+            ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+        ), $Settings->getNewsOutlets());
         $result['news'] = $news;
     }
 
@@ -1525,21 +1516,10 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             'date' => ['$lte' => date('Y-m-d')],
             'activities' => $id
         ];
-        $news = $osiris->news->find(
+        $news = Portfolio::newsListing($osiris->news->find(
             $Settings->getNewsPortfolioFilter($filter),
-            [
-                'sort' => ['date' => -1],
-                'projection' => [
-                    '_id' => 0,
-                    'id' => ['$toString' => '$_id'],
-                    'title' => 1,
-                    'title_de' => 1,
-                    'teaser' => 1,
-                    'teaser_de' => 1,
-                    'date' => 1
-                ]
-            ]
-        )->toArray();
+            ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+        ), $Settings->getNewsOutlets());
         $result['news'] = $news;
     }
 
@@ -1727,21 +1707,10 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
             'date' => ['$lte' => date('Y-m-d')],
             'projects' => $id
         ];
-        $news = $osiris->news->find(
+        $news = Portfolio::newsListing($osiris->news->find(
             $Settings->getNewsPortfolioFilter($filter),
-            [
-                'sort' => ['date' => -1],
-                'projection' => [
-                    '_id' => 0,
-                    'id' => ['$toString' => '$_id'],
-                    'title' => 1,
-                    'title_de' => 1,
-                    'teaser' => 1,
-                    'teaser_de' => 1,
-                    'date' => 1
-                ]
-            ]
-        )->toArray();
+            ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+        ), $Settings->getNewsOutlets());
         $project['news'] = $news;
     }
 
@@ -2052,21 +2021,10 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             'date' => ['$lte' => date('Y-m-d')],
             'persons' => $id
         ];
-        $news = $osiris->news->find(
+        $news = Portfolio::newsListing($osiris->news->find(
             $Settings->getNewsPortfolioFilter($filter),
-            [
-                'sort' => ['date' => -1],
-                'projection' => [
-                    '_id' => 0,
-                    'id' => ['$toString' => '$_id'],
-                    'title' => 1,
-                    'title_de' => 1,
-                    'teaser' => 1,
-                    'teaser_de' => 1,
-                    'date' => 1
-                ]
-            ]
-        )->toArray();
+            ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+        ), $Settings->getNewsOutlets());
         $result['news'] = $news;
     }
 
@@ -2692,21 +2650,10 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
             'date' => ['$lte' => date('Y-m-d')],
             'infrastructures' => $id
         ];
-        $news = $osiris->news->find(
+        $news = Portfolio::newsListing($osiris->news->find(
             $Settings->getNewsPortfolioFilter($filter),
-            [
-                'sort' => ['date' => -1],
-                'projection' => [
-                    '_id' => 0,
-                    'id' => ['$toString' => '$_id'],
-                    'title' => 1,
-                    'title_de' => 1,
-                    'teaser' => 1,
-                    'teaser_de' => 1,
-                    'date' => 1
-                ]
-            ]
-        )->toArray();
+            ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+        ), $Settings->getNewsOutlets());
         $infrastructure['news'] = $news;
     }
 
@@ -3021,21 +2968,10 @@ Route::get('/portfolio/news', function () {
     $filter = [
         'date' => ['$lte' => date('Y-m-d')]
     ];
-    $news = $osiris->news->find(
+    $news = Portfolio::newsListing($osiris->news->find(
         $Settings->getNewsPortfolioFilter($filter),
-        [
-            'sort' => ['date' => -1],
-            'projection' => [
-                '_id' => 0,
-                'id' => ['$toString' => '$_id'],
-                'title' => 1,
-                'title_de' => 1,
-                'teaser' => 1,
-                'teaser_de' => 1,
-                'date' => 1,
-            ]
-        ]
-    )->toArray();
+        ['sort' => ['date' => -1], 'projection' => Portfolio::newsProjection()]
+    ), $Settings->getNewsOutlets());
 
     echo rest($news);
 });
@@ -3056,28 +2992,9 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
     ];
     $news = $osiris->news->findOne(
         $Settings->getNewsPortfolioFilter($filter),
-        [
-            'projection' => [
-                '_id' => 0,
-                'id' => ['$toString' => '$_id'],
-                'title' => 1,
-                'title_de' => 1,
-                'teaser' => 1,
-                'teaser_de' => 1,
-                'content' => 1,
-                'content_de' => 1,
-                'date' => 1,
-                'image' => 1,
-                'activities' => 1,
-                'persons' => 1,
-                'projects' => 1,
-                'infrastructures' => 1,
-                'topics' => 1,
-                'events' => 1,
-                'featured' => 1
-            ]
-        ]
+        ['projection' => Portfolio::newsProjection(true)]
     );
+    if ($news) $news = Portfolio::newsOutput(DB::doc2Arr($news), $Settings->getNewsOutlets(), true);
 
     if (empty($news)) {
         echo rest('News not found', 0, 404);

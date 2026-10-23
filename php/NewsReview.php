@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/NewsEditorial.php';
 
-/** Optional, version-bound author reviews. No deadlines or automatic approvals. */
+/** Optional author review: confirmation completes release of the submitted outlet texts. */
 class NewsReview
 {
     private static function arrayValue($value)
@@ -24,56 +24,36 @@ class NewsReview
         return null;
     }
 
-    public static function prepared(array $news): array
-    {
-        return array_values(array_filter(NewsRequests::read($news), static fn($request) =>
-            in_array($request['status'] ?? '', ['ready', 'approved', 'pending_approval'], true)));
-    }
-
     private static function snapshot(array $request, array $contribution, array $outlet): array
     {
         $fields = NewsOutlets::fields($outlet);
         $snapshot = ['outlet_id' => $request['outlet_id'], 'name' => $outlet['name'] ?? ['en' => $request['outlet_id']],
             'fields' => $fields, 'revision' => (int) $contribution['revision']];
+        // Older plain-text review snapshots remain comparable without a migration.
+        if (($contribution['format'] ?? 'plain') === 'html') $snapshot['format'] = 'html';
         foreach ($fields as $field) $snapshot[$field] = $contribution[$field] ?? ['en' => '', 'de' => ''];
         return $snapshot;
     }
 
-    public static function matches(array $review, array $news, array $configuration, ?string $onlyOutlet = null): bool
+    public static function matches(array $review, array $news): bool
     {
-        if ((int) $review['original_revision'] !== (int) ($news['original_revision'] ?? 1)) return false;
         $contributions = NewsEditorial::contributions($news);
-        $outlets = array_column($configuration['outlets'], null, 'id');
-        $requests = array_column(NewsRequests::read($news), null, 'outlet_id');
+        $requests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
         $found = false;
         foreach ($review['contributions'] as $snapshot) {
             $id = $snapshot['outlet_id'];
-            if ($onlyOutlet !== null && $id !== $onlyOutlet) continue;
             $found = true;
             if (!isset($contributions[$id], $requests[$id])) return false;
-            if (self::snapshot($requests[$id], $contributions[$id], $outlets[$id] ?? []) != $snapshot) return false;
+            if ((int) ($contributions[$id]['revision'] ?? -1) !== (int) $snapshot['revision']) return false;
         }
         return $found;
-    }
-
-    private static function assertReady(array $contribution, array $outlet, array $news): void
-    {
-        if ((int) ($contribution['original_revision'] ?? 1) !== (int) ($news['original_revision'] ?? 1)) {
-            throw new InvalidArgumentException(lang('Review the changed original and mark the outlet ready again.', 'Bitte prüfe den geänderten Originalbeitrag und markiere das Outlet erneut als fertig.'));
-        }
-        $fields = NewsOutlets::fields($outlet);
-        $required = in_array('content', $fields, true) ? ['content'] : $fields;
-        foreach ($required as $field) {
-            if (trim($contribution[$field]['en'] ?? '') !== '' || trim($contribution[$field]['de'] ?? '') !== '') return;
-        }
-        throw new InvalidArgumentException(lang('A prepared outlet needs text in its configured fields.', 'Ein fertiges Outlet benötigt Text in seinen konfigurierten Feldern.'));
     }
 
     public static function statusLabel(string $status): string
     {
         return match ($status) {
             'pending' => lang('Awaiting response', 'Rückmeldung ausstehend'),
-            'approved' => lang('Confirmed by the author', 'Von Autor:in bestätigt'),
+            'approved' => lang('Released by the author', 'Von Autor:in freigegeben'),
             'changes_requested' => lang('Changes requested', 'Änderung angefragt'),
             'cancelled' => lang('Ended by the editorial team', 'Von der Redaktion beendet'),
             'closed_without_response' => lang('Closed without a response', 'Ohne Rückmeldung abgeschlossen'),
@@ -90,8 +70,8 @@ class NewsReview
         if (!in_array($action, ['request_review', 'approve_review', 'request_changes', 'cancel_review', 'release', 'revise'], true)) {
             throw new InvalidArgumentException(lang('Unknown review action.', 'Unbekannte Prüfaktion.'));
         }
-        if (NewsRequests::internalOnly($news)) throw new InvalidArgumentException(lang('This news is internal only.', 'Diese News ist nur intern.'));
-        $requests = array_column(NewsRequests::read($news), null, 'outlet_id');
+        if (NewsEditorial::internalOnly($news)) throw new InvalidArgumentException(lang('This news is internal only.', 'Diese News ist nur intern.'));
+        $requests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
         $contributions = NewsEditorial::contributions($news);
         $outlets = array_column($configuration['outlets'], null, 'id');
         $reviews = self::read($news);
@@ -108,7 +88,7 @@ class NewsReview
             foreach ($requests as $id => &$request) {
                 if ($request['status'] !== 'ready') continue;
                 if (!isset($contributions[$id])) throw new InvalidArgumentException(lang('Editorial draft not found.', 'Redaktioneller Entwurf nicht gefunden.'));
-                self::assertReady($contributions[$id], $outlets[$id] ?? [], $news);
+                NewsEditorial::assertReady($contributions[$id], $outlets[$id] ?? []);
                 $snapshots[] = self::snapshot($request, $contributions[$id], $outlets[$id] ?? []);
                 $request['status'] = 'pending_approval';
                 $request['author_review_id'] = $reviewId;
@@ -116,14 +96,14 @@ class NewsReview
             unset($request);
             if (!$snapshots) throw new InvalidArgumentException(lang('Mark at least one outlet ready first.', 'Markiere zuerst mindestens ein Outlet als fertig.'));
             $reviews[] = ['id' => $reviewId, 'status' => 'pending', 'requested_by' => $actor, 'requested_at' => $now,
-                'original_revision' => (int) ($news['original_revision'] ?? 1), 'contributions' => $snapshots];
+                'contributions' => $snapshots];
             $event['review_id'] = $reviewId;
         } elseif ($authorAction || $action === 'cancel_review') {
             if ($pending === null || !is_string($input['review_id'] ?? null) || $input['review_id'] !== $pending['id']) {
                 throw new InvalidArgumentException(lang('This review is no longer open. Reload the news item.', 'Diese Prüfung ist nicht mehr offen. Bitte lade die News neu.'));
             }
-            if ($action === 'approve_review' && !self::matches($pending, $news, $configuration)) {
-                throw new InvalidArgumentException(lang('The source or outlet configuration has changed. The editorial team needs to prepare a new review.', 'Der Originalbeitrag oder die Outlet-Konfiguration wurde geändert. Die Redaktion muss eine neue Prüfung vorbereiten.'));
+            if ($action === 'approve_review' && !self::matches($pending, $news)) {
+                throw new InvalidArgumentException(lang('The outlet texts have changed. The editorial team needs to prepare a new review.', 'Die Outlet-Texte wurden geändert. Die Redaktion muss eine neue Prüfung vorbereiten.'));
             }
             $status = match ($action) { 'approve_review' => 'approved', 'request_changes' => 'changes_requested', default => 'cancelled' };
             $comment = $input['comment'] ?? '';
@@ -142,7 +122,12 @@ class NewsReview
                 if (($requests[$id]['status'] ?? '') !== 'pending_approval' || ($requests[$id]['author_review_id'] ?? '') !== $pending['id']) {
                     throw new InvalidArgumentException(lang('The review has changed. Reload the news item.', 'Die Prüfung wurde geändert. Bitte lade die News neu.'));
                 }
-                $requests[$id]['status'] = match ($action) { 'approve_review' => 'approved', 'request_changes' => 'in_progress', default => 'ready' };
+                $requests[$id]['status'] = match ($action) { 'approve_review' => 'released', 'request_changes' => 'in_progress', default => 'ready' };
+                if ($action === 'approve_review') {
+                    $requests[$id]['release_mode'] = 'author_approved';
+                    $requests[$id]['released_at'] = $now;
+                    $requests[$id]['released_by'] = $actor;
+                }
                 if ($action !== 'approve_review') unset($requests[$id]['author_review_id']);
             }
             $event['review_id'] = $pending['id'];
@@ -152,22 +137,21 @@ class NewsReview
             }
             $releasedIds = [];
             foreach ($requests as $id => &$request) {
-                if (!in_array($request['status'], ['ready', 'approved', 'pending_approval'], true)) continue;
+                if (!in_array($request['status'], ['ready', 'pending_approval'], true)) continue;
                 if (!isset($contributions[$id])) throw new InvalidArgumentException(lang('Editorial draft not found.', 'Redaktioneller Entwurf nicht gefunden.'));
-                self::assertReady($contributions[$id], $outlets[$id] ?? [], $news);
-                if (in_array($request['status'], ['approved', 'pending_approval'], true)) {
+                NewsEditorial::assertReady($contributions[$id], $outlets[$id] ?? []);
+                if ($request['status'] === 'pending_approval') {
                     $reviewIndex = array_search($request['author_review_id'] ?? '', array_column($reviews, 'id'), true);
-                    if ($reviewIndex === false || !self::matches($reviews[$reviewIndex], $news, $configuration, $request['status'] === 'approved' ? $id : null)) {
+                    if ($reviewIndex === false || !self::matches($reviews[$reviewIndex], $news)) {
                         throw new InvalidArgumentException(lang('The reviewed version has changed. Prepare the outlet again.', 'Die geprüfte Fassung wurde geändert. Bereite das Outlet erneut vor.'));
                     }
                 }
                 $request['release_mode'] = match ($request['status']) {
-                    'approved' => 'author_approved', 'pending_approval' => 'without_response', default => 'without_review',
+                    'pending_approval' => 'without_response', default => 'without_review',
                 };
                 $request['status'] = 'released';
                 $request['released_by'] = $actor;
                 $request['released_at'] = $now;
-                $request['released_revision'] = (int) $contributions[$id]['revision'];
                 $releasedIds[] = $id;
             }
             unset($request);
@@ -193,21 +177,12 @@ class NewsReview
         return ['outlet_requests' => array_values($requests), 'author_reviews' => $reviews, 'editorial_history' => $history];
     }
 
-    public static function releaseLabel(string $mode): string
-    {
-        return match ($mode) {
-            'author_approved' => lang('Released after author confirmation', 'Nach Bestätigung durch Autor:in freigegeben'),
-            'without_response' => lang('Released without an author response', 'Ohne Rückmeldung redaktionell freigegeben'),
-            default => lang('Released without author review', 'Ohne Autorenprüfung freigegeben'),
-        };
-    }
-
     /** Called only after a successful database write. */
     public static function notify(DB $db, string $action, array $news): void
     {
         $text = match ($action) {
             'request_review' => ['Please review the prepared outlet contributions for', 'Bitte prüfe die vorbereiteten Outlet-Fassungen zur News'],
-            'approve_review' => ['The author has confirmed the outlet contributions for', 'Die Outlet-Fassungen wurden von der Autorin oder dem Autor bestätigt. News:'],
+            'approve_review' => ['The author has released the outlet contributions for', 'Die Outlet-Fassungen wurden von der Autorin oder dem Autor freigegeben. News:'],
             'request_changes' => ['The author has requested changes to the outlet contributions for', 'Die Autorin oder der Autor bittet um Änderungen an den Outlet-Fassungen. News:'],
             'cancel_review' => ['The editorial team has ended the author review for', 'Die Redaktion hat die Autorenprüfung beendet. News:'],
             'release' => ['The editorial team has released the prepared outlet contributions for', 'Die Redaktion hat die vorbereiteten Outlet-Fassungen freigegeben. News:'],

@@ -6,7 +6,10 @@ $news_lang = $Settings->get('news-language', 'one');
     <div class="connections">
         <!-- <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title"> -->
 
-        <details class="collapse-panel person-panel" open>
+        <?php
+        $persons = $osiris->persons->find([], ['sort' => ['displayname' => 1], 'projection' => ['_id' => 1, 'displayname' => 1]])->toArray();
+        ?>
+        <details class="collapse-panel person-panel" <?= !empty($persons) ? 'open' : '' ?>>
             <summary class="collapse-header">
                 <?= lang('People', 'Personen') ?>
             </summary>
@@ -15,7 +18,6 @@ $news_lang = $Settings->get('news-language', 'one');
                     <select id="person-select" class="form-control" placeholder="<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>">
                         <option value=""><?= lang('Please select a person', 'Bitte wähle eine Person aus') ?></option>
                         <?php
-                        $persons = $osiris->persons->find([], ['sort' => ['displayname' => 1], 'projection' => ['_id' => 1, 'displayname' => 1]])->toArray();
                         foreach ($persons as $s) { ?>
                             <option value="<?= $s['_id'] ?>"><?= $s['displayname'] ?></option>
                         <?php } ?>
@@ -83,7 +85,7 @@ $news_lang = $Settings->get('news-language', 'one');
             }
         </script>
 
-        <details class="collapse-panel activity-panel" open id="activity-panel">
+        <details class="collapse-panel activity-panel" <?= !empty($news['activities']) ? 'open' : '' ?> id="activity-panel">
             <summary class="collapse-header">
                 <?= lang('Activities', 'Aktivitäten') ?>
             </summary>
@@ -133,7 +135,7 @@ $news_lang = $Settings->get('news-language', 'one');
                 'sort' => ['name' => 1]
             ])->toArray();
         ?>
-            <details class="collapse-panel project-panel" open>
+            <details class="collapse-panel project-panel" <?= !empty($projects) ? 'open' : '' ?>>
                 <summary class="collapse-header">
                     <?= lang('Projects', 'Projekte') ?>
                 </summary>
@@ -251,7 +253,7 @@ $news_lang = $Settings->get('news-language', 'one');
                 'sort' => ['start' => -1]
             ])->toArray();
         ?>
-            <details class="collapse-panel event-panel" open>
+            <details class="collapse-panel event-panel" <?= !empty($events) ? 'open' : '' ?>>
                 <summary class="collapse-header">
                     <?= lang('Events', 'Veranstaltungen') ?>
                 </summary>
@@ -355,8 +357,8 @@ $news_lang = $Settings->get('news-language', 'one');
                 'projection' => ['_id' => 1, 'id' => 1, 'name' => 1, 'subtitle' => 1],
                 'sort' => ['end_date' => -1, 'start_date' => 1]
             ])->toArray();
-        ?>
-            <details class="collapse-panel infrastructure-panel" open>
+            ?>
+            <details class="collapse-panel infrastructure-panel" <?= !empty($infrastructures) ? 'open' : '' ?>>
                 <summary class="collapse-header">
                     <?= $Settings->infrastructureLabel() ?>
                 </summary>

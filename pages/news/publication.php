@@ -3,7 +3,7 @@
 $publicationConfiguration = $Settings->getNewsOutlets();
 $publicationNews = isset($news['_id']) ? DB::doc2Arr($news) : null;
 ?>
-<?php if (!NewsRequests::workflowAvailable($publicationConfiguration, $publicationNews ?? [])) { ?>
+<?php if (!NewsEditorial::workflowAvailable($publicationConfiguration, $publicationNews ?? [])) { ?>
     <div class="form-group">
         <label for="news-visibility" class="required"><?= lang('Visibility', 'Sichtbarkeit') ?></label>
         <select name="news[visibility]" id="news-visibility" class="form-control w-auto" required>
