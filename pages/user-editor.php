@@ -1349,15 +1349,20 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
 
-        <?php if ($active('research_profile')) { ?>
+        <?php if ($active('research_profile')) { 
+            $research_profile = $data['research_profile'] ?? '';
+            if (!is_string($research_profile)) $research_profile = '';
+            $research_profile_de = $data['research_profile_de'] ?? '';
+            if (!is_string($research_profile_de)) $research_profile_de = '';
+            ?>
             <h2 class="title"><?= lang('Research Profile', 'Forschungsprofil') ?></h2>
 
             <div class="row row-eq-spacing">
                 <div class="col-md-6">
                     <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="research_profile-editor-quill"><?= $data['research_profile'] ?? '' ?></div>
-                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $data['research_profile'] ?? '' ?></textarea>
+                        <div id="research_profile-editor-quill"><?= $research_profile ?></div>
+                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $research_profile ?></textarea>
                         <script>
                             quillEditor('research_profile-editor');
                         </script>
@@ -1367,8 +1372,8 @@ $active = function ($field) use ($data_fields) {
                 <div class="col-md-6">
                     <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="research_profile_de-editor-quill"><?= $data['research_profile_de'] ?? '' ?></div>
-                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $data['research_profile_de'] ?? '' ?></textarea>
+                        <div id="research_profile_de-editor-quill"><?= $research_profile_de ?></div>
+                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $research_profile_de ?></textarea>
                         <script>
                             quillEditor('research_profile_de-editor');
                         </script>
@@ -1581,15 +1586,20 @@ $active = function ($field) use ($data_fields) {
 
 
 
-        <?php if ($active('education')) { ?>
+        <?php if ($active('education')) { 
+            $education = $data['education'] ?? '';
+            if (!is_string($education)) $education = '';
+            $education_de = $data['education_de'] ?? '';
+            if (!is_string($education_de)) $education_de = '';
+            ?>
             <h2><?= lang('Education', 'Ausbildung') ?></h2>
 
             <div class="row row-eq-spacing my-0">
                 <div class="col-md-6">
                     <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="education-editor-quill"><?= $data['education'] ?? '' ?></div>
-                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $data['education'] ?? '' ?></textarea>
+                        <div id="education-editor-quill"><?= $education ?></div>
+                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $education ?></textarea>
                         <script>
                             quillEditor('education-editor');
                         </script>
@@ -1599,8 +1609,8 @@ $active = function ($field) use ($data_fields) {
                 <div class="col-md-6">
                     <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="education_de-editor-quill"><?= $data['education_de'] ?? '' ?></div>
-                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $data['education_de'] ?? '' ?></textarea>
+                        <div id="education_de-editor-quill"><?= $education_de ?></div>
+                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $education_de ?></textarea>
                         <script>
                             quillEditor('education_de-editor');
                         </script>
