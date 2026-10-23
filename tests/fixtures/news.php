@@ -87,6 +87,7 @@ class NewsOutletTestSettings extends Settings
     public $configuration;
     public function __construct($configuration) { $this->configuration = $configuration; }
     public function get($key, $default = null) { return $this->configuration ?? $default; }
+    public function featureEnabled($feature, $default = false) { return $feature === 'news-editorial' ? ($this->configuration['enabled'] ?? false) : $default; }
 }
 
 class NewsRequestTestSettings extends NewsOutletTestSettings
@@ -146,6 +147,7 @@ $initial = NewsOutlets::normalize([
         ['name' => ['en' => 'Newsletter', 'de' => 'Rundbrief'], 'active' => '1', 'portfolio' => '0'],
     ],
 ], $defaults);
+$initial['enabled'] = true; // Runtime flag supplied by Settings::getNewsOutlets().
 [$website, $newsletter] = $initial['outlets'];
 $configuration = $initial;
 $now = '2026-10-22T16:00:00+02:00';

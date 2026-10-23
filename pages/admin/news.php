@@ -52,7 +52,7 @@ $renderOutlet = static function (array $outlet, string $key) {
         </div>
         <fieldset class="form-group">
             <legend><?= lang('Editorial text fields', 'Redaktionelle Textfelder') ?></legend>
-            <p class="text-muted"><?= lang('Select the fields available to editors for this outlet. Existing texts are retained when a field is hidden.', 'Wähle aus, welche Felder die Redaktion für dieses Outlet bearbeiten kann. Bereits gespeicherte Texte bleiben beim Ausblenden eines Feldes erhalten.') ?></p>
+            <p class="text-muted mt-0"><?= lang('Select the fields available to editors for this outlet. Existing texts are retained when a field is hidden.', 'Wähle aus, welche Felder die Redaktion für dieses Outlet bearbeiten kann. Bereits gespeicherte Texte bleiben beim Ausblenden eines Feldes erhalten.') ?></p>
             <input type="hidden" name="configuration[outlets][<?= $key ?>][fields]" value="">
             <?php foreach (['title' => lang('Title', 'Titel'), 'teaser' => lang('Teaser', 'Teaser'), 'content' => lang('Contribution', 'Beitrag')] as $field => $label) { ?>
                 <div class="custom-checkbox mb-10">

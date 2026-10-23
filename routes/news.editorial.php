@@ -6,6 +6,7 @@ require_once BASEPATH . '/php/NewsReview.php';
 Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . '/php/init.php';
     if (!$Settings->featureEnabled('news', true)) abortwith(500, lang('News are not enabled.', 'News sind nicht aktiviert.'));
+    if (!$Settings->featureEnabled('news-editorial')) abortwith(403);
     $authorAction = in_array($_POST['action'] ?? null, ['approve_review', 'request_changes'], true);
     if (!$authorAction && !$Settings->hasPermission('news.editorial')) {
         abortwith(403, lang('You do not have editorial permission.', 'Du hast keine Redaktionsberechtigung.'));
@@ -22,6 +23,9 @@ Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
         $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
         if (!$news) abortwith(404, lang('News item not found.', 'Nachricht nicht gefunden.'));
         $news = DB::doc2Arr($news);
+        if (!NewsEditorial::workflowAvailable($Settings->getNewsOutlets(), $news)) {
+            abortwith(400, lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
+        }
         if ($authorAction && !NewsEditorial::isAuthor($news)) {
             abortwith(403, lang('Only the author can respond to this review.', 'Nur die Autorin oder der Autor kann auf diese Prüfung antworten.'));
         }

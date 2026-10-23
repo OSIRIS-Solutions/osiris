@@ -1,12 +1,15 @@
 <?php
 
+if (!$Settings->featureEnabled('news-editorial')) return;
+
 /** Only users with the editorial right see draft texts and editorial controls. */
 if (!$Settings->hasPermission('news.editorial')) return;
 require_once BASEPATH . '/php/NewsEditorial.php';
 require_once BASEPATH . '/php/NewsReview.php';
+$editorialConfiguration = $Settings->getNewsOutlets();
+if (!NewsEditorial::workflowAvailable($editorialConfiguration, $news)) return;
 include_once BASEPATH . '/header-editor.php';
 include_once BASEPATH . '/components/news-editor-style.php';
-$editorialConfiguration = $Settings->getNewsOutlets();
 $editorialContributions = NewsEditorial::contributions($news);
 $editorialRequests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
 $editorialOutlets = array_column($editorialConfiguration['outlets'], null, 'id');

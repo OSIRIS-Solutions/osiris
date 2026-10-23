@@ -1,5 +1,7 @@
 <?php
 
+if (!$Settings->featureEnabled('news-editorial')) return;
+
 /** Authors only see the saved versions that were explicitly sent for review. */
 if (!NewsEditorial::isAuthor($news) && !$Settings->hasPermission('news.editorial')) return;
 require_once BASEPATH . '/php/NewsReview.php';

@@ -13,6 +13,7 @@ $initial = NewsOutlets::normalize([
     ],
 ], $defaults);
 [$website, $newsletter] = $initial['outlets'];
+check(!array_key_exists('enabled', $initial), 'Outlet configuration does not store feature activation.');
 check($website['name'] === ['en' => 'Website', 'de' => 'Webseite'], 'Trim names.');
 check((bool) preg_match('/^[a-f0-9]{24}$/', $website['id']), 'Generate stable identifiers on the server.');
 check($website['id'] !== $newsletter['id'], 'Use different identifiers.');
@@ -93,6 +94,7 @@ foreach (['en' => 'Website', 'de' => 'Webseite'] as $testLanguage => $expectedTi
     ob_start();
     include BASEPATH . '/pages/admin/news.php';
     $html = ob_get_clean();
+    check(!str_contains($html, 'configuration[enabled]'), 'Feature activation belongs exclusively in the general feature settings.');
     check(str_contains($html, 'data-outlet-title>' . $expectedTitle . '</h3>'), 'Render the localized outlet title.');
     check(str_contains($html, 'name="configuration[outlets][0][name][en]" value="Website"'), 'Render the English name field.');
     check(str_contains($html, 'name="configuration[outlets][0][name][de]" value="Webseite"'), 'Render the German name field.');

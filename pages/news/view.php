@@ -20,7 +20,7 @@ require_once BASEPATH . '/php/NewsReview.php';
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $news = DB::doc2Arr($news);
-$authorPendingReview = NewsEditorial::isAuthor($news) ? NewsReview::pending($news) : null;
+$authorPendingReview = $Settings->featureEnabled('news-editorial') && NewsEditorial::isAuthor($news) ? NewsReview::pending($news) : null;
 
 $featuredCard = null;
 $featured = DB::doc2Arr($news['featured'] ?? []);
@@ -309,7 +309,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if ($authorPendingReview !== null) { ?>
             <a class="btn primary" href="#author-review-<?= e($authorPendingReview['id']) ?>"><i class="ph ph-check-circle" aria-hidden="true"></i> <?= lang('Review contributions', 'Beiträge prüfen') ?></a>
         <?php } ?>
-        <?php if ($Settings->hasPermission('news.editorial')) { ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
             <a class="btn" href="#news-editorial"><i class="ph ph-pencil-line" aria-hidden="true"></i> <?= lang('Editorial team', 'Redaktion') ?></a>
         <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
@@ -533,9 +533,9 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
 
 
     <?php include BASEPATH . '/pages/news/review.php'; ?>
-    <?php if ($Settings->hasPermission('news.editorial')) include BASEPATH . '/pages/news/editorial.php'; ?>
+    <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) include BASEPATH . '/pages/news/editorial.php'; ?>
 
-    <?php if (isset($_GET['verbose']) && $Settings->hasPermission('news.editorial')) {
+    <?php if ($Settings->featureEnabled('news-editorial') && isset($_GET['verbose']) && $Settings->hasPermission('news.editorial')) {
         dump($news);
     } ?>
 

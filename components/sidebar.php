@@ -244,7 +244,7 @@ $cart = readCart();
                         </a>
                     <?php } ?>
 
-                    <?php if (isset($notifications['news-editorial'])) { ?>
+                    <?php if ($Settings->featureEnabled('news-editorial') && isset($notifications['news-editorial'])) { ?>
                         <a href="<?= ROOTPATH ?>/news/editorial" class="with-icon <?= $pageactive('news-editorial') ?>">
                             <i class="ph ph-pencil" aria-hidden="true"></i>
                             <?= lang('News Editorial', 'News-Redaktion') ?>

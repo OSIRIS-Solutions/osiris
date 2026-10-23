@@ -15,6 +15,14 @@ try {
     $plain = requestRoute(['route' => '/crud/news/create', 'post' => $plainPost]);
     check($plain['error'] === null && $plain['news']['outlet_requests'] === [] && $plain['messages'] === [], 'Creating ordinary news works without any outlet request.');
 
+    $disabledConfiguration = array_replace($configuration, ['enabled' => false]);
+    $disabledPost = $plainPost;
+    $disabledPost['news']['visibility'] = 'public';
+    $classic = requestRoute(['route' => '/crud/news/create', 'post' => $disabledPost, 'configuration' => $disabledConfiguration]);
+    check($classic['error'] === null && $classic['news']['visibility'] === 'public' && !isset($classic['news']['publication_mode']) && $classic['messages'] === [], 'Configured outlets stay dormant until explicitly enabled.');
+    $disabledRequest = requestRoute(['route' => '/crud/news/create', 'post' => $post, 'configuration' => $disabledConfiguration]);
+    check($disabledRequest['error']['code'] === 400 && !$disabledRequest['write_attempted'] && $disabledRequest['messages'] === [], 'Reject stale outlet submissions after workflow deactivation without saving or notifying.');
+
     $id = $created['news']['_id'];
     $base = ['route' => '/crud/news/update/([a-f0-9]{24})', 'args' => [$id], 'news' => $created['news']];
     $updatePost = $post;

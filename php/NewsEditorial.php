@@ -15,7 +15,8 @@ class NewsEditorial
     public static function workflowAvailable(array $configuration, array $news = []): bool
     {
         // Deactivating outlets for new requests must not change existing publication rules.
-        return !empty($configuration['outlets']) || self::usesOutletWorkflow($news);
+        return (!empty($configuration['enabled']) && !empty($configuration['outlets'])) ||
+            self::usesOutletWorkflow($news) || self::requests($news) !== [];
     }
 
     public static function internalOnly(array $news): bool
@@ -158,6 +159,7 @@ class NewsEditorial
     /** Include inactive outlets only if they already belong to this news item. */
     public static function rows(array $configuration, array $news): array
     {
+        if (!self::workflowAvailable($configuration, $news)) return [];
         $requests = array_column(self::requests($news), null, 'outlet_id');
         $rows = [];
         foreach ($configuration['outlets'] as $outlet) {
@@ -180,6 +182,9 @@ class NewsEditorial
         }
         if (!is_array($selection)) {
             throw new InvalidArgumentException(lang('Invalid outlet selection.', 'Ungültige Outlet-Auswahl.'));
+        }
+        if ($selection && !self::workflowAvailable($configuration, $news)) {
+            throw new InvalidArgumentException(lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
         }
         $outlets = array_column($configuration['outlets'], null, 'id');
         $requests = array_column(self::requests($news), null, 'outlet_id');
@@ -335,6 +340,9 @@ class NewsEditorial
     {
         if (!in_array($action, ['add', 'start', 'reopen', 'save', 'ready', 'decline'], true)) {
             throw new InvalidArgumentException(lang('Unknown editorial action.', 'Unbekannte Redaktionsaktion.'));
+        }
+        if (!self::workflowAvailable($configuration, $news)) {
+            throw new InvalidArgumentException(lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
         }
         if (NewsEditorial::internalOnly($news)) {
             throw new InvalidArgumentException(lang('The author selected internal only. Outlet contributions cannot be edited.', 'Die Autorin oder der Autor hat Nur intern gewählt. Outlet-Beiträge können nicht bearbeitet werden.'));

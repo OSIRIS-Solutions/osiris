@@ -250,7 +250,7 @@ class DB
                 'value' => true
             ]);
             $permission = !empty($permission);
-            if ($permission) {
+            if ($permission && $this->featureEnabled('news-editorial')) {
                 $count = $this->db->news->countDocuments([
                     'internal_only' => ['$ne' => true],
                     'outlet_requests.status' => [

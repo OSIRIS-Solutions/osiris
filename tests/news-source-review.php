@@ -4,6 +4,7 @@
 require __DIR__ . '/fixtures/news.php';
 require_once BASEPATH . '/php/Portfolio.php';
 $configuration = $reviewConfiguration;
+$Settings = new NewsRequestTestSettings(['news.editorial'], $configuration);
 $configuration['original_portfolio'] = false;
 $configuration['outlets'][0]['portfolio'] = true;
 $configuration['outlets'][1]['portfolio'] = true;
@@ -43,4 +44,9 @@ check(count(Portfolio::newsOutput($changedOutlet, $configuration, true)['outlets
 $news['outlet_requests'][0]['status'] = 'in_progress';
 $news = array_merge($news, NewsEditorial::apply('ready', ['outlet_id' => $website['id']], $news, $configuration, 'editor', $now));
 check($news['outlet_requests'][0]['status'] === 'ready', 'Prepared text can be completed without source-version checkboxes.');
+$Settings = new NewsRequestTestSettings(['news.editorial'], array_replace($configuration, ['enabled' => false]));
+foreach (['outlets', 'editorial', 'review', 'review-controls'] as $section) {
+    ob_start(); include BASEPATH . '/pages/news/' . $section . '.php'; $html = ob_get_clean();
+    check(trim($html) === '', 'Hide ' . $section . ' when the feature is disabled, including for existing workflows.');
+}
 echo "News source independence checks passed.\n";

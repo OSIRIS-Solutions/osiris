@@ -20,6 +20,8 @@ try {
             $denied = requestRoute($base + ['route' => $route, 'permissions' => $permissions]);
             check($denied['error']['code'] === 403 && !$denied['write_attempted'] && !$denied['messages'], 'Enforce the dedicated right on the actual GET route.');
         }
+        $disabled = requestRoute(array_replace($base, ['route' => $route, 'permissions' => [$permission], 'configuration' => array_replace($reviewConfiguration, ['enabled' => false])]));
+        check($disabled['error']['code'] === 403 && !$disabled['write_attempted'], 'Disabled feature blocks editorial pages and exports despite sufficient permissions.');
         $allowed = requestRoute($base + ['route' => $route, 'permissions' => [$permission]]);
         check($allowed['error'] === null && str_contains(base64_decode($allowed['output']), '<h1>') && !$allowed['write_attempted'] && !$allowed['messages'], 'Authorized page renders without writes or inbox messages.');
     }

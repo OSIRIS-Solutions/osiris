@@ -19,7 +19,7 @@ Route::get('/admin', function () {
     $adminPerm = $Settings->hasPermission('admin.see');
     $userSyncPerm = $Settings->hasPermission('user.synchronize');
     $reportPerm = $Settings->hasPermission('report.templates');
-    $newsOutletsPerm = $adminPerm || $Settings->hasPermission('news.outlets');
+    $newsOutletsPerm = ($adminPerm || $Settings->hasPermission('news.outlets')) && $Settings->featureEnabled('news-editorial');
     if (!$adminPerm && !$userSyncPerm && !$reportPerm && !$newsOutletsPerm) {
         abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
     }

@@ -2,7 +2,7 @@
 
 Route::get('/news/editorial', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->featureEnabled('news', true) || !$Settings->hasPermission('news.editorial')) abortwith(403);
+    if (!$Settings->featureEnabled('news', true) || !$Settings->featureEnabled('news-editorial') || !$Settings->hasPermission('news.editorial')) abortwith(403);
     require_once BASEPATH . '/php/NewsEditorial.php';
     $queue = [];
     foreach ($osiris->news->find(['outlet_requests.status' => ['$in' => ['requested', 'in_progress', 'ready', 'pending_approval']]], ['projection' => ['image' => 0, 'content' => 0, 'content_de' => 0, 'editorial_contributions' => 0, 'author_reviews' => 0, 'editorial_history' => 0]]) as $document) {
@@ -23,7 +23,7 @@ Route::get('/news/editorial', function () {
 
 Route::get('/news/export', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->featureEnabled('news', true) || !$Settings->hasPermission('news.export')) abortwith(403);
+    if (!$Settings->featureEnabled('news', true) || !$Settings->featureEnabled('news-editorial') || !$Settings->hasPermission('news.export')) abortwith(403);
     require_once BASEPATH . '/php/NewsExport.php';
     $configuration = $Settings->getNewsOutlets();
     $error = null;

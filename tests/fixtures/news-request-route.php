@@ -19,7 +19,7 @@ function abortwith($code, $message = '', ...$unused) { throw new RuntimeExceptio
 class Settings
 {
     public function hasPermission(string $right) { return in_array($right, $GLOBALS['fixture']['permissions'], true); }
-    public function featureEnabled($feature, $default = false) { return $feature === 'news'; }
+    public function featureEnabled($feature, $default = false) { return $feature === 'news' || ($feature === 'news-editorial' && ($GLOBALS['fixture']['configuration']['enabled'] ?? false)); }
     public function getNewsOutlets() { return $GLOBALS['fixture']['configuration']; }
 }
 class DB

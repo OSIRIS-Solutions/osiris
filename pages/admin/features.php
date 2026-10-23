@@ -356,6 +356,46 @@
                     </div>
                 </div>
 
+                
+
+                <div class="box padded">
+                    <h4 class="title" id="news">
+                        <?= lang('News', 'Neuigkeiten') ?>
+                    </h4>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Show news on the home page', 'Zeige Neuigkeiten auf der Startseite') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('news', true);
+                        ?>
+                    </div>
+
+                    <div class="form-group" id="news-editorial">
+                        <label class="label"><?= lang('Editorial news workflow', 'Redaktioneller News-Workflow') ?></label>
+                        <?php renderCheckbox('news-editorial'); ?>
+                        <small><?= lang('Let authors request outlet contributions and editors prepare, review and release them. Disabling hides the editorial areas; existing drafts and releases are retained.', 'Autor:innen können Outlet-Beiträge beantragen, die Redaktion kann sie bearbeiten, prüfen lassen und freigeben. Beim Deaktivieren werden die redaktionellen Bereiche ausgeblendet; bestehende Entwürfe und Freigaben bleiben erhalten.') ?></small>
+                    </div>
+
+                    <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('Manage news outlets and Portfolio output', 'News-Outlets und Portfolio-Ausgabe verwalten') ?></a></p>
+
+                    <div class="form-group">
+                        <?php
+                        $news_lang = $Settings->get('news-language', 'both');
+                        ?>
+
+                        <label for="news-language">
+                            <?= lang('Language of news', 'Sprache der Neuigkeiten') ?>
+                        </label>
+                        <select name="general[news-language]" id="news-language" class="form-control small">
+                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('Only one language', 'Nur einsprachig') ?></option>
+                            <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option>
+                        </select>
+                    </div>
+
+                </div>
+
                 <div class="box padded">
                     <h4 class="title" id="trips">
                         <?= lang('Research Trips', 'Forschungsreisen') ?>
@@ -589,32 +629,6 @@
                         renderCheckbox('new-colleagues');
                         ?>
                     </div>
-
-                    <div class="form-group mt-10" id="news">
-                        <label for="" class="label">
-                            <?= lang('Show news on the home page', 'Zeige Neuigkeiten auf der Startseite') ?>
-                        </label>
-                        <?php
-                        renderCheckbox('news', true);
-                        ?>
-                    </div>
-
-                    <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('Manage news outlets and Portfolio output', 'News-Outlets und Portfolio-Ausgabe verwalten') ?></a></p>
-
-                    <div class="form-group">
-                        <?php
-                        $news_lang = $Settings->get('news-language', 'both');
-                        ?>
-
-                        <label for="news-language">
-                            <?= lang('Language of news', 'Sprache der Neuigkeiten') ?>
-                        </label>
-                        <select name="general[news-language]" id="news-language" class="form-control small">
-                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('Only one language', 'Nur einsprachig') ?></option>
-                            <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('Both languages', 'Beide Sprachen') ?></option>
-                        </select>
-                    </div>
-
                 </div>
 
                 <div class="box padded">
@@ -704,6 +718,7 @@
                     <a href="#infrastructures" class="submenu"><?= lang('Infrastructures', 'Infrastrukturen') ?></a>
                     <a href="#calendar" class="submenu"><?= lang('Calendar and Events', 'Kalender und Events') ?></a>
                     <a href="#tags" class="submenu"><?= lang('Tags', 'Schlagwörter') ?></a>
+                    <a href="#news" class="submenu"><?= lang('News', 'Neuigkeiten') ?></a>
                     <a href="#trips" class="submenu"><?= lang('Research Trips', 'Forschungsreisen') ?></a>
                     <a href="#wordcloud" class="submenu"><?= lang('Word Clouds', 'Word Clouds') ?></a>
 

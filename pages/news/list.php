@@ -79,17 +79,17 @@ $Vocabulary = new Vocabulary();
 <div class="container w-800 mw-full news-workflow">
     <h1>
         <i class="ph-duotone ph-megaphone"></i>
-        <?= lang('News', 'Nachrichten'); ?>
+        <?= lang('News', 'Neuigkeiten'); ?>
     </h1>
 
     <div class="btn-toolbar mb-20">
         <?php if (NewsEditorial::canCreate($Settings)) { ?>
             <a href="<?= ROOTPATH ?>/news/add" class="btn primary"><i class="ph ph-plus"></i> <?= lang('Create news item', 'Nachricht erstellen') ?></a>
         <?php } ?>
-        <?php if ($Settings->hasPermission('news.editorial')) { ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
             <a href="<?= ROOTPATH ?>/news/editorial" class="btn"><i class="ph ph-highlighter"></i> <?= lang('Editorial overview', 'Redaktionsübersicht') ?></a>
         <?php } ?>
-        <?php if ($Settings->hasPermission('news.export')) { ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.export')) { ?>
             <a href="<?= ROOTPATH ?>/news/export" class="btn"><i class="ph ph-export"></i> <?= lang('Export report', 'Bericht exportieren') ?></a>
         <?php } ?>
     </div>

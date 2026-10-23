@@ -487,7 +487,7 @@
             },
             {
                 "id": "news.edit",
-                "de": "Nachrichten hinzufügen und bearbeiten",
+                "de": "Neuigkeiten hinzufügen und bearbeiten",
                 "en": "Add and edit news"
             },
             {
@@ -502,7 +502,7 @@
             },
             {
                 "id": "news.delete",
-                "de": "Nachrichten löschen",
+                "de": "Neuigkeiten löschen",
                 "en": "Delete news"
             }
         ]

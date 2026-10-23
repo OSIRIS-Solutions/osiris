@@ -1,5 +1,7 @@
 <?php
 
+if (!$Settings->featureEnabled('news-editorial')) return;
+
 /** Batch actions apply only to the named ready or submitted outlet versions. */
 $pendingReview = NewsReview::pending($news);
 $preparedRequests = NewsEditorial::prepared($news);

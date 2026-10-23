@@ -204,7 +204,7 @@ class SidebarNav
                 'items' => [
                     [
                         'id' => 'news',
-                        'label' => lang('News', 'News'),
+                        'label' => lang('News', 'Neuigkeiten'),
                         'icon' => 'newspaper',
                         'url' => '/news',
                         'active' => ['^/news($|/)'],

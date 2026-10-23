@@ -1,4 +1,6 @@
 <?php
+
+if (!$Settings->featureEnabled('news-editorial')) return;
 /** Shared request selection and read-only summary. No editorial text is stored here. */
 $outletConfiguration = $Settings->getNewsOutlets();
 $outletNews = DB::doc2Arr($news ?? []);

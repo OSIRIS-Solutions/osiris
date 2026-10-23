@@ -12,6 +12,8 @@ try {
     $start = requestRoute($base + ['post' => $startPost]);
     check($start['error'] === null && $start['news']['revision'] === 2 && $start['news']['outlet_requests'][0]['status'] === 'in_progress', 'Start editing with the editorial permission alone.');
     check($start['news']['title'] === $source['title'] && $start['news']['content'] === $source['content'] && $start['news']['original_revision'] === 1, 'Editorial changes preserve the original text and its revision.');
+    $disabledStart = requestRoute($base + ['post' => $startPost, 'configuration' => array_replace($configuration, ['enabled' => false])]);
+    check($disabledStart['error']['code'] === 403 && !$disabledStart['write_attempted'], 'Disabling the feature blocks editorial endpoints even for existing requests.');
     $draftPost = ['csrf_token' => 'token', 'news_revision' => 2, 'action' => 'save', 'editorial' => [
         'outlet_id' => $website['id'], 'title' => ['de' => 'Webseitenfassung'], 'content' => ['de' => 'Ausführlicher Beitrag für die Webseite'],
         'internal_only' => true, 'original_revision' => 99,
