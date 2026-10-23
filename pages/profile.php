@@ -1044,7 +1044,7 @@ if (isset($_GET['verbose'])) {
                             <p><?= lang('No research interests stated.', 'Keine Forschungsinteressen angegeben.') ?></p>
                         <?php } ?>
 
-                        <?php if (isset($scientist['research_profile'])) { ?>
+                        <?php if (isset($scientist['research_profile']) && is_string($scientist['research_profile'])) { ?>
                             <h6 class="title">
                                 <?= lang('Research profile', 'Forschungsprofil') ?>
                             </h6>
@@ -1127,7 +1127,7 @@ if (isset($_GET['verbose'])) {
                     <?php } ?>
 
                     <?php if ($active('education')) { ?>
-                        <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                        <?php if (isset($scientist['education']) && !empty($scientist['education']) && is_string($scientist['education'])) { ?>
                             <h6 class="title">
                                 <?= lang('Education', 'Ausbildung') ?>
                             </h6>
