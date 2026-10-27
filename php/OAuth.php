@@ -97,7 +97,11 @@ function osirisOAuthStart(string $purpose, ?string $username = null): void
     try {
         osirisOAuthClient()->authenticate();
     } catch (\Throwable $e) {
-        error_log('OSIRIS: unable to start OIDC authentication (' . get_class($e) . ')');
+        // PHP errors identify missing runtime functions/classes/methods; keep details in the server log.
+        $detail = $e instanceof \Error
+            ? ': ' . str_replace(["\r", "\n"], ' ', $e->getMessage()) . ' in ' . $e->getFile() . ':' . $e->getLine()
+            : '';
+        error_log('OSIRIS: unable to start OIDC authentication (' . get_class($e) . ')' . $detail);
         osirisOAuthFail(lang('Unable to contact the single sign-on provider. Please check the configuration.', 'Der SSO-Anbieter konnte nicht erreicht werden. Bitte prüfe die Konfiguration.'));
     }
     exit;
