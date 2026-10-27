@@ -8,6 +8,7 @@ return [
     'lang_fr' => 'フランス語',
     'lang_pt' => 'ポルトガル語',
     'lang_nl' => 'オランダ語',
+    'lang_pl' => 'ポーランド語',
     'lang_sv' => 'スウェーデン語',
     'lang_ja' => '日本語',
     'lang_cn' => '中国語',
@@ -802,4 +803,5 @@ return [
     'word_cloud' => 'ワードクラウド',
     'partner' => 'パートナー',
     'item_added_to_collection' => 'アイテムがコレクションに追加されました。 <a class="link" href="{{rootpath}}/cart">コレクションを表示</a>',
+    'initiatives' => '取り組み',
 ];

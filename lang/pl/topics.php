@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'visualize_topic_network' => 'Wizualizacja sieci tematów',
+    'add_new_topic' => 'Dodaj nowy temat',
+    'view_details' => 'Pokaż szczegóły',
+    'upload_image' => 'Prześlij obraz',
+    'groups' => 'Grupy',
+    'id_cannot_be_changed' => 'Nie można zmieniać ID.',
+    'mark_as_inactive' => 'Oznacz jako nieaktywne',
+    'you_do_not_have_permission_to_create_a_new_topics' => 'Nie masz uprawnień do tworzenia nowych tematów.',
+    'go_back_to_topics' => 'Wróć do tematu',
+    'you_do_not_have_permission_to_edit_topics' => 'Nie masz uprawnień do edytowania tematów.',
+    'go_back_to_topic' => 'Wróć do tematu',
+    'with_this_id_already_exists' => 'o tym identyfikatorze już istnieje.',
+    'has_been_created_successfully' => 'zostało pomyślnie utworzone.',
+    'has_been_updated_successfully' => 'zostało pomyślnie zaktualizowane.',
+    'you_do_not_have_permission_to_delete_topics' => 'Nie masz uprawnień do usuwania tematów.',
+    'research_topic_has_been_deleted_successfully' => 'Temat badawczy został pomyślnie usunięty.',
+    'no_research_spectrum_is_assigned_to_this_topiclabel' => 'Do tego elementu {{topicLabel}} nie przypisano żadnego spektrum badań.',
+    'new_topiclabel' => 'Nowe {{topicLabel}}',
+    'edit_topiclabel' => 'Edytuj {{topicLabel}}',
+    'do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov' => 'Czy na pewno chcesz usunąć ten element {{topicLabel}}? Jeśli go usuniesz, zostanie on usunięty ze wszystkich powiązanych osób, działań i projektów.',
+    'number_of_projects' => 'Liczba projektów',
+];

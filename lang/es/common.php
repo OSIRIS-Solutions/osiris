@@ -8,6 +8,7 @@ return [
     'lang_fr' => 'Francés',
     'lang_pt' => 'Portugués',
     'lang_nl' => 'Neerlandés',
+    'lang_pl' => 'Polaco',
     'lang_sv' => 'Sueco',
     'lang_ja' => 'Japonés',
     'lang_cn' => 'Chino',
@@ -802,4 +803,5 @@ return [
     'word_cloud' => 'Nube de palabras',
     'partner' => 'Colaborador',
     'item_added_to_collection' => 'Elemento añadido a tu colección. <a class="link" href="{{rootpath}}/cart">Ver colección</a>',
+    'initiatives' => 'Iniciativas',
 ];

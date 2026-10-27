@@ -7,6 +7,7 @@ return [
     'lang_fr' => 'French',
     'lang_pt' => 'Portuguese',
     'lang_nl' => 'Dutch',
+    'lang_pl' => 'Polish',
     'lang_sv' => 'Swedish',
     'lang_ja' => 'Japanese',
     'lang_cn' => 'Chinese',
@@ -800,4 +801,5 @@ return [
     'word_cloud' => 'Word cloud',
     'partner' => 'Partner',
     'item_added_to_collection' => 'Item added to your collection. <a class="link" href="{{rootpath}}/cart">View collection</a>',
+    'initiatives' => 'Initiatives',
 ];

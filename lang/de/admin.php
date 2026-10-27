@@ -1,4 +1,5 @@
 <?php
+
 return [
     'search_settings' => 'Einstellungen durchsuchen...',
     'general_settings' => 'Allgemeine Einstellungen',
@@ -301,7 +302,7 @@ return [
     'select_form' => 'Formular auswählen',
     'select_a_form' => 'Ein Formular auswählen',
     'this_will_load_the_select_form_into_the_builder_however_as_long_as_you_do_n' => 'Dies lädt das ausgewählte Formular in den Builder, aber solange du nicht speicherst, wird dein Formular nicht überschrieben.',
-    'back_to_activity_type' => 'Zurück zum Aktivitätstyp',
+    'back_to_configuration' => 'Zurück zur Konfiguration',
     'form_builder' => 'Formular-Builder',
     'you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp' => 'Du hast die Felder von folgender Aktivität in den Arbeitsbereich geladen',
     'once_you_save_the_form_it_will_overwrite_the_fields_of_this_activity' => 'Sobald du das Formular speicherst, werden die Felder dieser Aktivität überschrieben.',
@@ -896,6 +897,7 @@ return [
     'language_description' => 'Bitte wähle hier, welche Sprachen diese OSIRIS-Instanz unterstützen soll.',
     'language_override' => 'Spracheinstellungen überschreiben',
     'language_override_description' => 'Füge nur die Texte hinzu, die du anpassen möchtest. Für alle anderen Texte wird weiterhin die mitgelieferte Übersetzung verwendet. Texte mit HTML können derzeit noch nicht angepasst werden.',
+    'language_override_count' => 'Derzeit gibt es {{count}}-Überschreibungen für diese Sprache.',
     'add_language_override' => 'Sprachanpassung hinzufügen',
     'select_language_key' => 'Sprachschlüssel suchen …',
     'language_key' => 'Sprachschlüssel',

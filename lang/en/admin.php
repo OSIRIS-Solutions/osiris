@@ -301,7 +301,7 @@ return [
     'select_form' => 'Select form',
     'select_a_form' => 'Select a form',
     'this_will_load_the_select_form_into_the_builder_however_as_long_as_you_do_n' => 'This will load the select form into the builder, however, as long as you do not save your form will not be overwritten.',
-    'back_to_activity_type' => 'Back to activity type',
+    'back_to_configuration' => 'Back to configuration',
     'form_builder' => 'Form Builder',
     'you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp' => 'You have loaded the fields from the following activity into your working space',
     'once_you_save_the_form_it_will_overwrite_the_fields_of_this_activity' => 'Once you save the form, it will overwrite the fields of this activity.',

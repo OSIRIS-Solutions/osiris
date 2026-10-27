@@ -8,6 +8,7 @@ return [
     'lang_fr' => 'Französisch',
     'lang_pt' => 'Portugiesisch',
     'lang_nl' => 'Niederländisch',
+    'lang_pl' => 'Polnisch',
     'lang_sv' => 'Schwedisch',
     'lang_ja' => 'Japanisch',
     'lang_cn' => 'Chinesisch',
@@ -801,4 +802,5 @@ return [
     'word_cloud' => 'Wortwolke',
     'partner' => 'Partner',
     'item_added_to_collection' => 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="{{rootpath}}/cart">Sammlung ansehen</a>',
+    'initiatives' => 'Initiativen',
 ];

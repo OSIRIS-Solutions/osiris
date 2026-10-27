@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'visualize_topic_network' => 'Visualiser le réseau des thèmes',
+    'add_new_topic' => 'Ajouter un nouveau sujet',
+    'view_details' => 'Voir les détails',
+    'upload_image' => 'Télécharger une image',
+    'groups' => 'Groupes',
+    'id_cannot_be_changed' => 'L\'ID ne peut pas être modifié.',
+    'mark_as_inactive' => 'Marquer comme inactif',
+    'you_do_not_have_permission_to_create_a_new_topics' => 'Vous n\'êtes pas autorisé à créer de nouveaux sujets.',
+    'go_back_to_topics' => 'Retour aux thèmes',
+    'you_do_not_have_permission_to_edit_topics' => 'Vous n\'êtes pas autorisé à modifier les rubriques.',
+    'go_back_to_topic' => 'Retour à la rubrique',
+    'with_this_id_already_exists' => 'Un texte portant cet identifiant existe déjà.',
+    'has_been_created_successfully' => 'a été créé avec succès.',
+    'has_been_updated_successfully' => 'a été mis à jour avec succès.',
+    'you_do_not_have_permission_to_delete_topics' => 'Vous n\'êtes pas autorisé à supprimer des rubriques.',
+    'research_topic_has_been_deleted_successfully' => 'Le sujet de recherche a été supprimé avec succès.',
+    'no_research_spectrum_is_assigned_to_this_topiclabel' => 'Aucun Research Spectrum n\'est attribué à cette {{topicLabel}}.',
+    'new_topiclabel' => 'Nouveau {{topicLabel}}',
+    'edit_topiclabel' => 'Modifier {{topicLabel}}',
+    'do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov' => 'Voulez-vous vraiment supprimer cette image {{topicLabel}} ? Si vous la supprimez, elle sera retirée de toutes les personnes, activités et projets qui y sont associés.',
+    'number_of_projects' => 'Nombre de projets',
+];
