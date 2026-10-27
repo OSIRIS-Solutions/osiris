@@ -105,6 +105,7 @@ $LANGUAGES = [
     'es' => 'Español',
     'fr' => 'Français',
     'pl' => 'Polski',
+    'nl' => 'Nederlands',
 ];
 
 // Get organizational units (Groups)

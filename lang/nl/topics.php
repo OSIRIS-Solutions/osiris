@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'visualize_topic_network' => 'Visualiseer het onderwerpsnetwerk',
+    'add_new_topic' => 'Nieuw onderwerp toevoegen',
+    'view_details' => 'Bekijk details',
+    'upload_image' => 'Afbeelding uploaden',
+    'groups' => 'Groepen',
+    'id_cannot_be_changed' => 'Het ID mag niet worden gewijzigd.',
+    'mark_as_inactive' => 'Markeer als inactief',
+    'you_do_not_have_permission_to_create_a_new_topics' => 'Je hebt geen toestemming om een nieuw onderwerp aan te maken.',
+    'go_back_to_topics' => 'Terug naar onderwerpen',
+    'you_do_not_have_permission_to_edit_topics' => 'Je hebt geen toestemming om onderwerpen te bewerken.',
+    'go_back_to_topic' => 'Terug naar het onderwerp',
+    'with_this_id_already_exists' => 'met deze ID bestaat al.',
+    'has_been_created_successfully' => 'is succesvol aangemaakt.',
+    'has_been_updated_successfully' => 'is succesvol bijgewerkt.',
+    'you_do_not_have_permission_to_delete_topics' => 'Je hebt geen toestemming om onderwerpen te verwijderen.',
+    'research_topic_has_been_deleted_successfully' => 'Het onderzoeksthema is succesvol verwijderd.',
+    'no_research_spectrum_is_assigned_to_this_topiclabel' => 'Aan deze {{topicLabel}} is geen onderzoeksspectrum toegewezen.',
+    'new_topiclabel' => 'Nieuw {{topicLabel}}',
+    'edit_topiclabel' => 'Bewerk {{topicLabel}}',
+    'do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov' => 'Wilt u deze {{topicLabel}} echt verwijderen? Als u deze verwijdert, wordt deze verwijderd uit alle gekoppelde personen, activiteiten en projecten.',
+    'number_of_projects' => 'Aantal projecten',
+];
