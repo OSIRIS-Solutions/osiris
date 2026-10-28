@@ -12,6 +12,7 @@
 - Wir haben auf der Startseite die Eventübersicht angepasst. Es werden nun Events nur noch 2 Monate im Voraus gezeigt und die Sortierung ist geändert. [#629](https://github.com/OSIRIS-Solutions/osiris/issues/629)
 - In der Admin Einstellung des ORCID Features wird ab sofort das Client Secret nach dem Speichern nicht mehr im Klartext angezeigt.
 - Es gibt nun in *CONFIG.php* die Möglichkeit eine Basis URL für die OSIRIS Instanz zu setzen. Die Variable heißt `BASE_URL` und soll aus Protokoll und Hostnamen bestehen, z.B. `https://osiris-demo.de/`. Damit wird die dynamische Bestimmung des Protokolls und Hostnamens überschrieben. Falls diese Variable nicht konfiguriert wird, bleibt die bisher genutzte dynamische Bestimmung bestehen. Diese neue Variable löst das Probleme aus Issue [#628](https://github.com/OSIRIS-Solutions/osiris/issues/628).
+- Die Sicherheit von Dokumenten wurde verbessert, sodass sich hochgeladene Dateien nicht mehr direkt über die URL abrufen lassen, wenn man keine Berechtigung dazu hat.
 
 ### Sonstige Bugfixes:
 - Fix Bug [#600](https://github.com/OSIRIS-Solutions/osiris/issues/600) - Antragsteller eines Projekts konnten das Projekt nach dem erstellen nicht bearbeiten 
