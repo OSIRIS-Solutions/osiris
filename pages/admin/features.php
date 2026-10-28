@@ -660,6 +660,24 @@
                         <?= lang('admin.more_configuration_options_for_the_resource_hub_can_be_found_after_enabling') ?>
                     </p>
                 </div>
+
+                <div class="box padded">
+                    <h4 class="title" id="initiatives">
+                        <?= lang('Initiatives', 'Initiativen') ?>
+                    </h4>
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('Enable Initiatives', 'Aktiviere Initiativen') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('initiatives');
+                        ?>
+                    </div>
+
+                    <p class="description">
+                        <?= lang('More configuration options for Initiatives can be found after enabling in the "Initiatives" section of the admin panel.', 'Weitere Konfigurationsmöglichkeiten für Initiativen finden sich nach dem Aktivieren im Bereich "Initiativen" des Admin-Panels.') ?>
+                    </p>
+                </div>
             </section>
 
             <div class="bottom-buttons">

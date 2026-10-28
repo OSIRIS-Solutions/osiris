@@ -14,101 +14,88 @@
  * @license     MIT
  */
 include_once BASEPATH . '/header-editor.php';
-include_once BASEPATH . '/php/Modules.php';
+// include_once BASEPATH . '/php/Modules.php';
 
-$Modules = new Modules();
-$all = [];
-$tags = [];
-foreach ($Modules->all_modules as $key => $value) {
-    if (($value['show'] ?? true) === false) {
-        continue;
-    }
-    $all[$key] = [
-        'name' => $value['name'] ?? $key,
-        'name_de' => $value['name_de'] ?? null,
-        'label' => $value['label'] ?? $value['name'] ?? $key,
-        'label_de' => $value['label_de'] ?? null,
-        'width' => $value['width'] ?? '12',
-        'fields' => array_keys($value['fields'] ?? []),
-        'type' => 'field',
-        'portfolio' => $value['portfolio'] ?? false,
-        'tags' => implode(',', $value['tags'] ?? []),
-    ];
-    foreach ($value['tags'] ?? [] as $tag) {
-        if (!in_array($tag, $tags)) {
-            $tags[] = $tag;
-        }
-    }
-}
+// $Modules = new Modules();
+// $all = [];
+// $tags = [];
+// foreach ($Modules->all_modules as $key => $value) {
+//     if (($value['show'] ?? true) === false) {
+//         continue;
+//     }
+//     $all[$key] = [
+//         'name' => $value['name'] ?? $key,
+//         'name_de' => $value['name_de'] ?? null,
+//         'label' => $value['label'] ?? $value['name'] ?? $key,
+//         'label_de' => $value['label_de'] ?? null,
+//         'width' => $value['width'] ?? '12',
+//         'fields' => array_keys($value['fields'] ?? []),
+//         'type' => 'field',
+//         'portfolio' => $value['portfolio'] ?? false,
+//         'tags' => implode(',', $value['tags'] ?? []),
+//     ];
+//     foreach ($value['tags'] ?? [] as $tag) {
+//         if (!in_array($tag, $tags)) {
+//             $tags[] = $tag;
+//         }
+//     }
+// }
 
-$custom_fields = $osiris->adminFields->find()->toArray();
-foreach ($custom_fields as $f) {
-    $all[$f['id']] = [
-        'name' => $f['name'],
-        'name_de' => $f['name_de'] ?? null,
-        'label' => $f['name'] ?? $key,
-        'label_de' => $f['name_de'] ?? null,
-        'width' => $f['width'] ?? '12',
-        'fields' => [$f['id']],
-        'type' => 'custom',
-    ];
-}
+// $custom_fields = $osiris->adminFields->find()->toArray();
+// foreach ($custom_fields as $f) {
+//     $all[$f['id']] = [
+//         'name' => $f['name'],
+//         'name_de' => $f['name_de'] ?? null,
+//         'label' => $f['name'] ?? $key,
+//         'label_de' => $f['name_de'] ?? null,
+//         'width' => $f['width'] ?? '12',
+//         'fields' => [$f['id']],
+//         'type' => 'custom',
+//     ];
+// }
 
-if (isset($_GET['copy']) && !empty($_GET['copy'])) {
-    // load fields from another form
-    $copy = $osiris->adminTypes->findOne(['id' => $_GET['copy']]);
+// if (isset($_GET['copy']) && !empty($_GET['copy'])) {
+//     // load fields from another form
+//     $copy = $osiris->adminTypes->findOne(['id' => $_GET['copy']]);
 
-    $modules = $copy['modules'] ?? [];
-    $fields = DB::doc2Arr($copy['fields'] ?? []);
-    if (empty($fields)) {
-        foreach ($modules as $m) {
-            $req = str_ends_with($m, '*');
-            $id = $req ? substr($m, 0, -1) : $m;
-            $mod = $all[$id] ?? [];
-            $fields[] = [
-                'id' => $id,
-                'type' => $mod['type'] ?? 'field',
-                'props' => ['required' => $req]
-            ];
-        }
-    }
-} else {
-    // use current type
-    $copy = false;
-    $modules = $type['modules'] ?? [];
-    $fields = DB::doc2Arr($type['fields'] ?? []);
-    if (empty($fields)) {
-        foreach ($modules as $m) {
-            $req = str_ends_with($m, '*');
-            $id = $req ? substr($m, 0, -1) : $m;
-            $mod = $all[$id] ?? [];
-            $fields[] = [
-                'id' => $id,
-                'type' => $mod['type'] ?? 'field',
-                'props' => ['required' => $req]
-            ];
-        }
-    }
-}
+//     $modules = $copy['modules'] ?? [];
+//     $fields = DB::doc2Arr($copy['fields'] ?? []);
+//     if (empty($fields)) {
+//         foreach ($modules as $m) {
+//             $req = str_ends_with($m, '*');
+//             $id = $req ? substr($m, 0, -1) : $m;
+//             $mod = $all[$id] ?? [];
+//             $fields[] = [
+//                 'id' => $id,
+//                 'type' => $mod['type'] ?? 'field',
+//                 'props' => ['required' => $req]
+//             ];
+//         }
+//     }
+// } else {
+//     // use current type
+//     $copy = false;
+//     $modules = $type['modules'] ?? [];
+//     $fields = DB::doc2Arr($type['fields'] ?? []);
+//     if (empty($fields)) {
+//         foreach ($modules as $m) {
+//             $req = str_ends_with($m, '*');
+//             $id = $req ? substr($m, 0, -1) : $m;
+//             $mod = $all[$id] ?? [];
+//             $fields[] = [
+//                 'id' => $id,
+//                 'type' => $mod['type'] ?? 'field',
+//                 'props' => ['required' => $req]
+//             ];
+//         }
+//     }
+// }
 
-// remove important tag from tags
-if (($key = array_search('important', $tags)) !== false) {
-    unset($tags[$key]);
-}
+// // remove important tag from tags
+// if (($key = array_search('important', $tags)) !== false) {
+//     unset($tags[$key]);
+// }
 
-$tagLabels = [
-    'publication' => ['en' => 'Publication', 'de' => 'Publikation'],
-    'general' => ['en' => 'General', 'de' => 'Allgemein'],
-    'authors' => ['en' => 'Users', 'de' => 'Nutzende'],
-    'layout' => ['en' => 'Layout', 'de' => 'Layout'],
-    'location' => ['en' => 'Location', 'de' => 'Ort'],
-    'event' => ['en' => 'Event', 'de' => 'Ereignis'],
-    'date' => ['en' => 'Date', 'de' => 'Datum'],
-    // 'important' => ['en' => 'Important', 'de' => 'Wichtig'],
-    'teaching' => ['en' => 'Teaching', 'de' => 'Lehre'],
-    'organizations' => ['en' => 'Organisations', 'de' => 'Organisationen'],
-    'people' => ['en' => 'People', 'de' => 'Personen'],
-];
 
 ?>
 
@@ -422,6 +409,7 @@ $tagLabels = [
 </div>
 
 
+<?php if ($config->canBeCopied): ?>
 <div class="modal" id="load-form" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content bg-white">
@@ -463,22 +451,25 @@ $tagLabels = [
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 
 <div class="btn-toolbar float-right">
+    <?php if ($config->canBeCopied): ?>
     <a class="btn" href="#load-form">
         <i class="ph ph-download-simple"></i>
         <?= lang('admin.load_form') ?>
     </a>
-    <a class="btn" href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
+    <?php endif; ?>
+    <a class="btn" href="<?= $config->backUrl ?>">
         <i class="ph ph-x"></i>
         <?= lang('action.cancel') ?>
     </a>
 </div>
 
-<a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>">
+<a href="<?= $config->backUrl ?>">
     <i class="ph ph-arrow-left"></i>
-    <?= lang('admin.back_to_activity_type') ?>
+    <?= lang('admin.back_to_configuration') ?>
 </a>
 
 <h1 class="m-0">
@@ -486,19 +477,21 @@ $tagLabels = [
 </h1>
 
 <ul class="breadcrumb category" style="--highlight-color:<?= $parent['color'] ?? '' ?>">
+    <?php if (isset($parent)): ?>
     <li>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $t ?>" class="colorless">
             <?= lang($parent['name'], $parent['name_de'] ?? null) ?>
         </a>
     </li>
+    <?php endif; ?>
     <li>
-        <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>" class="colorless">
+        <a href="<?= $config->backUrl ?>" class="colorless">
             <?= lang($type['name'], $type['name_de'] ?? null) ?>
         </a>
     </li>
 </ul>
 
-<?php if ($copy) { ?>
+<?php if ($copy && $config->canBeCopied) { ?>
     <div class="alert info">
         <?= lang('admin.you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp') ?>: <strong><?= lang($copy['name'], $copy['name_de'] ?? null) ?></strong>.
         <br>
@@ -507,7 +500,7 @@ $tagLabels = [
 <?php } ?>
 
 
-<form id="activity-form" action="<?= ROOTPATH ?>/crud/admin/activity-fields" method="post">
+<form id="activity-form" action="<?= $config->redirectUrl; ?>" method="post">
     <input type="hidden" name="activityType" value="<?= $type['id'] ?>">
     <input type="hidden" name="schema" id="schema">
 
@@ -522,8 +515,8 @@ $tagLabels = [
                     <div class="pillbar">
                         <a class="badge tag" data-tag="all"><?= lang('common.all') ?></a>
                         <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
-                        <?php foreach ($tags as $tag): ?>
-                            <a class="badge tag" data-tag="<?= $tag ?>"><?= lang($tagLabels[$tag]['en'] ?? ucfirst($tag), $tagLabels[$tag]['de'] ?? null) ?></a>
+                        <?php foreach ($config->tags as $tag): ?>
+                            <a class="badge tag" data-tag="<?= $tag ?>"><?= localized(FormBuilder::$tagLabels[$tag]?? ucfirst($tag)) ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -552,7 +545,11 @@ $tagLabels = [
 
                     <div class="font-size-12 text-muted"><?= lang('common.custom_fields') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
-                        <?php foreach ($custom_fields as $field) { ?>
+                        <?php foreach ($config->modules as $id => $field) {
+                            if ($field['type'] !== 'custom') {
+                                continue;
+                            }
+                        ?>
                             <li class="drag-item"
                                 data-type="custom"
                                 data-id="<?= e($field['id']) ?>"
@@ -570,13 +567,13 @@ $tagLabels = [
 
                     <div class="font-size-12 text-muted mt-10"><?= lang('common.data_fields') ?></div>
                     <ul id="catalog-list" class="list-group mb-10">
-                        <?php foreach ($Modules->all_modules as $id => $def):
+                        <?php foreach ($config->modules as $id => $def):
                             // skip elements that are in the form already
                             if (in_array($id, array_column($fields, 'id'))) {
                                 continue; // bereits im Formular enthalten
                             }
                             // skip elements that are hidden
-                            if (($def['show'] ?? true) === false) {
+                            if (($def['show'] ?? true) === false || $def['type'] === 'custom') {
                                 continue;
                             }
                         ?>
@@ -585,7 +582,7 @@ $tagLabels = [
                                 data-id="<?= e($id) ?>"
                                 data-label="<?= $def['label'] ?? $def['name'] ?>"
                                 data-label-de="<?= $def['label_de'] ?? null ?>"
-                                data-tags="<?= e(implode(',', $def['tags'] ?? [])) ?>">
+                                data-tags="<?= e($def['tags'] ?? '') ?>">
                                 <div class="d-flex justify-content-between">
                                     <span><?= lang($def['name'] ?? $id, $def['name_de'] ?? null) ?></span>
                                     <a class="preview" href="#preview"><i class="ph ph-question"></i></a>

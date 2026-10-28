@@ -163,6 +163,7 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     if (!$Settings->hasPermission('admin.see')) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
+    include_once BASEPATH . "/php/FormBuilder.php";
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
@@ -174,7 +175,52 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     $parent = $osiris->adminCategories->findOne(['id' => $t]);
     $color = $parent['color'] ?? '#000000';
     $st = $type['id'];
-    $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
+    // $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
+
+    $config = new FormBuilder(
+        entityLabel: $name,
+        redirectUrl: ROOTPATH . '/crud/admin/activity-fields',
+        entity: 'activities',
+        backUrl: ROOTPATH . '/admin/types/' . ($id)
+    );
+
+    if (isset($_GET['copy']) && !empty($_GET['copy'])) {
+        // load fields from another form
+        $copy = $osiris->adminTypes->findOne(['id' => $_GET['copy']]);
+
+        $modules = $copy['modules'] ?? [];
+        $fields = DB::doc2Arr($copy['fields'] ?? []);
+        if (empty($fields)) {
+            foreach ($modules as $m) {
+                $req = str_ends_with($m, '*');
+                $id = $req ? substr($m, 0, -1) : $m;
+                $mod = $all[$id] ?? [];
+                $fields[] = [
+                    'id' => $id,
+                    'type' => $mod['type'] ?? 'field',
+                    'props' => ['required' => $req]
+                ];
+            }
+        }
+    } else {
+        // use current type
+        $copy = false;
+        $modules = $type['modules'] ?? [];
+        $fields = DB::doc2Arr($type['fields'] ?? []);
+        if (empty($fields)) {
+            foreach ($modules as $m) {
+                $req = str_ends_with($m, '*');
+                $id = $req ? substr($m, 0, -1) : $m;
+                $mod = $all[$id] ?? [];
+                $fields[] = [
+                    'id' => $id,
+                    'type' => $mod['type'] ?? 'field',
+                    'props' => ['required' => $req]
+                ];
+            }
+        }
+    }
+
 
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
@@ -190,6 +236,54 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
     include BASEPATH . "/pages/admin/form-builder.php";
     include BASEPATH . "/footer.php";
 }, 'login');
+
+
+
+Route::get('/admin/initiatives/fields', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+
+    $type = $osiris->adminGeneral->findOne(['id' => 'initiative-fields']);
+    if (empty($type)) {
+        $type = [
+            'id' => 'initiative-fields', 
+            'name' => 'Initiatives', 
+            'name_de' => 'Initiativen',
+            'fields' => []
+        ];
+    }
+    $fields = DB::doc2Arr($type['fields'] ?? []);
+    
+    $name = lang('Initiatives', 'Initiativen');
+
+    $color = '#000000';
+    $copy = false;
+
+    include_once BASEPATH . "/php/FormBuilder.php";
+    $config = new FormBuilder(
+        entityLabel: $name,
+        redirectUrl: ROOTPATH . '/crud/admin/initiativesFields',
+        entity: 'initiatives',
+        backUrl: ROOTPATH . '/admin/initiatives',
+        mandatory: ['name', 'id', 'date-range-ongoing', 'type']
+    );
+
+    $breadcrumb = [
+        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => $name, 'path' => "/admin/initiatives"],
+        ['name' => lang("Data fields", "Datenfelder")]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($type);
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/form-builder.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
 
 Route::get('/admin/doi-mappings', function () {
     include_once BASEPATH . "/php/init.php";
@@ -605,7 +699,7 @@ Route::get('/admin/osirisinfo', function () {
 }, 'login');
 
 
-Route::get('/admin/language-override/(de|en|it|ja|es)', function ($lang) {
+Route::get('/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
@@ -613,7 +707,7 @@ Route::get('/admin/language-override/(de|en|it|ja|es)', function ($lang) {
     $breadcrumb = [
         ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => lang('admin.languages'), 'path' => '/admin/languages'],
-        ['name' => lang('common.lang_'.$lang)]
+        ['name' => lang('common.lang_' . $lang)]
     ];
 
     include BASEPATH . "/header.php";
@@ -622,7 +716,7 @@ Route::get('/admin/language-override/(de|en|it|ja|es)', function ($lang) {
     include BASEPATH . "/footer.php";
 }, 'login');
 
-Route::post('/crud/admin/language-override/(de|en|it|ja|es)', function ($lang) {
+Route::post('/crud/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
@@ -1168,7 +1262,7 @@ Route::post('/crud/admin/general', function () {
         if ($_FILES['logo']['error'] != UPLOAD_ERR_OK) {
             $msg = match ($_FILES['logo']['error']) {
                 1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
+                2 => lang('error.file_upload_too_large', replace: ['max' => '16 MB']),
                 3 => lang('error.file_partially_uploaded'),
                 4 => lang('error.no_file_uploaded'),
                 6 => lang('error.file_upload_missing_temp'),

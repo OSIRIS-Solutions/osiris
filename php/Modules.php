@@ -52,6 +52,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "author-table" => [
             "fields" => ["authors" => [
@@ -84,6 +85,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "book-series" => [
             "fields" => ["series" => 'Book Series on Open Source Systems'],
@@ -97,6 +99,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "book-title" => [
             "fields" => ["book" => 'Research Information Systems'],
@@ -110,6 +113,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "city" => [
             "fields" => ["city" => 'Helmstedt, Deutschland'],
@@ -123,6 +127,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'location'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "conference" => [
             "fields" => ["conference" => '1st CRIS Conference'],
@@ -136,6 +141,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "correction" => [
             "fields" => ["correction" => true],
@@ -149,6 +155,7 @@ class Modules
             "portfolio" => false,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "date-range" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => ["year" => 2022, "month" => 9, "day" => 8]],
@@ -162,6 +169,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['date', 'important'],
             "section" => "dates",
+            "entities" => ['activities']
         ],
         "date-range-ongoing" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => null],
@@ -175,6 +183,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['date', 'important'],
             "section" => "dates",
+            "entities" => ['activities']
         ],
         "date" => [
             "fields" => ["year" => 2023, "month" => 5, "day" => 4],
@@ -188,6 +197,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['date', 'important'],
             "section" => "dates",
+            "entities" => ['activities']
         ],
         "details" => [
             "fields" => ["details" => "Weitere Details"],
@@ -201,6 +211,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "others",
+            "entities" => ['activities']
         ],
         "doctype" => [
             "fields" => ["doc_type" => 'White Paper'],
@@ -214,6 +225,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "doi" => [
             "fields" => ["doi" => '10.1234/idk/invalid'],
@@ -227,6 +239,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['important', 'publication'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "edition" => [
             "fields" => ["edition" => 2],
@@ -240,6 +253,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "editor" => [
             "fields" => ["editors" => [
@@ -272,6 +286,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors', 'publication'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "editorial" => [
             "fields" => ["editor_type" => 'Guest Editor'],
@@ -285,6 +300,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "event-select" => [
             "fields" => [],
@@ -298,6 +314,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['event', 'modificator'],
             "section" => "",
+            "entities" => ['activities']
         ],
         "funding_type" => [
             "fields" => ["funding_type" => 'Third-Party Funded'],
@@ -311,6 +328,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "others",
+            "entities" => ['activities']
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -325,6 +343,7 @@ class Modules
             "tags" => ['people'],
             "show" => false,
             "section" => "people",
+            "entities" => ['activities']
         ],
         "guest-category" => [
             "fields" => ["category" => 'guest scientist'],
@@ -338,6 +357,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "gender" => [
             "fields" => ["gender" => 'f'],
@@ -351,6 +371,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "nationality" => [
             "fields" => ["country" => 'DE'],
@@ -364,6 +385,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people', 'location'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "country" => [
             "fields" => ["country" => 'DE'],
@@ -377,6 +399,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
+            "entities" => ['activities']
         ],
         "countries" => [
             "fields" => ["countries" => ['DE', 'AT', 'CH']],
@@ -390,6 +413,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
+            "entities" => ['activities']
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
@@ -403,6 +427,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'important'],
             "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "isbn" => [
             "fields" => ["isbn" => '979-8716615502'],
@@ -416,6 +441,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "issn" => [
             "fields" => ["issn" => ["1362-4962", "0305-1048"]],
@@ -429,6 +455,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "issue" => [
             "fields" => ["issue" => "D1"],
@@ -442,6 +469,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "iteration" => [
             "fields" => ["iteration" => "annual"],
@@ -455,6 +483,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "journal" => [
             "fields" => ["journal" => 'Information Systems Research', "journal_id" => null],
@@ -468,6 +497,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "lecture-invited" => [
             "fields" => ["invited_lecture" => true],
@@ -481,6 +511,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "lecture-type" => [
             "fields" => ["lecture_type" => 'short'],
@@ -494,6 +525,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "license" => [
             "fields" => ["license" => 'MIT'],
@@ -507,6 +539,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['software', 'publication'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "link" => [
             "fields" => ["link" => 'https://osiris-app.de'],
@@ -520,6 +553,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'important'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "location" => [
             "fields" => ["location" => 'Braunschweig, Germany'],
@@ -533,6 +567,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
+            "entities" => ['activities']
         ],
         "magazine" => [
             "fields" => ["magazine" => 'Apothekenumschau'],
@@ -546,6 +581,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
@@ -559,6 +595,7 @@ class Modules
             "portfolio" => false,
             "tags" => ['publication', 'important'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "openaccess" => [
             "fields" => ["open_access" => true],
@@ -572,6 +609,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'important'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "openaccess-status" => [
             "fields" => ["open_access" => true, "oa_status" => 'gold'],
@@ -585,6 +623,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'important'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "pages" => [
             "fields" => ["pages" => 'D1531-8'],
@@ -598,6 +637,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "peer-reviewed" => [
             "fields" => ["peer-reviewed" => true],
@@ -611,6 +651,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'important'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "person" => [
             "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
@@ -624,6 +665,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "person-only" => [
             "fields" => ["name" => "Koblitz, Julia"],
@@ -637,6 +679,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "person-organization" => [
             "fields" => ["name" => "Koblitz, Julia", "organization" => "DSMZ"],
@@ -650,6 +693,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
@@ -663,6 +707,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['general', 'important'],
             "section" => "",
+            "entities" => ['activities']
         ],
         "pub-language" => [
             "fields" => ["pub_language" => 'de'],
@@ -676,6 +721,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "publisher" => [
             "fields" => ["publisher" => 'Oxford'],
@@ -689,6 +735,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "pubmed" => [
             "fields" => ["pubmed" => 1234567],
@@ -702,6 +749,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "pubtype" => [
             "fields" => ["pubtype" => "article"],
@@ -715,6 +763,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "review-type" => [
             "fields" => ["review-type" => "Begutachtung eines Forschungsantrages"],
@@ -728,6 +777,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "role" => [
             "fields" => ["role" => "Organisator:in"],
@@ -741,6 +791,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people', 'event'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "scientist" => [
             "fields" => ["authors" =>
@@ -764,6 +815,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['authors', 'important'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "semester-select" => [
             "fields" => [],
@@ -777,6 +829,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['teaching', 'modificator'],
             "section" => "",
+            "entities" => ['activities']
         ],
         "scope" => [
             "fields" => ["scope" => "national"],
@@ -790,6 +843,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "software-link" => [
             "fields" => ["link" => "https://osiris-app.de"],
@@ -803,6 +857,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['software'],
             "section" => "software",
+            "entities" => ['activities']
         ],
         "software-type" => [
             "fields" => ["software_type" => "Database"],
@@ -816,6 +871,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['software'],
             "section" => "software",
+            "entities" => ['activities']
         ],
         "software-venue" => [
             "fields" => ["software_venue" => "GitHub"],
@@ -829,6 +885,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['software'],
             "section" => "software",
+            "entities" => ['activities']
         ],
         "status" => [
             "fields" => ["status" => 'completed'],
@@ -842,6 +899,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'important'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "student-category" => [
             "fields" => ["category" => 'doctoral thesis'],
@@ -855,6 +913,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['people', 'publication'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "tags" => [
             "fields" => ["tags" => ['OSIRIS', 'CRIS2023']],
@@ -868,6 +927,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "key",
+            "entities" => ['activities']
         ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
@@ -881,6 +941,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'people'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "supervisor" => [
             "fields" => ["authors" => [
@@ -904,6 +965,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors', 'people'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "supervisor-thesis" => [
             "fields" => ["authors"],
@@ -917,6 +979,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors', 'people', 'publication'],
             "section" => "authors",
+            "entities" => ['activities']
         ],
         "teaching-category" => [
             "fields" => ["category" => 'practical-lecture'],
@@ -930,6 +993,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['teaching'],
             "section" => "others",
+            "entities" => ['activities']
         ],
         "teaching-course" => [
             "fields" => ["title" => "Einführung in die Forschungsinformation", "module" => null, "module_id" => null],
@@ -943,6 +1007,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['teaching'],
             "section" => "others",
+            "entities" => ['activities']
         ],
         "title" => [
             "fields" => ["title" => 'OSIRIS - Open Source Research Information System'],
@@ -956,6 +1021,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'important'],
             "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "subtitle" => [
             "fields" => ["subtitle" => 'A subtitle for the activity, e.g. for a journal article.'],
@@ -969,6 +1035,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "university" => [
             "fields" => ["publisher" => 'Springer Nature'],
@@ -982,6 +1049,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['teaching', 'people'],
             "section" => "people",
+            "entities" => ['activities']
         ],
         "version" => [
             "fields" => ["version" => OSIRIS_VERSION],
@@ -995,6 +1063,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['software'],
             "section" => "software",
+            "entities" => ['activities']
         ],
         "venue" => [
             "fields" => ["venue"],
@@ -1008,6 +1077,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "volume" => [
             "fields" => ["volume" => 51],
@@ -1021,6 +1091,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
+            "entities" => ['activities']
         ],
         "political_consultation" => [
             "fields" => ["political_consultation" => 'Gutachten'],
@@ -1034,6 +1105,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event', 'publication'],
             "section" => "events",
+            "entities" => ['activities']
         ],
         "organization" => [
             "fields" => ["organization" => 'Technische Universität Braunschweig'],
@@ -1047,6 +1119,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['organizations', 'people'],
             "section" => "people",
+            "entities" => ['activities', 'initiatives']
         ],
         "organizations" => [
             "fields" => ["organizations" => ['Technische Universität Braunschweig', 'Deutsche Forschungsgemeinschaft']],
@@ -1060,6 +1133,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['organizations', 'people'],
             "section" => "people",
+            "entities" => ['activities', 'initiatives']
         ],
     );
 

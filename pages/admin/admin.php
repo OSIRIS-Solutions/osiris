@@ -209,6 +209,15 @@
                 <b><?= lang('common.journals') ?></b>
                 <p><?= lang('admin.journals_description') ?></p>
             </a>
+
+            <?php if ($Settings->featureEnabled('initiatives')) { ?>
+                <a class="card" href="<?= ROOTPATH ?>/admin/initiatives">
+                    <i class="ph-duotone ph-lightbulb" aria-hidden="true"></i>
+                    <b><?= lang('common.initiatives') ?></b>
+                    <p><?= lang('Manage initiatives', 'Verwalte Initiativen') ?></p>
+                </a>
+            <?php } ?>
+
         </div><?php endif; ?>
 
     <?php if ($adminPerm) : ?>
