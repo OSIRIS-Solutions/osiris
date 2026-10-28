@@ -475,7 +475,7 @@ function val($index, $default = '')
     if (
         !empty($orcid['client_id'])
         && !empty($orcid['client_secret'])
-        && $user['orcid_validated']
+        && (isset($user['orcid_validated']) && $user['orcid_validated'])
     ) { ?>
         <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('Import from ORCID', 'Von ORCID importieren') ?></a>
     <?php } ?>
@@ -857,7 +857,6 @@ $user_list = $osiris->persons->find(['last' => ['$ne' => '']], ['projection' => 
 
 
 <script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
-<script src="<?= ROOTPATH ?>/js/list-widget.js?v=<?= OSIRIS_BUILD ?>"></script>
 <script>
     function selectOrgEvent(event = null, type = 'organization') {
         console.log(type);

@@ -1742,6 +1742,16 @@ if ($edit_perm) {
                 </div>
             <?php endif; ?>
 
+
+            <?php if ($edit_perm) { ?>
+                <?php include_once BASEPATH . '/pages/activities/activity-modals.php'; ?>
+                <div class="mb-20">
+                    <a href="#edit-files" class="btn mt-20 primary">
+                        <?= lang('Add files', 'Dateien hinzufügen') ?>
+                    </a>
+                </div>
+            <?php } ?>
+
             <table class="table">
                 <tbody>
                     <?php
@@ -1825,50 +1835,6 @@ if ($edit_perm) {
                     ?>
                 </tbody>
             </table>
-
-            <?php if ($edit_perm) { ?>
-                <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
-                    <h5 class="title font-size-16">
-                        <?= lang('Upload document', 'Dokument hochladen') ?>
-                    </h5>
-                    <div class="form-group">
-                        <div class="custom-file">
-                            <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
-                            <label for="upload-file" class="custom-file-label"><?= lang('Choose a file', 'Wähle eine Datei aus') ?></label>
-                            <br><small class="text-danger">Max. 16 MB.</small>
-                        </div>
-                    </div>
-                    <input type="hidden" name="values[type]" value="activities">
-                    <input type="hidden" name="values[id]" value="<?= $id ?>">
-                    <div class="form-group floating-form">
-                        <select class="form-control" name="values[name]" placeholder="Name" required>
-                            <?php
-                            $vocab = $Vocabulary->getValues('activity-document-types');
-                            foreach ($vocab as $v) { ?>
-                                <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                            <?php } ?>
-                        </select>
-                        <label for="name" class="required"><?= lang('Document type', 'Dokumenttyp') ?></label>
-                    </div>
-                    <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('Description', 'Beschreibung') ?>" value="">
-                        <label for="description"><?= lang('Description', 'Beschreibung') ?></label>
-                    </div>
-                    <button class="btn primary" type="submit"><?= lang('Upload', 'Hochladen') ?></button>
-                </form>
-
-                <script>
-                    var uploadField = document.getElementById("upload-file");
-
-                    uploadField.onchange = function() {
-                        if (this.files[0].size > 16777216) {
-                            toastError(lang("File is too large! Max. 16MB is supported!", "Die Datei ist zu groß! Max. 16MB werden unterstützt."));
-                            this.value = "";
-                        };
-                    };
-                </script>
-            <?php } ?>
-
         </section>
 
     <?php endif; ?>

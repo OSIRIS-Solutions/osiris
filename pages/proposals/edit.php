@@ -45,8 +45,8 @@ if (!$new_project) {
     if ($user_project == false && ($form['created_by'] ?? '') == $_SESSION['username']) {
         $user_project = True;
     }
-    $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
-    $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
+    $edit_perm = ($Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.edit-own') && $user_project));
+    $status_perm = ($Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.status-own') && $user_project));
 
     // check if status change is requested
     if (isset($_GET['phase']) && $_GET['phase'] != $form['status']) {

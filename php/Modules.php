@@ -2100,7 +2100,7 @@ class Modules
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="number" step="0.1" class="form-control" name="values[supervisors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
+                                            <input type="number" step="0.01" class="form-control" name="values[supervisors][<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>" required>
                                         </td>
                                         <td>
                                             <button class="btn text-danger" type="button" onclick="removeSupervisorRow(this)"><i class="ph ph-trash"></i></button>
@@ -2160,7 +2160,7 @@ class Modules
                             tr.append('<td><input name="values[supervisors][' + counter + '][last]" type="text" class="form-control" required></td>')
                             tr.append('<td><input name="values[supervisors][' + counter + '][first]" type="text" class="form-control"></td>')
                             tr.append('<td><div class="custom-checkbox"><input type="checkbox" id="checkbox-' + counter + '" name="values[supervisors][' + counter + '][aoi]" value="1"><label for="checkbox-' + counter + '" class="blank"></label></div></td>')
-                            tr.append('<td><input type="number" step="0.1" class="form-control" name="values[supervisors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
+                            tr.append('<td><input type="number" step="0.01" class="form-control" name="values[supervisors][' + counter + '][sws]" id="teaching-sws" value="" required></td>')
                             var btn = $('<button class="btn text-danger" type="button">').html('<i class="ph ph-trash"></i>').on('click', function() {
                                 $(this).closest('tr').remove();
                             });

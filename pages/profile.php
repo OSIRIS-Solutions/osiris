@@ -457,7 +457,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         $googlescholar = $Settings->featureEnabled('googlescholar', true) && !empty($USER['google_scholar'] ?? null);
         // $openalex = $Settings->featureEnabled('openalex', true);
         $openalex = false; // currently not suppoted here
-        $orcid = $Settings->featureEnabled('orcid')  && $scientist['orcid_validated'] ?? false;
+        $orcid = $Settings->featureEnabled('orcid')  && ($scientist['orcid_validated'] ?? false);
         if ($googlescholar || $openalex || $orcid) { ?>
             <div class="btn-group btn-group-lg">
                 <?php if ($orcid) { ?>
