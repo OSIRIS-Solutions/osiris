@@ -18,16 +18,11 @@ function renderActivities($filter = [], $return_updated = false)
     foreach ($cursor as $doc) {
         $id = $doc['_id'];
         $Format->setDocument($doc);
-        $Format->usecase = 'web';
         $doc['authors'] = DB::doc2Arr($doc['authors'] ?? []);
 
-        $Format->usecase = 'print';
-        $f = $Format->format($renderLang);
-        $Format->usecase = 'web';
-        $web = $Format->formatShort($renderLang);
-
-        $Format->usecase = 'portal';
-        $portfolio = $Format->formatPortfolio($renderLang);
+        $f = $Format->format(lang:$renderLang, usecase:'print');
+        $web = $Format->formatShort(link:true, lang:$renderLang, usecase:'web');
+        $portfolio = $Format->formatPortfolio(lang:$renderLang, usecase:'portal');
 
         $rendered = [
             'print' => $f,
@@ -85,30 +80,30 @@ function renderActivities($filter = [], $return_updated = false)
 
         $active = false;
         // if (!isset($doc['year'])) {dump($doc, true); die;}
-        $sm = intval($doc['month'] ?? 0);
-        $sy = intval($doc['year'] ?? 0);
+        $start_month = intval($doc['month'] ?? 0);
+        $start_year = intval($doc['year'] ?? 0);
         // die;
-        $em = $sm;
-        $ey = $sy;
+        $end_month = $start_month;
+        $end_year = $start_year;
 
         if (isset($doc['end']) && !empty($doc['end'])) {
-            $em = $doc['end']['month'];
-            $ey = $doc['end']['year'];
+            $end_month = $doc['end']['month'];
+            $end_year = $doc['end']['year'];
         } elseif (in_array($doc['subtype'], $Settings->continuousTypes) && empty($doc['end'])) {
-            $em = CURRENTMONTH;
-            $ey = CURRENTYEAR;
+            $end_month = CURRENTMONTH;
+            $end_year = CURRENTYEAR;
             $active = true;
         }
-        $sq = $sy . 'Q' . ceil($sm / 3);
-        $eq = $ey . 'Q' . ceil($em / 3);
-        $quarter = $sq;
+        $start_quarter = $start_year . 'Q' . ceil($start_month / 3);
+        $end_quarter = $end_year . 'Q' . ceil($end_month / 3);
+        $quarter = $start_quarter;
         if ($active) {
             $quarter .= ' - today';
-        } elseif ($sq != $eq) {
-            if ($sy == $ey) {
-                $quarter .= ' - ' . 'Q' . ceil($em / 3);
+        } elseif ($start_quarter != $end_quarter) {
+                if ($start_year == $end_year) {
+                $quarter .= ' - ' . 'Q' . ceil($end_month / 3);
             } else {
-                $quarter .= ' - ' . $eq;
+                $quarter .= ' - ' . $end_quarter;
             }
         }
         $values['rendered']['quarter'] = $quarter;

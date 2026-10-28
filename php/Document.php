@@ -1796,7 +1796,7 @@ class Document extends Settings
         return $val;
     }
 
-    public function format($lang = null)
+    public function format($lang = null, $usecase = null)
     {
         $this->full = true;
         $this->appendix = '';
@@ -1805,6 +1805,9 @@ class Document extends Settings
         }
         $template = $this->subtypeArr['template']['print'] ?? '{title}';
 
+        if ($usecase !== null) {
+            $this->usecase = $usecase;
+        }
         if ($lang !== null) {
             $this->lang = $lang;
         }
@@ -1818,12 +1821,15 @@ class Document extends Settings
         return $line;
     }
 
-    public function formatShort($link = true, $lang = null)
+    public function formatShort($link = true, $lang = null, $usecase = null)
     {
         $this->full = false;
         $this->appendix = '';
         if (empty($this->usecase)) {
             $this->usecase = 'web';
+        }
+        if ($usecase !== null) {
+            $this->usecase = $usecase;
         }
         if ($lang !== null) {
             $this->lang = $lang;
@@ -1856,11 +1862,14 @@ class Document extends Settings
         return $line;
     }
 
-    public function formatPortfolio($lang = null)
+    public function formatPortfolio($lang = null, $usecase = null)
     {
         $this->full = false;
         $this->appendix = '';
         $this->usecase = 'portal';
+        if ($usecase !== null) {
+            $this->usecase = $usecase;
+        }
         if ($lang !== null) {
             $this->lang = $lang;
         }
