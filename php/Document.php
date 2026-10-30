@@ -1034,9 +1034,9 @@ class Document extends Settings
             //date instanceof MongoDB\Model\BSONDocument
             $d = new DateTime();
             $d->setDate(
-                $date['year'],
-                $date['month'] ?? 1,
-                $date['day'] ?? 1
+                (int) $date['year'],
+                (int) ($date['month'] ?: 1),
+                (int) ($date['day'] ?: 1)
             );
         } else {
             try {

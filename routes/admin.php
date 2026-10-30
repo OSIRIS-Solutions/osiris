@@ -633,6 +633,22 @@ Route::get('/admin/phpinfo', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+
+Route::get('/admin/osirisinfo', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
+    $breadcrumb = [
+        ['name' => lang("Settings", "Einstellungen"), 'path' => '/admin'],
+        ['name' => lang('OSIRIS Info', 'OSIRIS Info')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/osiris-info.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
+
+
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
@@ -891,6 +907,13 @@ Route::post('/crud/admin/general', function () {
                         ARRAY_FILTER_USE_KEY
                     );
                     $value['image-map'] = $imageMap;
+                }
+            }
+            if ($key === 'orcid' && is_array($value) && array_key_exists('client_secret', $value) && str_starts_with($value['client_secret'], '****')){
+                $current = $osiris->adminGeneral->findOne(['key' => 'orcid']);
+                $currentValue = DB::doc2Arr($current['value'] ?? []);
+                if (isset($currentValue['client_secret']) && !empty($currentValue['client_secret'])) {
+                    $value['client_secret'] = $currentValue['client_secret'];
                 }
             }
             $osiris->adminGeneral->deleteOne(['key' => $key]);

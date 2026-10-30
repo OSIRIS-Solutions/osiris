@@ -45,8 +45,8 @@ if (!$new_project) {
     if ($user_project == false && ($form['created_by'] ?? '') == $_SESSION['username']) {
         $user_project = True;
     }
-    $edit_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.edit-own') && $user_project));
-    $status_perm = ($Settings->hasPermission('proposals.edit') || ($Settings->hasPermission('proposals.status-own') && $user_project));
+    $edit_perm = ($Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.edit-own') && $user_project));
+    $status_perm = ($Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.status-own') && $user_project));
 
     // check if status change is requested
     if (isset($_GET['phase']) && $_GET['phase'] != $form['status']) {
@@ -917,8 +917,7 @@ if ($is_subproject) {
 
 
                 <?php if (array_key_exists('funding_program_select', $fields)) { ?>
-                    <div class="form-group">
-                        <div class="floating-form">
+                    <div class="form-group floating-form">
                         <select class="form-control" name="values[funding_program_select]" id="funding_program_select" <?= $req('funding_program_select') ?>>
                             <?php
                             if ($req('funding_program_select') == '') { ?>
@@ -937,11 +936,19 @@ if ($is_subproject) {
 
                 <?php if (array_key_exists('funding_program', $fields)) { ?>
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[funding_program]" value="<?= val('funding_program') ?>" id="funding_program" placeholder="Funding program">
+                        <input type="text" class="form-control" name="values[funding_program]" value="<?= val('funding_program') ?>" id="funding_program" placeholder="Funding program" list="funding_program_list">
                         <label for="funding_program" class="<?= $req('funding_program') ?>">
                             <?= lang('Funding program', 'Förderprogramm') ?>
                         </label>
                     </div>
+                    <datalist id="funding_program_list">
+                        <?php
+                        $coll = ($phase == 'project' ? $osiris->projects : $osiris->proposals);
+                        $vocab = $coll->distinct('funding_program');
+                        foreach ($vocab as $v) { ?>
+                            <option value="<?= $v ?>">
+                        <?php } ?>
+                    </datalist>
                 <?php } ?>
 
                 <?php if (array_key_exists('funding_number', $fields)) { ?>

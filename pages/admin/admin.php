@@ -294,13 +294,43 @@
 
 
     <?php if ($adminPerm) : ?>
+        <div class="col-md-6 col-lg-4" id="database-settings">
+            <h2><i class="ph-duotone ph-database"></i> <?= lang('Database', 'Datenbank') ?></h2>
+
+            <a class="card" href="<?= ROOTPATH ?>/rerender">
+                <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
+                <b><?= lang('Re-render', 'Neu rendern') ?></b>
+                <p><?= lang('Re-render all activities (may take some time)', 'Rendere alle Aktivitäten neu (kann einige Zeit dauern)') ?></p>
+            </a>
+            <a class="card" href="<?= ROOTPATH ?>/rerender-units">
+                <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
+                <b><?= lang('Re-render Units', 'Einheiten neu rendern') ?></b>
+                <p><?= lang('Re-render all units', 'Rendere alle Einheiten neu') ?></p>
+            </a>
+
+        </div>
+    <?php endif; ?>
+
+
+    <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="info-settings">
             <h2><i class="ph-duotone ph-info"></i> <?= lang('Information', 'Informationen') ?></h2>
 
+            <a class="card" href="<?= ROOTPATH ?>/admin/osiris-info">
+                <i class="ph-duotone ph-info" aria-hidden="true"></i>
+                <b><?= lang('OSIRIS Info', 'OSIRIS Info') ?></b>
+                <p><?= lang('View OSIRIS configuration information', 'Zeige OSIRIS-Konfigurationsinformationen an') ?></p>
+            </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
                 <b><?= lang('PHP Info', 'PHP Info') ?></b>
                 <p><?= lang('View PHP configuration information', 'Zeige PHP-Konfigurationsinformationen an') ?></p>
+            </a>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/logs">
+                <i class="ph-duotone ph-file-text" aria-hidden="true"></i>
+                <b><?= lang('Import Logs', 'Importprotokolle') ?></b>
+                <p><?= lang('View import logs', 'Zeige Importprotokolle an') ?></p>
             </a>
         </div>
     <?php endif; ?>

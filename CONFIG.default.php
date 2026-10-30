@@ -40,6 +40,9 @@ define('USER_MANAGEMENT', 'AUTH');
 // Keycloak / Life Science Login scopes: openid profile email
 
 
+// define trusted base URL
+define("BASE_URL", "http://localhost:8080");
+
 // define DB connection
 define("DB_NAME", "osiris");
 

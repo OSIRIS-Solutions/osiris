@@ -146,109 +146,117 @@ function renderAuthorUnits($doc, $old_doc = [])
 {
     global $Groups;
     $DB = new DB;
-    // Roles that may exist in different activity types
+    $doc = DB::doc2Arr($doc);
+    $old_doc = DB::doc2Arr($old_doc);
     $roles = ['authors', 'editors', 'supervisors', 'persons'];
-    // If none of the roles exist, nothing to do
-    $hasAny = false;
-    foreach ($roles as $r) {
-        if (!empty($doc[$r])) {
-            $hasAny = true;
-            break;
+
+    // A missing role is unchanged; an explicitly empty role removes its members.
+    $hasRoles = false;
+    foreach ($roles as $role) {
+        if (!array_key_exists($role, $doc) && array_key_exists($role, $old_doc)) {
+            $doc[$role] = $old_doc[$role];
         }
+        $hasRoles = $hasRoles || array_key_exists($role, $doc);
     }
-    if (!$hasAny) return $doc;
+    if (!$hasRoles) return $doc;
 
-    // Ensure start_date is available (needed for time-filtering units)
-    if (!isset($doc['start_date']) && isset($old_doc['start_date'])) {
-        $doc['start_date'] = $old_doc['start_date'];
+    // Raw date changes take precedence over a previously materialized start_date.
+    $effective = array_replace($old_doc, $doc);
+    if (array_key_exists('start', $doc)) {
+        $doc['start_date'] = valueFromDateArray($doc['start'] ?? $effective);
+    } elseif (array_intersect(['year', 'month', 'day'], array_keys($doc))) {
+        $doc['start_date'] = valueFromDateArray($effective);
+    } elseif (!array_key_exists('start_date', $doc)) {
+        $doc['start_date'] = $old_doc['start_date']
+            ?? valueFromDateArray($effective['start'] ?? $effective);
     }
-    if (!isset($doc['start_date'])) {
-        $doc = renderDates($doc);
-    }
-    if (!isset($doc['start_date'])) {
-        $doc['start_date'] = '1970-01-01';
-    }
-    $startdate = strtotime($doc['start_date']);
+    $startdate = empty($doc['start_date']) ? false : strtotime($doc['start_date']);
 
-    // Helper: get person's units active at $startdate (scientific only)
     $getUnitsForUserAtDate = function ($user) use ($DB, $startdate) {
+        // getPerson(null) defaults to the logged-in user. Never use that fallback here.
+        if (empty($user) || $startdate === false) return [];
         $person = $DB->getPerson($user);
-        if (empty($person['units'])) return [];
-
-        $u = DB::doc2Arr($person['units']);
-
-        $u = array_filter($u, function ($unit) use ($startdate) {
-            if (!($unit['scientific'] ?? false)) return false; // scientific only
-            if (empty($unit['start'])) return true;            // unknown start => keep
-            $s = strtotime($unit['start']);
-            $e = empty($unit['end']) ? null : strtotime($unit['end']);
-            return $s <= $startdate && ($e === null || $e >= $startdate);
-        });
-
-        $u = array_column($u, 'unit');
-        return array_values(array_unique($u));
+        $units = [];
+        foreach (DB::doc2Arr($person['units'] ?? []) as $unit) {
+            if (!($unit['scientific'] ?? false) || empty($unit['unit'])) continue;
+            $start = empty($unit['start']) ? null : strtotime($unit['start']);
+            $end = empty($unit['end']) ? null : strtotime($unit['end']);
+            // Missing bounds are open; malformed bounds are not valid memberships.
+            if ($start === false || $end === false) continue;
+            if (($start === null || $start <= $startdate)
+                && ($end === null || $end >= $startdate)) {
+                $units[] = $unit['unit'];
+            }
+        }
+        return array_values(array_unique($units));
     };
 
-    // Helper: index old role array by user for manual-flag carry-over
-    $indexOldByUser = function ($arr) {
-        $idx = [];
-        foreach ($arr as $item) {
-            if (empty($item['user'])) continue;
-            $idx[$item['user']] = $item;
+    $nameKey = function ($person) {
+        return json_encode([$person['last'] ?? '', $person['first'] ?? '']);
+    };
+    // Retain all matches so ambiguous names or accounts cannot overwrite each other.
+    $indexPeople = function ($people) use ($nameKey) {
+        $index = ['users' => [], 'names' => []];
+        foreach ($people as $person) {
+            $person = DB::doc2Arr($person);
+            if (!empty($person['user'])) $index['users'][$person['user']][] = $person;
+            if (!empty($person['last']) || !empty($person['first'])) {
+                $index['names'][$nameKey($person)][] = $person;
+            }
         }
-        return $idx;
+        return $index;
     };
 
     $allUnits = [];
-
     foreach ($roles as $role) {
-        if (empty($doc[$role])) continue;
-
-        $current = DB::doc2Arr($doc[$role]);
-        $oldIdx  = $indexOldByUser($old_doc[$role] ?? []);
+        if (!array_key_exists($role, $doc)) continue;
+        $current = DB::doc2Arr($doc[$role] ?? []);
+        $oldIdx = $indexPeople(DB::doc2Arr($old_doc[$role] ?? []));
+        $currentIdx = $indexPeople($current);
         foreach ($current as $i => $author) {
-            // Consistent affiliation behavior:
-            // - authors: only if aoi==true 
-            // - editors/supervisors: currently you also require aoi==true
-            // - persons: all aoi
-            if ($role !== 'persons' && !($author['aoi'] ?? false)) {
-                continue;
-            }
-
+            $author = DB::doc2Arr($author);
             $user = $author['user'] ?? null;
-            // Respect manual units:
-            // - if current says manually => keep
-            // - OR if old had manually => keep (prevents accidental overwrite)
-            $manualNow = ($author['manually'] ?? false) ? true : false;
-            $manualOld = null;
-            if (isset($oldIdx[$user])) {
-                $manualOld = ($oldIdx[$user]['manually'] ?? false) ? true : false;
-            }
-            if ($manualNow || $manualOld) {
-                $kept = DB::doc2Arr($author['units'] ?? []);
-                $current[$i]['units'] = $kept;
-                $allUnits = array_merge($allUnits, $kept);
-                continue;
+            $name = $nameKey($author);
+            $previous = [];
+            if (!empty($user) && count($oldIdx['users'][$user] ?? []) === 1
+                && count($currentIdx['users'][$user] ?? []) === 1) {
+                $previous = $oldIdx['users'][$user][0];
+            } elseif (count($oldIdx['names'][$name] ?? []) === 1
+                && count($currentIdx['names'][$name] ?? []) === 1) {
+                $candidate = $oldIdx['names'][$name][0];
+                // A name match must not transfer assignments between different accounts.
+                if (empty($user) || empty($candidate['user']) || $user === $candidate['user']) {
+                    $previous = $candidate;
+                }
             }
 
-            // Auto-assign units from person profile at the activity date
-            $u = $getUnitsForUserAtDate($user);
-
-            $current[$i]['units'] = $u;
-            $allUnits = array_merge($allUnits, $u);
+            if (array_key_exists('manually', $author)) {
+                // Explicit false restores automatic assignment; an empty manual list is valid.
+                $manual = (bool) $author['manually'];
+                $units = DB::doc2Arr($author['units'] ?? []);
+            } else {
+                $manual = (bool) ($previous['manually'] ?? false);
+                $units = DB::doc2Arr($previous['units'] ?? []);
+            }
+            $author['manually'] = $manual;
+            if (!$manual) {
+                $units = ($role === 'persons' || ($author['aoi'] ?? false))
+                    ? $getUnitsForUserAtDate($user) : [];
+            }
+            $author['units'] = array_values(array_unique($units));
+            $current[$i] = $author;
+            if ($role === 'persons' || ($author['aoi'] ?? false)) {
+                $allUnits = array_merge($allUnits, $author['units']);
+            }
         }
         $doc[$role] = $current;
     }
 
-    // Build global units list (including parent units)
-    $allUnits = array_values(array_unique($allUnits));
-
-    foreach ($allUnits as $unit) {
+    $directUnits = array_values(array_unique($allUnits));
+    foreach ($directUnits as $unit) {
         $allUnits = array_merge($allUnits, $Groups->getParents($unit, true));
     }
-
     $doc['units'] = array_values(array_unique($allUnits));
-
     return $doc;
 }
 

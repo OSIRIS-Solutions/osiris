@@ -71,7 +71,7 @@ Route::post('/auth/forgot-password', function () {
         );
 
 
-        $link = $_SERVER['HTTP_HOST'] . ROOTPATH . "/auth/reset-password?hash=$hash";
+        $link = BASE_URL . ROOTPATH . "/auth/reset-password?hash=$hash";
         // send mail
         sendMail(
             $user['mail'],
@@ -139,7 +139,7 @@ Route::post('/auth/admin-reset-password', function () {
         ['$set' => ['reset' => time(), 'hash' => $hash]]
     );
 
-    $link = $_SERVER['HTTP_HOST'] . ROOTPATH . "/auth/reset-password?hash=$hash";
+    $link = BASE_URL . ROOTPATH . "/auth/reset-password?hash=$hash";
 
     // return the link to the admin to share it with the user
     include BASEPATH . "/header.php";

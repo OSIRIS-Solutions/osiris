@@ -40,6 +40,7 @@ define('CURRENTYEAR', intval($year));
 
 function lang($en, $de = null)
 {
+    if (!is_string($en)) return '';
     if ($de === null) return $en;
     $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) == 'de' ? 'de' : 'en';
     $lang = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? $default;
@@ -106,7 +107,9 @@ Route::get('/set-preferences', function () {
     // Language settings and cookies
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('language', $_GET)) {
         $_COOKIE['osiris-language'] = $_GET['language'] === 'en' ? 'en' : 'de';
-        $domain = ($_SERVER['HTTP_HOST'] != 'testserver') ? $_SERVER['HTTP_HOST'] : false;
+        $host = parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
+        $domain = ($host != 'testserver') ? $host : false;
+        
         setcookie('osiris-language', $_COOKIE['osiris-language'], [
             'expires' => time() + 86400,
             'path' => ROOTPATH . '/',
@@ -128,7 +131,7 @@ Route::get('/set-preferences', function () {
     // check if accessibility settings are given
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && array_key_exists('accessibility', $_GET)) {
         // define base parameter
-        $domain = $_SERVER['HTTP_HOST'];
+        $domain = parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
         $cookie_settings = [
             'expires' => time() + 86400,
             'path' => ROOTPATH . '/',

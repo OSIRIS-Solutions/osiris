@@ -15,8 +15,6 @@ $orcid = new Orcid_Settings();
 if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
   $code = $_GET['code'];
 
-  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-
   $ch = curl_init($orcid->api_auth_url . 'oauth/token');
 
   curl_setopt_array($ch, array(
@@ -29,7 +27,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
       'client_id' => $orcid->client_id,
       'client_secret' => $orcid->client_secret,
       'grant_type' => 'authorization_code',
-      'redirect_uri' => $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH . '/orcid/validate'
+      'redirect_uri' => BASE_URL . '/orcid/validate'
     )),
     CURLOPT_HTTPHEADER => array(
       'Accept: application/json'
@@ -101,9 +99,8 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
       </h5>
       <?php
       if (!empty($orcid->client_id) && !empty($orcid->client_secret)) {
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
       ?>
-        <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn primary">
+        <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= BASE_URL ?>/orcid/validate" id="orcid-validation" class="btn primary">
           <i class="ph ph-user-circle-check" aria-hidden="true"></i>
           <?= lang('Connect ORCID', 'ORCID verknüpfen') ?>
         </a>

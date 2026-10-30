@@ -7,6 +7,7 @@
     </style>
 
     <?php
+    $tags = $doc['tags'] ?? [];
 
     $departments = [];
     if (!empty($doc['units'])) {
@@ -557,7 +558,6 @@
                                     </h3>
                                     <div id="tag-list">
                                         <?php
-                                        $tags = $doc['tags'] ?? [];
                                         if (count($tags)) {
                                             foreach ($tags as $tag) {
                                         ?>
@@ -745,7 +745,7 @@
                                                     <a href="<?= ROOTPATH ?>/news/view/<?= $news['_id']; ?>"> <?= $news['title']; ?> </a>
                                                 </h5>
                                                 <ul class="horizontal">
-                                                    <li><?= date('d.m.Y', strtotime($news['published'] ?? $news['created'])) ?></li>
+                                                    <li><?= date('d.m.Y', strtotime($news['published'] ?? $news['created'] ?? 'now')) ?></li>
                                                 </ul>
                                                 <p><?= $news['teaser'] ?? '' ?></p>
                                             </div>
