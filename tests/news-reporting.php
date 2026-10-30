@@ -31,13 +31,26 @@ $originalEntries = NewsExport::entries([$originalReport], $inactive, $originalFi
 check($originalEntries[0]['title'] === 'Original & title' && $originalEntries[0]['content'] === '<p><strong>Original</strong></p>', 'Original report includes internal news with language fallback and safe formatting.');
 $html = NewsExport::html($originalEntries, 'Report <title>', 'de');
 check(str_contains($html, 'Original &amp; title') && !str_contains($html, '<script>') && str_contains($html, '<strong>Original</strong>'), 'HTML export escapes labels and retains safe text formatting.');
-$word = NewsExport::word(array_merge($entries, $originalEntries, [['date' => '2026-10-22', 'content' => '<p>One<br>Two &amp; three</p><ul><li>Item</li></ul>']]), 'Report & title');
+$pixel = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+$withImage = array_replace($reportNews, ['image' => ['data' => new MongoDB\BSON\Binary($pixel), 'type' => 'gif']]);
+$illustrated = NewsExport::entries([$withImage], $reviewConfiguration, $filters);
+check(str_starts_with($illustrated[0]['image'], 'data:image/gif;base64,'), 'Include the shared cover image in outlet exports.');
+check(isset(NewsExport::entries([$withImage], $inactive, $originalFilters)[0]['image']), 'Include the cover image in original exports too.');
+$illustrated[0]['content'] = '<p><a href="https://example.org/details?a=1&amp;b=2">Details</a> and https://example.org/plain, plus www.example.org/news.</p><p><img src="data:image/gif;base64,' . $pixel . '" alt="Additional image"></p>';
+$illustratedHtml = NewsExport::html($illustrated, 'Illustrated report', 'en');
+check(substr_count($illustratedHtml, '<img ') === 2 && str_contains($illustratedHtml, 'href="https://example.org/plain"') && str_contains($illustratedHtml, 'href="https://www.example.org/news"'), 'HTML embeds cover and inline images and links bare web addresses.');
+$word = NewsExport::word(array_merge($illustrated, $entries, $originalEntries, [['date' => '2026-10-22', 'content' => '<p>One<br>Two &amp; three</p><ul><li>Item</li></ul>']]), 'Report & title');
 $file = tempnam(sys_get_temp_dir(), 'news-report-');
 try {
     \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007')->save($file);
     $zip = new ZipArchive();
     check($zip->open($file) === true, 'Generate a valid Word ZIP container.');
     $xml = $zip->getFromName('word/document.xml');
+    $relationships = $zip->getFromName('word/_rels/document.xml.rels');
+    $media = array_filter(range(0, $zip->numFiles - 1), static fn($index) => str_starts_with($zip->getNameIndex($index), 'word/media/'));
+    check(count($media) > 0 && substr_count($xml, '<v:imagedata ') >= 2, 'Word embeds both the shared cover and additional inline image.');
+    check(str_contains($relationships, 'Target="https://example.org/details?a=1&amp;b=2"') && str_contains($relationships, 'Target="https://example.org/plain"') && str_contains($relationships, 'Target="https://www.example.org/news"'), 'Word stores usable hyperlink relationships, including query parameters and bare URLs.');
+    check(str_contains($xml, '<w:hyperlink '), 'Word document text references the hyperlink relationships.');
     $zip->close();
     $doc = new DOMDocument();
     check($doc->loadXML($xml) && str_contains($xml, 'Prepared text') && str_contains($xml, 'Original &amp; title'), 'Word export contains well-formed text and formatting.');

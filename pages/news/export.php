@@ -5,7 +5,7 @@
         <?= lang('Export news report', 'News-Bericht exportieren') ?>
     </h1>
     <p><?= lang('Select the original contributions or one outlet. Outlet reports include released contributions only. The date range refers to the news date.', 'Wähle die Originalbeiträge oder ein Outlet. Outlet-Berichte enthalten ausschließlich freigegebene Beiträge. Der Zeitraum bezieht sich auf das Datum der Nachricht.') ?></p>
-    <p class="text-muted"><?= lang('If a translation is empty, the available language is used. Portfolio settings do not affect this internal report.', 'Fehlt eine Übersetzung, wird die vorhandene Sprache verwendet. Portfolio-Einstellungen beeinflussen diesen internen Bericht nicht.') ?></p>
+    <p class="text-muted"><?= lang('If a translation is empty, the available language is used. The news cover image is included automatically. Portfolio settings do not affect this internal report.', 'Fehlt eine Übersetzung, wird die vorhandene Sprache verwendet. Das Titelbild der Neuigkeit wird automatisch mit exportiert. Portfolio-Einstellungen beeinflussen diesen internen Bericht nicht.') ?></p>
     <?php if ($error) { ?>
         <div class="alert danger mb-20" role="alert"><?= e($error) ?></div>
     <?php } ?>

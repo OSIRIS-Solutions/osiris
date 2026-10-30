@@ -34,7 +34,7 @@ Route::get('/news/export', function () {
         $error = $exception->getMessage();
         $filters = NewsExport::filters([], $configuration);
     }
-    $entries = NewsExport::entries($osiris->news->find(NewsExport::query($filters), ['sort' => ['date' => 1], 'projection' => ['image' => 0, 'editorial_history' => 0]]), $configuration, $filters);
+    $entries = NewsExport::entries($osiris->news->find(NewsExport::query($filters), ['sort' => ['date' => 1], 'projection' => ['editorial_history' => 0]]), $configuration, $filters);
     $exportOutlet = array_column($configuration['outlets'], null, 'id')[$filters['channel']] ?? null;
     $exportChannelName = $exportOutlet ? (($exportOutlet['name'][$filters['language']] ?? '') ?: NewsOutlets::label($exportOutlet['name'])) : ($filters['language'] === 'de' ? 'Originalbeiträge' : 'Original contributions');
     $reportTitle = ($filters['language'] === 'de' ? 'News-Bericht' : 'News report') . ': ' . $exportChannelName;

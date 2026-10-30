@@ -1,6 +1,18 @@
 <?php
 
-/** Safe text formatting for editors, previews and exports; external embeds are excluded. */
+/** Validate embedded raster images without fetching remote URLs or reading local paths. */
+function rich_text_image_source(string $source, int $limit = 512000): string
+{
+    if (strlen($source) > (int) ceil($limit * 4 / 3) + 64 ||
+        !preg_match('~^data:(image/(?:png|jpeg|gif));base64,([A-Za-z0-9+/=]+)$~D', $source, $match)) return '';
+    $bytes = base64_decode($match[2], true);
+    if ($bytes === false || strlen($bytes) > $limit) return '';
+    $image = @getimagesizefromstring($bytes);
+    if (!$image || $image['mime'] !== $match[1] || $image[0] * $image[1] > 16000000) return '';
+    return 'data:' . $image['mime'] . ';base64,' . base64_encode($bytes);
+}
+
+/** Safe formatting and embedded raster images; external resources are excluded. */
 function sanitize_rich_text(string $html): string
 {
     if ($html === '') return '';
@@ -17,6 +29,10 @@ function sanitize_rich_text(string $html): string
         if (!$node instanceof DOMElement) return '';
         $tag = strtolower($node->tagName);
         if (in_array($tag, ['script', 'style', 'iframe', 'object', 'embed', 'svg', 'math', 'template'], true)) return '';
+        if ($tag === 'img') {
+            $src = rich_text_image_source($node->getAttribute('src'));
+            return $src === '' ? '' : '<img src="' . $src . '" alt="' . htmlspecialchars($node->getAttribute('alt'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">';
+        }
         $children = '';
         foreach ($node->childNodes as $child) $children .= $render($child);
         if (!in_array($tag, ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'sub', 'sup', 'a', 'ol', 'ul', 'li', 'blockquote', 'h1', 'h2', 'h3'], true)) return $children;
@@ -32,7 +48,7 @@ function sanitize_rich_text(string $html): string
     };
     $result = '';
     foreach ($document->getElementsByTagName('body')->item(0)->childNodes as $node) $result .= $render($node);
-    return rich_text_has_text($result, 'html') ? $result : '';
+    return rich_text_has_text($result, 'html') || str_contains($result, '<img ') ? $result : '';
 }
 
 function rich_text_has_text(string $value, string $format = 'plain'): bool

@@ -14,7 +14,7 @@ $editorialContributions = NewsEditorial::contributions($news);
 $editorialRequests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
 $editorialOutlets = array_column($editorialConfiguration['outlets'], null, 'id');
 $editorialInternalOnly = NewsEditorial::internalOnly($news);
-$editorialLanguages = lang('en', 'de') === 'de' ? ['de', 'en'] : ['en', 'de'];
+$editorialLanguages = ['en', 'de'];
 $editorialOriginal = [];
 foreach (['title', 'teaser', 'content'] as $field) {
     foreach (['en' => '', 'de' => '_de'] as $language => $suffix) {
@@ -140,8 +140,8 @@ $editorialHiddenFields = static function (?string $outletId = null, string $scop
                                                 <?php if ($field === 'title') { ?>
                                                     <input class="form-control" data-news-original-field="title" data-news-language="<?= $language ?>" id="editorial-<?= e($outletId) ?>-title-<?= $language ?>" name="editorial[title][<?= $language ?>]" maxlength="240" value="<?= e($contribution['title'][$language] ?? '') ?>">
                                                 <?php } elseif ($field === 'content') { ?>
-                                                    <div id="editorial-<?= e($outletId) ?>-content-<?= $language ?>-quill" data-news-content-editor data-input="editorial-<?= e($outletId) ?>-content-<?= $language ?>" hidden><?= render_rich_text($contribution['content'][$language] ?? '', $contribution['format'] ?? 'plain') ?></div>
-                                                    <textarea class="form-control" data-news-original-field="content" data-news-language="<?= $language ?>" id="editorial-<?= e($outletId) ?>-content-<?= $language ?>" name="editorial[content][<?= $language ?>]" rows="8" maxlength="100000"><?= e($contribution['content'][$language] ?? '') ?></textarea>
+                                                    <div id="editorial-<?= e($outletId) ?>-content-<?= $language ?>-quill" data-news-content-editor data-image-error="<?= e(lang('Choose a PNG, JPEG or GIF image up to 500 KB.', 'Wähle ein PNG-, JPEG- oder GIF-Bild bis 500 KB.')) ?>" data-input="editorial-<?= e($outletId) ?>-content-<?= $language ?>" hidden><?= render_rich_text($contribution['content'][$language] ?? '', $contribution['format'] ?? 'plain') ?></div>
+                                                    <textarea class="form-control" data-news-original-field="content" data-news-language="<?= $language ?>" id="editorial-<?= e($outletId) ?>-content-<?= $language ?>" name="editorial[content][<?= $language ?>]" rows="8" maxlength="1000000"><?= e($contribution['content'][$language] ?? '') ?></textarea>
                                                 <?php } else { ?>
                                                     <textarea class="form-control" data-news-original-field="<?= $field ?>" data-news-language="<?= $language ?>" id="editorial-<?= e($outletId) ?>-<?= $field ?>-<?= $language ?>" name="editorial[<?= $field ?>][<?= $language ?>]" rows="<?= $field === 'teaser' ? 3 : 8 ?>" maxlength="<?= $field === 'teaser' ? 2000 : 100000 ?>"><?= e($contribution[$field][$language] ?? '') ?></textarea>
                                                 <?php } ?>

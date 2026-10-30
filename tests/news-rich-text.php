@@ -33,4 +33,17 @@ $legacyConfiguration = $reviewConfiguration;
 $legacyConfiguration['outlets'][0]['fields'] = ['title'];
 $hidden = NewsEditorial::apply('save', $richInput, $preparedNews, $legacyConfiguration, 'editor', $now);
 check($hidden['editorial_contributions'][0]['format'] === 'plain' && $hidden['editorial_contributions'][0]['content'] === $preparedNews['editorial_contributions'][0]['content'], 'Hidden content fields cannot be changed or converted through forged inputs.');
+$image = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+$illustratedText = '<p>Illustrated contribution<img src="' . $image . '" onerror="alert(1)" alt="Figure &amp; caption"></p>';
+$cleanImage = sanitize_rich_text($illustratedText);
+check(str_contains($cleanImage, '<img src="' . $image . '"') && !str_contains($cleanImage, 'onerror'), 'Keep validated embedded images without executable attributes.');
+check(sanitize_rich_text($cleanImage) === $cleanImage, 'Embedded images survive repeated sanitization.');
+foreach (['https://example.org/image.png', '/etc/passwd', 'file:///tmp/image.png', 'data:image/svg+xml;base64,PHN2Zz4=', 'data:image/png;base64,YXR0YWNr', str_replace('image/gif', 'image/png', $image)] as $invalidImage) {
+    check(sanitize_rich_text('<p>Text<img src="' . $invalidImage . '"></p>') === '<p>Text</p>', 'Reject remote resources, local paths, SVG and invalid or mismatched image data.');
+}
+$illustratedInput = ['outlet_id' => $website['id'], 'format' => 'html', 'content' => ['en' => $illustratedText]];
+$illustratedNews = array_merge($preparedNews, NewsEditorial::apply('ready', $illustratedInput, $preparedNews, $reviewConfiguration, 'editor', $now));
+$illustratedReviewNews = $mutate('request_review', $illustratedNews);
+$illustratedReview = NewsReview::pending($illustratedReviewNews);
+check(str_contains($illustratedReview['contributions'][0]['content']['en'], '<img '), 'Review snapshots retain embedded images.');
 echo "News rich text checks passed.\n";

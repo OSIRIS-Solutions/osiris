@@ -413,7 +413,7 @@ class NewsEditorial
             }
             $texts = [];
             foreach ($textFields as $field) {
-                $limit = ['title' => 240, 'teaser' => 2000, 'content' => 100000][$field];
+                $limit = ['title' => 240, 'teaser' => 2000, 'content' => 1000000][$field];
                 // A field enabled after this form was opened may not have been submitted.
                 $value = array_key_exists($field, $input) ? $input[$field] : ($contributions[$id][$field] ?? []);
                 $texts[$field] = self::localized($value, $limit);

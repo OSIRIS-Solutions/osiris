@@ -64,7 +64,7 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
                 <?php foreach ($review['contributions'] as $snapshot) { ?>
                     <div class="box padded">
                         <h3 class="title"><?= e(NewsOutlets::label($snapshot['name'])) ?></h3>
-                        <?php foreach (lang('en', 'de') === 'de' ? ['de', 'en'] : ['en', 'de'] as $language) {
+                        <?php foreach (['en', 'de'] as $language) {
                             $reviewTexts = array_filter($snapshot['fields'], static fn($field) => ($snapshot[$field][$language] ?? '') !== '');
                             if (!$reviewTexts) continue;
                         ?>

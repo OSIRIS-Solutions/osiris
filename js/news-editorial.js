@@ -26,8 +26,39 @@
             const quill = new Quill(element, {
                 theme: 'snow',
                 bounds: element,
-                modules: { toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['link', 'clean']] },
-                formats: ['bold', 'italic', 'underline', 'list', 'link']
+                modules: { toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['link', 'image', 'clean']] },
+                formats: ['bold', 'italic', 'underline', 'list', 'link', 'image']
+            });
+            const imageError = document.createElement('p');
+            imageError.className = 'text-danger font-size-12';
+            imageError.setAttribute('role', 'alert');
+            imageError.hidden = true;
+            element.after(imageError);
+            const picker = document.createElement('input');
+            picker.type = 'file';
+            picker.accept = 'image/png,image/jpeg,image/gif';
+            picker.hidden = true;
+            element.after(picker);
+            picker.addEventListener('change', function () {
+                const file = picker.files[0];
+                if (!file) return;
+                if (!['image/png', 'image/jpeg', 'image/gif'].includes(file.type) || file.size > 500 * 1024) {
+                    imageError.textContent = element.dataset.imageError;
+                    imageError.hidden = false;
+                    return;
+                }
+                const range = quill.getSelection(true);
+                const reader = new FileReader();
+                reader.addEventListener('load', function () {
+                    imageError.hidden = true;
+                    quill.insertEmbed(range.index, 'image', reader.result, 'user');
+                    quill.setSelection(range.index + 1, 0, 'silent');
+                });
+                reader.readAsDataURL(file);
+            });
+            quill.getModule('toolbar').addHandler('image', function () {
+                picker.value = '';
+                picker.click();
             });
             quill.root.setAttribute('role', 'textbox');
             quill.root.setAttribute('aria-multiline', 'true');
@@ -36,7 +67,7 @@
             input.classList.add('d-none');
             document.getElementById(input.id + '-label').addEventListener('click', function () { quill.focus(); });
             const sync = function () {
-                input.value = quill.getText().replace(/[\s\u00a0\u200b]/g, '') === '' ? '' : quill.getSemanticHTML();
+                input.value = quill.getText().replace(/[\s\u00a0\u200b]/g, '') === '' && !quill.root.querySelector('img') ? '' : quill.getSemanticHTML();
             };
             sync();
             quill.on('text-change', function () { sync(); updateDirty(); });
@@ -83,15 +114,26 @@
             form.querySelector('[role="tablist"]').hidden = false;
             form.querySelectorAll('[data-news-language-heading]').forEach(heading => { heading.hidden = true; });
             tabs.forEach((tab, index) => {
-                tab.addEventListener('click', () => selectLanguage(tab, false));
+                const remember = () => {
+                    try { sessionStorage.setItem('news-editorial-language', tab.dataset.newsLanguageTab); } catch (error) { /* Storage is optional. */ }
+                };
+                tab.addEventListener('click', () => { remember(); selectLanguage(tab, false); });
                 tab.addEventListener('keydown', event => {
                     const target = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length : null;
                     if (target === null) return;
                     event.preventDefault();
+                    try { sessionStorage.setItem('news-editorial-language', tabs[target].dataset.newsLanguageTab); } catch (error) { /* Storage is optional. */ }
                     selectLanguage(tabs[target], true);
                 });
             });
-            selectLanguage(tabs[0], false);
+            const hasContent = language => Array.from(form.querySelectorAll('[data-news-language="' + language + '"]')).some(input => {
+                const editor = contentEditors.get(input.id);
+                return editor ? editor.quill.getText().trim() !== '' || editor.quill.root.querySelector('img') !== null : input.value.trim() !== '';
+            });
+            let preferredLanguage = null;
+            try { preferredLanguage = sessionStorage.getItem('news-editorial-language'); } catch (error) { /* Storage is optional. */ }
+            const initialLanguage = preferredLanguage || (hasContent('de') && !hasContent('en') ? 'de' : 'en');
+            selectLanguage(tabs.find(tab => tab.dataset.newsLanguageTab === initialLanguage) || tabs[0], false);
         }
     });
     section.addEventListener('submit', function (event) {
