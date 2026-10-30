@@ -394,7 +394,7 @@ function printRules($rules)
             </p>
             <!-- copy to clipboard -->
             <script>
-                function copyToClipboard() {
+                function copyResultToClipboard() {
                     var text = $('#result').text()
                     navigator.clipboard.writeText(text)
                     toastSuccess('Query copied to clipboard.')
@@ -402,7 +402,7 @@ function printRules($rules)
             </script>
 
             <div class="position-relative">
-                <button class="btn secondary small position-absolute top-0 right-0 m-10" onclick="copyToClipboard()"><i class="ph ph-clipboard" aria-label="Copy to clipboard"></i></button>
+                <button class="btn secondary small position-absolute top-0 right-0 m-10" onclick="copyResultToClipboard()"><i class="ph ph-clipboard" aria-label="Copy to clipboard"></i></button>
 
                 <pre id="result" class="code p-20"></pre>
             </div>

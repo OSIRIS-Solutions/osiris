@@ -25,13 +25,19 @@ define('USER_MANAGEMENT', 'AUTH');
 // define('OPEN_LDAP', false);
 // define('LDAP_BIND_METHOD', 'username'); // <-- 'dn' or 'username' or 'userPrincipalName'
 
-// OAUTH user management:
-// define('OAUTH', 'Microsoft'); // Microsoft | Keycloak | Generic
+// OAuth configuration: with USER_MANAGEMENT='AUTH', defining OAUTH enables
+// the additional SSO login. USER_MANAGEMENT='OAUTH' keeps standalone SSO.
+// OAUTH is the login button label, e.g. Keycloak or Life Science Login.
+// Parallel linking and SSO registration use the existing AUTH registration settings.
+// define('OAUTH', 'Microsoft'); // login button label
 // define('CLIENT_ID', 'DEINE_CLIENT_ID');
 // define('CLIENT_SECRET', 'DEIN_CLIENT_SECRET');
-// define('REDIRECT_URI', 'http://localhost/login-callback.php');
+// define('REDIRECT_URI', 'http://localhost/user/oauth-callback');
 // define('AUTHORITY', 'https://login.microsoftonline.com/common');
 // define('SCOPES', 'openid profile email User.Read');
+// Keycloak / Generic: AUTHORITY is the endpoint prefix ending in /protocol/openid-connect.
+// Example: http://localhost:8080/realms/osiris/protocol/openid-connect
+// Keycloak / Life Science Login scopes: openid profile email
 
 
 // define trusted base URL

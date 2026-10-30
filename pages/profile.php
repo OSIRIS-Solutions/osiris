@@ -479,10 +479,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 <?php } ?>
             </div>
         <?php } ?>
-
     </div>
-
-
 
 
     <?php
@@ -574,7 +571,44 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             </div>
         <?php } ?>
 
-
+        <!--- Contact Button --->
+        <?php
+        if ($Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? false)) {
+            $contact = $scientist['contact'] ?? null;
+            $contactType = $scientist['contact-button-type'] ?? null;
+            $contactTypeSettings = $Settings->get('contact-button')->getArrayCopy();
+            if (!isset($contactTypeSettings[$contactType]) || !($contactTypeSettings[$contactType] === '1')) {
+                $contactType = null;
+            }
+            $contactURL = null;
+            if($contact && $contactType) { 
+                if ($contactType == 'mail') {
+                    $contactURL = "mailto:" . $contact;
+                } elseif ($contactType == 'teams') {
+                    $contactURL = "https://teams.microsoft.com/l/chat/0/0?users=" . $contact;
+                } elseif ($contactType == 'slack') {
+                    $contactURL = "https://slack.com/app_redirect?channel=" . $contact;
+                } elseif ($contactType == 'matrix') {
+                    $contactURL = "https://matrix.to/#/" . $contact;
+                } elseif ($contactType == 'other') {
+                    $contactURL = $contact;
+                }
+                $contactLogo = socialLogo($contactType);
+                if ($contactType == 'other') {
+                    $contactInfo = lang('prefered contact link', 'bevorzugtem Kontakt-Link');
+                }
+                else {
+                    $contactInfo = ucfirst($contactType);
+                }
+                ?>
+                <div class="btn-group btn-group-lg" >
+                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('Contact ', 'Kontaktiere ') . $scientist['first'] . lang(' via ', ' per ') . $contactInfo ?>">
+                        <i class="ph <?= $contactLogo ?>"></i>
+                        <?= lang('Contact', 'Kontakt')?>
+                    </a>
+                </div>
+            <?php } ?>
+        <?php } ?>
     </div>
 
 <?php } ?>
@@ -710,6 +744,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             'rendered.users' => $user,
             'module_id' => ['$ne' => null]
         ]],
+        ['$sort' => ['start_date' => -1]],
         [
             '$group' => [
                 '_id' => '$module_id',
@@ -763,6 +798,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 
 
+<?php
+if (isset($_GET['verbose'])) {
+    dump($scientist, true);
+}
+?>
 
 
 <section id="general">
@@ -1004,7 +1044,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <p><?= lang('No research interests stated.', 'Keine Forschungsinteressen angegeben.') ?></p>
                         <?php } ?>
 
-                        <?php if (isset($scientist['research_profile'])) { ?>
+                        <?php if (isset($scientist['research_profile']) && is_string($scientist['research_profile'])) { ?>
                             <h6 class="title">
                                 <?= lang('Research profile', 'Forschungsprofil') ?>
                             </h6>
@@ -1087,7 +1127,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                     <?php } ?>
 
                     <?php if ($active('education')) { ?>
-                        <?php if (isset($scientist['education']) && !empty($scientist['education'])) { ?>
+                        <?php if (isset($scientist['education']) && !empty($scientist['education']) && is_string($scientist['education'])) { ?>
                             <h6 class="title">
                                 <?= lang('Education', 'Ausbildung') ?>
                             </h6>
@@ -1635,11 +1675,3 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
     </section>
 <?php } ?>
-
-
-
-<?php
-if (isset($_GET['verbose'])) {
-    dump($scientist, true);
-}
-?>

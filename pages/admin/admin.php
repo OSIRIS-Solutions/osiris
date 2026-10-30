@@ -78,6 +78,12 @@
                     <p><?= lang('Settings for the public portfolio', 'Einstellungen für das öffentliche Portfolio') ?></p>
                 </a>
             <?php } ?>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
+                <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
+                <b><?= lang('Resource Hub', 'Ressourcen-Hub') ?></b>
+                <p><?= lang('Settings for the Resource Hub', 'Einstellungen für den Ressourcen-Hub') ?></p>
+            </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
@@ -126,6 +132,7 @@
             <?php
             switch (strtoupper(USER_MANAGEMENT)) {
                 case 'AUTH':
+                case 'OAUTH':
             ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/authentication">
                         <i class="ph-duotone ph-users"></i>
@@ -165,9 +172,10 @@
             </a>
         </div>
     <?php endif; ?>
-    <?php if ($adminPerm) : ?>
+    <?php if ($adminPerm || $newsOutletsPerm) : ?>
         <div class="col-md-6 col-lg-4" id="content-settings">
             <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('Data Model & Content', 'Datenmodell & Inhalte') ?></h2>
+            <?php if ($adminPerm) { ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                 <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
                 <b><?= lang('Activities', 'Aktivitäten') ?></b>
@@ -194,6 +202,15 @@
                 <b><?= lang('Journals', 'Zeitschriften') ?></b>
                 <p><?= lang('Manage data fields of journals', 'Verwalte Datenfelder von Zeitschriften') ?></p>
             </a>
+            <?php } ?> 
+
+            <?php if ($newsOutletsPerm) { ?>
+                <a class="card" href="<?= ROOTPATH ?>/admin/news">
+                    <i class="ph-duotone ph-newspaper" aria-hidden="true"></i>
+                    <b><?= lang('News outlets', 'News-Outlets') ?></b>
+                    <p><?= lang('Manage editorial outlets and their Portfolio output', 'Verwalte redaktionelle Outlets und deren Portfolio-Ausgabe') ?></p>
+                </a>
+            <?php } ?>
         </div><?php endif; ?>
 
     <?php if ($adminPerm) : ?>

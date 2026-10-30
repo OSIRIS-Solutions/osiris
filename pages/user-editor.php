@@ -471,7 +471,7 @@ $active = function ($field) use ($data_fields) {
         <h4 class="title"><?= lang('Contact', 'Kontakt') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
-            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) ? 'disabled' : '' ?> onblur="validateEmail(this)">
+            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) || osirisOAuthLinked($data) ? 'disabled' : '' ?> onblur="validateEmail(this)">
             <?php if (in_array('mail', $ldap_fields)) {
                 echo $ldap_msg;
             } ?>
@@ -694,11 +694,129 @@ $active = function ($field) use ($data_fields) {
                 });
             </script>
         <?php } ?>
+
+        <!-- Contact Button -->
+        <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
+            <h4>
+                <?= lang('Contact Button', 'Kontakt Button') ?>
+            </h4>
+            <?php 
+                $contact_button = $data['contact-button'] ?? false;
+                $contact_button_type = $data['contact-button-type'] ?? 'mail';
+            ?>
+
+            <div class="form-group">
+                <div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
+                        <label for="contact-button-true"><?= lang('enabled', 'aktiviert') ?></label>
+                    </div>
+                    <div class="custom-radio d-inline-block ml-10">
+                        <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
+                        <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                    </div>
+                </div>
+                <small class="text-muted">
+                    <?= lang('The contact button will be displayed on your OSIRIS profile page. You can choose your preferred contact type to be displayed.', 'Der Kontakt-Button wird auf deiner OSIRIS-Profilseite angezeigt. Du kannst deinen Wunsch-Kontaktweg wählen.') ?>
+                </small>
+                <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
+                    <div class="col-sm">
+                        <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
+                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
+                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
+                                if (!$enabled) continue; ?>
+                                <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-sm">
+                        <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
+                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
+                        <small class="text-muted" id="contact-button-input-help"></small>
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                        function toggleContactButtonSettings() {
+                            if ($('#contact-button-true').is(':checked')) {
+                                $('#contact-button-settings').show();
+                                toggleContact($('#contact-button-type'));
+                            } else {
+                                $('#contact-button-settings').hide();
+                            }
+                        }
+                        toggleContactButtonSettings();
+                        $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
+                    });
+
+                    function toggleContact(select) {
+                        var type = $(select).val();
+                        var contactInput = $('#contact-button-input');
+                        var contactHelp = $('#contact-button-input-help');
+                        if (type === 'mail' || type === 'teams') {
+                            contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add an email address. It will be used for the contact button.', 'Bitte hier eine E-Mail-Adresse eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['mail'] ?? false ?>') {
+                                contactInput.val('<?= $data['mail'] ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'slack') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button. Keep in mind that the contact link will only work if the person clicking it is part of the same Slack Workspace', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet. Bitte beachte, dass der Link nur funktionieren wird, wenn die klickende Person Teil des gleichen Slack-Workspaces ist.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'matrix') {
+                            contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a Matrix ID in the format @username:server. It will be used for the contact button.', 'Bitte hier eine Matrix-ID im Format @username:server eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
+                                matrixId = matrix.includes('/#/') ? matrix.split('/#/')[1] : matrix;
+                                contactInput.val(matrixId);
+                            } else {
+                                contactInput.val('');
+                            }
+                        } else if (type === 'other') {
+                            contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
+                            contactHelp.text('<?= lang('Please add a contact URL. It will be used for the contact button.', 'Bitte hier eine Kontakt-URL eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
+                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
+                                contactInput.val('<?= $data['contact'] ?? '' ?>');
+                            } else {
+                                contactInput.val('');
+                            }
+                        }
+                        validateContact(contactInput);
+                    }
+
+                </script>
+            </div>
+        <?php } ?>
+
     </section>
 
 
 
     <section id="account" style="display:none;">
+        <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && osirisOAuthEnabled()
+            && $data['username'] === ($_SESSION['username'] ?? '')
+            && ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']) { ?>
+            <h5><?= e(osirisOAuthLabel()) ?></h5>
+            <?php if (osirisOAuthLinked($data)) { ?>
+                <p><?= lang('This profile uses single sign-on. Local password login is disabled.', 'Dieses Profil verwendet Single Sign-On. Die lokale Passwortanmeldung ist deaktiviert.') ?></p>
+            <?php } else { ?>
+                <p><?= lang('Link your existing profile and switch to single sign-on.', 'Verknüpfe dein bestehendes Profil und wechsle zu Single Sign-On.') ?></p>
+                <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= lang('Link single sign-on', 'Single Sign-On verknüpfen') ?></a>
+            <?php } ?>
+        <?php } ?>
+
         <h2 class="title">
             <?= lang('Account settings', 'Account-Einstellungen') ?>
         </h2>
@@ -714,7 +832,7 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <?php if (
-            USER_MANAGEMENT == 'AUTH' &&
+            USER_MANAGEMENT == 'AUTH' && !osirisOAuthLinked($data) &&
             $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
         ) { ?>
 
@@ -1230,15 +1348,20 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
 
-        <?php if ($active('research_profile')) { ?>
+        <?php if ($active('research_profile')) { 
+            $research_profile = $data['research_profile'] ?? '';
+            if (!is_string($research_profile)) $research_profile = '';
+            $research_profile_de = $data['research_profile_de'] ?? '';
+            if (!is_string($research_profile_de)) $research_profile_de = '';
+            ?>
             <h2 class="title"><?= lang('Research Profile', 'Forschungsprofil') ?></h2>
 
             <div class="row row-eq-spacing">
                 <div class="col-md-6">
                     <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="research_profile-editor-quill"><?= $data['research_profile'] ?? '' ?></div>
-                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $data['research_profile'] ?? '' ?></textarea>
+                        <div id="research_profile-editor-quill"><?= $research_profile ?></div>
+                        <textarea name="values[research_profile]" id="research_profile-editor" class="d-none" readonly><?= $research_profile ?></textarea>
                         <script>
                             quillEditor('research_profile-editor');
                         </script>
@@ -1248,8 +1371,8 @@ $active = function ($field) use ($data_fields) {
                 <div class="col-md-6">
                     <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="research_profile_de-editor-quill"><?= $data['research_profile_de'] ?? '' ?></div>
-                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $data['research_profile_de'] ?? '' ?></textarea>
+                        <div id="research_profile_de-editor-quill"><?= $research_profile_de ?></div>
+                        <textarea name="values[research_profile_de]" id="research_profile_de-editor" class="d-none" readonly><?= $research_profile_de ?></textarea>
                         <script>
                             quillEditor('research_profile_de-editor');
                         </script>
@@ -1462,15 +1585,20 @@ $active = function ($field) use ($data_fields) {
 
 
 
-        <?php if ($active('education')) { ?>
+        <?php if ($active('education')) { 
+            $education = $data['education'] ?? '';
+            if (!is_string($education)) $education = '';
+            $education_de = $data['education_de'] ?? '';
+            if (!is_string($education_de)) $education_de = '';
+            ?>
             <h2><?= lang('Education', 'Ausbildung') ?></h2>
 
             <div class="row row-eq-spacing my-0">
                 <div class="col-md-6">
                     <h5 class="mt-0 ">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="education-editor-quill"><?= $data['education'] ?? '' ?></div>
-                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $data['education'] ?? '' ?></textarea>
+                        <div id="education-editor-quill"><?= $education ?></div>
+                        <textarea name="values[education]" id="education-editor" class="d-none" readonly><?= $education ?></textarea>
                         <script>
                             quillEditor('education-editor');
                         </script>
@@ -1480,8 +1608,8 @@ $active = function ($field) use ($data_fields) {
                 <div class="col-md-6">
                     <h5 class="mt-0 ">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                     <div class="form-group mb-0">
-                        <div id="education_de-editor-quill"><?= $data['education_de'] ?? '' ?></div>
-                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $data['education_de'] ?? '' ?></textarea>
+                        <div id="education_de-editor-quill"><?= $education_de ?></div>
+                        <textarea name="values[education_de]" id="education_de-editor" class="d-none" readonly><?= $education_de ?></textarea>
                         <script>
                             quillEditor('education_de-editor');
                         </script>

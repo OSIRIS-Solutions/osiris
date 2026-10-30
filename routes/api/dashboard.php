@@ -735,17 +735,21 @@ Route::get('/api/dashboard/project-timeline', function () {
         die;
     }
 
-    $filter = [];
+    $aggregation = [
+        ['$unwind' => '$persons'],
+        ['$sort' => ['start' => 1]]
+    ];
     if (isset($_GET['user'])) {
-        $filter['persons.user'] = $_GET['user'];
+        $filter = ['persons.user' => $_GET['user']];
+        $aggregation = [
+            ['$match' => $filter],
+            ['$unwind' => '$persons'],
+            ['$match' => $filter],
+            ['$sort' => ['start' => 1]]
+        ];
     }
 
-    $result = $osiris->projects->aggregate([
-        ['$match' => $filter],
-        ['$unwind' => '$persons'],
-        ['$match' => $filter],
-        ['$sort' => ['start' => 1]]
-    ])->toArray();
+    $result = $osiris->projects->aggregate($aggregation)->toArray();
     echo return_rest($result, count($result));
 });
 

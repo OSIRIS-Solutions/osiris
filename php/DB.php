@@ -160,6 +160,7 @@ class DB
     }
     function notifications($force = false, $user = null)
     {
+        $Settings = new Settings;
         $notifications = [
             'approval' => lang('Approval of activities', 'Freigabe von Aktivitäten'),
             'epub' => '<em>Online ahead of print</em>-' . lang('Publications', 'Publikationen'),
@@ -170,6 +171,7 @@ class DB
             'infrastructure' => lang('Updating Infrastructures', 'Infrastrukturen aktualisieren'),
             'rejected' => lang('Rejected activities', 'Abgelehnte Aktivitäten'),
             'nagoya' => lang('Nagoya Protocol Compliance', 'Nagoya-Protokoll Bewertungen'),
+            'news-editorial' => lang('News Editorial', 'News-Redaktion'),
         ];
 
         $now = time();
@@ -184,6 +186,7 @@ class DB
         if (!isset($scientist)) {
             $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
         }
+        $roles = DB::doc2Arr($scientist['roles'] ?? []);
 
         // Immer: aktuelles Notifications-Dokument laden (falls vorhanden)
         $existing = $this->db->notifications->findOne(['user' => $user]);
@@ -240,13 +243,34 @@ class DB
             //     ];
             //     $hasNotification += 1;
             // }
+            if (!isset($_SESSION['username'])) return false;
+            $permission = $this->db->adminRights->findOne([
+                'role' => ['$in' => $roles],
+                'right' => 'news.editorial',
+                'value' => true
+            ]);
+            $permission = !empty($permission);
+            if ($permission && $this->featureEnabled('news-editorial')) {
+                $count = $this->db->news->countDocuments([
+                    'internal_only' => ['$ne' => true],
+                    'outlet_requests.status' => [
+                        '$in' => ['requested', 'in_progress', 'ready']
+                    ]
+                ]);
+                if ($count > 0) {
+                    $issues['news-editorial'] = [
+                        'name' => lang('News Editorial', 'News-Redaktion'),
+                        'count' => $count,
+                        'key' => 'news-editorial'
+                    ];
+                }
+            }
 
             // Prüfe auf Quartalsfreigabe
             $reportingEnabled = $this->db->adminFeatures->findOne(['feature' => 'quarterly-reporting']);
             $reportingEnabled = $reportingEnabled['enabled'] ?? true;
             if ($reportingEnabled) {
                 $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
-                $roles = DB::doc2Arr($scientist['roles'] ?? []);
                 $lastquarter = $this->getLastQuarter();
                 if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
                     $issues['approval'] = [
@@ -1224,7 +1248,7 @@ class DB
         echo self::getLogo($item, $class, $alt);
     }
 
-    
+
     public static function build_person_search_text(array $p): string
     {
         $parts = [];
@@ -1250,5 +1274,4 @@ class DB
 
         return $text;
     }
-
 }

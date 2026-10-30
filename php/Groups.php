@@ -96,7 +96,7 @@ class Groups
             $this->tree = [];
             return;
         }
-        $this->tree = $this->tree($g)[0];
+        $this->tree = $this->tree($g)[0] ?? [];
     }
 
 

@@ -24,6 +24,36 @@ class SidebarNav
         // -----------------------------
         $this->definition = [
             [
+                'id' => 'sidebar-home',
+                'label' => lang('Home', 'Home'),
+                'items' => [
+                    [
+                        'id' => 'home',
+                        'label' => lang('Home', 'Startseite'),
+                        'icon' => 'house',
+                        'url' => '/home',
+                        'active' => ['^/home($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'hub',
+                        'label' => $this->settings->resourceHubLabel(),
+                        'icon' => $this->settings->resourceHubIcon(),
+                        'url' => '/hub',
+                        'active' => ['^/hub($|/)'],
+                        'feature' => 'resource-hub',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ]
+                ]
+            ],
+            [
                 'id' => 'sidebar-activities',
                 'label' => lang('Content', 'Inhalte'),
                 'items' => [
@@ -89,6 +119,102 @@ class SidebarNav
                         'hasSearch' => true
                     ],
                     [
+                        'id' => 'infrastructures',
+                        'label' => $this->settings->infrastructureLabel(),
+                        'icon' => 'cube-transparent',
+                        'url' => '/infrastructures',
+                        'active' => ['^/infrastructures($|/)'],
+                        'feature' => 'infrastructures',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'documents',
+                        'label' => lang('Documents', 'Dokumente'),
+                        'icon' => 'files',
+                        'url' => '/documents',
+                        'active' => ['^/documents($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => 'documents|documents.central|documents.manage',
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ]
+                ]
+            ],
+            [
+                'id' => 'sidebar-users',
+                'label' => lang('Groups', 'Gruppen'),
+                'items' => [
+                    [
+                        'id' => 'users',
+                        'label' => lang('Users', 'Personen'),
+                        'icon' => 'users',
+                        'url' => '/user/browse',
+                        'active' => ['^/(user|profile)($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => true
+                    ],
+                    [
+                        'id' => 'groups',
+                        'label' => lang('Organisational Units', 'Einheiten'),
+                        'icon' => 'users-three',
+                        'url' => '/groups',
+                        'active' => ['^/groups($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'topics',
+                        'label' => $this->settings->topicLabel(),
+                        'icon' => 'puzzle-piece',
+                        'url' => '/topics',
+                        'active' => ['^/topics($|/)'],
+                        'feature' => 'topics',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'organizations',
+                        'label' => lang('Organisations', 'Organisationen'),
+                        'icon' => 'building',
+                        'url' => '/organizations',
+                        'active' => ['^/organizations($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ]
+                ]
+            ],
+            [
+                'id' => 'news-events',
+                'label' => lang('News & Events', 'News & Events'),
+                'items' => [
+                    [
+                        'id' => 'news',
+                        'label' => lang('News', 'Neuigkeiten'),
+                        'icon' => 'newspaper',
+                        'url' => '/news',
+                        'active' => ['^/news($|/)'],
+                        'feature' => 'news',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
                         'id' => 'events',
                         'label' => lang('Events', 'Events'),
                         'icon' => 'calendar-dots',
@@ -124,96 +250,6 @@ class SidebarNav
                         'favoritable' => true,
                         'hasSearch' => false
                     ],
-                    [
-                        'id' => 'topics',
-                        'label' => $this->settings->topicLabel(),
-                        'icon' => 'puzzle-piece',
-                        'url' => '/topics',
-                        'active' => ['^/topics($|/)'],
-                        'feature' => 'topics',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'infrastructures',
-                        'label' => $this->settings->infrastructureLabel(),
-                        'icon' => 'cube-transparent',
-                        'url' => '/infrastructures',
-                        'active' => ['^/infrastructures($|/)'],
-                        'feature' => 'infrastructures',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'documents',
-                        'label' => lang('Documents', 'Dokumente'),
-                        'icon' => 'files',
-                        'url' => '/documents',
-                        'active' => ['^/documents($|/)'],
-                        'feature' => null,
-                        'default' => false,
-                        'permission' => 'documents',
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'spectrum',
-                        'label' => lang('Spectrum', 'Spektrum'),
-                        'icon' => 'lightbulb',
-                        'url' => '/spectrum',
-                        'active' => ['^/spectrum($|/)'],
-                        'feature' => 'spectrum',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ]
-                ]
-            ],
-            [
-                'id' => 'sidebar-users',
-                'label' => lang('Groups', 'Gruppen'),
-                'items' => [
-                    [
-                        'id' => 'users',
-                        'label' => lang('Users', 'Personen'),
-                        'icon' => 'users',
-                        'url' => '/user/browse',
-                        'active' => ['^/(user|profile)($|/)'],
-                        'feature' => null,
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => true
-                    ],
-                    [
-                        'id' => 'groups',
-                        'label' => lang('Organisational Units', 'Einheiten'),
-                        'icon' => 'users-three',
-                        'url' => '/groups',
-                        'active' => ['^/groups($|/)'],
-                        'feature' => null,
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'organizations',
-                        'label' => lang('Organisations', 'Organisationen'),
-                        'icon' => 'building',
-                        'url' => '/organizations',
-                        'active' => ['^/organizations($|/)'],
-                        'feature' => null,
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ]
                 ]
             ],
             [
@@ -227,6 +263,18 @@ class SidebarNav
                         'url' => '/dashboard',
                         'active' => ['^/dashboard($|/)'],
                         'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'spectrum',
+                        'label' => lang('Spectrum', 'Spektrum'),
+                        'icon' => 'lightbulb',
+                        'url' => '/spectrum',
+                        'active' => ['^/spectrum($|/)'],
+                        'feature' => 'spectrum',
                         'default' => false,
                         'permission' => null,
                         'favoritable' => true,
@@ -373,7 +421,7 @@ class SidebarNav
                         'active' => ['^/admin($|/)'],
                         'feature' => null,
                         'default' => false,
-                        'permission' => 'admin.see|user.synchronize|report.templates',
+                        'permission' => 'admin.see|user.synchronize|report.templates|news.outlets',
                         'favoritable' => false,
                         'hasSearch' => false
                     ],

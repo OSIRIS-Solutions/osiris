@@ -74,9 +74,9 @@ function return_rest($data, $count = 0, $status = 200)
     $result = array();
     $limit = intval($_GET['limit'] ?? 0);
 
-    if (!empty($limit) && $count > $limit && is_array($data)) {
-        $offset = intval($_GET['offset'] ?? 0) || 0;
-        $data = array_slice($data, $offset, min($limit, $count - $offset));
+    if ($limit > 0 && $count > 0 && is_array($data)) {
+        $offset = max(0, intval($_GET['offset'] ?? 0));
+        $data = array_slice($data, $offset, $limit);
         $result += array(
             'limit' => $limit,
             'offset' => $offset
@@ -711,81 +711,6 @@ Route::get('/api/user-units/(.*)', function ($id) {
         'name' => $person['first'] . ' ' . $person['last'],
         'units' => $units
     ], 1);
-});
-
-Route::get('/api/reviews', function () {
-    error_reporting(E_ERROR | E_PARSE);
-    include_once BASEPATH . "/php/init.php";
-
-    if (!apikey_check($_GET['apikey'] ?? null)) {
-        echo return_permission_denied();
-        die;
-    }
-
-    $filter = [];
-    if (isset($_GET['filter'])) {
-        $filter = $_GET['filter'];
-    }
-    $filter['type'] = 'review';
-    $result = $osiris->activities->find($filter)->toArray();
-
-    $reviews = [];
-    foreach ($result as $doc) {
-        $authors = DB::doc2Arr($doc['authors'] ?? []);
-        $user = $authors[0]['user'] ?? null;
-        if (empty($user) && isset($doc['user'])) {
-            $user = $doc['user'];
-        }
-        if (!array_key_exists($user, $reviews)) {
-            $u = $DB->getNameFromId($user);
-            $reviews[$user] = [
-                'User' => $user,
-                'Name' => $u,
-                'Editor' => 0,
-                'Editorials' => [],
-                'Reviewer' => 0,
-                "Reviews" => []
-            ];
-        }
-        switch (strtolower($doc['subtype'] ?? $doc['role'] ?? 'review')) {
-            case 'editor':
-            case 'editorial':
-                $reviews[$user]['Editor']++;
-                $date = format_date($doc['start'] ?? $doc);
-                if (isset($doc['end']) && !empty($doc['end'])) {
-                    $date .= " - " . format_date($doc['end']);
-                } else {
-                    $date .= " - today";
-                }
-
-                $reviews[$user]['Editorials'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => $date,
-                    'details' => $doc['editor_type'] ?? ''
-                ];
-                break;
-
-            case 'reviewer':
-            case 'review':
-                $reviews[$user]['Reviewer']++;
-                $reviews[$user]['Reviews'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => format_date($doc)
-                ];
-                break;
-            default:
-                $reviews[$user]['Reviewer']++;
-                $reviews[$user]['Reviews'][] = [
-                    'id' => strval($doc['_id']),
-                    'date' => format_date($doc)
-                ];
-                break;
-        }
-    }
-
-    $table = array_values($reviews);
-
-    echo return_rest($table, count($result));
 });
 
 

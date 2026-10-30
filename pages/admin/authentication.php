@@ -52,7 +52,7 @@
 
         <div class="form-group">
             <label for="auth-token"><?= lang('AUTH Token', 'AUTH-Token') ?></label>
-            <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+            <button class="btn small ml-5" type="button" onclick="copyTokenToClipboard()" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
             </button>
             <div class="input-group">
@@ -74,7 +74,7 @@
 
 
 <script>
-    function copyToClipboard() {
+    function copyTokenToClipboard() {
         var text = $('#auth-token').val()
         navigator.clipboard.writeText(text)
         toastSuccess('Token copied to clipboard.')

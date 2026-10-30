@@ -117,17 +117,6 @@ function navigateCitation(id) {
     $('#' + id + '-box').show();
 }
 
-function copyToClipboard(selector) {
-    // check if navigator.clipboard is available
-    if (!navigator.clipboard) {
-        toastError(lang('This browser does not support copying to clipboard.', 'Dieser Browser unterstützt das Kopieren in die Zwischenablage nicht.'));
-        return;
-    }
-    var text = $(selector).text()
-    navigator.clipboard.writeText(text)
-    toastSuccess(lang('Query copied to clipboard.', 'Abfrage in die Zwischenablage kopiert.'))
-}
-
 function fetchOpenAlex(doi) {
     // set button to loading state
     $('#openalex-refresh-button').prop('disabled', true).addClass('loading');

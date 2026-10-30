@@ -14,6 +14,10 @@
  * @license     MIT
  */
 
+require_once BASEPATH . '/php/OAuth.php';
+require_once BASEPATH . '/routes/oauth-link.php';
+require_once BASEPATH . '/routes/oauth-register.php';
+
 Route::get('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
@@ -23,161 +27,33 @@ Route::get('/user/login', function () {
         header("Location: " . ROOTPATH . "/home");
         die;
     }
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/userlogin.php";
-    include BASEPATH . "/footer.php";
+    if (!defined('USER_MANAGEMENT')) {
+        die('USER_MANAGEMENT not defined in CONFIG.php');
+    }
+    $userManagement = strtoupper(USER_MANAGEMENT);
+    $page = 'login';
+    $redirectTarget = $_GET['redirect'] ?? $_SERVER['REQUEST_URI'];
+    $authMessages = [];
+    if (isset($_GET['redirect']) && !isset($_SESSION['msg'])) {
+        $authMessages[] = [
+            'text' => lang(
+                'Please log in to access the requested page.',
+                'Bitte melde dich an, um auf die gewünschte Seite zuzugreifen.'
+            ),
+            'type' => 'error',
+        ];
+    }
+    include BASEPATH . "/pages/user/auth-page.php";
 });
 
 Route::get('/user/oauth', function () {
     include_once BASEPATH . "/php/init.php";
-
-    $provider = defined('OAUTH') ? OAUTH : 'microsoft';
-    $provider = strtolower($provider);
-    switch ($provider) {
-        case 'keycloak':
-        case 'generic':
-            $authorizationEndpoint = AUTHORITY . '/auth';
-            break;
-
-        case 'microsoft':
-        default:
-            $authorizationEndpoint = AUTHORITY . '/oauth2/v2.0/authorize';
-            break;
-    }
-
-    $params = [
-        'client_id' => CLIENT_ID,
-        'response_type' => 'code',
-        'redirect_uri' => REDIRECT_URI,
-        'scope' => SCOPES,
-    ];
-
-    if ($provider === 'microsoft') {
-        $params['response_mode'] = 'query';
-    }
-
-    $authorizationUrl = $authorizationEndpoint . '?' . http_build_query($params);
-
-    header("Location: $authorizationUrl");
-    exit();
+    osirisOAuthStart('login');
 });
 
 Route::get('/user/oauth-callback', function () {
     include_once BASEPATH . "/php/init.php";
-
-    $provider = defined('OAUTH') ? OAUTH : 'microsoft';
-    $provider = strtolower($provider);
-    if (!isset($_GET['code'])) {
-        die("No authorization code returned.");
-    }
-
-    $code = $_GET['code'];
-
-    switch ($provider) {
-        case 'keycloak':
-        case 'generic':
-            $tokenUrl = AUTHORITY . '/token';
-            $userInfoUrl = AUTHORITY . '/userinfo';
-            break;
-
-        case 'microsoft':
-        default:
-            $tokenUrl = AUTHORITY . '/oauth2/v2.0/token';
-            $userInfoUrl = 'https://graph.microsoft.com/v1.0/me';
-            break;
-    }
-
-    $postData = [
-        'client_id' => CLIENT_ID,
-        'scope' => SCOPES,
-        'code' => $code,
-        'redirect_uri' => REDIRECT_URI,
-        'grant_type' => 'authorization_code',
-        'client_secret' => CLIENT_SECRET
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $tokenUrl);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    $data = json_decode($response, true);
-
-    if (!isset($data['access_token'])) {
-        dump($data);
-        die("Error getting access token.");
-    }
-
-    $accessToken = $data['access_token'];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $userInfoUrl);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $accessToken"]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $userInfoResponse = curl_exec($ch);
-    curl_close($ch);
-
-    $user = json_decode($userInfoResponse, true);
-
-    if ($provider === 'microsoft') {
-        $mail = $user['mail'] ?? $user['userPrincipalName'] ?? '';
-        $username = explode('@', $mail)[0];
-
-        $new_user = [
-            'username' => $username,
-            'displayname' => $user['displayName'] ?? $username,
-            'first' => $user['givenName'] ?? '',
-            'last' => $user['surname'] ?? '',
-            'mail' => $mail,
-            'position' => $user['jobTitle'] ?? '',
-            'telephone' => $user['businessPhones'][0] ?? '',
-            'lastlogin' => date('d.m.Y'),
-            'created' => date('d.m.Y'),
-        ];
-    } else {
-        $mail = $user['email'] ?? '';
-        $preferred = $user['preferred_username'] ?? $mail;
-        $username = explode('@', $preferred)[0];
-
-        $new_user = [
-            'username' => $username,
-            'displayname' => $user['name'] ?? $user['preferred_username'] ?? $username,
-            'first' => $user['given_name'] ?? '',
-            'last' => $user['family_name'] ?? '',
-            'mail' => $mail,
-            'position' => '',
-            'telephone' => '',
-            'lastlogin' => date('d.m.Y'),
-            'created' => date('d.m.Y'),
-        ];
-    }
-
-    if (empty($username)) {
-        dump($user);
-        die("Could not determine username from OAuth provider.");
-    }
-
-    $USER = $DB->getPerson($username);
-
-    if (empty($USER)) {
-        $osiris->persons->insertOne($new_user);
-        $USER = $DB->getPerson($username);
-    } else {
-        $osiris->persons->updateOne(
-            ['username' => $USER['username']],
-            ['$set' => ["lastlogin" => date('d.m.Y')]]
-        );
-    }
-
-    $_SESSION['username'] = $USER['username'];
-    $_SESSION['name'] = $USER['displayname'];
-    $_SESSION['loggedin'] = true;
-
-    header("Location: " . ROOTPATH . "/");
-    exit();
+    osirisOAuthCallback();
 });
 
 Route::post('/user/login', function () {
@@ -287,26 +163,24 @@ Route::post('/user/login', function () {
             die();
         }
     }
-    $breadcrumb = [
-        ['name' => lang('User Login', 'Login')]
-    ];
-    include BASEPATH . "/header.php";
-    include BASEPATH . "/pages/userlogin.php";
-    if (isset($auth)) {
-        printMsg($auth["msg"] ?? lang('Something went wrong', 'Etwas ist schief gelaufen'), "error", "");
-    }
+    $page = 'login';
+    $userManagement = strtoupper(USER_MANAGEMENT);
+    $redirectTarget = $_POST['redirect'] ?? $_SERVER['REQUEST_URI'];
+    $authMessages = [];
     if (empty($_POST['username'])) {
-        printMsg(lang("Username is required!", "Benutzername ist erforderlich!"), "error", "");
+        $authMessages[] = ['text' => lang('Username is required.', 'Bitte gib deinen Nutzernamen ein.'), 'type' => 'error'];
     }
     if (empty($_POST['password'])) {
-        printMsg(lang("Password is required!", "Passwort ist erforderlich!"), "error", "");
+        $authMessages[] = ['text' => lang('Password is required.', 'Bitte gib dein Passwort ein.'), 'type' => 'error'];
     }
-    include BASEPATH . "/footer.php";
+    include BASEPATH . "/pages/user/auth-page.php";
 });
 
 
 Route::get('/user/logout', function () {
     include_once BASEPATH . "/php/init.php";
+    osirisOAuthClearAttempt();
+    unset($_SESSION['oauth_link_csrf'], $_SESSION['auth_method']);
     unset($_SESSION["username"]);
     unset($_SESSION["name"]);
     unset($_SESSION["realuser"]);
@@ -349,87 +223,6 @@ Route::get('/user/logout', function () {
 //     dump($arr, true);
 // });
 
-
-
-// OAUTH
-Route::get('/user/oauth', function () {
-    include BASEPATH . "/php/init.php";
-    // league/oauth2-client
-    require BASEPATH . '/vendor/autoload.php';
-
-    $settings = require BASEPATH . '/config/oauth2.php';
-
-    $provider = new League\OAuth2\Client\Provider\GenericProvider($settings);
-
-
-    // If we don't have an authorization code then get one
-    if (!isset($_GET['code'])) {
-
-        // Fetch the authorization URL from the provider; this returns the
-        // urlAuthorize option and generates and applies any necessary parameters
-        // (e.g. state).
-        $authorizationUrl = $provider->getAuthorizationUrl();
-
-        // Get the state generated for you and store it to the session.
-        $_SESSION['oauth2state'] = $provider->getState();
-
-        // Optional, only required when PKCE is enabled.
-        // Get the PKCE code generated for you and store it to the session.
-        $_SESSION['oauth2pkceCode'] = $provider->getPkceCode();
-
-        // Redirect the user to the authorization URL.
-        header('Location: ' . $authorizationUrl);
-        exit;
-
-        // Check given state against previously stored one to mitigate CSRF attack
-    } elseif (empty($_GET['state']) || empty($_SESSION['oauth2state']) || $_GET['state'] !== $_SESSION['oauth2state']) {
-
-        if (isset($_SESSION['oauth2state'])) {
-            unset($_SESSION['oauth2state']);
-        }
-
-        exit('Invalid state');
-    } else {
-
-        try {
-
-            // Optional, only required when PKCE is enabled.
-            // Restore the PKCE code stored in the session.
-            $provider->setPkceCode($_SESSION['oauth2pkceCode']);
-
-            // Try to get an access token using the authorization code grant.
-            $accessToken = $provider->getAccessToken('authorization_code', [
-                'code' => $_GET['code']
-            ]);
-
-            // We have an access token, which we may use in authenticated
-            // requests against the service provider's API.
-            echo 'Access Token: ' . $accessToken->getToken() . "<br>";
-            echo 'Refresh Token: ' . $accessToken->getRefreshToken() . "<br>";
-            echo 'Expired in: ' . $accessToken->getExpires() . "<br>";
-            echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
-
-            // Using the access token, we may look up details about the
-            // resource owner.
-            $resourceOwner = $provider->getResourceOwner($accessToken);
-
-            var_export($resourceOwner->toArray());
-
-            // The provider provides a way to get an authenticated API request for
-            // the service, using the access token; it returns an object conforming
-            // to Psr\Http\Message\RequestInterface.
-            $request = $provider->getAuthenticatedRequest(
-                'GET',
-                'https://service.example.com/resource',
-                $accessToken
-            );
-        } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
-
-            // Failed to get the access token or user details.
-            exit($e->getMessage());
-        }
-    }
-});
 
 
 Route::get('/reset-guest-password', function () {

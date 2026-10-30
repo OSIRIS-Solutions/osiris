@@ -410,14 +410,14 @@ $design = $Settings->get('design');
             </tr>
             <!-- border color -->
             <tr>
-                <?php $borderColor = $design['border_color'] ?? '#afafaf'; ?>
+                <?php $borderColor = $design['border_color'] ?? '#b8bdc1'; ?>
                 <td>
                     <label for="design_border_color"><?= lang('Border color', 'Rahmenfarbe') ?></label>
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="color" class="form-control w-200" name="general[design][border_color]" value="<?= $borderColor ?>" id="design_border_color">
-                        <button type="button" class="btn ml-10" onclick="$('#design_border_color').val('#afafaf')" data-toggle="tooltip" data-title="<?= lang('Reset to default', 'Auf Standard zurücksetzen') ?>">
+                        <button type="button" class="btn ml-10" onclick="$('#design_border_color').val('#b8bdc1')" data-toggle="tooltip" data-title="<?= lang('Reset to default', 'Auf Standard zurücksetzen') ?>">
                             <i class="ph ph-arrow-counter-clockwise"></i>
                         </button>
                     </div>

@@ -15,10 +15,12 @@
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
  * @license     MIT
  */
+require_once BASEPATH . '/php/NewsEditorial.php';
+require_once BASEPATH . '/php/NewsReview.php';
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $news = DB::doc2Arr($news);
-
+$authorPendingReview = $Settings->featureEnabled('news-editorial') && NewsEditorial::isAuthor($news) ? NewsReview::pending($news) : null;
 $featuredCard = null;
 $featured = DB::doc2Arr($news['featured'] ?? []);
 if (!empty($featured['type']) && !empty($featured['id'])) {
@@ -100,6 +102,8 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
     }
 }
 ?>
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/news-workflow.css?v=<?= OSIRIS_BUILD ?>">
+
 
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/activity.css">
 
@@ -229,7 +233,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
 </style>
 
 <?php
-if ($Settings->hasPermission('news.edit')) { ?>
+if (NewsEditorial::canEdit($news, $Settings)) { ?>
     <!-- Modal for updating the profile picture -->
     <div class="modal modal-lg" id="change-picture" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -247,6 +251,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token('news')) ?>">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
                         <input type="file" id="profile-input" name="file" data-default-value="<?= lang("No file chosen", "Keine Datei ausgewählt") ?>" accept="image/*" required>
@@ -272,6 +277,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
                 <hr>
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token('news')) ?>">
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
@@ -285,11 +291,11 @@ if ($Settings->hasPermission('news.edit')) { ?>
 
 
 
-<div class="container w-800 mw-full">
+<div class="container w-800 mw-full news-workflow">
     <div class="btn-toolbar pb-20">
         <span class="badge type <?= $news['type'] ?? 'other' ?> mr-10"><?= $Vocabulary->getValue('news-category', $news['type'] ?? 'other') ?></span>
 
-        <?php if ($Settings->hasPermission('news.edit')) { ?>
+        <?php if (NewsEditorial::canEdit($news, $Settings)) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
                 <?= lang('Edit', 'Bearbeiten') ?>
@@ -298,6 +304,12 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <i class="ph ph-image"></i>
                 <?= lang('Change image', 'Bild ändern') ?>
             </a>
+        <?php } ?>
+        <?php if ($authorPendingReview !== null) { ?>
+            <a class="btn primary" href="#author-review-<?= e($authorPendingReview['id']) ?>"><i class="ph ph-check-circle" aria-hidden="true"></i> <?= lang('Review contributions', 'Beiträge prüfen') ?></a>
+        <?php } ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
+            <a class="btn" href="#news-editorial"><i class="ph ph-pencil-line" aria-hidden="true"></i> <?= lang('Editorial team', 'Redaktion') ?></a>
         <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
             <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('Are you sure you want to delete this news item?', 'Sind Sie sicher, dass Sie diese Nachricht löschen möchten?') ?>');" class="d-inline ml-auto">
@@ -362,6 +374,14 @@ if ($Settings->hasPermission('news.edit')) { ?>
         <?= lang($news['content'] ?? '', $news['content_de'] ?? null) ?>
     </div>
 
+
+    <?php if (NewsEditorial::isAuthor($news) || $Settings->hasPermission('news.editorial') || NewsEditorial::canEdit($news, $Settings)) {
+        $outletSelectionMode = 'view';
+        include BASEPATH . '/pages/news/outlets.php';
+        if (!empty($news['original_updated_at'])) { ?>
+            <p class="text-muted"><?= lang('Original last updated:', 'Original zuletzt geändert:') ?> <?= e(date('d.m.Y H:i', strtotime($news['original_updated_at']))) ?></p>
+        <?php }
+    } ?>
 
     <h4>
         <i class="ph-duotone ph-link-simple"></i>
@@ -502,20 +522,19 @@ if ($Settings->hasPermission('news.edit')) { ?>
             </div>
         <?php } ?>
 
-        <?php if (($news['visibility'] ?? '') === 'public') { ?>
+        <?php if (!NewsEditorial::workflowAvailable($Settings->getNewsOutlets(), $news)) { ?>
             <div>
-                <?= lang('Public', 'Öffentlich') ?>
-            </div>
-        <?php } else { ?>
-            <div>
-                <?= lang('Internal', 'Intern') ?>
+                <?= ($news['visibility'] ?? '') === 'public' ? lang('Public', 'Öffentlich') : lang('Internal', 'Intern') ?>
             </div>
         <?php } ?>
 
     </div>
 
 
-    <?php if (isset($_GET['verbose'])) {
+    <?php include BASEPATH . '/pages/news/review.php'; ?>
+    <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) include BASEPATH . '/pages/news/editorial.php'; ?>
+
+    <?php if ($Settings->featureEnabled('news-editorial') && isset($_GET['verbose']) && $Settings->hasPermission('news.editorial')) {
         dump($news);
     } ?>
 

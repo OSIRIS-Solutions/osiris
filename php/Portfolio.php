@@ -1,7 +1,7 @@
 <?php
 
-require_once BASEPATH . '/php/DB.php';
-require_once BASEPATH . '/php/Settings.php';
+require_once __DIR__ . '/DB.php';
+require_once __DIR__ . '/Settings.php';
 
 class Portfolio extends Settings
 {
@@ -437,5 +437,74 @@ class Portfolio extends Settings
 </div>';
 
         return $html;
+    }
+
+    /** The database selection and public output use the same configured sources. */
+    public static function newsFilter(array $filter, array $configuration): array
+    {
+        $sources = [];
+        if ($configuration['original_portfolio']) {
+            $sources[] = ['publication_mode' => 'outlets'];
+            $sources[] = ['publication_mode' => ['$ne' => 'outlets'], 'visibility' => 'public'];
+        }
+        $outlets = array_column(array_filter($configuration['outlets'], static fn($outlet) => !empty($outlet['portfolio'])), 'id');
+        if ($outlets) {
+            $sources[] = ['outlet_requests' => ['$elemMatch' => ['outlet_id' => ['$in' => $outlets], 'status' => ['$in' => ['approved', 'released']]]]];
+        }
+        unset($filter['visibility']);
+        return ['$and' => [$filter, ['internal_only' => ['$ne' => true]],
+            $sources ? ['$or' => $sources] : ['_id' => ['$exists' => false]]]];
+    }
+
+    /** Public news output: drafts, feedback and history are never exposed. */
+    public static function newsProjection(bool $detail = false): array
+    {
+        $fields = ['title', 'title_de', 'teaser', 'teaser_de', 'date', 'publication_mode', 'visibility',
+            'internal_only', 'outlet_requests', 'editorial_contributions'];
+        if ($detail) $fields = array_merge($fields, ['content', 'content_de', 'image', 'activities', 'persons', 'projects', 'infrastructures', 'topics', 'events', 'featured']);
+        return ['_id' => 0, 'id' => ['$toString' => '$_id']] + array_fill_keys($fields, 1);
+    }
+
+    public static function newsOutput(array $news, array $configuration, bool $detail = false): ?array
+    {
+        require_once __DIR__ . '/NewsEditorial.php';
+        if (($news['internal_only'] ?? false) === true) return null;
+        $original = !empty($configuration['original_portfolio']) &&
+            (($news['publication_mode'] ?? '') === 'outlets' || ($news['visibility'] ?? '') === 'public');
+        $fields = ['id', 'date'];
+        if ($detail) $fields = array_merge($fields, ['image', 'activities', 'persons', 'projects', 'infrastructures', 'topics', 'events', 'featured']);
+        if ($original) {
+            $fields = array_merge($fields, ['title', 'title_de', 'teaser', 'teaser_de']);
+            if ($detail) $fields = array_merge($fields, ['content', 'content_de']);
+        }
+        $result = array_intersect_key($news, array_fill_keys($fields, true));
+        $result['outlets'] = [];
+        $requests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
+        $contributions = NewsEditorial::contributions($news);
+        foreach ($configuration['outlets'] as $outlet) {
+            $id = $outlet['id'];
+            $request = $requests[$id] ?? [];
+            $contribution = $contributions[$id] ?? null;
+            if (empty($outlet['portfolio']) || $contribution === null || !NewsEditorial::isReleased($request)) continue;
+            $format = ($contribution['format'] ?? 'plain') === 'html' ? 'html' : 'plain';
+            $item = ['id' => $id, 'name' => ['en' => $outlet['name']['en'] ?? '', 'de' => $outlet['name']['de'] ?? ''], 'format' => $format];
+            foreach (NewsOutlets::fields($outlet) as $field) {
+                if ($field === 'content' && !$detail) continue;
+                $item[$field] = ['en' => $contribution[$field]['en'] ?? '', 'de' => $contribution[$field]['de'] ?? ''];
+                if ($field === 'content' && $format === 'html') $item[$field] = array_map('sanitize_rich_text', $item[$field]);
+            }
+            $result['outlets'][] = $item;
+        }
+        return $original || $result['outlets'] ? $result : null;
+    }
+
+    public static function newsListing(iterable $news, array $configuration): array
+    {
+        $result = [];
+        foreach ($news as $item) {
+            $item = self::newsOutput(DB::doc2Arr($item), $configuration);
+            if ($item !== null) $result[] = $item;
+        }
+        return $result;
     }
 }

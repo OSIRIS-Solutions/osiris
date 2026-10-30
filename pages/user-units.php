@@ -78,7 +78,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                         }
                         echo '</small> > ';
                     }
-                    echo '<strong>' . $name . '</strong>';
+                    echo '<strong><a href="' . ROOTPATH . '/groups/view/' . $unit['unit'] . '">' . $name . '</a></strong>';
                     ?>
                     <br>
                 </td>

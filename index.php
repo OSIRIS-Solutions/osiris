@@ -50,8 +50,10 @@ function lang($en, $de = null)
 include_once BASEPATH . "/php/Route.php";
 
 Route::get('/', function () {
-    if (isset($_GET['code']) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
-        header("Location: " . ROOTPATH . "/user/oauth-callback?code=" . $_GET['code']);
+    if ((isset($_GET['code']) || isset($_GET['error'])) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
+        // Legacy root callback must preserve state and provider cancellation.
+        $callback = array_intersect_key($_GET, array_flip(['code', 'state', 'error']));
+        header("Location: " . ROOTPATH . "/user/oauth-callback?" . http_build_query($callback));
         exit();
     }
     include_once BASEPATH . "/php/init.php";
@@ -87,7 +89,7 @@ if (empty($_SESSION['loggedin']) && !empty($_COOKIE['osiris-remember'])) {
         if ($remember && password_verify($token, $remember['token_hash'])) {
             $USER = $osiris->persons->findOne(['username' => $remember['username']]);
 
-            if ($USER) {
+            if ($USER && !osirisOAuthLinked($USER)) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $USER['username'];
                 $_SESSION['name'] = $USER['displayname'];
@@ -167,63 +169,7 @@ if (
     isset($_SESSION['username']) && !empty($_SESSION['username'])
 ) {
 
-    Route::get('/home', function () {
-        include_once BASEPATH . "/php/init.php";
-
-        // get user info
-        $user = $_SESSION['username'];
-        $scientist = $DB->getPerson($user);
-
-        $notifications = $DB->notifications();
-        // check which features are enabled
-        $hasNews = false;
-        if (
-            $Settings->featureEnabled('new-publications', true)
-            || $Settings->featureEnabled('news', true)
-            || ($Settings->featureEnabled('quarterly-reporting', true) && isset($notifications['approval']))
-            || $Settings->featureEnabled('new-colleagues', true)
-        ) {
-            $hasNews = true;
-        }
-
-        $hasEvents = $Settings->featureEnabled('events', false);
-
-        // include necessary classes
-        include_once BASEPATH . "/php/Vocabulary.php";
-        $Vocabulary = new Vocabulary();
-
-        // if no dashboard widgets are enabled, redirect to profile
-        if (!$hasNews && !$hasEvents) {
-            include_once BASEPATH . "/php/Document.php";
-            include_once BASEPATH . "/php/_achievements.php";
-
-            $Format = new Document($user);
-
-            if (empty($scientist)) {
-                $_SESSION['msg'] = lang("User not found.", "Benutzer nicht gefunden.");
-                $_SESSION['msg_type'] = "error";
-                header("Location: " . ROOTPATH . "/user/browse");
-                die;
-            }
-            $name = $scientist['displayname'];
-
-            $breadcrumb = [
-                ['name' => lang('Users', 'Personen'), 'path' => "/user/browse"],
-                ['name' => $name]
-            ];
-
-            include BASEPATH . "/header.php";
-            include BASEPATH . "/pages/profile.php";
-        } else {
-            $breadcrumb = [
-                ['name' => lang('Home', 'Startseite')]
-            ];
-            include BASEPATH . "/header.php";
-            include BASEPATH . "/pages/home.php";
-        }
-        include BASEPATH . "/footer.php";
-    });
-
+    include_once BASEPATH . "/routes/home.php";
     include_once BASEPATH . "/routes/data.php";
     include_once BASEPATH . "/routes/export.php";
     include_once BASEPATH . "/routes/database.php";

@@ -54,6 +54,21 @@ if (!empty($form) && isset($form['_id'])) {
     }
 }
 
+$available = [];
+$all_fields = $Modules->all_modules;
+include_once BASEPATH . '/php/Document.php';
+$Format = new Document();
+$templates = $Format->templates;
+$fields_from_templates = [];
+foreach ($templates as $template => $template_fields) {
+    foreach ($template_fields as $f) {
+        if (isset($fields_from_templates[$f])) {
+            $fields_from_templates[$f][] = $template;
+        } else {
+            $fields_from_templates[$f] = [$template];
+        }
+    }
+}
 ?>
 
 <style>
@@ -95,7 +110,7 @@ if (!empty($form) && isset($form['_id'])) {
 </div>
 
 <!-- download -->
- <!-- <form action="<?= ROOTPATH ?>/commons/download" method="post" id="download-form">
+<!-- <form action="<?= ROOTPATH ?>/commons/download" method="post" id="download-form">
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <input type="hidden" class="hidden" name="id" value="<?= $id ?>">
@@ -117,6 +132,12 @@ if (!empty($form) && isset($form['_id'])) {
             <?php } else { ?>
                 <?= lang('New type of activity', 'Neuer Typ von Aktivität') ?>
             <?php } ?>
+
+            <?php if (isset($copy) && $copy) { ?>
+                <small class="badge info ml-20">COPY</small>
+                <input type="hidden" name="copy" value="<?= $copy ?>">
+            <?php } ?>
+            
         </h4>
 
 
@@ -232,97 +253,82 @@ if (!empty($form) && isset($form['_id'])) {
                     <i class="ph ph-edit"></i>
                     <?= lang('Edit', 'Bearbeiten') ?>
                 </a>
+
+                <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
+                    <?= lang('Field overview', 'Datenfelder-Übersicht') ?> <i class="ph ph-arrow-square-out ml-5"></i>
+                </a>
+
+                <div id="data-fields">
+                    <?php
+                    if (isset($type['fields'])) {
+                        foreach ($type['fields'] as $field) {
+                            $field_type = $field['type'] ?? 'field';
+                            $props = $field['props'] ?? array();
+                            $icon = '';
+                            $name = '';
+                            $tooltip = '';
+                            switch ($field_type) {
+                                case 'field':
+                                    $f = $Modules->all_modules[$field['id']] ?? array();
+                                    $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
+                                    $icon = 'ph-database';
+
+                                    $tem = $fields_from_templates[$field['id']] ?? array();
+                                    if (!empty($tem)) {
+                                        $available = array_merge($available, $tem);
+                                    }
+                                    break;
+                                case 'custom':
+                                    $f = $osiris->adminFields->findOne(['id' => $field['id']]);
+                                    $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
+                                    $icon = 'ph-textbox';
+                                    break;
+                                case 'paragraph':
+                                    $tooltip = lang($props['text'] ?? 'Paragraph', $props['text_de'] ?? 'Absatz');
+                                    $icon = 'ph-paragraph';
+                                    break;
+                                case 'hr':
+                                    $tooltip = lang('Divider', 'Trennlinie');
+                                    $icon = 'ph-minus';
+                                    break;
+                                case 'heading':
+                                    $tooltip = lang($props['text'] ?? 'Heading', $props['text_de'] ?? 'Überschrift');
+                                    $icon = 'ph-text-h';
+                                    break;
+                                default:
+                                    $name = '';
+                                    $icon = 'ph-folder-open';
+                            }
+                            if ($tooltip) {
+                                $tooltip = get_preview($tooltip, 30);
+                                $tooltip = "data-toggle='tooltip' data-title='$tooltip'";
+                            }
+                            echo "<span class='badge' $tooltip><i class='ph $icon'></i> $name</span>";
+                        }
+                    } else {
+                        foreach ($type['modules'] ?? array() as $module) {
+                            $name = trim($module);
+                            if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
+                                $name = str_replace('*', '', $name);
+                            }
+                            $tem = $fields_from_templates[$name] ?? array();
+                            if (!empty($tem)) {
+                                $available = array_merge($available, $tem);
+                            }
+
+                            $mod = $all_fields[$name] ?? array();
+                            if (!empty($mod)) {
+                                echo "<span class='badge'><i class='ph ph-database'></i> " . lang($mod['name'], $mod['name_de'] ?? null) . "</span>";
+                            } else {
+                                echo "<span class='badge'><i class='ph ph-textbox'></i> " . lang($name) . "</span>";
+                            }
+                        }
+                    }
+
+                    ?>
+
+                </div>
             <?php } ?>
-
-            <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
-                <?= lang('Field overview', 'Datenfelder-Übersicht') ?> <i class="ph ph-arrow-square-out ml-5"></i>
-            </a>
-
-            <div id="data-fields">
-                <?php
-                $available = [];
-                $all_fields = $Modules->all_modules;
-                include_once BASEPATH . '/php/Document.php';
-                $Format = new Document();
-                $templates = $Format->templates;
-                $fields_from_templates = [];
-                foreach ($templates as $template => $template_fields) {
-                    foreach ($template_fields as $f) {
-                        if (isset($fields_from_templates[$f])) {
-                            $fields_from_templates[$f][] = $template;
-                        } else {
-                            $fields_from_templates[$f] = [$template];
-                        }
-                    }
-                }
-                if (isset($type['fields'])) {
-                    foreach ($type['fields'] as $field) {
-                        $field_type = $field['type'] ?? 'field';
-                        $props = $field['props'] ?? array();
-                        $icon = '';
-                        $name = '';
-                        $tooltip = '';
-                        switch ($field_type) {
-                            case 'field':
-                                $f = $Modules->all_modules[$field['id']] ?? array();
-                                $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
-                                $icon = 'ph-database';
-
-                                $tem = $fields_from_templates[$field['id']] ?? array();
-                                if (!empty($tem)) {
-                                    $available = array_merge($available, $tem);
-                                }
-                                break;
-                            case 'custom':
-                                $f = $osiris->adminFields->findOne(['id' => $field['id']]);
-                                $name = lang($f['name'] ?? $field['id'], $f['name_de'] ?? null);
-                                $icon = 'ph-textbox';
-                                break;
-                            case 'paragraph':
-                                $tooltip = lang($props['text'] ?? 'Paragraph', $props['text_de'] ?? 'Absatz');
-                                $icon = 'ph-paragraph';
-                                break;
-                            case 'hr':
-                                $tooltip = lang('Divider', 'Trennlinie');
-                                $icon = 'ph-minus';
-                                break;
-                            case 'heading':
-                                $tooltip = lang($props['text'] ?? 'Heading', $props['text_de'] ?? 'Überschrift');
-                                $icon = 'ph-text-h';
-                                break;
-                            default:
-                                $name = '';
-                                $icon = 'ph-folder-open';
-                        }
-                        if ($tooltip) {
-                            $tooltip = get_preview($tooltip, 30);
-                            $tooltip = "data-toggle='tooltip' data-title='$tooltip'";
-                        }
-                        echo "<span class='badge' $tooltip><i class='ph $icon'></i> $name</span>";
-                    }
-                } else {
-                    foreach ($type['modules'] ?? array() as $module) {
-                        $name = trim($module);
-                        if (str_ends_with($name, '*') || in_array($name, ['title', 'authors', 'date', 'date-range'])) {
-                            $name = str_replace('*', '', $name);
-                        }
-                        $tem = $fields_from_templates[$name] ?? array();
-                        if (!empty($tem)) {
-                            $available = array_merge($available, $tem);
-                        }
-
-                        $mod = $all_fields[$name] ?? array();
-                        if (!empty($mod)) {
-                            echo "<span class='badge'><i class='ph ph-database'></i> " . lang($mod['name'], $mod['name_de'] ?? null) . "</span>";
-                        } else {
-                            echo "<span class='badge'><i class='ph ph-textbox'></i> " . lang($name) . "</span>";
-                        }
-                    }
-                }
-
-                ?>
-
-            </div>
 
         </div>
 
@@ -423,6 +429,13 @@ if (!empty($form) && isset($form['_id'])) {
 
 
 <?php if (!$new) { ?>
+
+    <!-- Copy this type as id -->
+    <div class="mt-20">
+        <form action="<?= ROOTPATH ?>/admin/types/<?= $id ?>/copy" method="get">
+            <button class="btn primary"><i class="ph ph-copy"></i> <?= lang('Copy this type', 'Diesen Typ kopieren') ?></button>
+        </form>
+    </div>
 
 
     <?php if ($member == 0) { ?>

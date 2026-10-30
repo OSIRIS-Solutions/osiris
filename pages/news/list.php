@@ -1,5 +1,8 @@
 <?php
 
+require_once BASEPATH . '/php/NewsEditorial.php';
+$newsOutletConfiguration = $Settings->getNewsOutlets();
+
 /**
  * News list page
  * 
@@ -18,6 +21,8 @@
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 ?>
+<link rel="stylesheet" href="<?= ROOTPATH ?>/css/news-workflow.css?v=<?= OSIRIS_BUILD ?>">
+
 <style>
     .news-item {
         margin-bottom: 1.5rem;
@@ -71,22 +76,37 @@ $Vocabulary = new Vocabulary();
     } ?>
 </style>
 
-<div class="container w-800 mw-full">
+<div class="container w-800 mw-full news-workflow">
     <h1>
         <i class="ph-duotone ph-megaphone"></i>
-        <?= lang('News', 'Nachrichten'); ?>
+        <?= lang('News', 'Neuigkeiten'); ?>
     </h1>
 
-    <?php if ($Settings->hasPermission('news.edit')) { ?>
-        <div class="btn-toolbar mb-20">
-            <a href="<?= ROOTPATH ?>/news/add" class="btn primary">
-                <i class="ph ph-plus"></i>
-                <?= lang('Create news item', 'Nachricht erstellen'); ?>
-            </a>
-        </div>
-    <?php } ?>
+    <div class="btn-toolbar mb-20">
+        <?php if (NewsEditorial::canCreate($Settings)) { ?>
+            <a href="<?= ROOTPATH ?>/news/add" class="btn primary"><i class="ph ph-plus"></i> <?= lang('Create news item', 'Nachricht erstellen') ?></a>
+        <?php } ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
+            <a href="<?= ROOTPATH ?>/news/editorial" class="btn"><i class="ph ph-highlighter"></i> <?= lang('Editorial overview', 'Redaktionsübersicht') ?></a>
+        <?php } ?>
+        <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.export')) { ?>
+            <a href="<?= ROOTPATH ?>/news/export" class="btn"><i class="ph ph-export"></i> <?= lang('Export report', 'Bericht exportieren') ?></a>
+        <?php } ?>
+    </div>
 
-    <?php foreach ($osiris->news->find([], ['sort' => ['date' => -1]]) as $news) { ?>
+    <?php 
+    $filter = [];
+    if (!$Settings->hasPermission('news.see-future')) {
+        $filter = [
+            '$or' => [
+                ['date' => ['$lte' => date('Y-m-d')]],
+                ['created_by' => $_SESSION['username']],
+                ['persons' => strval($USER['_id'])]
+            ]
+        ];
+    }
+    foreach ($osiris->news->find($filter, ['sort' => ['date' => -1]]) as $news) {
+        ?>
         <div class="card news-item">
 
             <?php if (isset($news['image'])) {
@@ -125,10 +145,10 @@ $Vocabulary = new Vocabulary();
                             <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
                         </span>
                     <?php } ?>
-                    <?php if ($news['visibility'] == 'public') { ?>
+                    <?php if (!NewsEditorial::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'public') { ?>
                         &#x2219;
                         <?= lang('Public', 'Öffentlich') ?>
-                    <?php } elseif ($news['visibility'] == 'internal') { ?>
+                    <?php } elseif (!NewsEditorial::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'internal') { ?>
                         &#x2219;
                         <?= lang('Internal', 'Intern') ?>
                     <?php } else { ?>

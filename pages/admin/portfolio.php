@@ -22,6 +22,8 @@
             <?= lang('Portfolio Settings', 'Portfolio Einstellungen') ?>
         </h1>
 
+        <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('Configure news sources for Portfolio', 'News-Quellen für Portfolio konfigurieren') ?></a></p>
+
         <!-- portfolio url -->
         <div class="form-group">
             <label for="portfolio_url">
