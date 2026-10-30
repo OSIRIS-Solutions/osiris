@@ -39,8 +39,10 @@ function normalize_news_featured(array $data, array $connections): ?array
     $type = trim((string) ($featured['type'] ?? ''));
     $entityId = trim((string) ($featured['id'] ?? ''));
 
-    if (!isset($connectionFields[$type]) ||
-        !in_array($entityId, $connections[$connectionFields[$type]] ?? [], true)) {
+    if (
+        !isset($connectionFields[$type]) ||
+        !in_array($entityId, $connections[$connectionFields[$type]] ?? [], true)
+    ) {
         return null;
     }
 
@@ -99,13 +101,20 @@ Route::get('/news/view/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
+        return abortwith(500, lang('News are not enabled.', "News sind nicht aktiviert."));
     }
 
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
 
     if (!$news) {
-        abortwith(404, lang('News item not found.', "Nachricht nicht gefunden."));
+        return abortwith(404, lang('News item not found.', "Nachricht nicht gefunden."));
+    }
+    if (!$Settings->hasPermission('news.see-future')) {
+        $created_by = $news['created_by'] ?? null;
+        $persons = DB::doc2Arr($news['persons'] ?? []);
+        if ($created_by !== $_SESSION['username'] && !in_array(strval($USER['_id']), $persons) && $news['date'] > date('Y-m-d')) {
+            return abortwith(403, lang('You do not have permission to view future news items. Please ask an admin to grant you the "See future news" permission.', 'Du hast keine Berechtigung, zukünftige News zu sehen. Bitte frage einen Admin, dir das Recht "In der Zukunft geplante News sehen" zu geben.'));
+        }
     }
 
     $breadcrumb = [

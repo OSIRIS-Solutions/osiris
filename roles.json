@@ -476,6 +476,11 @@
                 "en": "Create news and request outlets"
             },
             {
+                "id": "news.see-future",
+                "de": "In der Zukunft geplante News sehen",
+                "en": "See news planned for the future"
+            },
+            {
                 "id": "news.edit-own",
                 "de": "Eigene News und offene Outlet-Anfragen bearbeiten",
                 "en": "Edit own news and open outlet requests"

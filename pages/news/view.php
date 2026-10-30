@@ -21,7 +21,6 @@ include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
 $news = DB::doc2Arr($news);
 $authorPendingReview = $Settings->featureEnabled('news-editorial') && NewsEditorial::isAuthor($news) ? NewsReview::pending($news) : null;
-
 $featuredCard = null;
 $featured = DB::doc2Arr($news['featured'] ?? []);
 if (!empty($featured['type']) && !empty($featured['id'])) {

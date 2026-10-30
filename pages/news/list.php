@@ -94,7 +94,19 @@ $Vocabulary = new Vocabulary();
         <?php } ?>
     </div>
 
-    <?php foreach ($osiris->news->find([], ['sort' => ['date' => -1]]) as $news) { ?>
+    <?php 
+    $filter = [];
+    if (!$Settings->hasPermission('news.see-future')) {
+        $filter = [
+            '$or' => [
+                ['date' => ['$lte' => date('Y-m-d')]],
+                ['created_by' => $_SESSION['username']],
+                ['persons' => strval($USER['_id'])]
+            ]
+        ];
+    }
+    foreach ($osiris->news->find($filter, ['sort' => ['date' => -1]]) as $news) {
+        ?>
         <div class="card news-item">
 
             <?php if (isset($news['image'])) {
