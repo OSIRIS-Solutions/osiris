@@ -728,6 +728,10 @@ Route::get('/portfolio/(publications|activities|all-activities)', function ($typ
         $filter['subtype'] = ['$in' => $Settings->getActivitiesPortfolio(true)];
     }
 
+    if ($type != 'publications' && isset($_GET['type'])){
+        $filter['type'] = $_GET['type'];
+    }
+
     if ($Settings->featureEnabled('quality-workflow')) {
         $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
         if ($visibility == 'only-approved') {
