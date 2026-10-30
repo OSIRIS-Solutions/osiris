@@ -94,7 +94,7 @@ Route::get('/get-form-preview', function () {
             case 'field':
                 $Modules->print_module($f['id'], $props['required'] ?? false, $props);
                 break;
-            case 'custom';
+            case 'custom':
                 $Modules->custom_field($f['id'], $props['required'] ?? false, $props);
                 break;
             case 'heading':
