@@ -1,8 +1,6 @@
     <?php if ($error == 404) { ?>
-        <!-- <img src="<?= ROOTPATH ?>/img/404.svg" alt="404 - Page not found" class="img-fluid m-auto d-block" style="max-width:80vw; max-height: 65vh;"> -->
-
         <div class="h-full position-relative text-center">
-            <img src="<?= ROOTPATH ?>/img/sophie/sophie-404.png" alt="404 - Page not found" style="width: 100%; max-width: 70rem; margin: 0 auto; display: block;">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-404.png" alt="404 - Page not found" style="width: 100%; max-width: 70rem; margin: 0 auto 3rem; display: block;">
             <div class="">
                 <h1 style="margin-top: -3rem;">
                     <?= lang('Page not found', 'Seite nicht gefunden') ?>
@@ -17,7 +15,7 @@
         </div>
     <?php } elseif ($error == 405) { ?>
         <div class="h-full position-relative text-center">
-            <img src="<?= ROOTPATH ?>/img/sophie/sophie-405.png" alt="405 - Method not allowed" style="width: 100%; max-width: 70rem; margin: 0 auto; display: block;">
+            <img src="<?= ROOTPATH ?>/img/sophie/sophie-405.png" alt="405 - Method not allowed" style="width: 100%; max-width: 70rem; margin: 0 auto 3rem; display: block;">
             <div class="">
                 <h1 style="margin-top: -1rem;">
                     <?= lang('Method not allowed', 'Methode nicht erlaubt') ?>
