@@ -396,6 +396,8 @@ const socialHostRules = {
     facebook: ['facebook.com', 'www.facebook.com', 'fb.com', 'www.fb.com'],
     x: ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'],
     matrix: ['matrix.to', 'www.matrix.to'],
+    slack: ['slack.com'],
+    teams: ['teams.microsoft.com', 'teams.cloud.microsoft'],
     website: [] // personal website: allow any valid URL
 };
 
@@ -403,9 +405,8 @@ function validateSocial(element){
     let msg = '';
     const name = $(element).attr('name') || '';
     const match = name.match(/\[socials\]\[([^\]]+)\]/i);
-    if (!match) return [true, msg];
-
-    const type = match[1].toLowerCase();
+    const type = match ? match[1].toLowerCase() : ($(element).attr('id') === 'contact-link' ? 'other' : null);
+    if (!type) return [true, msg];
     const url = String($(element).val() || '').trim();
 
     if (url === '') {
@@ -431,7 +432,7 @@ function validateSocial(element){
 
     if (socialHostRules[type] && socialHostRules[type].length > 0) {
         const hostname = parsedUrl.hostname;
-        if (!socialHostRules[type].includes(hostname)) {
+        if (!socialHostRules[type].includes(hostname) && !(type === 'slack' && hostname.endsWith('.slack.com'))) {
             msg = lang(`Socials: ${type} - URL must point to ${socialHostRules[type].join(', ')}`, `Soziale Medien: ${type} - URL muss auf ${socialHostRules[type].join(', ')} zeigen`);
             $(element).toggleClass('is-invalid', true);
             return [false, msg];
@@ -442,50 +443,40 @@ function validateSocial(element){
     return [true, msg];
 }
 
-function validateContact(element) {
-    const contactType = $('#contact-button-type').val();
-    const contactValue = $(element).val().trim();
-
-    if (contactValue === '') {
-        $(element).toggleClass('is-invalid', true);
-        $(element).toggleClass('is-valid', false);
-        return [true, ''];
-    }
-    
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (contactType === 'mail' || contactType === 'teams') {
-        if (!emailPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid email address.', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.')];
+// Keep the preference list in sync with the profile fields, including unsaved changes.
+function updateContactMethods() {
+    if (typeof allowedContactMethods === 'undefined') return;
+    const select = $('#contact-button-type');
+    const preferred = select.val();
+    select.empty();
+    Object.keys(contactMethodLabels).forEach(type => {
+        if (![true, 1, '1'].includes(allowedContactMethods[type])) return;
+        const input = type === 'mail' ? $('#mail') : type === 'other' ? $('#contact-link') : $(`#socials input[name="values[socials][${type}]"]`);
+        const value = String(input.val() || '').trim();
+        if (!value) return;
+        if (type === 'mail') {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return;
+        } else {
+            let url;
+            try { url = new URL(value); } catch (e) { return; }
+            if (!['http:', 'https:'].includes(url.protocol)) return;
+            const hosts = socialHostRules[type];
+            if (hosts && !hosts.includes(url.hostname) && !(type === 'slack' && url.hostname.endsWith('.slack.com'))) return;
         }
-    } else if (contactType === 'slack') {
-        const slackPattern = /^[a-zA-Z0-9._-]+$/;
-        if (!slackPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid Slack username.', 'Bitte geben Sie einen gültigen Slack-Benutzernamen ein.')];
-        }
-    } else if (contactType === 'matrix') {
-        const matrixPattern = /^@.+:.+$/;
-        if (!matrixPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid Matrix ID.', 'Bitte geben Sie eine gültige Matrix-ID ein.')];
-        }
-    } else if (contactType === 'other') {
-        const urlPattern = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
-        if (!urlPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('Please enter a valid URL.', 'Bitte geben Sie eine gültige URL ein.')];
-        }
-    }
-
-    $(element).toggleClass('is-invalid', false);
-    $(element).toggleClass('is-valid', true);
-    return [true, ''];
+        select.append($('<option>').val(type).text(contactMethodLabels[type]));
+    });
+    const types = select.find('option').map((_, option) => option.value).get();
+    select.val(types.includes(preferred) ? preferred : types[0]);
+    select.prop('disabled', !types.length);
+    $('#contact-methods-empty').prop('hidden', !!types.length);
 }
+
+$(document).ready(function () {
+    $('input[name="values[contact-button]"]').on('change', function () {
+        $('#contact-button-settings').prop('hidden', !$('#contact-button-true').is(':checked'));
+    });
+    $(document).on('input change', '#mail, #contact-link, #socials input', updateContactMethods);
+});
 
 function cleanEmptySocials() {
     $('#socials input').each(function() {
@@ -522,8 +513,7 @@ const validators = {
     password: validatePassword,
     password2: validatePassword2,
     email: validateEmail,
-    telephone: validateTelephone,
-    contact: validateContact
+    telephone: validateTelephone
 }
 
 

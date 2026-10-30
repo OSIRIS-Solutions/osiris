@@ -45,6 +45,10 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
+
+$contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix', 'other' => lang('Other contact link', 'Weiterer Kontaktlink')];
+$contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
+
 ?>
 
 
@@ -187,7 +191,7 @@ $active = function ($field) use ($data_fields) {
                     <div class="input-group d-inline-flex w-auto m-5">
                         <input type="text" name="values[names][]" value="<?= $n ?>" required class="form-control">
                         <div class="input-group-append">
-                            <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                            <a class="btn text-danger" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">×</a>
                         </div>
                     </div>
                 <?php } ?>
@@ -637,9 +641,9 @@ $active = function ($field) use ($data_fields) {
                                     <?= ucfirst($t) ?>
                                 </span>
                             </div>
-                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= e($url) ?>" placeholder="<?= lang('URL', 'URL') ?>">
                             <div class="input-group-append">
-                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">×</a>
                             </div>
                         </div>
                     </div>
@@ -653,7 +657,7 @@ $active = function ($field) use ($data_fields) {
                     <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
-                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'website'] as $s) {
+                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'slack', 'teams', 'website'] as $s) {
                         if (array_key_exists($s, $socials)) continue;
                         $logo = socialLogo($s);
                     ?>
@@ -681,7 +685,7 @@ $active = function ($field) use ($data_fields) {
                 </div>
                 <input type="text" name="values[socials][${type}]" class="form-control need-validation" data-validator="social" value="" placeholder="URL">
                 <div class="input-group-append">
-                    <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                    <a class="btn text-danger" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">×</a>
                 </div>
             </div>
         `;
@@ -695,16 +699,21 @@ $active = function ($field) use ($data_fields) {
             </script>
         <?php } ?>
 
-        <!-- Contact Button -->
-        <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
-            <h4>
-                <?= lang('Contact Button', 'Kontakt Button') ?>
-            </h4>
-            <?php 
-                $contact_button = $data['contact-button'] ?? false;
-                $contact_button_type = $data['contact-button-type'] ?? 'mail';
-            ?>
-
+        <!-- Contact button -->
+        <?php if ($Settings->featureEnabled('contact-button')) {
+            $contact_button = $data['contact-button'] ?? true;
+            $contactMethods = getProfileContactMethods($data, $contactSettings);
+            $preferredContact = $data['contact-button-type'] ?? 'mail';
+            if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
+        ?>
+            <?php if (filter_var($contactSettings['other'] ?? false, FILTER_VALIDATE_BOOLEAN)) { ?>
+                <div class="form-group">
+                    <label for="contact-link"><?= lang('Other contact link', 'Weiterer Kontaktlink') ?></label>
+                    <input type="url" name="values[contact-link]" id="contact-link" class="form-control need-validation" data-validator="social" value="<?= e($data['contact-link'] ?? '') ?>" placeholder="https://…">
+                    <small class="text-muted"><?= lang('Optional link for contacting you, such as a booking page.', 'Optionaler Link zur Kontaktaufnahme, zum Beispiel eine Terminbuchungsseite.') ?></small>
+                </div>
+            <?php } ?>
+            <h4><?= lang('Contact button', 'Kontakt-Button') ?></h4>
             <div class="form-group">
                 <div>
                     <div class="custom-radio d-inline-block ml-10">
@@ -716,88 +725,21 @@ $active = function ($field) use ($data_fields) {
                         <label for="contact-button-false"><?= lang('disabled', 'deaktiviert') ?></label>
                     </div>
                 </div>
-                <small class="text-muted">
-                    <?= lang('The contact button will be displayed on your OSIRIS profile page. You can choose your preferred contact type to be displayed.', 'Der Kontakt-Button wird auf deiner OSIRIS-Profilseite angezeigt. Du kannst deinen Wunsch-Kontaktweg wählen.') ?>
-                </small>
-                <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
-                    <div class="col-sm">
-                        <label for="contact-button-type"><?= lang('Contact type', 'Kontakt-Typ') ?></label>
-                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
-                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) { 
-                                if (!$enabled) continue; ?>
-                                <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="col-sm">
-                        <label for="contact"><?= lang('Contact', 'Kontakt') ?></label>
-                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact"  value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
-                        <small class="text-muted" id="contact-button-input-help"></small>
-                    </div>
+                <small class="d-block text-muted"><?= lang('The button uses the contact details in your profile that your organisation allows. Other available methods can be selected next to the button.', 'Der Button verwendet die von deiner Organisation erlaubten Kontaktangaben aus deinem Profil. Weitere verfügbare Wege können neben dem Button ausgewählt werden.') ?></small>
+                <div id="contact-button-settings" class="mt-10" <?= $contact_button ? '' : 'hidden' ?>>
+                    <label for="contact-button-type"><?= lang('Preferred contact method', 'Bevorzugter Kontaktweg') ?></label>
+                    <select id="contact-button-type" name="values[contact-button-type]" class="form-control" <?= $contactMethods ? '' : 'disabled' ?>>
+                        <?php foreach ($contactMethods as $type => $url) { ?>
+                            <option value="<?= $type ?>" <?= $preferredContact === $type ? 'selected' : '' ?>><?= e($contactLabels[$type]) ?></option>
+                        <?php } ?>
+                    </select>
+                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= lang('No permitted contact details are available. Add an email address or a contact link to your profile. The button appears once a permitted method is available.', 'Es sind keine freigegebenen Kontaktangaben vorhanden. Ergänze eine E-Mail-Adresse oder einen Kontaktlink im Profil. Der Button erscheint, sobald ein erlaubter Kontaktweg verfügbar ist.') ?></small>
                 </div>
-                <script>
-                    $(document).ready(function() {
-                        function toggleContactButtonSettings() {
-                            if ($('#contact-button-true').is(':checked')) {
-                                $('#contact-button-settings').show();
-                                toggleContact($('#contact-button-type'));
-                            } else {
-                                $('#contact-button-settings').hide();
-                            }
-                        }
-                        toggleContactButtonSettings();
-                        $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
-                    });
-
-                    function toggleContact(select) {
-                        var type = $(select).val();
-                        var contactInput = $('#contact-button-input');
-                        var contactHelp = $('#contact-button-input-help');
-                        if (type === 'mail' || type === 'teams') {
-                            contactInput.attr('placeholder', '<?= lang('Enter email address', 'E-Mail-Adresse eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add an email address. It will be used for the contact button.', 'Bitte hier eine E-Mail-Adresse eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
-                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams' ) && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else if ('<?= $data['mail'] ?? false ?>') {
-                                contactInput.val('<?= $data['mail'] ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'slack') {
-                            contactInput.attr('placeholder', '<?= lang('Enter Slack user id', 'Slack-Nutzer-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Slack user id in the format U12345678. It will be used for the contact button. Keep in mind that the contact link will only work if the person clicking it is part of the same Slack Workspace', 'Bitte hier eine Slack-Nutzer-ID im Format U12345678 eingeben. Sie wird für den Kontakt-Button verwendet. Bitte beachte, dass der Link nur funktionieren wird, wenn die klickende Person Teil des gleichen Slack-Workspaces ist.') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'matrix') {
-                            contactInput.attr('placeholder', '<?= lang('Enter Matrix ID', 'Matrix-ID eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a Matrix ID in the format @username:server. It will be used for the contact button.', 'Bitte hier eine Matrix-ID im Format @username:server eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
-                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
-                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
-                                matrixId = matrix.includes('/#/') ? matrix.split('/#/')[1] : matrix;
-                                contactInput.val(matrixId);
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'other') {
-                            contactInput.attr('placeholder', '<?= lang('Enter contact URL', 'Kontakt-URL eingeben') ?>');
-                            contactHelp.text('<?= lang('Please add a contact URL. It will be used for the contact button.', 'Bitte hier eine Kontakt-URL eingeben. Sie wird für den Kontakt-Button verwendet.') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        }
-                        validateContact(contactInput);
-                    }
-
-                </script>
             </div>
+            <script>
+                const allowedContactMethods = <?= json_encode($contactSettings, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+                const contactMethodLabels = <?= json_encode($contactLabels, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+            </script>
         <?php } ?>
 
     </section>
@@ -1254,7 +1196,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="input-group d-inline-flex w-auto mr-5 mb-10">
                     <input type="text" name="values[expertise][]" value="<?= $n ?>" list="expertise-list" required class="form-control">
                     <div class="input-group-append">
-                        <a class="btn" onclick="$(this).closest('.input-group').remove();">&times;</a>
+                        <a class="btn" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">&times;</a>
                     </div>
                 </div>
             <?php } ?>

@@ -568,6 +568,21 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         }
     }
 
+    $contactProfile = array_merge($old, $person);
+    $validLinks = getProfileContactMethods($contactProfile, array_fill_keys(['mail', 'slack', 'teams', 'matrix', 'other'], true));
+    foreach (['slack', 'teams', 'matrix', 'other'] as $type) {
+        $value = $type === 'other' ? ($person['contact-link'] ?? null) : ($person['socials'][$type] ?? null);
+        if (!empty($value) && !isset($validLinks[$type])) {
+            abortwith(400, lang('Please enter a valid contact URL.', 'Bitte gib einen gültigen Kontaktlink ein.'));
+        }
+    }
+    if (array_key_exists('contact-button', $person)) {
+        $person['contact-button'] = filter_var($person['contact-button'], FILTER_VALIDATE_BOOLEAN);
+        $availableContacts = getProfileContactMethods($contactProfile, DB::doc2Arr($Settings->get('contact-button', [])));
+        $preferredContact = $person['contact-button-type'] ?? $old['contact-button-type'] ?? 'mail';
+        $person['contact-button-type'] = is_string($preferredContact) && isset($availableContacts[$preferredContact]) ? $preferredContact : array_key_first($availableContacts);
+    }
+
     // update name information
     if (isset($values['last']) && isset($values['first'])) {
 
