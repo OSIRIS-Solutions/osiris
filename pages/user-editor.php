@@ -46,7 +46,7 @@ $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
 
-$contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix', 'other' => lang('Other contact link', 'Weiterer Kontaktlink')];
+$contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'];
 $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 ?>
@@ -706,13 +706,6 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             $preferredContact = $data['contact-button-type'] ?? 'mail';
             if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
         ?>
-            <?php if (filter_var($contactSettings['other'] ?? false, FILTER_VALIDATE_BOOLEAN)) { ?>
-                <div class="form-group">
-                    <label for="contact-link"><?= lang('Other contact link', 'Weiterer Kontaktlink') ?></label>
-                    <input type="url" name="values[contact-link]" id="contact-link" class="form-control need-validation" data-validator="social" value="<?= e($data['contact-link'] ?? '') ?>" placeholder="https://…">
-                    <small class="text-muted"><?= lang('Optional link for contacting you, such as a booking page.', 'Optionaler Link zur Kontaktaufnahme, zum Beispiel eine Terminbuchungsseite.') ?></small>
-                </div>
-            <?php } ?>
             <h4><?= lang('Contact button', 'Kontakt-Button') ?></h4>
             <div class="form-group">
                 <div>
@@ -733,7 +726,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                             <option value="<?= $type ?>" <?= $preferredContact === $type ? 'selected' : '' ?>><?= e($contactLabels[$type]) ?></option>
                         <?php } ?>
                     </select>
-                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= lang('No permitted contact details are available. Add an email address or a contact link to your profile. The button appears once a permitted method is available.', 'Es sind keine freigegebenen Kontaktangaben vorhanden. Ergänze eine E-Mail-Adresse oder einen Kontaktlink im Profil. Der Button erscheint, sobald ein erlaubter Kontaktweg verfügbar ist.') ?></small>
+                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= lang('No permitted contact details are available. Add an email address or a Slack, Teams or Matrix link to your profile. The button appears once a permitted method is available.', 'Es sind keine freigegebenen Kontaktangaben vorhanden. Ergänze eine E-Mail-Adresse oder einen Slack-, Teams- oder Matrix-Link im Profil. Der Button erscheint, sobald ein erlaubter Kontaktweg verfügbar ist.') ?></small>
                 </div>
             </div>
             <script>

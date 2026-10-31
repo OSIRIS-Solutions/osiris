@@ -405,8 +405,8 @@ function validateSocial(element){
     let msg = '';
     const name = $(element).attr('name') || '';
     const match = name.match(/\[socials\]\[([^\]]+)\]/i);
-    const type = match ? match[1].toLowerCase() : ($(element).attr('id') === 'contact-link' ? 'other' : null);
-    if (!type) return [true, msg];
+    if (!match) return [true, msg];
+    const type = match[1].toLowerCase();
     const url = String($(element).val() || '').trim();
 
     if (url === '') {
@@ -451,7 +451,7 @@ function updateContactMethods() {
     select.empty();
     Object.keys(contactMethodLabels).forEach(type => {
         if (![true, 1, '1'].includes(allowedContactMethods[type])) return;
-        const input = type === 'mail' ? $('#mail') : type === 'other' ? $('#contact-link') : $(`#socials input[name="values[socials][${type}]"]`);
+        const input = type === 'mail' ? $('#mail') : $(`#socials input[name="values[socials][${type}]"]`);
         const value = String(input.val() || '').trim();
         if (!value) return;
         if (type === 'mail') {
@@ -475,7 +475,7 @@ $(document).ready(function () {
     $('input[name="values[contact-button]"]').on('change', function () {
         $('#contact-button-settings').prop('hidden', !$('#contact-button-true').is(':checked'));
     });
-    $(document).on('input change', '#mail, #contact-link, #socials input', updateContactMethods);
+    $(document).on('input change', '#mail, #socials input', updateContactMethods);
 });
 
 function cleanEmptySocials() {

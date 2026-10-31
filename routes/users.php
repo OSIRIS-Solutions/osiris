@@ -569,9 +569,9 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     $contactProfile = array_merge($old, $person);
-    $validLinks = getProfileContactMethods($contactProfile, array_fill_keys(['mail', 'slack', 'teams', 'matrix', 'other'], true));
-    foreach (['slack', 'teams', 'matrix', 'other'] as $type) {
-        $value = $type === 'other' ? ($person['contact-link'] ?? null) : ($person['socials'][$type] ?? null);
+    $validLinks = getProfileContactMethods($contactProfile, array_fill_keys(['mail', 'slack', 'teams', 'matrix'], true));
+    foreach (['slack', 'teams', 'matrix'] as $type) {
+        $value = $person['socials'][$type] ?? null;
         if (!empty($value) && !isset($validLinks[$type])) {
             abortwith(400, lang('Please enter a valid contact URL.', 'Bitte gib einen gültigen Kontaktlink ein.'));
         }

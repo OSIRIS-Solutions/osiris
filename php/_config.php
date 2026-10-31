@@ -958,8 +958,7 @@ function getProfileContactMethods($person, $allowed): array
         'mail' => $person['mail'] ?? '',
         'slack' => $socials['slack'] ?? '',
         'teams' => $socials['teams'] ?? '',
-        'matrix' => $socials['matrix'] ?? '',
-        'other' => $person['contact-link'] ?? ''
+        'matrix' => $socials['matrix'] ?? ''
     ];
     $hosts = [
         'slack' => ['slack.com'],

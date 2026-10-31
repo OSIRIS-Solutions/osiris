@@ -509,7 +509,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($contactMethods) {
             $preferredContact = $scientist['contact-button-type'] ?? 'mail';
             if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
-            $contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix', 'other' => lang('Other contact link', 'Weiterer Kontaktlink')];
+            $contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'];
         ?>
             <div class="dropdown with-arrow btn-group btn-group-lg d-inline-flex">
                 <a class="btn secondary outline d-flex align-items-center gap-5" href="<?= e($contactMethods[$preferredContact]) ?>" target="_blank" rel="noopener noreferrer" data-toggle="tooltip" data-title="<?= e(lang('Contact via ', 'Kontakt per ') . $contactLabels[$preferredContact]) ?>">

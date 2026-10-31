@@ -7,7 +7,7 @@ function checkContact($condition, $message) {
     if (!$condition) throw new RuntimeException($message);
 }
 
-$all = array_fill_keys(['mail', 'slack', 'teams', 'matrix', 'other'], true);
+$all = array_fill_keys(['mail', 'slack', 'teams', 'matrix'], true);
 $person = [
     'mail' => 'person@example.org',
     'socials' => [
@@ -15,8 +15,7 @@ $person = [
         'slack' => 'https://example.slack.com/team/U12345678',
         'teams' => 'https://teams.microsoft.com/l/chat/0/0?users=person%40example.org',
         'github' => 'https://github.com/person'
-    ],
-    'contact-link' => 'https://example.org/book?person=1&duration=30'
+    ]
 ];
 $methods = getProfileContactMethods($person, $all);
 checkContact(array_keys($methods) === array_keys($all), 'Use a stable fallback order with email first.');
