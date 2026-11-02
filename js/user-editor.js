@@ -384,63 +384,62 @@ function validateORCID(element) {
     }
 }
 
-// allowed social media domains
-const socialHostRules = {
-    github: ['github.com', 'www.github.com'],
-    linkedin: ['linkedin.com', 'www.linkedin.com', 'de.linkedin.com'],
-    researchgate: ['researchgate.net', 'www.researchgate.net'],
-    youtube: ['youtube.com', 'www.youtube.com', 'youtu.be'],
-    mastodon: [], // hard to pin to one domain; allow any valid URL
-    bluesky: ['bsky.app', 'www.bsky.app'],
-    instagram: ['instagram.com', 'www.instagram.com'],
-    facebook: ['facebook.com', 'www.facebook.com', 'fb.com', 'www.fb.com'],
-    x: ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'],
-    matrix: ['matrix.to', 'www.matrix.to'],
-    slack: ['slack.com'],
-    teams: ['teams.microsoft.com', 'teams.cloud.microsoft'],
-    website: [] // personal website: allow any valid URL
-};
+async function loadSocialMediaConfig() {
+    try {
+        const response = await fetch('/data/social-media');
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        const socialMediaConfig = await response.json();
+        return socialMediaConfig;
 
-function validateSocial(element){
+    } catch (error) {
+        console.error('Could not load social media configuration:', error);
+        return null;
+    }
+}
+
+let socialMedia = null;
+async function initSocialMedia() {
+    socialMedia = await loadSocialMediaConfig();
+}
+
+function validateSocial(element) {
     let msg = '';
     const name = $(element).attr('name') || '';
     const match = name.match(/\[socials\]\[([^\]]+)\]/i);
     if (!match) return [true, msg];
-    const type = match[1].toLowerCase();
-    const url = String($(element).val() || '').trim();
 
-    if (url === '') {
+    const socialType = match[1].toLowerCase();
+    const socialValue = String($(element).val() || '').trim();
+
+    if (socialValue === '') {
         $(element).toggleClass('is-invalid', false);
         return [true, msg];
     }
 
-    
-    let parsedUrl;
-    try {
-        parsedUrl = new URL(url);
-    } catch (e) {
-        msg = lang(`Socials: ${type} - please enter a valid URL.`, `Soziale Medien: ${type} - bitte geben Sie eine gültige URL ein.`);
-        $(element).toggleClass('is-invalid', true);
-        return [false, msg];
+    const social = socialMedia[socialType];
+    if (!social) {
+        return [true, msg];
     }
 
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-        msg = lang(`Socials: ${type} - URL must start with http:// or https://`, `Soziale Medien: ${type} - URL muss mit http:// oder https:// beginnen`);
-        $(element).toggleClass('is-invalid', true);
-        return [false, msg];
+    const pattern = social.validator;
+
+    if (!pattern) {
+        $(element).toggleClass('is-invalid', false);
+        return [true, msg];
     }
 
-    if (socialHostRules[type] && socialHostRules[type].length > 0) {
-        const hostname = parsedUrl.hostname;
-        if (!socialHostRules[type].includes(hostname) && !(type === 'slack' && hostname.endsWith('.slack.com'))) {
-            msg = lang(`Socials: ${type} - URL must point to ${socialHostRules[type].join(', ')}`, `Soziale Medien: ${type} - URL muss auf ${socialHostRules[type].join(', ')} zeigen`);
-            $(element).toggleClass('is-invalid', true);
-            return [false, msg];
-        };
+    const regex = new RegExp(pattern);
+    if (regex.test(socialValue)) {
+        $(element).toggleClass('is-invalid', false);
+        return [true, msg];
     }
 
-    $(element).toggleClass('is-invalid', false);
-    return [true, msg];
+    // Invalid value
+    msg = 'Invalid ' + socialType + ' value';
+    $(element).toggleClass('is-invalid', true);
+    return [false, msg];
 }
 
 // Keep the preference list in sync with the profile fields, including unsaved changes.
@@ -522,6 +521,10 @@ function validateUserForm(event) {
     let firstInvalidElement = null;
     
     $('.need-validation').each(function() {
+        // Ignore elements with 'disabled' attribute
+        if ($(this).is(':disabled')) {
+            return;
+        }
         const validatorName = $(this).data('validator');
         const validator = validators[validatorName];
         if (validator) {

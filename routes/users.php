@@ -679,6 +679,28 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         $person['orcid_validated'] = false;
     }
 
+    // social media validation
+    $socialMedia = json_decode(file_get_contents(BASEPATH . "/data/social-media.json"), true);
+    if (isset($values['socials']) && is_array($values['socials'])) {
+        foreach ($values['socials'] as $type => $value) {
+            if (isset($socialMedia[$type])) {
+                $pattern = $socialMedia[$type]['validator'] ?? null;
+                $profileUrl = $socialMedia[$type]['profileUrl'] ?? '';
+                if ($pattern) {
+                    $regex = '~' . $pattern . '~i';
+                    if (preg_match($regex, trim($value), $matches) === 1) {
+                        $username = $matches['username'] ?? null;
+                        if ($username) {
+                            $person['socials'][$type] = $profileUrl . $username;
+                            continue; // skip setting to null if a valid username was found
+                        }
+                    }
+                }
+            }
+            $person['socials'][$type] = null; // set to null if no valid username was found
+        }
+    }
+
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],
         ['$set' => $person]
@@ -1130,7 +1152,8 @@ Route::post('/crud/queries', function () {
         'aggregate_value' => $_POST['aggregate_value'] ?? null,
         'columns' => $_POST['columns'] ?? null,
         'type' => $_POST['type'] ?? 'activity',
-        'expert' => (($_POST['expert'] ?? 'false') == 'true')
+        'expert' => (($_POST['expert'] ?? 'false') == 'true'),
+        'collection' => $_POST['collection'] ?? null,
     ]);
     return $updateResult->getInsertedId();
 });

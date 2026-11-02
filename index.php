@@ -200,6 +200,7 @@ if (
     // include_once BASEPATH . "/routes/adminRoles.php";
 
     include_once BASEPATH . "/addons/ida/index.php";
+    include_once BASEPATH . "/routes/aggregate.php";
 }
 include_once BASEPATH . "/routes/migrate.php";
 

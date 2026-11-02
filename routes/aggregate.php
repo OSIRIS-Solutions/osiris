@@ -17,6 +17,9 @@
 
 Route::get('/aggregate', function () {
     include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('aggregate.see')) {
+        abortwith(403, lang('You do not have permission to access the area.', 'Du hast keine Berechtigung, auf den Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+    }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/aggregate.php";
     include BASEPATH . "/footer.php";
