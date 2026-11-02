@@ -443,64 +443,6 @@ function validateSocial(element) {
 }
 
 
-// function validateSocial_old(element){
-//     let msg = '';
-//     const name = $(element).attr('name') || '';
-//     const match = name.match(/\[socials\]\[([^\]]+)\]/i);
-//     if (!match) return [true, msg];
-
-//     const type = match[1].toLowerCase();
-//     const url = String($(element).val() || '').trim();
-
-//     if (url === '') {
-//         $(element).toggleClass('is-invalid', false);
-//         return [true, msg];
-//     }
-
-//     if (type === 'matrix') {
-//         // if input does not match the regex
-//         const regex = /^@[a-zA-Z0-9]+:[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-//         const isValid = (username) => regex.test(username);
-//         if (!isValid(url)) {
-//             msg = lang(`Socials: ${type} - URL must match @username:matrix.to`, `Soziale Medien: ${type} - URL muss dem Format @username:server.xx entsprechen`);
-//             $(element).toggleClass('is-invalid', true);
-//             return [false, msg];
-//         }
-//         else {
-//             $(element).toggleClass('is-invalid', false);
-//             return [true, msg];
-//         }
-//     }
-
-
-//     let parsedUrl;
-//     try {
-//         parsedUrl = new URL(url);
-//     } catch (e) {
-//         msg = lang(`Socials: ${type} - please enter a valid URL.`, `Soziale Medien: ${type} - bitte geben Sie eine gültige URL ein.`);
-//         $(element).toggleClass('is-invalid', true);
-//         return [false, msg];
-//     }
-
-//     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-//         msg = lang(`Socials: ${type} - URL must start with http:// or https://`, `Soziale Medien: ${type} - URL muss mit http:// oder https:// beginnen`);
-//         $(element).toggleClass('is-invalid', true);
-//         return [false, msg];
-//     }
-
-//     if (socialHostRules[type] && socialHostRules[type].length > 0) {
-//         const hostname = parsedUrl.hostname;
-//         if (!socialHostRules[type].includes(hostname)) {
-//             msg = lang(`Socials: ${type} - URL must point to ${socialHostRules[type].join(', ')}`, `Soziale Medien: ${type} - URL muss auf ${socialHostRules[type].join(', ')} zeigen`);
-//             $(element).toggleClass('is-invalid', true);
-//             return [false, msg];
-//         };
-//     }
-
-//     $(element).toggleClass('is-invalid', false);
-//     return [true, msg];
-// }
-
 function cleanEmptySocials() {
     $('#socials input').each(function() {
         const url = String($(this).val() || '').trim();

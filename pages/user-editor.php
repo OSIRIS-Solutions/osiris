@@ -674,8 +674,6 @@ $active = function ($field) use ($data_fields) {
 
                 function addSocial(e, type, logo) {
                     e.preventDefault();
-                    // var i = $(btn).closest('form').find('select[name^="values[socials]"]').last().attr('name').match(/\[(\d+)\]/)[1];
-                    // get last index
                     var html = `
                     <div class="form-group">
                         <div class="input-group">
