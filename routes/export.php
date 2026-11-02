@@ -191,6 +191,19 @@ Route::post('/download', function () {
     $categories = $Categories->categories;
     $order = array_column($categories, 'id');
 
+    // topics translation table
+    $topics = $osiris->topics->find([], [
+        'projection' => [
+            'id' => 1,
+            'name' => 1,
+            '_id' => 0
+        ]
+    ]);
+    $topics_translation = [];
+    foreach ($topics as $topic) {
+        $topics_translation[$topic['id']] = $topic['name'];
+    }
+
     // select data
     $collection = $osiris->activities;
     $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
@@ -552,6 +565,16 @@ Route::post('/download', function () {
                 echo '  Keywords = {';
                 foreach ($doc['keywords'] as $keyword) echo $keyword . PHP_EOL;
                 echo '},' . PHP_EOL;
+            }
+            if (isset($doc['topics']) and ($doc['topics'] != '')){
+                echo '  ResearchTopics = {' . PHP_EOL;
+                foreach ($doc['topics'] as $top) echo '  ' . $topics_translation[$top] . PHP_EOL;
+                echo '  },'. PHP_EOL;
+            }
+            if (isset($doc['units']) and ($doc['units'] != '')){
+                echo '  Department = {' . PHP_EOL;
+                foreach ($doc['units'] as $unit) echo '  ' . $unit . PHP_EOL;
+                echo '  },' . PHP_EOL;
             }
 
             echo '}' . PHP_EOL . PHP_EOL;
