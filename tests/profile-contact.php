@@ -2,6 +2,8 @@
 
 // Run with: php tests/profile-contact.php (no database required).
 require __DIR__ . '/../php/_config.php';
+// Needs Basepath
+define('BASEPATH', __DIR__ . '/../');
 
 function checkContact($condition, $message) {
     if (!$condition) throw new RuntimeException($message);
@@ -13,11 +15,15 @@ $person = [
     'socials' => [
         'matrix' => 'https://matrix.to/#/@person:example.org',
         'slack' => 'https://example.slack.com/team/U12345678',
-        'teams' => 'https://teams.microsoft.com/l/chat/0/0?users=person%40example.org',
+        'teams' => 'https://teams.microsoft.com/l/chat/0/0?users=person@example.org',
         'github' => 'https://github.com/person'
     ]
 ];
 $methods = getProfileContactMethods($person, $all);
+checkContact(isset($methods['mail']), 'Email should be present in the contact methods.');
+checkContact(isset($methods['slack']), 'Slack should be present in the contact methods.');
+checkContact(isset($methods['teams']), 'Teams should be present in the contact methods.');
+checkContact(isset($methods['matrix']), 'Matrix should be present in the contact methods.');
 checkContact(array_keys($methods) === array_keys($all), 'Use a stable fallback order with email first.');
 checkContact($methods['mail'] === 'mailto:person@example.org', 'Use the profile email.');
 checkContact($methods['matrix'] === $person['socials']['matrix'], 'Keep existing Matrix URLs intact.');
@@ -30,7 +36,7 @@ foreach (['javascript:alert(1)', 'data:text/html,test', 'https://matrix.to.evil.
     checkContact(getProfileContactMethods(['socials' => ['matrix' => $url]], $all) === [], 'Reject unsafe schemes and incorrect service hosts.');
 }
 checkContact(getProfileContactMethods(['mail' => 'invalid', 'socials' => ['slack' => 'https://evilslack.com/user']], $all) === [], 'Reject invalid emails and misleading Slack hostnames.');
-checkContact(getProfileContactMethods(['socials' => ['teams' => 'https://teams.cloud.microsoft/l/chat/0/0?users=person%40example.org']], $all) !== [], 'Accept Teams links on the alternate host.');
+checkContact(getProfileContactMethods(['socials' => ['teams' => 'https://teams.cloud.microsoft/l/chat/0/0?users=person@example.org']], $all) !== [], 'Accept Teams links on the alternate host.');
 checkContact(getProfileContactMethods(['socials' => ['matrix' => [], 'slack' => null]], $all) === [], 'Ignore malformed or empty contact values.');
 
 $removed = $person;

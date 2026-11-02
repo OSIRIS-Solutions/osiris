@@ -456,11 +456,12 @@ function updateContactMethods() {
         if (type === 'mail') {
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return;
         } else {
-            let url;
-            try { url = new URL(value); } catch (e) { return; }
-            if (!['http:', 'https:'].includes(url.protocol)) return;
-            const hosts = socialHostRules[type];
-            if (hosts && !hosts.includes(url.hostname) && !(type === 'slack' && url.hostname.endsWith('.slack.com'))) return;
+            const social = socialMedia[type];
+            if (!social) return;
+            const pattern = social.validator;
+            if (!pattern) return;
+            const regex = new RegExp(pattern);
+            if (!regex.test(value)) return;
         }
         select.append($('<option>').val(type).text(contactMethodLabels[type]));
     });

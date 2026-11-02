@@ -7,17 +7,17 @@
     "linkedin": {
         "validator": "^(((https?://)?(www\\.)?)?linkedin.com/in/)?(?<username>[a-zA-Z0-9-]+)$",
         "placeholder": "LinkedIn profile URL",
-        "profileUrl": "https://www.linkedin.com/in/"
+        "profileUrl": "https://linkedin.com/in/"
     },
     "researchgate": {
         "validator": "^(((https?://)?(www\\.)?)?researchgate.net/profile/)?(?<username>[a-zA-Z0-9-]+)$",
-        "placeholder": "https://www.researchgate.net/profile/username",
-        "profileUrl": "https://www.researchgate.net/profile/"
+        "placeholder": "https://researchgate.net/profile/username",
+        "profileUrl": "https://researchgate.net/profile/"
     },
     "youtube": {
         "validator": "^(((https?://)?(www\\.)?)?(youtube.com/|youtu.be/))?@?(?<username>[a-zA-Z0-9_.-]+)$",
         "placeholder": "@username",
-        "profileUrl": "https://www.youtube.com/@"
+        "profileUrl": "https://youtube.com/@"
     },
     "mastodon": {
         "domain": [],
@@ -33,12 +33,12 @@
     "instagram": {
         "validator": "^(((https?://)?(www\\.)?)?instagram\\.com/)?@?(?<username>[a-zA-Z0-9_.]+)$",
         "placeholder": "@username",
-        "profileUrl": "https://www.instagram.com/"
+        "profileUrl": "https://instagram.com/"
     },
     "facebook": {
         "validator": "^(((https?://)?(www\\.)?)?facebook\\.com/)?@?(?<username>[a-zA-Z0-9.]+)$",
         "placeholder": "username",
-        "profileUrl": "https://www.facebook.com/"
+        "profileUrl": "https://facebook.com/"
     },
     "x": {
         "validator": "^(((https?://)?(www\\.)?)?(x\\.com|twitter\\.com)/)?(?<username>[a-zA-Z0-9_]+)$",
@@ -63,11 +63,21 @@
     "reddit": {
         "validator": "^(((https?://)?(www\\.)?)?(reddit\\.com)/user/)?(?<username>[a-zA-Z0-9_-]+)$",
         "placeholder": "Username or URL to profile",
-        "profileUrl": "https://www.reddit.com/user/"
+        "profileUrl": "https://reddit.com/user/"
     },
     "tiktok": {
         "validator": "^(((https?://)?(www\\.)?)?(tiktok\\.com)/@)?(?<username>[a-zA-Z0-9._]+)$",
         "placeholder": "Username or URL to profile",
-        "profileUrl": "https://www.tiktok.com/@"
+        "profileUrl": "https://tiktok.com/@"
+    },
+    "slack": {
+        "validator": "^((https?://)?(www\\.)?)?(?<username>[a-zA-Z0-9._-]+\\.slack\\.com/team/@?[a-zA-Z0-9._-]+)$",
+        "placeholder": "organization.slack.com/team/@username",
+        "profileUrl": "https://"
+    },
+    "teams": {
+        "validator": "^(((https?://)?(www\\.)?)?(teams\\.(cloud\\.)?microsoft(\\.com)?)/l/chat/0/0\\?users=)?@?(?<username>[a-zA-Z0-9._@-]+)$",
+        "placeholder": "User mail",
+        "profileUrl": "https://teams.microsoft.com/l/chat/0/0?users="
     }
 }

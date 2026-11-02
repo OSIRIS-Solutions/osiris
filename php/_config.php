@@ -973,11 +973,20 @@ function getProfileContactMethods($person, $allowed): array
             if (filter_var($value, FILTER_VALIDATE_EMAIL)) $methods[$type] = 'mailto:' . $value;
             continue;
         }
-        if (!filter_var($value, FILTER_VALIDATE_URL) || !in_array(strtolower(parse_url($value, PHP_URL_SCHEME) ?? ''), ['http', 'https'])) continue;
-        $host = strtolower(parse_url($value, PHP_URL_HOST) ?? '');
-        if (isset($hosts[$type]) && !in_array($host, $hosts[$type], true)
-            && !($type === 'slack' && str_ends_with($host, '.slack.com'))) continue;
-        $methods[$type] = $value;
+        // if (!filter_var($value, FILTER_VALIDATE_URL) || !in_array(strtolower(parse_url($value, PHP_URL_SCHEME) ?? ''), ['http', 'https'])) continue;
+        // $host = strtolower(parse_url($value, PHP_URL_HOST) ?? '');
+        // if (isset($hosts[$type]) && !in_array($host, $hosts[$type], true)
+        //     && !($type === 'slack' && str_ends_with($host, '.slack.com'))) continue;
+        $socialMedia = json_decode(file_get_contents(BASEPATH . "/data/social-media.json"), true);
+        if (isset($socialMedia[$type])) {
+            $pattern = $socialMedia[$type]['validator'] ?? null;
+            if ($pattern) {
+                $regex = '~' . $pattern . '~i';
+                if (preg_match($regex, $value)) {
+                    $methods[$type] = $value;
+                }
+            }
+        }
     }
     return $methods;
 }
