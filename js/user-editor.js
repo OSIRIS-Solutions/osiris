@@ -545,6 +545,10 @@ function validateUserForm(event) {
     let firstInvalidElement = null;
     
     $('.need-validation').each(function() {
+        // Ignore elements with 'disabled' attribute
+        if ($(this).is(':disabled')) {
+            return;
+        }
         const validatorName = $(this).data('validator');
         const validator = validators[validatorName];
         if (validator) {
