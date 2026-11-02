@@ -47,7 +47,6 @@ $active = function ($field) use ($data_fields) {
 };
 ?>
 
-
 <script>
     const selectedOrgIds = JSON.parse('<?= json_encode($depts) ?>');
 </script>
@@ -625,6 +624,10 @@ $active = function ($field) use ($data_fields) {
             <div id="socials">
                 <input type="hidden" name="values[socials]" value="">
                 <?php
+                $socialData = json_decode(
+                    file_get_contents( BASEPATH . '/data/social-media.json'),
+                    true
+                );
                 $socials = DB::doc2Arr($data['socials'] ?? []);
                 foreach ($socials as $t => $url) {
                     $logo = socialLogo($t);
@@ -637,7 +640,7 @@ $active = function ($field) use ($data_fields) {
                                     <?= ucfirst($t) ?>
                                 </span>
                             </div>
-                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('URL', 'URL') ?>">
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= $socialData[$t]['placeholder'] ?? '' ?>">
                             <div class="input-group-append">
                                 <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
                             </div>
@@ -653,7 +656,8 @@ $active = function ($field) use ($data_fields) {
                     <?= lang('Add new social', 'Füge soziale Medien hinzu') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
-                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'website'] as $s) {
+                    <?php 
+                    foreach (array_keys($socialData) as $s) {
                         if (array_key_exists($s, $socials)) continue;
                         $logo = socialLogo($s);
                     ?>
@@ -666,25 +670,27 @@ $active = function ($field) use ($data_fields) {
             </div>
 
             <script>
+                initSocialMedia();
+
                 function addSocial(e, type, logo) {
                     e.preventDefault();
                     // var i = $(btn).closest('form').find('select[name^="values[socials]"]').last().attr('name').match(/\[(\d+)\]/)[1];
                     // get last index
                     var html = `
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="ph ${logo} mr-5 text-primary"></i>
-                        ${type.toUpperCase()}
-                    </span>
-                </div>
-                <input type="text" name="values[socials][${type}]" class="form-control need-validation" data-validator="social" value="" placeholder="URL">
-                <div class="input-group-append">
-                    <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
-                </div>
-            </div>
-        `;
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="ph ${logo} mr-5 text-primary"></i>
+                                    ${type.toUpperCase()}
+                                </span>
+                            </div>
+                            <input type="text" name="values[socials][${type}]" class="form-control need-validation" data-validator="social" value="" placeholder="${socialMedia[type]['placeholder']}">
+                            <div class="input-group-append">
+                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                            </div>
+                        </div>
+                    `;
                     $('#socials').append(html);
                 }
 
