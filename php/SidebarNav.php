@@ -279,6 +279,18 @@ class SidebarNav
                         'permission' => null,
                         'favoritable' => false,
                         'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'aggregate',
+                        'label' => lang('Aggregate', 'Aggregieren'),
+                        'icon' => 'chart-bar',
+                        'url' => '/aggregate',
+                        'active' => ['^/aggregate($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => 'aggregate.see',
+                        'favoritable' => true,
+                        'hasSearch' => false
                     ]
                 ]
             ],

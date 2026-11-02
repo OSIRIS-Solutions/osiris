@@ -1127,7 +1127,8 @@ Route::post('/crud/queries', function () {
         'aggregate_value' => $_POST['aggregate_value'] ?? null,
         'columns' => $_POST['columns'] ?? null,
         'type' => $_POST['type'] ?? 'activity',
-        'expert' => (($_POST['expert'] ?? 'false') == 'true')
+        'expert' => (($_POST['expert'] ?? 'false') == 'true'),
+        'collection' => $_POST['collection'] ?? null,
     ]);
     return $updateResult->getInsertedId();
 });
