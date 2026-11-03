@@ -11,6 +11,11 @@ if (!defined('ADMIN'))
 if (!defined('USER_MANAGEMENT'))
     define('USER_MANAGEMENT', 'AUTH');
 
+if (!defined('BASE_URL')) {
+    $https =  isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off';
+    define('BASE_URL', ($https ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . ROOTPATH);
+}
+
 // check if USER_MANAGEMENT is valid:
 $valid_user_management = ['AUTH', 'LDAP', 'OAUTH'];
 if (!in_array(strtoupper(USER_MANAGEMENT), $valid_user_management)) {

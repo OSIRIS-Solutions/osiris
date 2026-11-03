@@ -1,5 +1,27 @@
 
 
+<time datetime="2026-10-27">27.10.2026</time>
+<a class="anchor" href="#version-2.1.3" id="version-2.1.3"></a>
+
+## Version 2.1.3
+
+### Hinzugefügt oder Verändert:
+- Das Admin Dashboard wurde um die Sektion *Informationen* erweitert. Dort können nun übersichtlich Informationen zur Version und Konfiguration von **OSIRIS** und **PHP** angezeigt werden.
+- Das Admin Dashboard wurde um die Sektion *Datenbank* erweitert. Hier kann direkt per Klick das Re-Rendern der Datenbank ausgeführt werden.
+- Das ORCID-Feature wurde ein wenig erweitert. Es ist nun möglich einzelne Aktivitäten mit *Überspringen* vorerst abzulehnen. Diese werden daraufhin aus der Importliste entfernt. Mit *Übersprungene Werke anzeigen* können diese jederzeit wieder angezeigt und importiert werden. [#625](https://github.com/OSIRIS-Solutions/osiris/issues/625)
+- Wir haben auf der Startseite die Eventübersicht angepasst. Es werden nun Events nur noch 2 Monate im Voraus gezeigt und die Sortierung ist geändert. [#629](https://github.com/OSIRIS-Solutions/osiris/issues/629)
+- In der Admin Einstellung des ORCID Features wird ab sofort das Client Secret nach dem Speichern nicht mehr im Klartext angezeigt.
+- Es gibt nun in *CONFIG.php* die Möglichkeit eine Basis URL für die OSIRIS Instanz zu setzen. Die Variable heißt `BASE_URL` und soll aus Protokoll und Hostnamen bestehen, z.B. `https://osiris-demo.de/`. Damit wird die dynamische Bestimmung des Protokolls und Hostnamens überschrieben. Falls diese Variable nicht konfiguriert wird, bleibt die bisher genutzte dynamische Bestimmung bestehen. Diese neue Variable löst das Probleme aus Issue [#628](https://github.com/OSIRIS-Solutions/osiris/issues/628).
+- Die Sicherheit von Dokumenten wurde verbessert, sodass sich hochgeladene Dateien nicht mehr direkt über die URL abrufen lassen, wenn man keine Berechtigung dazu hat.
+
+### Sonstige Bugfixes:
+- Fix Bug [#600](https://github.com/OSIRIS-Solutions/osiris/issues/600) - Antragsteller eines Projekts konnten das Projekt nach dem erstellen nicht bearbeiten 
+- Fix Bug [#606](https://github.com/OSIRIS-Solutions/osiris/issues/606) - Ein Modal im Formular-Builder war nicht korrekt schließbar.
+- Fix Bug [#602](https://github.com/OSIRIS-Solutions/osiris/issues/602) - In der klassischen Ansicht einer Aktivität konnten Dateien nicht hochgeladen werden.
+- Fix Bug [#627](https://github.com/OSIRIS-Solutions/osiris/issues/627) - Fehlendes Protokoll im Recovery-Link
+
+
+
 <time datetime="2026-10-02">02.10.2026</time>
 <a class="anchor" href="#version-2.1.2" id="version-2.1.2"></a>
 

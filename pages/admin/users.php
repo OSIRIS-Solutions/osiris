@@ -217,8 +217,8 @@ $um = strtoupper(USER_MANAGEMENT);
                 <br>
                 <!-- or share the link -->
                 <?= lang('or share the link', 'oder teile den Link') ?>
-                <code id="auth-token" class="code"><?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $_SERVER['HTTP_HOST'] ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
+                <code id="auth-token" class="code"><?= BASE_URL ?>/auth/new-user?token=<?= $token ?></code>
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= BASE_URL ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('Copy to clipboard', 'In die Zwischenablage kopieren') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
             </div>

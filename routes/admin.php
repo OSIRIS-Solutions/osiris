@@ -660,6 +660,13 @@ Route::post('/crud/admin/general', function () {
                     $value['image-map'] = $imageMap;
                 }
             }
+            if ($key === 'orcid' && is_array($value) && array_key_exists('client_secret', $value) && str_starts_with($value['client_secret'], '****')){
+                $current = $osiris->adminGeneral->findOne(['key' => 'orcid']);
+                $currentValue = DB::doc2Arr($current['value'] ?? []);
+                if (isset($currentValue['client_secret']) && !empty($currentValue['client_secret'])) {
+                    $value['client_secret'] = $currentValue['client_secret'];
+                }
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,

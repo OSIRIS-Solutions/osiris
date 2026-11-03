@@ -216,229 +216,269 @@ Route::post('/crud/reports/update-order', function () {
 
 
 Route::post('/reports', function () {
-    // hide deprecated because PHPWord has a lot of them
-    error_reporting(E_ERROR);
-    // hide errors! otherwise they will break the word document
-    if ($_POST['format'] == 'word') {
-        error_reporting(E_ERROR);
-        // ini_set('display_errors', 0);
-    }
-    require_once BASEPATH . '/php/init.php';
-    if (!isset($_POST['id'])) {
-        abortwith(500, lang('No report ID provided.', 'Keine Bericht-ID angegeben.'), "/reports");
-    }
-    $id = $_POST['id'];
-    $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
-    if (empty($report)) {
-        abortwith(404, lang('Report not found.', 'Bericht nicht gefunden.'), "/reports", lang('Go back to reports', 'Zurück zu den Berichten'));
-    }
+    // Keep warnings and incidental output out of both export formats.
+    $bufferLevel = ob_get_level();
+    $previousDisplayErrors = ini_set('display_errors', '0');
+    $temporaryFile = null;
+    ob_start();
+    try {
+        require_once BASEPATH . '/php/init.php';
+        if (!isset($_POST['id'])) {
+            abortwith(500, lang('No report ID provided.', 'Keine Bericht-ID angegeben.'), "/reports");
+        }
+        $id = $_POST['id'];
+        $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
+        if (empty($report)) {
+            abortwith(404, lang('Report not found.', 'Bericht nicht gefunden.'), "/reports", lang('Go back to reports', 'Zurück zu den Berichten'));
+        }
 
-    // Creating the new document...
-    \PhpOffice\PhpWord\Settings::setZipClass(\PhpOffice\PhpWord\Settings::PCLZIP);
-    \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+        require_once BASEPATH . '/php/ReportExport.php';
+        $export = new ReportExport();
 
-
-    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-    $phpWord->getSettings()->setUpdateFields(true);
-
-    // Apply export design styles
-    include_once BASEPATH . "/php/ReportTemplate.php";
-    $ReportTemplate = new ReportTemplate();
-    $exportStyle = $ReportTemplate->getStyle();
-    $ReportTemplate->applyReportStyle($phpWord);
-
-    // Adding an empty Section to the document...
-    $section = $ReportTemplate->addReportSection($phpWord);
-
-    $ReportTemplate->addReportFooter($section);
-
-    $styleCell = ['valign' => 'center'];
-    $styleText = [];
-    $styleTextBold = ['bold' => true];
-    $styleParagraph =  ['spaceBefore' => 0, 'spaceAfter' => 0];
-    $styleParagraphCenter =  ['spaceBefore' => 0, 'spaceAfter' => 0, 'align' => 'center'];
-    $styleParagraphRight =  ['spaceBefore' => 0, 'spaceAfter' => 0, 'align' => 'right'];
+        // Creating the new document...
+        \PhpOffice\PhpWord\Settings::setZipClass(\PhpOffice\PhpWord\Settings::PCLZIP);
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
 
 
-    require_once BASEPATH . '/php/Report.php';
-    $Report = new Report($report);
-    $year = $_POST['startyear'];
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $phpWord->getSettings()->setUpdateFields(true);
 
-    $startyear = $year;
-    $endyear = $year;
-    $startmonth = $_POST['startmonth'] ?? $Report->report['start'] ?? 1;
-    $duration = $_POST['duration'] ?? $Report->report['duration'] ?? 12;
-    $endmonth = $startmonth + $duration - 1;
-    if ($endmonth > 12) {
-        $endmonth -= 12;
-        $endyear++;
-    }
+        // Apply export design styles
+        include_once BASEPATH . "/php/ReportTemplate.php";
+        $ReportTemplate = new ReportTemplate();
+        $exportStyle = $ReportTemplate->getStyle();
+        $ReportTemplate->applyReportStyle($phpWord);
 
-    // set time and variables for the report
-    $Report->setTime($startyear, $endyear, $startmonth, $endmonth);
-    $vars = $_POST['var'] ?? [];
-    $Report->setVariables($vars);
+        // Adding an empty Section to the document...
+        $section = $ReportTemplate->addReportSection($phpWord);
 
-    // Generate report content
-    foreach ($Report->steps as $step) {
-        try {
-            switch ($step['type']) {
-                case 'toc':
-                    $section->addTOC();
-                    break;
-                case 'text':
-                    $text = $Report->getText($step);
-                    $level = $step['level'] ?? 'p';
-                    switch ($level) {
-                        case 'h1':
-                            // Add h1 as a heading, not as a paragraph
-                            $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading1']);
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($textrun, $text, false, false);
-                            $section->addTitle($textrun, 1);
+        $ReportTemplate->addReportFooter($section);
+
+        $styleCell = ['valign' => 'center'];
+        $styleText = [];
+        $styleTextBold = ['bold' => true];
+        $styleParagraph =  ['spaceBefore' => 0, 'spaceAfter' => 0];
+        $styleParagraphCenter =  ['spaceBefore' => 0, 'spaceAfter' => 0, 'align' => 'center'];
+        $styleParagraphRight =  ['spaceBefore' => 0, 'spaceAfter' => 0, 'align' => 'right'];
+
+
+        require_once BASEPATH . '/php/Report.php';
+        $Report = new Report($report);
+        $year = $_POST['startyear'];
+
+        $startyear = $year;
+        $endyear = $year;
+        $startmonth = $_POST['startmonth'] ?? $Report->report['start'] ?? 1;
+        $duration = $_POST['duration'] ?? $Report->report['duration'] ?? 12;
+        $endmonth = $startmonth + $duration - 1;
+        if ($endmonth > 12) {
+            $endmonth -= 12;
+            $endyear++;
+        }
+
+        // set time and variables for the report
+        $Report->setTime($startyear, $endyear, $startmonth, $endmonth);
+        $vars = $_POST['var'] ?? [];
+        $Report->setVariables($vars);
+
+        // Generate report content
+        foreach ($Report->steps as $stepIndex => $step) {
+            $export->setBlock($stepIndex + 1, $step);
+            try {
+                $export->checked(function () use ($step, $Report, $export, $section, $styleCell, $styleText, $styleTextBold, $styleParagraph, $styleParagraphCenter, $styleParagraphRight) {
+                    switch ($step['type']) {
+                        case 'toc':
+                            $section->addTOC();
                             break;
-                        case 'h2':
-                            $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading2']);
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($textrun, $text, false, false);
-                            $section->addTitle($textrun, 2);
+                        case 'text':
+                            $text = $Report->getText($step);
+                            $level = $step['level'] ?? 'p';
+                            switch ($level) {
+                                case 'h1':
+                                    // Add h1 as a heading, not as a paragraph
+                                    $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading1']);
+                                    $export->addHtml($textrun, $text);
+                                    $section->addTitle($textrun, 1);
+                                    break;
+                                case 'h2':
+                                    $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading2']);
+                                    $export->addHtml($textrun, $text);
+                                    $section->addTitle($textrun, 2);
+                                    break;
+                                case 'h3':
+                                    $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading3']);
+                                    $export->addHtml($textrun, $text);
+                                    $section->addTitle($textrun, 3);
+                                    break;
+                                case 'h4':
+                                    $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading4']);
+                                    $export->addHtml($textrun, $text);
+                                    $section->addTitle($textrun, 4);
+                                    break;
+                                default:
+                                    $run = $section->addTextRun();
+                                    $export->addHtml($run, $text);
+                                    break;
+                            }
                             break;
-                        case 'h3':
-                            $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading3']);
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($textrun, $text, false, false);
-                            $section->addTitle($textrun, 3);
+                        case 'line':
+                            $section->addTextBreak(1);
                             break;
-                        case 'h4':
-                            $textrun = new \PhpOffice\PhpWord\Element\TextRun(['styleName' => 'Heading4']);
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($textrun, $text, false, false);
-                            $section->addTitle($textrun, 4);
+                        case 'list':
+                            $list = $Report->prepareList($step);
+                            // Only lists with additional columns contain a header row.
+                            $hasHeader = !empty($list) && count($list[0]) > 1;
+                            if (empty($list) || ($hasHeader && count($list) === 1)) {
+                                $name = $step['name'] ?? lang('List', 'Liste');
+                                $section->addText(lang('No data available for the selected criteria of ' . $name . '.', 'Keine Daten für die ausgewählten Kriterien von ' . $name . ' verfügbar.'), ['italic' => true]);
+                                break;
+                            }
+                            if ($hasHeader) {
+                                $table = $section->addTable('ReportTable');
+                                // table head
+                                $table->addRow();
+                                foreach ($list[0] as $h) {
+                                    $cell = $table->addCell(3000, $styleCell);
+                                    $line = clean_comment_export($h);
+                                    $export->addHtml($cell, $line);
+                                    // ->addText($h, $styleTextBold, $styleParagraph);
+                                }
+                                // table body
+                                foreach (array_slice($list, 1) as $row) {
+                                    $table->addRow();
+                                    foreach ($row as $text) {
+                                        $style = $styleParagraph;
+                                        if (is_numeric($text)) {
+                                            $style = $styleParagraphRight;
+                                        }
+                                        $cell = $table->addCell(3000, $styleCell); //->addText($cell, $styleText, $style);
+                                        $line = clean_comment_export($text);
+                                        $export->addHtml($cell, $line);
+                                    }
+                                }
+                                break;
+                            } else {
+                                foreach ($list as $element) {
+                                    $line = $element[0];
+                                    $paragraph = $section->addTextRun();
+                                    $export->addHtml($paragraph, $line);
+                                }
+                            }
+                            break;
+                        case 'activities':
+                            $data = $Report->getActivities($step);
+                            foreach ($data as $d) {
+                                $paragraph = $section->addTextRun();
+                                $line = clean_comment_export($d, false);
+                                $export->addHtml($paragraph, $line);
+                            }
+                            break;
+                        case 'activities-field':
+                            $field = $step['field'] ?? 'impact';
+                            $data = $Report->getActivities($step, $field);
+                            $table = $section->addTable();
+                            $table->addRow();
+                            $cell = $table->addCell(9000);
+                            $cell = $table->addCell(1000);
+                            $label = $Report->fields[$field]['label'] ?? $field;
+                            $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
+                            foreach ($data as $d) {
+                                [$line, $val] = $d;
+                                $table->addRow();
+                                $cell = $table->addCell(9000);
+                                $line = clean_comment_export($line);
+                                $export->addHtml($cell, $line);
+                                $cell = $table->addCell(1000);
+                                $cell->addText($val, $styleTextBold, $styleParagraphCenter);
+                            }
+                            break;
+                        case 'table':
+                            $result = $Report->getTable($step);
+
+                            if (count($result) > 0) {
+                                $table = $section->addTable('ReportTable');
+
+                                // table head
+                                $table->addRow();
+                                foreach ($result[0] as $h) {
+                                    $run = $table->addCell(2000, $styleCell)->addTextRun($styleParagraph);
+                                    $export->addHtml($run, '<b>' . $h . '</b>');
+                                }
+                                // table body
+                                foreach (array_slice($result, 1) as $row) {
+                                    $table->addRow();
+                                    foreach ($row as $cell) {
+                                        $style = $styleParagraph;
+                                        if (is_numeric($cell)) {
+                                            $style = $styleParagraphRight;
+                                        }
+                                        $run = $table->addCell(2000, $styleCell)->addTextRun($style);
+                                        $export->addHtml($run, $cell);
+                                    }
+                                }
+                            }
                             break;
                         default:
-                            $run = $section->addTextRun();
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($run, $text, false, false);
-                            break;
+                            throw new InvalidArgumentException('Unknown report step type: ' . ($step['type'] ?? 'unknown'));
                     }
-                    break;
-                case 'line':
-                    $section->addTextBreak(1);
-                    break;
-                case 'list':
-                    $list = $Report->prepareList($step);
-                    if (count($list) <= 1) {
-                        $name = $step['name'] ?? lang('List', 'Liste');
-                        $section->addText(lang('No data available for the selected criteria of ' . $name . '.', 'Keine Daten für die ausgewählten Kriterien von ' . $name . ' verfügbar.'), ['italic' => true]);
-                        break;
-                    }
-                    if (count($list[0]) > 1) {
-                        $table = $section->addTable('ReportTable');
-                        // table head
-                        $table->addRow();
-                        foreach ($list[0] as $h) {
-                            $cell = $table->addCell(3000, $styleCell);
-                            $line = clean_comment_export($h);
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
-                            // ->addText($h, $styleTextBold, $styleParagraph);
-                        }
-                        // table body
-                        foreach (array_slice($list, 1) as $row) {
-                            $table->addRow();
-                            foreach ($row as $text) {
-                                $style = $styleParagraph;
-                                if (is_numeric($text)) {
-                                    $style = $styleParagraphRight;
-                                }
-                                $cell = $table->addCell(3000, $styleCell); //->addText($cell, $styleText, $style);
-                                $line = clean_comment_export($text);
-                                \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
-                            }
-                        }
-                        break;
-                    } else {
-                        foreach ($list as $element) {
-                            $line = $element[0];
-                            $paragraph = $section->addTextRun();
-                            \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
-                        }
-                    }
-                    break;
-                case 'activities':
-                    $data = $Report->getActivities($step);
-                    foreach ($data as $d) {
-                        $paragraph = $section->addTextRun();
-                        $line = clean_comment_export($d, false);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($paragraph, $line, false, false);
-                    }
-                    break;
-                case 'activities-field':
-                    $field = $step['field'] ?? 'impact';
-                    $data = $Report->getActivities($step, $field);
-                    $table = $section->addTable();
-                    $table->addRow();
-                    $cell = $table->addCell(9000);
-                    $cell = $table->addCell(1000);
-                    $label = $Report->fields[$field]['label'] ?? $field;
-                    $cell->addText($label, ['bold' => true, 'underline' => 'single'], $styleParagraphCenter);
-                    foreach ($data as $d) {
-                        [$line, $val] = $d;
-                        $table->addRow();
-                        $cell = $table->addCell(9000);
-                        $line = clean_comment_export($line);
-                        \PhpOffice\PhpWord\Shared\Html::addHtml($cell, $line, false, false);
-                        $cell = $table->addCell(1000);
-                        $cell->addText($val, $styleTextBold, $styleParagraphCenter);
-                    }
-                    break;
-                case 'table':
-                    $result = $Report->getTable($step);
-
-                    if (count($result) > 0) {
-                        $table = $section->addTable('ReportTable');
-
-                        // table head
-                        $table->addRow();
-                        foreach ($result[0] as $h) {
-                            $table->addCell(2000, $styleCell)->addText($h, $styleTextBold, $styleParagraph);
-                        }
-                        // table body
-                        foreach (array_slice($result, 1) as $row) {
-                            $table->addRow();
-                            foreach ($row as $cell) {
-                                $style = $styleParagraph;
-                                if (is_numeric($cell)) {
-                                    $style = $styleParagraphRight;
-                                }
-                                $table->addCell(2000, $styleCell)->addText($cell, $styleText, $style);
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    $html = "<p><b>" . lang('Unknown step type', 'Unbekannter Schritt-Typ') . ":</b> " . e($step['type'] ?? 'unknown') . "</p>";
-                    $html = clean_comment_export($html);
-                    \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html, false, false);
+                });
+            } catch (Throwable $error) {
+                $export->issue($section,
+                    lang('This block could not be fully exported. Please check its results.',
+                        'Dieser Baustein konnte nicht vollständig exportiert werden. Bitte die Ergebnisse prüfen.'),
+                    $error->getMessage());
             }
-        } catch (Exception $e) {
-            error_log("Report format error: " . $e->getMessage());
-            $html = "<p><b>Report Error in " . e($step['type'] ?? 'unknown step') . ":</b> " . e($e->getMessage()) . "</p>";
-            $html = clean_comment_export($html);
-            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html, false, false);
         }
+
+
+        // Finish serialization before sending any download headers or bytes.
+        $isHtml = ($_POST['format'] ?? 'word') === 'html';
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'osiris-report-');
+        if ($temporaryFile === false) {
+            throw new RuntimeException('Could not create a temporary report file.');
+        }
+        $export->checked(function () use ($phpWord, $isHtml, $temporaryFile) {
+            $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, $isHtml ? 'HTML' : 'Word2007');
+            $writer->save($temporaryFile);
+        });
+        $fileSize = filesize($temporaryFile);
+        if ($fileSize === false || $fileSize === 0) {
+            throw new RuntimeException('The report writer did not produce a document.');
+        }
+
+        if ($export->getIssues()) {
+            $_SESSION['msg'] = lang(
+                'The report was exported with warnings. Please check the marked blocks in the document.',
+                'Der Bericht wurde mit Warnungen exportiert. Bitte die markierten Bausteine im Dokument prüfen.'
+            );
+            $_SESSION['msg_type'] = 'warning';
+        }
+
+        // Discard incidental output collected during generation, never the document.
+        while (ob_get_level() > $bufferLevel) ob_end_clean();
+        if ($isHtml) {
+            header('Content-Type: text/html; charset=utf-8');
+        } else {
+            $filename = preg_replace('/[\x00-\x1F\x7F"\\\\\/]/', '_', $report['title'] . '_' . $year) . '.docx';
+            header('Content-Description: File Transfer');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        }
+        header('Cache-Control: no-store');
+        header('Content-Length: ' . $fileSize);
+        readfile($temporaryFile);
+    } catch (Throwable $error) {
+        error_log('Report export failed: ' . $error->getMessage());
+        while (ob_get_level() > $bufferLevel) ob_end_clean();
+        $_SESSION['msg'] = lang(
+            'The report could not be exported. Please check the template or contact support.',
+            'Der Bericht konnte nicht exportiert werden. Bitte die Vorlage prüfen oder den Support kontaktieren.'
+        );
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/reports', true, 303);
+    } finally {
+        if (is_string($temporaryFile) && is_file($temporaryFile)) unlink($temporaryFile);
+        while (ob_get_level() > $bufferLevel) ob_end_clean();
+        ini_set('display_errors', $previousDisplayErrors);
     }
-
-
-    // Save file
-    if ($_POST['format'] == 'html') {
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
-        $objWriter->save('php://output');
-        die;
-    }
-
-    // Download file
-    $filename = $report['title'] . '_' . $year . '.docx';
-    header("Content-Description: File Transfer");
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    header('Content-Transfer-Encoding: binary');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Expires: 0');
-    $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-    $xmlWriter->save("php://output");
 }, 'login');

@@ -414,7 +414,7 @@ $lastquarter = $Y . "Q" . $Q;
             $googlescholar = $Settings->featureEnabled('googlescholar', true) && !empty($USER['google_scholar'] ?? null);
             // $openalex = $Settings->featureEnabled('openalex', true);
             $openalex = false; // currently not suppoted here
-            $orcid = !empty($Settings->get('orcid')) && $USER['orcid_validated'] ?? false;
+            $orcid = !empty($Settings->get('orcid')) && ($USER['orcid_validated'] ?? false);
             if ($googlescholar || $openalex || $orcid) { ?>
                 <div class="btn-group btn-group-lg">
                     <?php if ($orcid) { ?>
@@ -1014,7 +1014,7 @@ $lastquarter = $Y . "Q" . $Q;
                             $conferences = $osiris->conferences->find(
                                 [
                                     '$or' => [
-                                        ['end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))], 'start' => ['$lte' => date('Y-m-d', strtotime('+6 month'))]],
+                                        ['end' => ['$gte' => date('Y-m-d', strtotime('-3 days'))], 'start' => ['$lte' => date('Y-m-d', strtotime('+2 month'))]],
                                         [
                                             'start' => ['$gte' => date('Y-m-d', strtotime('-6 month'))],
                                             '$or' => [
@@ -1025,7 +1025,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     ],
                                     'dismissed' => ['$ne' => $user]
                                 ],
-                                ['sort' => ['start' => 1]]
+                                ['sort' => ['end' => -1, 'start' => -1]]
                             )->toArray();
                             if (count($conferences) == 0) { ?>
                                 <div class="empty-state">

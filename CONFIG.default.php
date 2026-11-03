@@ -34,6 +34,9 @@ define('USER_MANAGEMENT', 'AUTH');
 // define('SCOPES', 'openid profile email User.Read');
 
 
+// define trusted base URL
+define("BASE_URL", "http://localhost:8080");
+
 // define DB connection
 define("DB_NAME", "osiris");
 
