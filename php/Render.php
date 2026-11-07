@@ -24,7 +24,7 @@ function renderActivities($filter = [], $return_updated = false)
         $Format->usecase = 'print';
         $f = $Format->format($renderLang);
         $Format->usecase = 'web';
-        $web = $Format->formatShort($renderLang);
+        $web = $Format->formatShort(lang: $renderLang);
 
         $Format->usecase = 'portal';
         $portfolio = $Format->formatPortfolio($renderLang);
