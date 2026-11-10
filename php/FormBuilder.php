@@ -3,9 +3,9 @@
 final class FormBuilder
 {
     public const INITIATIVE_SYSTEM_FIELDS = [
-        'title' => ['required' => true],
-        'date-range-ongoing' => ['required' => true]
-        ];
+        'name' => ['required' => true],
+        'date-range-ongoing' => ['required' => true],
+    ];
 
     public static array $tagLabels = [
         'publication' => ['en' => 'Publication', 'de' => 'Publikation'],

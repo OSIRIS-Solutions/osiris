@@ -1,0 +1,175 @@
+<?php
+
+require_once __DIR__ . '/FormBuilder.php';
+
+/** Shared rules for initiative forms and their simple objectives. */
+final class Initiatives
+{
+    public static function fields($database): array
+    {
+        $definition = $database->adminGeneral->findOne(['id' => 'initiative-fields']);
+        return FormBuilder::prepareFields(
+            DB::doc2Arr($definition['fields'] ?? []),
+            FormBuilder::INITIATIVE_SYSTEM_FIELDS
+        );
+    }
+
+    public static function visibleFields(array $fields, array $roles): array
+    {
+        return array_values(array_filter($fields, fn($field) =>
+            empty($field['props']['roles']) || in_array($field['props']['roles'], $roles, true)
+        ));
+    }
+
+    /** Prepare detail content using the same value formatter as activity views. */
+    public static function details(array $initiative, array $fields): array
+    {
+        include_once __DIR__ . '/Modules.php';
+        include_once __DIR__ . '/Document.php';
+
+        $modules = new Modules($initiative);
+        $modules->setFields($fields);
+        $format = new Document(false, 'list');
+        // This is entity data, so activity type/schema initialization is unnecessary.
+        $format->doc = $initiative;
+        $details = ['texts' => [], 'metadata' => []];
+        foreach ($fields as $field) {
+            if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
+            $id = $field['id'];
+            if ($id === 'name') continue; // Already shown as the page title.
+            $value = $format->get_field($id);
+            if ($value === null || $value === '' || $value === '-') continue;
+
+            $customFormat = $format->custom_fields[$id]['format'] ?? null;
+            $longText = in_array($id, ['abstract', 'description', 'details'], true)
+                || in_array($customFormat, ['text', 'text-format'], true);
+            // The formatter returns HTML for links/rich text, but ordinary text is escaped.
+            if (($customFormat !== null && !in_array($customFormat, ['url', 'text-format'], true))
+                || in_array($id, ['subtitle', 'details', 'abstract'], true)) {
+                $value = nl2br(e($value));
+            }
+            $details[$longText ? 'texts' : 'metadata'][] = [
+                'label' => $modules->get_name($id),
+                'value' => $value,
+            ];
+        }
+        return $details;
+    }
+
+    /** Keys actually offered to this user by the form. */
+    public static function editableValues(array $input, array $fields, array $modules): array
+    {
+        $keys = [];
+        foreach ($fields as $field) {
+            if (in_array($field['type'] ?? '', ['field', 'custom'], true)) {
+                $keys = array_merge($keys, $modules[$field['id']]['fields'] ?? []);
+            }
+        }
+        $reserved = ['_id', 'id', 'inactive', 'created', 'created_by', 'updated', 'updated_by', 'objectives'];
+        $keys = array_diff($keys, $reserved);
+        return array_replace(array_fill_keys($keys, null), array_intersect_key($input, array_flip($keys)));
+    }
+
+    /** Accept only fields offered by the current form, never system metadata. */
+    public static function formValues(array $input, array $fields, array $modules): array
+    {
+        $values = self::editableValues($input, $fields, $modules);
+        foreach ($fields as $field) {
+            if (!in_array($field['type'] ?? '', ['field', 'custom'], true)) continue;
+            $module = $modules[$field['id']] ?? null;
+            if ($module === null) continue;
+            foreach ($module['fields'] as $key) {
+                if (!array_key_exists($key, $values)) continue;
+                // In a date range only the start is required; an empty end means ongoing.
+                $required = !empty($field['props']['required']) && $key !== 'end';
+                $value = $values[$key];
+                if ($required && ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === ''))) {
+                    throw new InvalidArgumentException(translate('initiatives.required_field') . ': ' . $key);
+                }
+            }
+        }
+        if (!is_string($values['name'] ?? null) || trim($values['name']) === '') {
+            throw new InvalidArgumentException(translate('initiatives.name_required'));
+        }
+        $values['name'] = trim($values['name']);
+        foreach (['start', 'end'] as $key) {
+            if (array_key_exists($key, $values)) $values[$key] = self::dateInput($values[$key]);
+        }
+        if (!empty($values['start']) && !empty($values['end']) && $values['end'] < $values['start']) {
+            throw new InvalidArgumentException(translate('initiatives.invalid_date_range'));
+        }
+        return $values;
+    }
+
+    public static function objectiveValues(array $input): array
+    {
+        if (!is_string($input['name'] ?? null) || trim($input['name']) === '') {
+            throw new InvalidArgumentException(translate('initiatives.name_required'));
+        }
+        return ['name' => trim($input['name']), 'end_date' => self::dateInput($input['end_date'] ?? null)];
+    }
+
+    public static function dateInput($value): ?string
+    {
+        if ($value === null || $value === '') return null;
+        if (!is_string($value) || !preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/D', $value)) {
+            throw new InvalidArgumentException(translate('initiatives.invalid_date'));
+        }
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        if (!$date || $date->format('Y-m-d') !== $value || !checkdate((int) substr($value, 5, 2), (int) substr($value, 8, 2), (int) substr($value, 0, 4))) {
+            throw new InvalidArgumentException(translate('initiatives.invalid_date'));
+        }
+        return $value;
+    }
+
+    public static function isExpired($document, ?string $today = null): bool
+    {
+        $end = $document['end_date'] ?? null;
+        if (empty($end) && !empty($document['end']['year'])) {
+            $end = sprintf('%04d-%02d-%02d', $document['end']['year'], $document['end']['month'] ?? 12, $document['end']['day'] ?? 31);
+        }
+        return !empty($end) && $end < ($today ?? date('Y-m-d'));
+    }
+
+    public static function canView($settings): bool
+    {
+        return $settings->hasPermission('initiatives.view') || $settings->hasPermission('initiatives.edit');
+    }
+
+    public static function requireAccess(bool $edit = false): void
+    {
+        global $Settings;
+        if (!$Settings->featureEnabled('initiatives')) {
+            http_response_code(404);
+            abortwith(404, translate('common.initiatives'), '/');
+        }
+        if ($edit ? !$Settings->hasPermission('initiatives.edit') : !self::canView($Settings)) {
+            http_response_code(403);
+            abortwith(403, translate('initiatives.no_permission'), '/initiatives');
+        }
+    }
+
+    public static function find($database, string $id)
+    {
+        $initiative = DB::is_ObjectID($id) ? $database->initiatives->findOne(['_id' => DB::to_ObjectID($id)]) : null;
+        if (empty($initiative)) {
+            http_response_code(404);
+            abortwith(404, translate('common.initiative'), '/initiatives');
+        }
+        return $initiative;
+    }
+
+    /** Plain-text fallback for scalar, localized and compound field values. */
+    public static function text($value): string
+    {
+        if ($value === null) return '';
+        if (is_bool($value)) return translate($value ? 'common.yes' : 'common.no');
+        if ($value instanceof Traversable) $value = iterator_to_array($value);
+        if (is_array($value)) {
+            if (isset($value['year'])) return sprintf('%04d-%02d-%02d', $value['year'], $value['month'] ?? 1, $value['day'] ?? 1);
+            if (isset($value['en']) || isset($value['de'])) return strip_tags(localized($value));
+            return implode(', ', array_filter(array_map([self::class, 'text'], $value), fn($item) => $item !== ''));
+        }
+        return strip_tags((string) $value);
+    }
+}

@@ -155,18 +155,6 @@ class SidebarNav
                         'hasSearch' => false
                     ],
                     [
-                        'id' => 'topics',
-                        'label' => $this->settings->topicLabel(),
-                        'icon' => 'puzzle-piece',
-                        'url' => '/topics',
-                        'active' => ['^/topics($|/)'],
-                        'feature' => 'topics',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
                         'id' => 'infrastructures',
                         'label' => $this->settings->infrastructureLabel(),
                         'icon' => 'cube-transparent',
@@ -207,6 +195,30 @@ class SidebarNav
                         'permission' => null,
                         'favoritable' => true,
                         'hasSearch' => true
+                    ],
+                    [
+                        'id' => 'topics',
+                        'label' => $this->settings->topicLabel(),
+                        'icon' => 'puzzle-piece',
+                        'url' => '/topics',
+                        'active' => ['^/topics($|/)'],
+                        'feature' => 'topics',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'initiatives',
+                        'label' => translate('common.initiatives'),
+                        'icon' => 'lightbulb',
+                        'url' => '/initiatives',
+                        'active' => ['^/initiatives($|/)'],
+                        'feature' => 'initiatives',
+                        'default' => false,
+                        'permission' => 'initiatives.view|initiatives.edit',
+                        'favoritable' => true,
+                        'hasSearch' => false
                     ],
                     [
                         'id' => 'groups',

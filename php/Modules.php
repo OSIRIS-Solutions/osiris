@@ -211,7 +211,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "others",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "doctype" => [
             "fields" => ["doc_type" => 'White Paper'],
@@ -582,6 +582,20 @@ class Modules
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
             "entities" => ['activities']
+        ],
+        "name" => [
+            "fields" => ["name" => ''],
+            "name" => "Name",
+            "name_de" => "Name",
+            "label" => "Name",
+            "label_de" => "Name",
+            "description" => "A field for the name.",
+            "description_de" => "Ein Feld für den Namen.",
+            "width" => 6,
+            "portfolio" => true,
+            "tags" => ['general'],
+            "section" => "key",
+            "entities" => ['activities', 'initiatives']
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
@@ -1281,6 +1295,16 @@ class Modules
             </div>";
     }
 
+    public function setFields(array $fields): void
+    {
+        $this->fields = [];
+        foreach ($fields as $field) {
+            if (in_array($field['type'] ?? 'field', ['field', 'custom'], true)) {
+                $this->fields[$field['id']] = $field['props'] ?? [];
+            }
+        }
+    }
+
     function getFields()
     {
         if (!empty($this->fields)) {
@@ -1808,6 +1832,18 @@ class Modules
         }
 
         switch ($module) {
+
+            case 'name':
+                $val = $this->val('name');
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="name">
+                    <input type="text" name="values[name]" id="name" class="form-control" value="<?= $val ?>" <?= $labelClass ?> placeholder="Name">
+                    <label for="name" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
             case 'gender':
                 $val = $this->val('gender');
             ?>

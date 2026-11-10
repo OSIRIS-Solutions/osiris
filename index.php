@@ -367,6 +367,7 @@ if (
     include_once BASEPATH . "/routes/calendar.php";
     include_once BASEPATH . "/routes/infrastructures.php";
     include_once BASEPATH . "/routes/organizations.php";
+    include_once BASEPATH . "/routes/initiatives.php";
     include_once BASEPATH . "/routes/workflows.php";
     include_once BASEPATH . "/routes/admin.php";
     include_once BASEPATH . "/routes/orcid.php";

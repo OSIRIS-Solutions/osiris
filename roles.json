@@ -510,6 +510,23 @@
         ]
     },
     {
+        "de": "Initiativen",
+        "en": "Initiatives",
+        "icon": "lightbulb",
+        "fields": [
+            {
+                "id": "initiatives.view",
+                "de": "Initiativen sehen",
+                "en": "See initiatives"
+            },
+            {
+                "id": "initiatives.edit",
+                "de": "Initiativen bearbeiten",
+                "en": "Edit initiatives"
+            }
+        ]
+    },
+    {
         "de": "Nagoya-Protokoll",
         "en": "Nagoya Protocol",
         "icon": "scales",

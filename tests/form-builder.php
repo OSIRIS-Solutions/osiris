@@ -90,7 +90,7 @@ foreach (['initiatives', 'activities'] as $entity) {
     check(str_contains($html, 'let authorFields') === ($entity === 'activities'), 'Activity-specific checks must not block other entities.');
     if ($entity === 'initiatives') {
         check(str_contains($html, 'ph-lock-simple'), 'System fields must have a visible lock.');
-        check(str_contains($html, '"title":{"required":true}'), 'Trusted system rules must reach the UI.');
+        check(str_contains($html, 'const SYSTEM_FIELDS = ' . json_encode((object) FormBuilder::INITIATIVE_SYSTEM_FIELDS)), 'Trusted system rules must reach the UI.');
     }
     // Optional output for checking the rendered JavaScript syntax.
     if (isset($argv[1])) file_put_contents($argv[1] . '/' . $entity . '.html', $html);
