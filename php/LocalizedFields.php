@@ -286,3 +286,17 @@ function renderLocalizedFieldInput(
                <?= $required ? 'required' : '' ?>>
     <?php }
 }
+
+
+/** Preserve translation strings and normalize title markup like the ordinary title field. */
+function normalizeLocalizedValues(array $values, bool $title = false, bool $richtext = true): array
+{
+    $translations = [];
+    foreach ($values as $language => $value) {
+        if (!preg_match('/^[a-z]{2}(?:-[A-Za-z]{2})?$/D', (string) $language) || !is_scalar($value)) continue;
+        $value = trim((string) $value);
+        if ($title) $value = trim(str_replace(['<p>', '</p>'], ' ', $value));
+        $translations[$language] = localizedValueHasContent($value, $richtext ? 'richtext' : 'text') ? $value : '';
+    }
+    return $translations;
+}

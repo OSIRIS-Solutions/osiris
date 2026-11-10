@@ -77,7 +77,7 @@ $saveInitiative = function ($id = null) {
         $raw = Initiatives::formValues($input, $fields, $config->modules);
         // Activity normalization derives publication years from dates; keep initiative dates separate.
         $values = validateValues(array_diff_key($raw, ['start' => true, 'end' => true]), $DB, 'initiatives');
-        $values['name'] = $raw['name'];
+        if (is_string($raw['name'])) $values['name'] = $raw['name'];
         foreach (['start', 'end'] as $key) {
             if (array_key_exists($key, $raw)) {
                 $values[$key] = $raw[$key] === null ? null : valiDate($raw[$key]);
@@ -127,6 +127,7 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess(true);
     $initiative = Initiatives::find($osiris, $id);
+    $target = '#objectives';
     try {
         if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
         $values = Initiatives::objectiveValues($_POST['values']);
@@ -136,10 +137,12 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
         ];
         $osiris->objectives->insertOne($values);
     } catch (InvalidArgumentException $e) {
+        $_SESSION['objective_form'][$id]['new'] = Initiatives::objectiveDraft(is_array($_POST['values'] ?? null) ? $_POST['values'] : []);
+        $target = '#add-objective';
         $_SESSION['msg'] = e($e->getMessage());
         $_SESSION['msg_type'] = 'error';
     }
-    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . '#objectives');
+    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . $target);
 }, 'login');
 
 Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function ($id, $action, $objectiveId) {
@@ -156,6 +159,7 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
         http_response_code(404);
         abortwith(404, translate('initiatives.objective'), '/initiatives/view/' . $id);
     }
+    $target = '#objectives';
     try {
         if ($action === 'archive') {
             $values = ['inactive' => ($_POST['inactive'] ?? '') === '1'];
@@ -167,8 +171,10 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
         $values['updated_by'] = $_SESSION['username'];
         $osiris->objectives->updateOne($filter, ['$set' => $values]);
     } catch (InvalidArgumentException $e) {
+        $target = '#edit-objective-' . $objectiveId;
+        $_SESSION['objective_form'][$id][$objectiveId] = Initiatives::objectiveDraft(is_array($_POST['values'] ?? null) ? $_POST['values'] : []);
         $_SESSION['msg'] = e($e->getMessage());
         $_SESSION['msg_type'] = 'error';
     }
-    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . '#objectives');
+    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . $target);
 }, 'login');

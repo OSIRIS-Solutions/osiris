@@ -1641,7 +1641,7 @@ Route::post('/crud/admin/initiativesFields', function () {
     try {
         FormBuilder::validateFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('Check the system fields and use only one persons module.', 'Prüfe die Systemfelder und verwende nur ein Personenmodul.'));
+        abortwith(400, lang('Check the system fields and use only one version of each data field.', 'Prüfe die Systemfelder und verwende nur eine Variante je Datenfeld.'));
     }
     $osiris->adminGeneral->updateOne(
         ['id' => 'initiative-fields'],
@@ -1677,7 +1677,7 @@ Route::post('/crud/admin/activity-fields', function () {
     try {
         FormBuilder::validateFields($fields);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('Use only one persons module.', 'Verwende nur ein Personenmodul.'));
+        abortwith(400, lang('Use only one module for each data field.', 'Verwende nur ein Modul je Datenfeld.'));
     }
     $modules = [];
     foreach ($fields as $field) {

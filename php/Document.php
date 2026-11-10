@@ -111,6 +111,10 @@ class Document extends Settings
         "pages-pp" => ["pages"],
         "pages" => ["pages"],
         "peer-reviewed" => ["peer-reviewed"],
+        "title-loc" => ["title"],
+        "name-loc" => ["name"],
+        "abstract-loc" => ["abstract"],
+        "description-loc" => ["description"],
         "persons" => ["persons"],
         "persons-role" => ["persons"],
         "person" => ["name", "affiliation", "academic_title"],
@@ -1260,12 +1264,17 @@ class Document extends Settings
     {
         if ($default === '' && $this->usecase == 'list') $default = '-';
         if (!array_key_exists($field, $this->doc)) return $default;
-        return ($this->doc[$field] ?? '');
+        $value = $this->doc[$field] ?? '';
+        if (in_array($field, ['title', 'name', 'abstract', 'description'], true) && (is_array($value) || $value instanceof Traversable)) {
+            return localized($value, $this->lang);
+        }
+        return $value;
     }
 
     public function get_field($module, $default = '')
     {
         if ($this->usecase == 'list') $default = '-';
+        if (in_array($module, ['title-loc', 'name-loc', 'abstract-loc', 'description-loc'], true)) $module = substr($module, 0, -4);
         if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }

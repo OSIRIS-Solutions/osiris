@@ -427,7 +427,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['publication', 'important'],
             "section" => "summary",
-            "entities" => ['activities', 'initiatives', 'projects']
+            "entities" => ['activities', 'projects']
         ],
         "isbn" => [
             "fields" => ["isbn" => '979-8716615502'],
@@ -708,6 +708,55 @@ class Modules
             "tags" => ['people'],
             "section" => "people",
             "entities" => ['activities']
+        ],
+        "title-loc" => [
+            "fields" => ["title" => ['en' => '', 'de' => '']],
+            "name" => "Title (localized)", "name_de" => "Titel (mehrsprachig)",
+            "label" => "Title", "label_de" => "Titel",
+            "description" => "A multilingual title using the configured content languages.",
+            "description_de" => "Mehrsprachiges Feld für Titel in den konfigurierten Inhaltssprachen.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects'],
+        ],
+        "name-loc" => [
+            "fields" => ["name" => ['en' => '', 'de' => '']],
+            "name" => "Name (localized)", "name_de" => "Name (mehrsprachig)",
+            "label" => "Name", "label_de" => "Name",
+            "description" => "A multilingual name using the configured content languages.",
+            "description_de" => "Mehrsprachiges Feld für Name in den konfigurierten Inhaltssprachen.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects'],
+        ],
+        "abstract-loc" => [
+            "fields" => ["abstract" => ['en' => '', 'de' => '']],
+            "name" => "Abstract (localized)", "name_de" => "Zusammenfassung (mehrsprachig)",
+            "label" => "Abstract", "label_de" => "Zusammenfassung",
+            "description" => "A multilingual abstract using the configured content languages.",
+            "description_de" => "Mehrsprachiges Feld für Zusammenfassung in den konfigurierten Inhaltssprachen.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'projects'],
+        ],
+        "description" => [
+            "fields" => ["description" => ""],
+            "name" => "Description", "name_de" => "Beschreibung",
+            "label" => "Description", "label_de" => "Beschreibung",
+            "description" => "A description for this record.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects'],
+        ],
+        "description-loc" => [
+            "fields" => ["description" => ['en' => '', 'de' => '']],
+            "name" => "Description (localized)", "name_de" => "Beschreibung (mehrsprachig)",
+            "label" => "Description", "label_de" => "Beschreibung",
+            "description" => "A multilingual description using the configured content languages.",
+            "description_de" => "Mehrsprachiges Feld für Beschreibung in den konfigurierten Inhaltssprachen.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects'],
         ],
         "persons" => [
             "fields" => ["persons" => []],
@@ -1277,6 +1326,9 @@ class Modules
     private function val($index, $default = '')
     {
         $val = $this->form[$index] ?? $default;
+        if (in_array($index, ['title', 'name', 'abstract', 'description'], true) && (is_array($val) || $val instanceof Traversable)) {
+            $val = localized($val);
+        }
         if (is_string($val)) {
             return e($val);
         }
@@ -1850,6 +1902,29 @@ class Modules
         }
 
         switch ($module) {
+            case 'title-loc':
+            case 'name-loc':
+            case 'abstract-loc':
+            case 'description-loc':
+                require_once __DIR__ . '/LocalizedFields.php';
+                $field = substr($module, 0, -4);
+                $type = $field === 'name' ? 'text' : 'richtext';
+                echo '<div class="data-module col-sm-' . $width . '" data-module="' . e($module) . '">';
+                localizedField($this->form, $field, e($label), [
+                    'type' => $type, 'required' => $req || !empty($props['required']),
+                ]);
+                echo $this->render_help($help);
+                echo '</div>';
+                // Also initialize editors when this module is loaded via AJAX or in a preview.
+                ?>
+                <script>
+                    document.querySelectorAll('[data-module="<?= $module ?>"] .localized-quill').forEach(editor => {
+                        if (!editor.closest('[hidden]')) initLocalizedQuill(editor);
+                    });
+                </script>
+                <?php
+                break;
+
             case 'persons':
             case 'persons-role':
                 include BASEPATH . '/components/modules/persons.php';
@@ -1965,6 +2040,25 @@ class Modules
                 </div>
             <?php
                 break;
+            case "description":
+                $id = rand(1000, 9999);
+            ?>
+                <div class="data-module col-sm-<?= $width ?>" data-module="description">
+                    <div class="lang-<?= lang('common.this_language') ?>">
+                        <label for="description" class="<?= $labelClass ?> floating-description">
+                            <?= $label ?>
+                        </label>
+                        <div class="form-group description-editor" id="description-editor-<?= $id ?>"><?= localized($this->form['description'] ?? '') ?></div>
+                        <input type="text" class="form-control hidden" name="values[description]" id="description" <?= $labelClass ?> value="<?= $this->val('description') ?>">
+                    </div>
+                    <?= $this->render_help($help) ?>
+                </div>
+                <script>
+                    initQuill(document.getElementById('description-editor-<?= $id ?>'));
+                </script>
+            <?php
+                break;
+
             case "title":
                 $id = rand(1000, 9999);
             ?>
@@ -1974,7 +2068,7 @@ class Modules
                             <?= $label ?>
                         </label>
 
-                        <div class="form-group title-editor" id="title-editor-<?= $id ?>"><?= $this->form['title'] ?? '' ?></div>
+                        <div class="form-group title-editor" id="title-editor-<?= $id ?>"><?= localized($this->form['title'] ?? '') ?></div>
                         <input type="text" class="form-control hidden" name="values[title]" id="title" <?= $labelClass ?> value="<?= $this->val('title') ?>">
                     </div>
                     <?= $this->render_help($help) ?>

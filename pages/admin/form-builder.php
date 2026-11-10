@@ -14,7 +14,8 @@
  * @license     MIT
  */
 include_once BASEPATH . '/header-editor.php';
-$fields = FormBuilder::prepareFields($fields, $config->systemFields);
+$systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
+$fields = FormBuilder::prepareFields($fields, $systemFields);
 
 ?>
 
@@ -730,7 +731,7 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
                                         </div>
                                         <div class="flex-fill">
                                             <div class="title">
-                                                <?php if (isset($config->systemFields[$it['id']])): ?>
+                                                <?php if (isset($systemFields[$it['id']])): ?>
                                                     <i class="ph ph-lock-simple" title="<?= lang('System field', 'Systemfeld') ?>"></i>
                                                 <?php endif; ?>
                                                 <?= e($label) ?>
@@ -839,7 +840,12 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
 <script src="<?= ROOTPATH ?>/js/jquery-sortable.min.js"></script>
 <script>
     const ALL = <?= json_encode($config->modules) ?>;
-    const SYSTEM_FIELDS = <?= json_encode((object) $config->systemFields) ?>;
+    const SYSTEM_FIELDS = <?= json_encode((object) $systemFields) ?>;
+
+    function systemFieldFor(id) {
+        const counterpart = id?.endsWith('-loc') ? id.slice(0, -4) : id + '-loc';
+        return SYSTEM_FIELDS[id] || SYSTEM_FIELDS[counterpart];
+    }
 
     $(function() {
 
@@ -882,6 +888,18 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
 
                 // Ersetze den rohen <li> aus dem Katalog durch ein Canvas-Item-Template
                 const $item = buildCanvasItem(t, id, label);
+                let props = {};
+                if (t === 'field') {
+                    const counterpart = id.endsWith('-loc') ? id.slice(0, -4) : id + '-loc';
+                    $('#canvas-list .canvas-item').each(function () {
+                        const existing = $(this);
+                        if (existing.data('type') !== 'field' || existing.data('id') !== counterpart) return;
+                        props = existing.data('props') || {};
+                        deleteItem(existing, true);
+                    });
+                    if (systemFieldFor(id)?.required) props = {...props, required: true, recommended: false};
+                    $item.data('props', props);
+                }
                 $src.replaceWith($item);
             }
         });
@@ -974,7 +992,7 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
             var id = $(this).data('id') || '';
             var title = $(this).find('.title').text() || '—';
 
-            const systemField = SYSTEM_FIELDS[id];
+            const systemField = systemFieldFor(id);
             $('#deleteSelection').prop('disabled', !!systemField);
             $('#system-field-note').prop('hidden', !systemField);
 
@@ -1048,7 +1066,7 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
                 let defaults = ALL[$selected.data('id')] || {};
                 let props = {}
 
-                if (SYSTEM_FIELDS[$selected.data('id')]?.required) {
+                if (systemFieldFor($selected.data('id'))?.required) {
                     $('#prop-required').prop('checked', true);
                     $('#prop-recommended').prop('checked', false);
                 }
@@ -1057,7 +1075,7 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
                 if ($(this).attr('id') === 'prop-required' && $('#prop-required').is(':checked')) {
                     $('#prop-recommended').prop('checked', false);
                 }
-                if ($(this).attr('id') === 'prop-recommended' && $('#prop-recommended').is(':checked') && !SYSTEM_FIELDS[$selected.data('id')]?.required) {
+                if ($(this).attr('id') === 'prop-recommended' && $('#prop-recommended').is(':checked') && !systemFieldFor($selected.data('id'))?.required) {
                     $('#prop-required').prop('checked', false);
                 }
 
@@ -1142,8 +1160,8 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
             console.log('Aktuelles Schema:', schema);
         });
 
-        function deleteItem(item) {
-            if (SYSTEM_FIELDS[item.data('id')]) return;
+        function deleteItem(item, replacing = false) {
+            if (!replacing && systemFieldFor(item.data('id'))) return;
             var type = item.data('type');
             if (item.hasClass('is-selected')) {
                 $('#properties-panel').addClass('d-none');
@@ -1267,6 +1285,10 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
                 return;
             }
 
+            if (ids.some(id => id.endsWith('-loc') && ids.includes(id.slice(0, -4)))) {
+                toastError(<?= json_encode(lang('Use only one version of each field.', 'Verwende nur eine Variante je Datenfeld.')) ?>);
+                return;
+            }
             const personModules = schema.items.filter(item => item.type === 'field' && ['persons', 'persons-role'].includes(item.id));
             if (personModules.length > 1) {
                 toastError(<?= json_encode(lang('Use either Persons or Persons with roles.', 'Verwende entweder Personen oder Personen mit Rollen.')) ?>);

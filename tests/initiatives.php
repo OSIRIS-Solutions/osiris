@@ -11,6 +11,7 @@ define('ROOTPATH', '/osiris');
 define('OSIRIS_BUILD', 'test');
 define('OSIRIS_VERSION', 'test');
 define('CURRENTYEAR', 2026);
+define('OSIRIS_BASE_LANGUAGE', 'en');
 require BASEPATH . '/vendor/autoload.php';
 // Keep the production normalizers, but replace the page-rendering abort handler.
 $configSource = file_get_contents(BASEPATH . '/php/_config.php');
@@ -21,7 +22,14 @@ require BASEPATH . '/php/Language.php';
 $language = new Language(BASEPATH . '/lang');
 function translate($key) { global $language; return $language->resolve($key, 'en', 'en'); }
 function lang($en, $de = null, array $replace = []) { return $de === null ? translate($en) : $en; }
-function localized($value) { return is_string($value) ? $value : ($value['en'] ?? $value['de'] ?? ''); }
+function localized($value, ?string $language = null) {
+    if ($value instanceof Traversable) $value = iterator_to_array($value);
+    if (!is_array($value)) return (string) $value;
+    foreach (array_unique([$language ?? 'en', OSIRIS_BASE_LANGUAGE, ...array_keys($value)]) as $key) {
+        if (isset($value[$key]) && $value[$key] !== '') return (string) $value[$key];
+    }
+    return '';
+}
 class Aborted extends RuntimeException {}
 function abortwith($code, ...$args) { throw new Aborted('', $code); }
 function loadIsolated(string $file): void
@@ -30,7 +38,7 @@ function loadIsolated(string $file): void
     $source = file_get_contents(BASEPATH . '/' . $file);
     $source = str_replace("include_once BASEPATH . '/php/init.php';", 'global $DB, $osiris, $Settings;', $source);
     $source = str_replace('include_once BASEPATH . "/php/init.php";', 'global $DB, $osiris, $Settings;', $source);
-    $source = preg_replace('/^\s*(?:include|require)(?:_once)? (?![^\r\n]*components\/modules\/).*;\R/m', '', $source);
+    $source = preg_replace('/^\s*(?:include|require)(?:_once)? (?![^\r\n]*(?:components\/modules\/|pages\/initiatives\/objective-form\.php)).*;\R/m', '', $source);
     $source = str_replace('__DIR__', var_export(dirname(BASEPATH . '/' . $file), true), $source);
     eval('?>' . $source);
 }
@@ -96,10 +104,11 @@ class Settings {
 }
 class Vocabulary {
     public static ?array $roles = null;
+    public static ?array $objectiveTypes = null;
     public function getValues($key, $all = false) {
-        if ($key !== 'persons-role') return [];
+        if (!in_array($key, ['persons-role', 'objective-type'], true)) return [];
         $catalog = array_column(json_decode(file_get_contents(BASEPATH . '/data/vocabulary.json'), true), null, 'id');
-        $roles = self::$roles ?? $catalog[$key]['values'];
+        $roles = ($key === 'persons-role' ? self::$roles : self::$objectiveTypes) ?? $catalog[$key]['values'];
         return $all ? $roles : array_values(array_filter($roles, fn($role) => empty($role['inactive'])));
     }
     public function getValue($key, $id, $default = '') {
@@ -116,6 +125,7 @@ class Route
 $Settings = new class {
     public bool $enabled = true;
     public array $continuousTypes = [];
+    public function contentLanguages() { return ['en', 'de']; }
     public function get($key, $default = null) { return $default; }
     public array $permissions = ['initiatives.view', 'initiatives.edit'];
     public function featureEnabled($key) { return $this->enabled; }

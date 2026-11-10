@@ -17,12 +17,12 @@
         }
     }
     $abstract_fields = [];
-    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'event-select', 'persons', 'persons-role'];
+    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'title-loc', 'event-select', 'persons', 'persons-role'];
     $empty_fields = [];
     $sections = [];
     $Format->usecase = 'list';
     foreach ($fields as $field_id) {
-        if (in_array($field_id, ['abstract', 'description'])) {
+        if (in_array($field_id, ['abstract', 'description', 'abstract-loc', 'description-loc'])) {
             $abstract_fields[] = $field_id;
             continue;
         }
@@ -520,8 +520,9 @@
                                     <?php foreach ($abstract_fields as $field_id) {
                                         $field_name = $Modules->get_name($field_id);
                                         echo "<h3 class='section-title'>$field_name</h3>";
-                                        if (!empty($doc[$field_id])) {
-                                            echo '<div class="text-justify">' . $doc[$field_id] . '</div>';
+                                        $value = $Format->get_field($field_id, '');
+                                        if ($value !== '' && $value !== null && $value !== '-') {
+                                            echo '<div class="text-justify">' . $value . '</div>';
                                         } else {
                                             echo '<p>' . lang('activities.no_field_name_available', replace: ['field_name' => strtolower($field_name)]) . '</p>';
                                         }

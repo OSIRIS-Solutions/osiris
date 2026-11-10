@@ -44,7 +44,10 @@ function validateValues($values, $DB, ?string $entity = null)
     unset($values['last_authors']);
 
     foreach ($values as $key => $value) {
-        if ($key === 'persons' && in_array($entity, ['activities', 'initiatives'], true)) {
+        if (in_array($key, ['title', 'name', 'abstract', 'description'], true) && is_array($value)) {
+            require_once __DIR__ . '/LocalizedFields.php';
+            $values[$key] = normalizeLocalizedValues($value, $key === 'title', $key !== 'name');
+        } else if ($key === 'persons' && in_array($entity, ['activities', 'initiatives'], true)) {
             require_once __DIR__ . '/PersonField.php';
             $values[$key] = PersonField::normalize($value, $DB);
         } else if ($key == 'id') {

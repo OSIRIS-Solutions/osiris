@@ -60,15 +60,16 @@ $shown = 0;
             $shown++;
         ?>
             <div class="box padded">
+                <?php if ($status === 'objectives' && !empty($data['code'])): ?><span class="badge"><?= e($data['code']) ?></span><?php endif; ?>
                 <h4 class="title">
-                    <a href="<?= ROOTPATH ?>/initiatives/view/<?= e($data['_id']) ?>">
+                    <a href="<?= ROOTPATH ?>/initiatives/view/<?= e($status === 'objectives' ? $data['initiative'] : $data['_id']) ?><?= $status === 'objectives' ? '#objective-' . e($data['_id']) : '' ?>">
                         <?= e(Initiatives::text($data['name'] ?? '')) ?>
                     </a>
                 </h4>
                 <?php if ($archived): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?>
                 <?php if ($expired): ?><span class="badge warning"><?= translate('initiatives.expired') ?></span><?php endif; ?>
                 <div class="text-muted">
-                    <?= fromToDate($data['start'] ?? null, $data['end'] ?? null, true) ?>
+                    <?= e(Initiatives::period($data)) ?>
                 </div>
             </div>
         <?php endforeach; ?>

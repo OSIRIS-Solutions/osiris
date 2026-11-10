@@ -97,9 +97,23 @@ final class FormBuilder
     }
 
 
+    /** Localized modules can satisfy the same system-field requirement as their plain variant. */
+    public static function systemFieldsFor(array $fields, array $systemFields): array
+    {
+        $ids = array_column(array_filter($fields, fn($field) => ($field['type'] ?? '') === 'field'), 'id');
+        foreach ($systemFields as $id => $rules) {
+            if (in_array($id . '-loc', $ids, true)) {
+                unset($systemFields[$id]);
+                $systemFields[$id . '-loc'] = $rules;
+            }
+        }
+        return $systemFields;
+    }
+
     /** Add missing system fields without changing the positions of existing fields. */
     public static function prepareFields(array $fields, array $systemFields): array
     {
+        $systemFields = self::systemFieldsFor($fields, $systemFields);
         $missing = $systemFields;
         foreach ($fields as &$field) {
             $id = $field['id'] ?? '';
@@ -128,6 +142,12 @@ final class FormBuilder
     public static function validateFields(array $fields, array $systemFields = []): void
     {
         self::validateSystemFields($fields, $systemFields);
+        $ids = array_column(array_filter($fields, fn($field) => ($field['type'] ?? '') === 'field'), 'id');
+        foreach ($ids as $id) {
+            if (str_ends_with($id, '-loc') && in_array(substr($id, 0, -4), $ids, true)) {
+                throw new InvalidArgumentException("Use either $id or its plain variant, since both store the same field.");
+            }
+        }
         $personFields = array_filter($fields, fn($field) => ($field['type'] ?? '') === 'field'
             && in_array($field['id'] ?? '', ['persons', 'persons-role'], true));
         if (count($personFields) > 1) {
@@ -138,6 +158,7 @@ final class FormBuilder
     /** Check submitted schemas against trusted configuration, never client-side flags. */
     public static function validateSystemFields(array $fields, array $systemFields): void
     {
+        $systemFields = self::systemFieldsFor($fields, $systemFields);
         foreach ($systemFields as $id => $rules) {
             $matches = array_values(array_filter($fields, fn($field) => ($field['id'] ?? '') === $id));
             if (count($matches) !== 1

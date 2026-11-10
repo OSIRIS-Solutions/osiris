@@ -958,5 +958,20 @@
         "de": "Co-Leitung"
       }
     ]
+  },
+  {
+    "id": "objective-type",
+    "category": "General",
+    "name": "Objective types",
+    "name_de": "Objective-Typen",
+    "description": "Types of objectives within initiatives.",
+    "description_de": "Typen von Objectives innerhalb von Initiativen.",
+    "values": [
+      {
+        "id": "objective",
+        "en": "Objective",
+        "de": "Objective"
+      }
+    ]
   }
 ]

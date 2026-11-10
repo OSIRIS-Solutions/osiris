@@ -36,12 +36,12 @@ final class Initiatives
         foreach ($fields as $field) {
             if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
             $id = $field['id'];
-            if ($id === 'name') continue; // Already shown as the page title.
+            if (in_array($id, ['name', 'name-loc'], true)) continue; // Already shown as the page title.
             $value = $format->get_field($id);
             if ($value === null || $value === '' || $value === '-') continue;
 
             $customFormat = $format->custom_fields[$id]['format'] ?? null;
-            $longText = in_array($id, ['abstract', 'description', 'details'], true)
+            $longText = in_array($id, ['abstract', 'description', 'details', 'abstract-loc', 'description-loc'], true)
                 || in_array($customFormat, ['text', 'text-format'], true);
             // The formatter returns HTML for links/rich text, but ordinary text is escaped.
             if (($customFormat !== null && !in_array($customFormat, ['url', 'text-format'], true))
@@ -83,15 +83,20 @@ final class Initiatives
                 // In a date range only the start is required; an empty end means ongoing.
                 $required = !empty($field['props']['required']) && $key !== 'end';
                 $value = $values[$key];
+                if ($required && str_ends_with($field['id'], '-loc')) {
+                    $value = is_array($value) ? ($value[OSIRIS_BASE_LANGUAGE] ?? '') : $value;
+                }
                 if ($required && ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === ''))) {
                     throw new InvalidArgumentException(translate('initiatives.required_field') . ': ' . $key);
                 }
             }
         }
-        if (!is_string($values['name'] ?? null) || trim($values['name']) === '') {
+        $name = $values['name'] ?? null;
+        if (is_array($name)) $name = $name[OSIRIS_BASE_LANGUAGE] ?? '';
+        if (!is_string($name) || trim($name) === '') {
             throw new InvalidArgumentException(translate('initiatives.name_required'));
         }
-        $values['name'] = trim($values['name']);
+        if (is_string($values['name'])) $values['name'] = trim($values['name']);
         foreach (['start', 'end'] as $key) {
             if (array_key_exists($key, $values)) $values[$key] = self::dateInput($values[$key]);
         }
@@ -103,10 +108,44 @@ final class Initiatives
 
     public static function objectiveValues(array $input): array
     {
-        if (!is_string($input['name'] ?? null) || trim($input['name']) === '') {
-            throw new InvalidArgumentException(translate('initiatives.name_required'));
+        foreach (['code', 'name', 'description', 'type', 'start_date', 'end_date'] as $field) {
+            if (isset($input[$field]) && !is_string($input[$field])) {
+                throw new InvalidArgumentException(translate('initiatives.invalid_objective_field') . ': ' . $field);
+            }
         }
-        return ['name' => trim($input['name']), 'end_date' => self::dateInput($input['end_date'] ?? null)];
+        if (!is_string($input['name'] ?? null) || trim($input['name']) === '') {
+            throw new InvalidArgumentException(translate('initiatives.objective_title_required'));
+        }
+        require_once __DIR__ . '/Vocabulary.php';
+        $type = trim($input['type'] ?? '') ?: 'objective';
+        $vocabulary = new Vocabulary();
+        if (!in_array($type, array_column($vocabulary->getValues('objective-type'), 'id'), true)) {
+            throw new InvalidArgumentException(translate('initiatives.invalid_objective_field') . ': type');
+        }
+        $start = self::dateInput($input['start_date'] ?? null);
+        $end = self::dateInput($input['end_date'] ?? null);
+        if ($start !== null && $end !== null && $end < $start) {
+            throw new InvalidArgumentException(translate('initiatives.invalid_date_range'));
+        }
+        return [
+            'code' => trim($input['code'] ?? ''),
+            // Keep the existing name key as the objective title for compatibility.
+            'name' => trim($input['name']),
+            'description' => trim($input['description'] ?? ''),
+            'type' => $type,
+            'start_date' => $start,
+            'end_date' => $end,
+            'start' => $start === null ? null : valiDate($start),
+            'end' => $end === null ? null : valiDate($end),
+        ];
+    }
+
+    /** Retain only safe form inputs when redisplaying an invalid objective. */
+    public static function objectiveDraft(array $input): array
+    {
+        return array_filter(array_intersect_key($input, array_flip([
+            'code', 'name', 'description', 'type', 'start_date', 'end_date',
+        ])), 'is_string');
     }
 
     public static function dateInput($value): ?string
@@ -120,6 +159,16 @@ final class Initiatives
             throw new InvalidArgumentException(translate('initiatives.invalid_date'));
         }
         return $value;
+    }
+
+    public static function period($document): string
+    {
+        $start = $document['start_date'] ?? $document['start'] ?? null;
+        $end = $document['end_date'] ?? $document['end'] ?? null;
+        if (empty($start)) {
+            return empty($end) ? translate('common.open_end') : translate('initiatives.deadline') . ': ' . format_date($end);
+        }
+        return format_date($start) . ' – ' . (empty($end) ? translate('common.open_end') : format_date($end));
     }
 
     public static function isExpired($document, ?string $today = null): bool
