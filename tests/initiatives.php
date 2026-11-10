@@ -172,6 +172,11 @@ check(array_column($fields, 'id') === ['name', 'date-range-ongoing'], 'New forms
 $config = new FormBuilder('Test', '', entity: 'initiatives', systemFields: FormBuilder::INITIATIVE_SYSTEM_FIELDS);
 check(isset($config->modules['name'], $config->modules['date-range-ongoing']), 'System fields are offered for initiatives.');
 check(!isset($config->modules['doi']), 'Activity-only fields are excluded.');
+$scopeModule = new Modules(['scope' => 'international']);
+ob_start(); $scopeModule->print_module('scope'); $scopeHtml = ob_get_clean();
+$scopeDom = new DOMDocument(); @$scopeDom->loadHTML($scopeHtml); $scopeXpath = new DOMXPath($scopeDom);
+check($scopeXpath->query('//option[@value="international" and @selected]')->length === 1, 'The selected scope round-trips using a stable vocabulary key.');
+check($scopeXpath->query('//option[not(@value)]')->length === 0, 'Scope choices must not store translated display labels.');
 $bsonFields = new MongoDB\Model\BSONArray([
     new MongoDB\Model\BSONDocument(['id' => 'name', 'type' => 'field', 'props' => new MongoDB\Model\BSONDocument(['required' => false])]),
 ]);

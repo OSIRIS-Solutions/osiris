@@ -52,7 +52,7 @@ class Modules
             "portfolio" => "impossible",
             "tags" => ['authors'],
             "section" => "authors",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "author-table" => [
             "fields" => ["authors" => [
@@ -127,7 +127,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'location'],
             "section" => "bibliography",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "conference" => [
             "fields" => ["conference" => '1st CRIS Conference'],
@@ -328,7 +328,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "others",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -399,7 +399,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "countries" => [
             "fields" => ["countries" => ['DE', 'AT', 'CH']],
@@ -413,7 +413,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
@@ -553,7 +553,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general', 'important'],
             "section" => "key",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "location" => [
             "fields" => ["location" => 'Braunschweig, Germany'],
@@ -567,7 +567,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "magazine" => [
             "fields" => ["magazine" => 'Apothekenumschau'],
@@ -924,7 +924,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['event'],
             "section" => "events",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "software-link" => [
             "fields" => ["link" => "https://osiris-app.de"],
@@ -3637,10 +3637,10 @@ class Modules
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="scope">
                     <select class="form-control" id="scope" name="values[scope]" <?= $labelClass ?> autocomplete="off">
-                        <option <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('activities.local') ?></option>
-                        <option <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('activities.regional') ?></option>
-                        <option <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('activities.national') ?></option>
-                        <option <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('activities.international') ?></option>
+                        <option value="local" <?= $scope == 'local' ? 'selected' : '' ?>><?= lang('activities.local') ?></option>
+                        <option value="regional" <?= $scope == 'regional' ? 'selected' : '' ?>><?= lang('activities.regional') ?></option>
+                        <option value="national" <?= $scope == 'national' ? 'selected' : '' ?>><?= lang('activities.national') ?></option>
+                        <option value="international" <?= $scope == 'international' ? 'selected' : '' ?>><?= lang('activities.international') ?></option>
                     </select>
                     <label class="<?= $labelClass ?>" for="scope">
                         <?= $label ?>
