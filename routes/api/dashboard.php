@@ -539,7 +539,7 @@ Route::get('/api/dashboard/author-role', function () {
     $filter = ['year' => ['$gte' => $Settings->get('startyear')], 'type' => 'publication'];
     if (isset($_GET['user'])) {
         $user = $_GET['user'];
-        $filter['authors.user'] = $user;
+        $filter['rendered.users'] = $user;
 
         $data = $osiris->activities->aggregate([
             ['$match' => $filter],
@@ -1248,7 +1248,7 @@ Route::get('/api/dashboard/author-network', function () {
 });
 
 
-Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors)', function ($type) {
+Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors|persons)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
 
@@ -1270,9 +1270,12 @@ Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors)',
     $contributors = [];
     switch ($type) {
         case 'contributors':
-            foreach (['authors', 'editors', 'supervisors'] as $role) {
+            foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
                 $contributors = array_merge($contributors, DB::doc2Arr($doc[$role] ?? []));
             }
+            break;
+        case 'persons':
+            $contributors = DB::doc2Arr($doc['persons'] ?? []);
             break;
         case 'authors':
             $contributors = DB::doc2Arr($doc['authors'] ?? []);
@@ -1467,22 +1470,22 @@ Route::get('/api/dashboard/spectrum-search', function () {
     $spectrum = $osiris->activities->aggregate(
         [
             ['$match' => ['spectrum.display_name' => $name]],
-            ['$project' => ['authors' => 1, 'spectrum' => 1]],
+            ['$project' => ['rendered.users' => 1, 'spectrum' => 1]],
             ['$unwind' => '$spectrum'],
             ['$match' => ['spectrum.display_name' => $name]],
-            ['$unwind' => '$authors'],
-            ['$match' => ['authors.user' => ['$in' => $active_users]]],
+            ['$unwind' => '$rendered.users'],
+            ['$match' => ['rendered.users' => ['$in' => $active_users]]],
             [
                 '$group' => [
-                    '_id' => '$authors.user',
+                    '_id' => '$rendered.users',
                     'total' => ['$sum' => 1],
                     'totalScore' => ['$sum' => '$spectrum.score'],
-                    'author' => ['$first' => '$authors']
                 ]
             ],
             // ['$project' => ['score' => ['$divide' =>], 'spectrum' => 1]],
             ['$match' => ['totalScore' => ['$gte' => 1]]],
-            ['$sort' => ['author.last' => 1]],
+            ['$lookup' => ['from' => 'persons', 'localField' => '_id', 'foreignField' => 'username', 'as' => 'person']],
+            ['$sort' => ['person.last' => 1, 'person.first' => 1]],
         ]
     )->toArray();
 

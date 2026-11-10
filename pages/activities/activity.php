@@ -1106,7 +1106,7 @@ if ($edit_perm) {
 
                 <?php
 
-                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor', 'persons', 'persons-role'];
 
                 foreach ($typeFields as $field_id => $props) {
 
@@ -1122,12 +1122,14 @@ if ($edit_perm) {
 
                     // --- Configure optional third column (avoid duplicated if/elseif in thead + tbody) ---
                     $thirdCol = null;
-                    if ($sws) {
+                    if ($field_id === 'persons-role') {
+                        $thirdCol = ['label' => lang('common.role'), 'value' => fn($a) => e($Vocabulary->getValue('persons-role', $a['role'] ?? 'member', $a['role'] ?? 'member'))];
+                    } elseif ($sws && $role !== 'persons') {
                         $thirdCol = [
                             'label' => 'SWS',
                             'value' => fn($a) => ($a['sws'] ?? 0)
                         ];
-                    } elseif ($supervisorThesis) {
+                    } elseif ($supervisorThesis && $role !== 'persons') {
                         $thirdCol = [
                             'label' => lang('common.role'),
                             'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),

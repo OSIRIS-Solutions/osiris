@@ -251,7 +251,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
                 ['arrayFilters' => [['u' => $group['id']]]]
             );
             if ($collection == 'activities') {
-                $keys = ['authors', 'editors', 'supervisors'];
+                $keys = ['authors', 'editors', 'supervisors', 'persons'];
             } else {
                 $keys = ['persons'];
             }
@@ -627,9 +627,9 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
     if (isset($_POST['start'])) {
-        renderAuthorUnitsMany(['rendered.affiliated_users' => $user, 'date' => ['$gte' => $_POST['start']]]);
+        renderAuthorUnitsMany(['rendered.users' => $user, 'start_date' => ['$gte' => $_POST['start']]]);
     } else {
-        renderAuthorUnitsMany(['rendered.affiliated_users' => $user]);
+        renderAuthorUnitsMany(['rendered.users' => $user]);
     }
 
     $_SESSION['msg'] = lang('people.person_added_successfully');
@@ -647,7 +647,7 @@ Route::post('/crud/groups/removeperson/(.*)', function ($id) {
 
     // update activities from the period the person was in the group
     include_once BASEPATH . "/php/Render.php";
-    renderAuthorUnitsMany(['authors.user' => $_POST['username']]);
+    renderAuthorUnitsMany(['rendered.users' => $_POST['username']]);
 
     $_SESSION['msg'] = lang('people.person_removed_successfully');
     $_SESSION['msg_type'] = 'success';

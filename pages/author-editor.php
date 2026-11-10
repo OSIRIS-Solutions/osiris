@@ -35,6 +35,20 @@ foreach ($typeModules as $m) {
     if ($m == 'supervisor-thesis') $supervisorThesis = true;
 }
 
+$configuredFields = DB::doc2Arr($subtypeArr['fields'] ?? []);
+if ($configuredFields) $typeModules = array_column($configuredFields, 'id');
+require_once BASEPATH . '/php/PersonField.php';
+$personsWithRoles = $role === 'persons' && in_array('persons-role', $typeModules, true);
+$personRoles = [];
+if ($personsWithRoles) {
+    $Vocabulary = new Vocabulary();
+    $personRoles = $Vocabulary->getValues('persons-role', true);
+}
+if ($role === 'persons') {
+    $sws = false;
+    $supervisorThesis = false;
+}
+
 $authors = DB::doc2Arr($form[$role] ?? []);
 ?>
 
@@ -62,7 +76,9 @@ $authors = DB::doc2Arr($form[$role] ?? []);
 
     <h1>
         <i class="ph-duotone ph-users"></i>
-        <?php if ($role == 'authors') { ?>
+        <?php if ($role === 'persons') { ?>
+            <?= lang('common.persons') ?>
+        <?php } elseif ($role == 'authors') { ?>
             <?= lang('people.edit_authors') ?>
         <?php } elseif ($role == 'supervisors') { ?>
             <?= lang('people.edit_supervisors') ?>
@@ -71,6 +87,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         <?php } ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/activities/update-<?= $role ?>/<?= $id ?>" method="post">
+        <input type="hidden" name="authors" value="">
         <table class="table">
             <thead>
                 <tr>
@@ -78,7 +95,9 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                     <th>Username</th>
                     <th><?= lang('common.name_last') ?> <span class="text-danger">*</span></th>
                     <th><?= lang('common.name_first') ?></th>
-                    <?php if ($sws) : ?>
+                    <?php if ($personsWithRoles): ?>
+                        <th><?= lang('common.role') ?></th>
+                    <?php elseif ($sws) : ?>
                         <th>SWS</th>
                     <?php elseif ($supervisorThesis) : ?>
                         <th><?= lang('common.role') ?></th>
@@ -99,16 +118,30 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                             <i class="ph ph-dots-six-vertical text-muted handle"></i>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= $author['user'] ?>" onchange="updateUser(this)">
+                            <input name="authors[<?= $i ?>][user]" type="text" class="form-control" list="user-list" value="<?= e($author['user'] ?? '') ?>" onchange="updateUser(this)">
                             <input name="authors[<?= $i ?>][approved]" type="hidden" class="form-control" value="<?= $author['approved'] ?? 0 ?>">
+                            <?php if ($role === 'persons' && !$personsWithRoles && isset($author['role'])): ?>
+                                <input type="hidden" name="authors[<?= $i ?>][role]" value="<?= e($author['role']) ?>">
+                            <?php endif; ?>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][last]" type="text" class="form-control lastname" value="<?= $author['last'] ?>" required>
+                            <input name="authors[<?= $i ?>][last]" type="text" class="form-control lastname" value="<?= e($author['last'] ?? '') ?>" required>
                         </td>
                         <td>
-                            <input name="authors[<?= $i ?>][first]" type="text" class="form-control firstname" value="<?= $author['first'] ?>">
+                            <input name="authors[<?= $i ?>][first]" type="text" class="form-control firstname" value="<?= e($author['first'] ?? '') ?>">
                         </td>
-                        <?php if ($sws) : ?>
+                        <?php if ($personsWithRoles):
+                            $selectedRole = $author['role'] ?? PersonField::defaultRole($personRoles); ?>
+                            <td><select name="authors[<?= $i ?>][role]" class="form-control">
+                                <?php foreach ($personRoles as $option):
+                                    if (!empty($option['inactive']) && $option['id'] !== $selectedRole) continue; ?>
+                                    <option value="<?= e($option['id']) ?>" <?= $option['id'] === $selectedRole ? 'selected' : '' ?>><?= e(lang($option['en'], $option['de'] ?? null)) ?></option>
+                                <?php endforeach; ?>
+                                <?php if (!in_array($selectedRole, array_column($personRoles, 'id'), true)): ?>
+                                    <option value="<?= e($selectedRole) ?>" selected><?= e($selectedRole) ?></option>
+                                <?php endif; ?>
+                            </select></td>
+                        <?php elseif ($sws) : ?>
                             <td>
                                 <input type="number" step="0.1" class="form-control" name="authors[<?= $i ?>][sws]" id="teaching-sws" value="<?= $author['sws'] ?? '' ?>">
                             </td>
@@ -194,7 +227,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                                     <?= lang('people.set_unit_manually') ?>
                                 </a>
                                 <div class="unit-override-panel" data-author-index="<?= $i ?>" style="display:<?= !empty($overrides) ? 'block' : 'none' ?>">
-                                    <input type="text" name="authors[<?= $i ?>][unit_override]" class="form-control unit-search" placeholder="<?= lang('people.search_unit') ?>" list="units-list" value="<?= implode(',', $overrides) ?>">
+                                    <input type="text" name="authors[<?= $i ?>][unit_override]" class="form-control unit-search" placeholder="<?= lang('people.search_unit') ?>" list="units-list" value="<?= e(implode(',', $overrides)) ?>">
                                 </div>
                             </div>
                         </td>
@@ -208,7 +241,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
                 <tr id="last-row">
                     <td></td>
                     <td colspan="7">
-                        <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= lang('people.add_author') ?></button>
+                        <button class="btn" type="button" onclick="addAuthorRow()"><i class="ph ph-plus"></i> <?= $role === 'persons' ? lang('activities.add_person') : lang('people.add_author') ?></button>
                     </td>
                 </tr>
             </tfoot>
@@ -224,7 +257,7 @@ $authors = DB::doc2Arr($form[$role] ?? []);
             <?php
             $all_users = $osiris->persons->find(['username' => ['$ne' => null]]);
             foreach ($all_users as $s) { ?>
-                <option value="<?= $s['username'] ?>"><?= "$s[last], $s[first] ($s[username])" ?></option>
+                <option value="<?= e($s['username']) ?>"><?= e("$s[last], $s[first] ($s[username])") ?></option>
             <?php } ?>
         </datalist>
 
@@ -253,7 +286,13 @@ $authors = DB::doc2Arr($form[$role] ?? []);
         tr.append('<td><input name="authors[' + counter + '][last]" type="text" class="form-control lastname" required></td>')
         tr.append('<td><input name="authors[' + counter + '][first]" type="text" class="form-control firstname"></td>')
 
-        <?php if ($sws) : ?>
+        <?php if ($personsWithRoles): ?>
+            const select = $('<select class="form-control">').attr('name', 'authors[' + counter + '][role]');
+            const roles = <?= json_encode(array_values(array_filter($personRoles, fn($v) => empty($v['inactive']))), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+            roles.forEach(role => select.append($('<option>').val(role.id).text(role[<?= json_encode(lang('common.this_language')) ?>] || role.en)));
+            select.val(<?= json_encode(PersonField::defaultRole($personRoles)) ?>);
+            tr.append($('<td>').append(select));
+        <?php elseif ($sws) : ?>
             tr.append('<td><input type="number" step="0.1" class="form-control" name="authors[' + counter + '][sws]" id="teaching-sws"></td>')
         <?php elseif ($supervisorThesis) : ?>
             tr.append('<td><select name="authors[' + counter + '][role]" class="form-control"><option value="supervisor"><?= lang('people.supervisor') ?></option><option value="first-reviewer"><?= lang('people.first_reviewer') ?></option><option value="second-reviewer"><?= lang('people.second_reviewer') ?></option><option value="third-reviewer"><?= lang('people.third_reviewer') ?></option><option value="committee-member"><?= lang('people.committee_member') ?></option><option value="chair"><?= lang('people.chair') ?></option><option value="mentor"><?= lang('people.mentor') ?></option><option value="other"><?= lang('common.other') ?></option></select></td>')

@@ -240,6 +240,20 @@ class ActivityFields extends Fields
                 'type' => 'string'
             ],
             [
+                'id' => 'persons',
+                'module_of' => array_values(array_unique(array_merge($typeModules['persons'] ?? [], $typeModules['persons-role'] ?? []))),
+                'usage' => ['columns'],
+                'label' => lang('common.persons'),
+                'type' => 'list',
+            ],
+            [
+                'id' => 'persons.role',
+                'module_of' => $typeModules['persons-role'] ?? [],
+                'usage' => ['filter', 'aggregate'],
+                'label' => lang('common.role'),
+                'type' => 'list',
+            ],
+            [
                 'id' => 'supervisors',
                 'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
                 'usage' => [

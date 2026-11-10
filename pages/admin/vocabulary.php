@@ -15,6 +15,10 @@
  */
 
 $categories = [
+    'General' => [
+        'label' => lang('common.general'), 
+        'icon' => 'ph ph-users'
+    ],
     'Project' => [
         'label' => lang('common.projects'),
         'icon' => 'ph ph-tree-structure'

@@ -1639,9 +1639,9 @@ Route::post('/crud/admin/initiativesFields', function () {
         }
     }
     try {
-        FormBuilder::validateSystemFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
+        FormBuilder::validateFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('System fields must remain present, visible and required as configured.', 'Systemfelder müssen enthalten, sichtbar und wie vorgegeben verpflichtend bleiben.'));
+        abortwith(400, lang('Check the system fields and use only one persons module.', 'Prüfe die Systemfelder und verwende nur ein Personenmodul.'));
     }
     $osiris->adminGeneral->updateOne(
         ['id' => 'initiative-fields'],
@@ -1672,6 +1672,12 @@ Route::post('/crud/admin/activity-fields', function () {
     $fields = $schema['items'];
     if (empty($fields)) {
         die("No fields given.");
+    }
+    include_once BASEPATH . '/php/FormBuilder.php';
+    try {
+        FormBuilder::validateFields($fields);
+    } catch (InvalidArgumentException $e) {
+        abortwith(400, lang('Use only one persons module.', 'Verwende nur ein Personenmodul.'));
     }
     $modules = [];
     foreach ($fields as $field) {

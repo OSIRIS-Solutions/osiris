@@ -933,5 +933,30 @@
         "de": "Sonstige Nachrichten"
       }
     ]
+  },
+  {
+    "id": "persons-role",
+    "category": "General",
+    "name": "Person roles",
+    "name_de": "Personenrollen",
+    "description": "Roles of persons associated with activities or initiatives.",
+    "description_de": "Rollen von Personen in Aktivitäten oder Initiativen.",
+    "values": [
+      {
+        "id": "member",
+        "en": "Member",
+        "de": "Mitglied"
+      },
+      {
+        "id": "lead",
+        "en": "Lead",
+        "de": "Leitung"
+      },
+      {
+        "id": "co-lead",
+        "en": "Co-Lead",
+        "de": "Co-Leitung"
+      }
+    ]
   }
 ]

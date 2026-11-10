@@ -779,7 +779,8 @@ class DB
     {
         if ($include_created_by && isset($doc['created_by']) && $doc['created_by'] == $user) return true;
         if (isset($doc['user']) && $doc['user'] == $user) return true;
-        foreach (['authors', 'editors', 'supervisors'] as $role) {
+        if (isset($doc['rendered']['users'])) return in_array($user, DB::doc2Arr($doc['rendered']['users']), true);
+        foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
             if (!isset($doc[$role])) continue;
             foreach ($doc[$role] as $author) {
                 if (isset($author['user']) && !empty($author['user'])) {
@@ -871,13 +872,8 @@ class DB
                 if (isset($doc['epub']) && $doc['epub']) continue;
             }
 
-            // check if any of the authors is affiliated
-            $aoi_exists = false;
-            foreach ($doc['authors'] as $a) {
-                $aoi = boolval($a['aoi'] ?? false);
-                $aoi_exists = $aoi_exists || $aoi;
-            }
-            if (!$aoi_exists) continue;
+            // Rendering includes every contributor group, including persons.
+            if (empty($doc['affiliated'])) continue;
 
             $result[] = $doc;
         }
@@ -906,6 +902,7 @@ class DB
                 ['authors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
                 ['editors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
                 ['supervisors' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
+                ['persons' => ['$elemMatch' => ['user' => $user, 'approved' => ['$nin' => [true, 1, '1']]]]],
             ]]
         );
         if (!empty($docs)) $issues['approval'] = array_map('strval', $docs);

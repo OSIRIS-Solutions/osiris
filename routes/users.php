@@ -754,7 +754,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
         // update all activities that have this user as author
         if ($unit['scientific']) {
             // only necessary if unit is scientific
-            $filter = ['authors.user' => $user];
+            $filter = ['rendered.users' => $user];
             if (isset($unit['start'])) {
                 $filter['start_date'] = ['$gte' => $unit['start']];
             }
@@ -796,7 +796,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     renderCurrentUnits(['username' => $user]);
 
     // update all activities that have this user as author
-    $filter = ['authors.user' => $user];
+    $filter = ['rendered.users' => $user];
     renderAuthorUnitsMany($filter);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
@@ -952,12 +952,16 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
         die();
     }
 
-    // delete username from all activities
-    $osiris->activities->updateMany(
-        ["authors.user" => $user],
-        ['$set' => ["authors.$[elem].user" => null]],
-        ['arrayFilters' => [["elem.user" => $user]]]
-    );
+    // Array-element updates deliberately target the relevant contributor group.
+    foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
+        $osiris->activities->updateMany(
+            ['rendered.users' => $user, $role . '.user' => $user],
+            ['$set' => [$role . '.$[person].user' => null]],
+            ['arrayFilters' => [['person.user' => $user]]]
+        );
+    }
+    include_once BASEPATH . '/php/Render.php';
+    renderActivities(['rendered.users' => $user]);
 
     // delete user from all projects
     $osiris->projects->updateMany(

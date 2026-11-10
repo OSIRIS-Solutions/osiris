@@ -35,7 +35,7 @@ function e($value): string
 }
 
 // helper functions for all CRUD methods
-function validateValues($values, $DB)
+function validateValues($values, $DB, ?string $entity = null)
 {
     if (!is_array($values)) return $values;
     $first = max(intval($values['first_authors'] ?? 1), 1);
@@ -44,7 +44,10 @@ function validateValues($values, $DB)
     unset($values['last_authors']);
 
     foreach ($values as $key => $value) {
-        if ($key == 'id') {
+        if ($key === 'persons' && in_array($entity, ['activities', 'initiatives'], true)) {
+            require_once __DIR__ . '/PersonField.php';
+            $values[$key] = PersonField::normalize($value, $DB);
+        } else if ($key == 'id') {
             // do not validate id, it is set by the database
             continue;
         } else if ($key == 'doi') {
@@ -131,7 +134,7 @@ function validateValues($values, $DB)
             }
             $values[$key] = $countries;
         } else if (is_array($value)) {
-            $values[$key] = validateValues($value, $DB);
+            $values[$key] = validateValues($value, $DB, $entity);
         } else if ($key == 'issn') {
             if (empty($value)) {
                 $values[$key] = array();

@@ -125,6 +125,16 @@ final class FormBuilder
         return array_merge($added, $fields);
     }
 
+    public static function validateFields(array $fields, array $systemFields = []): void
+    {
+        self::validateSystemFields($fields, $systemFields);
+        $personFields = array_filter($fields, fn($field) => ($field['type'] ?? '') === 'field'
+            && in_array($field['id'] ?? '', ['persons', 'persons-role'], true));
+        if (count($personFields) > 1) {
+            throw new InvalidArgumentException('Use either persons or persons-role, since both store the same persons.');
+        }
+    }
+
     /** Check submitted schemas against trusted configuration, never client-side flags. */
     public static function validateSystemFields(array $fields, array $systemFields): void
     {

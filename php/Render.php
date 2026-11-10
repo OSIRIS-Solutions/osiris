@@ -42,6 +42,7 @@ function renderActivities($filter = [], $return_updated = false)
             'authors' => $Format->getAuthors('authors'),
             'editors' => $Format->getAuthors('editors'),
             'supervisors' => $Format->getAuthors('supervisors'),
+            'persons' => $Format->getAuthors('persons'),
             'users' => $Format->getUsers(false),
             'affiliated_users' => $Format->getUsers(true),
         ];
@@ -79,7 +80,9 @@ function renderActivities($filter = [], $return_updated = false)
                 return $a['aoi'] ?? false;
             });
         }
-        $values['affiliated'] = !empty($aoi_authors);
+        $values['affiliated'] = !empty($aoi_authors) || (bool) array_filter(
+            DB::doc2Arr($doc['persons'] ?? []), fn($person) => $person['aoi'] ?? !empty($person['user'])
+        );
         $values['affiliated_positions'] = $Format->getAffiliationTypes('authors');
         $values['cooperative'] = $Format->getCooperationType($values['affiliated_positions'], $doc['units'] ?? []);
 
@@ -334,7 +337,7 @@ function renderAuthorUnits($doc, $old_doc = [])
 function renderAuthorUnitsMany($filter = [])
 {
     $DB = new DB;
-    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'supervisors' => 1, 'units' => 1, 'start_date' => 1, 'subtype' => 1]]);
+    $cursor = $DB->db->activities->find($filter, ['projection' => ['authors' => 1, 'editors' => 1, 'supervisors' => 1, 'persons' => 1, 'units' => 1, 'start_date' => 1, 'subtype' => 1]]);
     foreach ($cursor as $doc) {
         $doc = renderAuthorUnits($doc);
         $DB->db->activities->updateOne(

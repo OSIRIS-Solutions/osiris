@@ -1886,7 +1886,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
     }
 
     $defaultFilter = [
-        'authors.user' => $person['username'], // TODO: check for other roles?
+        'rendered.users' => $person['username'],
         'hide' => ['$ne' => true]
     ];
 

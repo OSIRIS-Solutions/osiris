@@ -1267,9 +1267,15 @@ $fields = FormBuilder::prepareFields($fields, $config->systemFields);
                 return;
             }
 
+            const personModules = schema.items.filter(item => item.type === 'field' && ['persons', 'persons-role'].includes(item.id));
+            if (personModules.length > 1) {
+                toastError(<?= json_encode(lang('Use either Persons or Persons with roles.', 'Verwende entweder Personen oder Personen mit Rollen.')) ?>);
+                return;
+            }
+
             <?php if ($config->entity === 'activities'): ?>
             // check if an author field is present
-            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
+            let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor", "persons", "persons-role"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
                 toastError(<?= json_encode(lang('admin.the_form_must_contain_at_least_one_person_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);

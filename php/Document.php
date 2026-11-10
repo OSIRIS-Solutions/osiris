@@ -111,6 +111,8 @@ class Document extends Settings
         "pages-pp" => ["pages"],
         "pages" => ["pages"],
         "peer-reviewed" => ["peer-reviewed"],
+        "persons" => ["persons"],
+        "persons-role" => ["persons"],
         "person" => ["name", "affiliation", "academic_title"],
         "person-only" => ["name"],
         "person-organization" => ["name", "organization"],
@@ -262,6 +264,7 @@ class Document extends Settings
         return match ($field_id) {
             'supervisor', 'supervisor-thesis' => 'supervisors',
             'editor' => 'editors',
+            'persons', 'persons-role' => 'persons',
             'authors', 'author-table', 'scientist' => 'authors',
             default => null,
         };
@@ -510,12 +513,12 @@ class Document extends Settings
     public function getUsers($affiliatedOnly = false)
     {
         $users = [];
-        foreach (['authors', 'editors', 'supervisors'] as $role) {
+        foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
             if (isset($this->doc[$role]) && !empty($this->doc[$role])) {
                 $persons = DB::doc2Arr($this->doc[$role]);
                 foreach ($persons as $p) {
                     if (isset($p['user']) && !empty($p['user'])) {
-                        if ($affiliatedOnly && !($p['aoi'] ?? false)) continue;
+                        if ($affiliatedOnly && !($p['aoi'] ?? ($role === 'persons'))) continue;
                         $users[] = $p['user'];
                     }
                 }
@@ -1020,6 +1023,7 @@ class Document extends Settings
 
     public function getAuthors($key = 'authors')
     {
+        if ($key === 'persons') return $this->get_field('persons');
         if (empty($this->doc[$key])) return '';
         $full = $this->full;
         $this->full = true;
@@ -1278,6 +1282,19 @@ class Document extends Settings
         switch ($module) {
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
+            case 'persons':
+            case 'persons-role':
+                $persons = [];
+                foreach (DB::doc2Arr($this->doc['persons'] ?? []) as $person) {
+                    $name = e(trim(($person['first'] ?? '') . ' ' . ($person['last'] ?? '')));
+                    if (!empty($person['user'])) $name = '<a href="' . ROOTPATH . '/profile/' . rawurlencode($person['user']) . '">' . $name . '</a>';
+                    if ($module === 'persons-role') {
+                        $role = $person['role'] ?? 'member';
+                        $name .= ' (' . e($Vocabulary->getValue('persons-role', $role, $role)) . ')';
+                    }
+                    $persons[] = $name;
+                }
+                return implode(', ', $persons);
             case "authors": // ["authors"],
             case "scientist": // ["authors"],
             case "author-table": // ["authors"],

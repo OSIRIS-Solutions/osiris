@@ -596,7 +596,7 @@ Route::get('/activities/copy/([a-zA-Z0-9]*)', function ($id) {
 }, 'login');
 
 
-Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', function ($id, $role) {
+Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors|persons)', function ($id, $role) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $id = $DB->to_ObjectID($id);
@@ -624,7 +624,9 @@ Route::get('/activities/edit/([a-zA-Z0-9]*)/(authors|editors|supervisors)', func
         ['name' => lang('common.activities'), 'path' => "/activities"],
         ['name' => $name, 'path' => "/activities/view/$id"]
     ];
-    if ($role == "authors") {
+    if ($role === 'persons') {
+        $breadcrumb[] = ['name' => lang('common.persons')];
+    } elseif ($role == "authors") {
         $breadcrumb[] = ['name' => lang('common.authors_all_activities')];
     } else {
         $breadcrumb[] = ['name' => lang('activities.editors_activities')];
@@ -647,7 +649,7 @@ Route::post('/crud/activities/create', function () {
     $collection = $osiris->activities;
     $activityType = $_POST['values']['type'];
 
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, 'activities');
 
     // add information on creating process
     $values['created'] = date('Y-m-d');
@@ -699,7 +701,7 @@ Route::post('/crud/activities/create', function () {
         }
         $values['projects'] = $projects;
     }
-    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors'])) {
+    if (isset($values['authors']) || isset($values['editors']) || isset($values['supervisors']) || isset($values['persons'])) {
         $values = renderAuthorUnits($values);
     }
 
@@ -763,7 +765,7 @@ Route::post('/crud/activities/save-draft', function () {
     if (!$Settings->featureEnabled('drafts')) die("Drafts are disabled.");
     $collection = $osiris->activitiesDrafts;
 
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, 'activities');
 
     $values['created'] = date('Y-m-d');
     $values['created_by'] = ($_SESSION['username']);
@@ -867,7 +869,7 @@ Route::post('/crud/activities/update-tags/([A-Za-z0-9]*)', function ($id) {
         $_SESSION['msg'] = lang('activities.tags_deleted');
         $_SESSION['msg_type'] = "success";
     } else {
-        $values = validateValues($_POST['values'], $DB);
+        $values = validateValues($_POST['values'], $DB, 'activities');
         $collection->updateOne(
             ['_id' => $id],
             ['$set' => ['tags' => $values['tags']]]
@@ -886,21 +888,22 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->activities;
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, 'activities');
 
     if (isset($_POST['minor']) && $_POST['minor'] == 1) {
         unset($values['authors']);
         unset($values['editors']);
+        unset($values['persons']);
     }
 
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = ($_SESSION['username']);
 
     // Recompute affiliations for role changes and activity date changes.
-    if (array_intersect(['authors', 'editors', 'supervisors', 'start', 'year', 'month', 'day', 'start_date'], array_keys($values))) {
+    if (array_intersect(['authors', 'editors', 'supervisors', 'persons', 'start', 'year', 'month', 'day', 'start_date'], array_keys($values))) {
         // check if authors have been changed
         $old = $collection->findOne(['_id' => $DB->to_ObjectID($id)]);
-        foreach (['authors', 'editors', 'supervisors'] as $role) {
+        foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
             $old_arr = DB::doc2Arr($old[$role] ?? []);
             // Restore omitted accounts only when the name is unique on both sides.
             $current = $values[$role] ?? [];
@@ -1212,20 +1215,23 @@ Route::post('/crud/activities/update-infrastructure-data/(.*)', function ($id) {
 });
 
 
-Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*)', function ($type, $id) {
+Route::post('/crud/activities/update-(authors|editors|supervisors|persons)/([A-Za-z0-9]*)', function ($type, $id) {
     include_once BASEPATH . "/php/init.php";
-    // prepare id
-    if (!isset($_POST['authors']) || empty($_POST['authors'])) {
-        echo "Error: Author list cannot be empty.";
-        die();
-    }
     $id = $DB->to_ObjectID($id);
-
     $old_doc = $osiris->activities->findOne(['_id' => $id]);
-
+    if (!$old_doc) abortwith(404, lang('common.activity'), '/activities');
+    if (!$DB->isUserActivity($old_doc, $_SESSION['username']) && !$Settings->hasPermission('activities.edit')) {
+        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id);
+    }
+    if (($old_doc['locked'] ?? false) && !$Settings->hasPermission('activities.edit-locked')) {
+        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id);
+    }
+    $input = is_array($_POST['authors'] ?? null) ? $_POST['authors'] : [];
+    if (!$input && $type !== 'persons') abortwith(400, lang('error.no_values'));
     $authors = [];
     $units = [];
-    foreach ($_POST['authors'] as $i => $a) {
+    foreach ($input as $i => $a) {
+        if (!is_array($a)) abortwith(400, lang('error.no_values'));
         if (isset($a['unit_override']) && !empty($a['unit_override'])) {
             if (!($a['units'] ?? false)) $a['units'] = [];
             $a['units'] = array_merge($a['units'], explode(',', $a['unit_override']));
@@ -1234,8 +1240,8 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
             $units = array_merge($units, $a['units']);
         }
         $author = [
-            'last' => $a['last'],
-            'first' => $a['first'],
+            'last' => $a['last'] ?? '',
+            'first' => $a['first'] ?? '',
             'aoi' => (boolval($a['aoi'] ?? false)),
             //|| ($_SESSION['username'] == $a['user'] ?? '')
             'user' => empty($a['user']) ? null : $a['user'],
@@ -1252,6 +1258,20 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
             $author['sws'] = $a['sws'];
         }
         $authors[] = $author;
+    }
+
+    if ($type === 'persons') {
+        require_once BASEPATH . '/php/PersonField.php';
+        $authors = PersonField::normalize($authors, $DB);
+        if (!$authors) {
+            include_once BASEPATH . '/php/Modules.php';
+            $modules = new Modules($old_doc);
+            foreach ($modules->getFields() as $fieldId => $props) {
+                if (in_array($fieldId, ['persons', 'persons-role'], true) && !empty($props['required'])) {
+                    abortwith(400, lang('error.no_values'));
+                }
+            }
+        }
     }
 
     // prepare values for update
@@ -1284,7 +1304,7 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
         $_SESSION['msg_type'] = "info";
     }
     header("Location: " . ROOTPATH . "/activities/view/$id");
-});
+}, 'login');
 
 
 
@@ -1318,52 +1338,22 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
         return;
     }
 
-    // Autoren-Update
-    $updateAuthors = [
-        str_replace('$.', 'authors.$[a].', array_key_first($u)) => current($u),
-    ];
-    $updateAuthors = key($u) === '$set'
-        ? ['$set' => array_combine(
-            array_map(fn($k) => str_replace('$.', 'authors.$[a].', $k), array_keys($u['$set'])),
-            array_values($u['$set'])
-        )]
-        : $u; // (falls du später $unset nutzen willst)
-
-    $resA = $collection->updateOne(
-        ['_id' => $id, 'authors.user' => $user],
-        $updateAuthors,
-        ['arrayFilters' => [['a.user' => $user]]]
-    );
-
-    // Editoren-Update
-    $updateEditors = key($u) === '$set'
-        ? ['$set' => array_combine(
-            array_map(fn($k) => str_replace('$.', 'editors.$[e].', $k), array_keys($u['$set'])),
-            array_values($u['$set'])
-        )]
-        : $u;
-
-    $resE = $collection->updateOne(
-        ['_id' => $id, 'editors.user' => $user],
-        $updateEditors,
-        ['arrayFilters' => [['e.user' => $user]]]
-    );
-
-    $updateCount = ($resA->getModifiedCount() ?? 0) + ($resE->getModifiedCount() ?? 0);
-
-    // supervisor update
-    $updateSupervisors = key($u) === '$set'
-        ? ['$set' => array_combine(
-            array_map(fn($k) => str_replace('$.', 'supervisors.$[s].', $k), array_keys($u['$set'])),
-            array_values($u['$set'])
-        )]
-        : $u;
-    $resS = $collection->updateOne(
-        ['_id' => $id, 'supervisors.user' => $user],
-        $updateSupervisors,
-        ['arrayFilters' => [['s.user' => $user]]]
-    );
-    $updateCount += ($resS->getModifiedCount() ?? 0);
+    $updateCount = 0;
+    foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
+        $set = [];
+        foreach ($u['$set'] as $key => $value) {
+            $set[str_replace('$.', $role . '.$[person].', $key)] = $value;
+        }
+        $result = $collection->updateOne(
+            ['_id' => $id, $role . '.user' => $user],
+            ['$set' => $set],
+            ['arrayFilters' => [['person.user' => $user]]]
+        );
+        $updateCount += $result->getModifiedCount();
+    }
+    include_once BASEPATH . '/php/Render.php';
+    renderAuthorUnitsMany(['_id' => $id]);
+    renderActivities(['_id' => $id]);
 
     // force update of user notifications
     $DB->notifications(true);
@@ -1377,7 +1367,7 @@ Route::post('/crud/activities/approve/([A-Za-z0-9]*)', function ($id) {
     echo json_encode([
         'updated' => $updateCount
     ]);
-});
+}, 'login');
 
 
 Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
@@ -1389,6 +1379,7 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
     }
     $index = intval($_POST['index']);
     $role = $_POST['role'] ?? 'authors';
+    if (!in_array($role, ['authors', 'editors', 'supervisors', 'persons'], true)) abortwith(400, lang('error.no_values'));
 
     // prepare id
     $id = $DB->to_ObjectID($id);
@@ -1424,27 +1415,31 @@ Route::post('/crud/activities/claim/([A-Za-z0-9]*)', function ($id) {
 
     include_once BASEPATH . "/php/Render.php";
     renderAuthorUnitsMany(['_id' => $id]);
+    renderActivities(['_id' => $id]);
 
     // $updateCount = $updateResult->getModifiedCount();
     $_SESSION['msg'] = lang('activities.you_have_claimed_this_authorship');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/activities/view/$id");
     die();
-});
+}, 'login');
 
 
 Route::post('/crud/activities/approve-all', function () {
     include_once BASEPATH . "/php/init.php";
-    $osiris->activities->updateMany(
-        ['authors.user' => $_SESSION['username']],
-        ['$set' => ["authors.$.approved" => true]]
-    );
+    foreach (['authors', 'editors', 'supervisors', 'persons'] as $role) {
+        $osiris->activities->updateMany(
+            ['rendered.users' => $_SESSION['username'], $role . '.user' => $_SESSION['username']],
+            ['$set' => [$role . '.$[person].approved' => true]],
+            ['arrayFilters' => [['person.user' => $_SESSION['username']]]]
+        );
+    }
     // force update of user notifications
     $DB->notifications(true);
     $_SESSION['msg'] = lang('activities.all_pending_approvals_have_been_approved');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/issues");
-});
+}, 'login');
 
 
 Route::post('/crud/activities/fav', function () {

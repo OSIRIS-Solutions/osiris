@@ -66,12 +66,12 @@ $links = implode('&', $links);
 
 $raw = $osiris->activities->aggregate([
     ['$match' => $filter],
-    ['$project' => ['authors' => 1]],
-    ['$unwind' => '$authors'],
-    ['$match' => ['authors.aoi' => ['$in' => [1, true, '1', 'true']]]],
+    ['$project' => ['rendered.affiliated_users' => 1]],
+    ['$unwind' => '$rendered.affiliated_users'],
+    ['$match' => ['rendered.affiliated_users' => ['$nin' => [null, '']]]],
     [
         '$group' => [
-            '_id' => '$authors.user',
+            '_id' => '$rendered.affiliated_users',
             'count' => ['$sum' => 1],
         ]
     ]

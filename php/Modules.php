@@ -709,6 +709,24 @@ class Modules
             "section" => "people",
             "entities" => ['activities']
         ],
+        "persons" => [
+            "fields" => ["persons" => []],
+            "name" => "Persons", "name_de" => "Personen",
+            "label" => "Persons", "label_de" => "Personen",
+            "description" => "Persons associated with this record.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['authors', 'people'], "section" => "people",
+            "entities" => ['activities', 'initiatives'],
+        ],
+        "persons-role" => [
+            "fields" => ["persons" => []],
+            "name" => "Persons with roles", "name_de" => "Personen mit Rollen",
+            "label" => "Persons", "label_de" => "Personen",
+            "description" => "Persons associated with this record, with configurable roles.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['authors', 'people'], "section" => "people",
+            "entities" => ['activities', 'initiatives'],
+        ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
             "name" => "Projects",
@@ -1832,6 +1850,11 @@ class Modules
         }
 
         switch ($module) {
+            case 'persons':
+            case 'persons-role':
+                include BASEPATH . '/components/modules/persons.php';
+                break;
+
 
             case 'name':
                 $val = $this->val('name');

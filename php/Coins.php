@@ -32,7 +32,7 @@ class Coins
         $subtype = $doc['subtype'];
         $coins = $this->matrix[$subtype];
 
-        $authors = DB::doc2Arr($doc['authors']);
+        $authors = DB::doc2Arr($doc['authors'] ?? []);
         $author = array_filter($authors, function ($author) use ($user) {
             return $author['user'] == $user;
         });
@@ -90,6 +90,7 @@ class Coins
             // dump($subtype);
             $filter = [
                 'subtype' => $subtype,
+                'rendered.users' => $user,
                 'authors' => ['$elemMatch' => ['user' => $user, 'aoi' => ['$in' => [true, 1, '1']]]],
                 'epub' => ['$ne' => true]
             ];

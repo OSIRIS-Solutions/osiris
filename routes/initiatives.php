@@ -76,7 +76,7 @@ $saveInitiative = function ($id = null) {
         if (!is_array($input)) throw new InvalidArgumentException(translate('error.no_values'));
         $raw = Initiatives::formValues($input, $fields, $config->modules);
         // Activity normalization derives publication years from dates; keep initiative dates separate.
-        $values = validateValues(array_diff_key($raw, ['start' => true, 'end' => true]), $DB);
+        $values = validateValues(array_diff_key($raw, ['start' => true, 'end' => true]), $DB, 'initiatives');
         $values['name'] = $raw['name'];
         foreach (['start', 'end'] as $key) {
             if (array_key_exists($key, $raw)) {

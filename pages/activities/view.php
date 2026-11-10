@@ -17,7 +17,7 @@
         }
     }
     $abstract_fields = [];
-    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'event-select'];
+    $hidden_fields = ['authors', "editors", "supervisors", "semester-select", 'depts', 'projects', 'title', 'event-select', 'persons', 'persons-role'];
     $empty_fields = [];
     $sections = [];
     $Format->usecase = 'list';
@@ -77,6 +77,7 @@
         "authors",
         "editors",
         "supervisors",
+        "persons",
     ];
     $count_authors = 0;
     foreach ($author_keys as $k) {
@@ -1150,7 +1151,7 @@
                                 ?>
                             </p>
                             <?php
-                            $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+                            $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor', 'persons', 'persons-role'];
                             $authorTypes = [];
                             foreach ($typeFields as $field_id => $props) {
                                 if (!in_array($field_id, $authorModules, true)) continue;
@@ -1160,12 +1161,14 @@
                                 $contributors = $doc[$role] ?? [];
                                 // --- Configure optional third column (avoid duplicated if/elseif in thead + tbody) ---
                                 $thirdCol = null;
-                                if ($sws) {
+                                if ($field_id === 'persons-role') {
+                                    $thirdCol = ['label' => lang('common.role'), 'value' => fn($a) => e($Vocabulary->getValue('persons-role', $a['role'] ?? 'member', $a['role'] ?? 'member'))];
+                                } elseif ($sws && $role !== 'persons') {
                                     $thirdCol = [
                                         'label' => 'SWS',
                                         'value' => fn($a) => 'SWS <b>' . ($a['sws'] ?? 0) . '</b>',
                                     ];
-                                } elseif ($supervisorThesis) {
+                                } elseif ($supervisorThesis && $role !== 'persons') {
                                     $thirdCol = [
                                         'label' => lang('common.role'),
                                         'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
@@ -1422,6 +1425,9 @@
                                     <?php if (in_array('supervisors', $authorTypes)) { ?>
                                         <button class="btn" onclick="showCollaboratorChart('supervisors', this)"><?= lang('activities.supervisors') ?></button>
                                     <?php } ?>
+                                    <?php if (in_array('persons', $authorTypes)) { ?>
+                                        <button class="btn" onclick="showCollaboratorChart('persons', this)"><?= lang('common.persons') ?></button>
+                                    <?php } ?>
                                     <?php if (in_array('editors', $authorTypes)) { ?>
                                         <button class="btn" onclick="showCollaboratorChart('editors', this)"><?= lang('activities.editors') ?></button>
                                     <?php } ?>
@@ -1435,6 +1441,9 @@
                             </div>
                             <div id="chart-editors" class="collab-chart" style="max-width: 40rem;">
                                 <canvas id="chart-editors-canvas"></canvas>
+                            </div>
+                            <div id="chart-persons" class="collab-chart" style="max-width: 40rem;">
+                                <canvas id="chart-persons-canvas"></canvas>
                             </div>
                             <div id="chart-supervisors" class="collab-chart" style="max-width: 40rem;">
                                 <canvas id="chart-supervisors-canvas"></canvas>

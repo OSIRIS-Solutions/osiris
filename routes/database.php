@@ -198,7 +198,7 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     set_time_limit(6000);
     include_once BASEPATH . "/php/Render.php";
     $filter = [];
-    if (!empty($username)) $filter['rendered.affiliated_users'] = $username;
+    if (!empty($username)) $filter['rendered.users'] = $username;
 
     include BASEPATH . "/header.php";
     if (!$Settings->hasPermission('admin.see')) { ?>

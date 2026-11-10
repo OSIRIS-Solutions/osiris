@@ -16,20 +16,21 @@ require BASEPATH . '/vendor/autoload.php';
 $configSource = file_get_contents(BASEPATH . '/php/_config.php');
 $abortStart = strpos($configSource, 'function abortwith(');
 $abortEnd = strpos($configSource, 'function formatBytes(', $abortStart);
-eval('?>' . substr($configSource, 0, $abortStart) . substr($configSource, $abortEnd));
+eval('?>' . str_replace('__DIR__', var_export(BASEPATH . '/php', true), substr($configSource, 0, $abortStart) . substr($configSource, $abortEnd)));
 require BASEPATH . '/php/Language.php';
 $language = new Language(BASEPATH . '/lang');
 function translate($key) { global $language; return $language->resolve($key, 'en', 'en'); }
-function lang($en, $de = null) { return $de === null ? translate($en) : $en; }
+function lang($en, $de = null, array $replace = []) { return $de === null ? translate($en) : $en; }
 function localized($value) { return is_string($value) ? $value : ($value['en'] ?? $value['de'] ?? ''); }
 class Aborted extends RuntimeException {}
 function abortwith($code, ...$args) { throw new Aborted('', $code); }
 function loadIsolated(string $file): void
 {
-    global $DB, $osiris, $Settings, $initiative;
+    global $DB, $osiris, $Settings, $initiative, $form, $role, $id, $Groups;
     $source = file_get_contents(BASEPATH . '/' . $file);
     $source = str_replace("include_once BASEPATH . '/php/init.php';", 'global $DB, $osiris, $Settings;', $source);
-    $source = preg_replace('/^\s*(?:include|require)(?:_once)? .*;\R/m', '', $source);
+    $source = str_replace('include_once BASEPATH . "/php/init.php";', 'global $DB, $osiris, $Settings;', $source);
+    $source = preg_replace('/^\s*(?:include|require)(?:_once)? (?![^\r\n]*components\/modules\/).*;\R/m', '', $source);
     $source = str_replace('__DIR__', var_export(dirname(BASEPATH . '/' . $file), true), $source);
     eval('?>' . $source);
 }
@@ -39,6 +40,10 @@ class MemoryCollection
     private function matches(array $document, array $filter): bool
     {
         foreach ($filter as $key => $value) {
+            if (is_array($value) && array_key_exists('$ne', $value)) {
+                if (($document[$key] ?? null) === $value['$ne']) return false;
+                continue;
+            }
             if ((string) ($document[$key] ?? '') !== (string) $value) return false;
         }
         return true;
@@ -63,9 +68,10 @@ class MemoryCollection
         foreach ($this->documents as &$document) {
             if ($this->matches($document, $filter)) {
                 $document = array_replace($document, $update['$set']);
-                break;
+                return new class { public function getModifiedCount() { return 1; } };
             }
         }
+        return new class { public function getModifiedCount() { return 0; } };
     }
 }
 class DB
@@ -73,26 +79,50 @@ class DB
     public static $database;
     public $db;
     public function __construct() { $this->db = self::$database; }
+    public function getPerson($user = null) { return $this->db->persons->findOne(['username' => $user]) ?? []; }
+    public function updateHistory($values, $id) { return $values; }
+    public static function isUserActivity($doc, $user) { return in_array($user, self::doc2Arr($doc['rendered']['users'] ?? []), true) || ($doc['created_by'] ?? '') === $user; }
     public static function doc2Arr($value) { return $value instanceof Traversable ? iterator_to_array($value) : ($value ?? []); }
     public static function is_ObjectID($value) { return is_string($value) && preg_match('/^[a-f0-9]{24}$/i', $value); }
     public static function to_ObjectID($value) { return $value instanceof MongoDB\BSON\ObjectId ? $value : new MongoDB\BSON\ObjectId($value); }
 }
-class Settings { public function __construct() {} }
-class Vocabulary { public function getValues($key) { return []; } }
+class Settings {
+    public function __construct() {}
+    public function get($key, $default = null) { return $default; }
+    public function getActivity($category, $type = null) {
+        $id = $type ?? $category;
+        return DB::$database->adminTypes->findOne(['id' => $id]) ?? ['id' => $id, 'name' => $id, 'color' => '#333', 'icon' => 'users', 'upload' => false];
+    }
+}
+class Vocabulary {
+    public static ?array $roles = null;
+    public function getValues($key, $all = false) {
+        if ($key !== 'persons-role') return [];
+        $catalog = array_column(json_decode(file_get_contents(BASEPATH . '/data/vocabulary.json'), true), null, 'id');
+        $roles = self::$roles ?? $catalog[$key]['values'];
+        return $all ? $roles : array_values(array_filter($roles, fn($role) => empty($role['inactive'])));
+    }
+    public function getValue($key, $id, $default = '') {
+        foreach ($this->getValues($key, true) as $role) if ($role['id'] === $id) return $role['en'];
+        return $default;
+    }
+}
 class Route
 {
     public static array $routes = [];
-    public static function get($path, $fn, $visibility) { self::$routes['GET ' . $path] = [$fn, $visibility]; }
-    public static function post($path, $fn, $visibility) { self::$routes['POST ' . $path] = [$fn, $visibility]; }
+    public static function get($path, $fn, $visibility = 'public') { self::$routes['GET ' . $path] = [$fn, $visibility]; }
+    public static function post($path, $fn, $visibility = 'public') { self::$routes['POST ' . $path] = [$fn, $visibility]; }
 }
 $Settings = new class {
     public bool $enabled = true;
+    public array $continuousTypes = [];
+    public function get($key, $default = null) { return $default; }
     public array $permissions = ['initiatives.view', 'initiatives.edit'];
     public function featureEnabled($key) { return $this->enabled; }
     public function hasPermission($key) { return in_array($key, $this->permissions, true); }
 };
 $osiris = new stdClass();
-foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations'] as $collection) $osiris->$collection = new MemoryCollection();
+foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations', 'adminTypes', 'activities', 'groups'] as $collection) $osiris->$collection = new MemoryCollection();
 DB::$database = $osiris;
 $DB = new DB();
 $_SESSION = ['username' => 'reviewer'];
