@@ -55,10 +55,11 @@ Route::get('/user/oauth', function () {
         case 'generic':
             $authorizationEndpoint = AUTHORITY . '/auth';
             break;
-
         case 'microsoft':
-        default:
             $authorizationEndpoint = AUTHORITY . '/oauth2/v2.0/authorize';
+            break;
+        default:
+            $authorizationEndpoint = AUTHORITY . '/auth';
             break;
     }
 
