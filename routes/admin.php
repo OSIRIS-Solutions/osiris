@@ -194,7 +194,7 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
             foreach ($modules as $m) {
                 $req = str_ends_with($m, '*');
                 $id = $req ? substr($m, 0, -1) : $m;
-                $mod = $all[$id] ?? [];
+                $mod = $config->modules[$id] ?? [];
                 $fields[] = [
                     'id' => $id,
                     'type' => $mod['type'] ?? 'field',
@@ -211,7 +211,7 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
             foreach ($modules as $m) {
                 $req = str_ends_with($m, '*');
                 $id = $req ? substr($m, 0, -1) : $m;
-                $mod = $all[$id] ?? [];
+                $mod = $config->modules[$id] ?? [];
                 $fields[] = [
                     'id' => $id,
                     'type' => $mod['type'] ?? 'field',
@@ -267,7 +267,7 @@ Route::get('/admin/initiatives/fields', function () {
         redirectUrl: ROOTPATH . '/crud/admin/initiativesFields',
         entity: 'initiatives',
         backUrl: ROOTPATH . '/admin/initiatives',
-        mandatory: ['name', 'id', 'date-range-ongoing', 'type']
+        systemFields: FormBuilder::INITIATIVE_SYSTEM_FIELDS
     );
 
     $breadcrumb = [
@@ -1619,6 +1619,43 @@ Route::post('/crud/(categories|types)/update-order', function ($col) {
     }
 });
 
+Route::post('/crud/admin/initiativesFields', function () {
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+    }
+    include_once BASEPATH . "/php/FormBuilder.php";
+
+    $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
+    if (!is_array($schema) || !isset($schema['items']) || !is_array($schema['items'])
+        || !array_is_list($schema['items'])) {
+        abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+    }
+    $fields = $schema['items'];
+    foreach ($fields as $field) {
+        if (!is_array($field) || !is_string($field['type'] ?? null)
+            || (isset($field['props']) && !is_array($field['props']))) {
+            abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+        }
+    }
+    try {
+        FormBuilder::validateSystemFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
+    } catch (InvalidArgumentException $e) {
+        abortwith(400, lang('System fields must remain present, visible and required as configured.', 'Systemfelder müssen enthalten, sichtbar und wie vorgegeben verpflichtend bleiben.'));
+    }
+    $osiris->adminGeneral->updateOne(
+        ['id' => 'initiative-fields'],
+        ['$set' => ['fields' => $fields], '$setOnInsert' => [
+            'name' => 'Initiatives', 'name_de' => 'Initiativen',
+        ]],
+        ['upsert' => true]
+    );
+    $_SESSION['msg'] = lang('Form updated.', 'Formular aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/initiatives/fields');
+    die();
+}, 'login');
+
 Route::post('/crud/admin/activity-fields', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -1643,7 +1680,7 @@ Route::post('/crud/admin/activity-fields', function () {
             continue;
         }
         $f = $field['id'];
-        if (isset($field['overrides']) && isset($field['overrides']['required']) && $field['overrides']['required']) {
+        if (!empty($field['props']['required'])) {
             $f .= '*';
         }
         $modules[] = $f;

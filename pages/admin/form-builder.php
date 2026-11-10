@@ -14,88 +14,7 @@
  * @license     MIT
  */
 include_once BASEPATH . '/header-editor.php';
-// include_once BASEPATH . '/php/Modules.php';
-
-// $Modules = new Modules();
-// $all = [];
-// $tags = [];
-// foreach ($Modules->all_modules as $key => $value) {
-//     if (($value['show'] ?? true) === false) {
-//         continue;
-//     }
-//     $all[$key] = [
-//         'name' => $value['name'] ?? $key,
-//         'name_de' => $value['name_de'] ?? null,
-//         'label' => $value['label'] ?? $value['name'] ?? $key,
-//         'label_de' => $value['label_de'] ?? null,
-//         'width' => $value['width'] ?? '12',
-//         'fields' => array_keys($value['fields'] ?? []),
-//         'type' => 'field',
-//         'portfolio' => $value['portfolio'] ?? false,
-//         'tags' => implode(',', $value['tags'] ?? []),
-//     ];
-//     foreach ($value['tags'] ?? [] as $tag) {
-//         if (!in_array($tag, $tags)) {
-//             $tags[] = $tag;
-//         }
-//     }
-// }
-
-// $custom_fields = $osiris->adminFields->find()->toArray();
-// foreach ($custom_fields as $f) {
-//     $all[$f['id']] = [
-//         'name' => $f['name'],
-//         'name_de' => $f['name_de'] ?? null,
-//         'label' => $f['name'] ?? $key,
-//         'label_de' => $f['name_de'] ?? null,
-//         'width' => $f['width'] ?? '12',
-//         'fields' => [$f['id']],
-//         'type' => 'custom',
-//     ];
-// }
-
-// if (isset($_GET['copy']) && !empty($_GET['copy'])) {
-//     // load fields from another form
-//     $copy = $osiris->adminTypes->findOne(['id' => $_GET['copy']]);
-
-//     $modules = $copy['modules'] ?? [];
-//     $fields = DB::doc2Arr($copy['fields'] ?? []);
-//     if (empty($fields)) {
-//         foreach ($modules as $m) {
-//             $req = str_ends_with($m, '*');
-//             $id = $req ? substr($m, 0, -1) : $m;
-//             $mod = $all[$id] ?? [];
-//             $fields[] = [
-//                 'id' => $id,
-//                 'type' => $mod['type'] ?? 'field',
-//                 'props' => ['required' => $req]
-//             ];
-//         }
-//     }
-// } else {
-//     // use current type
-//     $copy = false;
-//     $modules = $type['modules'] ?? [];
-//     $fields = DB::doc2Arr($type['fields'] ?? []);
-//     if (empty($fields)) {
-//         foreach ($modules as $m) {
-//             $req = str_ends_with($m, '*');
-//             $id = $req ? substr($m, 0, -1) : $m;
-//             $mod = $all[$id] ?? [];
-//             $fields[] = [
-//                 'id' => $id,
-//                 'type' => $mod['type'] ?? 'field',
-//                 'props' => ['required' => $req]
-//             ];
-//         }
-//     }
-// }
-
-// // remove important tag from tags
-// if (($key = array_search('important', $tags)) !== false) {
-//     unset($tags[$key]);
-// }
-
+$fields = FormBuilder::prepareFields($fields, $config->systemFields);
 
 ?>
 
@@ -546,7 +465,7 @@ include_once BASEPATH . '/header-editor.php';
                     <div class="font-size-12 text-muted"><?= lang('common.custom_fields') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($config->modules as $id => $field) {
-                            if ($field['type'] !== 'custom') {
+                            if ($field['type'] !== 'custom' || in_array($id, array_column($fields, 'id'))) {
                                 continue;
                             }
                         ?>
@@ -612,6 +531,11 @@ include_once BASEPATH . '/header-editor.php';
                             <i class="ph ph-trash"></i> <?= lang('admin.delete_element') ?>
                         </button>
                     </div>
+
+                    <p id="system-field-note" class="text-muted" hidden>
+                        <i class="ph ph-lock-simple"></i>
+                        <?= lang('System field: can be moved, but cannot be removed or hidden.', 'Systemfeld: kann verschoben, aber nicht entfernt oder ausgeblendet werden.') ?>
+                    </p>
 
                     <div id="props-field" style="display:none;">
                         <b>
@@ -786,14 +710,14 @@ include_once BASEPATH . '/header-editor.php';
                                 $field_type = $it['type'] ?? 'field';
                                 $props = $it['props'] ?? [];
                                 if ($field_type === 'field' || $field_type === 'custom'):
-                                    $module = $all[$it['id']] ?? [];
+                                    $module = $config->modules[$it['id']] ?? [];
                                     $label = lang($module['name'] ?? $it['id'], $module['name_de'] ?? null);
                                     if (!empty($props['label'] ?? null)) {
                                         $label = lang($props['label'], $props['label_de'] ?? null);
                                     }
                             ?>
                                     <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?? 12 ?>"
-                                        data-type="field"
+                                        data-type="<?= e($field_type) ?>"
                                         data-id="<?= e($it['id']) ?>"
                                         data-props='<?= json_encode($props ?? []) ?>'>
                                         <div class="handle"></div>
@@ -805,7 +729,12 @@ include_once BASEPATH . '/header-editor.php';
                                             <?php } ?>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= e($label) ?></div>
+                                            <div class="title">
+                                                <?php if (isset($config->systemFields[$it['id']])): ?>
+                                                    <i class="ph ph-lock-simple" title="<?= lang('System field', 'Systemfeld') ?>"></i>
+                                                <?php endif; ?>
+                                                <?= e($label) ?>
+                                            </div>
                                             <div class="subtitle">
                                                 <code class="badge"><?= $it['id'] ?></code>
                                                 <?php if (!empty($props['required'])): ?>
@@ -909,8 +838,8 @@ include_once BASEPATH . '/header-editor.php';
 <script src="<?= ROOTPATH ?>/js/Sortable.min.js"></script>
 <script src="<?= ROOTPATH ?>/js/jquery-sortable.min.js"></script>
 <script>
-    const ALL = <?= json_encode($all) ?>;
-    console.log(ALL);
+    const ALL = <?= json_encode($config->modules) ?>;
+    const SYSTEM_FIELDS = <?= json_encode((object) $config->systemFields) ?>;
 
     $(function() {
 
@@ -1045,6 +974,10 @@ include_once BASEPATH . '/header-editor.php';
             var id = $(this).data('id') || '';
             var title = $(this).find('.title').text() || '—';
 
+            const systemField = SYSTEM_FIELDS[id];
+            $('#deleteSelection').prop('disabled', !!systemField);
+            $('#system-field-note').prop('hidden', !systemField);
+
             if (type === 'field' || type === 'custom') {
                 const defaults = ALL[id] || {};
                 $('#prop-id').text(id);
@@ -1067,10 +1000,10 @@ include_once BASEPATH . '/header-editor.php';
                 console.log('Feld-Eigenschaften:', props);
                 $('#prop-help').val(props.help || '');
                 $('#prop-help-de').val(props.help_de || props.help || '');
-                $('#prop-roles').val(props.roles || '');
+                $('#prop-roles').val(props.roles || '').prop('disabled', !!systemField);
                 $('#prop-width').val(props.width || '');
-                $('#prop-required').prop('checked', props.required || false);
-                $('#prop-recommended').prop('checked', props.recommended || false);
+                $('#prop-required').prop('checked', props.required || false).prop('disabled', !!systemField?.required);
+                $('#prop-recommended').prop('checked', props.recommended || false).prop('disabled', !!systemField?.required);
                 $('#prop-label-en').val(props.label || '');
                 $('#prop-label-de').val(props.label_de || '');
 
@@ -1115,11 +1048,16 @@ include_once BASEPATH . '/header-editor.php';
                 let defaults = ALL[$selected.data('id')] || {};
                 let props = {}
 
+                if (SYSTEM_FIELDS[$selected.data('id')]?.required) {
+                    $('#prop-required').prop('checked', true);
+                    $('#prop-recommended').prop('checked', false);
+                }
+
                 // required/recommended must be mutually exclusive, but both can be false
                 if ($(this).attr('id') === 'prop-required' && $('#prop-required').is(':checked')) {
                     $('#prop-recommended').prop('checked', false);
                 }
-                if ($(this).attr('id') === 'prop-recommended' && $('#prop-recommended').is(':checked')) {
+                if ($(this).attr('id') === 'prop-recommended' && $('#prop-recommended').is(':checked') && !SYSTEM_FIELDS[$selected.data('id')]?.required) {
                     $('#prop-required').prop('checked', false);
                 }
 
@@ -1205,6 +1143,7 @@ include_once BASEPATH . '/header-editor.php';
         });
 
         function deleteItem(item) {
+            if (SYSTEM_FIELDS[item.data('id')]) return;
             var type = item.data('type');
             if (item.hasClass('is-selected')) {
                 $('#properties-panel').addClass('d-none');
@@ -1328,6 +1267,7 @@ include_once BASEPATH . '/header-editor.php';
                 return;
             }
 
+            <?php if ($config->entity === 'activities'): ?>
             // check if an author field is present
             let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
@@ -1351,6 +1291,7 @@ include_once BASEPATH . '/header-editor.php';
                 $('.pillbar .tag[data-tag="date"]').addClass('active');
                 return;
             }
+            <?php endif; ?>
             // Alles ok, Formular absenden
             $('#activity-form').submit();
         });

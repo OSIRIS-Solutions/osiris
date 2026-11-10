@@ -1,9 +1,12 @@
 <?php
-include_once __DIR__ . '/DB.php';
-include_once __DIR__ . '/Modules.php';
 
 final class FormBuilder
 {
+    public const INITIATIVE_SYSTEM_FIELDS = [
+        'title' => ['required' => true],
+        'date-range-ongoing' => ['required' => true]
+        ];
+
     public static array $tagLabels = [
         'publication' => ['en' => 'Publication', 'de' => 'Publikation'],
         'general' => ['en' => 'General', 'de' => 'Allgemein'],
@@ -26,7 +29,7 @@ final class FormBuilder
         public readonly string $redirectUrl,
         public readonly string $entity = 'activities',
         public readonly string $backUrl = ROOTPATH . '/admin',
-        public readonly array $mandatory = [],
+        public readonly array $systemFields = [],
         private readonly bool $showCustomFields = true
     ) {
 
@@ -34,12 +37,15 @@ final class FormBuilder
             $this->canBeCopied = true;
         }
 
+        include_once __DIR__ . '/DB.php';
+        include_once __DIR__ . '/Modules.php';
+
         $DB = new DB();
         $osiris = $DB->db;
 
         $Modules = new Modules();
         foreach ($Modules->all_modules as $key => $value) {
-            if ($value['show'] ?? true === false) {
+            if (($value['show'] ?? true) === false) {
                 continue;
             }
             if (!in_array($this->entity, $value['entities'] ?? [])) {
@@ -56,7 +62,6 @@ final class FormBuilder
                 'type' => 'field',
                 'portfolio' => $value['portfolio'] ?? false,
                 'tags' => implode(',', $value['tags'] ?? []),
-                'mandatory' => in_array($key, $this->mandatory),
             ];
             foreach ($value['tags'] ?? [] as $tag) {
                 if (!in_array($tag, $this->tags)) {
@@ -81,8 +86,58 @@ final class FormBuilder
                     'width' => $f['width'] ?? '12',
                     'fields' => [$f['id']],
                     'type' => 'custom',
-                    'mandatory' => false,
                 ];
+            }
+        }
+        foreach ($systemFields as $id => $rules) {
+            if (!isset($this->modules[$id]) || $this->modules[$id]['type'] !== ($rules['type'] ?? 'field')) {
+                throw new InvalidArgumentException("Unknown system field: $id");
+            }
+        }
+    }
+
+
+    /** Add missing system fields without changing the positions of existing fields. */
+    public static function prepareFields(array $fields, array $systemFields): array
+    {
+        $missing = $systemFields;
+        foreach ($fields as &$field) {
+            $id = $field['id'] ?? '';
+            if (!isset($systemFields[$id]) || ($field['type'] ?? '') !== ($systemFields[$id]['type'] ?? 'field')) {
+                continue;
+            }
+            unset($missing[$id]);
+            // System fields must remain visible to everyone filling in the form.
+            unset($field['props']['roles']);
+            if ($systemFields[$id]['required'] ?? false) {
+                $field['props']['required'] = true;
+                $field['props']['recommended'] = false;
+            }
+        }
+        unset($field);
+
+        $added = [];
+        foreach ($missing as $id => $rules) {
+            $added[] = ['id' => $id, 'type' => $rules['type'] ?? 'field', 'props' => [
+                'required' => $rules['required'] ?? false,
+            ]];
+        }
+        return array_merge($added, $fields);
+    }
+
+    /** Check submitted schemas against trusted configuration, never client-side flags. */
+    public static function validateSystemFields(array $fields, array $systemFields): void
+    {
+        foreach ($systemFields as $id => $rules) {
+            $matches = array_values(array_filter($fields, fn($field) => ($field['id'] ?? '') === $id));
+            if (count($matches) !== 1
+                || ($matches[0]['type'] ?? '') !== ($rules['type'] ?? 'field')
+                || !empty($matches[0]['props']['roles'])
+                || (($rules['required'] ?? false) && (
+                    ($matches[0]['props']['required'] ?? false) !== true
+                    || !empty($matches[0]['props']['recommended'])
+                ))) {
+                throw new InvalidArgumentException("Invalid or missing system field: $id");
             }
         }
     }

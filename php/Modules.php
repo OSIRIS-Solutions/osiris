@@ -183,7 +183,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['date', 'important'],
             "section" => "dates",
-            "entities" => ['activities']
+            "entities" => ['activities', 'initiatives']
         ],
         "date" => [
             "fields" => ["year" => 2023, "month" => 5, "day" => 4],
@@ -1336,20 +1336,8 @@ class Modules
         }
     }
 
-    function print_form($type)
+    function render_form($fields)
     {
-        $this->type = $type;
-        $typeArr = $this->DB->db->adminTypes->findOne(['id' => $type]);
-        if (!isset($typeArr)) {
-            echo '<b>Type <code>' . $type . '</code> is not defined. </b>';
-            return;
-        }
-
-        $fields = $typeArr['fields'] ?? [];
-        if (empty($fields) && !empty($typeArr['modules'])) {
-            $this->print_modules($typeArr['modules']);
-            return;
-        }
         $user = $this->DB->db->persons->findOne(['username' => $this->user]);
         $user_roles = DB::doc2Arr($user['roles'] ?? []);
         foreach ($fields as $f) {
@@ -1385,6 +1373,23 @@ class Modules
                     break;
             }
         }
+    }
+
+    function print_form($type)
+    {
+        $this->type = $type;
+        $typeArr = $this->DB->db->adminTypes->findOne(['id' => $type]);
+        if (!isset($typeArr)) {
+            echo '<b>Type <code>' . $type . '</code> is not defined. </b>';
+            return;
+        }
+
+        $fields = $typeArr['fields'] ?? [];
+        if (empty($fields) && !empty($typeArr['modules'])) {
+            $this->print_modules($typeArr['modules']);
+            return;
+        }
+        $this->render_form($fields);
     }
 
 
@@ -2741,16 +2746,16 @@ class Modules
                                         </script>
                                     <?php } ?>
                                     <p>
-                                        <?php 
+                                        <?php
                                         if ($Settings->hasPermission('organizations.edit')) {
-                                            lang('forms.organization_not_found_add_new', replace:[
+                                            lang('forms.organization_not_found_add_new', replace: [
                                                 'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
                                             ]);
-                                        } else { 
-                                            lang('forms.organization_not_found_contact', replace:[
+                                        } else {
+                                            lang('forms.organization_not_found_contact', replace: [
                                                 'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
                                             ]);
-                                        } 
+                                        }
                                         ?>
                                     </p>
                                 </div>
@@ -3651,16 +3656,16 @@ class Modules
                                 <?php } ?>
 
                                 <p>
-                                    <?php 
+                                    <?php
                                     if ($Settings->hasPermission('organizations.edit')) {
-                                        lang('forms.organization_not_found_add_new', replace:[
+                                        lang('forms.organization_not_found_add_new', replace: [
                                             'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
                                         ]);
-                                    } else { 
-                                        lang('forms.organization_not_found_contact', replace:[
+                                    } else {
+                                        lang('forms.organization_not_found_contact', replace: [
                                             'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
                                         ]);
-                                    } 
+                                    }
                                     ?>
                                 </p>
                             </div>
@@ -3719,16 +3724,16 @@ class Modules
                                     </table>
                                     <small class="text-muted">Powered by <a href="https://ror.org/" target="_blank" rel="noopener noreferrer">ROR</a></small>
                                     <p>
-                                        <?php 
+                                        <?php
                                         if ($Settings->hasPermission('organizations.edit')) {
-                                            lang('forms.organization_not_found_add_new', replace:[
+                                            lang('forms.organization_not_found_add_new', replace: [
                                                 'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
                                             ]);
-                                        } else { 
-                                            lang('forms.organization_not_found_contact', replace:[
+                                        } else {
+                                            lang('forms.organization_not_found_contact', replace: [
                                                 'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
                                             ]);
-                                        } 
+                                        }
                                         ?>
                                     </p>
                                     <script>
