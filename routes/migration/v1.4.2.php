@@ -1,9 +1,12 @@
 <?php
 
+require_once BASEPATH . '/php/HttpClient.php';
+
 // Download from GitHub: stefangabos/world_countries
-$json = file_get_contents('https://raw.githubusercontent.com/stefangabos/world_countries/refs/heads/master/data/countries/_combined/world.json');
-// check for errors
-if ($json === false) {
+try {
+    $json = HttpClient::get('https://raw.githubusercontent.com/stefangabos/world_countries/refs/heads/master/data/countries/_combined/world.json', ['Accept: application/json'], 30);
+} catch (\RuntimeException $e) {
+    error_log('OSIRIS: Country download failed. ' . $e->getMessage());
     echo "Error downloading file.";
     include BASEPATH . "/footer.php";
     die;
@@ -21,11 +24,24 @@ if (!is_array($countries)) {
     die;
 }
 // check if countries is empty
-if (empty($countries)) {
+if (empty($countries) || !array_is_list($countries)) {
     echo "Error: countries is empty.";
     include BASEPATH . "/footer.php";
     die;
 }
+// Do not replace existing data with an unexpected response from the remote server.
+foreach ($countries as $country) {
+    if (!is_array($country)
+        || !is_string($country['alpha2'] ?? null) || !preg_match('/^[a-z]{2}$/i', $country['alpha2'])
+        || !is_string($country['alpha3'] ?? null) || !preg_match('/^[a-z]{3}$/i', $country['alpha3'])
+        || !is_string($country['en'] ?? null) || $country['en'] === ''
+        || (isset($country['de']) && !is_string($country['de']))) {
+        echo "Error: invalid country data.";
+        include BASEPATH . "/footer.php";
+        die;
+    }
+}
+
 // update countries
 $osiris->countries->deleteMany([]);
 foreach ($countries as $country) {
