@@ -161,6 +161,23 @@ final class Initiatives
         return $value;
     }
 
+    /** Stable, unique database references submitted by association fields. */
+    public static function normalizeLinks($values): array
+    {
+        if ($values instanceof Traversable) $values = iterator_to_array($values);
+        if (!is_array($values)) $values = empty($values) ? [] : [$values];
+        $links = [];
+        foreach ($values as $value) {
+            // Activity detail pages convert BSON references to Extended JSON.
+            if (is_array($value)) $value = $value['$oid'] ?? null;
+            if ($value instanceof MongoDB\BSON\ObjectId) $value = (string) $value;
+            if (!is_string($value) || !DB::is_ObjectID($value)) continue;
+            $id = DB::to_ObjectID($value);
+            $links[(string) $id] = $id;
+        }
+        return array_values($links);
+    }
+
     public static function period($document): string
     {
         $start = $document['start_date'] ?? $document['start'] ?? null;

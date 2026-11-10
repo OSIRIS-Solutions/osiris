@@ -776,6 +776,16 @@ class Modules
             "tags" => ['authors', 'people'], "section" => "people",
             "entities" => ['activities', 'initiatives'],
         ],
+        "initiatives" => [
+            "fields" => ["initiatives" => []],
+            "name" => "Initiatives", "name_de" => "Initiativen",
+            "label" => "Initiatives", "label_de" => "Initiativen",
+            "description" => "Select one or more initiatives associated with this record.",
+            "description_de" => "Eine oder mehrere Initiativen mit diesem Eintrag verknüpfen.",
+            "width" => 12, "portfolio" => "impossible",
+            "tags" => ['general'], "section" => "",
+            "entities" => ['activities', 'projects', 'proposals', 'events'],
+        ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
             "name" => "Projects",
@@ -1923,6 +1933,10 @@ class Modules
                     });
                 </script>
                 <?php
+                break;
+
+            case 'initiatives':
+                include BASEPATH . '/components/modules/initiatives.php';
                 break;
 
             case 'persons':

@@ -766,6 +766,16 @@
                                     </tr>
                                 <?php } ?>
 
+
+                                <?php if ($Settings->featureEnabled('initiatives')) { ?>
+                                    <tr>
+                                        <td>
+                                            <span class="key"><?= translate('common.initiatives') ?></span>
+                                            <?= $Format->get_field('initiatives', '-') ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
                                 <tr>
                                     <td>
                                         <span class="key"><?= lang('common.date') ?>: </span>

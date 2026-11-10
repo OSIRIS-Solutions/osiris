@@ -121,6 +121,7 @@ class Document extends Settings
         "person-only" => ["name"],
         "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
+        "initiatives" => ["initiatives"],
         "projects" => ["projects"],
         "pub-language" => ["pub-language"],
         "publisher" => ["publisher"],
@@ -1291,6 +1292,22 @@ class Document extends Settings
         switch ($module) {
             case "affiliation": // ["book"],
                 return $this->getVal('affiliation');
+            case 'initiatives':
+                if (!class_exists('Initiatives')) require_once __DIR__ . '/Initiatives.php';
+                $ids = Initiatives::normalizeLinks($this->doc['initiatives'] ?? []);
+                if (empty($ids) || $this->usecase === 'portal') return '';
+                $names = [];
+                foreach ($this->DB->db->initiatives->find(['_id' => ['$in' => $ids]]) as $initiative) {
+                    $name = e(trim(strip_tags(localized($initiative['name'] ?? '', $this->lang))));
+                    if ($this->usecase === 'print') {
+                        $names[] = $name;
+                        continue;
+                    }
+                    $title = trim(strip_tags(localized($initiative['title'] ?? '', $this->lang)));
+                    $tooltip = $title === '' ? '' : ' title="' . e($title) . '"';
+                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($initiative['_id']) . '"' . $tooltip . '><i class="ph ph-lightbulb" aria-hidden="true"></i> ' . $name . '</a>';
+                }
+                return implode(', ', $names);
             case 'persons':
             case 'persons-role':
                 $persons = [];
