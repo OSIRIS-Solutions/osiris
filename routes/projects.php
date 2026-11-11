@@ -388,7 +388,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
 
 
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, $collection);
     if (!isset($values['type']) || !isset($values['name'])) {
         $_SESSION['msg'] = lang('projects.missing_required_parameters');
         $_SESSION['msg_type'] = "error";
@@ -703,7 +703,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         abortwith(404, $collection == 'projects' ? lang('common.project') : lang('projects.project_proposal'), "/$collection");
     }
 
-    $values = validateValues($_POST['values'], $DB);
+    $values = validateValues($_POST['values'], $DB, $collection);
     // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
@@ -871,7 +871,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     $id = $DB->to_ObjectID($id);
     include_once BASEPATH . "/php/Render.php";
-    $values = renderProject($values, $id);
+    $values = renderProject($values, $collection, $id);
 
     $updateResult = $osiris->$collection->updateOne(
         ['_id' => $id],

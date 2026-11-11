@@ -6,6 +6,8 @@ set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 define('BASEPATH', dirname(__DIR__));
+define('ROOTPATH', '/osiris');
+require BASEPATH . '/php/FormBuilder.php';
 require BASEPATH . '/vendor/autoload.php';
 require BASEPATH . '/php/Language.php';
 require BASEPATH . '/php/ProjectFormMigration.php';
@@ -100,8 +102,8 @@ $modules = [
 $fields = $migration->fields('proposed', new MongoDB\Model\BSONArray(array_map(fn($m) => new MongoDB\Model\BSONDocument($m), $modules)));
 $byId = array_column(array_filter($fields, fn($f) => isset($f['id'])), null, 'id');
 $ids = array_keys($byId);
-check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'start_proposed', 'end_proposed', 'applicants', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
-foreach (['name-loc', 'title-loc', 'submission_date', 'start_proposed', 'end_proposed', 'applicants', 'funder'] as $id) {
+check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'start_proposed', 'end_proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
+foreach (['name-loc', 'title-loc', 'submission_date', 'start_proposed', 'end_proposed', 'persons-project', 'funder'] as $id) {
     check($byId[$id]['props']['required'] === true, "System requirement retained for $id.");
 }
 check($byId['abstract-loc']['props']['required'] === false, 'A required German-only field does not make the English value mandatory.');
@@ -114,8 +116,8 @@ $headings = array_values(array_filter($fields, fn($f) => $f['type'] === 'heading
 check(array_column(array_column($headings, 'props'), 'text') === ['Submission', 'General information', 'Persons', 'Funding', 'Project description', 'Institutional fields', 'Nagoya Protocol', 'Resources and Personnel'], 'Existing section headings are explicit ordered builder elements.');
 check($headings[1]['props']['text_de'] === $language->resolve('projects.general_information', 'de', 'en'), 'Headings include German translations.');
 $empty = $migration->fields('rejected', []);
-check(array_column($empty, 'id') === ['rejection_date'], 'Even an empty phase includes its system fields.');
-check(count(array_filter($empty, fn($f) => $f['type'] === 'heading')) === 1, 'Empty sections are omitted.');
+check(array_column($empty, 'id') === ['rejection_date', 'persons-project'], 'Even an empty phase includes its system fields.');
+check(count(array_filter($empty, fn($f) => $f['type'] === 'heading')) === 2, 'Only sections containing fields are emitted.');
 $plain = array_column($migration->fields('project', []), null, 'id');
 check(isset($plain['name'], $plain['title']) && !isset($plain['name-loc']), 'Without a German companion, plain modules are retained.');
 $duplicates = array_column($migration->fields('rejected', ['website', 'website*']), null, 'id');
@@ -126,7 +128,12 @@ $allIds = array_column($allFields, 'id');
 foreach (array_keys($legacy->FIELDS) as $id) {
     if (in_array($id, ['type', 'status'], true)) continue;
     $base = str_ends_with($id, '_de') ? substr($id, 0, -3) : $id;
-    $target = in_array($base, ['name', 'title', 'abstract'], true) ? $base . '-loc' : $id;
+    $target = match ($id) {
+        'start', 'end' => 'project-date',
+        'role' => 'institute-role',
+        'applicants', 'scholar', 'supervisor' => 'persons-project',
+        default => in_array($base, ['name', 'title', 'abstract'], true) ? $base . '-loc' : $id,
+    };
     check(in_array($target, $allIds, true), "Catalogue field $id survives migration.");
 }
 check(!in_array('type', $allIds, true) && !in_array('status', $allIds, true), 'Hidden workflow values stay outside the editable form configuration.');
@@ -144,6 +151,15 @@ $original = [
     ['_id' => 'two', 'id' => 'disabled', 'disabled' => true, 'phases' => [['id' => 'project', 'modules' => []]]],
     ['_id' => 'three', 'id' => 'no-phases', 'phases' => []],
 ];
+$activityOriginal = [
+    ['_id' => 'legacy-activity', 'id' => 'thesis', 'modules' => ['title*', 'university*']],
+    ['_id' => 'modern-activity', 'id' => 'other-thesis', 'modules' => ['university'], 'fields' => [
+        ['type' => 'heading', 'props' => ['text' => 'Details']],
+        ['id' => 'university', 'type' => 'field', 'props' => ['required' => false, 'label' => 'My university', 'label_de' => 'Meine Hochschule', 'width' => 6]],
+    ]],
+    ['_id' => 'custom-activity', 'id' => 'custom', 'modules' => [], 'fields' => [['id' => 'university', 'type' => 'custom', 'props' => []]]],
+];
+$osiris->adminTypes = new MigrationCollection($activityOriginal);
 $osiris->adminProjects = new MigrationCollection($original);
 $osiris->projects = new MigrationCollection([['name' => 'Old English', 'name_de' => 'Altes Deutsch']]);
 $osiris->proposals = new MigrationCollection([['name' => 'Proposal', 'name_de' => 'Antrag']]);
@@ -157,20 +173,48 @@ function runMigration(): array {
     return [$created, $existing];
 }
 $legacyBefore = $legacy->getFields('grant', 'proposed');
-check(runMigration() === [3, 2], 'Migration creates only missing fields, including disabled types.');
+check(runMigration() === [5, 0], 'Migration creates missing fields and adds the mandatory project persons to existing forms.');
 $migrated = $osiris->adminProjects->documents;
 check($migrated[0]['phases'][0]['fields'] === $fields, 'Production migration writes the converted phase fields.');
-check($migrated[0]['phases'][1]['fields'] === $existingFields && $migrated[0]['phases'][2]['fields'] === [], 'Existing fields, including explicitly empty ones, are preserved.');
+check($migrated[0]['phases'][1]['fields'][1] === $existingFields[0], 'Existing layout elements are preserved when system fields are added.');
+check(array_column($migrated[0]['phases'][2]['fields'], 'id') === ['persons-project'], 'Even an empty form receives its mandatory persons field.');
 foreach ($migrated as $i => $type) {
     foreach ($type['phases'] as $index => &$phase) {
-        if (!array_key_exists('fields', $original[$i]['phases'][$index])) unset($phase['fields']);
+        unset($phase['fields']);
     }
     unset($phase);
-    check($type === $original[$i], 'All legacy configuration and phase metadata remains unchanged.');
+    $expected = $original[$i];
+    foreach ($expected['phases'] as &$phase) unset($phase['fields']);
+    unset($phase);
+    check($type === $expected, 'All legacy configuration and phase metadata remains unchanged.');
 }
 check(runMigration() === [0, 5] && $osiris->adminProjects->documents === $migrated, 'Rerunning the migration does not overwrite fields or create duplicates.');
-check($osiris->adminProjects->writes === 3, 'Rerunning performs no database writes.');
+check($osiris->adminProjects->writes === 5, 'Rerunning performs no database writes.');
 check($osiris->projects->documents === [['name' => 'Old English', 'name_de' => 'Altes Deutsch']] && $osiris->proposals->documents === [['name' => 'Proposal', 'name_de' => 'Antrag']], 'Existing project and proposal data stays in its old format.');
 // getFields still sees precisely the same old configuration after migration.
 check($legacy->getFields('grant', 'proposed') === $legacyBefore, 'Legacy phase lookup and required flags remain unchanged.');
+$activityMigrated = $osiris->adminTypes->documents;
+check($activityMigrated[0]['modules'] === ['title*', 'publisher*'], 'Legacy activity module identifiers are renamed without losing required flags.');
+check($activityMigrated[0]['fields'][1] === ['id' => 'publisher', 'type' => 'field', 'props' => ['label' => 'University', 'label_de' => 'Universität', 'required' => true]], 'Activities with only modules get fields so the University label can be retained.');
+check($activityMigrated[1]['fields'][0] === $activityOriginal[1]['fields'][0], 'Activity layout elements remain unchanged.');
+check($activityMigrated[1]['fields'][1]['props']['label'] === 'My university' && $activityMigrated[1]['fields'][1]['props']['width'] === 6, 'Existing university label overrides and width are preserved.');
+check($activityMigrated[2] === $activityOriginal[2], 'A custom field named university is not renamed.');
+check($osiris->adminTypes->writes === 2, 'Activity migration is idempotent.');
+$upgraded = $migration->upgradeFields([
+    ['type' => 'heading', 'props' => ['text' => 'Custom heading']],
+    ['id' => 'role', 'type' => 'field', 'props' => ['label' => 'Our role', 'required' => true]],
+    ['id' => 'end', 'type' => 'field', 'props' => ['required' => false]],
+    ['id' => 'start', 'type' => 'field', 'props' => ['required' => true]],
+    ['id' => 'applicants', 'type' => 'field', 'props' => ['required' => false]],
+    ['id' => 'scholar', 'type' => 'field', 'props' => []],
+    ['id' => 'supervisor', 'type' => 'field', 'props' => []],
+]);
+check(array_column($upgraded, 'id') === ['institute-role', 'project-date', 'persons-project'], 'Prior migrated forms adopt the new module identities without duplicates.');
+check($upgraded[0]['props']['text'] === 'Custom heading' && $upgraded[1]['props']['label'] === 'Our role', 'Unrelated layout and role label edits survive migration.');
+check($upgraded[2]['props']['required'] === true, 'Combined project dates retain a required start or end.');
+check($migration->upgradeFields($upgraded) === $upgraded, 'Upgrading fields is stable on repeated calls.');
+$customized = $upgraded;
+$customized[2]['props']['label'] = 'Duration';
+$customized[3]['props']['label'] = 'Team';
+check($migration->upgradeFields($customized) === $customized, 'Existing project-date and persons-project labels remain configurable.');
 echo "Project form migration tests passed ($checks checks).\n";

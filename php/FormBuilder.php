@@ -7,6 +7,10 @@ final class FormBuilder
         'date-range-ongoing' => ['required' => true],
     ];
 
+    public const PROJECT_SYSTEM_FIELDS = ['persons-project' => ['required' => true]];
+
+    public readonly array $systemFields;
+
     public static array $tagLabels = [
         'publication' => ['en' => 'Publication', 'de' => 'Publikation'],
         'general' => ['en' => 'General', 'de' => 'Allgemein'],
@@ -29,9 +33,14 @@ final class FormBuilder
         public readonly string $redirectUrl,
         public readonly string $entity = 'activities',
         public readonly string $backUrl = ROOTPATH . '/admin',
-        public readonly array $systemFields = [],
+        array $systemFields = [],
         private readonly bool $showCustomFields = true
     ) {
+
+        $this->systemFields = array_replace(
+            $systemFields,
+            in_array($this->entity, ['projects', 'proposals'], true) ? self::PROJECT_SYSTEM_FIELDS : []
+        );
 
         if ($this->entity === 'activities') {
             $this->canBeCopied = true;
@@ -89,7 +98,7 @@ final class FormBuilder
                 ];
             }
         }
-        foreach ($systemFields as $id => $rules) {
+        foreach ($this->systemFields as $id => $rules) {
             if (!isset($this->modules[$id]) || $this->modules[$id]['type'] !== ($rules['type'] ?? 'field')) {
                 throw new InvalidArgumentException("Unknown system field: $id");
             }

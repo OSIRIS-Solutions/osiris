@@ -50,6 +50,9 @@ function validateValues($values, $DB, ?string $entity = null)
         } else if ($key === 'initiatives' && (is_array($value) || $value instanceof Traversable || $value === '' || (is_string($value) && DB::is_ObjectID($value)))) {
             if (!class_exists('Initiatives')) require_once __DIR__ . '/Initiatives.php';
             $values[$key] = Initiatives::normalizeLinks($value);
+        } else if ($key === 'persons' && in_array($entity, ['projects', 'proposals'], true)) {
+            require_once __DIR__ . '/ProjectPersons.php';
+            $values[$key] = ProjectPersons::normalize($value, $DB);
         } else if ($key === 'persons' && in_array($entity, ['activities', 'initiatives'], true)) {
             require_once __DIR__ . '/PersonField.php';
             $values[$key] = PersonField::normalize($value, $DB);

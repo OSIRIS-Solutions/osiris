@@ -402,6 +402,10 @@ function renderProject($doc, $col = 'projects', $id = null)
             $startdate = strtotime($doc['start_date']);
             // initialize units
             foreach ($doc['persons'] as $i => $author) {
+                if (array_key_exists('units', $author)) {
+                    $units = array_merge($units, DB::doc2Arr($author['units']));
+                    continue;
+                }
                 $user = $author['user'];
                 $person = $DB->getPerson($user);
                 if (isset($person['units']) && !empty($person['units'])) {

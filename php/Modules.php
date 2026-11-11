@@ -758,6 +758,42 @@ class Modules
             "tags" => ['general'], "section" => "summary",
             "entities" => ['activities', 'initiatives', 'projects'],
         ],
+        "persons-project" => [
+            "fields" => ["persons" => []],
+            "name" => "Project persons", "name_de" => "Projektpersonen",
+            "label" => "Persons", "label_de" => "Personen",
+            "description" => "Project persons with roles, membership dates and organizational units.",
+            "width" => 12, "portfolio" => false,
+            "tags" => ['people'], "section" => "people",
+            "entities" => ['projects', 'proposals'],
+        ],
+        "institute-role" => [
+            "fields" => ["role" => 'associated'],
+            "name" => "Institute role", "name_de" => "Rolle des Instituts",
+            "label" => "Institute role", "label_de" => "Rolle des Instituts",
+            "description" => "The institute's role in a project, using the project-institute-role vocabulary.",
+            "width" => 6, "portfolio" => true,
+            "tags" => ['general'], "section" => "general",
+            "entities" => ['projects', 'proposals'],
+        ],
+        "project-date" => [
+            "fields" => ["start" => [], "end" => []],
+            "name" => "Project dates", "name_de" => "Projektlaufzeit",
+            "label" => "Project dates", "label_de" => "Projektlaufzeit",
+            "description" => "Project start and end dates, with duration shortcuts.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['date'], "section" => "dates",
+            "entities" => ['projects', 'proposals'],
+        ],
+        "website" => [
+            "fields" => ["website" => 'https://osiris-app.de'],
+            "name" => "Website", "name_de" => "Webseite",
+            "label" => "Website", "label_de" => "Webseite",
+            "description" => "A website associated with this record.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "links",
+            "entities" => ['activities', 'initiatives', 'projects', 'proposals'],
+        ],
         "persons" => [
             "fields" => ["persons" => []],
             "name" => "Persons", "name_de" => "Personen",
@@ -1129,6 +1165,7 @@ class Modules
             "entities" => ['activities', 'initiatives', 'projects']
         ],
         "university" => [
+            "show" => false, // Legacy alias; migrated activity forms use publisher with a custom label.
             "fields" => ["publisher" => 'Springer Nature'],
             "name" => "University",
             "name_de" => "Universität",
@@ -1937,6 +1974,41 @@ class Modules
 
             case 'initiatives':
                 include BASEPATH . '/components/modules/initiatives.php';
+                break;
+
+            case 'persons-project':
+                include BASEPATH . '/components/modules/persons-project.php';
+                break;
+
+            case 'project-date':
+                include BASEPATH . '/components/modules/project-date.php';
+                break;
+
+            case 'institute-role':
+                $value = $this->val('role');
+                ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="institute-role">
+                    <select class="form-control" name="values[role]" id="institute-role" <?= $labelClass ?>>
+                        <?php foreach ($Vocabulary->getValues('project-institute-role', true) as $option):
+                            if (!empty($option['inactive']) && $option['id'] !== $value) continue;
+                        ?>
+                            <option value="<?= e($option['id']) ?>" <?= $option['id'] === $value ? 'selected' : '' ?>><?= e(lang($option['en'], $option['de'] ?? null)) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <label for="institute-role" class="<?= $labelClass ?>"><?= e($label) ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+                <?php
+                break;
+
+            case 'website':
+                ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="website">
+                    <input type="url" class="form-control" id="website" name="values[website]" value="<?= $this->val('website') ?>" <?= $labelClass ?> placeholder="https://">
+                    <label for="website" class="<?= $labelClass ?>"><?= e($label) ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+                <?php
                 break;
 
             case 'persons':

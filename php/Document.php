@@ -115,6 +115,10 @@ class Document extends Settings
         "name-loc" => ["name"],
         "abstract-loc" => ["abstract"],
         "description-loc" => ["description"],
+        "persons-project" => ["persons"],
+        "institute-role" => ["role"],
+        "project-date" => ["start", "end"],
+        "website" => ["website"],
         "persons" => ["persons"],
         "persons-role" => ["persons"],
         "person" => ["name", "affiliation", "academic_title"],
@@ -1306,6 +1310,29 @@ class Document extends Settings
                     $title = trim(strip_tags(localized($initiative['title'] ?? '', $this->lang)));
                     $tooltip = $title === '' ? '' : ' title="' . e($title) . '"';
                     $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($initiative['_id']) . '"' . $tooltip . '><i class="ph ph-lightbulb" aria-hidden="true"></i> ' . $name . '</a>';
+                }
+                return implode(', ', $names);
+            case 'institute-role':
+                $role = $this->getVal('role');
+                return e($Vocabulary->getValue('project-institute-role', $role, $role));
+            case 'project-date':
+                $start = $this->doc['start'] ?? $this->doc['start_date'] ?? null;
+                $end = $this->doc['end'] ?? $this->doc['end_date'] ?? null;
+                return implode(' – ', array_filter([empty($start) ? '' : self::format_date($start), empty($end) ? '' : self::format_date($end)]));
+            case 'website':
+                $website = (string) ($this->doc['website'] ?? '');
+                if ($website === '') return '';
+                if ($this->usecase === 'print' || !preg_match('~^https?://~i', $website)) return e($website);
+                return '<a href="' . e($website) . '" target="_blank" rel="noopener noreferrer">' . e($website) . '</a>';
+            case 'persons-project':
+                $names = [];
+                foreach ($this->doc['persons'] ?? [] as $person) {
+                    $user = $person['user'] ?? '';
+                    $name = e($person['name'] ?? $user);
+                    if ($user !== '' && !in_array($this->usecase, ['print', 'portal'], true)) $name = '<a href="' . ROOTPATH . '/profile/' . rawurlencode($user) . '">' . $name . '</a>';
+                    $role = $person['role'] ?? '';
+                    if ($role !== '') $name .= ' (' . e($Vocabulary->getValue('project-person-role', $role, $role)) . ')';
+                    $names[] = $name;
                 }
                 return implode(', ', $names);
             case 'persons':

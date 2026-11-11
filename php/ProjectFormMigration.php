@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/FormBuilder.php';
+
 /** One-way conversion of legacy phase configuration; does not change project data. */
 final class ProjectFormMigration
 {
@@ -11,7 +13,7 @@ final class ProjectFormMigration
         ['common.rejection', ['rejection_date']],
         [null, ['comment']],
         ['projects.general_information', ['acronym', 'name', 'name_de', 'title', 'title_de', 'start_proposed', 'end_proposed', 'start', 'end', 'purpose', 'internal_number']],
-        ['common.persons', ['applicants', 'scholar', 'supervisor']],
+        ['common.persons', ['persons-project']],
         ['projects.scholarship', ['scholarship', 'university']],
         ['projects.funding', ['funder', 'funding_organization', 'funding_program_select', 'funding_program', 'funding_number', 'joint_project', 'role', 'coordinator', 'funding_type', 'project_type']],
         ['projects.grant_sum', ['grant_sum_proposed', 'grant_income_proposed', 'grant_subproject_proposed', 'grant_sum', 'grant_income', 'grant_subproject']],
@@ -43,7 +45,8 @@ final class ProjectFormMigration
 
         // These are hidden workflow values, not configurable form inputs.
         // Type and status continue to come from the project type and phase.
-        unset($selected['type'], $selected['status']);
+        unset($selected['type'], $selected['status'], $selected['applicants'], $selected['scholar'], $selected['supervisor']);
+        $selected['persons-project'] = true;
 
         $fields = [];
         $emitted = [];
@@ -84,6 +87,68 @@ final class ProjectFormMigration
         // Preserve unrecognized/retired fields as well, so no configuration is
         // silently lost while the shared project module catalogue is built.
         foreach (array_keys($selected) as $id) $append($id);
+        return $this->upgradeFields($fields);
+    }
+
+    /** Also update fields generated during the earlier transitional migration. */
+    public function upgradeFields(array $fields): array
+    {
+        $result = [];
+        $date = null;
+        $persons = null;
+        foreach ($fields as $field) {
+            $field = DB::doc2Arr($field);
+            if (($field['type'] ?? 'field') !== 'field') { $result[] = $field; continue; }
+            $id = $field['id'] ?? '';
+            if (in_array($id, ['applicants', 'scholar', 'supervisor', 'persons-project'], true)) {
+                if ($persons === null) {
+                    $field['id'] = 'persons-project';
+                    $props = DB::doc2Arr($field['props'] ?? []);
+                    if ($id !== 'persons-project') unset($props['label'], $props['label_de']);
+                    $field['props'] = array_replace(['label' => 'Persons', 'label_de' => 'Personen'], $props, ['required' => true]);
+                    unset($field['props']['roles']);
+                    $persons = count($result);
+                    $result[] = $field;
+                }
+                continue;
+            }
+            if ($id === 'role') $field['id'] = 'institute-role';
+            if (in_array($id, ['start', 'end', 'project-date'], true)) {
+                if ($date === null) {
+                    $field['id'] = 'project-date';
+                    if ($id !== 'project-date') $field['props'] = array_replace(DB::doc2Arr($field['props'] ?? []), ['label' => 'Project dates', 'label_de' => 'Projektlaufzeit']);
+                    $date = count($result);
+                    $result[] = $field;
+                } else {
+                    $result[$date]['props']['required'] = !empty($result[$date]['props']['required']) || !empty($field['props']['required']);
+                }
+                continue;
+            }
+            $result[] = $field;
+        }
+        if ($persons === null) {
+            array_unshift($result, ['id' => 'persons-project', 'type' => 'field', 'props' => ['label' => 'Persons', 'label_de' => 'Personen', 'required' => true]]);
+        }
+        return FormBuilder::prepareFields($result, FormBuilder::PROJECT_SYSTEM_FIELDS);
+    }
+
+    /** University is an activity alias for publisher, not an organization link. */
+    public function activityFields($modules, array $fields): array
+    {
+        if (empty($fields)) {
+            foreach ($modules as $module) {
+                $id = rtrim($module, '*');
+                $fields[] = ['id' => $id, 'type' => !empty($this->definitions[$id]['custom']) ? 'custom' : 'field', 'props' => ['required' => str_ends_with($module, '*')]];
+            }
+        }
+        foreach ($fields as &$field) {
+            $field = DB::doc2Arr($field);
+            if (($field['type'] ?? 'field') === 'field' && ($field['id'] ?? '') === 'university') {
+                $field['id'] = 'publisher';
+                $field['props'] = array_replace(['label' => 'University', 'label_de' => 'Universität'], DB::doc2Arr($field['props'] ?? []));
+            }
+        }
+        unset($field);
         return $fields;
     }
 }

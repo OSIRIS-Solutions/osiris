@@ -110,9 +110,9 @@ class Vocabulary {
     public static ?array $roles = null;
     public static ?array $objectiveTypes = null;
     public function getValues($key, $all = false) {
-        if (!in_array($key, ['persons-role', 'objective-type'], true)) return [];
+        if (!in_array($key, ['persons-role', 'objective-type', 'project-person-role', 'project-institute-role'], true)) return [];
         $catalog = array_column(json_decode(file_get_contents(BASEPATH . '/data/vocabulary.json'), true), null, 'id');
-        $roles = ($key === 'persons-role' ? self::$roles : self::$objectiveTypes) ?? $catalog[$key]['values'];
+        $roles = ($key === 'persons-role' ? self::$roles : ($key === 'objective-type' ? self::$objectiveTypes : null)) ?? $catalog[$key]['values'];
         return $all ? $roles : array_values(array_filter($roles, fn($role) => empty($role['inactive'])));
     }
     public function getValue($key, $id, $default = '') {

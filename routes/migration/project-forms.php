@@ -2,6 +2,7 @@
 
 /** Transitional migration: add phase fields while preserving legacy modules. */
 require_once BASEPATH . '/php/Project.php';
+require_once BASEPATH . '/php/FormBuilder.php';
 require_once BASEPATH . '/php/Language.php';
 require_once BASEPATH . '/php/ProjectFormMigration.php';
 
@@ -15,14 +16,17 @@ $existing = 0;
 foreach ($osiris->adminProjects->find() as $projectType) {
     foreach ($projectType['phases'] ?? [] as $index => $phase) {
         $phase = DB::doc2Arr($phase);
-        if (array_key_exists('fields', $phase)) {
+        $hasFields = array_key_exists('fields', $phase);
+        $fields = $hasFields
+            ? $projectForms->upgradeFields(DB::doc2Arr($phase['fields']))
+            : $projectForms->fields($phase['id'], $phase['modules'] ?? []);
+        if ($hasFields && json_encode($fields) === json_encode($phase['fields'])) {
             $existing++;
             continue;
         }
         $path = 'phases.' . $index . '.fields';
-        $fields = $projectForms->fields($phase['id'], $phase['modules'] ?? []);
         $result = $osiris->adminProjects->updateOne(
-            ['_id' => $projectType['_id'], $path => ['$exists' => false]],
+            ['_id' => $projectType['_id']],
             ['$set' => [$path => $fields]]
         );
         $created += $result->getModifiedCount();
@@ -32,10 +36,28 @@ foreach ($osiris->adminProjects->find() as $projectType) {
 migrationCard(
     'Project phase forms prepared',
     'Formulare für Projektphasen vorbereitet',
-    'The new fields configuration preserves sections, field order and required fields. German companion fields use localized modules; German translations become optional. Legacy modules and project/proposal data remain unchanged.',
-    'Die neue fields-Konfiguration übernimmt Abschnitte, Feldreihenfolge und Pflichtfelder. Deutsche Zusatzfelder werden zu lokalisierten Modulen; deutsche Übersetzungen werden optional. Die bisherigen modules sowie Projekt- und Antragsdaten bleiben unverändert.',
+    'The new fields configuration preserves sections, field order and required fields. German companion fields use localized modules; German translations become optional. Project forms always include persons-project; institute-role and project-date replace their legacy inputs. Legacy project modules and project/proposal data remain unchanged.',
+    'Die neue fields-Konfiguration übernimmt Abschnitte, Feldreihenfolge und Pflichtfelder. Deutsche Zusatzfelder werden zu lokalisierten Modulen; deutsche Übersetzungen werden optional. Projektformulare enthalten immer persons-project; institute-role und project-date ersetzen die bisherigen Eingaben. Die bisherigen Projekt-modules sowie Projekt- und Antragsdaten bleiben unverändert.',
     $created,
     'phase forms created',
     'Phasenformulare angelegt'
 );
 echo '<p>' . e(lang('Existing phase forms preserved', 'Bestehende Phasenformulare beibehalten')) . ': ' . $existing . '</p>';
+
+$activitiesUpdated = 0;
+foreach ($osiris->adminTypes->find() as $activityType) {
+    $modules = DB::doc2Arr($activityType['modules'] ?? []);
+    $fields = DB::doc2Arr($activityType['fields'] ?? []);
+    $hasUniversity = in_array('university', $modules, true) || in_array('university*', $modules, true);
+    foreach ($fields as $field) {
+        if (($field['type'] ?? 'field') === 'field' && ($field['id'] ?? '') === 'university') $hasUniversity = true;
+    }
+    if (!$hasUniversity) continue;
+    $fields = $projectForms->activityFields($modules, $fields);
+    $modules = array_map(fn($id) => match ($id) {
+        'university' => 'publisher', 'university*' => 'publisher*', default => $id,
+    }, $modules);
+    $osiris->adminTypes->updateOne(['_id' => $activityType['_id']], ['$set' => ['modules' => $modules, 'fields' => $fields]]);
+    $activitiesUpdated++;
+}
+echo '<p>' . e(lang('Activity university fields migrated', 'University-Felder in Aktivitäten umgestellt')) . ': ' . $activitiesUpdated . '</p>';
