@@ -102,8 +102,8 @@ $modules = [
 $fields = $migration->fields('proposed', new MongoDB\Model\BSONArray(array_map(fn($m) => new MongoDB\Model\BSONDocument($m), $modules)));
 $byId = array_column(array_filter($fields, fn($f) => isset($f['id'])), null, 'id');
 $ids = array_keys($byId);
-check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'start_proposed', 'end_proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
-foreach (['name-loc', 'title-loc', 'submission_date', 'start_proposed', 'end_proposed', 'persons-project', 'funder'] as $id) {
+check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'project-date-proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
+foreach (['name-loc', 'title-loc', 'submission_date', 'project-date-proposed', 'persons-project', 'funder'] as $id) {
     check($byId[$id]['props']['required'] === true, "System requirement retained for $id.");
 }
 check($byId['abstract-loc']['props']['required'] === false, 'A required German-only field does not make the English value mandatory.');
@@ -130,6 +130,7 @@ foreach (array_keys($legacy->FIELDS) as $id) {
     $base = str_ends_with($id, '_de') ? substr($id, 0, -3) : $id;
     $target = match ($id) {
         'start', 'end' => 'project-date',
+        'start_proposed', 'end_proposed' => 'project-date-proposed',
         'role' => 'institute-role',
         'applicants', 'scholar', 'supervisor' => 'persons-project',
         default => in_array($base, ['name', 'title', 'abstract'], true) ? $base . '-loc' : $id,

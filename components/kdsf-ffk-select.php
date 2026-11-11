@@ -77,15 +77,15 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
 </style>
 <div class="kdsf-widget">
     <label for="kdsf-ffk">
-        KDSF Forschungsfeldklassifikation
+        <?= e($kdsfLabel ?? 'KDSF Forschungsfeldklassifikation') ?>
     </label>
-    <input type="search" id="search" placeholder="Suchen..." class="form-control">
+    <input type="search" id="kdsf-ffk-search" placeholder="Suchen..." class="form-control">
     <ul id="kdsf-ffk-list"></ul>
 </div>
 
 <script>
     function createList(items, parentUl) {
-        const selected_ffk = <?= json_encode($selected_ffk) ?>;
+        const selected_ffk = <?= json_encode(array_values(DB::doc2Arr($selected_ffk)), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         items.forEach(item => {
             let li = $('<li class="kdsf-category"></li>');
             if (item.children) {
@@ -147,9 +147,9 @@ if (isset($form) && isset($form['kdsf-ffk'])) {
         createList(data, $('#kdsf-ffk-list'));
     });
 
-    $('#search').on('input', function() {
+    $('#kdsf-ffk-search').on('input', function() {
         let term = $(this).val().toLowerCase();
-        $('li').each(function() {
+        $(this).closest('.kdsf-widget').find('li').each(function() {
             let text = $(this).text().toLowerCase();
             $(this).toggle(text.includes(term));
         });

@@ -128,7 +128,16 @@ class Route
     public static function get($path, $fn, $visibility = 'public') { self::$routes['GET ' . $path] = [$fn, $visibility]; }
     public static function post($path, $fn, $visibility = 'public') { self::$routes['POST ' . $path] = [$fn, $visibility]; }
 }
+// Exercise the actual topic chooser rather than duplicating its markup in a stub.
+$settingsSource = file_get_contents(BASEPATH . '/php/Settings.php');
+$chooserStart = strpos($settingsSource, '    function topicChooser(');
+$chooserEnd = strpos($settingsSource, '    function printTopics(', $chooserStart);
+eval('trait RegressionTopicChooser {' . substr($settingsSource, $chooserStart, $chooserEnd - $chooserStart) . '}');
 $Settings = new class {
+    use RegressionTopicChooser;
+    public function topicLabel() { return 'Research topics'; }
+    public function __get($key) { global $osiris; return $key === 'topics' ? $osiris->topics->find()->toArray() : null; }
+
     public bool $enabled = true;
     public array $continuousTypes = [];
     public function contentLanguages() { return ['en', 'de']; }

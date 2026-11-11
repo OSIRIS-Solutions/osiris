@@ -118,6 +118,7 @@ class Document extends Settings
         "persons-project" => ["persons"],
         "institute-role" => ["role"],
         "project-date" => ["start", "end"],
+        "project-date-proposed" => ["start_proposed", "end_proposed"],
         "website" => ["website"],
         "persons" => ["persons"],
         "persons-role" => ["persons"],
@@ -1316,8 +1317,11 @@ class Document extends Settings
                 $role = $this->getVal('role');
                 return e($Vocabulary->getValue('project-institute-role', $role, $role));
             case 'project-date':
-                $start = $this->doc['start'] ?? $this->doc['start_date'] ?? null;
-                $end = $this->doc['end'] ?? $this->doc['end_date'] ?? null;
+            case 'project-date-proposed':
+                $startKey = $module === 'project-date-proposed' ? 'start_proposed' : 'start';
+                $endKey = $module === 'project-date-proposed' ? 'end_proposed' : 'end';
+                $start = $this->doc[$startKey] ?? $this->doc[$startKey . '_date'] ?? null;
+                $end = $this->doc[$endKey] ?? $this->doc[$endKey . '_date'] ?? null;
                 return implode(' – ', array_filter([empty($start) ? '' : self::format_date($start), empty($end) ? '' : self::format_date($end)]));
             case 'website':
                 $website = (string) ($this->doc['website'] ?? '');

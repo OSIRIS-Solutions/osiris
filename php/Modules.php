@@ -803,22 +803,13 @@ class Modules
             "tags" => ['date'], "section" => 'dates',
             "entities" => ['projects'],
         ],
-        'start_proposed' => [
-            "fields" => ['start_proposed' => ''],
-            "name" => 'Proposed project start', "name_de" => 'Beantragter Projektbeginn',
-            "label" => 'Proposed project start', "label_de" => 'Beantragter Projektbeginn',
-            "description" => 'Project field: Proposed project start.',
-            "width" => 6, "portfolio" => true,
-            "tags" => ['date'], "section" => 'dates',
-            "entities" => ['projects'],
-        ],
-        'end_proposed' => [
-            "fields" => ['end_proposed' => ''],
-            "name" => 'Proposed project end', "name_de" => 'Beantragtes Projektende',
-            "label" => 'Proposed project end', "label_de" => 'Beantragtes Projektende',
-            "description" => 'Project field: Proposed project end.',
-            "width" => 6, "portfolio" => true,
-            "tags" => ['date'], "section" => 'dates',
+        "project-date-proposed" => [
+            "fields" => ["start_proposed" => [], "end_proposed" => []],
+            "name" => "Proposed project dates", "name_de" => "Beantragte Projektlaufzeit",
+            "label" => "Proposed project dates", "label_de" => "Beantragte Projektlaufzeit",
+            "description" => "Proposed start and end dates with duration shortcuts.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['date'], "section" => "dates",
             "entities" => ['projects'],
         ],
         'funder' => [
@@ -2272,8 +2263,6 @@ class Modules
             case 'submission_date':
             case 'approval_date':
             case 'rejection_date':
-            case 'start_proposed':
-            case 'end_proposed':
             case 'funder':
             case 'funding_organization':
             case 'funding_program':
@@ -2300,6 +2289,7 @@ class Modules
             case 'in-kind':
             case 'ressources':
             case 'topics':
+            case 'institute-role':
             case 'university':
                 include BASEPATH . '/components/modules/project-fields.php';
                 break;
@@ -2309,29 +2299,13 @@ class Modules
                 break;
 
             case 'project-date':
+            case 'project-date-proposed':
                 include BASEPATH . '/components/modules/project-date.php';
-                break;
-
-            case 'institute-role':
-                $value = $this->val('role');
-                ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="institute-role">
-                    <select class="form-control" name="values[role]" id="institute-role" <?= $labelClass ?>>
-                        <?php foreach ($Vocabulary->getValues('project-institute-role', true) as $option):
-                            if (!empty($option['inactive']) && $option['id'] !== $value) continue;
-                        ?>
-                            <option value="<?= e($option['id']) ?>" <?= $option['id'] === $value ? 'selected' : '' ?>><?= e(lang($option['en'], $option['de'] ?? null)) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <label for="institute-role" class="<?= $labelClass ?>"><?= e($label) ?></label>
-                    <?= $this->render_help($help) ?>
-                </div>
-                <?php
                 break;
 
             case 'website':
                 ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="website">
+                <div class="data-module form-group floating-form col-sm-<?= $width ?>" data-module="website">
                     <input type="url" class="form-control" id="website" name="values[website]" value="<?= $this->val('website') ?>" <?= $labelClass ?> placeholder="https://">
                     <label for="website" class="<?= $labelClass ?>"><?= e($label) ?></label>
                     <?= $this->render_help($help) ?>

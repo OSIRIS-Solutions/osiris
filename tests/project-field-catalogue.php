@@ -7,14 +7,14 @@ ob_start();
 $baselineChecks = $checks;
 loadIsolated('php/ProjectFormMigration.php');
 require_once BASEPATH . '/php/LocalizedFields.php';
-$newModules = ['acronym', 'image', 'submission_date', 'approval_date', 'rejection_date', 'start_proposed', 'end_proposed', 'funder', 'funding_organization', 'funding_program', 'funding_program_select', 'joint_project', 'funding_number', 'project_type', 'grant_income', 'grant_income_proposed', 'grant_sum', 'grant_sum_proposed', 'grant_subproject', 'grant_subproject_proposed', 'internal_number', 'coordinator', 'scholarship', 'university', 'research-countries', 'comment', 'nagoya', 'kdsf-ffk', 'public', 'purpose', 'personnel', 'in-kind', 'ressources', 'topics'];
+$newModules = ['acronym', 'image', 'submission_date', 'approval_date', 'rejection_date', 'project-date-proposed', 'funder', 'funding_organization', 'funding_program', 'funding_program_select', 'joint_project', 'funding_number', 'project_type', 'grant_income', 'grant_income_proposed', 'grant_sum', 'grant_sum_proposed', 'grant_subproject', 'grant_subproject_proposed', 'internal_number', 'coordinator', 'scholarship', 'university', 'research-countries', 'comment', 'nagoya', 'kdsf-ffk', 'public', 'purpose', 'personnel', 'in-kind', 'ressources', 'topics'];
 $projectConfig = new FormBuilder('Project', '', entity: 'projects');
 $proposalConfig = new FormBuilder('Proposal', '', entity: 'proposals');
 $settingsBackup = $Settings->enabled;
 $Settings->enabled = true;
 $orgId = new MongoDB\BSON\ObjectId();
 $osiris->organizations->insertOne(['_id' => $orgId, 'name' => 'University & Institute', 'location' => 'Berlin']);
-$osiris->topics->insertOne(['id' => 'climate', 'name' => 'Climate & Water', 'name_de' => 'Klima']);
+$osiris->topics->insertOne(['id' => 'climate', 'name' => 'Climate & Water', 'name_de' => 'Klima', 'color' => '#008083', 'subtitle' => 'Climate research']);
 $fixture = [
     'acronym' => '001', 'internal_number' => '1e10', 'coordinator' => 'Institute & partners',
     'submission_date' => '2026-01-02', 'approval_date' => '2026-03-04', 'rejection_date' => '2026-04-05',
@@ -46,19 +46,19 @@ foreach ($newModules as $id) {
 }
 function xpathFor($html) { $dom = new DOMDocument(); @$dom->loadHTML($html); return new DOMXPath($dom); }
 check(xpathFor($rendered['funding_number'])->query('//input[@name="values[funding_number]" and @value="001, AB-2"]')->length === 1, 'Stored funding reference lists become editable comma-separated text.');
-check(xpathFor($rendered['start_proposed'])->query('//input[@type="date" and @value="2027-01-01" and @required]')->length === 1, 'Proposed date arrays are supported.');
+check(xpathFor($rendered['project-date-proposed'])->query('//input[@type="date" and @value="2027-01-01" and @required]')->length === 1, 'Proposed date arrays are supported.');
 foreach (['funding_organization', 'scholarship', 'university'] as $id) {
     $field = $id === 'scholarship' ? 'funding_organization' : $id;
-    check(xpathFor($rendered[$id])->query('//select[@name="values[' . $field . ']"]/option[@selected and @value="' . $orgId . '"]')->length === 1, "$id preserves its organization reference and correct storage key.");
+    check(xpathFor($rendered[$id])->query('//input[@name="values[' . $field . ']" and @value="' . $orgId . '"]')->length === 1, "$id preserves its organization reference and correct storage key.");
 }
 check(str_contains($rendered['university'], 'University &amp; Institute'), 'Organization names are escaped.');
 check(str_contains($rendered['comment'], '&lt;script&gt;') && !str_contains($rendered['comment'], '<script>'), 'Free text is escaped.');
-check(xpathFor($rendered['public'])->query('//input[@name="values[public]" and @type="hidden" and @value="false"]')->length === 1, 'Clearing public consent submits false.');
+check(xpathFor($rendered['public'])->query('//input[@name="values[public]" and @type="hidden" and @value="0"]')->length === 1, 'Clearing public consent submits false.');
 check(xpathFor($rendered['joint_project'])->query('//input[@name="values[joint_project_identifier]" and @value="ID-1"]')->length === 1, 'Joint project auxiliary fields are retained.');
 check(xpathFor($rendered['joint_project'])->query('//input[@name="values[joint_project_speaker]" and @checked]')->length === 1, 'Consortium speaker role is retained.');
 check(xpathFor($rendered['research-countries'])->query('//input[@name="values[research-countries][]" and @value="DE;in"]')->length === 1, 'Research country roles are encoded for submission.');
-check(xpathFor($rendered['kdsf-ffk'])->query('//option[@selected and @value="139"]')->length === 1, 'KDSF codes remain selected.');
-check(xpathFor($rendered['topics'])->query('//option[@selected and @value="climate"]')->length === 1, 'Topic assignments remain selected.');
+check(xpathFor($rendered['kdsf-ffk'])->query('//*[@id="kdsf-ffk-list"]')->length === 1, 'KDSF retains its original hierarchical widget.');
+check(xpathFor($rendered['topics'])->query('//input[@type="checkbox" and @checked and @value="climate"]')->length === 1, 'Topic assignments remain selected in the original pill chooser.');
 check(str_contains($rendered['ressources'], 'values[ressources][material_details]') && str_contains($rendered['ressources'], 'A &amp; B'), 'Structured resource values are preserved and escaped.');
 foreach (['name', 'funding_type', 'countries', 'tags'] as $id) {
     check(isset($projectConfig->modules[$id]), "Existing compatible $id is enabled for projects.");

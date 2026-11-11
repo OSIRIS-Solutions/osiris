@@ -1,45 +1,61 @@
 <?php
 $required = $req || !empty($props['required']);
-$startDate = valueFromDateArray($this->form['start'] ?? $this->form['start_date'] ?? null);
-$endDate = valueFromDateArray($this->form['end'] ?? $this->form['end_date'] ?? null);
+$form = $this->form;
+$proposed = $module === 'project-date-proposed';
+$startKey = $proposed ? 'start_proposed' : 'start';
+$endKey = $proposed ? 'end_proposed' : 'end';
+$shortcut = $proposed ? 'timeframeProposed' : 'timeframe';
+$customLabel = isset($props['label']) && $props['label'] !== ($m['label'] ?? '');
+$reqField = fn($field) => $required ? 'required' : '';
 ?>
-<div class="data-module col-sm-<?= $width ?>" data-module="project-date" id="module-project-date">
-    <fieldset class="form-group">
-        <legend class="font-size-16 <?= $labelClass ?>"><?= e($label) ?></legend>
-        <div class="row row-eq-spacing">
-            <div class="col-sm-6">
-                <label for="project-start"><?= lang('projects.project_start') ?></label>
-                <input type="date" class="form-control" name="values[start]" id="project-start" value="<?= e($startDate) ?>" <?= $required ? 'required' : '' ?>>
-            </div>
-            <div class="col-sm-6">
-                <label for="project-end"><?= lang('projects.project_end') ?></label>
-                <input type="date" class="form-control" name="values[end]" id="project-end" value="<?= e($endDate) ?>" <?= $required ? 'required' : '' ?>>
-            </div>
-        </div>
-        <div class="btn-group mt-10">
-            <?php foreach ([6, 12, 36] as $months): ?>
-                <button type="button" class="btn small" data-months="<?= $months ?>"><?= $months ?> <?= lang('Months', 'Monate') ?></button>
-            <?php endforeach; ?>
-        </div>
-        <?= $this->render_help($help) ?>
-    </fieldset>
+<div class="data-module col-sm-<?= $width ?>" data-module="<?= e($module) ?>">
+<?php if ($customLabel): ?><label class="floating-title <?= $labelClass ?>"><?= e($label) ?></label><?php endif; ?>
+<?php
+$start = valueFromDateArray($form[$startKey] ?? $form[$startKey . '_date'] ?? null);
+$end = valueFromDateArray($form[$endKey] ?? $form[$endKey . '_date'] ?? null);
+?>
+                    <div class="row row-eq-spacing my-0 align-items-end ">
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[<?= e($startKey) ?>]" value="<?= $start ?>" id="<?= e($startKey) ?>" required placeholder=" ">
+
+                            <label for="<?= e($startKey) ?>" class="required">
+                                <?= lang($proposed ? 'projects.proposed_start_date' : 'projects.project_start') ?>
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="floating-title">
+                                <?= lang('projects.shortcut_length') ?>
+                            </span>
+                            <div class="btn-group w-full">
+                                <div class="btn small" onclick="<?= $shortcut ?>(36)"><?= lang('projects.3_yr') ?></div>
+                                <div class="btn small" onclick="<?= $shortcut ?>(12)"><?= lang('projects.1_yr') ?></div>
+                                <div class="btn small" onclick="<?= $shortcut ?>(6)"><?= lang('projects.6_mo') ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 floating-form">
+                            <input type="date" class="form-control" name="values[<?= e($endKey) ?>]" value="<?= $end ?>" id="<?= e($endKey) ?>" required placeholder=" ">
+
+                            <label for="<?= e($endKey) ?>" class="required">
+                                <?= lang($proposed ? 'projects.proposed_end_date' : 'projects.project_end') ?>
+                            </label>
+                        </div>
+                    </div>
+
+                    <script>
+                        function <?= $shortcut ?>(month) {
+                            let startField = document.querySelector('#<?= e($startKey) ?>');
+                            let start = startField.valueAsDate;
+                            if (start == '' || start === null) {
+                                toastError(<?= json_encode(lang('projects.please_select_a_start_date_first'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
+                                return;
+                            }
+
+                            let end = new Date(start.setMonth(start.getMonth() + month));
+                            end.setDate(end.getDate() - 1);
+                            let endField = document.querySelector('#<?= e($endKey) ?>');
+                            endField.valueAsDate = end;
+                        }
+                    </script>
+
+<?= $this->render_help($help) ?>
 </div>
-<script>
-(() => {
-    const widget = document.getElementById('module-project-date');
-    const start = widget.querySelector('[name="values[start]"]');
-    const end = widget.querySelector('[name="values[end]"]');
-    const update = () => { end.min = start.value; };
-    start.addEventListener('change', update);
-    widget.closest('form')?.addEventListener('reset', () => setTimeout(update, 0));
-    widget.querySelectorAll('[data-months]').forEach(button => button.addEventListener('click', () => {
-        if (!start.valueAsDate) { start.focus(); return; }
-        const date = new Date(start.valueAsDate);
-        date.setUTCMonth(date.getUTCMonth() + Number(button.dataset.months));
-        date.setUTCDate(date.getUTCDate() - 1);
-        end.valueAsDate = date;
-        end.dispatchEvent(new Event('change', {bubbles: true}));
-    }));
-    update();
-})();
-</script>

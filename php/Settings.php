@@ -852,7 +852,7 @@ class Settings
     }
 
 
-    function topicChooser($selected = [], $key = 'values[topics]')
+    function topicChooser($selected = [], $key = 'values[topics]', ?string $label = null)
     {
         if (!$this->featureEnabled('topics')) return '';
 
@@ -862,7 +862,7 @@ class Settings
         $selected = DB::doc2Arr($selected);
 ?>
         <div class="form-group" id="topic-widget">
-            <h5><?= $this->topicLabel() ?></h5>
+            <h5><?= $label === null ? $this->topicLabel() : e($label) ?></h5>
             <!-- make suire that an empty value is submitted in case no checkbox is ticked -->
             <input type="hidden" name="<?= $key ?>" value="">
             <div>

@@ -583,6 +583,64 @@ Route::get('/admin/projects', function () {
 }, 'login');
 
 
+Route::get('/admin/projects/([^/]+)/fields/(draft|proposed|approved|rejected|project)', function ($id, $phase) {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403, lang('error.admin_no_permission'), '/');
+    }
+    include_once BASEPATH . '/php/Project.php';
+    include_once BASEPATH . '/php/ProjectForms.php';
+    $project = $osiris->adminProjects->findOne(['id' => $id]);
+    if (empty($project)) return abortwith(404, lang('admin.project_type'), '/admin/projects');
+    try {
+        $phaseDefinition = ProjectForms::phase($project, $phase);
+        $config = ProjectForms::builder($project, $phase);
+        $fields = ProjectForms::fields($project, $phase, (new Project())->FIELDS);
+    } catch (InvalidArgumentException $error) {
+        return abortwith(404, lang('Unknown project phase.', 'Unbekannte Projektphase.'), '/admin/projects/2/' . rawurlencode($id));
+    }
+    $unavailable = ProjectForms::unavailable($fields, $config);
+    $builderUrl = ROOTPATH . '/admin/projects/' . rawurlencode($id) . '/fields/' . $phase;
+    $type = DB::doc2Arr($project);
+    $type['name'] = $config->entityLabel;
+    $type['name_de'] = $config->entityLabel;
+    $color = $project['color'] ?? '#008083';
+    $copy = false;
+    global $form;
+    $form = $type;
+    include BASEPATH . '/header.php';
+    if (isset($_GET['overview'])) include BASEPATH . '/pages/admin/project-field-overview.php';
+    else include BASEPATH . '/pages/admin/project-form.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
+Route::post('/crud/admin/projects/fields/([^/]+)/(draft|proposed|approved|rejected|project)', function ($id, $phase) {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403, lang('error.admin_no_permission'), '/');
+    }
+    include_once BASEPATH . '/php/ProjectForms.php';
+    $project = $osiris->adminProjects->findOne(['id' => $id]);
+    if (empty($project)) return abortwith(404, lang('admin.project_type'), '/admin/projects');
+    try {
+        ProjectForms::phase($project, $phase);
+    } catch (InvalidArgumentException $error) {
+        return abortwith(404, lang('Unknown project phase.', 'Unbekannte Projektphase.'));
+    }
+    $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
+    if (!is_array($schema) || !is_array($schema['items'] ?? null)) {
+        return abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+    }
+    try {
+        ProjectForms::save($osiris->adminProjects, $project, $phase, $schema['items']);
+    } catch (InvalidArgumentException $error) {
+        return abortwith(400, lang('Check the phase-specific fields and system fields.', 'Prüfe die phasenspezifischen Felder und die Systemfelder.'));
+    }
+    $_SESSION['msg'] = lang('Form updated.', 'Formular aktualisiert.');
+    $_SESSION['msg_type'] = 'success';
+    header('Location: ' . ROOTPATH . '/admin/projects/2/' . rawurlencode($id));
+}, 'login');
+
 Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
@@ -2007,70 +2065,10 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         header("Location: " . ROOTPATH . "/admin/projects/2/$id");
         die;
     } elseif ($stage == 2) {
-
-        if (!isset($_POST['phase'])) {
-            // save empty phases
-            $values['phases'] = [];
-            $updateResult = $collection->updateOne(
-                ['_id' => $mongo_id],
-                ['$set' => $values]
-            );
-            $_SESSION['msg'] = lang('admin.project_name_successfully_saved', replace: ['name' => $name]);
-            header("Location: " . ROOTPATH . "/admin/projects");
-            die;
-        }
-
-        $phases = $_POST['phase'];
-
-        $values['phases'] = [];
-        foreach ($Project::PHASES as $phase) {
-            $phase_id = $phase['id'];
-            // if projects are created directly, skip proposal phase
-            if ($original['process'] == 'project' && $phase['type'] == 'proposal') {
-                continue;
-            }
-            // check if pahse was not selected, if so create it with empty modules
-            if (!isset($phases[$phase_id])) {
-                $phases[$phase_id] = [
-                    'modules' => [],
-                ];
-            }
-            // add modules to phase
-            $modules = [];
-            foreach ($phases[$phase_id]['modules'] ?? [] as $m) {
-                if (str_ends_with($m, '*')) {
-                    $m = substr($m, 0, -1);
-                    $modules[] = [
-                        'module' => $m,
-                        'required' => true
-                    ];
-                } else {
-                    $modules[] = [
-                        'module' => $m,
-                        'required' => false
-                    ];
-                }
-            }
-            // add phase to values
-            $values['phases'][] = [
-                'id' => $phase_id,
-                'name' => $phase['name'],
-                'name_de' => $phase['name_de'],
-                'color' => $phase['color'] ?? 'muted',
-                'modules' => $modules
-            ];
-        }
-
-        $updateResult = $collection->updateOne(
-            ['_id' => $mongo_id],
-            ['$set' => $values]
-        );
-
-
-        $_SESSION['msg'] = lang('admin.project_name_successfully_saved', replace: ['name' => $name]);
-        header("Location: " . ROOTPATH . "/admin/projects");
-        // header("Location: " . ROOTPATH . "/admin/projects/3/$id");
-        die;
+        // Phase forms are saved independently by their Form Builder. Never
+        // replace phases with an empty legacy checkbox submission.
+        header('Location: ' . ROOTPATH . '/admin/projects/2/' . rawurlencode($original['id']));
+        return;
     }
     dump($values, true);
     die;

@@ -94,7 +94,7 @@ final class ProjectFormMigration
     public function upgradeFields(array $fields): array
     {
         $result = [];
-        $date = null;
+        $dates = [];
         $persons = null;
         foreach ($fields as $field) {
             $field = DB::doc2Arr($field);
@@ -113,14 +113,19 @@ final class ProjectFormMigration
                 continue;
             }
             if ($id === 'role') $field['id'] = 'institute-role';
-            if (in_array($id, ['start', 'end', 'project-date'], true)) {
-                if ($date === null) {
-                    $field['id'] = 'project-date';
-                    if ($id !== 'project-date') $field['props'] = array_replace(DB::doc2Arr($field['props'] ?? []), ['label' => 'Project dates', 'label_de' => 'Projektlaufzeit']);
-                    $date = count($result);
+            if (in_array($id, ['start', 'end', 'project-date', 'start_proposed', 'end_proposed', 'project-date-proposed'], true)) {
+                $proposed = in_array($id, ['start_proposed', 'end_proposed', 'project-date-proposed'], true);
+                $target = $proposed ? 'project-date-proposed' : 'project-date';
+                if (!isset($dates[$target])) {
+                    $field['id'] = $target;
+                    if ($id !== $target) {
+                        $field['props'] = array_replace(DB::doc2Arr($field['props'] ?? []), ['label' => $proposed ? 'Proposed project dates' : 'Project dates', 'label_de' => $proposed ? 'Beantragte Projektlaufzeit' : 'Projektlaufzeit']);
+                        unset($field['props']['width']);
+                    }
+                    $dates[$target] = count($result);
                     $result[] = $field;
                 } else {
-                    $result[$date]['props']['required'] = !empty($result[$date]['props']['required']) || !empty($field['props']['required']);
+                    $result[$dates[$target]]['props']['required'] = !empty($result[$dates[$target]]['props']['required']) || !empty($field['props']['required']);
                 }
                 continue;
             }
