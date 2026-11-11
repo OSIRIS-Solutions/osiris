@@ -120,6 +120,20 @@ Route::get('/migrate/languages', function () {
     include BASEPATH . "/footer.php";
 });
 
+// Temporary entry point while project phases move from modules to fields.
+Route::get('/migrate/project-forms', function () {
+    include_once BASEPATH . "/php/init.php";
+
+    if (!$Settings->hasPermission('admin.see')) {
+        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+    }
+
+    set_time_limit(6000);
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/routes/migration/project-forms.php";
+    include BASEPATH . "/footer.php";
+});
+
 Route::get('/migrate/localization', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -620,6 +634,13 @@ Route::get('/migrate', function () {
     }
     if (version_compare($DBversion, '2.2.0', '<')) {
         include BASEPATH . "/routes/migration/v2.2.0.php";
+        flush();
+        ob_flush();
+        $rerender = false;
+    }
+    if (version_compare($DBversion, '3.0.0', '<')) {
+        include BASEPATH . "/routes/migration/languages.php";
+        include BASEPATH . "/routes/migration/project-forms.php";
         flush();
         ob_flush();
         $rerender = false;
