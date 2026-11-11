@@ -125,8 +125,8 @@ include_once BASEPATH . "/php/Modules.php";
                     <span class="key"><?= lang('common.projects') ?></span>
                     <?php foreach ($projects as $project) { ?>
                         <a class="module " href="<?= ROOTPATH ?>/projects/view/<?= $project['_id'] ?>">
-                            <h5 class="m-0"><?= $project['name'] ?></h5>
-                            <span class="text-muted-"><?= $project['title'] ?? '' ?></span>
+                            <h5 class="m-0"><?= localized($project['name'] ?? '') ?></h5>
+                            <span class="text-muted-"><?= localized($project['title'] ?? '') ?></span>
                         </a>
                     <?php } ?>
                 </td>

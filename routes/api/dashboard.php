@@ -361,7 +361,7 @@ Route::get('/api/dashboard/collaborators', function () {
             $mongo_id = $DB->to_ObjectID($id);
             $project = $osiris->projects->findOne(['_id' => $mongo_id]);
         } else {
-            $project = $osiris->projects->findOne(['name' => $id]);
+            $project = $osiris->projects->findOne(['name.en' => $id]);
             $id = strval($project['_id'] ?? '');
         }
         if (empty($project)) {
@@ -1833,6 +1833,7 @@ Route::get('/api/command-palette/search', function () {
         // Aggregation pipeline to rank prefix matches higher than contains matches.
         // Fields: acronym, name (as you said)
         $pipeline = [
+            ['$set' => ['name' => '$name.en']],
             [
                 '$match' => [
                     '$or' => [
@@ -1920,6 +1921,7 @@ Route::get('/api/command-palette/search', function () {
         // Aggregation pipeline to rank prefix matches higher than contains matches.
         // Fields: acronym, name (as you said)
         $pipeline = [
+            ['$set' => ['name' => '$name.en']],
             [
                 '$match' => [
                     '$or' => [

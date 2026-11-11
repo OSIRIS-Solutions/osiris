@@ -19,6 +19,7 @@
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
 
+
 $type = $project['type'] ?? 'third-party';
 
 $user_project = false;
@@ -150,11 +151,11 @@ $scope = $Project->getScope($collaborators);
         <?php if (isset($project['acronym'])) { ?>
             <?= e($project['acronym']) ?> –
         <?php } ?>
-        <?= e($project['name']) ?>
+        <?= e(localized($project['name'] ?? '')) ?>
     </h1>
 
     <h2 class="subtitle">
-        <?= $project['title'] ?>
+        <?= localized($project['title'] ?? '') ?>
     </h2>
 </div>
 
@@ -865,7 +866,7 @@ if ($topicsEnabled) {
                     </p>
                     <!-- show current image if any -->
                     <?php if (!empty($project['image'])) : ?>
-                        <img src="<?= ROOTPATH . '/uploads/' . $project['image'] ?>" alt="<?= $project['name'] ?>" class="w-400">
+                        <img src="<?= ROOTPATH . '/uploads/' . $project['image'] ?>" alt="<?= localized($project['name'] ?? '') ?>" class="w-400">
                     <?php endif; ?>
 
                     <form action="<?= ROOTPATH ?>/crud/projects/image/<?= $project['_id'] ?>" method="post" enctype="multipart/form-data">

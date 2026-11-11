@@ -141,7 +141,7 @@ $projectCount = count($projectsForCountry);
                             <tr>
                                 <td class="font-size-12">
                                     <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
-                                        <strong><?= e($p['name'] ?? '') ?></strong>
+                                        <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                                     </a><br>
                                     <span class="text-muted">
                                         <?= e($p['id'] ?? '') ?>
@@ -242,7 +242,7 @@ $projectCount = count($projectsForCountry);
                             <tr>
                                 <td>
                                     <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $idStr ?>/<?= urlencode($c['id'] ?? '') ?>">
-                                        <?= e($p['name'] ?? '') ?>
+                                        <?= e(localized($p['name'] ?? '')) ?>
                                     </a>
                                 </td>
                                 <td><?= e($name ?: lang('projects.unnamed')) ?></td>

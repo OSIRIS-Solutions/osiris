@@ -4310,7 +4310,7 @@ class Modules
                     }
                     $project_list = $this->DB->db->projects->find($filter, [
                         'projection' => ['_id' => 1, 'name' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
-                        'sort' => ['name' => 1]
+                        'sort' => ['name.en' => 1]
                     ])->toArray();
                     ?>
 
@@ -4328,10 +4328,10 @@ class Modules
                                 <tr id="project-<?= $con ?>">
                                     <td class="w-full">
                                         <input type="hidden" name="values[projects][]" value="<?= $p['_id'] ?>">
-                                        <b><?= $p['name'] ?></b>
+                                        <b><?= localized($p['name'] ?? '') ?></b>
                                         <br>
                                         <span class="text-muted">
-                                            <?= $p['title'] ?? '' ?>
+                                            <?= localized($p['title'] ?? '') ?>
                                         </span>
                                     </td>
                                     <td>

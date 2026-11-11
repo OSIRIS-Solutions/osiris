@@ -508,6 +508,12 @@ class Report
             }
         }
 
+        if (in_array($collection, ['projects', 'proposals'], true)) {
+            $filter = ProjectFields::filterPaths($filter);
+            $options['sort'] = array_combine(array_map([ProjectFields::class, 'fieldPath'], array_keys($options['sort'])), array_values($options['sort']));
+            $options['projection']['defaultField'] = '$' . ProjectFields::fieldPath($defaultProjection);
+            foreach (($item['field'] ?? []) ?: [] as $field) $options['projection'][$field] = '$' . ProjectFields::fieldPath($field);
+        }
         $data = $this->DB->db->$collection->find($filter, $options)->toArray();
 
         if ($item['field'] ?? false) {
@@ -705,6 +711,12 @@ class Report
         if ($timelimit)
             $filter = $this->addTimeFilter($filter, $collection);
 
+
+        if (in_array($collection, ['projects', 'proposals'], true)) {
+            $filter = ProjectFields::filterPaths($filter);
+            $group = ProjectFields::fieldPath($group);
+            if ($group2) $group2 = ProjectFields::fieldPath($group2);
+        }
 
         $aggregate = [
             ['$match' => $filter],

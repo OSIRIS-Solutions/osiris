@@ -143,10 +143,10 @@
                                 <tr id="project-<?= $p['_id'] ?>">
                                     <td class="w-full">
                                         <input type="hidden" name="projects[]" value="<?= $p['_id'] ?>">
-                                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= $p['name'] ?></b>
+                                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= localized($p['name'] ?? '') ?></b>
                                         <br>
                                         <span class="text-muted">
-                                            <?= $p['title'] ?? '' ?>
+                                            <?= localized($p['title'] ?? '') ?>
                                         </span>
                                     </td>
                                     <td class="w-50">

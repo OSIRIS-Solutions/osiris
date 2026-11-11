@@ -111,7 +111,7 @@ function help_getProject($osiris, $id)
         );
     } else {
         $result = $osiris->projects->findOne(
-            ['name' => $id],
+            ['name.en' => $id],
         );
     }
     return $result;
@@ -1083,6 +1083,7 @@ Route::get('/portfolio/(unit|person|topic)/([^/]*)/projects', function ($context
 
     // Add projectTypes info based on type key
     foreach ($result as &$project) {
+        $project = portfolio_localized_fields($project, ['name', 'title', 'abstract']);
         if (isset($project['type']) && isset($projectTypes[$project['type']])) {
             $project['type_details'] = $projectTypes[$project['type']];
             $project['type'] = $projectTypes[$project['type']]['name'];
@@ -1376,8 +1377,8 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             if (empty($project)) continue;
             $projects[] = [
                 'id' => strval($project['_id']),
-                'name' => $project['name'],
-                'title' => $project['title'],
+                'name' => localized($project['name'] ?? '', 'en'),
+                'title' => localized($project['title'] ?? '', 'en'),
                 'funder' => $project['funder'],
                 'funding_organization' => $project['funding_organization'],
                 'funding_number' => $project['funding_number'],
@@ -1578,13 +1579,13 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
     $project = [
         'id' => strval($result['_id']),
         'acronym' => $result['acronym'] ?? null,
-        'name' => $result['name'],
-        'name_de' => $result['name_de'] ?? null,
+        'name' => localized($result['name'] ?? '', 'en'),
+        'name_de' => localized($result['name'] ?? '', 'de'),
         'type' => lang($project_type['name'], $project_type['name_de'] ?? null),
-        'title' => $result['title'] ?? '',
-        'title_de' => $result['title_de'] ?? null,
-        'abstract' => $result['abstract'] ?? '',
-        'abstract_de' => $result['abstract_de'] ?? null,
+        'title' => localized($result['title'] ?? '', 'en'),
+        'title_de' => localized($result['title'] ?? '', 'de'),
+        'abstract' => localized($result['abstract'] ?? '', 'en'),
+        'abstract_de' => localized($result['abstract'] ?? '', 'de'),
         'funder' => $result['funder'] ?? null,
         // 'funding_organization' => $result['funding_organization'] ?? null,
         'funding_number' => $result['funding_number'] ?? null,
@@ -1633,7 +1634,7 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
 
     $activities_filter = [
         '$or' => [
-            ['projects' => $result['name']],
+            ['projects' => localized($result['name'] ?? '', 'en')],
             ['projects' => DB::to_ObjectID($id)]
         ],
         'hide' => ['$ne' => true]
@@ -1689,8 +1690,8 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         if (!empty($parent) && ($parent['public'] ?? false)) {
             $project['parent'] = [
                 'id' => strval($parent['_id']),
-                'name' => $parent['name'],
-                'title' => $parent['title'] ?? ''
+                'name' => localized($parent['name'] ?? '', 'en'),
+                'title' => localized($parent['title'] ?? '', 'en')
             ];
 
             // // add inherited fields
@@ -1708,8 +1709,8 @@ Route::get('/portfolio/project/([^/]*)', function ($id) {
         if (!($sub['public'] ?? false)) continue;
         $project['subprojects'][] = [
             'id' => $sub['id'],
-            'name' => $sub['name'],
-            'title' => $sub['title'] ?? ''
+            'name' => localized($sub['name'] ?? '', 'en'),
+            'title' => localized($sub['title'] ?? '', 'en')
         ];
     }
 
@@ -1962,8 +1963,8 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             }
             $projects[$key][] = [
                 'id' => strval($project['_id']),
-                'name' => $project['name'],
-                'title' => $project['title'],
+                'name' => localized($project['name'] ?? '', 'en'),
+                'title' => localized($project['title'] ?? '', 'en'),
                 'funder' => $project['funder'] ?? $project['scholarship'] ?? null,
                 'funding_organization' => $project['funding_organization'] ?? null,
                 // 'funding_number' => $project['funding_number'] ,
@@ -3167,10 +3168,10 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             if ($featured && $featuredType == 'project' && $doc['id'] == $featuredId) {
                 $featuredCard['type_label'] = lang('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
-                $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . ($doc['name'] ?? '');
-                $featuredCard['subtitle'] = ($doc['title'] ?? '');
+                $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . localized($doc['name'] ?? '');
+                $featuredCard['subtitle'] = localized($doc['title'] ?? '');
             } else {
-                $projects[] = DB::doc2Arr($doc);
+                $projects[] = portfolio_localized_fields($doc, ['name', 'title', 'abstract']);
             }
         }
         $news['projects'] = $projects;
@@ -3329,6 +3330,10 @@ Route::get('/portfolio/search-index', function () {
         );
         foreach ($data as $project) {
             $project = DB::doc2Arr($project);
+            foreach (['name', 'title'] as $field) {
+                $project[$field . '_de'] = localized($project[$field] ?? '', 'de');
+                $project[$field] = localized($project[$field] ?? '', 'en');
+            }
             $project['search'] = $buildSearchText(
                 $project['acronym'] ?? null,
                 $project['name'] ?? null,

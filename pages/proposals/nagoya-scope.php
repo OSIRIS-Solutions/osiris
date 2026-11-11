@@ -104,7 +104,7 @@ $utilizationOptions = [
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
-        <?= ($project['name'] ?? '') ?>
+        <?= (localized($project['name'] ?? '')) ?>
     </a>
 </h2>
 

@@ -61,7 +61,7 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <li>
                             <a href="<?= e($item['url']) ?>">
-                                <strong><?= e($p['name'] ?? '') ?></strong>
+                                <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span>
                                 <i class="ph ph-globe"></i>
@@ -118,7 +118,7 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <li>
                             <a href="<?= e($item['url']) ?>">
-                                <strong><?= e($p['name'] ?? '') ?></strong>
+                                <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
                                 <?= lang('projects.abs_review_pending') ?>
@@ -131,7 +131,7 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <li class="mb-5">
                             <a href="<?= e($item['url']) ?>">
-                                <strong><?= e($p['name'] ?? '') ?></strong>
+                                <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
                                 <?= lang('projects.waiting_for_scope_from_pi') ?>
@@ -182,7 +182,7 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <li>
                             <a href="<?= e($item['url']) ?>">
-                                <strong><?= e($p['name'] ?? '') ?></strong>
+                                <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
                                 <?= lang('projects.permits_in_progress') ?>
@@ -195,7 +195,7 @@ $totalProjects     = count($projects ?? []);
                     ?>
                         <li class="mb-5">
                             <a href="<?= e($item['url']) ?>">
-                                <strong><?= e($p['name'] ?? '') ?></strong>
+                                <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
                                 <?= lang('projects.validation_by_abs_team_pending') ?>
@@ -263,7 +263,7 @@ $totalProjects     = count($projects ?? []);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/proposals/view/<?= $idStr ?>#nagoya">
-                            <strong><?= e($p['name'] ?? '') ?></strong>
+                            <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                         </a><br>
                         <span class="text-muted font-size-12">
                             <?= e($p['id'] ?? '') ?>

@@ -252,6 +252,11 @@ class Project extends Vocabulary
     public function printField($field, $value, $portfolio = false)
     {
         $DB = new DB();
+        if (in_array($field, ['name_de', 'title_de', 'abstract_de'], true)) {
+            $value = localized($this->project[substr($field, 0, -3)] ?? '', 'de');
+        } elseif (in_array($field, ['name', 'title', 'abstract'], true)) {
+            $value = localized($value);
+        }
         if (empty($value)) return '-';
         switch ($field) {
             case 'type':
@@ -756,8 +761,8 @@ class Project extends Vocabulary
     {
         $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
         $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
-        $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
-        $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
+        $widget .= '<h5 class="m-0">' . localized($this->project['name'] ?? '') . '</h5>';
+        $widget .= '<small class="d-block text-muted mb-5">' . localized($this->project['title'] ?? '') . '</small>';
         if (isset($this->project['funder']))
             $widget .= '<span class="float-right text-muted">' . $this->project['funder'] . '</span>';
         $widget .= '<span class="text-muted">' . $this->getDateRange() . '</span>';
@@ -769,8 +774,8 @@ class Project extends Vocabulary
     {
         $contacts = array_column(DB::doc2Arr($this->project['persons']), 'name');
         $widget = '<a class="module" href="' . ROOTPATH . '/projects/view/' . $this->project['_id'] . '">';
-        $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
-        $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
+        $widget .= '<h5 class="m-0">' . localized($this->project['name'] ?? '') . '</h5>';
+        $widget .= '<small class="d-block text-muted mb-5">' . localized($this->project['title'] ?? '') . '</small>';
         // contact
         if (!empty($contacts)) {
             $widget .= '<span class=" text-muted">';
@@ -785,8 +790,8 @@ class Project extends Vocabulary
     {
         $widget = '<a class="' . $cls . '" href="' . $base . '/project/' . $this->project['_id'] . '">';
         $widget .= '<span class="float-right">' . $this->getProjectStatus() . '</span>';
-        $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
-        $widget .= '<p class="d-block text-muted">' . $this->project['title'] . '</p>';
+        $widget .= '<h5 class="m-0">' . localized($this->project['name'] ?? '') . '</h5>';
+        $widget .= '<p class="d-block text-muted">' . localized($this->project['title'] ?? '') . '</p>';
         if (isset($this->project['funder']))
             $widget .= '<span class="float-right text-muted">' . $this->project['funder'] . '</span>';
         $widget .= '<span class="text-muted">' . $this->getDateRange() . '</span>';
@@ -799,8 +804,8 @@ class Project extends Vocabulary
     {
         $widget = '<a class="module" href="' . ROOTPATH . '/' . $collection . '/view/' . $this->project['_id'] . '" ' . ($external ? 'target="_blank"' : '') . '>';
         $widget .= '<span class="float-right">' . $this->getDateRange() . '</span>';
-        $widget .= '<h5 class="m-0">' . $this->project['name'] . '</h5>';
-        $widget .= '<small class="d-block text-muted mb-5">' . $this->project['title'] . '</small>';
+        $widget .= '<h5 class="m-0">' . localized($this->project['name'] ?? '') . '</h5>';
+        $widget .= '<small class="d-block text-muted mb-5">' . localized($this->project['title'] ?? '') . '</small>';
 
         if ($user === null)
             $widget .= '<span class="float-right">' . $this->getRole() . '</span> ';

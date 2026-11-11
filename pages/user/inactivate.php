@@ -132,7 +132,7 @@ if (!$user) {
             <?php foreach ($running_projects as $project) { ?>
                 <li>
                     <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id'] ?>">
-                        <?= $project['name'] ?? 'No name' ?>
+                        <?= localized($project['name'] ?? '') ?>
                     </a>
                 </li>
             <?php } ?>

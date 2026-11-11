@@ -758,6 +758,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
+    include_once BASEPATH . "/php/project_fields.php";
     $Project = new Project();
 
     if (!apikey_check($_GET['apikey'] ?? null, 'projects.read')) {
@@ -788,9 +789,11 @@ Route::get('/api/(projects|proposals)', function ($type) {
         ];
     }
 
+    $filter = ProjectFields::filterPaths($filter);
+
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
-        $group = $_GET['aggregate'];
+        $group = ProjectFields::fieldPath($_GET['aggregate']);
         $aggregate = [
             ['$match' => $filter],
         ];
@@ -835,11 +838,12 @@ Route::get('/api/(projects|proposals)', function ($type) {
         $result = $collection->find($filter)->toArray();
         $data = [];
         foreach ($result as $project) {
+
             $Project->setProject($project);
             $data[] = [
                 'id' => strval($project['_id']),
-                'name' => $project['name'],
-                'title' => $project['title'],
+                'name' => localized($project['name'] ?? '', 'en'),
+                'title' => localized($project['title'] ?? '', 'en'),
                 'type' => $project['type'],
                 'status' => $project['status'],
                 'date_range' => $Project->getDateRange(),
@@ -848,7 +852,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
                 'funding_organization' => ($project['funding_organization'] ?? '-'),
                 'funding_numbers' => $Project->getFundingNumbers('; '),
                 'applicant' => $DB->getNameFromId($project['contact'] ?? $project['supervisor'] ?? ''),
-                'activities' => $osiris->activities->count(['projects' => strval($project['name'])]),
+                'activities' => $osiris->activities->count(['projects' => strval(localized($project['name'] ?? '', 'en'))]),
                 'role' => $project['role'] ?? '',
                 'topics' => $project['topics'] ?? array(),
                 'units' => $Project->getUnits(true),
@@ -915,6 +919,11 @@ Route::get('/api/(projects|proposals)', function ($type) {
             'persons' => '$persons',
         ];
     }
+
+    foreach ($projection as $key => &$expression) {
+        if (is_string($expression) && $expression === '$' . $key) $expression = '$' . ProjectFields::fieldPath($key);
+    }
+    unset($expression);
 
     $pipeline = [];
     // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist

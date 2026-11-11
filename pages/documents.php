@@ -109,7 +109,7 @@
                         $filename = $doc['filename'] ?? '';
                         $desc = trim($doc['description'] ?? '');
                         $entityType = ucfirst($con['type'] ?? $doc['type']);
-                        $entityName = $con['name'] ?? lang('common.unknown');
+                        $entityName = localized($con['name'] ?? '') ?: lang('common.unknown');
                     ?>
                         <tr>
                             <!-- FILE -->

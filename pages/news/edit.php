@@ -446,13 +446,13 @@ if (isset($news) && isset($news['_id'])) {
                                                             $p['_id'] = $p;
                                                         }
                                                     ?>
-                                <tr id="project-<?= e($p['_id']) ?>" data-feature-type="project" data-feature-id="<?= e($p['_id']) ?>" data-feature-label="<?= e((isset($p['acronym']) ? $p['acronym'] . ' – ' : '') . ($p['name'] ?? '')) ?>">
+                                <tr id="project-<?= e($p['_id']) ?>" data-feature-type="project" data-feature-id="<?= e($p['_id']) ?>" data-feature-label="<?= e((isset($p['acronym']) ? $p['acronym'] . ' – ' : '') . localized($p['name'] ?? '')) ?>">
                                     <td class="w-full">
                                         <input type="hidden" name="news[projects][]" value="<?= $p['_id'] ?>">
-                                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= $p['name'] ?></b>
+                                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= localized($p['name'] ?? '') ?></b>
                                         <br>
                                         <span class="text-muted">
-                                            <?= $p['title'] ?? '' ?>
+                                            <?= localized($p['title'] ?? '') ?>
                                         </span>
                                     </td>
                                     <td class="w-50">

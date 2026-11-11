@@ -315,7 +315,7 @@ $all = $osiris->projects->count();
             'type' => ['$first' => '$collaborators.type'],
             'location' => ['$first' => '$collaborators.location'],
             'count' => ['$sum' => 1],
-            'projects' => ['$push' => '$name']
+            'projects' => ['$push' => '$name.en']
         ]],
         ['$sort' => ['name' => 1]]
     ])->toArray();

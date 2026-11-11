@@ -242,7 +242,7 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -250,7 +250,7 @@ Route::get('/proposals/nagoya-countries/([A-Za-z0-9]*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('projects.nagoya_review')]
     ];
 
@@ -268,7 +268,7 @@ Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -276,7 +276,7 @@ Route::get('/proposals/nagoya-countries-edit/([A-Za-z0-9]*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('projects.edit_nagoya_countries')]
     ];
 
@@ -294,7 +294,7 @@ Route::get('/proposals/nagoya-scope/([A-Za-z0-9]*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -302,7 +302,7 @@ Route::get('/proposals/nagoya-scope/([A-Za-z0-9]*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('common.nagoya_protocol')]
     ];
 
@@ -325,7 +325,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -333,7 +333,7 @@ Route::get('/proposals/nagoya-evaluation/([A-Za-z0-9]*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('common.nagoya_evaluation')]
     ];
 
@@ -352,7 +352,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -360,7 +360,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('projects.nagoya_permits')]
     ];
 
@@ -379,7 +379,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -402,7 +402,7 @@ Route::get('/proposals/nagoya-permits/([A-Za-z0-9]*)/([A-Za-z0-9]*)', function (
 
     $breadcrumb = [
         ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => $project['name'], 'path' => "/proposals/view/$id"],
+        ['name' => localized($project['name'] ?? ''), 'path' => "/proposals/view/$id"],
         ['name' => lang('projects.nagoya_permits'), 'path' => "/proposals/nagoya-permits/$id"],
         ['name' => $DB->getCountry($country['code'], lang('common.field_name_language'))]
     ];
@@ -625,8 +625,8 @@ Route::post('/crud/nagoya/notify-researchers', function () {
     foreach ($applicants as $user) {
         $DB->addMessage(
             $user,
-            "The Nagoya Protocol review for your project proposal '" . ($project['name'] ?? '') . "' has been completed. Please view the results and take any necessary actions regarding ABS compliance.",
-            "Die Nagoya-Bewertung für deinen Projektantrag '" . ($project['name'] ?? '') . "' wurde abgeschlossen. Bitte schau dir die Ergebnisse an und ergreife gegebenenfalls erforderliche Maßnahmen zur ABS-Compliance.",
+            "The Nagoya Protocol review for your project proposal '" . (localized($project['name'] ?? '')) . "' has been completed. Please view the results and take any necessary actions regarding ABS compliance.",
+            "Die Nagoya-Bewertung für deinen Projektantrag '" . (localized($project['name'] ?? '')) . "' wurde abgeschlossen. Bitte schau dir die Ergebnisse an und ergreife gegebenenfalls erforderliche Maßnahmen zur ABS-Compliance.",
             'nagoya',
             "/proposals/view/$project_id"
         );
@@ -770,8 +770,8 @@ Route::post('/crud/nagoya/add-abs-scope/([A-Za-z0-9]*)', function ($id) {
             // send messages to nagoya team
             $DB->addMessages(
                 'right:nagoya.view',
-                "The ABS scope for the project proposal '" . ($project['name'] ?? $id) . "' has been submitted for review.",
-                "Der ABS-Scope für den Projektantrag '" . ($project['name'] ?? $id) . "' wurde zur Prüfung eingereicht.",
+                "The ABS scope for the project proposal '" . (localized($project['name'] ?? '')) . "' has been submitted for review.",
+                "Der ABS-Scope für den Projektantrag '" . (localized($project['name'] ?? '')) . "' wurde zur Prüfung eingereicht.",
                 'nagoya',
                 "/proposals/nagoya-evaluation/" . $id,
             );

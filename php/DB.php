@@ -536,10 +536,10 @@ class DB
      */
     public function getProject($project)
     {
-        if ($this->is_ObjectID($project)) {
-            $project = $this->db->projects->findOne(['$or' => [['name' => $project], ['_id' => $this->to_ObjectID($project)]]]);
+        if ($project instanceof ObjectId || $this->is_ObjectID($project)) {
+            $project = $this->db->projects->findOne(['$or' => [['name.en' => (string) $project], ['_id' => $this->to_ObjectID($project)]]]);
         } else {
-            $project = $this->db->projects->findOne(['name' => $project]);
+            $project = $this->db->projects->findOne(['name.en' => $project]);
         }
         return $this->doc2Arr($project);
     }

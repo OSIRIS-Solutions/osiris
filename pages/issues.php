@@ -619,7 +619,7 @@ if (array_sum($a) === 0) { ?>
                 <tr id="tr-<?= $project_id ?>">
                     <td>
                         <?= lang('error.the_nagoya_protocol_compliance_for_project') ?>
-                        <b><?= $project['name'] ?></b>
+                        <b><?= localized($project['name'] ?? '') ?></b>
                         <?= lang('error.requires_your_input') ?><br>
                         <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $project_id ?>" class="btn small primary">
                             <i class="ph ph-edit"></i>

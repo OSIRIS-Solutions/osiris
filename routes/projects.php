@@ -28,6 +28,7 @@ Route::get('/(projects|proposals)', function ($collection) {
 
 Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Modules.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
@@ -40,6 +41,7 @@ Route::get('/(projects|proposals)/new', function ($collection) {
 
 Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
+    include_once BASEPATH . "/php/Modules.php";
     $user = $_SESSION['username'];
     $collection = 'projects';
     $breadcrumb = [
@@ -50,7 +52,7 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->proposals->findOne(['name' => $id]);
+        $project = $osiris->proposals->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
 
@@ -95,7 +97,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->$collection->findOne(['name' => $id]);
+        $project = $osiris->$collection->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
@@ -103,7 +105,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
     }
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
-        ['name' => $project['acronym'] ?? $project['name']]
+        ['name' => $project['acronym'] ?? localized($project['name'] ?? '')]
     ];
 
     include BASEPATH . "/header.php";
@@ -115,6 +117,7 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
 Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0-9]*)', function ($collection, $page, $id) {
     include_once BASEPATH . "/php/init.php";
     require_once BASEPATH . "/php/Project.php";
+    include_once BASEPATH . "/php/Modules.php";
 
     $user = $_SESSION['username'];
 
@@ -148,7 +151,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     $breadcrumb = [
         ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
-        ['name' =>  $project['acronym'] ?? $project['name'], 'path' => "/$collection/view/$id"],
+        ['name' =>  $project['acronym'] ?? localized($project['name'] ?? ''), 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
 
@@ -186,7 +189,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
         $mongo_id = $DB->to_ObjectID($id);
         $project = $osiris->projects->findOne(['_id' => $mongo_id]);
     } else {
-        $project = $osiris->projects->findOne(['name' => $id]);
+        $project = $osiris->projects->findOne(['name.en' => $id]);
         $id = strval($project['_id'] ?? '');
     }
     // check if project exists
@@ -197,7 +200,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     // set breadcrumb
     $breadcrumb = [
         ['name' => lang('common.projects'), 'path' => "/projects"],
-        ['name' => $project['acronym'] ?? $project['name'], 'path' => "/projects/view/$id"],
+        ['name' => $project['acronym'] ?? localized($project['name'] ?? ''), 'path' => "/projects/view/$id"],
         ['name' => lang('projects.add_subproject_projects')]
     ];
 
@@ -213,11 +216,11 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
 
     // add suffix to project name
-    $form['name'] = $form['name'] . "-" . $suffix;
+    $form['name']['en'] = localized($form['name'] ?? '', 'en') . "-" . $suffix;
     // check if name is unique
-    $project_exist = $osiris->projects->findOne(['name' => $form['name']]);
+    $project_exist = $osiris->projects->findOne(['name.en' => $form['name']['en']]);
     if (!empty($project_exist)) {
-        $form['name'] = $form['name'] . "-" . uniqid();
+        $form['name']['en'] .= "-" . uniqid();
     }
     // delete stuff that should not be inherited
     $delete = [
@@ -237,7 +240,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
 
     // add parent project
-    $form['parent'] = $project['name'];
+    $form['parent'] = localized($project['name'] ?? '');
     $form['parent_id'] = strval($project['_id']);
     $form['type'] = $project['type'];
 
@@ -285,7 +288,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $project = DB::doc2Arr($project);
     $Project = new Project($project);
 
-    $filename = $project['name'];
+    $filename = localized($project['name'] ?? '');
 
     if ($format == 'json') {
         $filename .= ".json";
@@ -299,14 +302,14 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $filename .= ".docx";
 
     $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
-    $abstract = clean_comment_export(strip_tags($project['abstract'] ?? 'NA'), false);
+    $abstract = clean_comment_export(strip_tags(localized($project['abstract'] ?? '')), false);
     $res = $project['ressources'] ?? [];
     $persons = [];
     foreach ($project['persons'] as $p) {
         $persons[] = $p['name'];
     }
     $persons = implode(', ', $persons);
-    // dump($project['abstract']);
+    // dump(localized($project['abstract'] ?? ''));
     $funding_organization = $project['funding_organization'] ?? $project['funder'] ?? null;
     if (DB::is_ObjectID($funding_organization)) {
         $org = $osiris->organizations->findOne(['_id' => $DB->to_ObjectID($funding_organization)]);
@@ -323,8 +326,8 @@ Route::post('/proposals/download/(.*)', function ($id) {
     }
     $contacts = implode(', ', $contacts);
 
-    $clean_name = clean_comment_export(strip_tags($project['name'] ?? 'NA'), false);
-    $clean_title = clean_comment_export(strip_tags($project['title'] ?? 'NA'), false);
+    $clean_name = clean_comment_export(strip_tags(localized($project['name'] ?? '')), false);
+    $clean_title = clean_comment_export(strip_tags(localized($project['title'] ?? '')), false);
 
     $projectValues = [
         "contact" => $contacts,
@@ -389,6 +392,10 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
 
     $values = validateValues($_POST['values'], $DB, $collection);
+    foreach (['name', 'title', 'abstract'] as $field) {
+        if (!array_key_exists($field, $values)) continue;
+        if (!is_array($values[$field])) $values[$field] = ['en' => $values[$field]];
+    }
     if (!isset($values['type']) || !isset($values['name'])) {
         $_SESSION['msg'] = lang('projects.missing_required_parameters');
         $_SESSION['msg_type'] = "error";
@@ -405,44 +412,47 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     $values['end-delay'] = endOfCurrentQuarter(true);
     $values['created_by'] = $_SESSION['username'];
 
-    // add persons
-    $persons = [];
-    foreach (['contact', 'scholar', 'supervisor'] as $key) {
-        if (!isset($values[$key]) || empty($values[$key])) continue;
-        $user = $values[$key];
-        $persons[] = [
-            'user' => $user,
-            'role' => ($key == 'contact' ? 'applicant' : $key),
-            'name' => $DB->getNameFromId($user),
-            'units' => $Groups->getPersonUnit($user)
-        ];
-    }
-    if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
-        $persons[] = [
-            'user' => $user,
-            'role' => 'applicant',
-            'name' => $DB->getNameFromId($user),
-            'units' => $Groups->getPersonUnit($user)
-        ];
-    }
-    if (!empty($persons)) {
-        $values['persons'] = $persons;
-    } else {
-        // add current user as applicant
-        // $values['persons'] = [
-        //     [
-        //         'user' => $_SESSION['username'],
-        //         'role' => 'applicant',
-        //         'name' => $DB->getNameFromId($_SESSION['username'])
-        //     ]
-        // ];
+    $personsSubmitted = array_key_exists('persons', $values);
+    if (!$personsSubmitted) {
+        // add persons
+        $persons = [];
+        foreach (['contact', 'scholar', 'supervisor'] as $key) {
+            if (!isset($values[$key]) || empty($values[$key])) continue;
+            $user = $values[$key];
+            $persons[] = [
+                'user' => $user,
+                'role' => ($key == 'contact' ? 'applicant' : $key),
+                'name' => $DB->getNameFromId($user),
+                'units' => $Groups->getPersonUnit($user)
+            ];
+        }
+        if (isset($values['applicants'])) foreach ($values['applicants'] as $user) {
+            $persons[] = [
+                'user' => $user,
+                'role' => 'applicant',
+                'name' => $DB->getNameFromId($user),
+                'units' => $Groups->getPersonUnit($user)
+            ];
+        }
+        if (!empty($persons)) {
+            $values['persons'] = $persons;
+        } else {
+            // add current user as applicant
+            // $values['persons'] = [
+            //     [
+            //         'user' => $_SESSION['username'],
+            //         'role' => 'applicant',
+            //         'name' => $DB->getNameFromId($_SESSION['username'])
+            //     ]
+            // ];
+        }
     }
     if (isset($values['parent_id'])) {
         $values['parent_id'] = $DB->to_ObjectID($values['parent_id']);
         $values['subproject'] = true;
         $parent = $osiris->projects->findOne(['_id' => $values['parent_id']]);
         if (!empty($parent)) {
-            $values['parent'] = $parent['name'];
+            $values['parent'] = localized($parent['name'] ?? '');
             // inherit persons
             $values['persons'] = $parent['persons'];
         } else {
@@ -472,6 +482,10 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
                 unset($values['proposal_id']);
             }
         }
+    }
+
+    if (array_key_exists('persons', $values)) {
+        $values['applicants'] = array_values(array_unique(array_column(array_filter(DB::doc2Arr($values['persons']), fn($person) => ($person['role'] ?? '') === 'applicant'), 'user')));
     }
 
     if (isset($values['public'])) {
@@ -533,16 +547,16 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         if ($collection == 'projects') {
             $DB->addMessages(
                 $type['notification_created'],
-                'New project has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
-                'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'New project has been created by ' . $creator . ': <b>' . localized($values['name'] ?? '') . '</b>',
+                'Ein neues Projekt wurde erstellt von ' . $creator . ': <b>' . localized($values['name'] ?? '') . '</b>',
                 'project',
                 "/$collection/view/" . $id,
             );
         } else {
             $DB->addMessages(
                 $type['notification_created'],
-                'New project proposal has been created by ' . $creator . ': <b>' . $values['name'] . '</b>',
-                'Ein neuer Projektantrag wurde erstellt von ' . $creator . ': <b>' . $values['name'] . '</b>',
+                'New project proposal has been created by ' . $creator . ': <b>' . localized($values['name'] ?? '') . '</b>',
+                'Ein neuer Projektantrag wurde erstellt von ' . $creator . ': <b>' . localized($values['name'] ?? '') . '</b>',
                 'proposal',
                 "/$collection/view/" . $id,
             );
@@ -565,8 +579,8 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
                 $html = '
                 <h3>Details:</h3>
                 <ul>
-                    <li><b>Short title:</b> ' . $values['name'] . '</li>
-                    <li><b>Full title:</b> ' . $values['title'] . '</li>
+                    <li><b>Short title:</b> ' . localized($values['name'] ?? '') . '</li>
+                    <li><b>Full title:</b> ' . localized($values['title'] ?? '') . '</li>
                     <li><b>Created by:</b> ' . $creator . '</li>
                     <li><b>Created on:</b> ' . date('d.m.Y') . '</li>
                 </ul>
@@ -590,8 +604,8 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             $typeOfP = $collection == 'projects' ? lang('projects.the_project') : lang('projects.the_proposal');
             $DB->addMessage(
                 $applicant,
-                $creator . ' has created ' . $typeOfP . ' <b>' . $values['name'] . '</b> for which you are entered as applicant.',
-                $creator . ' hat ' . $typeOfP . ' <b>' . $values['name'] . '</b> erstellt, bei dem du als Antragstellende Person angegeben wirst.',
+                $creator . ' has created ' . $typeOfP . ' <b>' . localized($values['name'] ?? '') . '</b> for which you are entered as applicant.',
+                $creator . ' hat ' . $typeOfP . ' <b>' . localized($values['name'] ?? '') . '</b> erstellt, bei dem du als Antragstellende Person angegeben wirst.',
                 $tag,
                 "/$collection/view/" . $id . '#section-history',
             );
@@ -602,8 +616,8 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (isset($values['nagoya']) && $values['nagoya']['enabled'] == true) {
         $DB->addMessages(
             'right:nagoya.view',
-            'Nagoya protocol information has been recorded for: <b>' . $values['name'] . '</b>',
-            'Nagoya-Protokoll-Informationen wurden erfasst für: <b>' . $values['name'] . '</b>',
+            'Nagoya protocol information has been recorded for: <b>' . localized($values['name'] ?? '') . '</b>',
+            'Nagoya-Protokoll-Informationen wurden erfasst für: <b>' . localized($values['name'] ?? '') . '</b>',
             'nagoya',
             "/$collection/view/" . $id,
         );
@@ -704,9 +718,18 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
     $values = validateValues($_POST['values'], $DB, $collection);
+    foreach (['name', 'title', 'abstract'] as $field) {
+        if (!array_key_exists($field, $values)) continue;
+        $translations = is_array($values[$field]) ? $values[$field] : ['en' => $values[$field]];
+        $values[$field] = array_replace(DB::doc2Arr($project[$field] ?? []), $translations);
+    }
     // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
+
+    if (array_key_exists('persons', $values)) {
+        $values['applicants'] = array_values(array_unique(array_column(array_filter(DB::doc2Arr($values['persons']), fn($person) => ($person['role'] ?? '') === 'applicant'), 'user')));
+    }
 
     if (isset($values['public'])) {
         $values['public'] = boolval($values['public']);
@@ -744,8 +767,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
     if (isset($values['abstract'])) {
-        $abstract_en = $values['abstract'];
-        $abstract_de = $values['abstract_de'] ?? $abstract_en;
+        $abstract_en = localized($values['abstract'] ?? '', 'en');
+        $abstract_de = localized($values['abstract'] ?? '', 'de');
 
         $values['teaser_en'] = get_preview($abstract_en);
         $values['teaser_de'] = get_preview($abstract_de);
@@ -776,8 +799,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 // send notification to admins about nagoya being enabled
                 $DB->addMessages(
                     'right:nagoya.view',
-                    'Nagoya-relevant information has been shared for: <b>' . $project['name'] . '</b>',
-                    'Nagoya-relevante Informationen wurden hinzugefügt für: <b>' . $project['name'] . '</b>',
+                    'Nagoya-relevant information has been shared for: <b>' . localized($project['name'] ?? '') . '</b>',
+                    'Nagoya-relevante Informationen wurden hinzugefügt für: <b>' . localized($project['name'] ?? '') . '</b>',
                     'nagoya',
                     "/$collection/view/" . $id,
                 );
@@ -791,8 +814,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         if ($nagoyaRelevant) {
             $DB->addMessages(
                 'right:nagoya.view',
-                'A project proposal with Nagoya protocol compliance has been approved: <b>' . $project['name'] . '</b>',
-                'Ein Projektantrag mit Nagoya-Protokoll-Relevanz wurde genehmigt: <b>' . $project['name'] . '</b>',
+                'A project proposal with Nagoya protocol compliance has been approved: <b>' . localized($project['name'] ?? '') . '</b>',
+                'Ein Projektantrag mit Nagoya-Protokoll-Relevanz wurde genehmigt: <b>' . localized($project['name'] ?? '') . '</b>',
                 'nagoya',
                 "/proposals/view/" . $id,
             );
@@ -811,8 +834,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $tag = $collection == 'projects' ? 'project' : 'proposal';
         $DB->addMessages(
             $type['notification_changed'],
-            'Project has been changed by ' . $creator . ': <b>' . $values['name'] . '</b>',
-            'Projekt wurde geändert von ' . $creator . ': <b>' . $values['name'] . '</b>',
+            'Project has been changed by ' . $creator . ': <b>' . localized($values['name'] ?? $project['name'] ?? '') . '</b>',
+            'Projekt wurde geändert von ' . $creator . ': <b>' . localized($values['name'] ?? $project['name'] ?? '') . '</b>',
             $tag,
             "/$collection/view/" . $id . '#section-history',
         );
@@ -834,8 +857,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 $html = '
                 <h3>Details:</h3>
                 <ul>
-                    <li><b>Short title:</b> ' . $values['name'] . '</li>
-                    <li><b>Full title:</b> ' . $values['title'] . '</li>
+                    <li><b>Short title:</b> ' . localized($values['name'] ?? $project['name'] ?? '') . '</li>
+                    <li><b>Full title:</b> ' . localized($values['title'] ?? $project['title'] ?? '') . '</li>
                     <li><b>Edited by:</b> ' . $creator . '</li>
                     <li><b>Edited on:</b> ' . date('d.m.Y') . '</li>
                     <li><b>Status:</b> ' . ($values['status'] ?? 'proposed') . '</li>
@@ -860,8 +883,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
             $tag = $collection == 'projects' ? 'project' : 'proposal';
             $DB->addMessage(
                 $applicant,
-                'Your project <b>' . $values['name'] . '</b> has been changed by ' . $creator . '',
-                'Dein Projekt <b>' . $values['name'] . '</b> wurde aktualisiert von ' . $creator . '',
+                'Your project <b>' . localized($values['name'] ?? $project['name'] ?? '') . '</b> has been changed by ' . $creator . '',
+                'Dein Projekt <b>' . localized($values['name'] ?? $project['name'] ?? '') . '</b> wurde aktualisiert von ' . $creator . '',
                 $tag,
                 "/$collection/view/" . $id . '#section-history',
             );
@@ -918,8 +941,8 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
     if ($collection == 'projects') {
         // remove project name from activities
         $osiris->activities->updateMany(
-            ['projects' => $project['name']],
-            ['$pull' => ['projects' => $project['name']]]
+            ['projects' => localized($project['name'] ?? '', 'en')],
+            ['$pull' => ['projects' => localized($project['name'] ?? '', 'en')]]
         );
     }
 
@@ -987,8 +1010,8 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
         $tag = $collection == 'projects' ? 'project' : 'proposal';
         $DB->addMessages(
             $type['notification_changed'],
-            'Persons of a project have been changed by ' . $creator . ': <b>' . $project['name'] . '</b>',
-            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . $project['name'] . '</b>',
+            'Persons of a project have been changed by ' . $creator . ': <b>' . localized($project['name'] ?? '') . '</b>',
+            'Die Personen im Projekt wurden geändert von ' . $creator . ': <b>' . localized($project['name'] ?? '') . '</b>',
             $tag,
             "/$collection/view/" . $id . '#section-history',
         );
@@ -1011,8 +1034,8 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
                 $html = '
                 <h3>Details:</h3>
                 <ul>
-                    <li><b>Short title:</b> ' . $project['name'] . '</li>
-                    <li><b>Full title:</b> ' . $project['title'] . '</li>
+                    <li><b>Short title:</b> ' . localized($project['name'] ?? '') . '</li>
+                    <li><b>Full title:</b> ' . localized($project['title'] ?? '') . '</li>
                     <li><b>Edited by:</b> ' . $creator . '</li>
                     <li><b>Edited on:</b> ' . date('d.m.Y') . '</li>
                 </ul>

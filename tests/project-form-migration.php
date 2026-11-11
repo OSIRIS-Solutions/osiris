@@ -62,6 +62,7 @@ class MigrationCollection {
                 $target = $value;
                 unset($target);
             }
+            foreach ($update['$unset'] ?? [] as $key => $ignored) unset($document[$key]);
             $modified = 1;
             $this->writes++;
             break;
@@ -162,8 +163,8 @@ $activityOriginal = [
 ];
 $osiris->adminTypes = new MigrationCollection($activityOriginal);
 $osiris->adminProjects = new MigrationCollection($original);
-$osiris->projects = new MigrationCollection([['name' => 'Old English', 'name_de' => 'Altes Deutsch']]);
-$osiris->proposals = new MigrationCollection([['name' => 'Proposal', 'name_de' => 'Antrag']]);
+$osiris->projects = new MigrationCollection([['_id' => 'project', 'name' => 'Old English', 'name_de' => 'Altes Deutsch']]);
+$osiris->proposals = new MigrationCollection([['_id' => 'proposal', 'name' => 'Proposal', 'name_de' => 'Antrag']]);
 function runMigration(): array {
     global $osiris;
     $source = file_get_contents(BASEPATH . '/routes/migration/project-forms.php');
@@ -191,7 +192,8 @@ foreach ($migrated as $i => $type) {
 }
 check(runMigration() === [0, 5] && $osiris->adminProjects->documents === $migrated, 'Rerunning the migration does not overwrite fields or create duplicates.');
 check($osiris->adminProjects->writes === 5, 'Rerunning performs no database writes.');
-check($osiris->projects->documents === [['name' => 'Old English', 'name_de' => 'Altes Deutsch']] && $osiris->proposals->documents === [['name' => 'Proposal', 'name_de' => 'Antrag']], 'Existing project and proposal data stays in its old format.');
+check($osiris->projects->documents === [['_id' => 'project', 'name' => ['en' => 'Old English', 'de' => 'Altes Deutsch']]] && $osiris->proposals->documents === [['_id' => 'proposal', 'name' => ['en' => 'Proposal', 'de' => 'Antrag']]], 'Project and proposal content migrates to language maps alongside the forms.');
+check($osiris->projects->writes === 1 && $osiris->proposals->writes === 1, 'Content migration is idempotent.');
 // getFields still sees precisely the same old configuration after migration.
 check($legacy->getFields('grant', 'proposed') === $legacyBefore, 'Legacy phase lookup and required flags remain unchanged.');
 $activityMigrated = $osiris->adminTypes->documents;
@@ -218,4 +220,7 @@ $customized = $upgraded;
 $customized[2]['props']['label'] = 'Duration';
 $customized[3]['props']['label'] = 'Team';
 check($migration->upgradeFields($customized) === $customized, 'Existing project-date and persons-project labels remain configurable.');
+$osiris->projects->documents[0]['name'] = new MongoDB\Model\BSONDocument(['en' => 'Old English', 'de' => 'Altes Deutsch']);
+runMigration();
+check($osiris->projects->writes === 1, 'Already migrated BSON language maps do not trigger another write.');
 echo "Project form migration tests passed ($checks checks).\n";

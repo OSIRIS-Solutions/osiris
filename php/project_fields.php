@@ -1,8 +1,28 @@
 <?php
 require_once "fields.php";
+require_once "Modules.php";
 
 class ProjectFields extends Fields
 {
+    public static function fieldPath(string $field): string
+    {
+        return match ($field) {
+            'name', 'title', 'abstract' => $field . '.en',
+            'name_de', 'title_de', 'abstract_de' => substr($field, 0, -3) . '.de',
+            default => $field,
+        };
+    }
+
+    public static function filterPaths(array $filter): array
+    {
+        $result = [];
+        foreach ($filter as $field => $value) {
+            $result[self::fieldPath($field)] = in_array($field, ['$and', '$or', '$nor'], true)
+                ? array_map([self::class, 'filterPaths'], $value) : $value;
+        }
+        return $result;
+    }
+
     private $type = 'projects';
 
     function __construct($type = 'projects')
@@ -18,19 +38,27 @@ class ProjectFields extends Fields
         $proposalTypes = [];
 
         $typeModules = [];
+        $moduleDefinitions = get_class_vars(Modules::class)['all_modules'];
         foreach ($adminCategories as $m) {
-            foreach ($m['phases'] as $phase) {
-                if ($phase['id'] == 'proposed') {
-                    $proposalTypes[$m['id']] = lang($m['name'], $m['name_de'] ?? null);
-                }
-                $modules = $phase['modules'] ?? [];
-                foreach ($modules as $module) {
-                    $module = $module['module'];
-                    if (!isset($typeModules[$module])) $typeModules[$module] = [];
-                    if (!in_array($m['id'], $typeModules[$module])) $typeModules[$module][] = $m['id'];
+            foreach ($m['phases'] ?? [] as $phase) {
+                if ($phase['id'] === 'proposed') $proposalTypes[$m['id']] = lang($m['name'], $m['name_de'] ?? null);
+                if (isset($phase['fields'])) {
+                    foreach ($phase['fields'] as $item) {
+                        if (!in_array($item['type'] ?? 'field', ['field', 'custom'], true)) continue;
+                        $id = $item['id'];
+                        $keys = ($item['type'] ?? 'field') === 'custom' ? [$id] : array_keys($moduleDefinitions[$id]['fields'] ?? [$id => null]);
+                        foreach ($keys as $key) {
+                            $typeModules[$key][] = $m['id'];
+                            if (str_ends_with($id, '-loc')) $typeModules[$key . '_de'][] = $m['id'];
+                        }
+                    }
+                } else {
+                    foreach ($phase['modules'] ?? [] as $item) $typeModules[$item['module']][] = $m['id'];
                 }
             }
         }
+        foreach ($typeModules as &$typesForField) $typesForField = array_values(array_unique($typesForField));
+        unset($typesForField);
 
         if ($this->type == 'proposals') {
             $types = $proposalTypes;

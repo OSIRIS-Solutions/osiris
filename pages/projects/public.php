@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Page to edit public information of a project.
  * 
@@ -40,14 +41,14 @@
                         <label for="name" class="required">
                             <?= lang('common.title') ?> (EN)
                         </label>
-                        <input type="text" class="form-control large" name="values[public_title]" id="public_title" required value="<?= $project['public_title'] ?? $project['name'] ?>">
+                        <input type="text" class="form-control large" name="values[public_title]" id="public_title" required value="<?= $project['public_title'] ?? localized($project['name'] ?? '', 'en') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="name" class="required">
                             <?= lang('common.subtitle') ?> (EN)
                         </label>
-                        <input type="text" class="form-control" name="values[public_subtitle]" id="public_subtitle" required value="<?= $project['public_subtitle'] ?? $project['title'] ?? ''  ?>">
+                        <input type="text" class="form-control" name="values[public_subtitle]" id="public_subtitle" required value="<?= $project['public_subtitle'] ?? localized($project['title'] ?? '', 'en')  ?>">
                     </div>
                 </fieldset>
             </div>
@@ -106,8 +107,8 @@
             in <span class="d-inline-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
         </h4>
         <div class="form-group">
-            <div id="public_abstract-quill"><?= $project['public_abstract'] ?? $project['abstract'] ?? '' ?></div>
-            <textarea name="values[public_abstract]" id="public_abstract" class="d-none" readonly><?= $project['public_abstract'] ?? $project['abstract'] ?? '' ?></textarea>
+            <div id="public_abstract-quill"><?= $project['public_abstract'] ?? localized($project['abstract'] ?? '', 'en') ?></div>
+            <textarea name="values[public_abstract]" id="public_abstract" class="d-none" readonly><?= $project['public_abstract'] ?? localized($project['abstract'] ?? '', 'en') ?></textarea>
             <script>
                 quillEditor('public_abstract');
             </script>

@@ -1,6 +1,7 @@
 <?php
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
+
 $Project->isProposal = true;
 
 $project = DB::doc2Arr($project);
@@ -79,11 +80,11 @@ if ($nagoyaRelevant) {
                 <?php if (isset($project['acronym'])) { ?>
                     <?= e($project['acronym']) ?> –
                 <?php } ?>
-                <?= e($project['name']) ?>
+                <?= e(localized($project['name'] ?? '')) ?>
             </h1>
 
             <h2 class="subtitle">
-                <?= $project['title'] ?>
+                <?= localized($project['title'] ?? '') ?>
             </h2>
 
             <?php if ($status == 'withdrawn') { ?>

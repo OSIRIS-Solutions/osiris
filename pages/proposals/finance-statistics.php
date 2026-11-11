@@ -181,7 +181,7 @@ foreach ($byApprovalYear as $p) {
 
     $rows[$year]['projects'][] = [
         'id' => (string)($p['_id'] ?? ''),
-        'name' => $p['name'] ?? '-',
+        'name' => (localized($p['name'] ?? '') ?: '-'),
         'income_proposed' => $incomeProp,
         'income_approved' => $incomeAppr,
         'sum_proposed' => $sumProp,
@@ -268,7 +268,7 @@ krsort($rows);
                                     <tr>
                                         <td>
                                             <a href="<?= $url ?>">
-                                                <?= e($p['name']) ?>
+                                                <?= e(localized($p['name'] ?? '')) ?>
                                             </a>
                                         </td>
                                         <td class="text-right">
