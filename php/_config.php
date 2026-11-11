@@ -56,6 +56,24 @@ function validateValues($values, $DB, ?string $entity = null)
         } else if ($key === 'persons' && in_array($entity, ['activities', 'initiatives'], true)) {
             require_once __DIR__ . '/PersonField.php';
             $values[$key] = PersonField::normalize($value, $DB);
+        } else if (in_array($entity, ['projects', 'proposals'], true) && in_array($key, ['topics', 'kdsf-ffk', 'nagoya_countries', 'tags', 'countries'], true)) {
+            $items = $value instanceof Traversable ? iterator_to_array($value) : (is_array($value) ? $value : []);
+            $values[$key] = array_values(array_unique(array_map('strval', array_filter($items, fn($item) => is_scalar($item) && (string) $item !== ''))));
+        } else if (in_array($entity, ['projects', 'proposals'], true) && $key === 'research-countries') {
+            $values[$key] = [];
+            foreach (is_array($value) || $value instanceof Traversable ? $value : [] as $country) {
+                if (is_string($country)) {
+                    [$iso, $role] = array_pad(explode(';', $country, 2), 2, 'both');
+                } else {
+                    $country = DB::doc2Arr($country);
+                    $iso = $country['iso'] ?? '';
+                    $role = $country['role'] ?? 'both';
+                }
+                if (!is_string($iso) || !preg_match('/^[A-Z]{2}$/', $iso)) continue;
+                $values[$key][] = ['iso' => $iso, 'role' => is_string($role) ? $role : 'both'];
+            }
+        } else if (in_array($entity, ['projects', 'proposals'], true) && in_array($key, ['acronym', 'internal_number', 'funding_number'], true) && is_string($value)) {
+            $values[$key] = trim($value);
         } else if ($key == 'id') {
             // do not validate id, it is set by the database
             continue;

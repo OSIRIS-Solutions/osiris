@@ -26,6 +26,10 @@ Route::post('/crud/upload-image', function () {
     if (isset($_FILES['image'])) {
         // Define the directory where you want to save the uploaded images
         $target_dir = "/uploads/projects/";
+        if (!is_dir(BASEPATH . $target_dir) && !mkdir(BASEPATH . $target_dir, 0775, true) && !is_dir(BASEPATH . $target_dir)) {
+            echo json_encode(['error' => 'The image upload directory could not be created.']);
+            exit;
+        }
 
         $file_name = $_POST['project_id'] . "_" . basename($_FILES['image']['name']);
 

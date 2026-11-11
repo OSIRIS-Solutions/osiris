@@ -328,7 +328,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "others",
-            "entities" => ['activities', 'initiatives']
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "guest" => [
             "fields" => ["category" => 'guest scientist'],
@@ -413,7 +413,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities', 'initiatives']
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "abstract" => [
             "fields" => ["abstract" => 'OSIRIS ist einzigartig in seinen Konfigurationsmöglichkeiten. Während sich viele andere CRIS nur auf Publikationen beschränken, kann in OSIRIS eine Vielzahl an Aktivitäten hinzugefügt werden.'],
@@ -595,7 +595,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "key",
-            "entities" => ['activities', 'initiatives']
+            "entities" => ['activities', 'initiatives', 'projects']
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
@@ -757,6 +757,303 @@ class Modules
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => "summary",
             "entities" => ['activities', 'initiatives', 'projects'],
+        ],
+        'acronym' => [
+            "fields" => ['acronym' => ''],
+            "name" => 'Acronym', "name_de" => 'Akronym',
+            "label" => 'Acronym', "label_de" => 'Akronym',
+            "description" => 'Project field: Acronym.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'image' => [
+            "fields" => ['image' => ''],
+            "name" => 'Project image', "name_de" => 'Projekt-Bild',
+            "label" => 'Project image', "label_de" => 'Projekt-Bild',
+            "description" => 'Project field: Project image.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'submission_date' => [
+            "fields" => ['submission_date' => ''],
+            "name" => 'Submission date', "name_de" => 'Einreichungsdatum',
+            "label" => 'Submission date', "label_de" => 'Einreichungsdatum',
+            "description" => 'Project field: Submission date.',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['date'], "section" => 'dates',
+            "entities" => ['projects'],
+        ],
+        'approval_date' => [
+            "fields" => ['approval_date' => ''],
+            "name" => 'Approval date', "name_de" => 'Bewilligungsdatum',
+            "label" => 'Approval date', "label_de" => 'Bewilligungsdatum',
+            "description" => 'Project field: Approval date.',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['date'], "section" => 'dates',
+            "entities" => ['projects'],
+        ],
+        'rejection_date' => [
+            "fields" => ['rejection_date' => ''],
+            "name" => 'Rejection date', "name_de" => 'Ablehnungsdatum',
+            "label" => 'Rejection date', "label_de" => 'Ablehnungsdatum',
+            "description" => 'Project field: Rejection date.',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['date'], "section" => 'dates',
+            "entities" => ['projects'],
+        ],
+        'start_proposed' => [
+            "fields" => ['start_proposed' => ''],
+            "name" => 'Proposed project start', "name_de" => 'Beantragter Projektbeginn',
+            "label" => 'Proposed project start', "label_de" => 'Beantragter Projektbeginn',
+            "description" => 'Project field: Proposed project start.',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['date'], "section" => 'dates',
+            "entities" => ['projects'],
+        ],
+        'end_proposed' => [
+            "fields" => ['end_proposed' => ''],
+            "name" => 'Proposed project end', "name_de" => 'Beantragtes Projektende',
+            "label" => 'Proposed project end', "label_de" => 'Beantragtes Projektende',
+            "description" => 'Project field: Proposed project end.',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['date'], "section" => 'dates',
+            "entities" => ['projects'],
+        ],
+        'funder' => [
+            "fields" => ['funder' => ''],
+            "name" => 'Funder (Category)', "name_de" => 'Förderer (Kategorie)',
+            "label" => 'Funder (Category)', "label_de" => 'Förderer (Kategorie)',
+            "description" => 'Project field: Funder (Category).',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'funding_organization' => [
+            "fields" => ['funding_organization' => null],
+            "name" => 'Funding organization', "name_de" => 'Förderorganisation',
+            "label" => 'Funding organization', "label_de" => 'Förderorganisation',
+            "description" => 'Project field: Funding organization.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'funding_program' => [
+            "fields" => ['funding_program' => ''],
+            "name" => 'Funding program (free text)', "name_de" => 'Förderprogramm (Freitext)',
+            "label" => 'Funding program (free text)', "label_de" => 'Förderprogramm (Freitext)',
+            "description" => 'Project field: Funding program (free text).',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'funding_program_select' => [
+            "fields" => ['funding_program_select' => ''],
+            "name" => 'Funding program (selection)', "name_de" => 'Förderprogramm (Auswahl)',
+            "label" => 'Funding program (selection)', "label_de" => 'Förderprogramm (Auswahl)',
+            "description" => 'Project field: Funding program (selection).',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'joint_project' => [
+            "fields" => ['joint_project' => false, 'joint_project_identifier' => '', 'joint_project_title' => '', 'joint_project_speaker' => false],
+            "name" => 'Joint project', "name_de" => 'Verbundprojekt',
+            "label" => 'Joint project', "label_de" => 'Verbundprojekt',
+            "description" => 'Project field: Joint project.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'funding_number' => [
+            "fields" => ['funding_number' => []],
+            "name" => 'Funding reference number', "name_de" => 'Förderkennzeichen',
+            "label" => 'Funding reference number', "label_de" => 'Förderkennzeichen',
+            "description" => 'Project field: Funding reference number.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'project_type' => [
+            "fields" => ['project_type' => ''],
+            "name" => 'Project type', "name_de" => 'Art des Projekts',
+            "label" => 'Project type', "label_de" => 'Art des Projekts',
+            "description" => 'Project field: Project type.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'grant_income' => [
+            "fields" => ['grant_income' => 0],
+            "name" => 'Grant sum (Institute)', "name_de" => 'Fördersumme (Institut)',
+            "label" => 'Grant sum (Institute)', "label_de" => 'Fördersumme (Institut)',
+            "description" => 'Project field: Grant sum (Institute).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'grant_income_proposed' => [
+            "fields" => ['grant_income_proposed' => 0],
+            "name" => 'Proposed grant sum (Institute)', "name_de" => 'Beantragte Fördersumme (Institut)',
+            "label" => 'Proposed grant sum (Institute)', "label_de" => 'Beantragte Fördersumme (Institut)',
+            "description" => 'Project field: Proposed grant sum (Institute).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'grant_sum' => [
+            "fields" => ['grant_sum' => 0],
+            "name" => 'Grant sum (total)', "name_de" => 'Fördersumme (gesamt)',
+            "label" => 'Grant sum (total)', "label_de" => 'Fördersumme (gesamt)',
+            "description" => 'Project field: Grant sum (total).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'grant_sum_proposed' => [
+            "fields" => ['grant_sum_proposed' => 0],
+            "name" => 'Proposed grant sum (total)', "name_de" => 'Beantragte Fördersumme (gesamt)',
+            "label" => 'Proposed grant sum (total)', "label_de" => 'Beantragte Fördersumme (gesamt)',
+            "description" => 'Project field: Proposed grant sum (total).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'grant_subproject' => [
+            "fields" => ['grant_subproject' => 0],
+            "name" => 'Grant sum (Subproject)', "name_de" => 'Fördersumme (Teilprojekt)',
+            "label" => 'Grant sum (Subproject)', "label_de" => 'Fördersumme (Teilprojekt)',
+            "description" => 'Project field: Grant sum (Subproject).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'grant_subproject_proposed' => [
+            "fields" => ['grant_subproject_proposed' => 0],
+            "name" => 'Proposed grant sum (Subproject)', "name_de" => 'Beantragte Fördersumme (Teilprojekt)',
+            "label" => 'Proposed grant sum (Subproject)', "label_de" => 'Beantragte Fördersumme (Teilprojekt)',
+            "description" => 'Project field: Proposed grant sum (Subproject).',
+            "width" => 6, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'internal_number' => [
+            "fields" => ['internal_number' => ''],
+            "name" => 'Internal ID', "name_de" => 'Interne ID',
+            "label" => 'Internal ID', "label_de" => 'Interne ID',
+            "description" => 'Project field: Internal ID.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'coordinator' => [
+            "fields" => ['coordinator' => ''],
+            "name" => 'Coordinator facility', "name_de" => 'Koordinator-Einrichtung',
+            "label" => 'Coordinator facility', "label_de" => 'Koordinator-Einrichtung',
+            "description" => 'Project field: Coordinator facility.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'scholarship' => [
+            "fields" => ['funding_organization' => null],
+            "name" => 'Funding organization (Scholarship)', "name_de" => 'Förderorganisation (Stipendium)',
+            "label" => 'Funding organization (Scholarship)', "label_de" => 'Förderorganisation (Stipendium)',
+            "description" => 'Project field: Funding organization (Scholarship).',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['funding'], "section" => 'funding',
+            "entities" => ['projects'],
+        ],
+        'research-countries' => [
+            "fields" => ['research-countries' => []],
+            "name" => 'Research in/about countries', "name_de" => 'Forschung in/über Länder',
+            "label" => 'Research in/about countries', "label_de" => 'Forschung in/über Länder',
+            "description" => 'Project field: Research in/about countries.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'comment' => [
+            "fields" => ['comment' => ''],
+            "name" => 'Comment', "name_de" => 'Kommentar',
+            "label" => 'Comment', "label_de" => 'Kommentar',
+            "description" => 'Project field: Comment.',
+            "width" => 12, "portfolio" => false,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'nagoya' => [
+            "fields" => ['nagoya' => ['enabled' => false, 'countries' => []], 'nagoya_countries' => []],
+            "name" => 'Nagoya Protocol Compliance', "name_de" => 'Nagoya Protocol Compliance',
+            "label" => 'Nagoya Protocol Compliance', "label_de" => 'Nagoya Protocol Compliance',
+            "description" => 'Project field: Nagoya Protocol Compliance.',
+            "width" => 12, "portfolio" => false,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'kdsf-ffk' => [
+            "fields" => ['kdsf-ffk' => []],
+            "name" => 'Research fields (KDSF)', "name_de" => 'Forschungsfelder (KDSF)',
+            "label" => 'Research fields (KDSF)', "label_de" => 'Forschungsfelder (KDSF)',
+            "description" => 'Project field: Research fields (KDSF).',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'public' => [
+            "fields" => ['public' => false],
+            "name" => 'Public presentation consent <i class=\'ph ph-globe portfolio\'></i>', "name_de" => 'Zustimmung zur öffentlichen Präsentation <i class=\'ph ph-globe portfolio\'></i>',
+            "label" => 'Public presentation consent <i class=\'ph ph-globe portfolio\'></i>', "label_de" => 'Zustimmung zur öffentlichen Präsentation <i class=\'ph ph-globe portfolio\'></i>',
+            "description" => 'Project field: Public presentation consent <i class=\'ph ph-globe portfolio\'></i>.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'purpose' => [
+            "fields" => ['purpose' => ''],
+            "name" => 'Purpose', "name_de" => 'Zweck',
+            "label" => 'Purpose', "label_de" => 'Zweck',
+            "description" => 'Project field: Purpose.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
+        ],
+        'personnel' => [
+            "fields" => ['personnel' => ''],
+            "name" => 'Personnel measures planned', "name_de" => 'Geplante Personalmaßnahmen',
+            "label" => 'Personnel measures planned', "label_de" => 'Geplante Personalmaßnahmen',
+            "description" => 'Project field: Personnel measures planned.',
+            "width" => 12, "portfolio" => false,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'in-kind' => [
+            "fields" => ['in-kind' => ''],
+            "name" => 'In-kind personnel', "name_de" => 'Umfang des geplanten eigenen Personaleinsatzes',
+            "label" => 'In-kind personnel', "label_de" => 'Umfang des geplanten eigenen Personaleinsatzes',
+            "description" => 'Project field: In-kind personnel.',
+            "width" => 12, "portfolio" => false,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'ressources' => [
+            "fields" => ['ressources' => ['material' => 'no', 'personnel' => 'no', 'room' => 'no', 'other' => 'no']],
+            "name" => 'Additional resources', "name_de" => 'Zusätzliche Ressourcen',
+            "label" => 'Additional resources', "label_de" => 'Zusätzliche Ressourcen',
+            "description" => 'Project field: Additional resources.',
+            "width" => 12, "portfolio" => false,
+            "tags" => ['general'], "section" => 'summary',
+            "entities" => ['projects'],
+        ],
+        'topics' => [
+            "fields" => ['topics' => []],
+            "name" => 'Research topics', "name_de" => 'Forschungsbereiche',
+            "label" => 'Research topics', "label_de" => 'Forschungsbereiche',
+            "description" => 'Project field: Research topics.',
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => 'general',
+            "entities" => ['projects'],
         ],
         "persons-project" => [
             "fields" => ["persons" => []],
@@ -1054,7 +1351,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "key",
-            "entities" => ['activities']
+            "entities" => ['activities', 'projects']
         ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
@@ -1165,19 +1462,13 @@ class Modules
             "entities" => ['activities', 'initiatives', 'projects']
         ],
         "university" => [
-            "show" => false, // Legacy alias; migrated activity forms use publisher with a custom label.
-            "fields" => ["publisher" => 'Springer Nature'],
-            "name" => "University",
-            "name_de" => "Universität",
-            "label" => "University",
-            "label_de" => "Universität",
-            "description" => "A field for the university of a publication, e.g. for a thesis.",
-            "description_de" => "Ein Feld für die Universität einer Publikation, z.B. für eine Abschlussarbeit.",
-            "width" => 6,
-            "portfolio" => true,
-            "tags" => ['teaching', 'people'],
-            "section" => "people",
-            "entities" => ['activities']
+            "fields" => ["university" => null],
+            "name" => "University", "name_de" => "Universität",
+            "label" => "University", "label_de" => "Universität",
+            "description" => "Select the project's university from the organization directory.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['organizations'], "section" => "people",
+            "entities" => ['projects'],
         ],
         "version" => [
             "fields" => ["version" => OSIRIS_VERSION],
@@ -1976,6 +2267,43 @@ class Modules
                 include BASEPATH . '/components/modules/initiatives.php';
                 break;
 
+            case 'acronym':
+            case 'image':
+            case 'submission_date':
+            case 'approval_date':
+            case 'rejection_date':
+            case 'start_proposed':
+            case 'end_proposed':
+            case 'funder':
+            case 'funding_organization':
+            case 'funding_program':
+            case 'funding_program_select':
+            case 'joint_project':
+            case 'funding_number':
+            case 'project_type':
+            case 'grant_income':
+            case 'grant_income_proposed':
+            case 'grant_sum':
+            case 'grant_sum_proposed':
+            case 'grant_subproject':
+            case 'grant_subproject_proposed':
+            case 'internal_number':
+            case 'coordinator':
+            case 'scholarship':
+            case 'research-countries':
+            case 'comment':
+            case 'nagoya':
+            case 'kdsf-ffk':
+            case 'public':
+            case 'purpose':
+            case 'personnel':
+            case 'in-kind':
+            case 'ressources':
+            case 'topics':
+            case 'university':
+                include BASEPATH . '/components/modules/project-fields.php';
+                break;
+
             case 'persons-project':
                 include BASEPATH . '/components/modules/persons-project.php';
                 break;
@@ -2063,9 +2391,10 @@ class Modules
             <?php
                 break;
             case 'countries':
-                $countries = $this->val('countries', []);
+                $countries = DB::doc2Arr($this->form['countries'] ?? []);
             ?>
                 <div class="data-module col-sm-<?= $width ?> <?= $req ? 'required' : '' ?>" data-module="countries">
+                    <input type="hidden" name="values[countries]" value="">
                     <label for="country-select" class="<?= $labelClass ?> floating-title">
                         <?= $label ?>
                     </label>
@@ -3528,16 +3857,6 @@ class Modules
             <?php
                 break;
 
-            case "university":
-            ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="university">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[publisher]" value="<?= $this->val('publisher') ?>" id="publisher" placeholder="publisher">
-                    <label for="publisher" class="<?= $labelClass ?>"><?= $label ?></label>
-                    <?= $this->render_help($help) ?>
-                </div>
-            <?php
-                break;
-
             case "city":
             ?>
                 <div class="data-module floating-form col-sm-<?= $width ?>" data-module="city">
@@ -4125,12 +4444,13 @@ class Modules
                 break;
 
             case 'tags':
-                $Settings = new Settings;
                 if (!$Settings->featureEnabled('tags')) break;
                 $all_tags = $Settings->get('tags') ?? [];
-                $tags = DB::doc2Arr($this->val('tags', []));
+                $tags = DB::doc2Arr($this->form['tags'] ?? []);
+                $all_tags = array_values(array_unique(array_merge(DB::doc2Arr($all_tags), $tags)));
             ?>
                 <div class="data-module col-sm-<?= $width ?> <?= $req ? 'required' : '' ?>" data-module="tags">
+                    <input type="hidden" name="values[tags]" value="">
                     <label for="tag-select" class="floating-title <?= $labelClass ?>">
                         <?= $label ?>
                     </label>
@@ -4139,7 +4459,7 @@ class Modules
                         foreach ($all_tags as $val) {
                             $selected = in_array($val, $tags);
                         ?>
-                            <option <?= ($selected ? 'selected' : '') ?> value="<?= $val ?>"><?= $val ?></option>
+                            <option <?= ($selected ? 'selected' : '') ?> value="<?= e($val) ?>"><?= e($val) ?></option>
                         <?php
                         }
                         ?>

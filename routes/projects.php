@@ -478,10 +478,10 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         $values['public'] = boolval($values['public']);
     }
 
-    if (isset($values['nagoya']) && $collection == 'proposals') {
+    if (isset($values['nagoya'])) {
         $nagoya = ($values['nagoya'] == 'yes');
         $countries = [];
-        foreach ($values['nagoya_countries'] as $iso) {
+        foreach ($values['nagoya_countries'] ?? [] as $iso) {
             $countries[] = [
                 'id' => uniqid(),
                 'code' => $iso,
@@ -602,8 +602,8 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
     if (isset($values['nagoya']) && $values['nagoya']['enabled'] == true) {
         $DB->addMessages(
             'right:nagoya.view',
-            'A new project proposal with Nagoya protocol compliance has been created: <b>' . $values['name'] . '</b>',
-            'Ein neuer Projektantrag mit Nagoya-Protokoll-Konformität wurde erstellt: <b>' . $values['name'] . '</b>',
+            'Nagoya protocol information has been recorded for: <b>' . $values['name'] . '</b>',
+            'Nagoya-Protokoll-Informationen wurden erfasst für: <b>' . $values['name'] . '</b>',
             'nagoya',
             "/$collection/view/" . $id,
         );
@@ -733,6 +733,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     if (isset($values['research-countries']) && is_array($values['research-countries'])) {
         $countries = [];
         foreach ($values['research-countries'] as $country) {
+            if (is_array($country)) { $countries[] = $country; continue; }
             $country = explode(';', $country, 2);
             $countries[] = [
                 'iso' => $country[0],
@@ -750,15 +751,15 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $values['teaser_de'] = get_preview($abstract_de);
     }
 
-    // nagoya only for proposals and if it was disabled before
-    if ($collection == 'proposals' && isset($values['nagoya'])) {
-        if (!is_string($project['nagoya']) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
+    // Preserve existing Nagoya case details when editing a project or proposal.
+    if (isset($values['nagoya'])) {
+        if (!is_string($project['nagoya'] ?? null) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
             // nagoya was already enabled before, do not change anything
             unset($values['nagoya']);
         } else {
             $nagoya = ($values['nagoya'] == 'yes');
             $countries = [];
-            foreach ($values['nagoya_countries'] as $iso) {
+            foreach ($values['nagoya_countries'] ?? [] as $iso) {
                 $countries[] = [
                     'id' => uniqid(),
                     'code' => $iso,
@@ -775,8 +776,8 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 // send notification to admins about nagoya being enabled
                 $DB->addMessages(
                     'right:nagoya.view',
-                    'Nagoya-relevant information has been shared for the following proposal: <b>' . $project['name'] . '</b>',
-                    'Für folgenden Antrag wurden Nagoya-relevante Informationen hinzugefügt: <b>' . $project['name'] . '</b>',
+                    'Nagoya-relevant information has been shared for: <b>' . $project['name'] . '</b>',
+                    'Nagoya-relevante Informationen wurden hinzugefügt für: <b>' . $project['name'] . '</b>',
                     'nagoya',
                     "/$collection/view/" . $id,
                 );

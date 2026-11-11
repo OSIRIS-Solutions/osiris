@@ -91,6 +91,8 @@ class DB
     public static $database;
     public $db;
     public function __construct() { $this->db = self::$database; }
+    public function getCountries($language = 'en') { return ['DE' => 'Germany', 'FR' => 'France', 'AT' => 'Austria']; }
+    public function getCountry($code, $language = 'en') { return $this->getCountries($language)[$code] ?? $code; }
     public function getPerson($user = null) { return $this->db->persons->findOne(['username' => $user]) ?? []; }
     public function updateHistory($values, $id) { return $values; }
     public static function isUserActivity($doc, $user) { return in_array($user, self::doc2Arr($doc['rendered']['users'] ?? []), true) || ($doc['created_by'] ?? '') === $user; }
@@ -110,8 +112,8 @@ class Vocabulary {
     public static ?array $roles = null;
     public static ?array $objectiveTypes = null;
     public function getValues($key, $all = false) {
-        if (!in_array($key, ['persons-role', 'objective-type', 'project-person-role', 'project-institute-role'], true)) return [];
         $catalog = array_column(json_decode(file_get_contents(BASEPATH . '/data/vocabulary.json'), true), null, 'id');
+        if (!isset($catalog[$key])) return [];
         $roles = ($key === 'persons-role' ? self::$roles : ($key === 'objective-type' ? self::$objectiveTypes : null)) ?? $catalog[$key]['values'];
         return $all ? $roles : array_values(array_filter($roles, fn($role) => empty($role['inactive'])));
     }
@@ -136,7 +138,7 @@ $Settings = new class {
     public function hasPermission($key) { return in_array($key, $this->permissions, true); }
 };
 $osiris = new stdClass();
-foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations', 'adminTypes', 'activities', 'groups'] as $collection) $osiris->$collection = new MemoryCollection();
+foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations', 'adminTypes', 'activities', 'groups', 'topics'] as $collection) $osiris->$collection = new MemoryCollection();
 DB::$database = $osiris;
 $DB = new DB();
 $_SESSION = ['username' => 'reviewer'];
