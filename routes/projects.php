@@ -757,7 +757,11 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     $values['updated_by'] = $_SESSION['username'];
 
     if (array_key_exists('persons', $values)) {
-        $values['applicants'] = array_values(array_unique(array_column(array_filter(DB::doc2Arr($values['persons']), fn($person) => ($person['role'] ?? '') === 'applicant'), 'user')));
+        if (Project::sameValue(ProjectPersons::normalize($project['persons'] ?? [], $DB), $values['persons'])) {
+            unset($values['persons']);
+        } else {
+            $values['applicants'] = array_values(array_unique(array_column(array_filter(DB::doc2Arr($values['persons']), fn($person) => ($person['role'] ?? '') === 'applicant'), 'user')));
+        }
     }
 
     if (isset($values['public'])) {
@@ -773,7 +777,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
             $values['funding_number'] = strval($values['funding_number']);
         }
         $values['funding_number'] = explode(',', $values['funding_number']);
-        $values['funding_number'] = array_map('trim', $values['funding_number']);
+        $values['funding_number'] = array_values(array_filter(array_map('trim', $values['funding_number']), fn($number) => $number !== ''));
     }
 
     if (isset($values['funding_organization']) && DB::is_ObjectID($values['funding_organization'])) {
@@ -795,7 +799,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $values['research-countries'] = $countries;
     }
 
-    if (isset($values['abstract'])) {
+    if (isset($values['abstract']) && !Project::sameValue($project['abstract'] ?? null, $values['abstract'])) {
         $abstract_en = localized($values['abstract'] ?? '', 'en');
         $abstract_de = localized($values['abstract'] ?? '', 'de');
 
@@ -805,7 +809,9 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
 
     // Preserve existing Nagoya case details when editing a project or proposal.
     if (isset($values['nagoya'])) {
-        if (!is_string($project['nagoya'] ?? null) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
+        $unchangedNagoya = ($values['nagoya'] === 'yes') === (bool) ($project['nagoya']['enabled'] ?? false)
+            && empty($values['nagoya_countries']);
+        if ($unchangedNagoya || !is_string($project['nagoya'] ?? null) && isset($project['nagoya']['enabled']) && $project['nagoya']['enabled'] == true && !empty($project['nagoya']['countries'])) {
             // nagoya was already enabled before, do not change anything
             unset($values['nagoya']);
         } else {
@@ -848,6 +854,15 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
                 'nagoya',
                 "/proposals/view/" . $id,
             );
+        }
+    }
+
+    foreach ($values as $key => $value) {
+        if (!Project::sameValue($project[$key] ?? null, $value)) continue;
+        if (array_key_exists($key, DB::doc2Arr($project))) {
+            $values[$key] = $project[$key];
+        } else {
+            unset($values[$key]);
         }
     }
 

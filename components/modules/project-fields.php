@@ -61,6 +61,7 @@ case 'purpose': ?>
 
 
                         <select class="form-control" name="values[purpose]" id="purpose" <?= $reqField('purpose') ?> autocomplete="off" placeholder=" ">
+                            <?php if (isset($form['_id']) && empty($form['purpose'])): ?><option value="" selected></option><?php endif; ?>
                             <?php
                             $vocab = $Vocabulary->getValues('project-purpose');
                             foreach ($vocab as $v) { ?>
@@ -84,6 +85,7 @@ case 'funder': ?>
 
 
                         <select class="form-control" name="values[funder]" value="<?= $val('funder') ?>" <?= $reqField('funder') ?> id="funder" placeholder=" ">
+                            <?php if (isset($form['_id']) && empty($form['funder'])): ?><option value="" selected></option><?php endif; ?>
                             <?php
                             $vocab = $Vocabulary->getValues('funder');
                             foreach ($vocab as $v) { ?>
@@ -108,7 +110,7 @@ case 'funding_program_select': ?>
 
                         <select class="form-control" name="values[funding_program_select]" id="funding_program_select" <?= $reqField('funding_program_select') ?> placeholder=" ">
                             <?php
-                            if ($reqField('funding_program_select') == '') { ?>
+                            if ($reqField('funding_program_select') == '' || (isset($form['_id']) && empty($form['funding_program_select']))) { ?>
                                 <option value=""><?= lang('projects.select_funding_program') ?></option>
                             <?php }
                             $vocab = $Vocabulary->getValues('funding-program');
@@ -132,7 +134,7 @@ case 'funding_number': ?>
 case 'coordinator': ?>
 
 
-                            <input type="text" class="form-control" <?= $reqField('coordinator') ?> name="values[coordinator]" id="coordinator" value="<?= $val('coordinator', $Settings->get('affiliation')) ?>" placeholder="Institute of XYZ">
+                            <input type="text" class="form-control" <?= $reqField('coordinator') ?> name="values[coordinator]" id="coordinator" value="<?= $val('coordinator', isset($form['_id']) ? '' : $Settings->get('affiliation')) ?>" placeholder="Institute of XYZ">
                             <label for="coordinator" class="<?= $reqField('coordinator') ?>"><?= e($label) ?></label>
 
 
@@ -141,6 +143,7 @@ case 'project_type': ?>
 
 
                         <select class="form-control" name="values[project_type]" id="project_type" <?= $reqField('project_type') ?> placeholder=" ">
+                            <?php if (isset($form['_id']) && empty($form['project_type'])): ?><option value="" selected></option><?php endif; ?>
                             <?php
                             $vocab = $Vocabulary->getValues('project-type');
                             foreach ($vocab as $v) { ?>
@@ -754,6 +757,7 @@ case 'institute-role': ?>
 
 
                             <select class="form-control" name="values[role]" id="role" <?= $reqField('role') ?> placeholder=" ">
+                            <?php if (isset($form['_id']) && empty($form['role'])): ?><option value="" selected></option><?php endif; ?>
                                 <?php
                                 $vocab = $Vocabulary->getValues('project-institute-role');
                                 foreach ($vocab as $v) { ?>

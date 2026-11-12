@@ -894,13 +894,32 @@ class Project extends Vocabulary
     }
 
 
-    /**
-     * Function to convert array into human readable Module fields
-     */
+    /** Compare form values before rendering; BSON maps and empty optional inputs are equivalent. */
+    public static function sameValue($before, $after): bool
+    {
+        $normalize = function ($value) use (&$normalize) {
+            if ($value instanceof Traversable) $value = iterator_to_array($value);
+            if (is_array($value)) {
+                $list = array_is_list($value);
+                foreach ($value as $key => $item) {
+                    $value[$key] = $normalize($item);
+                    if (!$list && $value[$key] === null) unset($value[$key]);
+                }
+                if (!$list) ksort($value);
+                return $value === [] ? null : $value;
+            }
+            if ($value === '') return null;
+            if (is_int($value) || is_float($value)) return (string) $value;
+            if ($value instanceof \MongoDB\BSON\ObjectId) return (string) $value;
+            return $value;
+        };
+        return $normalize($before) === $normalize($after);
+    }
+
     private function convertProject4humans($doc)
     {
 
-        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date', 'teaser', 'teaser_en', 'end_date'];
+        $omit_fields = ['_id', 'history', 'comment', 'files', 'activities', 'updated_by', 'updated', 'start_date', 'teaser', 'teaser_en', 'teaser_de', 'end_date'];
 
         $result = [];
 
@@ -917,7 +936,7 @@ class Project extends Vocabulary
                 $val = DB::doc2Arr($val);
             }
             if (is_array($val)) {
-                if (is_string($val[0])) {
+                if (array_is_list($val) && isset($val[0]) && is_string($val[0])) {
                     $val = implode(', ', $val);
                 } else {
                     $val = json_encode($val);
@@ -951,19 +970,23 @@ class Project extends Vocabulary
             $hist['status_before'] = $old_doc['status'] ?? null;
             $hist['status_after'] = $new_doc['status'];
         }
-        $new_ = $this->convertProject4humans($new_doc);
-        $old_ = $this->convertProject4humans($old_doc);
-        $diff = array_diff_assoc($new_, $old_);
-
-        if (!empty($diff)) {
-            $changes = [];
-            foreach ($diff as $key => $val) {
-                $changes[$key] = ['before' => $old_[$key] ?? null, 'after' => $val];
-            }
-            $hist['changes'] = $changes;
+        $changed = [];
+        foreach ($new_doc as $key => $value) {
+            if (!self::sameValue($old_doc[$key] ?? null, $value)) $changed[$key] = $value;
         }
-        // dump($hist, true);
-        // die;
+        // Some field renderers read the project context rather than their value argument.
+        $context = $this->project;
+        try {
+            $this->project = $old_doc;
+            $old_ = $this->convertProject4humans(array_intersect_key(DB::doc2Arr($old_doc), $changed));
+            $this->project = array_replace(DB::doc2Arr($old_doc), $new_doc);
+            $new_ = $this->convertProject4humans($changed);
+        } finally {
+            $this->project = $context;
+        }
+        foreach ($new_ as $key => $value) {
+            $hist['changes'][$key] = ['before' => $old_[$key] ?? null, 'after' => $value];
+        }
         $new_doc['history'] = $old_doc['history'] ?? [];
         $new_doc['history'][] = $hist;
         return $new_doc;

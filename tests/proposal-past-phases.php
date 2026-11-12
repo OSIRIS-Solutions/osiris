@@ -12,7 +12,7 @@ class PastPhaseProject extends Project {
     }
     public function to_ObjectID($id) { return DB::to_ObjectID($id); }
     // History comparisons do not need organization and country lookups in this fixture.
-    public function printField($field, $value, $portfolio = false) { if (in_array($field, ['name', 'title', 'abstract'], true)) return parent::printField($field, $value, $portfolio); return is_array($value) || $value instanceof Traversable ? json_encode(DB::doc2Arr($value)) : (string) $value; }
+    public function printField($field, $value, $portfolio = false) { if (in_array($field, ['name', 'title', 'abstract', 'purpose', 'role'], true)) return parent::printField($field, $value, $portfolio); return is_array($value) || $value instanceof Traversable ? json_encode(DB::doc2Arr($value)) : (string) $value; }
 }
 $osiris->adminProjects = new MemoryCollection(); $osiris->proposals = new MemoryCollection();
 $field = fn($id, $props = []) => ['id' => $id, 'type' => 'field', 'props' => $props];
@@ -73,4 +73,51 @@ $_POST = ['values' => ['type' => 'grant', 'status' => 'approved']];
 $save('proposals', (string) $id);
 $history = $osiris->proposals->findOne(['_id' => $id])['history']; $last = end($history);
 check($last['status_before'] === 'proposed' && $last['status_after'] === 'approved' && empty($last['past_phase']), 'Ordinary approvals remain genuine status transitions.');
+// A full, unchanged form must not turn a single funding correction into unrelated updates.
+$type = $osiris->adminProjects->findOne(['id' => 'grant']);
+foreach (['grant_sum_proposed', 'abstract-loc', 'purpose', 'institute-role', 'coordinator', 'project_type', 'funding_number', 'personnel', 'nagoya'] as $module) {
+    $type['phases'][0]['fields'][] = $field($module);
+}
+$osiris->adminProjects->updateOne(['id' => 'grant'], ['$set' => $type]);
+$unchanged = array_replace($document, [
+    'abstract' => ['en' => 'Original abstract'], 'teaser_de' => 'Existing manual teaser',
+    'persons' => [['user' => 'reviewer', 'role' => 'applicant', 'name' => 'Old account name', 'units' => []]],
+    'applicants' => [], 'nagoya' => ['countries' => [], 'enabled' => false], 'grant_sum_proposed' => 1050000.0,
+]);
+$osiris->proposals->documents[(string) $id] = $unchanged;
+$Settings->permissions = ['proposals.edit', 'proposals.edit-past-phases'];
+$Settings->enabled = true;
+$_POST = ['edit_phase' => 'proposed', 'values' => [
+    'status' => 'approved', 'abstract' => ['en' => 'Original abstract'], 'persons' => $unchanged['persons'],
+    'purpose' => '', 'role' => '', 'coordinator' => '', 'project_type' => '', 'funding_number' => '', 'personnel' => '',
+    'nagoya' => 'no', 'nagoya_countries' => [''], 'grant_sum_proposed' => '200000',
+]];
+$save('proposals', (string) $id);
+$saved = $osiris->proposals->findOne(['_id' => $id]); $last = end($saved['history']);
+check(array_keys($last['changes']) === ['grant_sum_proposed'], 'Submitting the full unchanged form logs only the changed proposed grant sum.');
+check($saved['persons'] === $unchanged['persons'] && $saved['applicants'] === [] && $saved['teaser_de'] === $unchanged['teaser_de'] && $saved['nagoya'] === $unchanged['nagoya'], 'Unchanged sources preserve membership data, applicants, manual teasers and Nagoya details.');
+check(!array_key_exists('purpose', $saved) && !array_key_exists('funding_number', $saved), 'Blank optional inputs do not add fields to imported documents.');
+$osiris->proposals->updateOne(['_id' => $id], ['$set' => ['applicants' => ['reviewer']]]);
+$_POST['values']['persons'][0]['role'] = 'lead';
+$_POST['values']['abstract']['en'] = 'Updated abstract';
+$_POST['values']['nagoya'] = 'yes';
+$_POST['values']['grant_sum_proposed'] = '0';
+$save('proposals', (string) $id);
+$updated = $osiris->proposals->findOne(['_id' => $id]);
+check($updated['applicants'] === [] && $updated['teaser_en'] === 'Updated abstract' && $updated['nagoya']['enabled'] === true && $updated['grant_sum_proposed'] === '0', 'Intentional source changes still update applicants, previews and Nagoya, and zero remains a valid correction.');
+$renderer = new Modules(['_id' => $id]);
+foreach (['purpose', 'institute-role', 'project_type', 'funder'] as $module) {
+    ob_start(); $renderer->print_module($module); $html = ob_get_clean();
+    check(str_contains($html, '<option value="" selected>'), "$module preserves missing selections when editing instead of choosing the first value.");
+}
+ob_start(); $renderer->print_module('coordinator'); $html = ob_get_clean();
+check(str_contains($html, 'value=""'), 'Missing coordinators stay empty when editing existing documents.');
+check(Project::sameValue(new MongoDB\Model\BSONDocument(['b' => 1, 'a' => null]), ['b' => 1.0]) && !Project::sameValue(false, 0) && !Project::sameValue(null, 0) && !Project::sameValue(['a', 'b'], ['b', 'a']), 'Comparison ignores BSON map order and empty optional values while preserving false, zero and list order.');
+$contextDocument = array_replace($document, ['purpose' => 'research', 'role' => 'associated']);
+$osiris->proposals->documents[(string) $id] = $contextDocument;
+$project = new PastPhaseProject(['purpose' => 'unrelated']);
+$history = $project->updateHistory(['purpose' => 'others', 'role' => 'coordinator'], $id, 'proposals');
+$changes = end($history['history'])['changes'];
+$vocab = new Vocabulary();
+check($changes['purpose']['before'] === $vocab->getValue('project-purpose', 'research') && $changes['purpose']['after'] === $vocab->getValue('project-purpose', 'others') && $changes['role']['before'] !== $changes['role']['after'] && $project->project === ['purpose' => 'unrelated'], 'History renders before and after with their own project context and restores the caller context.');
 ob_end_clean(); echo $baselineOutput; echo 'Past proposal phase checks passed (' . ($checks - $baselineChecks) . " checks).\n";
