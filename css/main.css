@@ -15644,18 +15644,6 @@ table img {
   box-shadow: 0 0.4rem 0 var(--success-color-30);
 }
 
-#data-modules .ql-snow.ql-toolbar::after,
-#data-modules .ql-snow .ql-toolbar::after {
-  content: "Bitte Rechtschreibung und Formatierung sorgsam prüfen.";
-  display: inline-block;
-  color: var(--muted-color);
-  font-size: small;
-}
-#data-modules .lang-en .ql-snow.ql-toolbar::after,
-#data-modules .lang-en .ql-snow .ql-toolbar::after {
-  content: "Please check spelling and formatting carefully.";
-}
-
 /* QUERY BUILDER */
 .query-builder .btn-xs,
 .query-builder .btn-group-xs > .btn {

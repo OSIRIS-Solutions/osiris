@@ -544,4 +544,6 @@ return [
     'scholar_project_fields' => 'Forschende Person',
     'countries_of_research_simple' => 'Forschungsländer (einfach)',
     'additional_resources' => 'Zusätzliche Ressourcen',
+    'proposed_project_dates' => 'Beantragte Projektlaufzeit',
+    'project_dates' => 'Projektlaufzeit',
 ];

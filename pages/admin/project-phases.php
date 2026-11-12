@@ -30,7 +30,9 @@ foreach (ProjectForms::phases($project) as $phase):
                 $title = '';
                 $icon = match ($fieldType) { 'custom' => 'ph-textbox', 'heading' => 'ph-text-h', 'paragraph' => 'ph-paragraph', 'hr' => 'ph-minus', default => 'ph-database' };
                 if (in_array($fieldType, ['field', 'custom'], true)) {
-                    $name = lang($props['label'] ?? $module['name'] ?? $id, $props['label_de'] ?? $module['name_de'] ?? null);
+                    $name = !empty($props['label']) || !empty($props['label_de'])
+                        ? lang(($props['label'] ?? '') ?: ($module['label'] ?? $id), $props['label_de'] ?? null)
+                        : ($module['label'] ?? $id);
                     $title = $id;
                 } else {
                     $title = strip_tags(lang($props['text'] ?? 'Divider', $props['text_de'] ?? 'Trennlinie'));

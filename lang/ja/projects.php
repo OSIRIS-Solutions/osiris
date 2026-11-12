@@ -547,4 +547,6 @@ return [
     'scholar_project_fields' => '研究者',
     'countries_of_research_simple' => '研究対象国（簡易版）',
     'additional_resources' => '追加リソース',
+    'proposed_project_dates' => '提案されたプロジェクトの日程',
+    'project_dates' => 'プロジェクトの日付',
 ];

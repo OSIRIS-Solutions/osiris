@@ -500,8 +500,8 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                             <li class="drag-item"
                                 data-type="field"
                                 data-id="<?= e($id) ?>"
-                                data-label="<?= $def['label'] ?? $def['name'] ?>"
-                                data-label-de="<?= $def['label_de'] ?? null ?>"
+                                data-label="<?= e($def['label'] ?? $def['name']) ?>"
+                                data-label-de="<?= e($def['label_de'] ?? '') ?>"
                                 data-tags="<?= e($def['tags'] ?? '') ?>">
                                 <div class="d-flex justify-content-between">
                                     <span><?= lang($def['name'] ?? $id, $def['name_de'] ?? null) ?></span>
@@ -712,9 +712,9 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                 $props = $it['props'] ?? [];
                                 if ($field_type === 'field' || $field_type === 'custom'):
                                     $module = $config->modules[$it['id']] ?? [];
-                                    $label = lang($module['name'] ?? $it['id'], $module['name_de'] ?? null);
-                                    if (!empty($props['label'] ?? null)) {
-                                        $label = lang($props['label'], $props['label_de'] ?? null);
+                                    $label = $module['label'] ?? lang($module['name'] ?? $it['id'], $module['name_de'] ?? null);
+                                    if (!empty($props['label']) || !empty($props['label_de'])) {
+                                        $label = lang(($props['label'] ?? '') ?: $label, $props['label_de'] ?? null);
                                     }
                             ?>
                                     <li class="canvas-item col-sm-<?= $props['width'] ?? $module['width'] ?? 12 ?>"
@@ -884,7 +884,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 const $src = $(evt.item);
                 const t = $src.data('type'); // "field" | "layout-heading" | "layout-hr" | "layout-paragraph"
                 const id = $src.data('id') || null; // nur bei "field"
-                const label = $src.find('span').text() || $src.data('label') || '—'; // Fallback auf data-label
+                const label = ALL[id]?.label || $src.find('span').text() || $src.data('label') || '—'; // Fallback auf data-label
 
                 // Ersetze den rohen <li> aus dem Katalog durch ein Canvas-Item-Template
                 const $item = buildCanvasItem(t, id, label);
@@ -1001,7 +1001,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 $('#prop-id').text(id);
                 $('#props-field').show();
 
-                $('#prop-label-en').attr('placeholder', defaults.label || title);
+                $('#prop-label-en').attr('placeholder', defaults.label_en || defaults.label || title);
                 $('#prop-label-de').attr('placeholder', defaults.label_de || title);
 
                 if (defaults.width === 0) {
@@ -1091,6 +1091,8 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 } else {
                     props.recommended = false;
                 }
+                delete props.label;
+                delete props.label_de;
                 if ($('#prop-label-en').val()) {
                     props.label = $('#prop-label-en').val();
                     $subtitle.append(' <span class="badge primary"><i class="ph ph-tag m-0"></i></span>');
@@ -1126,7 +1128,9 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                     props.portfolio = false;
                 }
                 $selected.data('props', props);
-                // $selected.find('.title').text($('#prop-label-en').val() || '—');
+                const ownLabel = <?= json_encode(lang('common.this_language')) ?> === 'de' && props.label_de ? props.label_de : props.label;
+                if (ownLabel) $selected.find('.title').text(ownLabel);
+                else $selected.find('.title').html(defaults.label || '—');
 
             } else if (type === 'layout-heading') {
                 var props = {

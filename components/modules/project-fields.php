@@ -2,7 +2,7 @@
 /** Original project inputs from pages/proposals/edit.php, adapted only to Modules. */
 $required = $req || !empty($props['required']);
 $floating = in_array($module, ['acronym', 'submission_date', 'approval_date', 'rejection_date', 'purpose', 'internal_number', 'funder', 'funding_program', 'funding_program_select', 'funding_number', 'coordinator', 'project_type', 'grant_sum', 'grant_income', 'grant_subproject', 'grant_sum_proposed', 'grant_income_proposed', 'grant_subproject_proposed', 'comment', 'personnel', 'in-kind', 'institute-role'], true);
-$customLabel = isset($props['label']) && $props['label'] !== ($m['label'] ?? '');
+$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== translate($m['label']);
 $form = $this->form;
 $DB = $this->DB;
 $osiris = $DB->db;
@@ -23,9 +23,7 @@ case 'acronym': ?>
 
 
                         <input type="text" class="form-control" name="values[acronym]" id="acronym" value="<?= $val('acronym') ?>" maxlength="100" placeholder="Short title" <?= $reqField('acronym') ?>>
-                        <label for="acronym" class="<?= $reqField('acronym') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.acronym') ?>
-                        <?php endif; ?></label>
+                        <label for="acronym" class="<?= $reqField('acronym') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -35,9 +33,7 @@ case 'submission_date': ?>
 
 
                     <input type="date" class="form-control large" name="values[submission_date]" id="submission_date" value="<?= $val('submission_date', date('Y-m-d')) ?>" required placeholder=" ">
-                    <label for="submission_date" class="required"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                        <?= lang('projects.date_of_submission') ?>
-                    <?php endif; ?></label>
+                    <label for="submission_date" class="required"><?= e($label) ?></label>
 
 
 <?php break;
@@ -47,9 +43,7 @@ case 'approval_date': ?>
 
 
                     <input type="date" class="form-control large" name="values[approval_date]" id="approval_date" value="<?= $val('approval_date', date('Y-m-d')) ?>" required placeholder=" ">
-                    <label for="approval_date" class="required"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                        <?= lang('projects.date_of_approval') ?>
-                    <?php endif; ?></label>
+                    <label for="approval_date" class="required"><?= e($label) ?></label>
 
 
 <?php break;
@@ -59,9 +53,7 @@ case 'rejection_date': ?>
 
 
                     <input type="date" class="form-control large" name="values[rejection_date]" id="rejection_date" value="<?= $val('rejection_date', date('Y-m-d')) ?>" required placeholder=" ">
-                    <label for="rejection_date" class="required"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                        <?= lang('projects.date_of_rejection') ?>
-                    <?php endif; ?></label>
+                    <label for="rejection_date" class="required"><?= e($label) ?></label>
 
 
 <?php break;
@@ -75,9 +67,7 @@ case 'purpose': ?>
                                 <option value="<?= $v['id'] ?>" <?= $sel('purpose', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="purpose" class="<?= $reqField('purpose') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.purpose_of_the_project') ?>
-                        <?php endif; ?></label>
+                        <label for="purpose" class="<?= $reqField('purpose') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -86,9 +76,7 @@ case 'internal_number': ?>
 
                         <input type="text" class="form-control" name="values[internal_number]" id="internal_number" value="<?= $val('internal_number') ?>" placeholder="1234" <?= $reqField('internal_number') ?>>
 
-                        <label for="internal_number" class="<?= $reqField('internal_number') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('common.internal_id') ?>
-                        <?php endif; ?></label>
+                        <label for="internal_number" class="<?= $reqField('internal_number') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -102,9 +90,7 @@ case 'funder': ?>
                                 <option value="<?= $v['id'] ?>" <?= $sel('funder', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="funder" class="<?= $reqField('funder') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.funder_category') ?>
-                        <?php endif; ?></label>
+                        <label for="funder" class="<?= $reqField('funder') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -112,9 +98,7 @@ case 'funding_program': ?>
 
 
                         <input type="text" class="form-control" name="values[funding_program]" value="<?= $val('funding_program') ?>" id="funding_program" placeholder="Funding program">
-                        <label for="funding_program" class="<?= $reqField('funding_program') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.funding_program') ?>
-                        <?php endif; ?></label>
+                        <label for="funding_program" class="<?= $reqField('funding_program') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -132,9 +116,7 @@ case 'funding_program_select': ?>
                                 <option value="<?= $v['id'] ?>" <?= $sel('funding_program_select', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="funding_program_select" class="<?= $reqField('funding_program_select') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.funding_program') ?>
-                        <?php endif; ?></label>
+                        <label for="funding_program_select" class="<?= $reqField('funding_program_select') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -142,9 +124,7 @@ case 'funding_number': ?>
 
 
                         <input type="text" class="form-control" name="values[funding_number]" value="<?= $val('funding_number') ?>" id="funding_number" placeholder="ABC123">
-                        <label for="funding_number" class="<?= $reqField('funding_number') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.funding_reference_number') ?>
-                        <?php endif; ?></label>
+                        <label for="funding_number" class="<?= $reqField('funding_number') ?>"><?= e($label) ?></label>
                         <small class="text-muted"><?= lang('projects.multiple_seperated_by_comma') ?></small>
 
 
@@ -153,9 +133,7 @@ case 'coordinator': ?>
 
 
                             <input type="text" class="form-control" <?= $reqField('coordinator') ?> name="values[coordinator]" id="coordinator" value="<?= $val('coordinator', $Settings->get('affiliation')) ?>" placeholder="Institute of XYZ">
-                            <label for="coordinator" class="<?= $reqField('coordinator') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.coordinator_facility') ?>
-                            <?php endif; ?></label>
+                            <label for="coordinator" class="<?= $reqField('coordinator') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -169,9 +147,7 @@ case 'project_type': ?>
                                 <option value="<?= $v['id'] ?>" <?= $sel('project_type', $v['id']) ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="project_type" class="<?= $reqField('project_type') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.project_type') ?>
-                        <?php endif; ?></label>
+                        <label for="project_type" class="<?= $reqField('project_type') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -189,9 +165,7 @@ case 'grant_income': ?>
 
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_income') ?> name="values[grant_income]" id="grant_income" value="<?= $val('grant_income') ?>" placeholder="1234">
-                            <label for="grant_income" class="<?= $reqField('grant_income') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.grant_sum_institute_edit') ?>
-                            <?php endif; ?></label>
+                            <label for="grant_income" class="<?= $reqField('grant_income') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -199,9 +173,7 @@ case 'grant_subproject': ?>
 
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_subproject') ?> name="values[grant_subproject]" id="grant_subproject" value="<?= $val('grant_subproject') ?>" placeholder="1234">
-                            <label for="grant_subproject" class="<?= $reqField('grant_subproject') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.grant_sum_subproject_edit') ?>
-                            <?php endif; ?></label>
+                            <label for="grant_subproject" class="<?= $reqField('grant_subproject') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -220,9 +192,7 @@ case 'grant_income_proposed': ?>
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_income_proposed') ?> name="values[grant_income_proposed]" id="grant_income_proposed" value="<?= $val('grant_income_proposed') ?>" placeholder="112345">
 
-                            <label for="grant_income_proposed" class="<?= $reqField('grant_income_proposed') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.proposed_grant_institute') ?>
-                            <?php endif; ?></label>
+                            <label for="grant_income_proposed" class="<?= $reqField('grant_income_proposed') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -231,9 +201,7 @@ case 'grant_subproject_proposed': ?>
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_subproject_proposed') ?> name="values[grant_subproject_proposed]" id="grant_subproject_proposed" value="<?= $val('grant_subproject_proposed') ?>" placeholder="112345">
 
-                            <label for="grant_subproject_proposed" class="<?= $reqField('grant_subproject_proposed') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.proposed_grant_subproject') ?>
-                            <?php endif; ?></label>
+                            <label for="grant_subproject_proposed" class="<?= $reqField('grant_subproject_proposed') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -254,9 +222,7 @@ case 'comment': ?>
 
 
                     <textarea name="values[comment]" id="comment" cols="30" rows="5" class="form-control" placeholder="Comment" <?= $reqField('comment') ?>><?= $val('comment') ?></textarea>
-                    <label for="comment" class="<?= $reqField('comment') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                        <?= lang('common.comment') ?>
-                    <?php endif; ?></label>
+                    <label for="comment" class="<?= $reqField('comment') ?>"><?= e($label) ?></label>
 
 
 <?php break;
@@ -767,9 +733,7 @@ case 'personnel': ?>
 
                         <textarea name="values[personnel]" id="personnel" cols="30" rows="2" class="form-control" placeholder="1 Doktorand:in"><?= $val('personnel') ?></textarea>
 
-                        <label for="personnel"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.personnel_measures_planned') ?>
-                        <?php endif; ?></label>
+                        <label for="personnel"><?= e($label) ?></label>
                         <small class="text-muted">
                             <!-- Einstellungen/Verlängerungen in Personenmonaten & Kategorie -->
                             <?= lang('projects.hiring_extensions_in_person_months_category') ?>
@@ -780,9 +744,7 @@ case 'in-kind': ?>
 
                         <textarea name="values[in-kind]" id="in-kind" cols="30" rows="2" class="form-control" placeholder="Antragsteller 5%"><?= $val('in-kind') ?></textarea>
 
-                        <label for="in-kind"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                            <?= lang('projects.in_kind_personnel') ?>
-                        <?php endif; ?></label>
+                        <label for="in-kind"><?= e($label) ?></label>
                         <small class="text-muted">
                             <?= lang('projects.informative_details_in_mentioning_the_collaborating_persons_e_g_applicant_1') ?>
                         </small>
@@ -799,7 +761,7 @@ case 'institute-role': ?>
                                 <?php } ?>
                             </select>
                             <label for="role" class="<?= $reqField('role') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.role_of') ?> <?= $Settings->get('affiliation') ?>
+                                <?= translate('projects.role_of') ?> <?= e($Settings->get('affiliation')) ?>
                             <?php endif; ?></label>
 
 

@@ -5,7 +5,7 @@ $proposed = $module === 'project-date-proposed';
 $startKey = $proposed ? 'start_proposed' : 'start';
 $endKey = $proposed ? 'end_proposed' : 'end';
 $shortcut = $proposed ? 'timeframeProposed' : 'timeframe';
-$customLabel = isset($props['label']) && $props['label'] !== ($m['label'] ?? '');
+$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== translate($m['label']);
 $reqField = fn($field) => $required ? 'required' : '';
 ?>
 <div class="data-module col-sm-<?= $width ?>" data-module="<?= e($module) ?>">

@@ -9,7 +9,7 @@ define('BASEPATH', dirname(__DIR__));
 define('ROOTPATH', '/osiris');
 require BASEPATH . '/php/FormBuilder.php';
 require BASEPATH . '/vendor/autoload.php';
-require BASEPATH . '/php/Language.php';
+require_once BASEPATH . '/php/Language.php';
 require BASEPATH . '/php/ProjectFormMigration.php';
 $checks = 0;
 function check(bool $condition, string $message): void {

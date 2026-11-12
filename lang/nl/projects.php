@@ -547,4 +547,6 @@ return [
     'scholar_project_fields' => 'Wetenschapper',
     'countries_of_research_simple' => 'Onderzoekslanden (eenvoudig)',
     'additional_resources' => 'Aanvullende bronnen',
+    'proposed_project_dates' => 'Voorgestelde projectdata',
+    'project_dates' => 'Projectdata',
 ];

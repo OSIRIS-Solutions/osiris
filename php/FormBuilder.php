@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Language.php';
+
 final class FormBuilder
 {
     public const INITIATIVE_SYSTEM_FIELDS = [
@@ -50,6 +52,8 @@ final class FormBuilder
         $DB = new DB();
         $osiris = $DB->db;
 
+        global $Translations;
+        $Translations ??= new Language(BASEPATH . '/lang');
         $Modules = new Modules();
         foreach ($Modules->all_modules as $key => $value) {
             if (($value['show'] ?? true) === false) {
@@ -62,8 +66,9 @@ final class FormBuilder
                 'id' => $key,
                 'name' => $value['name'] ?? $key,
                 'name_de' => $value['name_de'] ?? null,
-                'label' => $value['label'] ?? $value['name'] ?? $key,
-                'label_de' => $value['label_de'] ?? null,
+                'label' => translate($value['label']),
+                'label_en' => $Translations->resolve($value['label'], 'en', 'en'),
+                'label_de' => $Translations->resolve($value['label'], 'de', 'en'),
                 'width' => $value['width'] ?? '12',
                 'fields' => array_keys($value['fields'] ?? []),
                 'type' => 'field',

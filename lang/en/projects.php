@@ -546,4 +546,6 @@ return [
     'scholar_project_fields' => 'Scholar',
     'countries_of_research_simple' => 'Countries of research (simple)',
     'additional_resources' => 'Additional resources',
+    'proposed_project_dates' => 'Proposed project dates',
+    'project_dates' => 'Project dates',
 ];
