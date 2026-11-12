@@ -49,6 +49,29 @@ check($format->get_field('initiatives') === '', 'Initiatives are not exposed by 
 $format->usecase = 'web';
 $format->doc = ['initiatives' => [new MongoDB\BSON\ObjectId(), 'invalid']];
 check($format->get_field('initiatives') === '', 'Missing or malformed references are ignored.');
+// Objective links use the same reference schema and an independent selection widget.
+$objectiveId = new MongoDB\BSON\ObjectId();
+$osiris->objectives->documents = [];
+$osiris->objectives->insertOne(['_id' => $objectiveId, 'initiative' => $first, 'code' => '26-01', 'name' => 'Climate & water', 'description' => '<b>Evaluate</b> "results"', 'inactive' => true]);
+foreach (['activities', 'projects', 'proposals'] as $entity) {
+    $config = new FormBuilder('Test', '', entity: $entity);
+    $saved = validateValues(['objectives' => [(string) $objectiveId, (string) $objectiveId, 'bad']], $DB, $entity);
+    check(isset($config->modules['objectives']) && count($saved['objectives']) === 1 && $saved['objectives'][0] instanceof MongoDB\BSON\ObjectId, "Objective links are available and normalized for $entity.");
+}
+check(validateValues(['objectives' => ''], $DB)['objectives'] === [], 'Clearing objectives saves an empty array.');
+$objectiveRenderer = new Modules(['objectives' => [$objectiveId]]);
+ob_start(); $objectiveRenderer->print_module('objectives', true, ['help' => 'Objective help']); $html = ob_get_clean();
+$dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
+check($xpath->query('//input[@name="values[objectives][]" and @checked]')->length === 1 && str_contains($html, 'Archived') && str_contains($html, 'Climate &amp; Water') && str_contains($html, 'Objective help'), 'The objective widget retains archived selections, groups by initiative and renders help.');
+check(str_contains($html, 'const required = true;') && str_contains($html, 'ph-target'), 'The objective widget supports required selection and the target icon.');
+$format->doc = json_decode(json_encode(['objectives' => [$objectiveId]]), true);
+$rendered = $format->get_field('objectives');
+check(str_contains($rendered, '/initiatives/view/' . $first . '#objective-' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders Extended JSON references as escaped objective links with identifiers and description tooltips.');
+$format->usecase = 'print';
+check($format->get_field('objectives') === '26-01: Climate &amp; water', 'Printed objectives use plain names.');
+$format->usecase = 'portal';
+check($format->get_field('objectives') === '', 'Objectives are not exposed through the optional portfolio integration.');
+$format->usecase = 'web';
 $Settings->enabled = false;
 ob_start(); $renderer->print_module('initiatives'); $disabled = ob_get_clean();
 check($disabled === '', 'A disabled feature emits no clearing input for existing associations.');

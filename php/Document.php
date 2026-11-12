@@ -127,6 +127,7 @@ class Document extends Settings
         "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
         "initiatives" => ["initiatives"],
+        "objectives" => ["objectives"],
         "projects" => ["projects"],
         "pub-language" => ["pub-language"],
         "publisher" => ["publisher"],
@@ -1337,6 +1338,24 @@ class Document extends Settings
                     $title = trim(strip_tags(localized($initiative['title'] ?? '', $this->lang)));
                     $tooltip = $title === '' ? '' : ' title="' . e($title) . '"';
                     $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($initiative['_id']) . '"' . $tooltip . '><i class="ph ph-compass" aria-hidden="true"></i> ' . $name . '</a>';
+                }
+                return implode(', ', $names);
+            case 'objectives':
+                if (!class_exists('Initiatives')) require_once __DIR__ . '/Initiatives.php';
+                $ids = Initiatives::normalizeLinks($this->doc['objectives'] ?? []);
+                if (empty($ids) || $this->usecase === 'portal') return '';
+                $names = [];
+                foreach ($this->DB->db->objectives->find(['_id' => ['$in' => $ids]]) as $objective) {
+                    $name = trim(strip_tags(localized($objective['name'] ?? '', $this->lang)));
+                    $code = trim((string) ($objective['code'] ?? ''));
+                    $name = e(($code === '' ? '' : $code . ': ') . $name);
+                    if ($this->usecase === 'print') {
+                        $names[] = $name;
+                        continue;
+                    }
+                    $description = trim(strip_tags(localized($objective['description'] ?? '', $this->lang)));
+                    $tooltip = $description === '' ? '' : ' title="' . e($description) . '"';
+                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($objective['initiative']) . '#objective-' . e($objective['_id']) . '"' . $tooltip . '><i class="ph ph-target" aria-hidden="true"></i> ' . $name . '</a>';
                 }
                 return implode(', ', $names);
             case 'institute-role':

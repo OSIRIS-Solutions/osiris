@@ -56,7 +56,7 @@ function validateValues($values, $DB, ?string $entity = null)
         } else if (in_array($key, ['title', 'name', 'abstract', 'description'], true) && is_array($value)) {
             require_once __DIR__ . '/LocalizedFields.php';
             $values[$key] = normalizeLocalizedValues($value, $key === 'title', $key !== 'name');
-        } else if ($key === 'initiatives' && (is_array($value) || $value instanceof Traversable || $value === '' || (is_string($value) && DB::is_ObjectID($value)))) {
+        } else if (in_array($key, ['initiatives', 'objectives'], true) && (is_array($value) || $value instanceof Traversable || $value === '' || (is_string($value) && DB::is_ObjectID($value)))) {
             if (!class_exists('Initiatives')) require_once __DIR__ . '/Initiatives.php';
             $values[$key] = Initiatives::normalizeLinks($value);
         } else if ($key === 'persons' && in_array($entity, ['projects', 'proposals'], true)) {

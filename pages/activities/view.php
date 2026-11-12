@@ -774,6 +774,14 @@
                                             <?= $Format->get_field('initiatives', '-') ?>
                                         </td>
                                     </tr>
+                                    <?php if ($objectiveLinks = $Format->get_field('objectives')): ?>
+                                        <tr>
+                                            <td>
+                                                <span class="key"><?= translate('initiatives.objectives') ?></span>
+                                                <?= $objectiveLinks ?>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
                                 <?php } ?>
 
                                 <tr>

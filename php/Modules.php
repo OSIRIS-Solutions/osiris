@@ -1065,6 +1065,16 @@ class Modules
             "tags" => ['general'], "section" => "",
             "entities" => ['activities', 'projects', 'proposals', 'events'],
         ],
+        "objectives" => [
+            "fields" => ["objectives" => []],
+            "name" => "Objectives", "name_de" => "Objectives",
+            'label' => 'initiatives.objectives',
+            "description" => "Select one or more objectives associated with this record.",
+            "description_de" => "Ein oder mehrere Objectives mit diesem Eintrag verknüpfen.",
+            "width" => 12, "portfolio" => "impossible",
+            "tags" => ['general'], "section" => "",
+            "entities" => ['activities', 'projects', 'proposals'],
+        ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
             "name" => "Projects",
@@ -2197,6 +2207,10 @@ class Modules
 
             case 'initiatives':
                 include BASEPATH . '/components/modules/initiatives.php';
+                break;
+
+            case 'objectives':
+                include BASEPATH . '/components/modules/objectives.php';
                 break;
 
             case 'acronym':
