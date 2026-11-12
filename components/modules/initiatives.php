@@ -26,7 +26,7 @@ $required = $req || !empty($props['required']);
             ?>
                 <label class="initiative-option<?= $class ?>" <?= $title !== '' ? 'title="' . e($title) . '"' : '' ?>>
                     <input type="checkbox" name="values[initiatives][]" value="<?= e($id) ?>" <?= in_array($id, $selected, true) ? 'checked' : '' ?>>
-                    <span class="initiative-option-name"><i class="ph ph-lightbulb" aria-hidden="true"></i> <?= e(trim(strip_tags(localized($initiative['name'] ?? '')))) ?>
+                    <span class="initiative-option-name"><i class="ph ph-compass" aria-hidden="true"></i> <?= e(trim(strip_tags(localized($initiative['name'] ?? '')))) ?>
                         <?php if ($archived || $expired): ?><small class="text-muted">(<?= $archived ? lang('Archived', 'Archiviert') : lang('Expired', 'Abgelaufen') ?>)</small><?php endif; ?>
                     </span>
                 </label>

@@ -24,7 +24,7 @@ $shown = 0;
     }
 </style>
 <div class="container w-800 mw-full">
-    <h1><i class="ph-duotone ph-lightbulb"></i> <?= e(translate('common.initiatives')) ?></h1>
+    <h1><i class="ph-duotone ph-compass"></i> <?= e(translate('common.initiatives')) ?></h1>
     <div class="btn-toolbar">
         <?php if ($Settings->hasPermission('initiatives.edit')): ?>
             <a class="btn secondary" href="<?= ROOTPATH ?>/initiatives/new">

@@ -17,7 +17,7 @@ $Modules->setFields($fields);
 ?>
 <div class="container w-800 mw-full">
     <h1>
-        <i class="ph-duotone ph-lightbulb"></i>
+        <i class="ph-duotone ph-compass"></i>
         <?= e(translate($editing ? 'action.edit' : 'common.new')) ?>: <?= e(translate('common.initiative')) ?>
     </h1>
 

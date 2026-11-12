@@ -212,7 +212,7 @@
 
             <?php if ($Settings->featureEnabled('initiatives')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/initiatives">
-                    <i class="ph-duotone ph-lightbulb" aria-hidden="true"></i>
+                    <i class="ph-duotone ph-compass" aria-hidden="true"></i>
                     <b><?= lang('common.initiatives') ?></b>
                     <p><?= lang('Manage initiatives', 'Verwalte Initiativen') ?></p>
                 </a>

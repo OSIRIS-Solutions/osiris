@@ -17,7 +17,7 @@ $objectives = $osiris->objectives->find(['initiative' => $initiative['_id']], ['
 ?>
 <div class="container w-800 mw-full">
     <h1>
-        <i class="ph-duotone ph-lightbulb"></i> <?= e(Initiatives::text($initiative['name'] ?? '')) ?>
+        <i class="ph-duotone ph-compass"></i> <?= e(Initiatives::text($initiative['name'] ?? '')) ?>
     </h1>
 
     <?php if (!empty($initiative['inactive'])): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?>

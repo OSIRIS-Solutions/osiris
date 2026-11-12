@@ -29,7 +29,7 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
 <div class="container w-800 mw-full">
 
     <h1>
-        <i class="ph-duotone ph-lightbulb"></i>
+        <i class="ph-duotone ph-compass"></i>
         <?= lang('Initiatives', 'Initiativen') ?>
     </h1>
 

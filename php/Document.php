@@ -1336,7 +1336,7 @@ class Document extends Settings
                     }
                     $title = trim(strip_tags(localized($initiative['title'] ?? '', $this->lang)));
                     $tooltip = $title === '' ? '' : ' title="' . e($title) . '"';
-                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($initiative['_id']) . '"' . $tooltip . '><i class="ph ph-lightbulb" aria-hidden="true"></i> ' . $name . '</a>';
+                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($initiative['_id']) . '"' . $tooltip . '><i class="ph ph-compass" aria-hidden="true"></i> ' . $name . '</a>';
                 }
                 return implode(', ', $names);
             case 'institute-role':

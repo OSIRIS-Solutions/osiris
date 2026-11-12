@@ -211,7 +211,7 @@ class SidebarNav
                     [
                         'id' => 'initiatives',
                         'label' => translate('common.initiatives'),
-                        'icon' => 'lightbulb',
+                        'icon' => 'compass',
                         'url' => '/initiatives',
                         'active' => ['^/initiatives($|/)'],
                         'feature' => 'initiatives',
