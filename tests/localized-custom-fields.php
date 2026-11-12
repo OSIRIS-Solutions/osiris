@@ -35,6 +35,14 @@ foreach (['string' => 'input', 'text' => 'textarea', 'text-format' => 'textarea'
 }
 $custom = new CustomFields(['local-notes' => $values['local-notes']]);
 check($custom->value('local-notes') === '0123', 'The journal value renderer resolves localized custom text.');
+foreach (['person', 'infrastructure'] as $entity) {
+    $document = new MongoDB\Model\BSONDocument(['local-notes' => new MongoDB\Model\BSONDocument(['en' => 'Stored ' . $entity, 'de' => 'Übersetzung'])]);
+    $renderer = new CustomFields($document);
+    check($renderer->value('local-notes') === 'Stored ' . $entity, "The $entity renderer accepts BSON language documents without string-conversion errors.");
+}
+$osiris->adminFields->insertOne(['id' => 'selected-labels', 'name' => 'Selected labels', 'format' => 'list', 'values' => [['One', 'Eins']]]);
+$renderer = new CustomFields(['selected-labels' => new MongoDB\Model\BSONArray(['Eins'])]);
+check($renderer->value('selected-labels') === 'One', 'BSON selection lists use the same formatter as ordinary lists.');
 $format = new Document(false, 'list'); $format->doc = ['local-notes' => $values['local-notes']];
 check($format->get_field('local-notes') === '0123', 'Document resolves localized custom text.');
 $journal = $osiris->journals->findOne([]);

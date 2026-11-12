@@ -324,20 +324,18 @@ if ($edit_perm) { ?>
                 <?php } ?>
 
                 <?php
-                // check if user has custom fields
-                $custom_fields = $osiris->adminFields->find()->toArray();
-                if (!empty($custom_fields)) {
-                    foreach ($custom_fields as $field) {
-                        if ($active($field['id']) && isset($infrastructure[$field['id']])) { ?>
-                            <tr>
-                                <td>
-                                    <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
-                                    <?= $infrastructure[$field['id']] ?>
-                                </td>
-                            </tr>
-                <?php }
-                    }
-                } ?>
+                require_once BASEPATH . '/php/CustomFields.php';
+                $CustomFields = new CustomFields($infrastructure);
+                foreach ($CustomFields->fields as $field) {
+                    if (!$active($field['id']) || !isset($infrastructure[$field['id']])) continue;
+                ?>
+                    <tr>
+                        <td>
+                            <span class="key"><?= $CustomFields->name($field['id']) ?></span>
+                            <?= $CustomFields->value($field['id'], '-') ?>
+                        </td>
+                    </tr>
+                <?php } ?>
             </table>
         </div>
         <div class="col-md-6">

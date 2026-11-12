@@ -872,20 +872,18 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             echo "</td></tr>";
                         } ?>
                         <?php
-                        // check if user has custom fields
-                        $custom_fields = $osiris->adminFields->find()->toArray();
-                        if (!empty($custom_fields)) {
-                            foreach ($custom_fields as $field) {
-                                if ($active($field['id']) && isset($scientist[$field['id']])) { ?>
-                                    <tr>
-                                        <td>
-                                            <span class="key"><?= lang($field['name'], $field['name_de'] ?? null) ?></span>
-                                            <?= $scientist[$field['id']] ?>
-                                        </td>
-                                    </tr>
-                        <?php }
-                            }
-                        } ?>
+                        require_once BASEPATH . '/php/CustomFields.php';
+                        $CustomFields = new CustomFields($scientist);
+                        foreach ($CustomFields->fields as $field) {
+                            if (!$active($field['id']) || !isset($scientist[$field['id']])) continue;
+                        ?>
+                            <tr>
+                                <td>
+                                    <span class="key"><?= $CustomFields->name($field['id']) ?></span>
+                                    <?= $CustomFields->value($field['id'], '-') ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <?php if (isset($scientist['mail'])) { ?>
                             <tr>
                                 <td>

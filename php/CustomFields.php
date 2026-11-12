@@ -108,12 +108,15 @@ class CustomFields
 
         $val = ($this->form[$field['id']] ?? '');
         if (self::isLocalized($field)) $val = localized($val);
+        if ($val instanceof Traversable) $val = iterator_to_array($val);
 
         if ($format == 'date') {
+            if (!class_exists(Document::class)) require_once __DIR__ . '/Document.php';
             return Document::format_date($val);
         }
         if ($format == 'url' && !empty($val) && $val != '-') {
-            return "<a href='$val' target='_blank' class='link'>$val</a>";
+            if (!preg_match('~^https?://~i', $val)) return e($val);
+            return '<a href="' . e($val) . '" target="_blank" rel="noopener noreferrer" class="link">' . e($val) . '</a>';
         }
 
         // only in german because standard is always english
@@ -145,9 +148,6 @@ class CustomFields
             }
             $label = '[' . $this->lang($field['name'], $field['name_de'] ?? null) . ']';
             return $val ? $label : '';
-        }
-        if ($val instanceof MongoDB\Model\BSONArray) {
-            $val = DB::doc2Arr($val);
         }
         if (is_array($val)) {
             return implode(", ", array_map(function ($item) {
