@@ -1115,7 +1115,7 @@ class DB
                 $val = DB::doc2Arr($val);
             }
             if (is_array($val) && !empty($val) && isset($val[0])) {
-                if (is_string($val[0])) {
+                if (is_array($val) && is_string($val[0])) {
                     $val = implode(', ', $val);
                 } else {
                     $val = json_encode($val);

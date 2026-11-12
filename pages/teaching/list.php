@@ -90,7 +90,7 @@ $teaching = $osiris->teaching->aggregate([
                         }
                     }
                 } else {
-                    $affiliation = e($module['affiliation']);
+                    $affiliation = e($module['affiliation'] ?? '');
                 }
             ?>
                 <tr>
