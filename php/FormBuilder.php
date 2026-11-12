@@ -33,14 +33,12 @@ final class FormBuilder
         public readonly string $redirectUrl,
         public readonly string $entity = 'activities',
         public readonly string $backUrl = ROOTPATH . '/admin',
-        array $systemFields = [],
+        ?array $systemFields = null,
         private readonly bool $showCustomFields = true
     ) {
 
-        $this->systemFields = array_replace(
-            $systemFields,
-            in_array($this->entity, ['projects', 'proposals'], true) ? self::PROJECT_SYSTEM_FIELDS : []
-        );
+        $this->systemFields = $systemFields
+            ?? (in_array($this->entity, ['projects', 'proposals'], true) ? self::PROJECT_SYSTEM_FIELDS : []);
 
         if ($this->entity === 'activities') {
             $this->canBeCopied = true;

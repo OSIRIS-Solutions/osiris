@@ -20,10 +20,9 @@ $osiris->adminProjects->insertOne(['id' => 'grant', 'name' => 'Grant', 'name_de'
 $Settings->permissions = ['proposals.add', 'proposals.edit', 'projects.add', 'projects.edit'];
 $osiris->persons->updateOne(['username' => 'reviewer'], ['$set' => ['first' => 'Rae', 'last' => 'Reviewer']]);
 $_SERVER['REQUEST_URI'] = '/proposals/new';
-function editor($form, $parameters = [], $from_proposal = false): string {
+function editor($form, $parameters = [], $from_proposal = false, $collection = 'proposals'): string {
     global $DB, $osiris, $Settings;
     $_GET = ['type' => 'grant'] + $parameters;
-    $collection = 'proposals';
     $source = file_get_contents(BASEPATH . '/pages/proposals/edit.php');
     $source = preg_replace('/^require_once .*;\R/m', '', $source);
     ob_start(); eval('?>' . $source); return ob_get_clean();
@@ -36,10 +35,17 @@ $existing = $canonical + ['_id' => new MongoDB\BSON\ObjectId(), 'type' => 'grant
 $html = editor($existing, ['phase' => 'approved']);
 check(str_contains($html, '/crud/proposals/update/') && str_contains($html, 'name="values[status]" value="approved"'), 'Approval keeps its existing update route and status.');
 check(str_contains($html, 'name="values[start]" value="2027-01-01"') && str_contains($html, 'name="values[grant_sum]"') && str_contains($html, 'value="1234"'), 'Proposed dates and funding are carried over on approval.');
+$html = editor($existing, ['phase' => 'rejected']);
+check(str_contains($html, 'name="values[rejection_date]"') && !str_contains($html, 'data-module="persons-project"'), 'Rejection asks for the rejection date without editing existing project persons.');
 $html = editor($existing, ['phase' => 'withdrawn']);
 check(str_contains($html, 'name="values[withdrawn_reason]"') && !str_contains($html, 'data-module="persons-project"'), 'Withdrawal retains its separate reason-only form.');
 $html = editor($existing, [], true);
 check(str_contains($html, '/crud/projects/create') && str_contains($html, 'name="values[proposal_id]"'), 'Creating a project from a proposal keeps the original linkage.');
+$project = array_replace($existing, ['status' => 'ongoing']);
+$html = editor($project, [], false, 'projects');
+check(str_contains($html, '/crud/projects/update/') && str_contains($html, 'name="values[status]" value="project"'), 'Existing projects use the project form regardless of a legacy status.');
+$html = editor($existing, ['phase' => 'unknown']);
+check(str_contains($html, 'Unknown project phase.') && !str_contains($html, 'id="proposal-form"'), 'Invalid proposal phases render an inline error without invoking a second page layout.');
 $Settings->permissions = [];
 $html = editor($existing);
 check(!str_contains($html, 'id="proposal-form"'), 'Existing edit permission checks still prevent editing.');

@@ -46,6 +46,23 @@ foreach (['persons-project', 'institute-role', 'project-date', 'website'] as $id
     } else check($xpath->query('//input[@type="url" and @name="values[website]"]')->length === 1, 'Website stores its own field.');
     if (isset($argv[1])) file_put_contents($argv[1] . '/' . $id . '.html', $html);
 }
+// Project dates are opt-in; proposals retain their data without showing date controls.
+foreach (['project', 'proposed'] as $status) {
+    $renderer = new Modules(['status' => $status, 'persons' => $persons, 'start_date' => '2026-01-01', 'end_date' => '2027-12-31']);
+    ob_start(); $renderer->print_module('persons-project', true); $html = ob_get_clean();
+    $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
+    if ($status === 'proposed') {
+        check($xpath->query('//input[@type="date"]')->length === 0, 'Proposals have no editable membership dates.');
+        check($xpath->query('//input[@type="hidden" and @name="values[persons][0][start]" and @value="2026-01-01"]')->length === 1, 'Editing a proposal preserves existing membership dates.');
+    } else {
+        check($xpath->query('//div[contains(@class,"project-person-dates") and @id="project-person-dates-0" and @hidden]')->length === 1, 'Membership matching the project period starts in inherited mode.');
+    }
+}
+$persons[0]['start'] = '2026-06-01';
+$renderer = new Modules(['status' => 'project', 'persons' => $persons, 'start_date' => '2026-01-01', 'end_date' => '2027-12-31']);
+ob_start(); $renderer->print_module('persons-project', true); $html = ob_get_clean();
+$dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
+check($xpath->query('//div[@id="project-person-dates-0" and not(@hidden)]//input[@data-person-date="start" and @value="2026-06-01"]')->length === 1, 'Existing individual dates are visible and retained.');
 $format = new Document(false, 'web');
 $format->doc = $values;
 check(str_contains($format->get_field('persons-project'), 'Rae Reviewer') && str_contains($format->get_field('persons-project'), '/profile/reviewer'), 'Document renders linked project persons.');

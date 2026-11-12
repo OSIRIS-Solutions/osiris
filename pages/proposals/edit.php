@@ -122,7 +122,7 @@ if ($is_subproject) {
     }
 </style>
 
-<div class="container w-600">
+<div class="container w-800">
     <?php
     if ($is_subproject) {
         // type cannot be changed for subprojects        
@@ -190,7 +190,7 @@ if ($is_subproject) {
             $title = lang('projects.new_project');
             $subtitle = lang('projects.this_type_of_project_is_created_directly_as_a_project');
             $phase = 'project';
-        } elseif ($selected['process'] == 'project' || $status == 'project') {
+        } elseif ($collection === 'projects' || $selected['process'] == 'project' || $status == 'project') {
             $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
             $title = lang('projects.edit_project') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
@@ -206,18 +206,24 @@ if ($is_subproject) {
         // Withdrawals keep their separate reason form. Draft is reserved for
         // future internal approval; new proposals still start in proposed.
         if ($phase !== 'withdrawn') {
+            $phaseError = null;
             try {
                 $phaseDefinition = ProjectForms::phase($project_type, $phase);
             } catch (InvalidArgumentException $error) {
-                return abortwith(400, lang('Unknown project phase.', 'Unbekannte Projektphase.'));
+                $phaseError = lang('Unknown project phase.', 'Unbekannte Projektphase.');
             }
             if (!empty($phaseDefinition['planned']) && $status !== $phase) {
-                return abortwith(400, lang('This phase is being prepared and is not yet available.', 'Diese Phase wird vorbereitet und ist noch nicht verfügbar.'));
+                $phaseError = lang('This phase is being prepared and is not yet available.', 'Diese Phase wird vorbereitet und ist noch nicht verfügbar.');
+            }
+            if (isset($phaseError)) {
+                echo '<div class="alert danger" role="alert">' . e($phaseError) . '</div></div>';
+                return;
             }
         }
         $fields = $phase === 'withdrawn' ? [] : ProjectForms::fields($project_type, $phase, $Project->FIELDS);
         $fields = array_values(array_filter($fields, fn($field) => ($field['id'] ?? '') !== 'tags' || $Settings->hasPermission('projects.tags')));
         $moduleForm = $form;
+        $moduleForm['status'] = $phase;
         foreach ($fields as $field) {
             if (($field['type'] ?? 'field') === 'field' && in_array($field['id'] ?? '', ['name', 'title', 'abstract'], true)) {
                 $moduleForm[$field['id']] = localized($form[$field['id']] ?? '', 'en');

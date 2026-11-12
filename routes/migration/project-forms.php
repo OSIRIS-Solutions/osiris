@@ -19,7 +19,7 @@ foreach ($osiris->adminProjects->find() as $projectType) {
         $phase = DB::doc2Arr($phase);
         $hasFields = array_key_exists('fields', $phase);
         $fields = $hasFields
-            ? $projectForms->upgradeFields(DB::doc2Arr($phase['fields']))
+            ? $projectForms->upgradeFields(DB::doc2Arr($phase['fields']), $phase['id'])
             : $projectForms->fields($phase['id'], $phase['modules'] ?? []);
         if ($hasFields && json_encode($fields) === json_encode($phase['fields'])) {
             $existing++;

@@ -117,8 +117,8 @@ $headings = array_values(array_filter($fields, fn($f) => $f['type'] === 'heading
 check(array_column(array_column($headings, 'props'), 'text') === ['Submission', 'General information', 'Persons', 'Funding', 'Project description', 'Institutional fields', 'Nagoya Protocol', 'Resources and Personnel'], 'Existing section headings are explicit ordered builder elements.');
 check($headings[1]['props']['text_de'] === $language->resolve('projects.general_information', 'de', 'en'), 'Headings include German translations.');
 $empty = $migration->fields('rejected', []);
-check(array_column($empty, 'id') === ['rejection_date', 'persons-project'], 'Even an empty phase includes its system fields.');
-check(count(array_filter($empty, fn($f) => $f['type'] === 'heading')) === 2, 'Only sections containing fields are emitted.');
+check(array_column($empty, 'id') === ['rejection_date'], 'Rejected phases only require the rejection date.');
+check(count(array_filter($empty, fn($f) => $f['type'] === 'heading')) === 1, 'Only sections containing fields are emitted.');
 $plain = array_column($migration->fields('project', []), null, 'id');
 check(isset($plain['name'], $plain['title']) && !isset($plain['name-loc']), 'Without a German companion, plain modules are retained.');
 $duplicates = array_column($migration->fields('rejected', ['website', 'website*']), null, 'id');

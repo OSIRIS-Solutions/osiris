@@ -28,7 +28,10 @@ foreach (ProjectForms::phases($projectType) as $phase) {
     ProjectForms::validate($fields, $config);
     check(ProjectForms::unavailable($fields, $config) === [], "Defaults for $id are compatible with its catalogue.");
     $withoutPersons = array_values(array_filter($fields, fn($f) => ($f['id'] ?? '') !== 'persons-project'));
-    rejects(fn() => ProjectForms::validate($withoutPersons, $config), "Project persons cannot be removed in $id.");
+    if ($id === 'rejected') {
+        check(!isset($config->modules['persons-project']) && $fields === $withoutPersons, 'Rejected forms do not include project persons.');
+        ProjectForms::validate($withoutPersons, $config);
+    } else rejects(fn() => ProjectForms::validate($withoutPersons, $config), "Project persons cannot be removed in $id.");
     foreach (['submission_date', 'approval_date', 'rejection_date'] as $date) {
         $expected = ['submission_date' => 'proposed', 'approval_date' => 'approved', 'rejection_date' => 'rejected'][$date];
         check(isset($config->modules[$date]) === ($id === $expected), "$date is only available in its matching phase.");

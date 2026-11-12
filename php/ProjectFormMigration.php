@@ -46,7 +46,8 @@ final class ProjectFormMigration
         // These are hidden workflow values, not configurable form inputs.
         // Type and status continue to come from the project type and phase.
         unset($selected['type'], $selected['status'], $selected['applicants'], $selected['scholar'], $selected['supervisor']);
-        $selected['persons-project'] = true;
+        if ($phase !== 'rejected') $selected['persons-project'] = true;
+        else unset($selected['persons-project']);
 
         $fields = [];
         $emitted = [];
@@ -87,11 +88,11 @@ final class ProjectFormMigration
         // Preserve unrecognized/retired fields as well, so no configuration is
         // silently lost while the shared project module catalogue is built.
         foreach (array_keys($selected) as $id) $append($id);
-        return $this->upgradeFields($fields);
+        return $this->upgradeFields($fields, $phase);
     }
 
     /** Also update fields generated during the earlier transitional migration. */
-    public function upgradeFields(array $fields): array
+    public function upgradeFields(array $fields, ?string $phase = null): array
     {
         $result = [];
         $dates = [];
@@ -101,6 +102,7 @@ final class ProjectFormMigration
             if (($field['type'] ?? 'field') !== 'field') { $result[] = $field; continue; }
             $id = $field['id'] ?? '';
             if (in_array($id, ['applicants', 'scholar', 'supervisor', 'persons-project'], true)) {
+                if ($phase === 'rejected') continue;
                 if ($persons === null) {
                     $field['id'] = 'persons-project';
                     $props = DB::doc2Arr($field['props'] ?? []);
@@ -131,10 +133,10 @@ final class ProjectFormMigration
             }
             $result[] = $field;
         }
-        if ($persons === null) {
+        if ($persons === null && $phase !== 'rejected') {
             array_unshift($result, ['id' => 'persons-project', 'type' => 'field', 'props' => ['label' => 'Persons', 'label_de' => 'Personen', 'required' => true]]);
         }
-        return FormBuilder::prepareFields($result, FormBuilder::PROJECT_SYSTEM_FIELDS);
+        return FormBuilder::prepareFields($result, $phase === 'rejected' ? [] : FormBuilder::PROJECT_SYSTEM_FIELDS);
     }
 
     /** University is an activity alias for publisher, not an organization link. */

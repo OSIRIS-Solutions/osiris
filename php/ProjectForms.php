@@ -23,6 +23,7 @@ final class ProjectForms
 
     // Everything not listed here (including custom fields) can be used in any phase.
     private const MODULE_PHASES = [
+        'persons-project' => ['draft', 'proposed', 'approved', 'project'],
         'submission_date' => ['proposed'],
         'approval_date' => ['approved'],
         'rejection_date' => ['rejected'],
@@ -66,7 +67,7 @@ final class ProjectForms
             'project' => ['name', 'title', 'project-date', 'funder'],
             default => throw new InvalidArgumentException('Unknown project phase.'),
         };
-        return array_fill_keys($fields, ['required' => true]) + FormBuilder::PROJECT_SYSTEM_FIELDS;
+        return array_fill_keys($fields, ['required' => true]) + ($phase === 'rejected' ? [] : FormBuilder::PROJECT_SYSTEM_FIELDS);
     }
 
     public static function builder($projectType, string $phase): FormBuilder
@@ -103,7 +104,7 @@ final class ProjectForms
         }
         $language = new Language(BASEPATH . '/lang');
         $migration = new ProjectFormMigration($legacyDefinitions, $language);
-        $fields = isset($stored['fields']) ? $migration->upgradeFields($stored['fields'])
+        $fields = isset($stored['fields']) ? $migration->upgradeFields($stored['fields'], $phase)
             : ($phase === 'draft' ? [] : $migration->fields($phase, $stored['modules'] ?? []));
         return FormBuilder::prepareFields($fields, self::systemFields($phase));
     }
