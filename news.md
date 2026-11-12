@@ -1,3 +1,27 @@
+<time datetime="2026-11-12">12.11.2026</time>
+<a class="anchor" href="#version-2.1.5" id="version-2.1.5"></a>
+
+## Version 2.1.5
+
+### Aggregations Tool (Beta)
+Ein neues Feature, das komplexe MongoDB-Abfragen von der Oberfläche aus ermöglicht. Diese Funktion richtet sich vor allem an die Nutzer:innen der Verwaltung, da es beim Reporting oft zu komplexen Abfragen kommt. In diesem Tool können MongoDB-Aggregations-Pipeline Anfragen getätigt werden. Diese sind ähnlich dem Experten-Modus in den erweiterten Suchen, aber im Gegensatz zu diesen können Daten aus mehreren Quellen miteinander verbunden werden. Erste Beispiele sind im Tool integriert, Vorschläge für weitere  Beispiele sind immer willkommen. Der der Zugriff wird rollenbasiert unter *Rollen und Rechte* -> *Metriken und Berichte* -> *Zugriff auf das Aggregations-Tool* vergeben. Das Feature erscheint dann in der Sidebar unter *Analyse*.
+
+### Proxy Einstellungen
+Wenn OSIRIS hinter einem Proxy läuft, ist es nun möglich, die Proxy-Konfiguration in CONFIG.php einzutragen. Mehr dazu im [Wiki](https://wiki.osiris-app.de/technical/configure/proxy/)
+
+### Sonstiges
+- Bugfix in Journals -> Metriken abrufen. Falls die Daten von der externen Metriken-API nicht abgerufen werden konnten, kam es zu einer langen Ladezeit. Nun gibt es eine korrekte Fehlermeldung.
+- Bugfix im User Profil: Informationen die automatisch aus anderen Quellen bezogen wurden konnten das Speichern von Änderungen verhindern. Diese Felder werden nun bei der Validierung korrekt ignoriert.
+- Neue soziale Medien Optionen im User Profil
+
+
+
+<time datetime="2026-11-04">04.11.2026</time>
+<a class="anchor" href="#version-2.1.4" id="version-2.1.4"></a>
+"
+## Version 2.1.4
+
+Dieser Patch bringt 2 neue Felder in dem BibTeX Export: `ResearchTopics` und `Department` sind die Namen der neuen Listen die ab sofort Forschungsfelder und Abteilungen/Gruppen im BibTeX-Download mit ausgeliefert werden.
 
 
 <time datetime="2026-10-27">27.10.2026</time>
