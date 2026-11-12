@@ -4,7 +4,7 @@
 ## Version 2.1.5
 
 ### Aggregations Tool (Beta)
-Ein neues Feature, das komplexe MongoDB-Abfragen von der Oberfläche aus ermöglicht. Diese Funktion richtet sich vor allem an die Nutzer:innen der Verwaltung, da es beim Reporting oft zu komplexen Abfragen kommt. In diesem Tool können MongoDB-Aggregations-Pipeline Anfragen getätigt werden. Diese sind ähnlich dem Experten-Modus in den erweiterten Suchen, aber im Gegensatz zu diesen können Daten aus mehreren Quellen miteinander verbunden werden. Erste Beispiele sind im Tool integriert, Vorschläge für weitere  Beispiele sind immer willkommen. Der der Zugriff wird rollenbasiert unter *Rollen und Rechte* -> *Metriken und Berichte* -> *Zugriff auf das Aggregations-Tool* vergeben. Das Feature erscheint dann in der Sidebar unter *Analyse*.
+Ein neues Feature, das komplexe MongoDB-Abfragen von der Oberfläche aus ermöglicht. Diese Funktion richtet sich vor allem an die Nutzer:innen der Verwaltung, da es beim Reporting oft zu komplexen Abfragen kommt. In diesem Tool können MongoDB-Aggregations-Pipeline Anfragen getätigt werden. Diese sind ähnlich dem Experten-Modus in den erweiterten Suchen, aber im Gegensatz zu diesen können Daten aus mehreren Quellen miteinander verbunden werden. Erste Beispiele sind im Tool integriert, Vorschläge für weitere  Beispiele sind immer willkommen. Der Zugriff wird rollenbasiert unter *Rollen und Rechte* -> *Metriken und Berichte* -> *Zugriff auf das Aggregations-Tool* vergeben. Das Feature erscheint dann in der Sidebar unter *Analyse*.
 
 ### Proxy Einstellungen
 Wenn OSIRIS hinter einem Proxy läuft, ist es nun möglich, die Proxy-Konfiguration in CONFIG.php einzutragen. Mehr dazu im [Wiki](https://wiki.osiris-app.de/technical/configure/proxy/)
