@@ -404,6 +404,54 @@
                 </div>
 
                 <div class="box padded">
+                    <h4 class="title" id="trips">
+                        <?= lang('Patents', 'Patente') ?>
+                    </h4>
+                    <div class="form-group">
+                        <label for="" class="label">
+                            <?= lang('Enable a module for analysing patents', 'Aktiviere ein Modul, das Patente analysieren kann') ?>
+                        </label>
+
+                        <p class="text-muted">
+                            <?= lang('The add-on requires an activity type called <kbd>patent</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>patent</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.') ?>
+                        </p>
+                        <?php
+                        $patent = $Settings->featureEnabled('patent');
+
+                        $patent_available = $osiris->adminTypes->count(['id' => 'patent']);
+                        $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+
+                        if ($patent_available == 0) { ?>
+                            <p>
+                                <i class="ph ph-warning text-danger"></i>
+                                <?= lang('The activity type <kbd>patent</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>patent</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
+                            </p>
+                        <?php } else if ($modules_available == 0) { ?>
+                            <p>
+                                <i class="ph ph-warning text-danger"></i>
+                                <?= lang('The activity type <kbd>patent</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>patent</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>
+                            </p>
+                        <?php } else { ?>
+                            <p>
+                                <i class="ph ph-seal-check text-success"></i>
+                                <?= lang('The module is available and can be activated here.', 'Das Modul ist verfügbar und kann hier aktiviert werden.') ?>
+                            </p>
+
+                            <div class="custom-radio">
+                                <input type="radio" id="patent-true" value="1" name="features[patent]" <?= $patent ? 'checked' : '' ?>>
+                                <label for="patent-true"><?= lang('enabled', 'aktiviert') ?></label>
+                            </div>
+
+                            <div class="custom-radio">
+                                <input type="radio" id="patent-false" value="0" name="features[patent]" <?= $patent ? '' : 'checked' ?>>
+                                <label for="patent-false"><?= lang('disabled', 'deaktiviert') ?></label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+
+                <div class="box padded">
                     <h4 class="title" id="wordcloud">
                         <?= lang('Word Clouds', 'Word Clouds') ?>
                     </h4>
