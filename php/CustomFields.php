@@ -1,10 +1,74 @@
 <?php
-include_once "_config.php";
-include_once "init.php";
-include_once "Vocabulary.php";
+require_once __DIR__ . '/LocalizedFields.php';
 
 class CustomFields
 {
+
+    private const COLLECTIONS = [
+        'activities', 'projects', 'proposals', 'persons', 'groups', 'journals',
+        'conferences', 'events', 'deadlines', 'infrastructures', 'initiatives', 'organizations', 'news',
+    ];
+
+    public static function isLocalized($field): bool
+    {
+        return filter_var($field['localized'] ?? false, FILTER_VALIDATE_BOOLEAN) && in_array($field['format'] ?? '', ['string', 'text', 'text-format'], true);
+    }
+
+    /** Stable field IDs remain usable in saved searches, independently of UI language. */
+    public static function queryPaths($database): array
+    {
+        $paths = [];
+        foreach ($database->adminFields->find() as $field) {
+            if (self::isLocalized($field)) $paths[$field['id']] = $field['id'] . '.en';
+        }
+        return $paths;
+    }
+
+    public static function filterPaths(array $filter, array $paths): array
+    {
+        $result = [];
+        foreach ($filter as $key => $value) {
+            $result[$paths[$key] ?? $key] = in_array($key, ['$and', '$or', '$nor'], true)
+                ? array_map(fn($clause) => self::filterPaths($clause, $paths), $value) : $value;
+        }
+        return $result;
+    }
+
+    /** Normal saves only configure new fields; existing localization is immutable. */
+    public static function definitionValues(array $definition, $previous = []): array
+    {
+        $definition['localized'] = !empty($previous)
+            ? self::isLocalized($previous)
+            : filter_var($definition['localized'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $definition['format'] ??= $previous['format'] ?? 'string';
+        if (self::isLocalized($previous) && $definition['format'] !== $previous['format']) {
+            throw new InvalidArgumentException(translate('admin.localized_field_locked'));
+        }
+        if ($definition['localized'] && !in_array($definition['format'], ['string', 'text', 'text-format'], true)) {
+            throw new InvalidArgumentException(translate('admin.localized_text_formats_only'));
+        }
+        return $definition;
+    }
+
+    /** Explicit, one-way conversion. Existing maps make retries idempotent. */
+    public static function convertToLocalized($field, $database): void
+    {
+        if (self::isLocalized($field)) return;
+        if (!in_array($field['format'] ?? '', ['string', 'text', 'text-format'], true)) {
+            throw new InvalidArgumentException(translate('admin.localized_text_formats_only'));
+        }
+        $id = $field['id'];
+        if (!preg_match('/^[A-Za-z0-9_-]+$/D', $id)) throw new InvalidArgumentException('Invalid field ID.');
+        foreach (self::COLLECTIONS as $collection) {
+            foreach ($database->$collection->find([$id => ['$exists' => true]]) as $document) {
+                $value = $document[$id] ?? null;
+                if ($value instanceof Traversable) $value = iterator_to_array($value);
+                if ($value === null || is_array($value)) continue;
+                $database->$collection->updateOne(['_id' => $document['_id']], ['$set' => [$id => ['en' => (string) $value]]]);
+            }
+        }
+        $database->adminFields->updateOne(['id' => $id], ['$set' => ['localized' => true]]);
+    }
 
     public $fields = array();
     public $form = array();
@@ -43,6 +107,7 @@ class CustomFields
         if (!array_key_exists($field['id'], $this->form)) return $default;
 
         $val = ($this->form[$field['id']] ?? '');
+        if (self::isLocalized($field)) $val = localized($val);
 
         if ($format == 'date') {
             return Document::format_date($val);
@@ -144,6 +209,19 @@ class CustomFields
         if (isset($props['help'])) {
             $help = lang($props['help'], $props['help_de'] ?? null);
             $labelClass .= " has-help";
+        }
+
+        if (CustomFields::isLocalized($field)) {
+            $form = $this->form;
+            if (!array_key_exists($module, $form)) $form[$module] = $field['default'] ?? '';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . e($module) . '">';
+            localizedField($form, $module, e($label), [
+                'type' => ['string' => 'text', 'text' => 'textarea', 'text-format' => 'richtext'][$field['format']],
+                'required' => $req || !empty($props['required']),
+            ]);
+            echo $this->render_help($help);
+            echo '</div>';
+            return;
         }
 
         if ($field['format'] == 'bool') {

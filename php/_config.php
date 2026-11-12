@@ -43,8 +43,17 @@ function validateValues($values, $DB, ?string $entity = null)
     $last = max(intval($values['last_authors'] ?? 1), 1);
     unset($values['last_authors']);
 
+    require_once __DIR__ . '/CustomFields.php';
+    $localizedCustom = [];
+    foreach ($DB->db->adminFields->find() as $field) {
+        if (CustomFields::isLocalized($field)) $localizedCustom[$field['id']] = $field;
+    }
+
     foreach ($values as $key => $value) {
-        if (in_array($key, ['title', 'name', 'abstract', 'description'], true) && is_array($value)) {
+        if (isset($localizedCustom[$key])) {
+            $translations = is_array($value) ? $value : ['en' => (string) ($value ?? '')];
+            $values[$key] = normalizeLocalizedValues($translations, false, $localizedCustom[$key]['format'] === 'text-format');
+        } else if (in_array($key, ['title', 'name', 'abstract', 'description'], true) && is_array($value)) {
             require_once __DIR__ . '/LocalizedFields.php';
             $values[$key] = normalizeLocalizedValues($value, $key === 'title', $key !== 'name');
         } else if ($key === 'initiatives' && (is_array($value) || $value instanceof Traversable || $value === '' || (is_string($value) && DB::is_ObjectID($value)))) {

@@ -105,6 +105,16 @@ Route::post('/crud/fields/create', function () {
         die();
     }
 
+    require_once BASEPATH . '/php/CustomFields.php';
+    try {
+        $values = CustomFields::definitionValues($values);
+    } catch (InvalidArgumentException $error) {
+        $_SESSION['msg'] = $error->getMessage();
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/fields/' . ($values['id'] ?? 'new'));
+        die();
+    }
+
     $osiris->adminFields->insertOne($values);
 
     $_SESSION['msg'] = lang('admin.custom_field_created_successfully');
@@ -135,6 +145,16 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
         }
     }
 
+    require_once BASEPATH . '/php/CustomFields.php';
+    try {
+        $values = CustomFields::definitionValues($values, $osiris->adminFields->findOne(['id' => $id]) ?? []);
+    } catch (InvalidArgumentException $error) {
+        $_SESSION['msg'] = $error->getMessage();
+        $_SESSION['msg_type'] = 'error';
+        header('Location: ' . ROOTPATH . '/admin/fields/' . ($values['id'] ?? 'new'));
+        die();
+    }
+
     $updateResult = $osiris->adminFields->updateOne(
         ['id' => $id],
         ['$set' => $values]
@@ -145,6 +165,25 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
     header("Location: " . ROOTPATH . "/admin/fields/$id");
 });
 
+
+Route::post('/crud/fields/localize/(.*)', function ($id) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/CustomFields.php';
+    if (!$Settings->hasPermission('admin.see')) abortwith(403);
+    $field = $osiris->adminFields->findOne(['id' => $id]);
+    if (empty($field)) abortwith(404);
+    if (($_POST['confirm_localize'] ?? '') !== 'yes') abortwith(400, translate('admin.localized_conversion_warning'));
+
+    try {
+        CustomFields::convertToLocalized($field, $osiris);
+        $_SESSION['msg'] = translate('admin.localized_conversion_done');
+        $_SESSION['msg_type'] = 'success';
+    } catch (InvalidArgumentException $error) {
+        $_SESSION['msg'] = $error->getMessage();
+        $_SESSION['msg_type'] = 'error';
+    }
+    header('Location: ' . ROOTPATH . '/admin/fields/' . rawurlencode($id));
+});
 
 Route::post('/crud/fields/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";

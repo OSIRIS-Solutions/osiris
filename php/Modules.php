@@ -1770,6 +1770,20 @@ class Modules
             $labelClass .= " has-help";
         }
 
+        require_once __DIR__ . '/CustomFields.php';
+        if (CustomFields::isLocalized($field)) {
+            $form = $this->form;
+            if (!array_key_exists($module, $form)) $form[$module] = $field['default'] ?? '';
+            echo '<div class="data-module col-sm-' . $width . '" data-module="' . e($module) . '">';
+            localizedField($form, $module, e($label), [
+                'type' => ['string' => 'text', 'text' => 'textarea', 'text-format' => 'richtext'][$field['format']],
+                'required' => $req || !empty($props['required']),
+            ]);
+            echo $this->render_help($help);
+            echo '</div>';
+            return;
+        }
+
         if ($field['format'] == 'bool') {
             echo '<div class="data-module col-sm-' . $width . '" data-module="' . $module . '">';
             echo '<label for="' . $module . '" class="' . $labelClass . ' floating-title">' . $label . '</label>';

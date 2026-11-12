@@ -1887,6 +1887,7 @@ class Document extends Settings
         if (!array_key_exists($field['id'], $this->doc)) return $default;
 
         $val = ($this->doc[$field['id']] ?? '');
+        if (!empty($field['localized']) && in_array($format, ['string', 'text', 'text-format'], true)) $val = localized($val, $this->lang);
         if ($format == 'date') {
             return Document::format_date($val);
         }

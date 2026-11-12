@@ -112,6 +112,8 @@ class Settings
      */
     function getActivityFilter($filter, $user = null, $reduced = false)
     {
+        require_once __DIR__ . '/CustomFields.php';
+        $filter = CustomFields::filterPaths($filter, CustomFields::queryPaths($this->osiris));
         $user = $user ?? ($_SESSION['username']);
         // check if allowed types are actually all types
         $all_types = $this->osiris->adminCategories->distinct('id', []);

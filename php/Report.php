@@ -1,8 +1,9 @@
 <?php
-require_once "init.php";
-include_once "activity_fields.php";
-include_once "project_fields.php";
-include_once "event_fields.php";
+require_once __DIR__ . "/init.php";
+require_once __DIR__ . '/CustomFields.php';
+include_once __DIR__ . "/activity_fields.php";
+include_once __DIR__ . "/project_fields.php";
+include_once __DIR__ . "/event_fields.php";
 
 use Amenadiel\JpGraph\Graph;
 use Amenadiel\JpGraph\Plot;
@@ -398,6 +399,15 @@ class Report
             $options['projection'][$field] = 1;
         }
 
+        $customPaths = CustomFields::queryPaths($this->DB->db);
+        $filter = CustomFields::filterPaths($filter, $customPaths);
+        $sort = [];
+        foreach ($options['sort'] as $key => $direction) $sort[$customPaths[$key] ?? $key] = $direction;
+        $options['sort'] = $sort;
+        foreach ($options['projection'] as $key => &$expression) {
+            if (isset($customPaths[$key])) $expression = '$' . $customPaths[$key];
+        }
+        unset($expression);
         $data = $this->DB->db->activities->find($filter, $options);
 
         if ($field) {
@@ -514,6 +524,15 @@ class Report
             $options['projection']['defaultField'] = '$' . ProjectFields::fieldPath($defaultProjection);
             foreach (($item['field'] ?? []) ?: [] as $field) $options['projection'][$field] = '$' . ProjectFields::fieldPath($field);
         }
+        $customPaths = CustomFields::queryPaths($this->DB->db);
+        $filter = CustomFields::filterPaths($filter, $customPaths);
+        $sort = [];
+        foreach ($options['sort'] as $key => $direction) $sort[$customPaths[$key] ?? $key] = $direction;
+        $options['sort'] = $sort;
+        foreach ($options['projection'] as $key => &$expression) {
+            if (isset($customPaths[$key])) $expression = '$' . $customPaths[$key];
+        }
+        unset($expression);
         $data = $this->DB->db->$collection->find($filter, $options)->toArray();
 
         if ($item['field'] ?? false) {
@@ -717,6 +736,11 @@ class Report
             $group = ProjectFields::fieldPath($group);
             if ($group2) $group2 = ProjectFields::fieldPath($group2);
         }
+
+        $customPaths = CustomFields::queryPaths($this->DB->db);
+        $filter = CustomFields::filterPaths($filter, $customPaths);
+        $group = $customPaths[$group] ?? $group;
+        if ($group2) $group2 = $customPaths[$group2] ?? $group2;
 
         $aggregate = [
             ['$match' => $filter],

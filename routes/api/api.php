@@ -15,6 +15,7 @@
  */
 
 include_once BASEPATH . '/php/ApiClient.php';
+require_once BASEPATH . '/php/CustomFields.php';
 
 function apikey_check($key = null, $scope = null)
 {
@@ -131,6 +132,7 @@ function return_rest_stream($data)
 Route::get('/api/activities', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     if (!apikey_check($_GET['apikey'] ?? null, 'activities.read')) {
         echo return_permission_denied();
@@ -151,9 +153,11 @@ Route::get('/api/activities', function () {
         $filter = $Settings->getActivityFilter($filter);
     }
 
+    $filter = CustomFields::filterPaths($filter, $customPaths);
+
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
-        $group = $_GET['aggregate'];
+        $group = $customPaths[$_GET['aggregate']] ?? $_GET['aggregate'];
         $aggregate = [
             ['$match' => $filter],
         ];
@@ -220,6 +224,11 @@ Route::get('/api/activities', function () {
             // 'departments' => '$units'
         ];
     }
+
+    foreach ($projection as $key => &$expression) {
+        if (isset($customPaths[$key]) && ($expression === 1 || $expression === '$' . $key)) $expression = '$' . $customPaths[$key];
+    }
+    unset($expression);
 
     $pipeline = [];
     // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist
@@ -453,6 +462,7 @@ Route::get('/api/spectrum-activities', function () {
 Route::get('/api/(conferences|events|deadlines)', function ($type) {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     if (!apikey_check($_GET['apikey'] ?? null, 'events.read')) {
         echo return_permission_denied();
@@ -464,6 +474,7 @@ Route::get('/api/(conferences|events|deadlines)', function ($type) {
     if ($type === 'deadlines') {
         $collection = 'deadlines';
     }
+    $filter = CustomFields::filterPaths($filter, $customPaths);
     $events = $osiris->$collection->find(
         $filter,
         ['sort' => ['start' => -1]]
@@ -487,6 +498,7 @@ Route::get('/api/users', function () {
         ini_set('display_errors', 0);
     }
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     if (!apikey_check($_GET['apikey'] ?? null, 'persons.read')) {
         echo return_permission_denied();
@@ -518,6 +530,7 @@ Route::get('/api/users', function () {
         $filter['current_units'] = ['$in' => (array) $filter['units']];
         unset($filter['units']);
     }
+    $filter = CustomFields::filterPaths($filter, $customPaths);
     $result = $osiris->persons->find($filter)->toArray();
 
     if (isset($_GET['full'])) {
@@ -587,7 +600,7 @@ Route::get('/api/users', function () {
                 'mail' => $user['mail'] ?? '',
             ];
             foreach ($columns as $col) {
-                $entry[$col] = $user[$col] ?? null;
+                $entry[$col] = isset($customPaths[$col]) ? localized($user[$col] ?? '', 'en') : ($user[$col] ?? null);
             }
             $table[] = $entry;
         } else {
@@ -757,6 +770,7 @@ Route::get('/api/(projects|proposals)', function ($type) {
 
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
     include_once BASEPATH . "/php/Project.php";
     include_once BASEPATH . "/php/project_fields.php";
     $Project = new Project();
@@ -789,11 +803,11 @@ Route::get('/api/(projects|proposals)', function ($type) {
         ];
     }
 
-    $filter = ProjectFields::filterPaths($filter);
+    $filter = CustomFields::filterPaths(ProjectFields::filterPaths($filter), $customPaths);
 
     if (isset($_GET['aggregate'])) {
         // aggregate by one column
-        $group = ProjectFields::fieldPath($_GET['aggregate']);
+        $group = $customPaths[$_GET['aggregate']] ?? ProjectFields::fieldPath($_GET['aggregate']);
         $aggregate = [
             ['$match' => $filter],
         ];
@@ -925,6 +939,11 @@ Route::get('/api/(projects|proposals)', function ($type) {
     }
     unset($expression);
 
+    foreach ($projection as $key => &$expression) {
+        if (isset($customPaths[$key]) && ($expression === 1 || $expression === '$' . $key)) $expression = '$' . $customPaths[$key];
+    }
+    unset($expression);
+
     $pipeline = [];
     // Nur `$match` hinzufügen, wenn `$filter` nicht leer ist
     if (!empty($filter)) {
@@ -957,6 +976,7 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
 
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     $scopeByType = [
         'projects' => 'projects.read',
@@ -1017,10 +1037,12 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         }
     }
 
+    $filter = CustomFields::filterPaths($filter, $customPaths);
+
     $unwinds = ['authors', 'editors', 'supervisors', 'persons', 'collaborators', 'topics', 'metrics', 'impact', 'units'];
 
     if (!empty($_GET['aggregate'])) {
-        $group = $_GET['aggregate'];
+        $group = $customPaths[$_GET['aggregate']] ?? $_GET['aggregate'];
         $function = $_GET['aggregate_function'] ?? 'count';
         $value_field = $_GET['aggregate_value'] ?? null;
         $allowed_functions = ['count', 'sum', 'mean', 'median'];
@@ -1228,6 +1250,11 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         };
     }
 
+    foreach ($projection as $key => &$expression) {
+        if (isset($customPaths[$key]) && ($expression === 1 || $expression === '$' . $key)) $expression = '$' . $customPaths[$key];
+    }
+    unset($expression);
+
     $pipeline = [];
     if (!empty($unwind)) {
         $pipeline = array_merge($pipeline, $unwind);
@@ -1308,6 +1335,7 @@ Route::get('/api/journal', function () {
 Route::get('/api/journals', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     if (!apikey_check($_GET['apikey'] ?? null, 'journals.read')) {
         echo return_permission_denied();
@@ -1404,7 +1432,7 @@ Route::get('/api/journals', function () {
         // Add all custom fields configured for journals.
         foreach ($fields as $field) {
             if (array_key_exists($field, $document)) {
-                $journal[$field] = DB::doc2Arr($document[$field]);
+                $journal[$field] = isset($customPaths[$field]) ? localized($document[$field], 'en') : DB::doc2Arr($document[$field]);
             }
         }
 
@@ -1539,6 +1567,7 @@ Route::get('/api/infrastructures', function () {
 Route::get('/api/organizations', function () {
     error_reporting(E_ERROR | E_PARSE);
     include_once BASEPATH . "/php/init.php";
+    $customPaths = CustomFields::queryPaths($osiris);
 
     if (!apikey_check($_GET['apikey'] ?? null, 'organizations.read')) {
         echo return_permission_denied();
@@ -1581,6 +1610,7 @@ Route::get('/api/organizations', function () {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
         $filter = ['$or' => [['name' => ['$regex' => $j]], ['synonyms' => ['$regex' => $j]]]];
     }
+    $filter = CustomFields::filterPaths($filter, $customPaths);
     $result = $osiris->organizations->find($filter, $options)->toArray();
     echo return_rest($result, count($result));
 });

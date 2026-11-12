@@ -7,6 +7,8 @@ In dieser Version haben wir Sprache in OSIRIS neu gedacht. OSIRIS unterstützt n
 
 ### Mehrsprachigkeit
 
+Eigene Datenfelder der Formate „Normaler Text“, „Langer Text“ und „Text mit Formatierung“ können als mehrsprachig konfiguriert werden. Die Eingabe bietet dann einen Sprachumschalter. Neue Felder können direkt mehrsprachig angelegt werden. Bestehende Textfelder werden über eine separate, bewusst zu bestätigende Aktion dauerhaft konvertiert; vorhandene Texte bleiben dabei als englische Ausgangswerte erhalten. Bestehende Filter und gespeicherte Suchen verwenden weiterhin den englischen Wert; zusätzliche Übersetzungen werden bei der Anzeige entsprechend der Oberflächensprache aufgelöst. Die Konvertierung kann nicht rückgängig gemacht werden. Das normale Speichern der Feldkonfiguration löst keine Datenmigration aus.
+
 TODO
 
 ### Initiativen

@@ -16,6 +16,11 @@
  * @license     MIT
  */
 
+require_once BASEPATH . '/php/CustomFields.php';
+$existingField = isset($form['id']);
+$localizedLocked = CustomFields::isLocalized($form ?? []);
+$canLocalize = $existingField && !$localizedLocked && in_array($form['format'] ?? '', ['string', 'text', 'text-format'], true);
+
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
@@ -117,7 +122,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             <div class="row row-eq-spacing">
                 <div class="col-sm-6">
                     <label for="format">Format</label>
-                    <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)">
+                    <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)" <?= $localizedLocked ? 'disabled' : '' ?>>
                         <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('admin.normal_text') ?></option>
                         <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('admin.long_text') ?></option>
                         <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= lang('admin.text_with_formatting') ?></option>
@@ -131,6 +136,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                         <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= lang('admin.free_text_list_without_predefined_values') ?></option>
                         <!-- <option value="user">User</option> -->
                     </select>
+                    <?php if ($localizedLocked): ?><input type="hidden" name="values[format]" value="<?= e($form['format']) ?>"><?php endif; ?>
                 </div>
                 <div class="col-sm-6">
                     <label for="default">Default</label>
@@ -139,6 +145,20 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             </div>
 
 
+
+            <div class="form-group" id="localized-option" <?= in_array($form['format'] ?? 'string', ['string', 'text', 'text-format'], true) ? '' : 'style="display:none"' ?>>
+                <?php if (!$existingField): ?>
+                    <input type="hidden" name="values[localized]" value="false">
+                    <label><input type="checkbox" id="localized" name="values[localized]" value="true"> <?= translate('admin.localized_custom_field') ?></label>
+                    <small class="d-block text-muted"><?= translate('admin.localized_custom_field_help') ?></small>
+                <?php elseif ($localizedLocked): ?>
+                    <span><i class="ph ph-lock-simple"></i> <?= translate('admin.localized_custom_field') ?></span>
+                    <small class="d-block text-muted"><?= translate('admin.localized_field_locked') ?></small>
+                <?php elseif ($canLocalize): ?>
+                    <a href="#localize-field" class="btn secondary"><i class="ph ph-translate"></i> <?= translate('admin.convert_to_localized_field') ?></a>
+                    <small class="d-block text-muted"><?= translate('admin.localized_conversion_warning') ?></small>
+                <?php endif; ?>
+            </div>
 
             <fieldset id="values-field" <?= ($form['format'] ?? null) != 'list' ? 'style="display: none;"' : '' ?>>
                 <legend><?= lang('admin.possible_values') ?></legend>
@@ -219,6 +239,23 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 
 </form>
+
+<?php if ($canLocalize): ?>
+    <div class="modal" id="localize-field" tabindex="-1" role="dialog" aria-labelledby="localize-field-title">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a href="#close-modal" class="close" role="button" aria-label="<?= e(translate('action.cancel')) ?>"><span aria-hidden="true">&times;</span></a>
+                <h3 class="title" id="localize-field-title"><?= translate('admin.convert_to_localized_field') ?></h3>
+                <p><strong><?= translate('admin.localized_conversion_warning') ?></strong></p>
+                <p><?= translate('admin.localized_conversion_details') ?></p>
+                <form action="<?= ROOTPATH ?>/crud/fields/localize/<?= e(rawurlencode($form['id'])) ?>" method="post">
+                    <button type="submit" class="btn secondary" name="confirm_localize" value="yes"><?= translate('admin.localized_conversion_confirm') ?></button>
+                    <a href="#close-modal" class="btn"><?= translate('action.cancel') ?></a>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <?php if (!empty($form['id'] ?? null)) { ?>
     <h3>
@@ -366,6 +403,9 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
     }
 
     function updateFields(name) {
+        const localized = ['string', 'text', 'text-format'].includes(name);
+        $('#localized-option').toggle(<?= json_encode($existingField) ?> ? <?= json_encode($canLocalize || $localizedLocked) ?> : localized);
+        $('#localized').prop('disabled', !localized || <?= json_encode($localizedLocked) ?>);
         $('#values-field').hide()
         switch (name) {
             case 'string':

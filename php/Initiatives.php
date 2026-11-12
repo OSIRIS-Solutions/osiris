@@ -83,7 +83,7 @@ final class Initiatives
                 // In a date range only the start is required; an empty end means ongoing.
                 $required = !empty($field['props']['required']) && $key !== 'end';
                 $value = $values[$key];
-                if ($required && str_ends_with($field['id'], '-loc')) {
+                if ($required && (str_ends_with($field['id'], '-loc') || !empty($module['localized']))) {
                     $value = is_array($value) ? ($value[OSIRIS_BASE_LANGUAGE] ?? '') : $value;
                 }
                 if ($required && ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === ''))) {

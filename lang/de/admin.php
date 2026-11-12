@@ -919,4 +919,13 @@ return [
     'secret_key' => 'Geheimer Schlüssel',
     'activity_not_found_using_default_example' => 'Die Aktivität wurde leider nicht in der Datenbank gefunden. Es wird das Standardbeispiel verwendet.',
     'invalid_activity_id' => 'Die eingegebene ID ist ungültig. Bitte verwende eine gültige Aktivitäts-ID.',
+    'localized_custom_field' => 'Mehrsprachiges Feld',
+    'localized_custom_field_help' => 'Das neue Feld unterstützt von Anfang an Übersetzungen. Filter und Sortierung verwenden den englischen Wert. Diese Auswahl kann nach dem Speichern nicht rückgängig gemacht werden.',
+    'localized_text_formats_only' => 'Nur Textfelder können mehrsprachig sein.',
+    'localized_field_locked' => 'Dieses Feld ist mehrsprachig. Die Mehrsprachigkeit kann nicht rückgängig gemacht werden; das Feldformat bleibt fest.',
+    'convert_to_localized_field' => 'In mehrsprachiges Feld konvertieren',
+    'localized_conversion_warning' => 'Diese Konvertierung ist dauerhaft und kann nicht rückgängig gemacht werden.',
+    'localized_conversion_details' => 'Vorhandene Texte bleiben als englische Werte erhalten. Die Konvertierung verwendet die gespeicherte Feldkonfiguration und speichert keine anderen offenen Änderungen auf dieser Seite.',
+    'localized_conversion_confirm' => 'Dauerhaft konvertieren',
+    'localized_conversion_done' => 'Das Feld wurde in ein mehrsprachiges Feld konvertiert.',
 ];

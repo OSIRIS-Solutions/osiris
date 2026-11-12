@@ -48,6 +48,10 @@ class MemoryCollection
     private function matches(array $document, array $filter): bool
     {
         foreach ($filter as $key => $value) {
+            if (is_array($value) && array_key_exists('$exists', $value)) {
+                if (array_key_exists($key, $document) !== $value['$exists']) return false;
+                continue;
+            }
             if (is_array($value) && array_key_exists('$in', $value)) {
                 if (!in_array((string) ($document[$key] ?? ''), array_map('strval', $value['$in']), true)) return false;
                 continue;

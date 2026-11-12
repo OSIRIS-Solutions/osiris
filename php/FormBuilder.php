@@ -87,6 +87,7 @@ final class FormBuilder
         }
 
         if ($showCustomFields) {
+            require_once __DIR__ . '/CustomFields.php';
             $custom_fields = $osiris->adminFields->find()->toArray();
             foreach ($custom_fields as $f) {
                 $this->modules[$f['id']] = [
@@ -98,6 +99,7 @@ final class FormBuilder
                     'width' => $f['width'] ?? '12',
                     'fields' => [$f['id']],
                     'type' => 'custom',
+                    'localized' => CustomFields::isLocalized($f),
                 ];
             }
         }

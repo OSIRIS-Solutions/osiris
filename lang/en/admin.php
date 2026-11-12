@@ -917,4 +917,13 @@ return [
     'secret_key' => 'Secret key',
     'activity_not_found_using_default_example' => 'Sorry, the activity was not found in the database. We will use the default example.',
     'invalid_activity_id' => 'The ID you entered is not valid. Please use a valid activity ID.',
+    'localized_custom_field' => 'Multilingual field',
+    'localized_custom_field_help' => 'The new field supports translations from creation. Filters and sorting use the English value. This choice cannot be reversed after saving.',
+    'localized_text_formats_only' => 'Only text fields can be multilingual.',
+    'localized_field_locked' => 'This field is multilingual. Localization cannot be reversed and the field format is fixed.',
+    'convert_to_localized_field' => 'Convert to multilingual field',
+    'localized_conversion_warning' => 'This conversion is permanent and cannot be undone.',
+    'localized_conversion_details' => 'Existing texts are preserved as English values. The conversion uses the saved field configuration and does not save any other pending changes on this page.',
+    'localized_conversion_confirm' => 'Convert permanently',
+    'localized_conversion_done' => 'The field has been converted to multilingual input.',
 ];

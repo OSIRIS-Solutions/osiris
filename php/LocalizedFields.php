@@ -9,7 +9,7 @@
  * localizedField($form, "research.$i.subtitle", lang('common.subtitle'), ['group' => "research.$i"]);
  *
  * Supported options:
- * - type: text (default) or richtext
+ * - type: text (default), textarea or richtext
  * - required: whether the base language is required
  * - class: additional classes for a text input
  * - root: outer input name (default: values); null omits the outer name
@@ -275,6 +275,10 @@ function renderLocalizedFieldInput(
                   class="d-none localized-value"
                   <?= $disabled ? 'disabled' : '' ?>
                   readonly><?= e($value) ?></textarea>
+    <?php } elseif ($type === 'textarea') { ?>
+        <textarea class="<?= e($inputClass) ?> localized-value" rows="4"
+                  name="<?= e($inputName) ?>" id="<?= e($id) ?>"
+                  <?= $disabled ? 'disabled' : '' ?> <?= $required ? 'required' : '' ?>><?= e($value) ?></textarea>
     <?php } else { ?>
         <input type="text"
                class="<?= e($inputClass) ?> localized-value"
