@@ -52,6 +52,13 @@ $year = $_GET['year'] ?? $api_year;
     <strong class="highlight"><?= $api_year ?></strong>
 </p>
 
+<?php
+if ($api_year == 'unknown') {
+    echo "<p class='alert alert-danger'>" . lang("Failed to fetch API data.", "Fehler beim Abrufen der API-Daten.") . "</p>";
+    die;
+}
+?>
+
 <form action="#" method="get">
     <div class="form-group">
         <label for="year"><?= lang('Select year', 'Jahr auswählen') ?></label>

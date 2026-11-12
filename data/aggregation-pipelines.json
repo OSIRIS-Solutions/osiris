@@ -1,0 +1,116 @@
+[
+    {
+        "name": "Activities with male first author",
+        "collection": "activities",
+        "rules": [
+            {
+                "$unwind": "$authors"
+            },
+            {
+                "$match": {
+                    "authors.position": "first"
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "persons",
+                    "let": {
+                        "authors": "$authors"
+                    },
+                    "pipeline": [
+                        {
+                            "$match": {
+                                "$expr": {
+                                    "$and": [
+                                        {
+                                            "$eq": [
+                                                "$username",
+                                                "$$authors.user"
+                                            ]
+                                        },
+                                        {
+                                            "$eq": [
+                                                "$gender",
+                                                "m"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    "as": "genderPersons"
+                }
+            },
+            {
+                "$match": {
+                    "genderPersons.0": {
+                        "$exists": true
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 1,
+                    "title": 1,
+                    "type": 1,
+                    "name": {
+                        "$concat": [
+                            {
+                                "$arrayElemAt": [
+                                    "$genderPersons.first",
+                                    0
+                                ]
+                            },
+                            " ",
+                            {
+                                "$arrayElemAt": [
+                                    "$genderPersons.last",
+                                    0
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "Groups with female head",
+        "collection": "groups",
+        "rules": [
+            {
+                "$unwind": "$head"
+            },
+            {
+                "$lookup": {
+                    "from": "persons",
+                    "localField": "head",
+                    "foreignField": "username",
+                    "as": "person"
+                }
+            },
+            {
+                "$unwind": "$person"
+            },
+            {
+                "$match": {
+                    "person.gender": "f"
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "doc": {
+                        "$first": "$$ROOT"
+                    }
+                }
+            },
+            {
+                "$replaceRoot": {
+                    "newRoot": "$doc"
+                }
+            }
+        ]
+    }
+]

@@ -3,6 +3,12 @@
 // define relative path to your root folder 
 define('ROOTPATH', '');
 
+// define DB connection
+define("DB_NAME", "osiris");
+
+// define trusted base URL
+define("BASE_URL", "http://localhost:8080");
+
 // define ADMIN user name
 define('ADMIN', 'juk20');
 
@@ -10,6 +16,18 @@ define('ADMIN', 'juk20');
 define('MAINTENANCE', false);
 // if Live is set to false, the system will indicate "Testsystem" in the header
 define('LIVE', true);
+
+// check if OSIRIS_DB_HOST (Docker) is defined, else opt out to localhost
+$host_db = getenv('OSIRIS_DB_HOST') ?? "localhost";
+if (empty($host_db)) {
+    $host_db = "localhost";
+}
+define("DB_HOST", $host_db);
+
+define("DB_STRING", "mongodb://" . DB_HOST . ":27017/" . DB_NAME . "?retryWrites=true&w=majority");
+
+// define CRON secret for cron jobs
+define('CRON_SECRET', 'your_cron_secret');
 
 // possible values are 'AUTH', 'LDAP' or 'OAUTH'
 define('USER_MANAGEMENT', 'AUTH');
@@ -33,26 +51,10 @@ define('USER_MANAGEMENT', 'AUTH');
 // define('AUTHORITY', 'https://login.microsoftonline.com/common');
 // define('SCOPES', 'openid profile email User.Read');
 
-
-// define trusted base URL
-define("BASE_URL", "http://localhost:8080");
-
-// define DB connection
-define("DB_NAME", "osiris");
-
-// check if OSIRIS_DB_HOST (Docker) is defined, else opt out to localhost
-$host_db = getenv('OSIRIS_DB_HOST') ?? "localhost";
-if (empty($host_db)) {
-    $host_db = "localhost";
-}
-define("DB_HOST", $host_db);
-
-define("DB_STRING", "mongodb://" . DB_HOST . ":27017/" . DB_NAME . "?retryWrites=true&w=majority");
-
-// define CRON secret for cron jobs
-define('CRON_SECRET', 'your_cron_secret');
-
-// not needed right now, but planned in the future
-define("ORCID_APP_ID", null);
-define("ORCID_SECRET_KEY", null);
-
+// Optional outgoing proxy for country downloads and journal creation.
+// Leave unset for direct access or libcurl's proxy environment settings.
+// Use the proxy's actual protocol, even when the destination uses HTTPS.
+// define('PROXY_URL', 'http://proxy.example.org:3128');
+// Optional proxy authentication (methods supported by the installed libcurl):
+// define('PROXY_USERNAME', 'username');
+// define('PROXY_PASSWORD', 'password');

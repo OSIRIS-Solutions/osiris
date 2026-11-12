@@ -973,6 +973,8 @@ function socialLogo($type)
             return 'ph-facebook-logo';
         case 'X':
             return 'ph-x-logo';
+        case 'x':
+            return 'ph-x-logo';
         case 'matrix':
             return 'ph-matrix-logo';
         case 'website':
@@ -983,6 +985,12 @@ function socialLogo($type)
             return 'ph-student';
         case 'email':
             return 'ph-email-logo';
+        case 'telegram':
+            return 'ph-telegram-logo';
+        case 'reddit':
+            return 'ph-reddit-logo';
+        case 'tiktok':
+            return 'ph-tiktok-logo';
         default:
             return 'ph-link';
     }

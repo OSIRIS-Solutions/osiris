@@ -26,6 +26,17 @@ Route::get('/data/kdsf', function () {
     echo $json;
 });
 
+Route::get('/data/social-media', function() {
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET');
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Expires: 0');
+    $json = file_get_contents(BASEPATH . "/data/social-media.json");
+    echo $json;
+});
+
 Route::get('/get-modules', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Modules.php";

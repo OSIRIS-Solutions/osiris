@@ -75,3 +75,11 @@ if (!defined('ORCID_SECRET_KEY'))
 
 if (!defined('CRON_SECRET'))
     define('CRON_SECRET', 'please-change-this-secret');
+
+// Optional outgoing proxy for country downloads and journal creation.
+if (!defined('PROXY_URL'))
+    define('PROXY_URL', null);
+if (!defined('PROXY_USERNAME'))
+    define('PROXY_USERNAME', '');
+if (!defined('PROXY_PASSWORD'))
+    define('PROXY_PASSWORD', '');

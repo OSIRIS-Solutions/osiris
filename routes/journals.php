@@ -380,15 +380,8 @@ Route::post('/crud/journal/create', function () {
 
                 $url = "https://osiris-app.de/api/v1/journals/" . $issn;
 
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [
-                    'Accept: application/json',
-                    // "X-ApiKey: $apikey"
-                ]);
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                $result = curl_exec($curl);
-                $result = json_decode($result, true);
+                require_once BASEPATH . '/php/HttpClient.php';
+                $result = json_decode(HttpClient::get($url, ['Accept: application/json']), true, 512, JSON_THROW_ON_ERROR);
                 if (!empty($result['metrics'] ?? null)) {
                     $values['metrics'] = $result['metrics'];
                     # sort metrics by year
@@ -407,6 +400,8 @@ Route::post('/crud/journal/create', function () {
                 }
             }
         } catch (\Throwable $th) {
+            // Metrics are optional: keep saving the journal if the external service fails.
+            error_log('OSIRIS: Journal metrics lookup failed; saving without external metrics.');
         }
     }
 
