@@ -11,7 +11,8 @@ Wenn OSIRIS hinter einem Proxy läuft, ist es nun möglich, die Proxy-Konfigurat
 
 ### Sonstiges
 - Bugfix in Journals -> Metriken abrufen. Falls die Daten von der externen Metriken-API nicht abgerufen werden konnten, kam es zu einer langen Ladezeit. Nun gibt es eine korrekte Fehlermeldung.
-- Bugfix im User Profil: Informationen die automatisch aus anderen Quellen bezogen wurden konnten das Speichern von Änderungen verhindern. Diese Felder werden nun bei der Validierung korrekt ignoriert.
+- Bugfix im User Profil Editor: Informationen die automatisch aus anderen Quellen bezogen wurden konnten das Speichern von Änderungen verhindern. Diese Felder werden nun bei der Validierung korrekt ignoriert.
+- Bugfix im User Profil: Forschungsinteressen werden wieder geladen
 - Neue soziale Medien Optionen im User Profil
 
 
