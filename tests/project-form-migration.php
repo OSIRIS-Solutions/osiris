@@ -18,6 +18,7 @@ function check(bool $condition, string $message): void {
     if (!$condition) throw new RuntimeException($message);
 }
 function lang($en, $de = null) { return $en; }
+function translate($key) { global $language, $testLanguage; return $language->resolve($key, $testLanguage ?? 'en', 'en'); }
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function migrationCard(...$args) {}
 class DB {
@@ -84,6 +85,15 @@ $osiris = (object) [
 ];
 $legacy = new Project();
 $language = new Language(BASEPATH . '/lang');
+$catalogue = json_decode(file_get_contents(BASEPATH . '/data/project-fields.json'), true);
+check(count(array_filter($catalogue, fn($field) => isset($field['label']) && !isset($field['en']) && !isset($field['de']))) === count($catalogue), 'Catalogue entries store one interface label key.');
+foreach (['en', 'de'] as $locale) {
+    check(array_filter($catalogue, fn($field) => $language->resolve($field['label'], $locale, 'en') === $field['label']) === [], "Every catalogue key resolves in $locale.");
+}
+$testLanguage = 'fr';
+check($legacy->printLabel('name') === $language->resolve('projects.short_title', 'fr', 'en'), 'Project labels follow the interface language.');
+$testLanguage = 'en';
+check($legacy->printLabel('custom-first') === 'First' && $legacy->printLabel('topics') === 'Research areas', 'Institutional field names are retained.');
 $migration = new ProjectFormMigration($legacy->FIELDS, $language);
 $modules = [
     ['module' => 'abstract_de', 'required' => true],
@@ -103,7 +113,7 @@ $modules = [
 $fields = $migration->fields('proposed', new MongoDB\Model\BSONArray(array_map(fn($m) => new MongoDB\Model\BSONDocument($m), $modules)));
 $byId = array_column(array_filter($fields, fn($f) => isset($f['id'])), null, 'id');
 $ids = array_keys($byId);
-check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'project-date-proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
+check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'project-date-proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field', 'initiatives'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
 foreach (['name-loc', 'title-loc', 'submission_date', 'project-date-proposed', 'persons-project', 'funder'] as $id) {
     check($byId[$id]['props']['required'] === true, "System requirement retained for $id.");
 }

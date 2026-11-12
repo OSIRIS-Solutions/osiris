@@ -541,4 +541,10 @@ return [
     'ended_Project' => 'fin',
     'ongoing_Project' => 'en cours',
     'collaborator_added' => 'Ajouté par un collaborateur',
+    'funding_organization' => 'Organisme de financement',
+    'funding_program_free_text' => 'Programme de financement (texte libre)',
+    'funding_program_selection' => 'Programme de financement (sélection)',
+    'scholar_project_fields' => 'Scholar',
+    'countries_of_research_simple' => 'Pays de recherche (simple)',
+    'additional_resources' => 'Ressources supplémentaires',
 ];

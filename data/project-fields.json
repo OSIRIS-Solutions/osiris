@@ -1,8 +1,7 @@
 [
   {
     "id": "type",
-    "en": "Type",
-    "de": "Typ",
+    "label": "common.type",
     "kdsf": null,
     "scope": {
       "project": true,
@@ -12,8 +11,7 @@
   },
   {
     "id": "acronym",
-    "en": "Acronym",
-    "de": "Akronym",
+    "label": "projects.acronym",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -24,8 +22,7 @@
   },
   {
     "id": "name",
-    "en": "Short title",
-    "de": "Kurztitel",
+    "label": "projects.short_title",
     "kdsf": null,
     "scope": {
       "project": true,
@@ -36,8 +33,7 @@
   },
   {
     "id": "name_de",
-    "en": "Short title (German)",
-    "de": "Kurztitel (Deutsch)",
+    "label": "projects.short_title_german",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -48,8 +44,7 @@
   },
   {
     "id": "title",
-    "en": "Full title",
-    "de": "Voller Titel",
+    "label": "common.full_title",
     "kdsf": "KDSF-B-2-2",
     "scope": {
       "project": true,
@@ -60,8 +55,7 @@
   },
   {
     "id": "title_de",
-    "en": "Full title (German)",
-    "de": "Voller Titel (Deutsch)",
+    "label": "projects.full_title_german",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -72,8 +66,7 @@
   },
   {
     "id": "image",
-    "en": "Project image",
-    "de": "Projekt-Bild",
+    "label": "projects.project_image",
     "kdsf": null,
     "scope": {
       "project": false
@@ -82,8 +75,7 @@
   },
   {
     "id": "status",
-    "en": "Status",
-    "de": "Status",
+    "label": "common.status",
     "kdsf": null,
     "scope": {
       "proposed": true,
@@ -94,8 +86,7 @@
   },
   {
     "id": "applicants",
-    "en": "Applicants",
-    "de": "Antragstellende Personen",
+    "label": "projects.applicants",
     "kdsf": "KDSF-B-2-15",
     "scope": {
       "proposed": true
@@ -104,8 +95,7 @@
   },
   {
     "id": "submission_date",
-    "en": "Submission date",
-    "de": "Einreichungsdatum",
+    "label": "projects.submission_date",
     "kdsf": null,
     "scope": {
       "proposed": true
@@ -114,8 +104,7 @@
   },
   {
     "id": "approval_date",
-    "en": "Approval date",
-    "de": "Bewilligungsdatum",
+    "label": "projects.approval_date",
     "kdsf": null,
     "scope": {
       "approved": true
@@ -124,8 +113,7 @@
   },
   {
     "id": "rejection_date",
-    "en": "Rejection date",
-    "de": "Ablehnungsdatum",
+    "label": "projects.rejection_date",
     "kdsf": null,
     "scope": {
       "rejected": true
@@ -134,8 +122,7 @@
   },
   {
     "id": "start",
-    "en": "Project start",
-    "de": "Projektbeginn",
+    "label": "projects.project_start",
     "kdsf": "KDSF-B-2-3",
     "scope": {
       "project": true,
@@ -145,8 +132,7 @@
   },
   {
     "id": "end",
-    "en": "Project end",
-    "de": "Projektende",
+    "label": "projects.project_end",
     "kdsf": "KDSF-B-2-4",
     "scope": {
       "project": true,
@@ -156,8 +142,7 @@
   },
   {
     "id": "start_proposed",
-    "en": "Proposed project start",
-    "de": "Beantragter Projektbeginn",
+    "label": "projects.proposed_project_start",
     "kdsf": null,
     "scope": {
       "proposed": true
@@ -166,8 +151,7 @@
   },
   {
     "id": "end_proposed",
-    "en": "Proposed project end",
-    "de": "Beantragtes Projektende",
+    "label": "projects.proposed_project_end",
     "kdsf": null,
     "scope": {
       "proposed": true
@@ -175,9 +159,18 @@
     "order": 14
   },
   {
+    "id": "initiatives",
+    "label": "common.initiatives",
+    "kdsf": null,
+    "scope": {
+      "project": true,
+      "proposed": true
+    },
+    "order": 15
+  },
+  {
     "id": "funder",
-    "en": "Funder (Category)",
-    "de": "Förderer (Kategorie)",
+    "label": "projects.funder_category",
     "kdsf": null,
     "scope": {
       "project": true,
@@ -187,8 +180,7 @@
   },
   {
     "id": "funding_organization",
-    "en": "Funding organization",
-    "de": "Förderorganisation",
+    "label": "projects.funding_organization",
     "kdsf": "KDSF-B-3-6",
     "scope": {
       "project": false,
@@ -198,8 +190,7 @@
   },
   {
     "id": "funding_program",
-    "en": "Funding program (free text)",
-    "de": "Förderprogramm (Freitext)",
+    "label": "projects.funding_program_free_text",
     "kdsf": "KDSF-B-3-1",
     "scope": {
       "project": false,
@@ -210,8 +201,7 @@
   },
   {
     "id": "funding_program_select",
-    "en": "Funding program (selection)",
-    "de": "Förderprogramm (Auswahl)",
+    "label": "projects.funding_program_selection",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -222,8 +212,7 @@
   },
   {
     "id": "joint_project",
-    "en": "Joint project",
-    "de": "Verbundprojekt",
+    "label": "projects.joint_project",
     "kdsf": "KDSF-B-2-7",
     "scope": {
       "project": false,
@@ -234,8 +223,7 @@
   },
   {
     "id": "funding_number",
-    "en": "Funding reference number",
-    "de": "Förderkennzeichen",
+    "label": "projects.funding_reference_number",
     "kdsf": "KDSF-B-3-2",
     "scope": {
       "project": false,
@@ -245,8 +233,7 @@
   },
   {
     "id": "funding_type",
-    "en": "Funding type",
-    "de": "Förderart",
+    "label": "projects.funding_type_project_fields",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -257,8 +244,7 @@
   },
   {
     "id": "project_type",
-    "en": "Project type",
-    "de": "Art des Projekts",
+    "label": "projects.project_type_project_fields",
     "kdsf": "KDSF-B-2-16 (GWK)",
     "scope": {
       "project": false,
@@ -269,8 +255,7 @@
   },
   {
     "id": "grant_income",
-    "en": "Grant sum (Institute)",
-    "de": "Fördersumme (Institut)",
+    "label": "projects.grant_sum_institute_project_fields",
     "kdsf": null,
     "scope": {
       "approved": false
@@ -279,8 +264,7 @@
   },
   {
     "id": "grant_income_proposed",
-    "en": "Proposed grant sum (Institute)",
-    "de": "Beantragte Fördersumme (Institut)",
+    "label": "projects.proposed_grant_sum_institute",
     "kdsf": null,
     "scope": {
       "proposed": false
@@ -289,8 +273,7 @@
   },
   {
     "id": "grant_sum",
-    "en": "Grant sum (total)",
-    "de": "Fördersumme (gesamt)",
+    "label": "projects.grant_sum_total_project_fields",
     "kdsf": "KDSF-B-3-4",
     "scope": {
       "approved": false
@@ -299,8 +282,7 @@
   },
   {
     "id": "grant_sum_proposed",
-    "en": "Proposed grant sum (total)",
-    "de": "Beantragte Fördersumme (gesamt)",
+    "label": "projects.proposed_grant_sum_total",
     "kdsf": null,
     "scope": {
       "proposed": false
@@ -309,8 +291,7 @@
   },
   {
     "id": "abstract",
-    "en": "Abstract",
-    "de": "Zusammenfassung",
+    "label": "projects.abstract",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -320,8 +301,7 @@
   },
   {
     "id": "abstract_de",
-    "en": "Abstract (German)",
-    "de": "Zusammenfassung (Deutsch)",
+    "label": "projects.abstract_german_project_fields",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -331,8 +311,7 @@
   },
   {
     "id": "grant_subproject",
-    "en": "Grant sum (Subproject)",
-    "de": "Fördersumme (Teilprojekt)",
+    "label": "projects.grant_sum_subproject_project_fields",
     "kdsf": null,
     "scope": {
       "approved": false
@@ -341,8 +320,7 @@
   },
   {
     "id": "grant_subproject_proposed",
-    "en": "Proposed grant sum (Subproject)",
-    "de": "Beantragte Fördersumme (Teilprojekt)",
+    "label": "projects.proposed_grant_sum_subproject",
     "kdsf": null,
     "scope": {
       "proposed": false
@@ -351,8 +329,7 @@
   },
   {
     "id": "internal_number",
-    "en": "Internal ID",
-    "de": "Interne ID",
+    "label": "common.internal_id",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -363,8 +340,7 @@
   },
   {
     "id": "role",
-    "en": "Role of the institute",
-    "de": "Rolle des Instituts",
+    "label": "projects.role_of_the_institute",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -375,8 +351,7 @@
   },
   {
     "id": "coordinator",
-    "en": "Coordinator facility",
-    "de": "Koordinator-Einrichtung",
+    "label": "projects.coordinator_facility",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -386,8 +361,7 @@
   },
   {
     "id": "scholar",
-    "en": "Scholar",
-    "de": "Forschende Person",
+    "label": "projects.scholar_project_fields",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -398,8 +372,7 @@
   },
   {
     "id": "supervisor",
-    "en": "Supervisor",
-    "de": "Betreuende Person",
+    "label": "projects.supervisor",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -410,8 +383,7 @@
   },
   {
     "id": "university",
-    "en": "University",
-    "de": "Universität",
+    "label": "organizations.university",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -422,8 +394,7 @@
   },
   {
     "id": "scholarship",
-    "en": "Funding organization (Scholarship)",
-    "de": "Förderorganisation (Stipendium)",
+    "label": "projects.funding_organization_scholarship",
     "kdsf": "KDSF-B-3-6",
     "scope": {
       "project": false,
@@ -434,8 +405,7 @@
   },
   {
     "id": "tags",
-    "en": "Tags",
-    "de": "Schlagworte",
+    "label": "common.tags",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -446,8 +416,7 @@
   },
   {
     "id": "countries",
-    "en": "Countries of research (simple)",
-    "de": "Forschungsländer (einfach)",
+    "label": "projects.countries_of_research_simple",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -458,8 +427,7 @@
   },
   {
     "id": "research-countries",
-    "en": "Research in/about countries",
-    "de": "Forschung in/über Länder",
+    "label": "projects.research_in_and_about_countries",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -470,8 +438,7 @@
   },
   {
     "id": "comment",
-    "en": "Comment",
-    "de": "Kommentar",
+    "label": "common.comment",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -483,8 +450,7 @@
   },
   {
     "id": "nagoya",
-    "en": "Nagoya Protocol Compliance",
-    "de": "Nagoya Protocol Compliance",
+    "label": "projects.nagoya_protocol_compliance",
     "kdsf": null,
     "scope": {
       "proposed": false,
@@ -494,8 +460,7 @@
   },
   {
     "id": "kdsf-ffk",
-    "en": "Research fields (KDSF)",
-    "de": "Forschungsfelder (KDSF)",
+    "label": "projects.research_fields_kdsf",
     "kdsf": "KDSF-B-2-6",
     "scope": {
       "project": false,
@@ -506,8 +471,7 @@
   },
   {
     "id": "public",
-    "en": "Public presentation consent <i class='ph ph-globe portfolio'></i>",
-    "de": "Zustimmung zur öffentlichen Präsentation <i class='ph ph-globe portfolio'></i>",
+    "label": "projects.public_presentation_consent",
     "kdsf": null,
     "scope": {
       "project": false
@@ -516,8 +480,7 @@
   },
   {
     "id": "purpose",
-    "en": "Purpose",
-    "de": "Zweck",
+    "label": "projects.purpose",
     "kdsf": "KDSF-B-2-5",
     "scope": {
       "project": false,
@@ -528,8 +491,7 @@
   },
   {
     "id": "website",
-    "en": "Website",
-    "de": "Webseite",
+    "label": "common.website",
     "kdsf": null,
     "scope": {
       "project": false,
@@ -539,8 +501,7 @@
   },
   {
     "id": "personnel",
-    "en": "Personnel measures planned",
-    "de": "Geplante Personalmaßnahmen",
+    "label": "projects.personnel_measures_planned",
     "kdsf": null,
     "scope": {
       "proposed": false
@@ -549,8 +510,7 @@
   },
   {
     "id": "in-kind",
-    "en": "In-kind personnel",
-    "de": "Umfang des geplanten eigenen Personaleinsatzes",
+    "label": "projects.in_kind_personnel",
     "kdsf": null,
     "scope": {
       "proposed": false
@@ -559,8 +519,7 @@
   },
   {
     "id": "ressources",
-    "en": "Additional resources",
-    "de": "Zusätzliche Ressourcen",
+    "label": "projects.additional_resources",
     "kdsf": null,
     "scope": {
       "proposed": false

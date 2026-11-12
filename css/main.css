@@ -3684,23 +3684,23 @@ Tables
 }
 .table tbody tr.secondary td,
 .table tbody tr.secondary th {
-  background-color: var(--secondary-color-very-light);
+  background-color: var(--secondary-color-20);
 }
 .table tbody tr.primary td,
 .table tbody tr.primary th {
-  background-color: var(--primary-color-very-light);
+  background-color: var(--primary-color-20);
 }
 .table tbody tr.success td,
 .table tbody tr.success th {
-  background-color: var(--success-color-very-light);
+  background-color: var(--success-color-20);
 }
 .table tbody tr.danger td,
 .table tbody tr.danger th {
-  background-color: var(--danger-color-very-light);
+  background-color: var(--danger-color-20);
 }
 .table tbody tr.signal td,
 .table tbody tr.signal th {
-  background-color: var(--signal-color-very-light);
+  background-color: var(--signal-color-20);
 }
 .table tbody tr.muted td,
 .table tbody tr.muted th {
@@ -3708,7 +3708,7 @@ Tables
 }
 .table tbody tr.blue td,
 .table tbody tr.blue th {
-  background-color: var(--blue-color-very-light);
+  background-color: var(--blue-color-20);
 }
 .table:not(.simple):not(.cards) tbody tr:nth-child(even) {
   background-color: var(--table-stripe-color, transparent);
@@ -3933,6 +3933,13 @@ div.dt-button-collection .dt-button-active:after {
 .dt-empty {
   text-align: center !important;
   color: #666;
+}
+
+.project-detail-section td {
+  background: var(--gray-color-very-light);
+  padding: 0.6rem 1.4rem;
+  font-size: 0.9em;
+  font-weight: 600;
 }
 
 /*

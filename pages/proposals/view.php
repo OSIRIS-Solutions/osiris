@@ -1,6 +1,9 @@
 <?php
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
+require_once BASEPATH . "/php/ProjectForms.php";
+$detailUser = $osiris->persons->findOne(['username' => $_SESSION['username']]);
+$detailRoles = DB::doc2Arr($detailUser['roles'] ?? []);
 
 $Project->isProposal = true;
 
@@ -282,7 +285,6 @@ if ($nagoyaRelevant) {
 
     <section id="general">
         <?php
-        $mentioned_fields = [];
         ?>
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-8">
@@ -333,24 +335,9 @@ if ($nagoyaRelevant) {
                 <table class="table" id="proposal-details">
                     <tbody>
                         <?php
-                        $fields = $Project->getFields($type, 'proposed');
-                        foreach ($fields as $f) {
-                            $key = $f['module'];
-                            if ($key == 'nagoya') {
-                                continue;
-                            }
-                            if ($key == 'status') continue;
-                            $mentioned_fields[] = $key;
+                        $details = ProjectForms::details($Project, 'proposed', $detailRoles);
+                        include BASEPATH . '/components/project-details.php';
                         ?>
-                            <tr>
-                                <td>
-                                    <?php
-                                    echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                    echo $Project->printField($key, $project[$key] ?? null);
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
                         <tr>
                             <td>
                                 <span class="key"><?= lang('common.created_by_view') ?></span>
@@ -373,22 +360,10 @@ if ($nagoyaRelevant) {
                     <table class="table" id="approval-details" style="display:none;">
                         <tbody>
                             <?php
-                            $fields = $Project->getFields($type, 'approved');
-                            foreach ($fields as $f) {
-                                $key = $f['module'];
-                                if ($key == 'nagoya') {
-                                    continue;
-                                }
+                            $details = ProjectForms::details($Project, 'approved', $detailRoles);
+                            include BASEPATH . '/components/project-details.php';
                             ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                        echo $Project->printField($key, $project[$key] ?? null);
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php } ?> <tr>
+                            <tr>
                                 <td>
                                     <span class="key"><?= lang('projects.updated_by') ?></span>
                                     <?php if (!isset($project['updated_by']) || $project['updated_by'] == 'system') {
@@ -561,22 +536,9 @@ if ($nagoyaRelevant) {
                     <table class="table" id="rejection-details" style="display:none;">
                         <tbody>
                             <?php
-                            $fields = $Project->getFields($type, 'rejected');
-                            foreach ($fields as $f) {
-                                $key = $f['module'];
-                                if ($key == 'nagoya') {
-                                    continue;
-                                }
+                            $details = ProjectForms::details($Project, 'rejected', $detailRoles);
+                            include BASEPATH . '/components/project-details.php';
                             ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                        echo $Project->printField($key, $project[$key] ?? null);
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
                         </tbody>
                     </table>
                 <?php } ?>

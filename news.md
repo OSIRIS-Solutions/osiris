@@ -1,3 +1,31 @@
+<time datetime="XXXX-XX-XX">XX.XX.XXXX</time>
+<a class="anchor" href="#version-3.0.0" id="version-3.0.0"></a>
+
+## Version 3.0.0
+
+In dieser Version haben wir Sprache in OSIRIS neu gedacht. OSIRIS unterstützt nun mehr Sprachen im Interface und bietet eine verbesserte Benutzeroberfläche für die Verwaltung von Übersetzungen.
+
+### Mehrsprachigkeit
+
+TODO
+
+### Initiativen
+
+TODO
+
+### Projekte
+
+Die Erfassungsformulare für Projekte und Projektanträge verwenden jetzt den Form-Builder. Im Admin-Bereich lässt sich für jeden Projekttyp und jede Phase ein eigenes Formular zusammenstellen. Felder können angeordnet, beschriftet und als Pflichtfelder festgelegt werden; Überschriften, Hinweise und Trennlinien helfen bei der Strukturierung. Systemseitig benötigte Felder bleiben erhalten und können innerhalb des Formulars positioniert werden. Die Detailansichten übernehmen ebenfalls die konfigurierte Feldreihenfolge, Beschriftungen und Gliederung.
+
+Bestehende Formularkonfigurationen werden einschließlich Feldreihenfolge, Abschnitten und Pflichtfeldern übernommen. Die bisherige Konfiguration bleibt während der Umstellung zusätzlich erhalten.
+
+Kurznamen, Titel und Zusammenfassungen können mehrsprachig erfasst werden. Vorhandene Texte werden als englische Ausgangswerte übernommen; bisherige deutsche Texte bleiben als Übersetzungen erhalten. Deutsche Übersetzungen sind künftig optional.
+
+Das Personenfeld bündelt die Zuordnung von Personen, Rollen und Organisationseinheiten. Bei Projekten gilt standardmäßig die gesamte Projektlaufzeit; abweichende Mitgliedschaftszeiträume lassen sich über ein Uhr-Symbol festlegen. Bei Anträgen werden diese Datumsfelder nicht angezeigt. Für die Ablehnungsphase ist keine erneute Personenzuordnung erforderlich.
+
+Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt.
+
+
 <time datetime="2026-08-18">18.08.2026</time>
 <a class="anchor" href="#version-2.1.1" id="version-2.1.1"></a>
 

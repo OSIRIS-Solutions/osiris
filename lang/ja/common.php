@@ -803,5 +803,6 @@ return [
     'word_cloud' => 'ワードクラウド',
     'partner' => 'パートナー',
     'item_added_to_collection' => 'アイテムがコレクションに追加されました。 <a class="link" href="{{rootpath}}/cart">コレクションを表示</a>',
+    'initiative' => 'イニシアチブ',
     'initiatives' => '取り組み',
 ];

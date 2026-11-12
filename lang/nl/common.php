@@ -801,5 +801,6 @@ return [
     'word_cloud' => 'Woordwolk',
     'partner' => 'Partner',
     'item_added_to_collection' => 'Item toegevoegd aan je verzameling. <a class="link" href="{{rootpath}}/cart">Bekijk verzameling</a>',
+    'initiative' => 'Initiatief',
     'initiatives' => 'Initiatieven',
 ];

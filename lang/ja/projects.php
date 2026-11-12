@@ -541,4 +541,10 @@ return [
     'ended_Project' => '終了',
     'ongoing_Project' => '進行中',
     'collaborator_added' => '共同研究者が追加されました',
+    'funding_organization' => '資金提供機関',
+    'funding_program_free_text' => '助成プログラム（自由記述）',
+    'funding_program_selection' => '助成プログラム（抜粋）',
+    'scholar_project_fields' => '研究者',
+    'countries_of_research_simple' => '研究対象国（簡易版）',
+    'additional_resources' => '追加リソース',
 ];

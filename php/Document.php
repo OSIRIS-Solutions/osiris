@@ -1277,6 +1277,32 @@ class Document extends Settings
         return $value;
     }
 
+    /** Format project modules without initializing an activity type or schema. */
+    public function getProjectField(Project $project, string $module)
+    {
+        $this->doc = DB::doc2Arr($project->project);
+        // These fields have project-specific meanings or established widgets.
+        if (in_array($module, [
+            'submission_date', 'approval_date', 'rejection_date', 'joint_project',
+            'countries', 'research-countries', 'purpose', 'funder', 'funding_number',
+            'funding_type', 'funding_program_select', 'kdsf-ffk', 'public', 'image', 'nagoya',
+            'grant_sum', 'grant_income', 'grant_sum_proposed', 'grant_income_proposed',
+            'topics', 'tags', 'ressources', 'funding_organization', 'scholarship', 'university',
+        ], true)) {
+            return $project->printField($module, $this->doc[$module] ?? null);
+        }
+        $value = $this->get_field($module);
+        $customFormat = $this->custom_fields[$module]['format'] ?? null;
+        if (($customFormat !== null && !in_array($customFormat, ['url', 'text-format'], true))
+            || in_array($module, ['name', 'name-loc', 'subtitle', 'details', 'acronym',
+                'internal_number', 'funding_program', 'coordinator', 'project_type',
+                'grant_sum', 'grant_income', 'grant_subproject', 'grant_sum_proposed',
+                'grant_income_proposed', 'grant_subproject_proposed', 'comment', 'personnel', 'in-kind'], true)) {
+            return nl2br(e($value));
+        }
+        return $value;
+    }
+
     public function get_field($module, $default = '')
     {
         if ($this->usecase == 'list') $default = '-';

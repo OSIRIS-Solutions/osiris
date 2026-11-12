@@ -18,6 +18,9 @@
 
 require_once BASEPATH . "/php/Project.php";
 $Project = new Project($project);
+require_once BASEPATH . "/php/ProjectForms.php";
+$detailUser = $osiris->persons->findOne(['username' => $_SESSION['username']]);
+$detailRoles = DB::doc2Arr($detailUser['roles'] ?? []);
 
 
 $type = $project['type'] ?? 'third-party';
@@ -425,37 +428,9 @@ if ($topicsEnabled) {
                         </tr>
                     <?php } ?>
                     <?php
-                    $fields = $Project->getFields($type, 'project');
-                    foreach ($fields as $module) {
-                        $key = $module['module'];
-                        $value = $project[$key] ?? null;
-                        if (!array_key_exists($key, $Project->FIELDS)) {
-                            continue;
-                        }
-                        if ($key == 'nagoya' && !$Settings->featureEnabled('nagoya')) {
-                            continue;
-                        }
-                        if ($key == 'topics' && !$Settings->featureEnabled('topics')) {
-                            continue;
-                        }
+                    $details = ProjectForms::details($Project, 'project', $detailRoles);
+                    include BASEPATH . '/components/project-details.php';
                     ?>
-                        <tr>
-                            <td>
-                                <?php
-                                echo "<span class='key'>" . $Project->printLabel($key) . "</span>";
-                                echo $Project->printField($key, $project[$key] ?? null);
-
-                                if ($key == 'image' && $edit_perm) { ?>
-                                    <br>
-                                    <a href="#edit-image" data-toggle="modal">
-                                        <i class="ph ph-image"></i>
-                                        <?= lang('action.edit') ?>
-                                    </a>
-                                <?php }
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
                     <tr>
                         <td>
                             <span class="key"><?= lang('common.created_by_view') ?></span>

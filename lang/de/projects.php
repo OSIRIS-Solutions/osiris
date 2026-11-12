@@ -538,4 +538,10 @@ return [
     'ended_Project' => 'abgeschlossen',
     'ongoing_Project' => 'laufend',
     'collaborator_added' => 'Kooperationspartner hinzugefügt',
+    'funding_organization' => 'Förderorganisation',
+    'funding_program_free_text' => 'Förderprogramm (Freitext)',
+    'funding_program_selection' => 'Förderprogramm (Auswahl)',
+    'scholar_project_fields' => 'Forschende Person',
+    'countries_of_research_simple' => 'Forschungsländer (einfach)',
+    'additional_resources' => 'Zusätzliche Ressourcen',
 ];

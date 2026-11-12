@@ -801,5 +801,6 @@ return [
     'word_cloud' => 'Chmura słów',
     'partner' => 'Partner',
     'item_added_to_collection' => 'Pozycja dodana do kolekcji. <a class="link" href="{{rootpath}}/cart">Wyświetl kolekcję</a>',
+    'initiative' => 'Inicjatywa',
     'initiatives' => 'Inicjatywy',
 ];

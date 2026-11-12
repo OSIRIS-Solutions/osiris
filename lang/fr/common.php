@@ -801,5 +801,6 @@ return [
     'word_cloud' => 'Nuage de mots',
     'partner' => 'Partenaire',
     'item_added_to_collection' => 'Élément ajouté à votre collection. <a class="link" href="{{rootpath}}/cart">Voir la collection</a>',
+    'initiative' => 'Initiative',
     'initiatives' => 'Initiatives',
 ];

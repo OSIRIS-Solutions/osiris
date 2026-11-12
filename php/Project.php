@@ -127,8 +127,7 @@ class Project extends Vocabulary
         foreach ($fields as $field) {
             $this->FIELDS[$field['id']] = [
                 'id' => $field['id'],
-                'en' => $field['en'],
-                'de' => $field['de'],
+                'label' => $field['label'],
                 'kdsf' => $field['kdsf'] ?? null,
                 'custom' => false,
                 "scope" => $field['scope'] ?? [],
@@ -229,7 +228,7 @@ class Project extends Vocabulary
     {
         $field = $this->FIELDS[$key] ?? null;
         if (empty($field)) return $key;
-        return lang($field['en'], $field['de'] ?? null);
+        return isset($field['label']) ? translate($field['label']) : lang($field['en'], $field['de'] ?? null);
     }
 
     public function getJointProject()

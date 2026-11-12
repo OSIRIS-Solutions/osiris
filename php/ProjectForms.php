@@ -109,6 +109,39 @@ final class ProjectForms
         return FormBuilder::prepareFields($fields, self::systemFields($phase));
     }
 
+    /** Configured detail rows; value rendering belongs to Document. */
+    public static function details(Project $project, string $phase, array $roles = []): array
+    {
+        require_once __DIR__ . '/Modules.php';
+        require_once __DIR__ . '/Document.php';
+        $definition = $project->getProjectType($project->project['type'] ?? 'third-party');
+        $fields = self::fields($definition, $phase, $project->FIELDS);
+        $modules = new Modules(DB::doc2Arr($project->project));
+        $modules->setFields($fields);
+        $format = new Document(false, 'list');
+        global $Settings;
+        $details = [];
+        foreach ($fields as $field) {
+            $props = DB::doc2Arr($field['props'] ?? []);
+            if (!empty($props['roles']) && !in_array($props['roles'], $roles, true)) continue;
+            $type = $field['type'] ?? 'field';
+            $id = $field['id'] ?? '';
+            if (in_array($type, ['heading', 'paragraph', 'hr'], true)) {
+                $details[] = ['type' => $type, 'value' => lang($props['text'] ?? '', $props['text_de'] ?? null)];
+                continue;
+            }
+            if (!in_array($type, ['field', 'custom'], true) || $id === 'status') continue;
+            if ($id === 'nagoya' && ($project->isProposal || !$Settings->featureEnabled('nagoya'))) continue;
+            if ($id === 'topics' && !$Settings->featureEnabled('topics')) continue;
+            $details[] = [
+                'type' => 'field', 'id' => $id,
+                'label' => $modules->get_name($id),
+                'value' => $format->getProjectField($project, $id),
+            ];
+        }
+        return $details;
+    }
+
     public static function unavailable(array $fields, FormBuilder $config): array
     {
         $ids = [];

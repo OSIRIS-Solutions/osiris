@@ -540,4 +540,10 @@ return [
     'ended_Project' => 'ended',
     'ongoing_Project' => 'ongoing',
     'collaborator_added' => 'Collaborator added',
+    'funding_organization' => 'Funding organization',
+    'funding_program_free_text' => 'Funding program (free text)',
+    'funding_program_selection' => 'Funding program (selection)',
+    'scholar_project_fields' => 'Scholar',
+    'countries_of_research_simple' => 'Countries of research (simple)',
+    'additional_resources' => 'Additional resources',
 ];

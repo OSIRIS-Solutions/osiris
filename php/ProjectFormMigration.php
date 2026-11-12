@@ -62,8 +62,13 @@ final class ProjectFormMigration
             $props = [
                 // A formerly required German translation becomes optional.
                 'required' => $selected[$localized ? $base : $id] ?? false,
-                'label' => $definition['en'] ?? $base,
-                'label_de' => $definition['de'] ?? $definition['en'] ?? $base,
+                // Form labels remain editable, including institutional overrides.
+                'label' => isset($definition['label'])
+                    ? $this->language->resolve($definition['label'], 'en', 'en')
+                    : ($definition['en'] ?? $base),
+                'label_de' => isset($definition['label'])
+                    ? $this->language->resolve($definition['label'], 'de', 'en')
+                    : ($definition['de'] ?? $definition['en'] ?? $base),
             ];
             $fields[] = ['id' => $target, 'type' => !empty($definition['custom']) ? 'custom' : 'field', 'props' => $props];
             $emitted[$target] = true;

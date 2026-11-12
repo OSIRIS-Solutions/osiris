@@ -6,6 +6,7 @@ $baselineOutput = ob_get_clean();
 ob_start();
 $baselineChecks = $checks;
 loadIsolated('php/ProjectFormMigration.php');
+loadIsolated('php/ProjectForms.php');
 require_once BASEPATH . '/php/LocalizedFields.php';
 $newModules = ['acronym', 'image', 'submission_date', 'approval_date', 'rejection_date', 'project-date-proposed', 'funder', 'funding_organization', 'funding_program', 'funding_program_select', 'joint_project', 'funding_number', 'project_type', 'grant_income', 'grant_income_proposed', 'grant_sum', 'grant_sum_proposed', 'grant_subproject', 'grant_subproject_proposed', 'internal_number', 'coordinator', 'scholarship', 'university', 'research-countries', 'comment', 'nagoya', 'kdsf-ffk', 'public', 'purpose', 'personnel', 'in-kind', 'ressources', 'topics'];
 $projectConfig = new FormBuilder('Project', '', entity: 'projects');
@@ -84,8 +85,9 @@ $migration = new ProjectFormMigration($definitions, $language);
 foreach (['project', 'proposed', 'approved', 'rejected'] as $phase) {
     $schema = $migration->fields($phase, array_map(fn($id) => ['module' => $id, 'required' => false], array_keys($definitions)));
     foreach ($schema as $field) if (($field['type'] ?? '') === 'field') check(isset($projectConfig->modules[$field['id']]), "Migrated $phase field {$field['id']} is available.");
-    FormBuilder::validateFields($schema, $projectConfig->systemFields);
+    FormBuilder::validateFields($schema, ProjectForms::systemFields($phase));
 }
+$schema = $migration->fields('project', array_map(fn($id) => ['module' => $id, 'required' => false], array_keys($definitions)));
 $renderer->setFields($schema);
 ob_start(); $renderer->render_form($schema); $assembled = ob_get_clean();
 check(str_contains($assembled, 'data-module="persons-project"') && str_contains($assembled, 'data-module="university"') && str_contains($assembled, 'data-module="project-date"'), 'Migrated fields also render together through the shared form renderer.');

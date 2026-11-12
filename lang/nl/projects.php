@@ -541,4 +541,10 @@ return [
     'ended_Project' => 'einde',
     'ongoing_Project' => 'in uitvoering',
     'collaborator_added' => 'Medewerker toegevoegd',
+    'funding_organization' => 'Financieringsorganisatie',
+    'funding_program_free_text' => 'Financieringsprogramma (vrije tekst)',
+    'funding_program_selection' => 'Financieringsprogramma (selectie)',
+    'scholar_project_fields' => 'Wetenschapper',
+    'countries_of_research_simple' => 'Onderzoekslanden (eenvoudig)',
+    'additional_resources' => 'Aanvullende bronnen',
 ];
