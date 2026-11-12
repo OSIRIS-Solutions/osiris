@@ -546,4 +546,9 @@ return [
     'additional_resources' => 'Zusätzliche Ressourcen',
     'proposed_project_dates' => 'Beantragte Projektlaufzeit',
     'project_dates' => 'Projektlaufzeit',
+    'edit_past_phase' => 'Frühere Phase bearbeiten',
+    'phase_edit_denied' => 'Du darfst diese Antragsphase nicht bearbeiten.',
+    'correcting_past_phase' => 'Du korrigierst die Phase „{{phase}}“. Der aktuelle Status bleibt „{{status}}“.',
+    'past_phase_correction' => 'Korrektur einer früheren Phase',
+    'draft' => 'Entwurf',
 ];

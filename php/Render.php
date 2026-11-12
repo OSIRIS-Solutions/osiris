@@ -375,24 +375,28 @@ function renderProject($doc, $col = 'projects', $id = null)
     if (isset($id)) {
         $project = $DB->db->$col->findOne(
             ['_id' => $id],
-            ['projection' => ['start' => 1, 'end' => 1, 'start_date' => 1, 'end_date' => 1, 'start_proposed' => 1, 'end_proposed' => 1]]
+            ['projection' => ['start' => 1, 'end' => 1, 'start_date' => 1, 'end_date' => 1, 'start_proposed' => 1, 'end_proposed' => 1, 'status' => 1]]
         );
     }
     if (isset($doc['start'])) {
         $doc['start_date'] = valueFromDateArray($doc['start']);
-    } elseif (isset($doc['start_proposed'])) {
-        $doc['start_date'] = $doc['start_proposed'];
     } elseif (isset($project['start'])) {
         $doc['start_date'] = valueFromDateArray($project['start']);
+    } elseif (($project['status'] ?? null) === 'approved' && isset($project['start_date'])) {
+        $doc['start_date'] = $project['start_date'];
+    } elseif (isset($doc['start_proposed'])) {
+        $doc['start_date'] = $doc['start_proposed'];
     } elseif (isset($project['start_proposed'])) {
         $doc['start_date'] = $project['start_proposed'];
     }
     if (isset($doc['end'])) {
         $doc['end_date'] = valueFromDateArray($doc['end']);
-    } elseif (isset($doc['end_proposed'])) {
-        $doc['end_date'] = $doc['end_proposed'];
     } elseif (isset($project['end'])) {
         $doc['end_date'] = valueFromDateArray($project['end']);
+    } elseif (($project['status'] ?? null) === 'approved' && isset($project['end_date'])) {
+        $doc['end_date'] = $project['end_date'];
+    } elseif (isset($doc['end_proposed'])) {
+        $doc['end_date'] = $doc['end_proposed'];
     } elseif (isset($project['end_proposed'])) {
         $doc['end_date'] = $project['end_proposed'];
     }

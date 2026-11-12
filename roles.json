@@ -261,6 +261,11 @@
                 "en": "Edit own proposals (only current status)"
             },
             {
+                "id": "proposals.edit-past-phases",
+                "de": "Frühere Antragsphasen korrigieren (zusätzlich zum Bearbeitungsrecht)",
+                "en": "Correct past proposal phases (in addition to edit permission)"
+            },
+            {
                 "id": "proposals.status-own",
                 "de": "Den Status eigener Anträge ändern",
                 "en": "Change status of own proposals"

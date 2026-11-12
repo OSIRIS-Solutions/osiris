@@ -906,6 +906,12 @@ class Project extends Vocabulary
 
         foreach ($doc as $key => $val) {
             if (in_array($key, $omit_fields)) continue;
+            // Keep changes to every translation visible in history, not only the UI language.
+            if (in_array($key, ['name', 'title', 'abstract'], true) && (is_array($val) || $val instanceof Traversable)) {
+                $result[$key] = strip_tags(json_encode(DB::doc2Arr($val), JSON_UNESCAPED_UNICODE));
+                continue;
+            }
+
             $val = $this->printField($key, $val);
             if ($val instanceof BSONArray || $val instanceof BSONDocument) {
                 $val = DB::doc2Arr($val);
@@ -926,7 +932,7 @@ class Project extends Vocabulary
     /**
      * function to add update history in a document
      */
-    public function updateHistory($new_doc, $id, $collection = 'projects')
+    public function updateHistory($new_doc, $id, $collection = 'projects', ?string $editedPhase = null)
     {
         if (DB::is_ObjectID($id)) {
             $id = $this->to_ObjectID($id);
@@ -939,6 +945,12 @@ class Project extends Vocabulary
             // 'current' => 'unchanged'
             'changes' => []
         ];
+        $hist['phase'] = $editedPhase ?? ($new_doc['status'] ?? $old_doc['status'] ?? null);
+        if ($editedPhase !== null) $hist['past_phase'] = true;
+        if (($new_doc['status'] ?? $old_doc['status'] ?? null) !== ($old_doc['status'] ?? null)) {
+            $hist['status_before'] = $old_doc['status'] ?? null;
+            $hist['status_after'] = $new_doc['status'];
+        }
         $new_ = $this->convertProject4humans($new_doc);
         $old_ = $this->convertProject4humans($old_doc);
         $diff = array_diff_assoc($new_, $old_);

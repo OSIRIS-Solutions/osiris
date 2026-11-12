@@ -24,6 +24,8 @@ $type = $type ?? $_GET['type'] ?? $form['type'] ?? null;
 
 $form = $form ?? array();
 $new_project = empty($form) || !isset($form['_id']);
+$editingPastPhase = !$new_project && ($collection ?? 'proposals') === 'proposals' && isset($_GET['edit_phase']);
+if ($editingPastPhase) $type = $form['type'] ?? $type;
 
 // get current url without query string
 $current_url = strtok($_SERVER["REQUEST_URI"], '?');
@@ -50,7 +52,7 @@ if (!$new_project) {
     $status_perm = ($Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.status-own') && $user_project));
 
     // check if status change is requested
-    if (isset($_GET['phase']) && $_GET['phase'] != $form['status']) {
+    if (!$editingPastPhase && isset($_GET['phase']) && $_GET['phase'] != $form['status']) {
         // prefill form with old data
         if ($_GET['phase'] == 'approved') {
             if (isset($form['start_proposed'])) {
@@ -199,7 +201,7 @@ if ($is_subproject) {
             $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
             $url = ROOTPATH . "/proposals/view/" . $form['_id'];
             $title = lang('projects.edit_project_proposal') . ': <q>' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? '')) . '</q>';
-            $phase = $_GET['phase'] ?? $status;
+            $phase = $_GET['edit_phase'] ?? $_GET['phase'] ?? $status;
         }
 
 
@@ -212,13 +214,18 @@ if ($is_subproject) {
             } catch (InvalidArgumentException $error) {
                 $phaseError = lang('Unknown project phase.', 'Unbekannte Projektphase.');
             }
-            if (!empty($phaseDefinition['planned']) && $status !== $phase) {
+            if (!empty($phaseDefinition['planned']) && $status !== $phase && !$editingPastPhase) {
                 $phaseError = lang('This phase is being prepared and is not yet available.', 'Diese Phase wird vorbereitet und ist noch nicht verfügbar.');
             }
             if (isset($phaseError)) {
                 echo '<div class="alert danger" role="alert">' . e($phaseError) . '</div></div>';
                 return;
             }
+        }
+        if (!$new_project && $collection === 'proposals'
+            && !ProjectForms::canEditPhase($form, $phase, $Settings, $_SESSION['username'], $editingPastPhase)) {
+            echo '<div class="alert danger">' . e(translate('projects.phase_edit_denied')) . '</div></div>';
+            return;
         }
         $fields = $phase === 'withdrawn' ? [] : ProjectForms::fields($project_type, $phase, $Project->FIELDS);
         $fields = array_values(array_filter($fields, fn($field) => ($field['id'] ?? '') !== 'tags' || $Settings->hasPermission('projects.tags')));
@@ -241,7 +248,11 @@ if ($is_subproject) {
             <?= $subtitle ?>
         </p>
 
-        <?php if ($status == 'proposed' && $phase == 'approved') {
+        <?php if ($editingPastPhase) { ?>
+            <div class="alert signal" role="status">
+                <?= e(translate('projects.correcting_past_phase', ['phase' => translate('projects.' . $phase), 'status' => translate('projects.' . $status)])) ?>
+            </div>
+        <?php } elseif ($status == 'proposed' && $phase == 'approved') {
             if (!$status_perm) {
                 echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
                 echo '</div>';
@@ -290,7 +301,8 @@ if ($is_subproject) {
         <form action="<?= $formaction ?>" method="post" id="proposal-form" class="box padded">
             <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
             <input type="hidden" class="hidden" name="values[type]" value="<?= $type ?>">
-            <input type="hidden" class="hidden" name="values[status]" value="<?= $phase ?>">
+            <input type="hidden" class="hidden" name="values[status]" value="<?= $editingPastPhase ? e($status) : e($phase) ?>">
+            <?php if ($editingPastPhase): ?><input type="hidden" name="edit_phase" value="<?= e($phase) ?>"><?php endif; ?>
 
             <?php if ($phase == 'withdrawn') { ?>
                 <div class="form-group">

@@ -20,7 +20,12 @@ $abortEnd = strpos($configSource, 'function formatBytes(', $abortStart);
 eval('?>' . str_replace('__DIR__', var_export(BASEPATH . '/php', true), substr($configSource, 0, $abortStart) . substr($configSource, $abortEnd)));
 require BASEPATH . '/php/Language.php';
 $language = new Language(BASEPATH . '/lang');
-function translate($key) { global $language, $testInterfaceLanguage; return $language->resolve($key, $testInterfaceLanguage ?? 'en', 'en'); }
+function translate($key, array $replace = []) {
+    global $language, $testInterfaceLanguage;
+    $text = $language->resolve($key, $testInterfaceLanguage ?? 'en', 'en');
+    foreach ($replace as $name => $value) $text = str_replace('{{' . $name . '}}', (string) $value, $text);
+    return $text;
+}
 function lang($en, $de = null, array $replace = []) { return $de === null ? translate($en) : $en; }
 function localized($value, ?string $language = null) {
     if ($value instanceof Traversable) $value = iterator_to_array($value);

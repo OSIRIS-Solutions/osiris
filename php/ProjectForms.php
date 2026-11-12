@@ -57,6 +57,53 @@ final class ProjectForms
         return self::phases($projectType)[$phase] ?? throw new InvalidArgumentException('Unknown project phase.');
     }
 
+    /** Only predecessors on the actual proposal branch are editable. */
+    public static function pastPhases($document): array
+    {
+        $status = $document['status'] ?? 'proposed';
+        if (!in_array($status, ['proposed', 'approved', 'rejected', 'withdrawn'], true)) return [];
+        $usedDraft = false;
+        foreach ($document['history'] ?? [] as $entry) {
+            if (in_array('draft', [$entry['phase'] ?? null, $entry['status_before'] ?? null, $entry['status_after'] ?? null], true)) $usedDraft = true;
+        }
+        $phases = $usedDraft ? ['draft'] : [];
+        if ($status !== 'proposed') $phases[] = 'proposed';
+        return $phases;
+    }
+
+    public static function canEditPhase($document, string $phase, $settings, string $username, bool $past = false): bool
+    {
+        $own = ($document['created_by'] ?? null) === $username;
+        foreach ($document['persons'] ?? [] as $person) {
+            if ((string) ($person['user'] ?? '') === $username) $own = true;
+        }
+        $edit = $settings->hasPermission('proposals.edit') || ($own && $settings->hasPermission('proposals.edit-own'));
+        if ($past) {
+            return $edit && $settings->hasPermission('proposals.edit-past-phases') && in_array($phase, self::pastPhases($document), true);
+        }
+        $status = $document['status'] ?? 'proposed';
+        if ($phase === $status) return $edit;
+        return $status === 'proposed' && in_array($phase, ['approved', 'rejected', 'withdrawn'], true)
+            && ($settings->hasPermission('proposals.edit') || ($own && $settings->hasPermission('proposals.status-own')));
+    }
+
+    /** Limit corrections to inputs that this user can edit in the selected phase. */
+    public static function correctionValues(array $input, array $fields, array $modules, array $roles, $settings): array
+    {
+        $keys = [];
+        foreach ($fields as $field) {
+            $props = $field['props'] ?? [];
+            if (!empty($props['roles']) && !in_array($props['roles'], $roles, true)) continue;
+            $id = $field['id'] ?? '';
+            if ($id === 'tags' && !$settings->hasPermission('projects.tags')) continue;
+            if (in_array($id, ['topics', 'nagoya'], true) && !$settings->featureEnabled($id)) continue;
+            if (($field['type'] ?? 'field') === 'custom') $keys[] = $id;
+            elseif (($field['type'] ?? 'field') === 'field') $keys = array_merge($keys, array_keys($modules[$id]['fields'] ?? []));
+        }
+        $keys = array_diff($keys, ['_id', 'id', 'type', 'status', 'history', 'created', 'created_by', 'updated', 'updated_by', 'proposal_id', 'project_id', 'parent_id']);
+        return array_intersect_key($input, array_flip($keys));
+    }
+
     public static function systemFields(string $phase): array
     {
         $fields = match ($phase) {

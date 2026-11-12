@@ -548,4 +548,9 @@ return [
     'additional_resources' => 'Additional resources',
     'proposed_project_dates' => 'Proposed project dates',
     'project_dates' => 'Project dates',
+    'edit_past_phase' => 'Edit a past phase',
+    'phase_edit_denied' => 'You are not allowed to edit this proposal phase.',
+    'correcting_past_phase' => 'You are correcting the {{phase}} phase. The current status remains {{status}}.',
+    'past_phase_correction' => 'Correction of a past phase',
+    'draft' => 'Draft',
 ];

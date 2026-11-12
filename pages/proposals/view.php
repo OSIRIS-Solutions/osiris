@@ -175,6 +175,20 @@ if ($nagoyaRelevant) {
                 <i class="ph ph-edit"></i>
                 <?= lang('projects.edit_current_state') ?>
             </a>
+            <?php
+            $pastPhases = array_filter(ProjectForms::pastPhases($project), fn($phase) => ProjectForms::canEditPhase($project, $phase, $Settings, $_SESSION['username'], true));
+            if ($pastPhases): ?>
+                <div class="dropdown">
+                    <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ph ph-clock-counter-clockwise"></i> <?= translate('projects.edit_past_phase') ?> <i class="ph ph-caret-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <?php foreach ($pastPhases as $phase): ?>
+                            <a class="item" href="<?= ROOTPATH ?>/proposals/edit/<?= e($id) ?>?edit_phase=<?= e($phase) ?>"><?= translate('projects.' . $phase) ?></a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
             <!-- dropdown -->
             <div class="dropdown">
                 <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
@@ -807,6 +821,9 @@ if ($nagoyaRelevant) {
                         </h5>
 
                         <?php
+                        if (!empty($h['past_phase']) && isset($h['phase'])) {
+                            echo '<p class="text-muted small">' . e(translate('projects.past_phase_correction')) . ': ' . e(translate('projects.' . $h['phase'])) . '</p>';
+                        }
                         if (isset($h['changes']) && count($h['changes']) > 0) {
                             echo '<div class="font-weight-bold mt-10">' .
                                 lang('common.changes_to_the_project') .

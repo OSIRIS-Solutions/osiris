@@ -25,6 +25,8 @@ Kurznamen, Titel und Zusammenfassungen können mehrsprachig erfasst werden. Vorh
 
 Das Personenfeld bündelt die Zuordnung von Personen, Rollen und Organisationseinheiten. Bei Projekten gilt standardmäßig die gesamte Projektlaufzeit; abweichende Mitgliedschaftszeiträume lassen sich über ein Uhr-Symbol festlegen. Bei Anträgen werden diese Datumsfelder nicht angezeigt. Für die Ablehnungsphase ist keine erneute Personenzuordnung erforderlich.
 
+Mit dem zusätzlichen Recht „Frühere Antragsphasen korrigieren“ lassen sich bereits durchlaufene Phasen eines Antrags nachträglich bearbeiten, etwa zur Korrektur importierter Altdaten. Das normale Bearbeitungsrecht für den jeweiligen Antrag bleibt Voraussetzung. Der aktuelle Status und die bewilligte Laufzeit bleiben bei der Korrektur beantragter Angaben erhalten; es wird kein erneuter Statuswechsel ausgelöst. Die bearbeitete Phase wird in der Historie vermerkt. Gemeinsam verwendete Felder wie Titel und Personen bleiben gemeinsame Angaben des Antrags.
+
 Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt.
 
 

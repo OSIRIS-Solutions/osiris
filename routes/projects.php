@@ -130,6 +130,11 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
 
     $user_project = in_array($user, array_column(DB::doc2Arr($project['persons'] ?? []), 'user'));
     $edit_perm = ($project['created_by'] == $_SESSION['username'] || $Settings->hasPermission($collection . '.edit') || ($Settings->hasPermission($collection . '.edit-own') && $user_project));
+    if ($collection === 'proposals' && $page === 'edit') {
+        require_once BASEPATH . '/php/ProjectForms.php';
+        $requestedPhase = $_GET['edit_phase'] ?? $_GET['phase'] ?? $project['status'] ?? 'proposed';
+        $edit_perm = is_string($requestedPhase) && ProjectForms::canEditPhase($project, $requestedPhase, $Settings, $user, isset($_GET['edit_phase']));
+    }
     if (!$edit_perm) {
         abortwith(403, lang('projects.you_do_not_have_permission_to_edit_this_project'), "/$collection/view/$id", lang('projects.go_back_to_project'));
     }
@@ -717,7 +722,31 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         abortwith(404, $collection == 'projects' ? lang('common.project') : lang('projects.project_proposal'), "/$collection");
     }
 
-    $values = validateValues($_POST['values'], $DB, $collection);
+    require_once BASEPATH . '/php/ProjectForms.php';
+    $input = $_POST['values'];
+    if (!is_array($input)) abortwith(400);
+    $pastPhase = null;
+    if (isset($_POST['edit_phase']) && $collection !== 'proposals') abortwith(403);
+    if ($collection === 'proposals') {
+        $correction = isset($_POST['edit_phase']);
+        $phase = $correction ? $_POST['edit_phase'] : ($input['status'] ?? $project['status'] ?? 'proposed');
+        if (!is_string($phase) || !ProjectForms::canEditPhase($project, $phase, $Settings, $_SESSION['username'], $correction)) {
+            abortwith(403, translate('projects.phase_edit_denied'));
+        }
+        if ($correction) {
+            require_once BASEPATH . '/php/Modules.php';
+            $Project = new Project($project);
+            $projectType = $Project->getProjectType($project['type']);
+            $fields = ProjectForms::fields($projectType, $phase, $Project->FIELDS);
+            $modules = new Modules(DB::doc2Arr($project));
+            $person = $DB->getPerson($_SESSION['username']);
+            $input = ProjectForms::correctionValues($input, $fields, $modules->all_modules, DB::doc2Arr($person['roles'] ?? []), $Settings);
+            $input['type'] = $project['type'];
+            $input['status'] = $project['status'];
+            $pastPhase = $phase;
+        }
+    }
+    $values = validateValues($input, $DB, $collection);
     foreach (['name', 'title', 'abstract'] as $field) {
         if (!array_key_exists($field, $values)) continue;
         $translations = is_array($values[$field]) ? $values[$field] : ['en' => $values[$field]];
@@ -823,10 +852,10 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     }
 
     $Project = new Project();
-    $type = $Project->getProjectType($values['type']);
+    $type = $Project->getProjectType($values['type'] ?? $project['type']);
 
     // get history of project
-    $values = $Project->updateHistory($values, $id, $collection);
+    $values = $Project->updateHistory($values, $id, $collection, $pastPhase);
 
     // check for notifications on create
     if (!empty($type['notification_changed'] ?? null)) {
