@@ -5447,6 +5447,41 @@ input[type=number] {
   color: var(--danger-color);
 }
 
+/* Keep conditional inputs visually connected to their Yes/No question. */
+.conditional-details {
+  position: relative;
+  margin-block-start: 1rem;
+  margin-inline-start: 0.7rem;
+  padding-block: 0.4rem;
+  padding-inline-start: 1.8rem;
+  border-inline-start: 2px solid var(--primary-color-30);
+  animation: conditional-field-reveal 160ms ease-out;
+}
+
+.conditional-details::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 3.3rem;
+  width: 1rem;
+  border-block-start: 2px solid var(--primary-color-30);
+}
+
+@keyframes conditional-field-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-0.3rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conditional-details {
+    animation: none;
+  }
+}
 .floating-form {
   position: relative;
 }
@@ -13693,15 +13728,24 @@ a.module:hover {
 #data-modules .row [class^=col] {
   padding: 1rem;
 }
-#data-modules .floating-form > label {
+#data-modules .data-module.floating-form > label,
+#data-modules .row [class^=col].floating-form > label {
   padding: 2rem calc(1.3rem + var(--padding-threshold, 0.5rem));
 }
-#data-modules .floating-form > .form-control:focus, #data-modules .floating-form > .form-control:not(:placeholder-shown) {
+#data-modules .data-module.floating-form > .form-control:focus,
+#data-modules .data-module.floating-form > .form-control:not(:placeholder-shown),
+#data-modules .row [class^=col].floating-form > .form-control:focus,
+#data-modules .row [class^=col].floating-form > .form-control:not(:placeholder-shown) {
   padding-top: 1.625rem;
   padding-bottom: 0.2rem;
   padding-left: var(--padding-threshold, 0.5rem);
 }
-#data-modules .floating-form > .form-control:focus ~ label, #data-modules .floating-form > .form-control:not(:placeholder-shown) ~ label, #data-modules .floating-form > .form-select ~ label {
+#data-modules .data-module.floating-form > .form-control:focus ~ label,
+#data-modules .data-module.floating-form > .form-control:not(:placeholder-shown) ~ label,
+#data-modules .data-module.floating-form > .form-select ~ label,
+#data-modules .row [class^=col].floating-form > .form-control:focus ~ label,
+#data-modules .row [class^=col].floating-form > .form-control:not(:placeholder-shown) ~ label,
+#data-modules .row [class^=col].floating-form > .form-select ~ label {
   transform: scale(0.75) translateY(-0.6rem) translateX(0.4rem);
 }
 

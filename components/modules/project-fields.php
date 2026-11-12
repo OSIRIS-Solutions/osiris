@@ -456,12 +456,12 @@ case 'joint_project': ?>
                                 </label>
                             </div>
                             <div class="form-group floating-form">
-                                <input type="text" class="form-control" name="values[joint_project_title]" id="joint_project_title" value="<?= $val('joint_project_title') ?>" placeholder="">
+                                <input type="text" class="form-control" name="values[joint_project_title]" id="joint_project_title" value="<?= $val('joint_project_title') ?>" placeholder=" ">
                                 <label for="joint_project_title" class="">
                                     <?= lang('projects.title_of_the_joint_project') ?>
                                 </label>
                             </div>
-                            <div class="form-group floating-form">
+                            <div class="form-group">
                                 <!-- checkbox -->
                                 <input type="hidden" name="values[joint_project_speaker]" value="false">
                                 <div class="custom-checkbox">
