@@ -29,4 +29,12 @@ return [
     'deadline' => 'End date',
     'no_objectives' => 'No objectives have been defined.',
     'add_objective' => 'Add objective',
+    'show_all' => 'Show all',
+    'show_matching' => 'Show matching entries',
+    'search_selection' => 'Search names, identifiers and descriptions',
+    'choose_activity_date' => 'Enter the activity date to see matching entries.',
+    'no_matching_entries' => 'No matching entries. Adjust the date or search.',
+    'outside_period' => 'Outside the selection for this date',
+    'selection_outside_period' => 'This new association is outside the activity period. Change the date or remove the selection.',
+    'selection_hint' => 'The selection follows the activity date. Existing associations are retained.',
 ];

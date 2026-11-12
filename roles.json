@@ -517,7 +517,7 @@
     {
         "de": "Initiativen",
         "en": "Initiatives",
-        "icon": "lightbulb",
+        "icon": "compass",
         "fields": [
             {
                 "id": "initiatives.view",
@@ -528,6 +528,11 @@
                 "id": "initiatives.edit",
                 "de": "Initiativen bearbeiten",
                 "en": "Edit initiatives"
+            },
+            {
+                "id": "initiatives.select-outside-period",
+                "de": "Initiativen und Objectives außerhalb der Laufzeit zuordnen",
+                "en": "Assign initiatives and objectives outside their period"
             }
         ]
     },

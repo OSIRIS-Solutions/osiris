@@ -194,6 +194,72 @@ final class Initiatives
         return $values;
     }
 
+    /** An objective is selectable only within its own and its initiative's period. */
+    public static function selectionBounds($document, $parent = []): array
+    {
+        $start = max(valueFromDateArray($document['start_date'] ?? $document['start'] ?? null) ?? '', valueFromDateArray($parent['start_date'] ?? $parent['start'] ?? null) ?? '');
+        $ends = array_filter([valueFromDateArray($document['end_date'] ?? $document['end'] ?? null), valueFromDateArray($parent['end_date'] ?? $parent['end'] ?? null)]);
+        return ['start' => $start, 'end' => $ends ? min($ends) : '', 'archived' => !empty($document['inactive']) || !empty($parent['inactive'])];
+    }
+
+    /** Partial dates cover the known year/month; a range without an end uses its start. */
+    public static function activityPeriod(array $input): ?array
+    {
+        $start = $input['start_date'] ?? $input['start'] ?? null;
+        if (!empty($start)) {
+            $start = valueFromDateArray($start);
+            $end = valueFromDateArray($input['end_date'] ?? $input['end'] ?? null) ?: $start;
+            try {
+                if (self::dateInput($start) === null || self::dateInput($end) === null) return null;
+            } catch (InvalidArgumentException $e) {
+                return null;
+            }
+            return [$start, max($start, $end)];
+        }
+        $year = (int) ($input['year'] ?? 0);
+        $month = (int) ($input['month'] ?? 0);
+        $day = (int) ($input['day'] ?? 0);
+        if ($year < 1900 || $year > 2155 || $month < 0 || $month > 12 || $day < 0 || $day > 31 || ($day && !$month)) return null;
+        if ($day && !checkdate($month, $day, $year)) return null;
+        $start = sprintf('%04d-%02d-%02d', $year, $month ?: 1, $day ?: 1);
+        $end = $day ? $start : ($month ? date('Y-m-t', strtotime($start)) : "$year-12-31");
+        return [$start, $end];
+    }
+
+    public static function matchesPeriod(array $bounds, ?array $period): bool
+    {
+        return $period !== null && !$bounds['archived']
+            && (!$bounds['start'] || !$bounds['end'] || $bounds['start'] <= $bounds['end'])
+            && (!$bounds['start'] || $bounds['start'] <= $period[1])
+            && (!$bounds['end'] || $bounds['end'] >= $period[0]);
+    }
+
+    /** Existing links remain valid; new out-of-period links require the additional right. */
+    public static function validateActivitySelection(array $input, $previous, $database, $settings): void
+    {
+        if ($settings->hasPermission('initiatives.select-outside-period')) return;
+        $activity = array_replace(DB::doc2Arr($previous), $input);
+        // Cached dates must not override a newly entered year or date range.
+        if (array_key_exists('year', $input) && !array_key_exists('start', $input)) {
+            unset($activity['start'], $activity['end'], $activity['start_date'], $activity['end_date']);
+        } elseif (array_key_exists('start', $input)) {
+            unset($activity['start_date'], $activity['end_date']);
+        }
+        $period = self::activityPeriod($activity);
+        foreach (['initiatives', 'objectives'] as $field) {
+            if (!array_key_exists($field, $input)) continue;
+            $old = array_map('strval', self::normalizeLinks($previous[$field] ?? []));
+            $new = array_filter(self::normalizeLinks($input[$field]), fn($id) => !in_array((string) $id, $old, true));
+            foreach ($new as $id) {
+                $document = $database->$field->findOne(['_id' => $id]);
+                $parent = $field === 'objectives' && $document ? $database->initiatives->findOne(['_id' => $document['initiative']]) : [];
+                if (!$document || ($field === 'objectives' && !$parent) || !self::matchesPeriod(self::selectionBounds($document, $parent), $period)) {
+                    abortwith(403, translate('initiatives.selection_outside_period'));
+                }
+            }
+        }
+    }
+
     public static function period($document): string
     {
         $start = $document['start_date'] ?? $document['start'] ?? null;

@@ -13,7 +13,21 @@ TODO
 
 ### Initiativen
 
-TODO
+Mit Initiativen lassen sich gemeinsame Vorhaben wie Missionen, strategische Programme oder bereichsübergreifende Arbeitsgruppen in OSIRIS abbilden. Sie bündeln Personen, Projekte und Aktivitäten rund um ein gemeinsames Anliegen und können durch konkrete Ziele – sogenannte Objectives – untergliedert werden.
+
+<!-- Zur Einordnung: **Organisationseinheiten (Units)** bilden die organisatorische Zugehörigkeit und Hierarchie ab. **Forschungsbereiche (Topics)** beschreiben thematische Schwerpunkte und Querschnitte. **Initiativen** stehen für konkrete gemeinsame Vorhaben mit eigener Laufzeit sowie optionalen Mitgliedern und Zielen. Welche Struktur sinnvoll ist, richtet sich nach dem jeweiligen Institut; eine Arbeitsgruppe innerhalb der regulären Organisationshierarchie kann weiterhin als Organisationseinheit abgebildet werden. Grundlagen zur bisherigen Unterscheidung erklärt der Wiki-Beitrag [Organisationsstrukturen in OSIRIS](https://wiki.osiris-app.de/topics/organizational-structure/). -->
+
+Die Funktion lässt sich im Admin-Bereich aktivieren. Initiativen erhalten einen eigenen Navigationsbereich mit Übersichts- und Detailansichten. Ihr Erfassungsformular wird über den Form-Builder konfiguriert, einschließlich eigener Datenfelder, Beschriftungen und Pflichtfelder. Mehrsprachige Angaben sowie optionale Personenzuordnungen mit Rollen, etwa Mitglied oder Leitung, werden unterstützt.
+
+Objectives gehören jeweils zu genau einer Initiative. Sie erhalten eine Kennung, einen Titel, eine Beschreibung, einen über das Vokabular konfigurierbaren Typ und eine Laufzeit. Anlegen und Bearbeiten erfolgen direkt auf der Initiativenseite in einem Dialog. Beim Anlegen wird die Laufzeit der Initiative als Vorgabe übernommen. Die Nutzung von Objectives ist optional.
+
+Über die neuen Formularmodule können Aktivitäten, Projekte und Anträge mehreren Initiativen oder Objectives zugeordnet werden. Bei der Auswahl von Objectives werden die zugehörigen Initiativen automatisch mitgespeichert; zusätzliche direkte Initiativenzuordnungen werden ohne Doppelungen ergänzt. Beide Zuordnungen stehen in den erweiterten Suchen als Filter und Tabellenspalten zur Verfügung.
+
+Bei Aktivitäten folgt die reguläre Auswahl dem Aktivitätsdatum und passt sich bei Datumsänderungen unmittelbar an. Auch nachträgliche Zuordnungen zu vergangenen Laufzeiten sind damit möglich. Mit dem zusätzlichen Recht „Initiativen und Objectives außerhalb der Laufzeit zuordnen“ öffnet „Alle anzeigen“ die vollständige Auswahl mit Suchfunktion. Bereits gespeicherte Zuordnungen bleiben bei Datumsänderungen erhalten.
+
+Initiativen und Objectives können archiviert und wiederhergestellt werden. Abgelaufene Einträge werden gekennzeichnet; vergangene Initiativen bleiben über die Übersicht erreichbar. Vorhandene Verknüpfungen bleiben erhalten. Lese- und Bearbeitungsrechte werden über das bestehende Rollen- und Rechtesystem vergeben.
+
+Die öffentliche Portfolio-Integration ist optional vorgesehen. Eine stichtagsbezogene Auswertung ist als spätere Erweiterung geplant.
 
 ### Projekte
 
@@ -28,6 +42,45 @@ Das Personenfeld bündelt die Zuordnung von Personen, Rollen und Organisationsei
 Mit dem zusätzlichen Recht „Frühere Antragsphasen korrigieren“ lassen sich bereits durchlaufene Phasen eines Antrags nachträglich bearbeiten, etwa zur Korrektur importierter Altdaten. Das normale Bearbeitungsrecht für den jeweiligen Antrag bleibt Voraussetzung. Der aktuelle Status und die bewilligte Laufzeit bleiben bei der Korrektur beantragter Angaben erhalten; es wird kein erneuter Statuswechsel ausgelöst. Die bearbeitete Phase wird in der Historie vermerkt. Gemeinsam verwendete Felder wie Titel und Personen bleiben gemeinsame Angaben des Antrags.
 
 Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt.
+
+
+### Neue Datenfelder
+
+Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Verknüpfungen. Welche Module zur Auswahl stehen, richtet sich nach der Entität und bei Projekten nach der jeweiligen Phase. Die technischen Modulnamen sind hier zur Orientierung im Feldkatalog angegeben; die angezeigten Beschriftungen lassen sich im Form-Builder anpassen.
+
+| Modul | Verwendung |
+| --- | --- |
+| Name (`name`) | Ein allgemeines Namensfeld, etwa für den Kurznamen einer Initiative oder eines Projekts. |
+| Beschreibung (`description`) | Eine Beschreibung mit Textformatierung für Aktivitäten, Initiativen und Projekte. |
+| Name, mehrsprachig (`name-loc`) | Ein Name mit getrennten Eingaben für die konfigurierten Inhaltssprachen. |
+| Titel, mehrsprachig (`title-loc`) | Ein mehrsprachiger Titel für Aktivitäten, Initiativen und Projekte. |
+| Zusammenfassung, mehrsprachig (`abstract-loc`) | Eine mehrsprachige Zusammenfassung für Aktivitäten und Projekte. |
+| Beschreibung, mehrsprachig (`description-loc`) | Eine mehrsprachige Beschreibung mit Textformatierung. |
+| Webseite (`website`) | Ein allgemeines Feld für einen Weblink, verfügbar für Aktivitäten, Initiativen, Projekte und Anträge. |
+| Personen (`persons`) | Personen zu Aktivitäten oder Initiativen zuordnen, unabhängig von bibliografischen Autorenpositionen. |
+| Personen mit Rollen (`persons-role`) | Personenzuordnung mit Rollen aus dem Vokabular „Personenrollen“. Vorgaben sind Mitglied, Leitung und Co-Leitung; das Vokabular kann erweitert werden. |
+| Projektpersonen (`persons-project`) | Personen mit Projektrolle und Organisationseinheiten zu Projekten oder Anträgen zuordnen. Bei Projekten lassen sich abweichende Mitgliedschaftszeiträume ergänzen. |
+| Rolle des Instituts (`institute-role`) | Die Rolle des eigenen Instituts im Projekt über ein konfigurierbares Vokabular auswählen. |
+| Projektlaufzeit (`project-date`) | Projektbeginn und -ende gemeinsam erfassen, einschließlich der vorhandenen Hilfen zur Eingabe der Laufzeit. |
+| Beantragte Projektlaufzeit (`project-date-proposed`) | Beantragten Beginn und beantragtes Ende gemeinsam erfassen. Dieses Modul ist für die entsprechenden frühen Projektphasen vorgesehen. |
+| Initiativen (`initiatives`) | Einen Eintrag direkt einer oder mehreren Initiativen zuordnen. |
+| Objectives (`objectives`) | Einen Eintrag einem oder mehreren Objectives zuordnen; die zugehörigen Initiativen werden automatisch mitgespeichert. |
+
+Die mehrsprachigen Textmodule ersetzen im jeweiligen Formular ihre einsprachige Variante; beide Varianten desselben Feldes können nicht gleichzeitig verwendet werden. Pflichtangaben beziehen sich auf die Ausgangssprache, weitere Übersetzungen sind optional. Die oben beschriebenen mehrsprachigen Custom Fields ergänzen diese Standardmodule um frei definierbare Textfelder.
+
+`persons` und `persons-role` sind alternative Darstellungen derselben Personenzuordnung und können ebenfalls nicht gleichzeitig im selben Formular verwendet werden. Bei Aktivitäten werden verknüpfte OSIRIS-Personen auch für die Zuordnung der Aktivität zu den betreffenden Personen berücksichtigt.
+
+Mit dem Umzug der Projektformulare sind außerdem die bisherigen projektspezifischen Eingaben als Module im Form-Builder verfügbar:
+
+- **Allgemeine Angaben:** Akronym (`acronym`), interne ID (`internal_number`), Zweck (`purpose`), Art des Projekts (`project_type`), Kommentar (`comment`), Projektbild (`image`) und Zustimmung zur öffentlichen Präsentation (`public`).
+- **Verfahrensdaten:** Einreichungsdatum (`submission_date`), Bewilligungsdatum (`approval_date`) und Ablehnungsdatum (`rejection_date`).
+- **Förderung und Zusammenarbeit:** Fördererkategorie (`funder`), Förderorganisation (`funding_organization`), Förderprogramm als Freitext oder Auswahl (`funding_program`, `funding_program_select`), Förderkennzeichen (`funding_number`), Verbundprojekt (`joint_project`) und Koordinator-Einrichtung (`coordinator`). Für Stipendien stehen die passende Förderorganisationsauswahl (`scholarship`) und die Universitätsauswahl aus dem Organisationskatalog (`university`) zur Verfügung.
+- **Fördersummen:** Beantragte und bewilligte Summen für das Gesamtprojekt, das eigene Institut und Teilprojekte (`grant_sum_proposed`, `grant_income_proposed`, `grant_subproject_proposed`, `grant_sum`, `grant_income`, `grant_subproject`).
+- **Fachliche Zuordnung:** Forschung in oder über bestimmte Länder (`research-countries`), Forschungsbereiche (`topics`) und KDSF-Forschungsfelder (`kdsf-ffk`).
+- **Personal und Ressourcen:** Geplante Personalmaßnahmen (`personnel`), eigener Personaleinsatz (`in-kind`) und zusätzliche Ressourcen (`ressources`).
+- **Nagoya-Protokoll:** Erfassung der Nagoya-Relevanz und der betroffenen Länder (`nagoya`).
+
+Projektpersonen werden außerhalb der Ablehnungsphase als Systemfeld eingebunden. Weitere systemseitig benötigte Felder hängen von der Projektphase ab; ihre Position im Formular bleibt konfigurierbar.
 
 
 <time datetime="2026-08-18">18.08.2026</time>

@@ -32,7 +32,7 @@ check($xpath->query('//input[@type="hidden" and @name="values[initiatives]"]')->
 check($xpath->query('//label[@title=\'Title "quoted"\']')->length === 1, 'The chooser tooltip uses the plain localized title.');
 check(str_contains($html, 'Climate &amp; Water') && str_contains($html, 'Archived') && str_contains($html, 'Selection help'), 'The chooser escapes names, marks archived initiatives and renders help.');
 check(strpos($html, 'Climate &amp; Water') < strpos($html, 'Archived initiative'), 'Active initiatives are listed first.');
-check(str_contains($html, 'const required = true;'), 'Required group validation is enabled.');
+check(str_contains($html, 'data-required="true"'), 'Required group validation is enabled.');
 if (isset($argv[1])) file_put_contents($argv[1] . '/initiative-module.html', $html);
 $format = new Document(false, 'web');
 $format->doc = ['initiatives' => [$first, $second]];
@@ -74,7 +74,7 @@ $objectiveRenderer = new Modules(['objectives' => [$objectiveId]]);
 ob_start(); $objectiveRenderer->print_module('objectives', true, ['help' => 'Objective help']); $html = ob_get_clean();
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
 check($xpath->query('//input[@name="values[objectives][]" and @checked]')->length === 1 && str_contains($html, 'Archived') && str_contains($html, 'Climate &amp; Water') && str_contains($html, 'Objective help'), 'The objective widget retains archived selections, groups by initiative and renders help.');
-check(str_contains($html, 'const required = true;') && str_contains($html, 'ph-target'), 'The objective widget supports required selection and the target icon.');
+check(str_contains($html, 'data-required="true"') && str_contains($html, 'ph-target'), 'The objective widget supports required selection and the target icon.');
 $format->doc = json_decode(json_encode(['objectives' => [$objectiveId]]), true);
 $rendered = $format->get_field('objectives');
 check(str_contains($rendered, '/initiatives/view/' . $first . '#objective-' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders Extended JSON references as escaped objective links with identifiers and description tooltips.');
@@ -89,7 +89,7 @@ check($disabled === '', 'A disabled feature emits no clearing input for existing
 $Settings->enabled = true;
 $osiris->initiatives->documents = [];
 ob_start(); $renderer->print_module('initiatives', true); $empty = ob_get_clean();
-check(str_contains($empty, 'No initiatives available.') && str_contains($empty, '<select class="form-control" required'), 'An empty required chooser explains why submission is blocked.');
+check(str_contains($empty, 'No matching entries.') && str_contains($empty, 'data-selection-empty required'), 'An empty required chooser explains why submission is blocked.');
 ob_end_clean();
 echo $baselineOutput;
 echo 'Initiative link tests passed (' . ($checks - $baselineChecks) . " checks).\n";

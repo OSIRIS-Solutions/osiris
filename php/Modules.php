@@ -3404,6 +3404,7 @@ class Modules
                         $('#year').val(today.getFullYear());
                         $('#month').val(today.getMonth() + 1);
                         $('#day').val(today.getDate());
+                        document.getElementById('day').dispatchEvent(new Event('change', { bubbles: true }));
                     }
                 </script>
             <?php

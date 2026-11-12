@@ -29,4 +29,12 @@ return [
     'deadline' => 'Ablaufdatum',
     'no_objectives' => 'Es wurden noch keine Objectives angelegt.',
     'add_objective' => 'Objective hinzufügen',
+    'show_all' => 'Alle anzeigen',
+    'show_matching' => 'Passende anzeigen',
+    'search_selection' => 'Namen, Kennungen und Beschreibungen durchsuchen',
+    'choose_activity_date' => 'Bitte zuerst das Aktivitätsdatum eingeben, um passende Einträge zu sehen.',
+    'no_matching_entries' => 'Keine passenden Einträge. Datum oder Suche anpassen.',
+    'outside_period' => 'Außerhalb der Auswahl für dieses Datum',
+    'selection_outside_period' => 'Diese neue Zuordnung liegt außerhalb des Aktivitätszeitraums. Bitte das Datum ändern oder die Auswahl entfernen.',
+    'selection_hint' => 'Die Auswahl folgt dem Aktivitätsdatum. Bestehende Zuordnungen bleiben erhalten.',
 ];

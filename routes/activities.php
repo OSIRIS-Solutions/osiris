@@ -649,6 +649,10 @@ Route::post('/crud/activities/create', function () {
     $collection = $osiris->activities;
     $activityType = $_POST['values']['type'];
 
+    if (array_intersect(['initiatives', 'objectives'], array_keys($_POST['values']))) {
+        require_once BASEPATH . '/php/Initiatives.php';
+        Initiatives::validateActivitySelection($_POST['values'], [], $osiris, $Settings);
+    }
     $values = validateValues($_POST['values'], $DB, 'activities');
 
     // add information on creating process
@@ -888,6 +892,10 @@ Route::post('/crud/activities/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->activities;
+    if (array_intersect(['initiatives', 'objectives'], array_keys($_POST['values']))) {
+        require_once BASEPATH . '/php/Initiatives.php';
+        Initiatives::validateActivitySelection($_POST['values'], $collection->findOne(['_id' => $DB->to_ObjectID($id)]) ?? [], $osiris, $Settings);
+    }
     $values = validateValues($_POST['values'], $DB, 'activities');
 
     if (isset($_POST['minor']) && $_POST['minor'] == 1) {
