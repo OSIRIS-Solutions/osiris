@@ -1262,7 +1262,15 @@ Route::post('/crud/activities/update-(authors|editors|supervisors)/([A-Za-z0-9]*
             $author['role'] = $a['role'];
         } elseif (isset($a['sws'])) {
             $author['sws'] = $a['sws'];
+        } 
+
+        if (isset($a['academic_title'])) {
+            $author['academic_title'] = $a['academic_title'];
+        } 
+        if (isset($a['affiliation'])) {
+            $author['affiliation'] = $a['affiliation'];
         }
+        
         $authors[] = $author;
     }
 
