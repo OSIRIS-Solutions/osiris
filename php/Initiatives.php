@@ -178,6 +178,22 @@ final class Initiatives
         return array_values($links);
     }
 
+    /** Rebuild initiative links from this submission, including the selected objectives' parents. */
+    public static function resolveLinks(array $values, $database): array
+    {
+        if (!array_key_exists('objectives', $values)) return $values;
+        $values['objectives'] = self::normalizeLinks($values['objectives']);
+        $initiatives = self::normalizeLinks($values['initiatives'] ?? []);
+        if ($values['objectives'] !== []) {
+            foreach ($database->objectives->find(['_id' => ['$in' => $values['objectives']]], ['projection' => ['initiative' => 1]]) as $objective) {
+                $initiatives[] = $objective['initiative'] ?? null;
+            }
+        }
+        // Do not merge previously stored links: removing an objective must remove its implicit initiative.
+        $values['initiatives'] = self::normalizeLinks($initiatives);
+        return $values;
+    }
+
     public static function period($document): string
     {
         $start = $document['start_date'] ?? $document['start'] ?? null;

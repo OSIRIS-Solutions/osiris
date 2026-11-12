@@ -1017,6 +1017,29 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         }
     });
 
+    // Reference filters arrive as strings from the query builder, but are stored as ObjectIds.
+    $convertLinkFilters = function (array $filter) use (&$convertLinkFilters): array {
+        $toId = fn($value) => is_string($value) && DB::is_ObjectID($value) ? DB::to_ObjectID($value) : $value;
+        foreach ($filter as $field => &$value) {
+            if (in_array($field, ['$and', '$or', '$nor'], true) && is_array($value)) {
+                $value = array_map($convertLinkFilters, $value);
+            } elseif (in_array($field, ['initiatives', 'objectives'], true)) {
+                if (!is_array($value)) {
+                    $value = $toId($value);
+                    continue;
+                }
+                foreach ($value as $operator => &$operand) {
+                    if (in_array($operator, ['$eq', '$ne'], true)) $operand = $toId($operand);
+                    elseif (in_array($operator, ['$in', '$nin', '$all'], true) && is_array($operand)) $operand = array_map($toId, $operand);
+                }
+                unset($operand);
+            }
+        }
+        unset($value);
+        return $filter;
+    };
+    $filter = $convertLinkFilters($filter);
+
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');
         $filter = ['title' => ['$regex' => $j]];
@@ -1276,9 +1299,21 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
         foreach ($result as &$row) {
             $Project->setProject($row);
             foreach ($row as $key => $value) {
+                if (in_array($key, ['initiatives', 'objectives'], true)) continue;
                 $row[$key] = $Project->printField($key, $value);
             }
         }
+    }
+
+    $linkColumns = array_intersect(['initiatives', 'objectives'], $_GET['columns'] ?? []);
+    if (!isset($_GET['raw']) && $linkColumns !== []) {
+        include_once BASEPATH . '/php/Document.php';
+        $format = new Document(false, 'list');
+        foreach ($result as &$row) {
+            $format->doc = DB::doc2Arr($row);
+            foreach ($linkColumns as $field) $row[$field] = $format->get_field($field) ?: '-';
+        }
+        unset($row);
     }
 
     echo return_rest($result, count($result));

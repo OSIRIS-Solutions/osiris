@@ -273,8 +273,10 @@ function validateValues($values, $DB, ?string $entity = null)
         $values['end'] = $values['start'];
         $values['end_date'] = $values['start_date'];
     }
-    // dump($values);
-    // die;
+    if (isset($values['objectives']) && is_array($values['objectives'])) {
+        if (!class_exists('Initiatives')) require_once __DIR__ . '/Initiatives.php';
+        $values = Initiatives::resolveLinks($values, $DB->db);
+    }
     return $values;
 }
 

@@ -983,6 +983,34 @@ class ProjectFields extends Fields
             'values' => $units
         ];
 
+        if ($Settings->featureEnabled('initiatives')) {
+            $initiativeNames = [];
+            foreach ($osiris->initiatives->find() as $initiative) {
+                $initiativeNames[(string) $initiative['_id']] = trim(strip_tags(localized($initiative['name'] ?? '')));
+            }
+            $objectiveNames = [];
+            foreach ($osiris->objectives->find() as $objective) {
+                $name = trim(strip_tags(localized($objective['name'] ?? '')));
+                $code = trim((string) ($objective['code'] ?? ''));
+                $parent = $initiativeNames[(string) ($objective['initiative'] ?? '')] ?? '';
+                $objectiveNames[(string) $objective['_id']] = ($parent === '' ? '' : $parent . ' – ')
+                    . ($code === '' ? '' : $code . ': ') . $name;
+            }
+            foreach (['initiatives' => $initiativeNames, 'objectives' => $objectiveNames] as $id => $values) {
+                asort($values, SORT_NATURAL | SORT_FLAG_CASE);
+                $FIELDS[] = [
+                    'id' => $id,
+                    'module_of' => ['general'],
+                    'usage' => ['filter', 'columns'],
+                    'label' => translate($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
+                    'type' => 'list',
+                    'input' => 'select',
+                    'operators' => ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null', 'exists', 'not_exists'],
+                    'values' => $values,
+                ];
+            }
+        }
+
         if ($Settings->featureEnabled('topics')) {
             $topics = $osiris->topics->find()->toArray();
             $topics = array_column($topics, 'name', 'id');

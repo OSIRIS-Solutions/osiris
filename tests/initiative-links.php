@@ -56,9 +56,20 @@ $osiris->objectives->insertOne(['_id' => $objectiveId, 'initiative' => $first, '
 foreach (['activities', 'projects', 'proposals'] as $entity) {
     $config = new FormBuilder('Test', '', entity: $entity);
     $saved = validateValues(['objectives' => [(string) $objectiveId, (string) $objectiveId, 'bad']], $DB, $entity);
-    check(isset($config->modules['objectives']) && count($saved['objectives']) === 1 && $saved['objectives'][0] instanceof MongoDB\BSON\ObjectId, "Objective links are available and normalized for $entity.");
+    check(isset($config->modules['objectives']) && count($saved['objectives']) === 1 && $saved['objectives'][0] instanceof MongoDB\BSON\ObjectId && array_map('strval', $saved['initiatives']) === [(string) $first], "Objective links are normalized and their parent initiative is stored for $entity.");
 }
 check(validateValues(['objectives' => ''], $DB)['objectives'] === [], 'Clearing objectives saves an empty array.');
+$cleared = validateValues(['objectives' => ''], $DB, 'activities');
+check($cleared['objectives'] === [] && $cleared['initiatives'] === [], 'Clearing the last objective also clears implicit initiative links.');
+$merged = validateValues(['initiatives' => [(string) $second, (string) $first], 'objectives' => [(string) $objectiveId]], $DB, 'projects');
+check(array_map('strval', $merged['initiatives']) === [(string) $second, (string) $first], 'Explicit and implicit initiatives form one deduplicated list.');
+$otherObjective = new MongoDB\BSON\ObjectId();
+$osiris->objectives->insertOne(['_id' => $otherObjective, 'initiative' => $second, 'name' => 'Another objective']);
+$switched = validateValues(['objectives' => [(string) $otherObjective]], $DB, 'projects');
+check(array_map('strval', $switched['initiatives']) === [(string) $second], 'A changed objective selection replaces derived initiatives instead of retaining old parents.');
+$both = validateValues(['objectives' => [(string) $objectiveId, (string) $otherObjective]], $DB, 'activities');
+check(count($both['initiatives']) === 2, 'Objectives from different initiatives contribute all their parents.');
+check(!array_key_exists('initiatives', validateValues(['comment' => 'Only a comment'], $DB, 'activities')), 'Partial updates without association fields leave stored links untouched.');
 $objectiveRenderer = new Modules(['objectives' => [$objectiveId]]);
 ob_start(); $objectiveRenderer->print_module('objectives', true, ['help' => 'Objective help']); $html = ob_get_clean();
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
