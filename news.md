@@ -21,7 +21,7 @@ Die Funktion lässt sich im Admin-Bereich aktivieren. Initiativen erhalten einen
 
 Objectives gehören jeweils zu genau einer Initiative. Sie erhalten eine Kennung, einen Titel, eine Beschreibung, einen über das Vokabular konfigurierbaren Typ und eine Laufzeit. Anlegen und Bearbeiten erfolgen direkt auf der Initiativenseite in einem Dialog. Beim Anlegen wird die Laufzeit der Initiative als Vorgabe übernommen. Die Nutzung von Objectives ist optional.
 
-Über die neuen Formularmodule können Aktivitäten, Projekte und Anträge mehreren Initiativen oder Objectives zugeordnet werden. Bei der Auswahl von Objectives werden die zugehörigen Initiativen automatisch mitgespeichert; zusätzliche direkte Initiativenzuordnungen werden ohne Doppelungen ergänzt. Beide Zuordnungen stehen in den erweiterten Suchen als Filter und Tabellenspalten zur Verfügung.
+Über die neuen Formularmodule können Aktivitäten, Projekte, Anträge und Events mehreren Initiativen oder Objectives zugeordnet werden. Bei der Auswahl von Objectives werden die zugehörigen Initiativen automatisch mitgespeichert; zusätzliche direkte Initiativenzuordnungen werden ohne Doppelungen ergänzt. Beide Zuordnungen stehen in den erweiterten Suchen als Filter und Tabellenspalten zur Verfügung.
 
 Bei Aktivitäten folgt die reguläre Auswahl dem Aktivitätsdatum und passt sich bei Datumsänderungen unmittelbar an. Auch nachträgliche Zuordnungen zu vergangenen Laufzeiten sind damit möglich. Mit dem zusätzlichen Recht „Initiativen und Objectives außerhalb der Laufzeit zuordnen“ öffnet „Alle anzeigen“ die vollständige Auswahl mit Suchfunktion. Bereits gespeicherte Zuordnungen bleiben bei Datumsänderungen erhalten.
 
@@ -44,6 +44,16 @@ Mit dem zusätzlichen Recht „Frühere Antragsphasen korrigieren“ lassen sich
 Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt.
 
 
+### Events
+
+Auch die Erfassungsformulare für Events verwenden jetzt den Form-Builder. Im Admin-Bereich werden die Event-Felder zusammen mit den Initiativen unter den weiteren Datenmodell-Einstellungen verwaltet. Eine gemeinsame Formularkonfiguration gilt für alle Veranstaltungstypen. Felder lassen sich anordnen, beschriften und als Pflichtfelder festlegen; Überschriften, Hinweise und Trennlinien strukturieren das Formular. Kurztitel, Veranstaltungstyp, Zeitraum und Ort bleiben als Systemfelder erhalten und können innerhalb des Formulars positioniert werden.
+
+Die Konfiguration wird sowohl im regulären Event-Editor als auch beim Anlegen eines Events aus einer Aktivität heraus verwendet. Damit stehen an beiden Stellen auch eigene Datenfelder, Personenzuordnungen sowie Verknüpfungen mit Initiativen und Objectives zur Verfügung. Die Event-Detailansicht berücksichtigt die konfigurierte Feldauswahl, Beschriftung und Reihenfolge. Initiativen und Objectives sind außerdem in der erweiterten Event-Suche als Filter und Spalten verfügbar.
+
+Beim Anlegen kann man sich mit „Ich nehme teil“ direkt als teilnehmende Person eintragen lassen. Dieser Shortcut steht ausschließlich für neue Events zur Verfügung. Die weitere Verwaltung der eigenen Teilnahme erfolgt über die Event-Detailseite.
+
+Beim Upgrade wird der bisherige Formularaufbau als Standardkonfiguration übernommen. Bereits angepasste Formulardefinitionen behalten ihre Einstellungen; die bisherigen Eventdaten und Speicherfelder bleiben erhalten. Für eintägige Events kann das Enddatum leer bleiben und wird beim Speichern auf das Startdatum gesetzt.
+
 ### Neue Datenfelder
 
 Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Verknüpfungen. Welche Module zur Auswahl stehen, richtet sich nach der Entität und bei Projekten nach der jeweiligen Phase. Die technischen Modulnamen sind hier zur Orientierung im Feldkatalog angegeben; die angezeigten Beschriftungen lassen sich im Form-Builder anpassen.
@@ -57,14 +67,20 @@ Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Ver
 | Zusammenfassung, mehrsprachig (`abstract-loc`) | Eine mehrsprachige Zusammenfassung für Aktivitäten und Projekte. |
 | Beschreibung, mehrsprachig (`description-loc`) | Eine mehrsprachige Beschreibung mit Textformatierung. |
 | Webseite (`website`) | Ein allgemeines Feld für einen Weblink, verfügbar für Aktivitäten, Initiativen, Projekte und Anträge. |
-| Personen (`persons`) | Personen zu Aktivitäten oder Initiativen zuordnen, unabhängig von bibliografischen Autorenpositionen. |
-| Personen mit Rollen (`persons-role`) | Personenzuordnung mit Rollen aus dem Vokabular „Personenrollen“. Vorgaben sind Mitglied, Leitung und Co-Leitung; das Vokabular kann erweitert werden. |
+| Personen (`persons`) | Personen zu Aktivitäten, Initiativen oder Events zuordnen, unabhängig von bibliografischen Autorenpositionen. |
+| Personen mit Rollen (`persons-role`) | Personenzuordnung für Aktivitäten, Initiativen und Events mit Rollen aus dem Vokabular „Personenrollen“. Vorgaben sind Mitglied, Leitung und Co-Leitung; das Vokabular kann erweitert werden. |
 | Projektpersonen (`persons-project`) | Personen mit Projektrolle und Organisationseinheiten zu Projekten oder Anträgen zuordnen. Bei Projekten lassen sich abweichende Mitgliedschaftszeiträume ergänzen. |
 | Rolle des Instituts (`institute-role`) | Die Rolle des eigenen Instituts im Projekt über ein konfigurierbares Vokabular auswählen. |
 | Projektlaufzeit (`project-date`) | Projektbeginn und -ende gemeinsam erfassen, einschließlich der vorhandenen Hilfen zur Eingabe der Laufzeit. |
 | Beantragte Projektlaufzeit (`project-date-proposed`) | Beantragten Beginn und beantragtes Ende gemeinsam erfassen. Dieses Modul ist für die entsprechenden frühen Projektphasen vorgesehen. |
 | Initiativen (`initiatives`) | Einen Eintrag direkt einer oder mehreren Initiativen zuordnen. |
 | Objectives (`objectives`) | Einen Eintrag einem oder mehreren Objectives zuordnen; die zugehörigen Initiativen werden automatisch mitgespeichert. |
+| Event-Kurztitel (`event-title`) | Einfaches Textfeld für den Kurztitel eines Events; speichert im bisherigen Feld `title`. |
+| Vollständiger Eventtitel (`title_full`) | Optionaler vollständiger Titel eines Events. |
+| Veranstaltungstyp (`event-type`) | Auswahl aus dem bestehenden Vokabular „Veranstaltungstyp“; speichert weiterhin in `type`. |
+| Event-Beschreibung (`event-description`) | Beschreibung eines Events mit den bisherigen vollständigen Formatierungsmöglichkeiten; speichert in `description`. |
+| Event-Webseite (`url`) | Weblink eines Events im bisherigen Feld `url`. |
+| Event-Sichtbarkeit im Portfolio (`event-public`) | Checkbox für die öffentliche Freigabe eines Events im Feld `public`. Bei aktiviertem Portfolio ist sie für neue Events standardmäßig angekreuzt. |
 
 Die mehrsprachigen Textmodule ersetzen im jeweiligen Formular ihre einsprachige Variante; beide Varianten desselben Feldes können nicht gleichzeitig verwendet werden. Pflichtangaben beziehen sich auf die Ausgangssprache, weitere Übersetzungen sind optional. Die oben beschriebenen mehrsprachigen Custom Fields ergänzen diese Standardmodule um frei definierbare Textfelder.
 
