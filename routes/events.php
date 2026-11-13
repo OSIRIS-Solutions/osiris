@@ -192,6 +192,10 @@ Route::get('/deadlines/edit/(.*)', function ($id) {
         abortwith(404, lang('events.deadline'), '/deadlines');
     }
 
+    if (($form['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('deadlines.edit')) {
+        return abortwith(403, translate('common.deadlines'), '/deadlines');
+    }
+
     $breadcrumb = [
         ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
         ['name' => $form['title']]
@@ -364,115 +368,79 @@ Route::post('/ajax/conferences/toggle-interest', function () {
 
 Route::post('/crud/deadlines/add', function () {
     include_once BASEPATH . "/php/init.php";
-    // check if json is requested from ajax
-    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-    $accept_json = strpos($accept, 'application/json') !== false;
-
-    if (!isset($_POST['values'])) {
+    require_once BASEPATH . '/php/DeadlineForms.php';
+    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, lang('events.deadlines_are_not_enabled'));
+    $accept_json = strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false;
+    $input = $_POST['values'] ?? null;
+    if (!is_array($input)) return abortwith(400, translate('error.no_values'));
+    try {
+        $values = DeadlineForms::values($input, $osiris, $Settings);
+    } catch (InvalidArgumentException $error) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('error.no_values')]);
-            exit;
+            echo json_encode(['status' => 'error', 'msg' => $error->getMessage()]);
+            return;
         }
-        abortwith(500, lang('error.no_values'));
+        $form = DeadlineForms::redisplay($input);
+        include BASEPATH . '/header.php';
+        printMsg($error->getMessage(), 'error', translate('common.error'));
+        include BASEPATH . '/pages/deadlines/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
-    $values = $_POST['values'];
-
-    // required fields:
-    if (!isset($values['title']) || !isset($values['date'])) {
-        if ($accept_json) {
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('events.title_and_date_are_needed')]);
-            exit;
-        }
-        $new = true;
-        $form = $values;
-        include BASEPATH . "/header.php";
-        printMsg(lang('events.title_and_date_are_needed'), 'error', lang('events.missing_fields'));
-        include BASEPATH . "/pages/events/edit.php";
-        include BASEPATH . "/footer.php";
-        exit;
-    }
-    // check if title, start, location are already in the database
-    $existing = $osiris->deadlines->findOne([
-        'title' => $values['title'],
-        'start' => $values['start']
-    ]);
+    $existing = $osiris->deadlines->findOne(['title' => $values['title'], 'date' => $values['date']]);
     if ($existing) {
+        $message = lang('A deadline with the same title and date already exists.', 'Ein Termin mit demselben Titel und Datum existiert bereits.');
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id']]);
-            exit;
+            echo json_encode(['status' => 'warning', 'msg' => $message, 'id' => (string) $existing['_id']]);
+            return;
         }
-        $_SESSION['msg'] = lang('events.an_event_with_the_same_title_and_date_already_exists');
-        header("Location: " . ROOTPATH . "/deadlines/view/" . $existing['_id']);
-        exit;
+        $_SESSION['msg'] = $message;
+        header('Location: ' . ROOTPATH . '/deadlines/view/' . $existing['_id']);
+        return;
     }
-
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
-
-    $start = strtotime($values['date']);
-    $values['year'] = intval(date('Y', $start));
-    $values['month'] = intval(date('n', $start));
-    $values['quarter'] = ceil($values['month'] / 3);
-    $values['day'] = intval(date('j', $start));
-
-    $values['roles'] = $values['roles'] ?? [];
-    if (empty($values['roles'])) {
-        $values['roles'] = ['user'];
-    } else {
-        $values['roles'] = array_keys($values['roles']);
-    }
-
     $added = $osiris->deadlines->insertOne($values);
-
     $id = $added->getInsertedId();
-
-    if (strpos($accept, 'application/json') !== false) {
+    if ($accept_json) {
         header('Content-Type: application/json');
-        echo json_encode(['status' => 'success', 'id' => (string)$id]);
-        exit;
+        echo json_encode(['status' => 'success', 'id' => (string) $id]);
+        return;
     }
-    $_SESSION['msg'] = lang('events.event_added_successfully');
+    $_SESSION['msg'] = lang('Deadline added successfully.', 'Termin erfolgreich hinzugefügt.');
     $_SESSION['msg_type'] = 'success';
-    header("Location: " . ROOTPATH . "/deadlines/view/$id");
+    header('Location: ' . ROOTPATH . '/deadlines/view/' . $id);
 }, 'login');
-
 
 Route::post('/crud/deadlines/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-
-    $values = $_POST['values'];
-    $redirect = false;
-    if (isset($values['redirect'])) {
-        $redirect = $values['redirect'];
-        unset($values['redirect']);
+    require_once BASEPATH . '/php/DeadlineForms.php';
+    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, lang('events.deadlines_are_not_enabled'));
+    $previous = $osiris->deadlines->findOne(['_id' => DB::to_ObjectID($id)]);
+    if (!$previous) return abortwith(404, translate('common.deadlines'), '/deadlines');
+    if (($previous['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('deadlines.edit')) {
+        return abortwith(403, translate('common.deadlines'), '/deadlines');
+    }
+    $input = $_POST['values'] ?? null;
+    if (!is_array($input)) return abortwith(400, translate('error.no_values'));
+    try {
+        $values = DeadlineForms::values($input, $osiris, $Settings, DB::doc2Arr($previous));
+    } catch (InvalidArgumentException $error) {
+        $form = DeadlineForms::redisplay($input, DB::doc2Arr($previous));
+        include BASEPATH . '/header.php';
+        printMsg($error->getMessage(), 'error', translate('common.error'));
+        include BASEPATH . '/pages/deadlines/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
-
-    $date = strtotime($values['date']);
-    $values['year'] = intval(date('Y', $date));
-    $values['month'] = intval(date('n', $date));
-    $values['quarter'] = ceil($values['month'] / 3);
-    $values['day'] = intval(date('j', $date));
-
-    $values['roles'] = $values['roles'] ?? [];
-    if (empty($values['roles'])) {
-        $values['roles'] = ['user'];
-    } else {
-        $values['roles'] = array_keys($values['roles']);
-    }
-
-    $updated = $osiris->deadlines->updateOne(
-        ['_id' => $DB::to_ObjectID($id)],
-        ['$set' => $values]
-    );
-
+    $osiris->deadlines->updateOne(['_id' => DB::to_ObjectID($id)], ['$set' => $values]);
     $_SESSION['msg'] = lang('events.deadline_updated_successfully');
     $_SESSION['msg_type'] = 'success';
-    header("Location: " . ROOTPATH . "/deadlines/view/$id");
+    header('Location: ' . ROOTPATH . '/deadlines/view/' . $id);
 }, 'login');
 
 

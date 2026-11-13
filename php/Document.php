@@ -126,6 +126,10 @@ class Document extends Settings
         "person-only" => ["name"],
         "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
+        "deadline-title" => ["title"],
+        "deadline-description" => ["description"],
+        "deadline-type" => ["type"],
+        "deadline-date" => ["date"],
         "event-title" => ["title"],
         "event-description" => ["description"],
         "event-public" => ["public"],
@@ -1284,6 +1288,12 @@ class Document extends Settings
         return $value;
     }
 
+    /** Deadline modules and custom fields use the same field formatting as events. */
+    public function getDeadlineField(array $deadline, string $module)
+    {
+        return $this->getEventField($deadline, $module);
+    }
+
     /** Render event fields without activity-specific initialization. */
     public function getEventField(array $event, string $module)
     {
@@ -1387,12 +1397,18 @@ class Document extends Settings
                 $start = $this->doc[$startKey] ?? $this->doc[$startKey . '_date'] ?? null;
                 $end = $this->doc[$endKey] ?? $this->doc[$endKey . '_date'] ?? null;
                 return implode(' – ', array_filter([empty($start) ? '' : self::format_date($start), empty($end) ? '' : self::format_date($end)]));
+            case 'deadline-title':
             case 'event-title':
                 return e($this->getVal('title'));
+            case 'deadline-description':
             case 'event-description':
                 return $this->getVal('description');
             case 'event-public':
                 return '<span class="badge ' . (!empty($this->doc['public']) ? 'success' : 'signal') . '">' . e(translate(!empty($this->doc['public']) ? 'common.shown' : 'common.not_shown')) . '</span>';
+            case 'deadline-date':
+                return empty($this->doc['date']) ? '' : self::format_date($this->doc['date']);
+            case 'deadline-type':
+                return e($Vocabulary->getValue('deadline-type', $this->doc['type'] ?? ''));
             case 'event-type':
                 return $Vocabulary->getValue('event-type', $this->doc['type'] ?? '');
             case 'url':

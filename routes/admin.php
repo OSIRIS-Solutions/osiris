@@ -280,6 +280,47 @@ Route::post('/crud/admin/eventsFields', function () {
     header('Location: ' . ROOTPATH . '/admin/data-model#events');
 }, 'login');
 
+Route::get('/admin/deadlines/fields', function () {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    require_once BASEPATH . '/php/DeadlineForms.php';
+    $config = DeadlineForms::builder();
+    $fields = DeadlineForms::fields($osiris);
+    $name = translate('common.deadlines');
+    $type = ['id' => 'deadline-fields', 'name' => $name];
+    $color = '#000000';
+    $copy = false;
+    $breadcrumb = [['name' => translate('common.settings'), 'path' => '/admin'], ['name' => translate('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/pages/admin/form-builder.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
+Route::post('/crud/admin/deadlinesFields', function () {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    require_once BASEPATH . '/php/DeadlineForms.php';
+    $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
+    $fields = $schema['items'] ?? null;
+    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, translate('error.no_values'));
+    $config = DeadlineForms::builder();
+    try {
+        foreach ($fields as $field) {
+            if (!is_array($field) || !in_array($field['type'] ?? '', ['field', 'custom', 'heading', 'paragraph', 'hr'], true)
+                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(translate('error.no_values'));
+        }
+        FormBuilder::validateFields($fields, DeadlineForms::SYSTEM_FIELDS);
+        foreach ($fields as $field) {
+            if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
+            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(translate('error.no_values'));
+        }
+    } catch (InvalidArgumentException $error) {
+        return abortwith(400, $error->getMessage());
+    }
+    $osiris->adminGeneral->updateOne(['id' => 'deadline-fields'], ['$set' => ['fields' => $fields]], ['upsert' => true]);
+    header('Location: ' . ROOTPATH . '/admin/data-model#deadlines');
+}, 'login');
+
 Route::get('/admin/initiatives/fields', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {

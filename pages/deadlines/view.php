@@ -12,10 +12,17 @@ if ($today) {
 }
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+require_once BASEPATH . '/php/DeadlineForms.php';
+require_once BASEPATH . '/php/Modules.php';
+require_once BASEPATH . '/php/Document.php';
+$fields = DeadlineForms::visibleFields($osiris, $Settings);
+$modules = new Modules(DB::doc2Arr($deadline));
+$modules->setFields($fields);
+$document = new Document(false, 'list');
 ?>
 
 
-<h1><?= $deadline['title'] ?></h1>
+<h1><?= e($deadline['title']) ?></h1>
 
 <div class="btn-toolbar">
     <?php if ($deadline['created_by'] == $_SESSION['username'] || $Settings->hasPermission('deadlines.edit')) { ?>
@@ -43,72 +50,35 @@ $Vocabulary = new Vocabulary();
 
 
 <div class="row row-eq-spacing">
-
-    <div class="col-md-6 col-lg-4">
-
+    <div class="col">
         <table class="table">
-            <?php if (isset($deadline['type'])) { ?>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('common.type') ?></span>
-                        <?= $Vocabulary->getValue('deadline-type', $deadline['type']) ?>
-                    </td>
-                </tr>
-            <?php } ?>
-
-            <tr>
-                <td>
-                    <span class="key"><?= lang('common.date') ?></span>
-                    <?= format_date($deadline['date']) ?>
-
-                    <?php if (!$in_past) { ?>
-                        <b class="badge danger ml-10"><?= $days ?></b>
-                    <?php } else { ?>
-                        <b class="badge muted ml-10"> <?= lang('deadlines.already_over') ?></b>
-                    <?php } ?>
-
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="key"><?= lang('common.url') ?></span>
-                    <?php if (!empty($deadline['url'])) {
-                        $short_url = str_replace('https://', '', $deadline['url']);
-                        if (strlen($short_url) > 50) {
-                            $short_url = substr($short_url, 0, 50) . '...';
-                        }
-                    ?>
-                        <a href="<?= $deadline['url'] ?>" target="_blank"><i class="ph ph-link"></i> <?= $short_url ?></a>
-                    <?php } else { ?>
-                        -
-                    <?php } ?>
-                </td>
-            </tr>
-            <?php if (!$in_past) { ?>
-                <tr>
-                    <td>
-                        <a class="btn small" href="<?= ROOTPATH ?>/deadline/ics/<?= $deadline['_id'] ?>">
-                            <i class="ph ph-calendar-plus"></i>
-                            <?= lang('common.add_to_calendar') ?>
-                        </a>
-                    </td>
-                </tr>
-            <?php } ?>
-
+            <?php foreach ($fields as $field):
+                $fieldType = $field['type'] ?? 'field';
+                $id = $field['id'] ?? '';
+                $props = $field['props'] ?? [];
+                if ($id === 'deadline-title') continue;
+            ?>
+                <tr><td colspan="2">
+                    <?php if ($fieldType === 'heading'): ?>
+                        <strong><?= e(lang($props['text'] ?? '', $props['text_de'] ?? null)) ?></strong>
+                    <?php elseif ($fieldType === 'paragraph'): ?>
+                        <?= nl2br(e(lang($props['text'] ?? '', $props['text_de'] ?? null))) ?>
+                    <?php elseif ($fieldType === 'hr'): ?><hr>
+                    <?php else: ?>
+                        <span class="key"><?= e($modules->get_name($id)) ?></span>
+                        <?= $document->getDeadlineField(DB::doc2Arr($deadline), $id) ?: '-' ?>
+                        <?php if ($id === 'deadline-date'): ?>
+                            <b class="badge <?= $in_past ? 'muted' : 'danger' ?> ml-10"><?= e($in_past ? lang('deadlines.already_over') : $days) ?></b>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </td></tr>
+            <?php endforeach; ?>
+            <?php if (!$in_past): ?>
+                <tr><td><a class="btn small" href="<?= ROOTPATH ?>/deadline/ics/<?= e($deadline['_id']) ?>"><i class="ph ph-calendar-plus"></i> <?= translate('common.add_to_calendar') ?></a></td></tr>
+            <?php endif; ?>
         </table>
     </div>
-    <?php if (isset($deadline['description'])) { ?>
-
-        <div class="col">
-            <div id="description" class="box padded m-0" style="max-height: 36rem; overflow-x: auto;">
-                <?= $deadline['description'] ?? '' ?>
-            </div>
-        </div>
-    <?php } ?>
-
 </div>
-
-
 
 <?php
 if (isset($_GET['verbose'])) {

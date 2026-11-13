@@ -17,6 +17,7 @@
  */
 require_once BASEPATH . '/php/Initiatives.php';
 require_once BASEPATH . '/php/EventForms.php';
+require_once BASEPATH . '/php/DeadlineForms.php';
 $config = new FormBuilder(
     entityLabel: translate('common.initiatives'),
     redirectUrl: ROOTPATH . '/crud/admin/initiativesFields',
@@ -91,13 +92,14 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
     </div>
 
     <?php
-    $config = EventForms::builder();
-    $fields = EventForms::fields($osiris);
+    foreach (['events' => [EventForms::class, 'ph-calendar-dots'], 'deadlines' => [DeadlineForms::class, 'ph-flag-pennant']] as $entity => [$forms, $entityIcon]):
+    $config = $forms::builder();
+    $fields = $forms::fields($osiris);
     $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
     ?>
-    <div class="box" id="events">
+    <div class="box" id="<?= e($entity) ?>">
         <div class="content">
-            <h2 class="title"><i class="ph-duotone ph-calendar-dots"></i> <?= translate('common.events') ?></h2>
+            <h2 class="title"><i class="ph-duotone <?= e($entityIcon) ?>"></i> <?= translate('common.' . $entity) ?></h2>
             <h2 class="font-size-18"><?= translate('common.data_fields') ?>:</h2>
             <div class="my-10">
                 <?php foreach ($fields as $field):
@@ -129,9 +131,10 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                     </span>
                 <?php endforeach; ?>
             </div>
-            <a class="btn secondary" href="<?= ROOTPATH ?>/admin/events/fields">
+            <a class="btn secondary" href="<?= ROOTPATH ?>/admin/<?= e($entity) ?>/fields">
                 <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
             </a>
         </div>
     </div>
+    <?php endforeach; ?>
 </div>

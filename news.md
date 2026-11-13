@@ -54,6 +54,12 @@ Beim Anlegen kann man sich mit „Ich nehme teil“ direkt als teilnehmende Pers
 
 Beim Upgrade wird der bisherige Formularaufbau als Standardkonfiguration übernommen. Bereits angepasste Formulardefinitionen behalten ihre Einstellungen; die bisherigen Eventdaten und Speicherfelder bleiben erhalten. Für eintägige Events kann das Enddatum leer bleiben und wird beim Speichern auf das Startdatum gesetzt.
 
+### Deadlines
+
+Auch Deadlines verwenden jetzt den Form-Builder. Unter den weiteren Datenmodell-Einstellungen lassen sich Felder, Beschriftungen und Reihenfolge konfigurieren sowie eigene Datenfelder und Verknüpfungen mit Personen, Initiativen und Objectives ergänzen. Titel, Termin und Typ bleiben als verschiebbare Systemfelder erhalten. Der Typ wird weiterhin über das Vokabular `deadline-type` gepflegt.
+
+Editor und Detailansicht übernehmen die Formularkonfiguration. Die Zielgruppen-Rollen bleiben als separate Einstellung erhalten; auch Fristanzeige und Kalenderexport stehen weiterhin zur Verfügung. Beim Upgrade wird das bisherige Formular als Standard übernommen, ohne vorhandene Deadlines oder bereits angepasste Formularkonfigurationen zu verändern.
+
 ### Neue Datenfelder
 
 Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Verknüpfungen. Welche Module zur Auswahl stehen, richtet sich nach der Entität und bei Projekten nach der jeweiligen Phase. Die technischen Modulnamen sind hier zur Orientierung im Feldkatalog angegeben; die angezeigten Beschriftungen lassen sich im Form-Builder anpassen.

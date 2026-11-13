@@ -626,7 +626,7 @@ class Modules
             "entities" => ['activities']
         ],
         "person" => [
-            "fields" => ["name" => "Koblitz, Julia", "affiliation" => "DSMZ", "academic_title" => "Dr."],
+            "fields" => ["name" => "Koblitz, Julia", "affiliation" => "OSIRIS Solutions", "academic_title" => "Dr."],
             "name" => "Person",
             "name_de" => "Person",
             'label' => 'forms.person_details',
@@ -652,7 +652,7 @@ class Modules
             "entities" => ['activities']
         ],
         "person-organization" => [
-            "fields" => ["name" => "Koblitz, Julia", "organization" => "DSMZ"],
+            "fields" => ["name" => "Koblitz, Julia", "organization" => "OSIRIS Solutions"],
             "name" => "Person with organization (ROR)",
             "name_de" => "Person mit Organisation (ROR)",
             'label' => 'forms.person_details',
@@ -1044,7 +1044,7 @@ class Modules
             "description" => "Persons associated with this record.",
             "width" => 12, "portfolio" => true,
             "tags" => ['authors', 'people'], "section" => "people",
-            "entities" => ['activities', 'initiatives', 'events'],
+            "entities" => ['activities', 'initiatives', 'events', 'deadlines'],
         ],
         "persons-role" => [
             "fields" => ["persons" => []],
@@ -1053,7 +1053,31 @@ class Modules
             "description" => "Persons associated with this record, with configurable roles.",
             "width" => 12, "portfolio" => true,
             "tags" => ['authors', 'people'], "section" => "people",
-            "entities" => ['activities', 'initiatives', 'events'],
+            "entities" => ['activities', 'initiatives', 'events', 'deadlines'],
+        ],
+        "deadline-title" => [
+            "fields" => ["title" => ''],
+            "name" => "Deadline title", "name_de" => "Termin-Titel", 'label' => 'common.title',
+            "description" => "The deadline title as a plain text input.",
+            "width" => 12, "portfolio" => true, "tags" => ['deadline'], "section" => "general", "entities" => ['deadlines'],
+        ],
+        "deadline-description" => [
+            "fields" => ["description" => ''],
+            "name" => "Deadline description", "name_de" => "Deadline-Beschreibung", 'label' => 'common.description',
+            "description" => "The deadline description with full text formatting.",
+            "width" => 12, "portfolio" => true, "tags" => ['deadline'], "section" => "general", "entities" => ['deadlines'],
+        ],
+        "deadline-type" => [
+            "fields" => ["type" => ''],
+            "name" => "Deadline type", "name_de" => "Termintyp", 'label' => 'common.type',
+            "description" => "Deadline type from the deadline-type vocabulary.",
+            "width" => 12, "portfolio" => true, "tags" => ['deadline'], "section" => "general", "entities" => ['deadlines'],
+        ],
+        "deadline-date" => [
+            "fields" => ["date" => ''],
+            "name" => "Deadline date", "name_de" => "Termin", 'label' => 'deadlines.deadline_date',
+            "description" => "The deadline as a single calendar date.",
+            "width" => 12, "portfolio" => "impossible", "tags" => ['deadline'], "section" => "general", "entities" => ['deadlines'],
         ],
         "event-title" => [
             "fields" => ["title" => ''],
@@ -1088,8 +1112,8 @@ class Modules
         "url" => [
             "fields" => ["url" => ''],
             "name" => "URL", "name_de" => "URL", 'label' => 'common.url',
-            "description" => "The event website.",
-            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "links", "entities" => ['events'],
+            "description" => "A link to further information.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "links", "entities" => ['events', 'deadlines'],
         ],
         "initiatives" => [
             "fields" => ["initiatives" => []],
@@ -1099,7 +1123,7 @@ class Modules
             "description_de" => "Eine oder mehrere Initiativen mit diesem Eintrag verknüpfen.",
             "width" => 12, "portfolio" => "impossible",
             "tags" => ['general'], "section" => "",
-            "entities" => ['activities', 'projects', 'proposals', 'events'],
+            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines'],
         ],
         "objectives" => [
             "fields" => ["objectives" => []],
@@ -1109,7 +1133,7 @@ class Modules
             "description_de" => "Ein oder mehrere Objectives mit diesem Eintrag verknüpfen.",
             "width" => 12, "portfolio" => "impossible",
             "tags" => ['general'], "section" => "",
-            "entities" => ['activities', 'projects', 'proposals', 'events'],
+            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines'],
         ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
@@ -2218,6 +2242,10 @@ class Modules
         }
 
         switch ($module) {
+            case 'deadline-title':
+            case 'deadline-description':
+            case 'deadline-type':
+            case 'deadline-date':
             case 'event-title':
             case 'event-description':
             case 'event-public':

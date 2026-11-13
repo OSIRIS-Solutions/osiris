@@ -1,6 +1,5 @@
 <?php
-include_once BASEPATH . "/php/Vocabulary.php";
-$Vocabulary = new Vocabulary();
+require_once BASEPATH . '/php/DeadlineForms.php';
 
 $action = ROOTPATH . "/crud/deadlines/add";
 $btn = lang('deadlines.add_deadline');
@@ -17,7 +16,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <h1>
         <i class="ph-duotone ph-flag-pennant"></i>
-        <?= lang('deadlines.add_deadline') ?>
+        <?= isset($form['_id']) ? lang('deadlines.edit_deadline') : lang('deadlines.add_deadline') ?>
     </h1>
 
     <p class="text-muted">
@@ -26,48 +25,9 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <form action="<?= $action ?>" method="post" id="deadline-form">
 
-        <div class="form-group floating-form">
-            <input type="text" name="values[title]" class="form-control" value="<?= e($form['title'] ?? '') ?>" placeholder="title" required>
-            <label for="title" class="required"><?= lang('common.title') ?></label>
+        <div id="data-modules" class="row row-eq-spacing">
+            <?php DeadlineForms::render($osiris, $Settings, DB::doc2Arr($form ?? [])); ?>
         </div>
-
-        <div class="form-group floating-form">
-            <input type="date" name="values[date]" class="form-control" id="conference-end-date" value="<?= $form['date'] ?? '' ?>" placeholder="date">
-            <label for="date" class="required"><?= lang('deadlines.deadline_date') ?></label>
-        </div>
-
-        <div class="form-group floating-form">
-            <select name="values[type]" id="type" class="form-control" required>
-                <?php
-                $vocab = $Vocabulary->getValues('deadline-type');
-                $sel = $form['type'] ?? '';
-                foreach ($vocab as $v) { ?>
-                    <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                <?php } ?>
-            </select>
-            <label for="type" class="required">
-                <?= lang('common.type') ?>
-            </label>
-        </div>
-
-        <div class="form-group">
-            <label for="description" class="floating-title"><?= lang('common.description') ?></label>
-
-            <div class="form-group title-editor" id="description-quill"><?= $form['description'] ?? '' ?></div>
-            <textarea name="values[description]" id="description" class="d-none" readonly><?= $form['description'] ?? '' ?></textarea>
-
-            <script>
-                quillEditor('description');
-            </script>
-        </div>
-
-
-
-        <div class="form-group floating-form">
-            <input type="url" name="values[url]" class="form-control" value="<?= e($form['url'] ?? '') ?>" placeholder="url">
-            <label for="url"><?= lang('common.link') ?></label>
-        </div>
-
 
         <div class="form-group">
             <b class="floating-title"><?= lang('common.roles') ?></b><br>
@@ -75,12 +35,13 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
             $selected = DB::doc2Arr($form['roles'] ?? []);
+            $roles = array_unique(array_merge($roles, $selected));
             foreach ($roles as $role) {
                 $checked = in_array($role, $selected) ? 'checked' : '';
             ?>
                 <div class="pill-checkbox ">
-                    <input type="checkbox" id="role-<?= $role ?>" value="1" name="values[roles][<?= $role ?>]" <?= $checked ?>>
-                    <label for="role-<?= $role ?>"><?= strtoupper($role) ?></label>
+                    <input type="checkbox" id="role-<?= e($role) ?>" value="1" name="values[roles][<?= e($role) ?>]" <?= $checked ?>>
+                    <label for="role-<?= e($role) ?>"><?= e(strtoupper($role)) ?></label>
                 </div>
             <?php
             }

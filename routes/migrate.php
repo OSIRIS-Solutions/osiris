@@ -142,6 +142,14 @@ Route::get('/migrate/event-forms', function () {
     include BASEPATH . '/footer.php';
 }, 'login');
 
+Route::get('/migrate/deadline-forms', function () {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/routes/migration/deadline-forms.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
 Route::get('/migrate/localization', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -650,6 +658,7 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/languages.php";
         include BASEPATH . "/routes/migration/project-forms.php";
         include BASEPATH . "/routes/migration/event-forms.php";
+        include BASEPATH . "/routes/migration/deadline-forms.php";
         flush();
         ob_flush();
         $rerender = false;
