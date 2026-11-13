@@ -803,4 +803,5 @@ return [
     'item_added_to_collection' => 'Item added to your collection. <a class="link" href="{{rootpath}}/cart">View collection</a>',
     'initiative' => 'Initiative',
     'initiatives' => 'Initiatives',
+    'data_model' => 'Other data models'
 ];

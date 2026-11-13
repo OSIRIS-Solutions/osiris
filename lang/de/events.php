@@ -11,6 +11,8 @@ return [
     'do_you_want_to_delete_this_event' => 'Möchten Sie diese Event löschen?',
     'participating_persons' => 'Teilnehmende Personen',
     'withdraw_participation' => 'Teilnahme zurückziehen',
+    'invalid_event_type' => 'Bitte wähle einen gültigen Veranstaltungstyp.',
+    'i_participate' => 'Ich nehme teil',
     'participate' => 'Teilnehmen',
     'no_one_will_participate_or_has_participated' => 'Niemand wird teilnehmen oder hat teilgenommen',
     'interested_persons' => 'Interessierte Personen',

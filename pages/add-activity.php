@@ -168,73 +168,7 @@ function val($index, $default = '')
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="title"><?= lang('action.add_event') ?></h5>
-            <div id="content" id="new-event">
-
-                <div class="form-group mb-10">
-                    <label for="title" class="required"><?= lang('common.short_title') ?></label>
-                    <input type="text" id="event-title" required class="form-control">
-                </div>
-                <div class="form-group mb-10">
-                    <label for="title"><?= lang('common.full_title') ?></label>
-                    <input type="text" id="event-title_full" class="form-control">
-                </div>
-
-                <div class="form-group floating-form">
-                    <select id="event-type" class="form-control" required>
-                        <?php
-                        $vocab = $Vocabulary->getValues('event-type');
-                        $sel = $form['type'] ?? '';
-                        foreach ($vocab as $v) { ?>
-                            <option value="<?= $v['id'] ?>" <?= $sel == $v['id'] ? 'selected' : '' ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
-                        <?php } ?>
-                    </select>
-                    <label for="event-type" class="required">
-                        <?= lang('common.type') ?>
-                    </label>
-                </div>
-
-                <div class="form-row row-eq-spacing mb-10">
-                    <div class="col">
-                        <label for="start" class="required"><?= lang('common.start_date') ?></label>
-                        <input type="date" id="event-start" required class="form-control" onchange="$('#event-end').val(this.value)">
-                    </div>
-                    <div class="col">
-                        <label for="end" class="required"><?= lang('common.end_date') ?></label>
-                        <input type="date" id="event-end" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-row row-eq-spacing">
-                    <div class="col">
-                        <label for="event-location" class="required"><?= lang('common.location') ?></label>
-                        <input type="text" required class="form-control" value="<?= $form['location'] ?? '' ?>" id="event-location">
-                    </div>
-                    <div class="col">
-                        <label for="event-country"><?= lang('common.country') ?></label>
-                        <select id="event-country" class="form-control">
-                            <option value=""><?= lang('common.select_country') ?></option>
-                            <!-- germany first -->
-                            <option value="DE"><?= lang('activities.germany') ?></option>
-                            <?php
-                            foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
-                                <option value="<?= $key ?>"><?= $value ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group mb-10">
-                    <label for="url"><?= lang('common.url') ?></label>
-                    <input type="url" id="event-url" class="form-control">
-                </div>
-
-                <div class="custom-checkbox">
-                    <input type="checkbox" id="event-attended" value="<?= $_SESSION['username'] ?>">
-                    <label for="event-attended" class="blank"><?= lang('activities.i_have_attended') ?></label>
-                </div>
-
-                <button class="btn mb-10" type="button" onclick="addEvent()"><?= lang('action.add_event') ?></button>
-            </div>
+            <iframe id="event-create-frame" title="<?= e(translate('action.add_event')) ?>" src="<?= ROOTPATH ?>/conferences/new?embedded=1&amp;location=<?= rawurlencode($form['location'] ?? '') ?>" style="width: 100%; height: 65vh; border: 0;" loading="lazy"></iframe>
         </div>
     </div>
 </div>

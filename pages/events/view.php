@@ -1,10 +1,17 @@
 <?php
 include_once BASEPATH . "/php/Vocabulary.php";
 $Vocabulary = new Vocabulary();
+require_once BASEPATH . '/php/EventForms.php';
+require_once BASEPATH . '/php/Modules.php';
+require_once BASEPATH . '/php/Document.php';
+$eventFields = EventForms::visibleFields($osiris, $Settings);
+$eventModules = new Modules(DB::doc2Arr($conference));
+$eventModules->setFields($eventFields);
+$eventFormat = new Document(false, 'list');
 
 $today = date('Y-m-d');
 $start = $conference['start'];
-$end = $conference['end'];
+$end = $conference['end'] ?: $start;
 
 $is_today = ($today == $start && $today == $end);
 $in_past = $end < $today;
@@ -22,8 +29,8 @@ if ($is_today) {
     $days = $days == 0 ? lang('events.until_today') : lang('events.ended') . ' ' . $days . ' ' . lang('events.days_ago');
 }
 
-$conference['participants'] = DB::doc2Arr($conference['participants']);
-$conference['interests'] = DB::doc2Arr($conference['interests']);
+$conference['participants'] = DB::doc2Arr($conference['participants'] ?? []);
+$conference['interests'] = DB::doc2Arr($conference['interests'] ?? []);
 
 $interest = in_array($_SESSION['username'], $conference['interests']);
 $participate = in_array($_SESSION['username'], $conference['participants']);
@@ -51,19 +58,11 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
     }
 </style>
 
-<h1><?= $conference['title'] ?></h1>
-<h2 class="subtitle">
-    <?= $conference['title_full'] ?>
-</h2>
+<h1><?= e($conference['title']) ?></h1>
+<?php if (in_array('title_full', array_column($eventFields, 'id'), true) && !empty($conference['title_full'])): ?>
+    <h2 class="subtitle"><?= e($conference['title_full']) ?></h2>
+<?php endif; ?>
 
-
-<!-- show research topics -->
-<?php
-$topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count() > 0;
-if ($topicsEnabled) {
-    echo $Settings->printTopics($conference['topics'] ?? [], 'mb-20', false);
-}
-?>
 
 <?php if ($conference['created_by'] == $_SESSION['username'] || $Settings->hasPermission('conferences.edit')) { ?>
     <div class="btn-toolbar">
@@ -90,113 +89,36 @@ if ($topicsEnabled) {
 
 <div class="row row-eq-spacing">
 
-    <div class="col-md-6 col-lg-4">
+    <div class="col">
 
         <table class="table">
-            <tr>
-                <td colspan="2">
-                    <span class="key"><?= lang('common.location') ?></span>
-                    <?= $conference['location'] ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <span class="key"><?= lang('common.country') ?></span>
-                    <?= $DB->getCountry($conference['country'] ?? '', lang('common.field_name_language')) ?>
-                </td>
-            </tr>
-            <?php if (isset($conference['type'])) { ?>
-                <tr>
-                    <td colspan="2">
-                        <span class="key"><?= lang('common.type') ?></span>
-                        <?= $Vocabulary->getValue('event-type', $conference['type']) ?>
-                    </td>
-                </tr>
-            <?php } ?>
-
-            <?php if (isset($conference['internal_id'])) { ?>
-                <tr>
-                    <td colspan="2">
-                        <span class="key"><?= lang('common.internal_id') ?></span>
-                        <?= $conference['internal_id'] ?>
-                    </td>
-                </tr>
-            <?php } ?>
-
-            <tr>
-                <td>
-                    <span class="key"><?= lang('common.start_view') ?></span>
-                    <?= format_date($conference['start']) ?><br>
-                    <b class="badge <?= ($in_past ? 'danger' : 'success') ?>"><?= $days ?></b>
-                </td>
-                <td>
-                    <span class="key"><?= lang('common.end') ?></span>
-                    <?= format_date($conference['end']) ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <span class="key"><?= lang('common.url') ?></span>
-                    <?php if (!empty($conference['url'])) {
-                        $short_url = str_replace('https://', '', $conference['url']);
-                        if (strlen($short_url) > 50) {
-                            $short_url = substr($short_url, 0, 50) . '...';
-                        }
-                    ?>
-                        <a href="<?= $conference['url'] ?>" target="_blank"><i class="ph ph-link"></i> <?= $short_url ?></a>
-                    <?php } else { ?>
-                        -
-                    <?php } ?>
-                </td>
-            </tr>
-                <?php if ($Settings->featureEnabled('portal')) {
-                    $public = $conference['public'] ?? false;
-                ?>
-                    <tr>
-                        <td colspan="2">
-                            <span class="key"><?= lang('common.portfolio_visibility') ?>: </span>
-                            <?php if ($public) { ?>
-                                <span class="badge success">
-                                    <i class="ph ph-globe m-0"></i> <?= lang('common.shown') ?>
-                                </span>
-                            <?php } else { ?>
-                                <span class="badge signal">
-                                    <i class="ph ph-globe-x m-0"></i> <?= lang('common.not_shown') ?>
-                                </span>
-                            <?php } ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-            <?php if ($Settings->featureEnabled('tags')) { ?>
-                <tr>
-                    <td colspan="2">
-                        <span class="key"><?= $Settings->tagLabel() ?></span>
-                        <?= $Settings->printTags($conference['tags'] ?? [], 'conferences') ?>
-                    </td>
-                </tr>
-            <?php } ?>
-            <?php if (!$in_past) { ?>
-                <tr>
-                    <td colspan="2">
-                        <a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= $conference['_id'] ?>">
-                            <i class="ph ph-calendar-plus"></i>
-                            <?= lang('common.add_to_calendar') ?>
-                        </a>
-                    </td>
-                </tr>
-            <?php } ?>
-
+            <?php foreach ($eventFields as $field):
+                $fieldType = $field['type'] ?? 'field';
+                $id = $field['id'] ?? '';
+                $props = $field['props'] ?? [];
+                if (in_array($id, ['event-title', 'title_full'], true)) continue;
+            ?>
+                <tr><td colspan="2">
+                    <?php if ($fieldType === 'heading'): ?>
+                        <strong><?= e(lang($props['text'] ?? '', $props['text_de'] ?? null)) ?></strong>
+                    <?php elseif ($fieldType === 'paragraph'): ?>
+                        <?= nl2br(e(lang($props['text'] ?? '', $props['text_de'] ?? null))) ?>
+                    <?php elseif ($fieldType === 'hr'): ?><hr>
+                    <?php else: ?>
+                        <span class="key"><?= e($eventModules->get_name($id)) ?></span>
+                        <?= $eventFormat->getEventField(DB::doc2Arr($conference), $id) ?: '-' ?>
+                    <?php endif; ?>
+                </td></tr>
+            <?php endforeach; ?>
+            <?php if (isset($conference['internal_id']) && !in_array('internal_id', array_column(EventForms::fields($osiris), 'id'), true)): ?>
+                <tr><td><span class="key"><?= translate('common.internal_id') ?></span><?= e($conference['internal_id']) ?></td></tr>
+            <?php endif; ?>
+            <tr><td><b class="badge <?= $in_past ? 'danger' : 'success' ?>"><?= e($days) ?></b></td></tr>
+            <?php if (!$in_past): ?>
+                <tr><td><a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= e($conference['_id']) ?>"><i class="ph ph-calendar-plus"></i> <?= translate('common.add_to_calendar') ?></a></td></tr>
+            <?php endif; ?>
         </table>
     </div>
-    <?php if (isset($conference['description'])) { ?>
-
-        <div class="col">
-            <div id="description" class="box padded m-0" style="max-height: 36rem; overflow-x: auto;">
-                <?= $conference['description'] ?? '' ?>
-            </div>
-        </div>
-    <?php } ?>
-
 </div>
 
 

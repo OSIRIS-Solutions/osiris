@@ -61,6 +61,13 @@ Route::get('/(conferences|deadlines)/new', function ($page) {
     $form = [];
     $new = true;
 
+    $embedded = $page === 'conferences' && isset($_GET['embedded']);
+    if ($embedded) {
+        $form['location'] = is_string($_GET['location'] ?? null) ? $_GET['location'] : '';
+        include BASEPATH . '/pages/events/embedded.php';
+        return;
+    }
+
     include BASEPATH . "/header.php";
     if ($page == 'deadlines') {
         include BASEPATH . "/pages/deadlines/edit.php";
@@ -103,6 +110,10 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     $form = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$form) {
         abortwith(404, lang('common.event'), '/conferences');
+    }
+
+    if (($form['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('conferences.edit')) {
+        return abortwith(403, translate('common.event'), '/conferences');
     }
 
     $breadcrumb = [
@@ -209,22 +220,23 @@ Route::post('/crud/conferences/add', function () {
         }
         abortwith(500, lang('error.no_values'));
     }
-    $values = $_POST['values'];
-
-    // required fields:
-    if (!isset($values['title']) || !isset($values['start']) || !isset($values['location'])) {
+    require_once BASEPATH . '/php/EventForms.php';
+    try {
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        $values = EventForms::values($_POST['values'], $osiris, $Settings);
+    } catch (InvalidArgumentException $error) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('events.title_location_and_date_are_needed')]);
-            exit;
+            echo json_encode(['status' => 'error', 'msg' => $error->getMessage()]);
+            return;
         }
-        $new = true;
-        $form = $values;
-        include BASEPATH . "/header.php";
-        printMsg(lang('events.title_location_and_date_are_needed'), 'error', lang('events.missing_fields'));
-        include BASEPATH . "/pages/events/edit.php";
-        include BASEPATH . "/footer.php";
-        exit;
+        $form = EventForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : []);
+        $form['participants'] = ($_POST['attending'] ?? '0') === '1' ? [$_SESSION['username']] : [];
+        include BASEPATH . '/header.php';
+        printMsg(e($error->getMessage()), 'error', translate('common.error'));
+        include BASEPATH . '/pages/events/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
     // check if title, start, location are already in the database
     $existing = $osiris->conferences->findOne([
@@ -234,7 +246,7 @@ Route::post('/crud/conferences/add', function () {
     if ($existing) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id']]);
+            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id'], 'event' => array_intersect_key(DB::doc2Arr($existing), array_flip(['title', 'start', 'end', 'location', 'country']))]);
             exit;
         }
         $_SESSION['msg'] = lang('events.an_event_with_the_same_title_and_date_already_exists');
@@ -242,27 +254,13 @@ Route::post('/crud/conferences/add', function () {
         exit;
     }
 
-    if (isset($values['public'])) $values['public'] = boolval($values['public'] === 'true');
-
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
 
-    $start = strtotime($values['start']);
-    $values['year'] = intval(date('Y', $start));
-    $values['month'] = intval(date('n', $start));
-    $values['quarter'] = ceil($values['month'] / 3);
-    $values['day'] = intval(date('j', $start));
-
-    if (isset($values['participants'])) {
-        $values['participants'] = explode(',', $values['participants']);
-    } else {
-        $values['participants'] = [];
-    }
-    if (isset($values['interests'])) {
-        $values['interests'] = explode(',', $values['interests']);
-    } else {
-        $values['interests'] = [];
-    }
+    $values['participants'] = isset($_POST['attending'])
+        ? ($_POST['attending'] === '1' ? [$_SESSION['username']] : [])
+        : (is_string($_POST['values']['participants'] ?? null) ? explode(',', $_POST['values']['participants']) : []);
+    $values['interests'] = is_string($_POST['values']['interests'] ?? null) ? explode(',', $_POST['values']['interests']) : [];
     $values['activities'] = [];
 
     $added = $osiris->conferences->insertOne($values);
@@ -271,7 +269,7 @@ Route::post('/crud/conferences/add', function () {
 
     if (strpos($accept, 'application/json') !== false) {
         header('Content-Type: application/json');
-        echo json_encode(['status' => 'success', 'id' => (string)$id]);
+        echo json_encode(['status' => 'success', 'id' => (string)$id, 'event' => array_intersect_key($values, array_flip(['title', 'start', 'end', 'location', 'country']))]);
         exit;
     }
     $_SESSION['msg'] = lang('events.event_added_successfully');
@@ -283,21 +281,26 @@ Route::post('/crud/conferences/add', function () {
 Route::post('/crud/conferences/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
-    $values = $_POST['values'];
-    $redirect = false;
-    if (isset($values['redirect'])) {
-        $redirect = $values['redirect'];
-        unset($values['redirect']);
+    require_once BASEPATH . '/php/EventForms.php';
+    $previous = $osiris->conferences->findOne(['_id' => $DB::to_ObjectID($id)]);
+    if (!$previous) return abortwith(404, translate('common.events'));
+    if (($previous['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('conferences.edit')) {
+        return abortwith(403, translate('common.event'), '/conferences');
+    }
+    try {
+        if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
+        $values = EventForms::values($_POST['values'], $osiris, $Settings, DB::doc2Arr($previous));
+    } catch (InvalidArgumentException $error) {
+        $form = EventForms::redisplay(is_array($_POST['values'] ?? null) ? $_POST['values'] : [], DB::doc2Arr($previous));
+        include BASEPATH . '/header.php';
+        printMsg(e($error->getMessage()), 'error', translate('common.error'));
+        include BASEPATH . '/pages/events/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
 
-    $start = strtotime($values['start']);
-    $values['year'] = intval(date('Y', $start));
-    $values['month'] = intval(date('n', $start));
-    $values['quarter'] = ceil($values['month'] / 3);
-    $values['day'] = intval(date('j', $start));
-    if (isset($values['public'])) $values['public'] = boolval($values['public'] === 'true');
 
     $updated = $osiris->conferences->updateOne(
         ['_id' => $DB::to_ObjectID($id)],

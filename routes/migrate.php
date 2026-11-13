@@ -134,6 +134,14 @@ Route::get('/migrate/project-forms', function () {
     include BASEPATH . "/footer.php";
 });
 
+Route::get('/migrate/event-forms', function () {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/routes/migration/event-forms.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
 Route::get('/migrate/localization', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -641,6 +649,7 @@ Route::get('/migrate', function () {
     if (version_compare($DBversion, '3.0.0', '<')) {
         include BASEPATH . "/routes/migration/languages.php";
         include BASEPATH . "/routes/migration/project-forms.php";
+        include BASEPATH . "/routes/migration/event-forms.php";
         flush();
         ob_flush();
         $rerender = false;

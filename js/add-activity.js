@@ -1645,10 +1645,9 @@ function getDate(element) {
     return date
 }
 
-function selectEvent(id, event, start, end, location, country) {
-    console.log(country);
+function selectEvent(id, title, start, end, location, country) {
     $('#conference_id').val(id)
-    $('#conference').val(event).addClass('is-valid')
+    $('#conference').val(title).addClass('is-valid')
     $('#location').val(location).addClass('is-valid')
     if ($('#date_start').length > 0)
         $('#date_start').val(start).addClass('is-valid')
@@ -1661,14 +1660,15 @@ function selectEvent(id, event, start, end, location, country) {
     $('#date_end').val(end).addClass('is-valid')
     // select country in dropdown
     $('#country').val(country).addClass('is-valid')
+    document.querySelector('#activity-form [name="values[start]"], #activity-form [name="values[year]"]')?.dispatchEvent(new Event('change', { bubbles: true }));
 
 
-    $('#connected-conference').html(lang('activities.connected_to') + event)
+    $('#connected-conference').text(lang('activities.connected_to') + title)
 
     if ($('#event-select-dropdown').length > 0) {
         $('#event-select-dropdown').removeClass('show')
     }
-    toastSuccess(lang('activities.event_selected', { event }))
+    toastSuccess(lang('activities.event_selected', { event: $('<span>').text(title).html() }))
 
     // remove is_valid after 3 seconds
     setTimeout(function () {
@@ -1680,65 +1680,15 @@ function selectEvent(id, event, start, end, location, country) {
     }, 3000);
 }
 
-function addEvent() {
-    var data = {
-        title: $('#event-title').val(),
-        title_full: $('#event-title_full').val(),
-        start: $('#event-start').val(),
-        end: $('#event-end').val(),
-        location: $('#event-location').val(),
-        country: $('#event-country').val(),
-        type: $('#event-type').val(),
-        url: $('#event-url').val()
-    }
-
-    // check for required
-    var valid = true;
-    ['title', 'start', 'end', 'location'].forEach(function (d) {
-        if (data[d] === '') {
-            $('#' + d).addClass('is-invalid')
-            valid = false
-        }
-    });
-    if (!valid) {
-        toastWarning(lang('activities.please_fill_out_all_required_fields'))
-        return;
-    }
-
-
-    if ($('#event-attended').is(':checked')) {
-        data['participants'] = $('#event-attended').val()
-    }
-
-    $.ajax({
-        type: "POST",
-        data: {
-            values: data
-        },
-        dataType: "json",
-        url: ROOTPATH + '/crud/conferences/add',
-        success: function (response) {
-            console.log(response);
-            if (response.id && response.status == 'warning') {
-                if (response.msg) toastWarning(response.msg)
-                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
-                // close modal
-                window.location.hash = '#event-select'
-                return;
-            } else if (response.msg && response.status == 'error') {
-                toastWarning(response.msg)
-                return;
-            } else {
-                toastSuccess(lang('events.event_added_successfully'))
-                selectEvent(response.id, data.title, data.start, data.end, data.location, data.country)
-                // close modal
-                window.location.hash = '#event-select'
-            }
-            $('.loader').removeClass('show')
-        },
-        error: function (response) {
-            $('.loader').removeClass('show')
-            toastError(response.responseText)
-        }
-    })
-}
+// The embedded editor uses the same configured form as the regular event page.
+window.addEventListener('message', function (event) {
+    const frame = document.getElementById('event-create-frame');
+    if (event.origin !== window.location.origin || !frame || event.source !== frame.contentWindow || event.data?.type !== 'osiris:event-created') return;
+    const result = event.data.result;
+    if (!result?.id || !result.event) return;
+    if (result.status === 'warning' && result.msg) toastWarning(result.msg);
+    else toastSuccess(lang('events.event_added_successfully'));
+    const data = result.event;
+    selectEvent(result.id, data.title, data.start, data.end, data.location, data.country);
+    window.location.hash = '#event-select';
+});

@@ -161,7 +161,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['date', 'important'],
             "section" => "dates",
-            "entities" => ['activities']
+            "entities" => ['activities', 'events']
         ],
         "date-range-ongoing" => [
             "fields" => ["start" => ["year" => 2022, "month" => 9, "day" => 6], "end" => null],
@@ -376,7 +376,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities', 'initiatives']
+            "entities" => ['activities', 'initiatives', 'events']
         ],
         "countries" => [
             "fields" => ["countries" => ['DE', 'AT', 'CH']],
@@ -532,7 +532,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['location'],
             "section" => "locations",
-            "entities" => ['activities', 'initiatives']
+            "entities" => ['activities', 'initiatives', 'events']
         ],
         "magazine" => [
             "fields" => ["magazine" => 'Apothekenumschau'],
@@ -558,7 +558,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "key",
-            "entities" => ['activities', 'initiatives', 'projects']
+            "entities" => ['activities', 'initiatives', 'projects', 'events']
         ],
         "online-ahead-of-print" => [
             "fields" => ["epub" => true],
@@ -999,7 +999,7 @@ class Modules
             "description" => 'Project field: Research topics.',
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => 'general',
-            "entities" => ['projects'],
+            "entities" => ['projects', 'events'],
         ],
         "persons-project" => [
             "fields" => ["persons" => []],
@@ -1044,7 +1044,7 @@ class Modules
             "description" => "Persons associated with this record.",
             "width" => 12, "portfolio" => true,
             "tags" => ['authors', 'people'], "section" => "people",
-            "entities" => ['activities', 'initiatives'],
+            "entities" => ['activities', 'initiatives', 'events'],
         ],
         "persons-role" => [
             "fields" => ["persons" => []],
@@ -1053,7 +1053,43 @@ class Modules
             "description" => "Persons associated with this record, with configurable roles.",
             "width" => 12, "portfolio" => true,
             "tags" => ['authors', 'people'], "section" => "people",
-            "entities" => ['activities', 'initiatives'],
+            "entities" => ['activities', 'initiatives', 'events'],
+        ],
+        "event-title" => [
+            "fields" => ["title" => ''],
+            "name" => "Event short title", "name_de" => "Event-Kurztitel", 'label' => 'common.short_title',
+            "description" => "The event short title as a plain text input.",
+            "width" => 12, "portfolio" => true, "tags" => ['event'], "section" => "general", "entities" => ['events'],
+        ],
+        "event-description" => [
+            "fields" => ["description" => ''],
+            "name" => "Event description", "name_de" => "Event-Beschreibung", 'label' => 'common.description',
+            "description" => "The event description with full text formatting.",
+            "width" => 12, "portfolio" => true, "tags" => ['event'], "section" => "general", "entities" => ['events'],
+        ],
+        "event-public" => [
+            "fields" => ["public" => true],
+            "name" => "Event portfolio visibility", "name_de" => "Event-Sichtbarkeit im Portfolio", 'label' => 'events.show_this_event_in_the_public_portfolio',
+            "description" => "Whether the event appears in the public portfolio. Enabled by default for new events.",
+            "width" => 12, "portfolio" => true, "tags" => ['event'], "section" => "general", "entities" => ['events'],
+        ],
+        "event-type" => [
+            "fields" => ["type" => 'conference'],
+            "name" => "Event type", "name_de" => "Veranstaltungstyp", 'label' => 'common.type',
+            "description" => "Event type from the event-type vocabulary.",
+            "width" => 12, "portfolio" => true, "tags" => ['event'], "section" => "general", "entities" => ['events'],
+        ],
+        "title_full" => [
+            "fields" => ["title_full" => ''],
+            "name" => "Full title", "name_de" => "Vollständiger Titel", 'label' => 'common.full_title',
+            "description" => "The full title of an event.",
+            "width" => 12, "portfolio" => true, "tags" => ['event'], "section" => "general", "entities" => ['events'],
+        ],
+        "url" => [
+            "fields" => ["url" => ''],
+            "name" => "URL", "name_de" => "URL", 'label' => 'common.url',
+            "description" => "The event website.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "links", "entities" => ['events'],
         ],
         "initiatives" => [
             "fields" => ["initiatives" => []],
@@ -1073,7 +1109,7 @@ class Modules
             "description_de" => "Ein oder mehrere Objectives mit diesem Eintrag verknüpfen.",
             "width" => 12, "portfolio" => "impossible",
             "tags" => ['general'], "section" => "",
-            "entities" => ['activities', 'projects', 'proposals'],
+            "entities" => ['activities', 'projects', 'proposals', 'events'],
         ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
@@ -1291,7 +1327,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "key",
-            "entities" => ['activities', 'projects']
+            "entities" => ['activities', 'projects', 'events']
         ],
         "thesis" => [
             "fields" => ["category" => 'doctor'],
@@ -1392,7 +1428,7 @@ class Modules
             "portfolio" => true,
             "tags" => ['general'],
             "section" => "summary",
-            "entities" => ['activities', 'initiatives', 'projects']
+            "entities" => ['activities', 'initiatives', 'projects', 'events']
         ],
         "university" => [
             "fields" => ["university" => null],
@@ -2182,6 +2218,15 @@ class Modules
         }
 
         switch ($module) {
+            case 'event-title':
+            case 'event-description':
+            case 'event-public':
+            case 'event-type':
+            case 'title_full':
+            case 'url':
+                include BASEPATH . '/components/modules/event-fields.php';
+                break;
+
             case 'title-loc':
             case 'name-loc':
             case 'abstract-loc':

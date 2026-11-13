@@ -210,13 +210,11 @@
                 <p><?= lang('admin.journals_description') ?></p>
             </a>
 
-            <?php if ($Settings->featureEnabled('initiatives')) { ?>
-                <a class="card" href="<?= ROOTPATH ?>/admin/initiatives">
-                    <i class="ph-duotone ph-compass" aria-hidden="true"></i>
-                    <b><?= lang('common.initiatives') ?></b>
-                    <p><?= lang('Manage initiatives', 'Verwalte Initiativen') ?></p>
-                </a>
-            <?php } ?>
+            <a class="card" href="<?= ROOTPATH ?>/admin/data-model">
+                <i class="ph-duotone ph-gear-six" aria-hidden="true"></i>
+                <b><?= lang('common.data_model') ?></b>
+                <p><?= lang('Manage other data model settings', 'Verwalte weitere Datenmodell-Einstellungen') ?></p>
+            </a>
 
         </div><?php endif; ?>
 

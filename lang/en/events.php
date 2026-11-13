@@ -11,6 +11,8 @@ return [
     'do_you_want_to_delete_this_event' => 'Do you want to delete this event?',
     'participating_persons' => 'Participating persons',
     'withdraw_participation' => 'Withdraw participation',
+    'invalid_event_type' => 'Please select a valid event type.',
+    'i_participate' => 'I participate',
     'participate' => 'Participate',
     'no_one_will_participate_or_has_participated' => 'No one will participate or has participated',
     'interested_persons' => 'Interested persons',

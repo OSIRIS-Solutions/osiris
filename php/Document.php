@@ -126,6 +126,12 @@ class Document extends Settings
         "person-only" => ["name"],
         "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
+        "event-title" => ["title"],
+        "event-description" => ["description"],
+        "event-public" => ["public"],
+        "event-type" => ["type"],
+        "title_full" => ["title_full"],
+        "url" => ["url"],
         "initiatives" => ["initiatives"],
         "objectives" => ["objectives"],
         "projects" => ["projects"],
@@ -1278,6 +1284,19 @@ class Document extends Settings
         return $value;
     }
 
+    /** Render event fields without activity-specific initialization. */
+    public function getEventField(array $event, string $module)
+    {
+        $this->doc = $event;
+        if ($module === 'topics') return $this->printTopics($event['topics'] ?? [], '', false);
+        if ($module === 'tags') return $this->printTags($event['tags'] ?? [], 'conferences');
+        $value = $this->get_field($module);
+        $customFormat = $this->custom_fields[$module]['format'] ?? null;
+        if (($customFormat !== null && !in_array($customFormat, ['url', 'text-format'], true))
+            || in_array($module, ['title', 'title_full', 'name', 'subtitle', 'location', 'country', 'event-type'], true)) return nl2br(e($value));
+        return $value;
+    }
+
     /** Format project modules without initializing an activity type or schema. */
     public function getProjectField(Project $project, string $module)
     {
@@ -1368,8 +1387,17 @@ class Document extends Settings
                 $start = $this->doc[$startKey] ?? $this->doc[$startKey . '_date'] ?? null;
                 $end = $this->doc[$endKey] ?? $this->doc[$endKey . '_date'] ?? null;
                 return implode(' – ', array_filter([empty($start) ? '' : self::format_date($start), empty($end) ? '' : self::format_date($end)]));
+            case 'event-title':
+                return e($this->getVal('title'));
+            case 'event-description':
+                return $this->getVal('description');
+            case 'event-public':
+                return '<span class="badge ' . (!empty($this->doc['public']) ? 'success' : 'signal') . '">' . e(translate(!empty($this->doc['public']) ? 'common.shown' : 'common.not_shown')) . '</span>';
+            case 'event-type':
+                return $Vocabulary->getValue('event-type', $this->doc['type'] ?? '');
+            case 'url':
             case 'website':
-                $website = (string) ($this->doc['website'] ?? '');
+                $website = (string) ($this->doc[$module] ?? '');
                 if ($website === '') return '';
                 if ($this->usecase === 'print' || !preg_match('~^https?://~i', $website)) return e($website);
                 return '<a href="' . e($website) . '" target="_blank" rel="noopener noreferrer">' . e($website) . '</a>';
