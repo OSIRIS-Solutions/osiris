@@ -327,6 +327,7 @@ Route::get('/admin/initiatives/fields', function () {
         abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
     }
 
+    require_once BASEPATH . '/php/Initiatives.php';
     $type = $osiris->adminGeneral->findOne(['id' => 'initiative-fields']);
     if (empty($type)) {
         $type = [
@@ -336,7 +337,7 @@ Route::get('/admin/initiatives/fields', function () {
             'fields' => []
         ];
     }
-    $fields = DB::doc2Arr($type['fields'] ?? []);
+    $fields = Initiatives::fields($osiris);
     
     $name = lang('Initiatives', 'Initiativen');
 

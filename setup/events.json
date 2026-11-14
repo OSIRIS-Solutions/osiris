@@ -1,0 +1,16 @@
+{
+  "id": "event-fields",
+  "fields": [
+    {"id": "event-title", "type": "field", "props": {"required": true}},
+    {"id": "title_full", "type": "field", "props": {}},
+    {"id": "event-type", "type": "field", "props": {"required": true}},
+    {"id": "event-description", "type": "field", "props": {}},
+    {"id": "date-range", "type": "field", "props": {"required": true, "width": 12}},
+    {"id": "location", "type": "field", "props": {"required": true, "width": 6}},
+    {"id": "country", "type": "field", "props": {"width": 6}},
+    {"id": "url", "type": "field", "props": {}},
+    {"id": "topics", "type": "field", "props": {}},
+    {"id": "tags", "type": "field", "props": {}},
+    {"id": "event-public", "type": "field", "props": {}}
+  ]
+}

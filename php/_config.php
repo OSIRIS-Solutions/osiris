@@ -188,7 +188,7 @@ function validateValues($values, $DB, ?string $entity = null)
             $values['open_access'] = $value != 'closed';
         } else if ($key == 'title' || $key == 'title_de') {
             // strip <p> tags
-            $values[$key] = str_replace(['<p>', '</p>'], ' ', $value);
+            $values[$key] = str_replace(['<p>', '</p>'], ' ', $value ?? '');
             $values[$key] = trim($values[$key]);
             if ($values[$key] === '' || $values[$key] == '<br>' || $values[$key] == '<br/>') {
                 $values[$key] = null;

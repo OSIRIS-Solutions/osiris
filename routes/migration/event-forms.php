@@ -1,6 +1,7 @@
 <?php
 /** Initialize the event form or rename draft module IDs; event data and field properties stay unchanged. */
 require_once BASEPATH . '/php/EventForms.php';
+setupDefaults($osiris, ['events']);
 $definition = $osiris->adminGeneral->findOne(['id' => 'event-fields']);
 $fields = isset($definition['fields'])
     ? EventForms::upgradeFields(DB::doc2Arr($definition['fields']))

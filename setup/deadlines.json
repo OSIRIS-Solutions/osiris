@@ -1,0 +1,10 @@
+{
+  "id": "deadline-fields",
+  "fields": [
+    {"id": "deadline-title", "type": "field", "props": {"required": true}},
+    {"id": "deadline-date", "type": "field", "props": {"required": true}},
+    {"id": "deadline-type", "type": "field", "props": {"required": true}},
+    {"id": "deadline-description", "type": "field", "props": {}},
+    {"id": "url", "type": "field", "props": {}}
+  ]
+}

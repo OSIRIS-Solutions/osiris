@@ -1,0 +1,129 @@
+[
+  {
+    "id": "third-party",
+    "icon": "hand-coins",
+    "color": "#b61f29",
+    "name": "Third-party funding",
+    "name_de": "Drittmittel",
+    "subprojects": true,
+    "phases": [
+      {
+        "id": "draft",
+        "name": "Draft",
+        "name_de": "Entwurf",
+        "color": "muted",
+        "fields": [
+          {"id": "name-loc", "type": "field", "props": {"required": true}},
+          {"id": "title-loc", "type": "field", "props": {}},
+          {"id": "project-date-proposed", "type": "field", "props": {}},
+          {"id": "persons-project", "type": "field", "props": {"required": true}},
+          {"id": "abstract-loc", "type": "field", "props": {}}
+        ]
+      },
+      {
+        "id": "proposed",
+        "name": "Proposed",
+        "name_de": "Beantragt",
+        "color": "signal",
+        "fields": [
+          {"type": "heading", "props": {"text": "Submission", "text_de": "Einreichung"}},
+          {"id": "submission_date", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "General information", "text_de": "Allgemeine Informationen"}},
+          {"id": "name-loc", "type": "field", "props": {"required": true, "label": "Short title", "label_de": "Kurztitel"}},
+          {"id": "title-loc", "type": "field", "props": {"required": true, "label": "Full Title", "label_de": "Kompletter Titel"}},
+          {"id": "project-date-proposed", "type": "field", "props": {"required": true}},
+          {"id": "purpose", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "Persons", "text_de": "Personen"}},
+          {"id": "persons-project", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "Funding", "text_de": "Förderung"}},
+          {"id": "funder", "type": "field", "props": {"required": true}},
+          {"id": "funding_organization", "type": "field", "props": {"required": true}},
+          {"id": "institute-role", "type": "field", "props": {"required": false}},
+          {"id": "coordinator", "type": "field", "props": {"required": true}},
+          {"id": "funding_type", "type": "field", "props": {"required": true}},
+          {"id": "project_type", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Grant sum in Euro", "text_de": "Fördermittel in Euro"}},
+          {"id": "grant_sum_proposed", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Project description", "text_de": "Projektbeschreibung"}},
+          {"id": "abstract-loc", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Nagoya Protocol", "text_de": "Nagoya-Protokoll"}},
+          {"id": "nagoya", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Resources and Personnel", "text_de": "Ressourcen und Personal"}},
+          {"id": "personnel", "type": "field", "props": {"required": false}},
+          {"id": "ressources", "type": "field", "props": {"required": false}},
+          {"id": "initiatives", "type": "field", "props": {"required": false}}
+        ]
+      },
+      {
+        "id": "approved",
+        "name": "Approved",
+        "name_de": "Bewilligt",
+        "color": "success",
+        "fields": [
+          {"type": "heading", "props": {"text": "Approval", "text_de": "Bewilligung"}},
+          {"id": "approval_date", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "General information", "text_de": "Allgemeine Informationen"}},
+          {"id": "name-loc", "type": "field", "props": {"required": true, "label": "Short title", "label_de": "Kurztitel"}},
+          {"id": "title-loc", "type": "field", "props": {"required": true, "label": "Full Title", "label_de": "Kompletter Titel"}},
+          {"id": "project-date", "type": "field", "props": {"required": true}},
+          {"id": "internal_number", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Persons", "text_de": "Personen"}},
+          {"id": "persons-project", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "Funding", "text_de": "Förderung"}},
+          {"id": "funding_number", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "Grant sum in Euro", "text_de": "Fördermittel in Euro"}},
+          {"id": "grant_sum", "type": "field", "props": {"required": false}},
+          {"id": "kdsf-ffk", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Nagoya Protocol", "text_de": "Nagoya-Protokoll"}},
+          {"id": "nagoya", "type": "field", "props": {"required": false}}
+        ]
+      },
+      {
+        "id": "rejected",
+        "name": "Rejected",
+        "name_de": "Abgelehnt",
+        "color": "danger",
+        "fields": [
+          {"type": "heading", "props": {"text": "Rejection", "text_de": "Ablehnung"}},
+          {"id": "rejection_date", "type": "field", "props": {"required": true}},
+          {"id": "comment", "type": "field", "props": {"required": false}}
+        ]
+      },
+      {
+        "id": "project",
+        "name": "Project",
+        "name_de": "Projekt",
+        "color": "primary",
+        "fields": [
+          {"type": "heading", "props": {"text": "General information", "text_de": "Allgemeine Informationen"}},
+          {"id": "name-loc", "type": "field", "props": {"required": true, "label": "Short title", "label_de": "Kurztitel"}},
+          {"id": "title-loc", "type": "field", "props": {"required": true, "label": "Full Title", "label_de": "Kompletter Titel"}},
+          {"id": "project-date", "type": "field", "props": {"required": true}},
+          {"id": "purpose", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Persons", "text_de": "Personen"}},
+          {"id": "persons-project", "type": "field", "props": {"required": true}},
+          {"type": "heading", "props": {"text": "Funding", "text_de": "Förderung"}},
+          {"id": "funder", "type": "field", "props": {"required": true}},
+          {"id": "funding_organization", "type": "field", "props": {"required": false}},
+          {"id": "funding_number", "type": "field", "props": {"required": false}},
+          {"id": "institute-role", "type": "field", "props": {"required": false}},
+          {"id": "coordinator", "type": "field", "props": {"required": false}},
+          {"id": "funding_type", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Project description", "text_de": "Projektbeschreibung"}},
+          {"id": "abstract-loc", "type": "field", "props": {"required": false}},
+          {"id": "website", "type": "field", "props": {"required": false}},
+          {"id": "kdsf-ffk", "type": "field", "props": {"required": false}},
+          {"type": "heading", "props": {"text": "Countries you will do research on/in:", "text_de": "Länder über/in denen Forschung betrieben wird:"}},
+          {"id": "research-countries", "type": "field", "props": {"required": false}},
+          {"id": "topics", "type": "field", "props": {"required": false}},
+          {"id": "image", "type": "field", "props": {"required": false}},
+          {"id": "initiatives", "type": "field", "props": {"required": false}}
+        ]
+      }
+    ],
+    "disabled": false,
+    "portfolio": true,
+    "process": "proposal",
+    "stage": 2
+  }
+]

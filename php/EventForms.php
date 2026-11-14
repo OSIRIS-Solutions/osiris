@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/FormBuilder.php';
+require_once __DIR__ . '/../setup/defaults.php';
 require_once __DIR__ . '/Initiatives.php';
 
 /** One form definition for event editing, quick creation and details. */
@@ -18,14 +19,7 @@ final class EventForms
 
     public static function defaults(): array
     {
-        $fields = [];
-        foreach (['event-title', 'title_full', 'event-type', 'event-description', 'date-range', 'location', 'country', 'url', 'topics', 'tags', 'event-public'] as $id) {
-            $props = [];
-            if (in_array($id, ['location', 'country'], true)) $props['width'] = 6;
-            if ($id === 'date-range') $props['width'] = 12;
-            $fields[] = ['id' => $id, 'type' => 'field', 'props' => $props];
-        }
-        return FormBuilder::prepareFields($fields, self::SYSTEM_FIELDS);
+        return FormBuilder::prepareFields(setupDefinition('events')['fields'], self::SYSTEM_FIELDS);
     }
 
     /** Rename the initial draft's module IDs without changing stored event fields or form properties. */

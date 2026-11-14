@@ -448,6 +448,9 @@ Route::get('/install', function () {
     // make sure to create an index
     $osiris->activities->createIndex(['rendered.plain' => 'text']);
 
+    require_once BASEPATH . "/setup/defaults.php";
+    setupDefaults($osiris);
+
     // last step: write Version number to database
     $osiris->system->deleteMany(['key' => 'version']);
     $osiris->system->insertOne(
@@ -659,6 +662,7 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/project-forms.php";
         include BASEPATH . "/routes/migration/event-forms.php";
         include BASEPATH . "/routes/migration/deadline-forms.php";
+        include BASEPATH . "/routes/migration/initiative-forms.php";
         flush();
         ob_flush();
         $rerender = false;

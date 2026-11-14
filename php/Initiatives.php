@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/FormBuilder.php';
+require_once __DIR__ . '/../setup/defaults.php';
 
 /** Shared rules for initiative forms and their simple objectives. */
 final class Initiatives
@@ -9,7 +10,7 @@ final class Initiatives
     {
         $definition = $database->adminGeneral->findOne(['id' => 'initiative-fields']);
         return FormBuilder::prepareFields(
-            DB::doc2Arr($definition['fields'] ?? []),
+            DB::doc2Arr($definition['fields'] ?? setupDefinition('initiatives')['fields']),
             FormBuilder::INITIATIVE_SYSTEM_FIELDS
         );
     }

@@ -1,0 +1,10 @@
+{
+  "id": "initiative-fields",
+  "fields": [
+    {"id": "name", "type": "field", "props": {"required": true}},
+    {"id": "title", "type": "field", "props": {}},
+    {"id": "description", "type": "field", "props": {}},
+    {"id": "date-range-ongoing", "type": "field", "props": {"required": true}},
+    {"id": "persons-role", "type": "field", "props": {}}
+  ]
+}

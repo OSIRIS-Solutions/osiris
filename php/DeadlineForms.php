@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/FormBuilder.php';
+require_once __DIR__ . '/../setup/defaults.php';
 require_once __DIR__ . '/Initiatives.php';
 
 /** One form definition for deadline editing and details. */
@@ -17,11 +18,7 @@ final class DeadlineForms
 
     public static function defaults(): array
     {
-        $fields = [];
-        foreach (['deadline-title', 'deadline-date', 'deadline-type', 'deadline-description', 'url'] as $id) {
-            $fields[] = ['id' => $id, 'type' => 'field', 'props' => []];
-        }
-        return FormBuilder::prepareFields($fields, self::SYSTEM_FIELDS);
+        return FormBuilder::prepareFields(setupDefinition('deadlines')['fields'], self::SYSTEM_FIELDS);
     }
 
     public static function builder(): FormBuilder

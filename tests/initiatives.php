@@ -13,6 +13,7 @@ define('OSIRIS_VERSION', 'test');
 define('CURRENTYEAR', 2026);
 define('OSIRIS_BASE_LANGUAGE', 'en');
 require BASEPATH . '/vendor/autoload.php';
+require BASEPATH . '/setup/defaults.php';
 // Keep the production normalizers, but replace the page-rendering abort handler.
 $configSource = file_get_contents(BASEPATH . '/php/_config.php');
 $abortStart = strpos($configSource, 'function abortwith(');
@@ -192,7 +193,7 @@ function postRoute(string $pattern, array $input, ...$args): void {
 }
 
 $fields = Initiatives::fields($osiris);
-check(array_column($fields, 'id') === ['name', 'date-range-ongoing'], 'New forms include system fields.');
+check(array_column($fields, 'id') === ['name', 'title', 'description', 'date-range-ongoing', 'persons-role'], 'New forms include the initiative starter fields.');
 $config = new FormBuilder('Test', '', entity: 'initiatives', systemFields: FormBuilder::INITIATIVE_SYSTEM_FIELDS);
 check(isset($config->modules['name'], $config->modules['date-range-ongoing']), 'System fields are offered for initiatives.');
 check(!isset($config->modules['doi']), 'Activity-only fields are excluded.');
