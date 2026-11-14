@@ -26,44 +26,6 @@
 
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
-
-        <h5>
-            <?= lang('admin.languages') ?>
-        </h5>
-
-        <?php
-        $installed_lang = [
-            'en',
-            'de',
-            'it',
-            'ja',
-            'es',
-            'fr',
-            'pl',
-            'nl'
-        ];
-        $langs = $Settings->languages();
-        if (!is_array($langs) || empty($langs)) {
-            $langs = ['en', 'de'];
-        }
-        foreach ($installed_lang as $lang) { ?>
-            <div class="custom-checkbox mb-5 d-flex">
-                <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked' : '' ?>>
-                <label for="lang-select-<?= $lang ?>"><?= lang('common.lang_' . $lang) ?></label>
-
-                <a href="<?= ROOTPATH ?>/admin/language-override/<?= $lang ?>" class="ml-auto">
-                    <?= lang('admin.language_override') ?>
-                </a>
-            </div>
-        <?php } ?>
-
-        <span class="text-muted">
-            <?= lang('admin.language_description') ?>
-        </span>
-
-
-
-        <hr>
         <h5>
             <?= lang('admin.general_charts') ?>
         </h5>
