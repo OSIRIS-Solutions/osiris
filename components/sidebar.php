@@ -134,30 +134,6 @@ $cart = readCart();
                         <?= lang('action.add_event') ?>
                     </a>
                 <?php } ?>
-                <?php if ($Settings->featureEnabled('infrastructures') && $Settings->hasPermission('infrastructures.edit')) {
-                    $header_infras = $osiris->infrastructures->find([
-                        'statistic_frequency' => 'irregularly',
-                        'persons' => [
-                            '$elemMatch' => [
-                                'user' => $_SESSION['username'],
-                                'reporter' => true
-                            ]
-                        ],
-                        'start_date' => ['$lte' => CURRENTYEAR . '-12-31'],
-                        '$or' => [
-                            ['end_date' => null],
-                            ['end_date' => ['$gte' => CURRENTYEAR . '-01-01']]
-                        ],
-                    ]);
-                    foreach ($header_infras as $inf) {
-                ?>
-                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $inf['_id'] ?>?edit-stats=<?= date('Y-m-d') ?>">
-                            <i class="ph ph-cube-transparent"></i>
-                            <?= lang('common.statistics_for') . $inf['name'] ?>
-                        </a>
-                <?php
-                    }
-                } ?>
             </div>
         </nav>
 

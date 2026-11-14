@@ -39,33 +39,23 @@ $end = $form['end_date'] ?? '';
             <tr>
                 <th>
                     <?= lang('common.person') ?><br>
-                    <span class="badge kdsf m-0">
-                        KDSF-B-13-16-A
-                    </span>
+
                 </th>
                 <th>
                     <?= lang('common.role') ?>
-                    <span class="badge kdsf m-0">
-                        KDSF-B-13-16-E
-                    </span>
+
                 </th>
                 <th>
                     <?= lang('infrastructures.scope_fte') ?>
-                    <span class="badge kdsf m-0">
-                        KDSF-B-13-16-D
-                    </span>
+
                 </th>
                 <th>
                     <?= lang('common.start') ?>
-                    <span class="badge kdsf m-0">
-                        KDSF-B-13-16-B
-                    </span>
+
                 </th>
                 <th>
                     <?= lang('common.end') ?>
-                    <span class="badge kdsf m-0">
-                        KDSF-B-13-16-C
-                    </span>
+
                 </th>
                 <th>
                     <?= lang('infrastructures.reporter_required') ?>

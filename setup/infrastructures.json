@@ -1,0 +1,77 @@
+{
+  "id": "infrastructure-fields",
+  "fields": [
+    {
+      "id": "infrastructure-id",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "infrastructure-date",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "name-loc",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "subtitle-loc",
+      "type": "field",
+      "props": {}
+    },
+    {
+      "id": "description-loc",
+      "type": "field",
+      "props": {}
+    },
+    {
+      "id": "infrastructure-category",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "infrastructure-type",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "infrastructure-access",
+      "type": "field",
+      "props": {
+        "required": true
+      }
+    },
+    {
+      "id": "infrastructure-link",
+      "type": "field",
+      "props": {}
+    },
+    {
+      "id": "contact-email",
+      "type": "field",
+      "props": {}
+    },
+    {
+      "id": "topics",
+      "type": "field",
+      "props": {}
+    },
+    {
+      "id": "infrastructure-collaborative",
+      "type": "field",
+      "props": {}
+    }
+  ]
+}

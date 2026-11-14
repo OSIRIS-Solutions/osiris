@@ -88,8 +88,8 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
             if ($entity) {
                 $featuredCard['type_label'] = $Settings->infrastructureLabel();
                 $featuredCard['icon'] = 'ph-microscope';
-                $featuredCard['title'] = $entity['name'] ?? '';
-                $featuredCard['subtitle'] = $entity['subtitle'] ?? '';
+                $featuredCard['title'] = localized($entity['name'] ?? '');
+                $featuredCard['subtitle'] = localized($entity['subtitle'] ?? '');
                 $featuredCard['url'] = ROOTPATH . '/infrastructures/view/' . ($entity['_id'] ?? $featuredId);
             }
             break;
@@ -449,7 +449,7 @@ if ($Settings->hasPermission('news.edit')) { ?>
                 <div class="connection">
                     <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructure') ?></span>
                     <h5>
-                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                        <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= e(localized($infrastructure['name'])); ?> </a>
                     </h5>
                     <p><?= $infrastructure['subtitle'] ?? '' ?></p>
                 </div>

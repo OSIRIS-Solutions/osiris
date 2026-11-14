@@ -1005,7 +1005,7 @@ Route::get('/portfolio/(person)/([^/]*)/infrastructures', function ($context, $i
         }
         $result[] = [
             'id' => $infrastructure['id'],
-            'name' => $infrastructure['name'],
+            'name' => apiLocalized($infrastructure['name']),
             'role' => $Infra->getRole($p['role'] ?? null),
             'start' => $self['start'] ?? '',
             'end' => $self['end'] ?? '',
@@ -1476,7 +1476,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             if (empty($infrastructure)) continue;
             $result['infrastructures'][] = [
                 'id' => $infrastructure['id'],
-                'name' => $infrastructure['name'],
+                'name' => apiLocalized($infrastructure['name']),
                 'subtitle' => $infrastructure['subtitle'] ?? null,
                 'start' => $infrastructure['start_date'] ?? null,
                 'end' => $infrastructure['end_date'] ?? null,
@@ -2014,7 +2014,7 @@ Route::get('/portfolio/person/([^/]*)', function ($id) {
             }
             $result['infrastructures'][] = [
                 'id' => $infrastructure['id'],
-                'name' => $infrastructure['name'],
+                'name' => apiLocalized($infrastructure['name']),
                 'role' => $Infra->getRole($self['role'] ?? null),
                 'start' => $self['start'] ?? '',
                 'end' => $self['end'] ?? '',
@@ -2502,7 +2502,7 @@ Route::get('/portfolio/infrastructures', function () {
         'public' => true,
     ];
     $options = [
-        'sort' => ['name' => 1],
+        'sort' => ['name.en' => 1],
         'projection' => [
             'id' => 1,
             'name' => 1,
@@ -2525,7 +2525,7 @@ Route::get('/portfolio/infrastructures', function () {
     )->toArray();
     foreach ($data as $infrastructure) {
         $infrastructure['logo'] = $Infra->getLogo($infrastructure);
-        $result[] = $infrastructure;
+        $result[] = portfolio_localized_fields($infrastructure, ['name', 'subtitle', 'description']);
     }
 
     echo rest($result);
@@ -2697,7 +2697,7 @@ Route::get('/portfolio/infrastructure/([^/]*)', function ($id) {
     }
 
 
-    echo rest($infrastructure);
+    echo rest(portfolio_localized_fields($infrastructure, ['name', 'subtitle', 'description']));
 });
 
 
@@ -3192,10 +3192,10 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             if ($featured && $featuredType == 'infrastructure' && $doc['id'] == $featuredId) {
                 $featuredCard['type_label'] = $Settings->infrastructureLabel();
                 $featuredCard['icon'] = 'ph-microscope';
-                $featuredCard['title'] = ($doc['name'] ?? '');
-                $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
+                $featuredCard['title'] = (apiLocalized($doc['name'] ?? ''));
+                $featuredCard['subtitle'] = (apiLocalized($doc['subtitle'] ?? ''));
             } else {
-                $infrastructures[] = DB::doc2Arr($doc);
+                $infrastructures[] = portfolio_localized_fields($doc, ['name', 'subtitle']);
             }
         }
         $news['infrastructures'] = $infrastructures;
@@ -3417,12 +3417,12 @@ Route::get('/portfolio/search-index', function () {
         foreach ($data as $infrastructure) {
             $infrastructure = DB::doc2Arr($infrastructure);
             $infrastructure['search'] = $buildSearchText(
-                $infrastructure['name'] ?? null,
+                implode(' ', DB::doc2Arr($infrastructure['name'] ?? [])),
                 $infrastructure['name_de'] ?? null,
-                $infrastructure['subtitle'] ?? null,
+                implode(' ', DB::doc2Arr($infrastructure['subtitle'] ?? [])),
                 $infrastructure['subtitle_de'] ?? null
             );
-            $infrastructures[] = $infrastructure;
+            $infrastructures[] = portfolio_localized_fields($infrastructure, ['name', 'subtitle']);
         }
     }
 

@@ -37,18 +37,11 @@ foreach ($persons as $p) {
 include_once BASEPATH . '/php/Vocabulary.php';
 $Vocabulary = new Vocabulary();
 
-$data_fields = $Settings->get('infrastructure-data');
-if (!is_null($data_fields)) {
-    $data_fields = DB::doc2Arr($data_fields);
-} else {
-    $fields = file_get_contents(BASEPATH . '/data/infrastructure-fields.json');
-    $fields = json_decode($fields, true);
-
-    $data_fields = array_filter($fields, function ($field) {
-        return $field['default'] ?? false;
-    });
-    $data_fields = array_column($data_fields, 'id');
-}
+require_once BASEPATH . '/php/InfrastructureForms.php';
+$infrastructureFields = InfrastructureForms::visibleFields($osiris, $Settings);
+$data_fields = [];
+$config = InfrastructureForms::builder();
+foreach ($infrastructureFields as $field) $data_fields = array_merge($data_fields, $config->modules[$field['id'] ?? '']['fields'] ?? []);
 
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
@@ -194,7 +187,7 @@ if ($edit_perm) { ?>
         <div class="col flex-grow-0">
             <div class="position-relative">
                 <?php
-                $Infra->printLogo($infrastructure, 'infrastructure-logo', lang('common.logo_of') . ' ' . $infrastructure['name']);
+                $Infra->printLogo($infrastructure, 'infrastructure-logo', lang('common.logo_of') . ' ' . localized($infrastructure['name']));
                 ?>
 
                 <?php if ($edit_perm) { ?>
@@ -204,12 +197,12 @@ if ($edit_perm) { ?>
         </div>
         <div class="col ml-20">
             <h1 class="title mt-0">
-                <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                <?= e(localized($infrastructure['name'])) ?>
             </h1>
 
-            <h2 class="subtitle">
-                <?= lang($infrastructure['subtitle'], $infrastructure['subtitle_de'] ?? null) ?>
-            </h2>
+            <?php if (in_array('subtitle', $data_fields, true) && !empty(localized($infrastructure['subtitle'] ?? ''))): ?>
+                <h2 class="subtitle"><?= e(localized($infrastructure['subtitle'])) ?></h2>
+            <?php endif; ?>
 
             <!-- show research topics -->
             <?php
@@ -233,119 +226,45 @@ if ($edit_perm) { ?>
 
         <div class="col-md-6">
             <table class="table small mt-0" id="infrastructure-details">
-                <tr>
-                    <td>
-                        <span class="key">ID: </span>
-                        <?= $infrastructure['id'] ?? '-' ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('common.start_date') ?>: </span>
-                        <?= format_date($infrastructure['start_date']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="key"><?= lang('common.end_date') ?>: </span>
-                        <?php if (!empty($infrastructure['end_date'])) {
-                            echo '<span class="badge signal">' . format_date($infrastructure['end_date']) . '</span>';
-                        } else {
-                            echo '<span class="badge primary">' . lang('infrastructures.open') . '</span>';
-                        } ?>
-                    </td>
-                </tr>
-                <?php if ($active('type')) { ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.category') ?>: </span>
-                            <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <?php if ($active('infrastructure_type')) { ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.type_statistics') ?>: </span>
-                            <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <?php if ($active('access')) { ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.user_access') ?>: </span>
-                            <?= $Vocabulary->getValue('infrastructure-access', $infrastructure['access'] ?? '-') ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <?php if ($active('collaborative') && $infrastructure['collaborative'] ?? false) { ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('infrastructures.collaborative_infrastructure') ?>: </span>
-                            <a href="#collaborative" class="badge success"><?= count($infrastructure['collaborators'] ?? []) ?> <?= lang('infrastructures.partners') ?></a>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <?php if ($active('link') && !empty($infrastructure['link'])) : ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.link') ?>: </span>
-                            <a href="<?= e($infrastructure['link']) ?>" target="_blank"><?= e($infrastructure['link']) ?></a>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <?php if ($active('contact_email') && !empty($infrastructure['contact_email'])) : ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.contact_email') ?>: </span>
-                            <a href="mailto:<?= e($infrastructure['contact_email']) ?>"><?= e($infrastructure['contact_email']) ?></a>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <!-- visibility -->
-                <?php if ($Settings->featureEnabled('portal')) {
-                    $public = $infrastructure['public'] ?? false;
-                ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= lang('common.portfolio_visibility') ?>: </span>
-                            <?php if ($public) { ?>
-                                <span class="badge success">
-                                    <i class="ph ph-globe m-0"></i> <?= lang('common.shown') ?>
-                                </span>
-                            <?php } else { ?>
-                                <span class="badge signal">
-                                    <i class="ph ph-globe-x m-0"></i> <?= lang('common.not_shown') ?>
-                                </span>
-                            <?php } ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-
                 <?php
-                require_once BASEPATH . '/php/CustomFields.php';
-                $CustomFields = new CustomFields($infrastructure);
-                foreach ($CustomFields->fields as $field) {
-                    if (!$active($field['id']) || !isset($infrastructure[$field['id']])) continue;
+                require_once BASEPATH . '/php/Modules.php';
+                require_once BASEPATH . '/php/Document.php';
+                $modules = new Modules(DB::doc2Arr($infrastructure));
+                $modules->setFields($infrastructureFields);
+                $document = new Document(false, 'list');
+                foreach ($infrastructureFields as $field):
+                    $id = $field['id'] ?? '';
+                    $type = $field['type'] ?? 'field';
+                    $props = $field['props'] ?? [];
+                    if (in_array($id, ['name-loc', 'subtitle-loc', 'description-loc'], true)) continue;
                 ?>
-                    <tr>
-                        <td>
-                            <span class="key"><?= $CustomFields->name($field['id']) ?></span>
-                            <?= $CustomFields->value($field['id'], '-') ?>
-                        </td>
-                    </tr>
-                <?php } ?>
+                    <tr><td>
+                        <?php if ($type === 'heading'): ?>
+                            <strong><?= e(lang($props['text'] ?? '', $props['text_de'] ?? null)) ?></strong>
+                        <?php elseif ($type === 'paragraph'): ?>
+                            <?= nl2br(e(lang($props['text'] ?? '', $props['text_de'] ?? null))) ?>
+                        <?php elseif ($type === 'hr'): ?><hr>
+                        <?php else: ?>
+                            <span class="key"><?= e($modules->get_name($id)) ?></span>
+                            <?= $document->getInfrastructureField(DB::doc2Arr($infrastructure), $id) ?: '-' ?>
+                        <?php endif; ?>
+                    </td></tr>
+                <?php endforeach; ?>
+                <?php if ($Settings->featureEnabled('portal') && $edit_perm): ?>
+                    <tr><td><span class="key"><?= translate('common.public') ?></span><span class="badge"><?= translate(!empty($infrastructure['public']) ? 'common.shown' : 'common.not_shown') ?></span></td></tr>
+                <?php endif; ?>
             </table>
         </div>
+        <?php if (in_array('description', $data_fields, true)): ?>
         <div class="col-md-6">
             <div class="box padded mt-0" id="description" style="height: 100%;max-height: 400px;overflow-y: auto;">
                 <h3 class="title">
                     <?= lang('infrastructures.about') ?>
                 </h3>
-                <?= ($infrastructure['description'] ?? '-') ?>
+                <?= localized($infrastructure['description'] ?? '-') ?>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 
     <script>
@@ -504,14 +423,6 @@ if ($edit_perm) { ?>
 
     <?php if ($reporter || $Settings->hasPermission('infrastructures.statistics') || $edit_perm) {
 
-        $kdsf_mapping = [
-            'internal' => 'KDSF-B-13-8-B',
-            'national' => 'KDSF-B-13-8-C',
-            'international' => 'KDSF-B-13-8-D',
-            'hours' => 'KDSF-B-13-9-B',
-            'accesses' => 'KDSF-B-13-10-B',
-        ];
-
     ?>
 
         <button type="button" class="btn" id="add-stat-btn" onclick="$('#infra-stat-edit-box').toggleClass('hidden');">
@@ -567,9 +478,7 @@ if ($edit_perm) { ?>
                         </label>
                         <input type="number" class="form-control w-200" name="values[<?= $key['id'] ?>]" id="<?= $key['id'] ?>" value="0" />
 
-                        <?php if (!empty($kdsf_mapping[$key['id']])): ?>
-                            <span class="badge kdsf"><?= $kdsf_mapping[$key['id']] ?? '' ?></span>
-                        <?php endif; ?>
+
                     </div>
                 <?php } ?>
                 <!-- comment -->

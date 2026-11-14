@@ -682,7 +682,17 @@ class Modules
             "description_de" => "Mehrsprachiges Feld für Name in den konfigurierten Inhaltssprachen.",
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => "summary",
-            "entities" => ['activities', 'initiatives', 'projects'],
+            "entities" => ['activities', 'initiatives', 'projects', 'infrastructures'],
+        ],
+        "subtitle-loc" => [
+            "fields" => ["subtitle" => ['en' => '', 'de' => '']],
+            "name" => "Subtitle (localized)", "name_de" => "Untertitel (mehrsprachig)",
+            'label' => 'common.subtitle',
+            "description" => "A multilingual subtitle using the configured content languages.",
+            "description_de" => "Mehrsprachiges Feld für Untertitel in den konfigurierten Inhaltssprachen.",
+            "width" => 12, "portfolio" => true,
+            "tags" => ['general'], "section" => "summary",
+            "entities" => ['activities', 'initiatives', 'projects', 'events', 'infrastructures'],
         ],
         "abstract-loc" => [
             "fields" => ["abstract" => ['en' => '', 'de' => '']],
@@ -711,7 +721,7 @@ class Modules
             "description_de" => "Mehrsprachiges Feld für Beschreibung in den konfigurierten Inhaltssprachen.",
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => "summary",
-            "entities" => ['activities', 'initiatives', 'projects'],
+            "entities" => ['activities', 'initiatives', 'projects', 'infrastructures'],
         ],
         'acronym' => [
             "fields" => ['acronym' => ''],
@@ -999,7 +1009,7 @@ class Modules
             "description" => 'Project field: Research topics.',
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => 'general',
-            "entities" => ['projects', 'events'],
+            "entities" => ['projects', 'events', 'infrastructures'],
         ],
         "persons-project" => [
             "fields" => ["persons" => []],
@@ -1054,6 +1064,54 @@ class Modules
             "width" => 12, "portfolio" => true,
             "tags" => ['authors', 'people'], "section" => "people",
             "entities" => ['activities', 'initiatives', 'events', 'deadlines'],
+        ],
+        "infrastructure-id" => [
+            "fields" => ['id' => ''],
+            "name" => "Infrastructure ID", "name_de" => "Infrastruktur-ID", 'label' => 'common.id',
+            "description" => "Infrastructure ID.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-date" => [
+            "fields" => ['start_date' => '', 'end_date' => ''],
+            "name" => "Infrastructure dates", "name_de" => "Infrastruktur-Laufzeit", 'label' => 'projects.project_dates',
+            "description" => "Infrastructure dates.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-category" => [
+            "fields" => ['type' => ''],
+            "name" => "Infrastructure category", "name_de" => "Infrastruktur-Kategorie", 'label' => 'common.category',
+            "description" => "Infrastructure category.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-type" => [
+            "fields" => ['infrastructure_type' => ''],
+            "name" => "Infrastructure type", "name_de" => "Infrastruktur-Art", 'label' => 'infrastructures.type_of_infrastructure',
+            "description" => "Infrastructure type.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-access" => [
+            "fields" => ['access' => ''],
+            "name" => "Infrastructure access", "name_de" => "Infrastruktur-Zugang", 'label' => 'common.user_access',
+            "description" => "Infrastructure access.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-link" => [
+            "fields" => ['link' => ''],
+            "name" => "Infrastructure website", "name_de" => "Infrastruktur-Webseite", 'label' => 'infrastructures.website',
+            "description" => "Infrastructure website.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "contact-email" => [
+            "fields" => ['contact_email' => ''],
+            "name" => "Contact email", "name_de" => "Kontakt-E-Mail", 'label' => 'common.contact_email',
+            "description" => "Contact email.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
+        ],
+        "infrastructure-collaborative" => [
+            "fields" => ['collaborative' => false, 'collaborators' => [], 'coordinator' => ''],
+            "name" => "Collaborative infrastructure", "name_de" => "Verbundforschungsinfrastruktur", 'label' => 'common.collaborative_research_infrastructure',
+            "description" => "Collaborative infrastructure.",
+            "width" => 12, "portfolio" => true, "tags" => ['general'], "section" => "general", "entities" => ['infrastructures'],
         ],
         "deadline-title" => [
             "fields" => ["title" => ''],
@@ -1123,7 +1181,7 @@ class Modules
             "description_de" => "Eine oder mehrere Initiativen mit diesem Eintrag verknüpfen.",
             "width" => 12, "portfolio" => "impossible",
             "tags" => ['general'], "section" => "",
-            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines'],
+            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines', 'infrastructures'],
         ],
         "objectives" => [
             "fields" => ["objectives" => []],
@@ -1133,7 +1191,7 @@ class Modules
             "description_de" => "Ein oder mehrere Objectives mit diesem Eintrag verknüpfen.",
             "width" => 12, "portfolio" => "impossible",
             "tags" => ['general'], "section" => "",
-            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines'],
+            "entities" => ['activities', 'projects', 'proposals', 'events', 'deadlines', 'infrastructures'],
         ],
         "projects" => [
             "fields" => ["projects" => ['OSIRIS', 'CRIS2023']],
@@ -1651,7 +1709,7 @@ class Modules
     private function val($index, $default = '')
     {
         $val = $this->form[$index] ?? $default;
-        if (in_array($index, ['title', 'name', 'abstract', 'description'], true) && (is_array($val) || $val instanceof Traversable)) {
+        if (in_array($index, ['title', 'name', 'subtitle', 'abstract', 'description'], true) && (is_array($val) || $val instanceof Traversable)) {
             $val = localized($val);
         }
         if (is_string($val)) {
@@ -2242,6 +2300,17 @@ class Modules
         }
 
         switch ($module) {
+            case 'infrastructure-id':
+            case 'infrastructure-date':
+            case 'infrastructure-category':
+            case 'infrastructure-type':
+            case 'infrastructure-access':
+            case 'infrastructure-link':
+            case 'contact-email':
+            case 'infrastructure-collaborative':
+                include BASEPATH . '/components/modules/infrastructure-fields.php';
+                break;
+
             case 'deadline-title':
             case 'deadline-description':
             case 'deadline-type':
@@ -2257,11 +2326,12 @@ class Modules
 
             case 'title-loc':
             case 'name-loc':
+            case 'subtitle-loc':
             case 'abstract-loc':
             case 'description-loc':
                 require_once __DIR__ . '/LocalizedFields.php';
                 $field = substr($module, 0, -4);
-                $type = $field === 'name' ? 'text' : 'richtext';
+                $type = in_array($field, ['name', 'subtitle'], true) ? 'text' : 'richtext';
                 echo '<div class="data-module col-sm-' . $width . '" data-module="' . e($module) . '">';
                 localizedField($this->form, $field, e($label), [
                     'type' => $type, 'required' => $req || !empty($props['required']),

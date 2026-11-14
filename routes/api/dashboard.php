@@ -2077,21 +2077,21 @@ Route::get('/api/command-palette/search', function () {
             [
                 '$match' => [
                     '$or' => [
-                        ['name'    => ['$regex' => $rxContain, '$options' => 'i']],
-                        ['name_de' => ['$regex' => $rxContain, '$options' => 'i']],
+                        ['name.en' => ['$regex' => $rxContain, '$options' => 'i']],
+                        ['name.de' => ['$regex' => $rxContain, '$options' => 'i']],
                     ]
                 ]
             ],
             [
                 '$addFields' => [
                     '_cp_prefix_name' => [
-                        '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                        '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.en', '']], 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
                     ],
                     '_cp_prefix_name_de' => [
-                        '$cond' => [['$regexMatch' => ['input' => '$name_de', 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
+                        '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.de', '']], 'regex' => $rxPrefix, 'options' => 'i']], 1, 0]
                     ],
                     '_cp_contain_name' => [
-                        '$cond' => [['$regexMatch' => ['input' => '$name', 'regex' => $rxContain, 'options' => 'i']], 1, 0]
+                        '$cond' => [['$regexMatch' => ['input' => ['$ifNull' => ['$name.en', '']], 'regex' => $rxContain, 'options' => 'i']], 1, 0]
                     ],
                 ]
             ],
@@ -2106,7 +2106,7 @@ Route::get('/api/command-palette/search', function () {
                     ]
                 ]
             ],
-            ['$sort' => ['_cp_score' => -1, 'name' => 1]],
+            ['$sort' => ['_cp_score' => -1, 'name.en' => 1]],
             ['$limit' => 6],
             ['$project' => ['_id' => 1, 'name' => 1, '_cp_score' => 1]]
         ];
@@ -2121,7 +2121,7 @@ Route::get('/api/command-palette/search', function () {
                 'id' => 'infrastructure:' . $id,
                 'type' => lang('common.entity'),
                 'entity' => 'infrastructure',
-                'label' => $doc->name ?? $id,
+                'label' => localized($doc->name ?? $id),
                 'url' => '/infrastructures/view/' . $id,
                 'icon' => 'cube-transparent',
                 'priority' => (int)$doc->_cp_score,

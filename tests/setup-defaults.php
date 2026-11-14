@@ -20,7 +20,7 @@ class SetupCollection extends MemoryCollection
 }
 $database = (object) ['adminGeneral' => new SetupCollection(), 'adminProjects' => new SetupCollection()];
 setupDefaults($database);
-check(count($database->adminGeneral->documents) === 3 && count($database->adminProjects->documents) === 1, 'Fresh installation creates all three forms and a project type.');
+check(count($database->adminGeneral->documents) === 4 && count($database->adminProjects->documents) === 1, 'Fresh installation creates all three forms and a project type.');
 $project = $database->adminProjects->findOne(['id' => 'third-party']);
 check($project['process'] === 'proposal' && array_column($project['phases'], 'id') === ['draft', 'proposed', 'approved', 'rejected', 'project'], 'The third-party default covers the proposal lifecycle with draft prepared.');
 foreach ($project['phases'] as $phase) {

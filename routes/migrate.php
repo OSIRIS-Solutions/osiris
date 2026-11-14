@@ -150,6 +150,14 @@ Route::get('/migrate/deadline-forms', function () {
     include BASEPATH . '/footer.php';
 }, 'login');
 
+Route::get('/migrate/infrastructure-forms', function () {
+    include_once BASEPATH . '/php/init.php';
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/routes/migration/infrastructure-forms.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
 Route::get('/migrate/localization', function () {
     include_once BASEPATH . "/php/init.php";
 
@@ -213,8 +221,8 @@ Route::get('/migrate/index', function () {
     ensureIndex($osiris->projects, ['name' => 1]);
 
     /* infrastructures */
-    ensureIndex($osiris->infrastructures, ['name' => 1]);
-    ensureIndex($osiris->infrastructures, ['name_de' => 1]);
+    ensureIndex($osiris->infrastructures, ['name.en' => 1]);
+    ensureIndex($osiris->infrastructures, ['name.de' => 1]);
 
     /* events */
     ensureIndex($osiris->events, ['title' => 1]);
@@ -663,6 +671,7 @@ Route::get('/migrate', function () {
         include BASEPATH . "/routes/migration/event-forms.php";
         include BASEPATH . "/routes/migration/deadline-forms.php";
         include BASEPATH . "/routes/migration/initiative-forms.php";
+        include BASEPATH . "/routes/migration/infrastructure-forms.php";
         flush();
         ob_flush();
         $rerender = false;

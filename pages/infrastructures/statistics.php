@@ -126,7 +126,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                            <?= e(localized($infrastructure['name'])) ?>
                         </a>
                     </td>
                     <td>
@@ -139,7 +139,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                         <?= $Vocabulary->getValue('infrastructure-type', $infrastructure['infrastructure_type'] ?? '-') ?>
                     </td>
                     <td class="font-size-12 description">
-                        <?= $infrastructure['description'] ?? '-' ?>
+                        <?= localized($infrastructure['description'] ?? '-') ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -203,7 +203,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                            <?= e(localized($infrastructure['name'])) ?>
                         </a>
                     </td>
                     <td>
@@ -286,7 +286,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                            <?= e(localized($infrastructure['name'])) ?>
                         </a>
                     </td>
                     <td>
@@ -379,7 +379,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                            <?= e(localized($infrastructure['name'])) ?>
                         </a>
                     </td>
                     <td>
@@ -480,7 +480,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <tr>
                     <td>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                            <?= lang($infrastructure['name'], $infrastructure['name_de'] ?? null) ?>
+                            <?= e(localized($infrastructure['name'])) ?>
                         </a>
                     </td>
                     <td>
@@ -554,7 +554,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
             <?php foreach ($collaborations as $infrastructure) { ?>
                 <tr>
                     <td>
-                        <?= $infrastructure['name'] ?>
+                        <?= e(localized($infrastructure['name'])) ?>
                     </td>
                     <td>
                         <?= $Vocabulary->getValue('infrastructure-category', $infrastructure['type'] ?? '-') ?>

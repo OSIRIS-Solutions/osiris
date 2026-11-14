@@ -1426,14 +1426,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                             <td>
                                 <h6 class="m-0">
                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                        <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                        <?= e(localized($infra['name'])) ?>
                                     </a>
                                     <br>
                                 </h6>
 
                                 <div class="text-muted mb-5">
                                     <?php if (!empty($infra['subtitle'])) { ?>
-                                        <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                        <?= e(localized($infra['subtitle'])) ?>
                                     <?php } else { ?>
                                         <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
                                     <?php } ?>

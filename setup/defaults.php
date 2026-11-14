@@ -7,7 +7,7 @@ function setupDefinition(string $name): array
 }
 
 /** Only fill missing configurations; never replace institutional settings. */
-function setupDefaults($database, array $models = ['projects', 'events', 'deadlines', 'initiatives']): void
+function setupDefaults($database, array $models = ['projects', 'events', 'deadlines', 'initiatives', 'infrastructures']): void
 {
     foreach ($models as $model) {
         if ($model === 'projects') {

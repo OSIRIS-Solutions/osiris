@@ -100,7 +100,7 @@
                             <div class="card">
                                 <div>
                                     <h5 class="my-0">
-                                        <a href="<?= $base ?>/infrastructure/<?= $infrastructure['id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                                        <a href="<?= $base ?>/infrastructure/<?= $infrastructure['id']; ?>"> <?= e(localized($infrastructure['name'])); ?> </a>
                                     </h5>
                                     <small class="text-muted"><?= $infrastructure['subtitle'] ?? '' ?></small>
                                 </div>

@@ -124,7 +124,7 @@
                             <option value=""><?= lang('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
-                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= e(localized($s['name'])) ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
@@ -225,7 +225,7 @@
                             <option value=""><?= lang('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
-                                <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                <option value="<?= $s['id'] ?>"><?= e(localized($s['name'])) ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
@@ -246,10 +246,10 @@
                                 <tr>
                                     <td class="w-full">
                                         <input type="hidden" name="infrastructures[]" value="<?= $infra['id'] ?>">
-                                        <b><?= $infra['name'] ?></b>
+                                        <b><?= e(localized($infra['name'])) ?></b>
                                         <br>
                                         <span class="text-muted">
-                                            <?= $infra['subtitle'] ?? '' ?>
+                                            <?= e(localized($infra['subtitle'] ?? '')) ?>
                                         </span>
                                     </td>
 

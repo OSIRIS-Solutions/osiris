@@ -231,7 +231,7 @@
                             <?php foreach ($infrastructures as $i) { ?>
                                 <div class="card">
                                     <h5 class="my-0">
-                                        <a href="<?= $base ?>/infrastructure/<?= $i['id'] ?>"> <?= $i['name'] ?> </a>
+                                        <a href="<?= $base ?>/infrastructure/<?= $i['id'] ?>"> <?= e(localized($i['name'])) ?> </a>
                                     </h5>
                                     <small class="text-muted" v-html="i.title ?? ''"></small>
                                     <hr />

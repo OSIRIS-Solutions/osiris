@@ -707,7 +707,7 @@
                                             <div class="connection">
                                                 <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructure') ?></span>
                                                 <h5>
-                                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= $infrastructure['name']; ?> </a>
+                                                    <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= e(localized($infrastructure['name'])); ?> </a>
                                                 </h5>
                                                 <p><?= $infrastructure['subtitle'] ?? '' ?></p>
                                             </div>

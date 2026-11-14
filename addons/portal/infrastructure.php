@@ -16,7 +16,7 @@
  * @license     MIT
  */
 
-$name = $data['name'];
+$name = localized($data['name']);
 ?>
 
 <?php if ($Portfolio->isPreview()) { ?>
@@ -50,22 +50,22 @@ $name = $data['name'];
             <?php endif; ?>
             <div class="col" id="infrastructure-header-info">
                 <h1 class="title">
-                    <?= lang($data['name'], $data['name_de'] ?? null) ?>
+                    <?= e(localized($data['name'])) ?>
                 </h1>
 
                 <h2 class="subtitle">
-                    <?= lang($data['subtitle'], $data['subtitle_de'] ?? null) ?>
+                    <?= e(localized($data['subtitle'])) ?>
                 </h2>
             </div>
         </div>
 
         <div class="row row-eq-spacing">
             <div class="col-sm-8 order-sm-first order-last" id="about">
-                <?php if (!empty($data['description']) || !empty($data['description_de']) || !empty($data['link'])) { ?>
+                <?php if (!empty(localized($data['description'] ?? '')) || !empty($data['link'])) { ?>
                     <h3 id="about"><?= lang('portal.about_name', replace: ['name' => $name]); ?></h3>
 
                     <div class="mt-20">
-                        <?= lang($data['description'], $data['description_de'] ?? null); ?>
+                        <?= localized($data['description'] ?? ''); ?>
                     </div>
                     <?php if (isset($data['link'])) { ?>
                         <a class="btn primary" href="<?= e($data['link']) ?>" target="_blank" rel="noopener noreferrer">

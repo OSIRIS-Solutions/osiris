@@ -195,7 +195,7 @@ if (!$user) {
             <?php foreach ($ongoing_infrastructures as $infrastructure) { ?>
                 <li>
                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id'] ?>">
-                        <?= $infrastructure['name'] ?? 'No name' ?>
+                        <?= localized($infrastructure['name'] ?? 'No name') ?>
                     </a>
                 </li>
             <?php } ?>

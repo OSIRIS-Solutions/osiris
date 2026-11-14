@@ -559,13 +559,13 @@ $numbers = $data['numbers'] ?? [
                                                 <div>
                                                     <h5 class="m-0">
                                                         <a href="<?= $base ?>/infrastructure/<?= $infra['id'] ?>" class="link">
-                                                            <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                                            <?= e(localized($infra['name'])) ?>
                                                         </a>
                                                     </h5>
 
                                                     <div class="text-muted mb-5">
                                                         <?php if (!empty($infra['subtitle'])) { ?>
-                                                            <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                                            <?= e(localized($infra['subtitle'])) ?>
                                                         <?php } ?>
                                                     </div>
                                                     <p>

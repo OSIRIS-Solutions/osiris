@@ -60,6 +60,12 @@ Auch Deadlines verwenden jetzt den Form-Builder. Unter den weiteren Datenmodell-
 
 Editor und Detailansicht übernehmen die Formularkonfiguration. Die Zielgruppen-Rollen bleiben als separate Einstellung erhalten; auch Fristanzeige und Kalenderexport stehen weiterhin zur Verfügung. Beim Upgrade wird das bisherige Formular als Standard übernommen, ohne vorhandene Deadlines oder bereits angepasste Formularkonfigurationen zu verändern.
 
+### Infrastrukturen
+
+Die Stammdatenformulare für Infrastrukturen verwenden jetzt ebenfalls den Form-Builder. Die bisherige Feldauswahl einschließlich eigener Datenfelder wird übernommen. Name, ID und Laufzeit bleiben als positionierbare Systemfelder erhalten. Personenverwaltung und Statistik-Einstellungen bleiben separate Bereiche; die Partner- und Koordinatorauswahl für Verbundinfrastrukturen bleibt erhalten. Neue Instanzen erhalten ein Standardformular.
+
+Namen, Untertitel und Beschreibungen werden als Sprachfelder gespeichert. Bisherige Texte werden nach Englisch übernommen, deutsche Angaben bleiben als optionale Übersetzungen erhalten. Das neue Modul `subtitle-loc` ermöglicht mehrsprachige Untertitel auch in anderen dafür freigegebenen Formularen. Die KDSF-Zuordnungen bleiben als technisches Mapping erhalten; die Kennzeichnungen in der Infrastruktur-Oberfläche entfallen.
+
 ### Neue Datenfelder
 
 Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Verknüpfungen. Welche Module zur Auswahl stehen, richtet sich nach der Entität und bei Projekten nach der jeweiligen Phase. Die technischen Modulnamen sind hier zur Orientierung im Feldkatalog angegeben; die angezeigten Beschriftungen lassen sich im Form-Builder anpassen.

@@ -30,18 +30,11 @@ $infrastructures  = $osiris->infrastructures->find(
 )->toArray();
 
 
-$data_fields = $Settings->get('infrastructure-data');
-if (!is_null($data_fields)) {
-    $data_fields = DB::doc2Arr($data_fields);
-} else {
-    $fields = file_get_contents(BASEPATH . '/data/infrastructure-fields.json');
-    $fields = json_decode($fields, true);
-
-    $data_fields = array_filter($fields, function ($field) {
-        return $field['default'] ?? false;
-    });
-    $data_fields = array_column($data_fields, 'id');
-}
+require_once BASEPATH . '/php/InfrastructureForms.php';
+$infrastructureFields = InfrastructureForms::visibleFields($osiris, $Settings);
+$data_fields = [];
+$config = InfrastructureForms::builder();
+foreach ($infrastructureFields as $field) $data_fields = array_merge($data_fields, $config->modules[$field['id'] ?? '']['fields'] ?? []);
 
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
@@ -116,20 +109,20 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                     <tr>
                         <td class="d-flex align-items-center">
                             <?php
-                            $Infrastructure->printLogo($infra, "infrastructure-logo", lang('infrastructures.logo_of') . ' ' . $infra['name']);
+                            $Infrastructure->printLogo($infra, "infrastructure-logo", lang('infrastructures.logo_of') . ' ' . localized($infra['name']));
                             ?>
                             <div class="position-relative w-full">
                                 <h6 class="m-0">
                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                        <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                        <?= e(localized($infra['name'])) ?>
                                     </a>
                                 </h6>
 
                                 <div class="text-muted mb-5">
                                     <?php if (!empty($infra['subtitle'])) { ?>
-                                        <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                        <?= e(localized($infra['subtitle'])) ?>
                                     <?php } else { ?>
-                                        <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                        <?= get_preview(localized($infra['description']), 300) ?>
                                     <?php } ?>
                                 </div>
                                 <div>
@@ -148,7 +141,7 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 ?>
                             </div>
                         </td>
-                        <td><?= lang($infra['name'], $infra['name_de'] ?? null) ?></td>
+                        <td><?= e(localized($infra['name'])) ?></td>
                         <td><?= $infra['start_date'] ?></td>
                         <td><?= $infra['end_date'] ?? '' ?></td>
                         <td>

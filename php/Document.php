@@ -113,6 +113,7 @@ class Document extends Settings
         "peer-reviewed" => ["peer-reviewed"],
         "title-loc" => ["title"],
         "name-loc" => ["name"],
+        "subtitle-loc" => ["subtitle"],
         "abstract-loc" => ["abstract"],
         "description-loc" => ["description"],
         "persons-project" => ["persons"],
@@ -126,6 +127,14 @@ class Document extends Settings
         "person-only" => ["name"],
         "person-organization" => ["name", "organization"],
         "political_consultation" => ["political_consultation"],
+        "infrastructure-id" => ["id"],
+        "infrastructure-date" => ["start_date", "end_date"],
+        "infrastructure-category" => ["type"],
+        "infrastructure-type" => ["infrastructure_type"],
+        "infrastructure-access" => ["access"],
+        "infrastructure-link" => ["link"],
+        "contact-email" => ["contact_email"],
+        "infrastructure-collaborative" => ["collaborative", "collaborators", "coordinator"],
         "deadline-title" => ["title"],
         "deadline-description" => ["description"],
         "deadline-type" => ["type"],
@@ -1282,10 +1291,31 @@ class Document extends Settings
         if ($default === '' && $this->usecase == 'list') $default = '-';
         if (!array_key_exists($field, $this->doc)) return $default;
         $value = $this->doc[$field] ?? '';
-        if (in_array($field, ['title', 'name', 'abstract', 'description'], true) && (is_array($value) || $value instanceof Traversable)) {
+        if (in_array($field, ['title', 'name', 'subtitle', 'abstract', 'description'], true) && (is_array($value) || $value instanceof Traversable)) {
             return localized($value, $this->lang);
         }
         return $value;
+    }
+
+    /** Render configured infrastructure metadata without activity initialization. */
+    public function getInfrastructureField(array $infrastructure, string $module)
+    {
+        $this->doc = $infrastructure;
+        $vocabulary = new Vocabulary();
+        $vocabularies = ['infrastructure-category' => ['infrastructure-category', 'type'], 'infrastructure-type' => ['infrastructure-type', 'infrastructure_type'], 'infrastructure-access' => ['infrastructure-access', 'access']];
+        if (isset($vocabularies[$module])) {
+            [$vocab, $key] = $vocabularies[$module];
+            return e($vocabulary->getValue($vocab, $infrastructure[$key] ?? ''));
+        }
+        if ($module === 'infrastructure-id') return e($infrastructure['id'] ?? '');
+        if ($module === 'infrastructure-date') return fromToDate($infrastructure['start_date'] ?? null, $infrastructure['end_date'] ?? null, true);
+        if ($module === 'infrastructure-collaborative') return '<span class="badge">' . e(translate(!empty($infrastructure['collaborative']) ? 'common.yes' : 'common.no')) . '</span>';
+        if ($module === 'infrastructure-link') {
+            $url = $infrastructure['link'] ?? '';
+            return preg_match('~^https?://~i', $url) ? '<a href="' . e($url) . '" target="_blank" rel="noopener noreferrer">' . e($url) . '</a>' : e($url);
+        }
+        if ($module === 'contact-email') return empty($infrastructure['contact_email']) ? '' : '<a href="mailto:' . e($infrastructure['contact_email']) . '">' . e($infrastructure['contact_email']) . '</a>';
+        return $this->getEventField($infrastructure, $module);
     }
 
     /** Deadline modules and custom fields use the same field formatting as events. */
@@ -1303,7 +1333,7 @@ class Document extends Settings
         $value = $this->get_field($module);
         $customFormat = $this->custom_fields[$module]['format'] ?? null;
         if (($customFormat !== null && !in_array($customFormat, ['url', 'text-format'], true))
-            || in_array($module, ['title', 'title_full', 'name', 'subtitle', 'location', 'country', 'event-type'], true)) return nl2br(e($value));
+            || in_array($module, ['title', 'title_full', 'name', 'subtitle', 'subtitle-loc', 'location', 'country', 'event-type'], true)) return nl2br(e($value));
         return $value;
     }
 
@@ -1336,7 +1366,7 @@ class Document extends Settings
     public function get_field($module, $default = '')
     {
         if ($this->usecase == 'list') $default = '-';
-        if (in_array($module, ['title-loc', 'name-loc', 'abstract-loc', 'description-loc'], true)) $module = substr($module, 0, -4);
+        if (in_array($module, ['title-loc', 'name-loc', 'subtitle-loc', 'abstract-loc', 'description-loc'], true)) $module = substr($module, 0, -4);
         if (str_starts_with($module, 'authors-') || str_starts_with($module, 'editors-') || str_starts_with($module, 'supervisors-')) {
             return $this->formatAuthorsNew($module);
         }

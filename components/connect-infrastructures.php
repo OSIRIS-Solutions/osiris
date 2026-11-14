@@ -48,7 +48,7 @@ if (!$permission) {
                             <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('forms.select_infrastructure') ?> --</option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
-                                <option <?= $con == $s['id'] ? 'selected' : '' ?> value="<?=$s['id']?>"><?= $s['name'] ?></option>
+                                <option <?= $con == $s['id'] ? 'selected' : '' ?> value="<?=$s['id']?>"><?= e(localized($s['name'])) ?></option>
                             <?php } ?>
                         </select>
                     </td>

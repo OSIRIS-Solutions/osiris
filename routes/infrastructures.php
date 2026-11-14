@@ -85,7 +85,7 @@ Route::get('/infrastructures/view/(.*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => $infrastructure['name']]
+        ['name' => localized($infrastructure['name'])]
     ];
 
     $Infra = new Infrastructure();
@@ -109,7 +109,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
         $osiris_id = $DB->to_ObjectID($id);
         $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
-        $form = $osiris->infrastructures->findOne(['name' => $id]);
+        $form = $osiris->infrastructures->findOne(['name.en' => $id]);
         $id = strval($infrastructure['_id'] ?? '');
     }
     if (empty($form)) {
@@ -130,7 +130,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
+        ['name' => localized($form['name']), 'path' => "/infrastructures/view/$id"],
         ['name' => lang('action.edit')]
     ];
 
@@ -153,7 +153,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
         $osiris_id = $DB->to_ObjectID($id);
         $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
-        $form = $osiris->infrastructures->findOne(['name' => $id]);
+        $form = $osiris->infrastructures->findOne(['name.en' => $id]);
         $id = strval($infrastructure['_id'] ?? '');
     }
     if (empty($form)) {
@@ -173,7 +173,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => $form['name'], 'path' => "/infrastructures/view/$id"],
+        ['name' => localized($form['name']), 'path' => "/infrastructures/view/$id"],
         ['name' => lang('common.persons')]
     ];
 
@@ -201,38 +201,21 @@ Route::post('/crud/infrastructures/create', function () {
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
-    $values = validateValues($_POST['values'], $DB);
-
-    $id = $values['id'] ?? uniqid();
-
-    // check if infrastructure id already exists:
-    $infrastructure_exist = $collection->findOne(['id' => $id]);
-    if (!empty($infrastructure_exist)) {
-        $_SESSION['msg'] = lang('infrastructures.infrastructure_id_already_exists_please_choose_a_different_one');
-        $_SESSION['msg_type'] = 'error';
-        header("Location: " . $red);
-        die();
+    require_once BASEPATH . '/php/InfrastructureForms.php';
+    $previous = [];
+    try {
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        $values = InfrastructureForms::values($_POST['values'], $osiris, $Settings, $previous);
+    } catch (InvalidArgumentException $error) {
+        global $form;
+        $form = InfrastructureForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : [], $previous);
+        include BASEPATH . '/header.php';
+        printMsg($error->getMessage(), 'error', translate('common.error'));
+        include BASEPATH . '/pages/infrastructures/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
-    // dump($values, true);
-
-    // format collaborators
-    if (isset($values['collaborative'])) {
-        $values['collaborative'] = $values['collaborative'] == 'yes' ? true : false;
-        if (isset($values['collaborators'])) {
-
-            $values['coordinator_organization'] = null;
-            if (DB::is_ObjectID($values['coordinator'] ?? null)) {
-                $values['coordinator_organization'] = DB::to_ObjectID($values['coordinator']);
-                $values['coordinator_institute'] = false;
-            } else {
-                $values['coordinator_institute'] = true;
-            }
-        }
-        $values['collaborators'] = array_map('DB::to_ObjectID', $values['collaborators'] ?? []);
-    }
-    // dump($values, true);
-    // die;
-
+    if ($collection->findOne(['id' => $values['id']])) return abortwith(400, lang('infrastructures.infrastructure_id_already_exists_please_choose_a_different_one'));
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
@@ -277,23 +260,21 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
     $collection = $osiris->infrastructures;
 
-    $values = validateValues($_POST['values'], $DB);
-    if (isset($values['collaborative'])) {
-        $values['collaborative'] = $values['collaborative'] == 'yes' ? true : false;
-        if (isset($values['collaborators'])) {
-            $values['coordinator_organization'] = null;
-            if (DB::is_ObjectID($values['coordinator'] ?? null)) {
-                $values['coordinator_organization'] = DB::to_ObjectID($values['coordinator']);
-                $values['coordinator_institute'] = false;
-            } else {
-                $values['coordinator_institute'] = true;
-            }
-        }
-        $values['collaborators'] = array_map('DB::to_ObjectID', $values['collaborators'] ?? []);
-        unset($values['coordinator']);
+    require_once BASEPATH . '/php/InfrastructureForms.php';
+    $previous = DB::doc2Arr($collection->findOne(['_id' => DB::to_ObjectID($id)]) ?? []);
+    if (!$previous) return abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
+    try {
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        $values = InfrastructureForms::values($_POST['values'], $osiris, $Settings, $previous);
+    } catch (InvalidArgumentException $error) {
+        global $form;
+        $form = InfrastructureForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : [], $previous);
+        include BASEPATH . '/header.php';
+        printMsg($error->getMessage(), 'error', translate('common.error'));
+        include BASEPATH . '/pages/infrastructures/edit.php';
+        include BASEPATH . '/footer.php';
+        return;
     }
-
-    // add information on creating process
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
 
@@ -645,5 +626,5 @@ Route::get('/infrastructures/image/(.*)', function ($id) {
         abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     }
     include_once BASEPATH . "/php/Infrastructure.php";
-    echo Infrastructure::getLogo($infrastructure, "", "Logo of " . $infrastructure['name'], $infrastructure['type'] ?? "");
+    echo Infrastructure::getLogo($infrastructure, "", "Logo of " . localized($infrastructure['name']), $infrastructure['type'] ?? "");
 });

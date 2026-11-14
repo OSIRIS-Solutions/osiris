@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "name": "KDSF-B-13-2",
+    "start_date": "KDSF-B-13-3",
+    "end_date": "KDSF-B-13-4",
+    "type": "KDSF-B-13-5",
+    "infrastructure_type": "KDSF-B-13-6",
+    "access": "KDSF-B-13-7",
+    "description": "KDSF-B-13-11",
+    "collaborative": "KDSF-B-13-12",
+    "collaborators": "KDSF-B-13-15"
+  },
+  "statistics": {
+    "internal": "KDSF-B-13-8-B",
+    "national": "KDSF-B-13-8-C",
+    "international": "KDSF-B-13-8-D",
+    "hours": "KDSF-B-13-9-B",
+    "accesses": "KDSF-B-13-10-B"
+  },
+  "persons": {
+    "user": "KDSF-B-13-16-A",
+    "role": "KDSF-B-13-16-E",
+    "fte": "KDSF-B-13-16-D",
+    "start": "KDSF-B-13-16-B",
+    "end": "KDSF-B-13-16-C"
+  }
+}

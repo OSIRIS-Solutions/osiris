@@ -1656,7 +1656,7 @@ if ($edit_perm) {
                                 <td>
                                     <h6 class="m-0">
                                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infra['_id'] ?>" class="link">
-                                            <?= lang($infra['name'], $infra['name_de'] ?? null) ?>
+                                            <?= e(localized($infra['name'])) ?>
                                         </a>
                                         <br>
                                     </h6>

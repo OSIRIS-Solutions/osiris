@@ -74,14 +74,6 @@ if (empty($yearstats)) {
     $yearstats = $yearstats[0];
 }
 
-$kdsf_mapping = [
-    'internal' => 'KDSF-B-13-8-B',
-    'national' => 'KDSF-B-13-8-C',
-    'international' => 'KDSF-B-13-8-D',
-    'hours' => 'KDSF-B-13-9-B',
-    'accesses' => 'KDSF-B-13-10-B',
-];
-
 ?>
 
 <h1>
@@ -96,9 +88,7 @@ $kdsf_mapping = [
     <?php foreach ($fields as $key) { ?>
         <div class="form-group">
             <label for="<?= $key['id'] ?>"><?= lang($key['en'], $key['de']) ?>
-            <?php if (!empty($kdsf_mapping[$key['id']])): ?>
-                <span class="badge kdsf"><?= $kdsf_mapping[$key['id']] ?? '' ?></span>
-            <?php endif; ?>
+
             </label>
             <input type="number" class="form-control w-auto" name="values[<?= $key['id'] ?>]" id="<?= $key['id'] ?>" value="<?= $yearstats[$key['id']] ?? 0 ?>" />
         </div>

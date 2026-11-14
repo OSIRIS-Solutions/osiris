@@ -590,7 +590,7 @@ if (array_sum($a) === 0) { ?>
                     <tr id="tr-<?= $id ?>">
                         <td>
                             <?= lang('error.please_update_the_statistics_of') ?>
-                            <b><?= $doc['name'] ?></b>
+                            <b><?= e(localized($doc['name'])) ?></b>
                             <?= lang('error.from') ?>
                             <b><?= $timepoint ?></b>
                             <br>

@@ -93,13 +93,61 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
 
     <?php
     foreach (['events' => [EventForms::class, 'ph-calendar-dots'], 'deadlines' => [DeadlineForms::class, 'ph-flag-pennant']] as $entity => [$forms, $entityIcon]):
-    $config = $forms::builder();
-    $fields = $forms::fields($osiris);
+        $config = $forms::builder();
+        $fields = $forms::fields($osiris);
+        $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
+    ?>
+        <div class="box" id="<?= e($entity) ?>">
+            <div class="content">
+                <h2 class="title"><i class="ph-duotone <?= e($entityIcon) ?>"></i> <?= translate('common.' . $entity) ?></h2>
+                <h2 class="font-size-18"><?= translate('common.data_fields') ?>:</h2>
+                <div class="my-10">
+                    <?php foreach ($fields as $field):
+                        $props = $field['props'] ?? [];
+                        $fieldType = $field['type'] ?? 'field';
+                        $id = $field['id'] ?? '';
+                        $module = $config->modules[$id] ?? [];
+                        $name = '';
+                        $title = '';
+                        $icon = match ($fieldType) {
+                            'custom' => 'ph-textbox',
+                            'heading' => 'ph-text-h',
+                            'paragraph' => 'ph-paragraph',
+                            'hr' => 'ph-minus',
+                            default => 'ph-database'
+                        };
+                        if (in_array($fieldType, ['field', 'custom'], true)) {
+                            $name = !empty($props['label']) || !empty($props['label_de'])
+                                ? lang(($props['label'] ?? '') ?: ($module['label'] ?? $id), $props['label_de'] ?? null)
+                                : ($fieldType === 'custom' ? lang($module['label'] ?? $id, $module['label_de'] ?? null) : ($module['label'] ?? $id));
+                            $title = $id;
+                        } else {
+                            $title = strip_tags(lang($props['text'] ?? 'Divider', $props['text_de'] ?? 'Trennlinie'));
+                        }
+                    ?>
+                        <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
+                            <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(lang('admin.required_fields')) ?>"></i><?php endif; ?>
+                            <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+                <a class="btn secondary" href="<?= ROOTPATH ?>/admin/<?= e($entity) ?>/fields">
+                    <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
+                </a>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+
+    <?php
+    require_once BASEPATH . '/php/InfrastructureForms.php';
+    $config = InfrastructureForms::builder();
+    $fields = InfrastructureForms::fields($osiris);
     $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
     ?>
-    <div class="box" id="<?= e($entity) ?>">
+    <div class="box" id="infrastructures">
         <div class="content">
-            <h2 class="title"><i class="ph-duotone <?= e($entityIcon) ?>"></i> <?= translate('common.' . $entity) ?></h2>
+            <h2 class="title"><i class="ph-duotone ph-hard-drives"></i> <?= translate('common.infrastructures') ?></h2>
             <h2 class="font-size-18"><?= translate('common.data_fields') ?>:</h2>
             <div class="my-10">
                 <?php foreach ($fields as $field):
@@ -131,10 +179,19 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                     </span>
                 <?php endforeach; ?>
             </div>
-            <a class="btn secondary" href="<?= ROOTPATH ?>/admin/<?= e($entity) ?>/fields">
+            <a class="btn secondary" href="<?= ROOTPATH ?>/admin/infrastructures/fields">
                 <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
             </a>
+
+            <hr>
+
+            <p class="text-muted">
+                <?= lang('admin.to_add_more_fields_to_the_annual_statistics_you_can_update') ?>
+                <a href="<?= ROOTPATH ?>/admin/vocabulary/infrastructure-stats"><?= lang('admin.the_vocabulary_for_infrastructure_statistics') ?></a>
+                <?= lang('admin.and_add_the_fields_you_want_to_use_there') ?>
+            </p>
         </div>
+
     </div>
-    <?php endforeach; ?>
+
 </div>

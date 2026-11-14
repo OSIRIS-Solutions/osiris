@@ -662,10 +662,10 @@ if (isset($news) && isset($news['_id'])) {
                         </thead>
                         <tbody id="infrastructure-list"><?php
                                                         foreach ($infrastructures as $infra) { ?>
-                                <tr id="infrastructure-<?= e($infra['id']) ?>" data-feature-type="infrastructure" data-feature-id="<?= e($infra['id']) ?>" data-feature-label="<?= e($infra['name']) ?>">
+                                <tr id="infrastructure-<?= e($infra['id']) ?>" data-feature-type="infrastructure" data-feature-id="<?= e($infra['id']) ?>" data-feature-label="<?= e(localized($infra['name'])) ?>">
                                     <td class="w-full">
                                         <input type="hidden" name="news[infrastructures][]" value="<?= $infra['id'] ?>">
-                                        <b><?= $infra['name'] ?></b>
+                                        <b><?= e(localized($infra['name'])) ?></b>
                                         <br>
                                         <span class="text-muted">
                                             <?= $infra['subtitle'] ?? '' ?>
