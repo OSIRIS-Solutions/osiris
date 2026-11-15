@@ -426,7 +426,7 @@ if (isset($news) && isset($news['_id'])) {
                             <option value=""><?= lang('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
-                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= localized($s['name']) ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
