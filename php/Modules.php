@@ -1814,16 +1814,53 @@ class Modules
         }
     }
 
+    /** Consecutive visible language fields share a switcher, without changing the saved schema. */
+    private function groupLocalizedFields(array $fields): array
+    {
+        require_once __DIR__ . '/LocalizedFields.php';
+        require_once __DIR__ . '/CustomFields.php';
+        static $render = 0;
+        $prefix = 'form-builder-' . ++$render . '-';
+        $custom = array_column($this->DB->db->adminFields->find()->toArray(), null, 'id');
+        $groups = [];
+        $group = 0;
+        foreach ($fields as $index => $field) {
+            $id = $field['id'] ?? '';
+            $type = $field['type'] ?? 'field';
+            if ($type === 'field' && isset($this->all_modules[$id]) && str_ends_with($id, '-loc')) {
+                $groups[$group][$index] = substr($id, 0, -4);
+            } elseif ($type === 'custom' && CustomFields::isLocalized($custom[$id] ?? [])) {
+                $groups[$group][$index] = $id;
+            } else {
+                $group++;
+            }
+        }
+        foreach ($groups as $number => $members) {
+            if (count($members) < 2) continue;
+            $languages = [];
+            foreach ($members as $key) {
+                $form = $this->form;
+                if (!array_key_exists($key, $form)) $form[$key] = $custom[$key]['default'] ?? '';
+                $languages = array_merge($languages, array_keys(localizedFieldValues($form, $key, OSIRIS_BASE_LANGUAGE)));
+            }
+            foreach ($members as $index => $key) {
+                $fields[$index]['props'] = DB::doc2Arr($fields[$index]['props'] ?? []);
+                $fields[$index]['props']['localized_group'] = $prefix . $number;
+                $fields[$index]['props']['localized_languages'] = array_values(array_unique($languages));
+            }
+        }
+        return $fields;
+    }
+
     function render_form($fields)
     {
         $user = $this->DB->db->persons->findOne(['username' => $this->user]);
         $user_roles = DB::doc2Arr($user['roles'] ?? []);
-        foreach ($fields as $f) {
+        $fields = array_values(array_filter(DB::doc2Arr($fields), fn($field) =>
+            empty($field['props']['roles']) || in_array($field['props']['roles'], $user_roles)
+        ));
+        foreach ($this->groupLocalizedFields($fields) as $f) {
             $props = $f['props'] ?? [];
-            // check for role visibility
-            if (isset($props['roles']) && !empty($props['roles']) && !in_array($props['roles'], $user_roles)) {
-                continue;
-            }
             switch ($f['type'] ?? 'field') {
                 case 'field':
                     $this->print_module($f['id'], $props['required'] ?? false, $props);
@@ -1906,6 +1943,8 @@ class Modules
             localizedField($form, $module, e($label), [
                 'type' => ['string' => 'text', 'text' => 'textarea', 'text-format' => 'richtext'][$field['format']],
                 'required' => $req || !empty($props['required']),
+                'group' => $props['localized_group'] ?? null,
+                'languages' => $props['localized_languages'] ?? [],
             ]);
             echo $this->render_help($help);
             echo '</div>';
@@ -2335,6 +2374,8 @@ class Modules
                 echo '<div class="data-module col-sm-' . $width . '" data-module="' . e($module) . '">';
                 localizedField($this->form, $field, e($label), [
                     'type' => $type, 'required' => $req || !empty($props['required']),
+                    'group' => $props['localized_group'] ?? null,
+                    'languages' => $props['localized_languages'] ?? [],
                 ]);
                 echo $this->render_help($help);
                 echo '</div>';

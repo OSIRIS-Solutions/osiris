@@ -50,6 +50,33 @@ $legacy = new Modules(['name' => 'Legacy name']);
 ob_start(); $legacy->print_module('name-loc'); $legacyHtml = ob_get_clean();
 check(str_contains($legacyHtml, 'value="Legacy name"'), 'Plain existing values populate the base language.');
 
+// Consecutive visible localized fields share one switcher, including custom fields.
+$osiris->adminFields->insertOne(['id' => 'group-note', 'name' => 'Group note', 'format' => 'text', 'localized' => true]);
+$groupedValues = array_replace($form, ['subtitle' => ['en' => 'Subtitle', 'es' => 'Subtítulo'], 'group-note' => ['fr' => 'Note française']]);
+$groupedFields = [
+    ['id' => 'name-loc', 'type' => 'field'],
+    ['id' => 'url', 'type' => 'field', 'props' => ['roles' => 'admin']],
+    ['id' => 'subtitle-loc', 'type' => 'field'],
+    ['id' => 'group-note', 'type' => 'custom'],
+    ['type' => 'heading', 'props' => ['text' => 'Separate section']],
+    ['id' => 'description-loc', 'type' => 'field'],
+    ['id' => 'url', 'type' => 'field'],
+    ['id' => 'title-loc', 'type' => 'field'],
+    ['id' => 'abstract-loc', 'type' => 'field'],
+];
+$originalFields = $groupedFields;
+$groupedRenderer = new Modules($groupedValues);
+ob_start(); $groupedRenderer->render_form($groupedFields); $groupedHtml = ob_get_clean();
+$dom = new DOMDocument(); @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $groupedHtml); $xpath = new DOMXPath($dom);
+$groupFor = fn($id) => $xpath->query('//*[@data-localized-field="' . $id . '"]')->item(0)->getAttribute('data-localized-group');
+check($groupFor('name') !== '' && $groupFor('name') === $groupFor('subtitle') && $groupFor('name') === $groupFor('group-note'), 'Consecutive localized built-in and custom fields group across hidden fields.');
+check($xpath->query('//*[@data-module="subtitle-loc"]//*[@role="tablist"]')->length === 0 && $xpath->query('//*[@data-module="group-note"]//*[@class="localized-language-indicator"]')->length === 1, 'Only the first field shows tabs; following fields show the shared-language indicator.');
+check($xpath->query('//*[@data-module="name-loc"]//*[@role="tab"][ @data-language="fr" or @data-language="es"]')->length === 2 && $xpath->query('//*[@data-module="name-loc"]//*[@data-language="fr" and contains(@class,"localized-language-panel")]')->length === 1, 'Translations present only in later fields remain accessible through the common tabs and panels.');
+check($groupFor('description') === '' && $groupFor('title') !== $groupFor('name') && $groupFor('title') === $groupFor('abstract'), 'Headings and ordinary fields end groups; single localized fields keep their own switcher.');
+check($groupedFields === $originalFields, 'Grouping leaves the configured schema unchanged.');
+ob_start(); $groupedRenderer->render_form($groupedFields); $secondHtml = ob_get_clean();
+check(!str_contains($secondHtml, 'data-localized-group="' . $groupFor('name') . '"') && substr_count($secondHtml, 'role="tablist"') === 3, 'Repeated form rendering uses fresh groups and retains each switcher.');
+
 $format = new Document(false, 'list');
 $format->doc = $normalized;
 foreach ($modules as $id => $key) check($format->get_field($id) === $normalized[$key]['en'], "$id renders the selected language through Document.");

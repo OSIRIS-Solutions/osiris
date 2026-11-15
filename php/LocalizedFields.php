@@ -14,6 +14,7 @@
  * - class: additional classes for a text input
  * - root: outer input name (default: values); null omits the outer name
  * - group: fields with the same group share one language switcher
+ * - languages: additional languages shared by all fields in a group
  * - show_tabs: render the switcher even when another field already controls the group
  * - hide_label: keep the label accessible but hide it visually
  * - disabled: disable all language inputs
@@ -47,7 +48,7 @@ function localizedField($form, string $name, string $label, array $options = [])
     $path = localizedFieldPath($name);
 
     $languages = array_values(array_filter(
-        array_unique(array_merge([$baseLanguage], $configuredLanguages, array_keys($translations))),
+        array_unique(array_merge([$baseLanguage], $configuredLanguages, $options['languages'] ?? [], array_keys($translations))),
         fn($language) => $language !== 'keys' && preg_match('/^[a-z]{2}(?:-[A-Za-z]{2})?$/', $language)
     ));
 
