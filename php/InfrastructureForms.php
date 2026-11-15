@@ -13,7 +13,13 @@ final class InfrastructureForms
 
     public static function builder(): FormBuilder
     {
-        return new FormBuilder(entityLabel: translate('common.infrastructures'), redirectUrl: ROOTPATH . '/crud/admin/infrastructuresFields', entity: 'infrastructures', backUrl: ROOTPATH . '/admin/infrastructures', systemFields: self::SYSTEM_FIELDS);
+        return new FormBuilder(
+            entityLabel: translate('common.infrastructures'),
+            redirectUrl: ROOTPATH . '/crud/admin/infrastructuresFields',
+            entity: 'infrastructures',
+            backUrl: ROOTPATH . '/data-model#infrastructures',
+            systemFields: self::SYSTEM_FIELDS
+        );
     }
 
     public static function defaults(): array
@@ -38,7 +44,10 @@ final class InfrastructureForms
             if (in_array($field['id'], $selected, true)) $custom[] = ['id' => $field['id'], 'type' => 'custom', 'props' => []];
         }
         $insert = count($fields);
-        foreach ($fields as $i => $field) if (in_array($field['id'], ['topics', 'infrastructure-collaborative'], true)) { $insert = $i; break; }
+        foreach ($fields as $i => $field) if (in_array($field['id'], ['topics', 'infrastructure-collaborative'], true)) {
+            $insert = $i;
+            break;
+        }
         array_splice($fields, $insert, 0, $custom);
         return $fields;
     }
@@ -154,5 +163,4 @@ final class InfrastructureForms
         if (array_key_exists('public', $input)) $input['public'] = filter_var($input['public'], FILTER_VALIDATE_BOOLEAN);
         return array_replace($previous, $input, isset($previous['id']) ? ['id' => $previous['id']] : []);
     }
-
 }

@@ -196,13 +196,6 @@
                     <p><?= lang('admin.projects_description') ?></p>
                 </a>
             <?php } ?>
-            <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-                <a class="card" href="<?= ROOTPATH ?>/admin/infrastructures">
-                    <i class="ph-duotone ph-cube-transparent" aria-hidden="true"></i>
-                    <b><?= lang('common.infrastructures') ?></b>
-                    <p><?= lang('admin.infrastructures_description') ?></p>
-                </a>
-            <?php } ?>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/journals">
                 <i class="ph-duotone ph-stack" aria-hidden="true"></i>

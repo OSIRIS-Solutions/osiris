@@ -277,7 +277,7 @@ Route::post('/crud/admin/infrastructuresFields', function () {
         return abortwith(400, $error->getMessage());
     }
     $osiris->adminGeneral->updateOne(['id' => 'infrastructure-fields'], ['$set' => ['fields' => $fields]], ['upsert' => true]);
-    header('Location: ' . ROOTPATH . '/admin/infrastructures');
+    header('Location: ' . ROOTPATH . '/admin/data-model#infrastructures');
 }, 'login');
 
 Route::get('/admin/events/fields', function () {

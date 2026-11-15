@@ -44,7 +44,7 @@
         <small class="text-muted"><?= lang('admin.manage_data_of_people_and_login') ?></small>
     </a>
     <?php if ($Settings->featureEnabled('infrastructures')) { ?>
-        <a href="<?= ROOTPATH ?>/admin/infrastructures" class="">
+        <a href="<?= ROOTPATH ?>/admin/data-model#infrastructures" class="">
             <i class="ph-duotone ph-cube-transparent text-secondary" aria-hidden="true"></i>
             <?= lang('common.infrastructures') ?>
             <br>
