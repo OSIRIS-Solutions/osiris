@@ -644,7 +644,7 @@ if (isset($news) && isset($news['_id'])) {
                             <option value=""><?= lang('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
-                                <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                <option value="<?= $s['id'] ?>"><?= localized($s['name']) ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
