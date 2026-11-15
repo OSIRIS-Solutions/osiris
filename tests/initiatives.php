@@ -44,7 +44,7 @@ function loadIsolated(string $file): void
     $source = file_get_contents(BASEPATH . '/' . $file);
     $source = str_replace("include_once BASEPATH . '/php/init.php';", 'global $DB, $osiris, $Settings;', $source);
     $source = str_replace('include_once BASEPATH . "/php/init.php";', 'global $DB, $osiris, $Settings;', $source);
-    $source = preg_replace('/^\s*(?:include|require)(?:_once)? (?![^\r\n]*(?:components\/modules\/|pages\/initiatives\/objective-form\.php)).*;\R/m', '', $source);
+    $source = preg_replace('/^\s*(?:include|require)(?:_once)? (?![^\r\n]*(?:components\/modules\/|pages\/initiatives\/(?:objective-form|archive-controls|content-data|content-tabs|linked-content)\.php)).*;\R/m', '', $source);
     $source = str_replace('__DIR__', var_export(dirname(BASEPATH . '/' . $file), true), $source);
     eval('?>' . $source);
 }
@@ -142,12 +142,14 @@ class Route
 $settingsSource = file_get_contents(BASEPATH . '/php/Settings.php');
 $chooserStart = strpos($settingsSource, '    function topicChooser(');
 $chooserEnd = strpos($settingsSource, '    function printTopics(', $chooserStart);
-eval('trait RegressionTopicChooser {' . substr($settingsSource, $chooserStart, $chooserEnd - $chooserStart) . '}');
+$topicsEnd = strpos($settingsSource, '    function printTopic(', $chooserEnd);
+eval('trait RegressionTopicChooser {' . substr($settingsSource, $chooserStart, $topicsEnd - $chooserStart) . '}');
 $Settings = new class {
     use RegressionTopicChooser;
     public function topicLabel() { return 'Research topics'; }
-    public function __get($key) { global $osiris; return $key === 'topics' ? $osiris->topics->find()->toArray() : null; }
+    public function __get($key) { global $osiris; return $key === 'osiris' ? $osiris : ($key === 'topics' ? $osiris->topics->find()->toArray() : null); }
 
+    public function getActivityFilter($filter) { return $filter; }
     public bool $enabled = true;
     public array $continuousTypes = [];
     public function contentLanguages() { return ['en', 'de']; }
@@ -157,7 +159,7 @@ $Settings = new class {
     public function hasPermission($key) { return in_array($key, $this->permissions, true); }
 };
 $osiris = new stdClass();
-foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations', 'adminTypes', 'activities', 'groups', 'topics'] as $collection) $osiris->$collection = new MemoryCollection();
+foreach (['initiatives', 'objectives', 'persons', 'adminGeneral', 'adminFields', 'organizations', 'adminTypes', 'activities', 'groups', 'topics', 'projects', 'proposals', 'conferences', 'infrastructures', 'deadlines'] as $collection) $osiris->$collection = new MemoryCollection();
 DB::$database = $osiris;
 $DB = new DB();
 $_SESSION = ['username' => 'reviewer'];

@@ -55,7 +55,7 @@ check($updated['created_by'] === 'reviewer' && $updated['initiative'] === $paren
 $count = count($osiris->objectives->documents);
 postRoute('/crud/initiatives/(.*)/objectives/create', ['values' => array_replace($input, ['name' => '', 'initiative' => 'spoof'])], $id);
 check(count($osiris->objectives->documents) === $count, 'Invalid create does not insert an objective.');
-check($_SESSION['objective_form'][$id]['new']['code'] === $input['code'] && !isset($_SESSION['objective_form'][$id]['new']['initiative']), 'Invalid create preserves only editable inputs for the modal.');
+check($_SESSION['objective_form'][$id]['new']['code'] === $input['code'] && !isset($_SESSION['objective_form'][$id]['new']['initiative']), 'Invalid create preserves only editable inputs for the create page.');
 postRoute('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', ['values' => array_replace($input, ['code' => 'Keep input', 'start_date' => 'invalid'])], $id, 'update', $objectiveId);
 check($_SESSION['objective_form'][$id][$objectiveId]['code'] === 'Keep input', 'Invalid edits retain the entered values.');
 check($osiris->objectives->findOne(['_id' => $objective['_id']])['code'] === 'EA-02', 'Invalid edits leave stored values intact.');
@@ -63,52 +63,49 @@ check($osiris->objectives->findOne(['_id' => $objective['_id']])['code'] === 'EA
 $initiative = $parent;
 ob_start(); loadIsolated('pages/initiatives/view.php'); $html = ob_get_clean();
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
-check($xpath->query('//a[@href="#add-objective" and contains(@class,"btn")]')->length === 1, 'The add action opens the modal.');
-check($xpath->query('//div[@id="add-objective" and @role="dialog"]')->length === 1, 'The create form is an accessible modal.');
-check($xpath->query('//select[@id="new-objective-type"]/option[@value="research" and @selected]')->length === 1, 'The dropdown retains the chosen vocabulary key after failed validation.');
-check($xpath->query('//select[@id="new-objective-type"]/option[@value="research"]')->item(0)->textContent === 'Research', 'Dropdowns show vocabulary labels rather than keys.');
-check($xpath->query('//select[@id="new-objective-type"]/option[@value="inactive"]')->length === 0, 'Dropdowns omit inactive vocabulary choices.');
-check(str_contains($html, 'Type: Validation'), 'Objective details use the vocabulary label.');
-check($xpath->query('//div[@id="add-objective"]//a[@href="#close-modal"]')->length === 2, 'The modal provides close and cancel controls.');
-foreach (['code', 'name', 'description', 'type', 'start_date', 'end_date'] as $field) {
-    check($xpath->query('//*[@id="add-objective"]//*[@name="values[' . $field . ']"]')->length === 1, 'The modal includes ' . $field . '.');
+check($xpath->query('//a[@href="' . ROOTPATH . '/initiatives/' . $id . '/objectives/new"]')->length === 1, 'Adding an objective opens a dedicated page.');
+check(str_contains($html, '/initiatives/objectives/view/' . $objectiveId), 'Objective cards navigate to the objective detail page.');
+check($xpath->query('//form | //div[@role="dialog"]')->length === 0 && !str_contains($html, '/objectives/archive/'), 'The overview has no edit forms, modals or archive actions.');
+check(isset($_SESSION['objective_form'][$id]['new'], $_SESSION['objective_form'][$id][$objectiveId]), 'Reading the overview does not consume pending form input.');
+
+function renderObjectiveEditor(array $initiative, array $objective): string {
+    $source = str_replace("require_once BASEPATH . '/php/Vocabulary.php';", '', file_get_contents(BASEPATH . '/pages/initiatives/objective-edit.php'));
+    ob_start(); eval('?>' . $source); return ob_get_clean();
 }
-check($xpath->query('//*[@id="new-objective-code" and @value=" EA-01 "]')->length === 1, 'The modal repopulates failed input.');
-check($xpath->query('//div[@role="dialog"]//*[@id="edit-objective-' . $objectiveId . '-code" and @value="Keep input"]')->length === 1, 'The edit modal retains failed inputs.');
-check(!isset($_SESSION['objective_form'][$id]), 'Displayed form drafts are consumed once.');
-check($xpath->query('//a[@href="#edit-objective-' . $objectiveId . '"]')->length === 1, 'Edit opens the objective-specific modal.');
-check($xpath->query('//div[@id="edit-objective-' . $objectiveId . '" and @role="dialog"]')->length === 1, 'Each objective has its own edit modal.');
-check($xpath->query('//div[@id="edit-objective-' . $objectiveId . '"]//a[@href="#close-modal"]')->length === 2, 'Edit provides close and cancel controls.');
+$newHtml = renderObjectiveEditor($parent, []);
+$newDom = new DOMDocument(); @$newDom->loadHTML($newHtml); $newXpath = new DOMXPath($newDom);
+check($newXpath->query('//select[@id="new-objective-type"]/option[@value="research" and @selected]')->length === 1, 'The create page retains the chosen vocabulary key after failed validation.');
+check($newXpath->query('//select[@id="new-objective-type"]/option[@value="research"]')->item(0)->textContent === 'Research' && $newXpath->query('//option[@value="inactive"]')->length === 0, 'Vocabulary labels are shown and inactive choices omitted.');
+foreach (['code', 'name', 'description', 'type', 'start_date', 'end_date'] as $field) {
+    check($newXpath->query('//*[@name="values[' . $field . ']"]')->length === 1, 'The create page includes ' . $field . '.');
+}
+check($newXpath->query('//input[@id="new-objective-code" and @value=" EA-01 "]')->length === 1, 'Failed input is repopulated.');
+check(!isset($_SESSION['objective_form'][$id]['new']) && isset($_SESSION['objective_form'][$id][$objectiveId]), 'Only the displayed form draft is consumed.');
+check(str_contains($newHtml, ROOTPATH . '/initiatives/view/' . $id . '#objectives') && !str_contains($newHtml, '/objectives/archive/'), 'Cancel returns to the parent objectives and new records have no archive control.');
+$editHtml = renderObjectiveEditor($parent, DB::doc2Arr($updated));
+$editDom = new DOMDocument(); @$editDom->loadHTML($editHtml); $editXpath = new DOMXPath($editDom);
+check($editXpath->query('//input[@id="edit-objective-code" and @value="Keep input"]')->length === 1, 'The edit page retains failed input.');
+check(str_contains($editHtml, ROOTPATH . '/initiatives/objectives/view/' . $objectiveId), 'Edit cancellation returns to the objective detail page.');
+check($editXpath->query('//form//form')->length === 0 && str_contains($editHtml, '/objectives/archive/' . $objectiveId), 'Archiving is a separate form outside normal saving.');
+check(str_contains($editHtml, 'Archive “Validate climate forecasts”?') && $editXpath->query('//div[contains(@class,"dropdown-menu")]//form')->length === 1, 'Archiving requires opening a named confirmation before submitting.');
 
 // Initiative dates are defaults only for new objectives; explicit draft/record values win.
-$initiative['start_date'] = '2026-01-01';
-$initiative['end_date'] = '2028-12-31';
-ob_start(); loadIsolated('pages/initiatives/view.php'); $defaultHtml = ob_get_clean();
-$defaultDom = new DOMDocument(); @$defaultDom->loadHTML($defaultHtml); $defaultXpath = new DOMXPath($defaultDom);
-check($defaultXpath->query('//input[@id="new-objective-start" and @value="2026-01-01"]')->length === 1, 'New objectives inherit the initiative start.');
-check($defaultXpath->query('//input[@id="new-objective-end" and @value="2028-12-31"]')->length === 1, 'New objectives inherit the initiative end.');
-check($defaultXpath->query('//input[@id="edit-objective-' . $objectiveId . '-end" and @value=""]')->length === 1, 'An existing open-ended objective does not inherit a different end.');
+$parent['start_date'] = '2026-01-01';
+$parent['end_date'] = '2028-12-31';
+$defaultHtml = renderObjectiveEditor($parent, []);
+check(str_contains($defaultHtml, 'value="2026-01-01"') && str_contains($defaultHtml, 'value="2028-12-31"'), 'New objectives inherit both initiative dates.');
+$editHtml = renderObjectiveEditor($parent, DB::doc2Arr($updated));
+check(str_contains($editHtml, 'id="edit-objective-end" class="form-control" type="date" name="values[end_date]" value=""'), 'An existing open-ended objective never inherits a new end date.');
 $_SESSION['objective_form'][$id]['new'] = ['start_date' => '', 'end_date' => '2029-01-01'];
-ob_start(); loadIsolated('pages/initiatives/view.php'); $draftHtml = ob_get_clean();
-check(str_contains($draftHtml, 'id="new-objective-start" class="form-control" type="date" name="values[start_date]" value=""'), 'An explicitly cleared draft start stays empty.');
-check(str_contains($draftHtml, 'value="2029-01-01"'), 'Entered draft dates override initiative defaults.');
-unset($initiative['start_date'], $initiative['end_date']);
-$initiative['start'] = ['year' => 2025, 'month' => 3, 'day' => 4];
-$initiative['end'] = null;
-ob_start(); loadIsolated('pages/initiatives/view.php'); $arrayDateHtml = ob_get_clean();
-check(str_contains($arrayDateHtml, 'value="2025-03-04"'), 'Structured initiative dates also populate the new form.');
-check(str_contains($arrayDateHtml, 'id="new-objective-end" class="form-control" type="date" name="values[end_date]" value=""'), 'An ongoing initiative leaves the default end empty.');
-$ids = [];
-foreach ($xpath->query('//*[@id]') as $element) $ids[] = $element->getAttribute('id');
-check(count($ids) === count(array_unique($ids)), 'Create and edit forms use unique HTML IDs.');
-if (isset($argv[1])) file_put_contents($argv[1] . '/objectives.html', $html);
-
-$_GET = ['status' => 'objectives'];
-ob_start(); loadIsolated('pages/initiatives/list.php'); $listHtml = ob_get_clean();
-check(str_contains($listHtml, '/initiatives/view/' . $id . '#objective-' . $objectiveId), 'The objective overview links to the objective within its actual initiative.');
+$draftHtml = renderObjectiveEditor($parent, []);
+check(str_contains($draftHtml, 'id="new-objective-start" class="form-control" type="date" name="values[start_date]" value=""') && str_contains($draftHtml, 'value="2029-01-01"'), 'Explicit draft dates, including a cleared start, override defaults.');
+unset($parent['start_date'], $parent['end_date']);
+$parent['start'] = ['year' => 2025, 'month' => 3, 'day' => 4];
+$parent['end'] = null;
+$arrayDateHtml = renderObjectiveEditor($parent, []);
+check(str_contains($arrayDateHtml, 'value="2025-03-04"') && str_contains($arrayDateHtml, 'id="new-objective-end" class="form-control" type="date" name="values[end_date]" value=""'), 'Structured dates and an ongoing initiative also populate correctly.');
 $Settings->permissions = ['initiatives.view'];
-ob_start(); loadIsolated('pages/initiatives/view.php'); $readonlyHtml = ob_get_clean();
-check(!str_contains($readonlyHtml, 'id="add-objective"') && !str_contains($readonlyHtml, '<form'), 'Read-only users receive neither modal nor editing forms.');
-ob_end_clean();
-echo $baselineOutput;
+aborts(fn() => Route::$routes['GET /initiatives/(.*)/objectives/new'][0]($id), 403);
+aborts(fn() => Route::$routes['GET /initiatives/objectives/edit/(.*)'][0]($objectiveId), 403);
+ob_end_clean(); echo $baselineOutput;
 echo 'Objective regression tests passed (' . ($checks - $baselineChecks) . " checks).\n";

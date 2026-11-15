@@ -37,4 +37,11 @@ return [
     'outside_period' => 'Outside the selection for this date',
     'selection_outside_period' => 'This new association is outside the activity period. Change the date or remove the selection.',
     'selection_hint' => 'The selection follows the activity date. Existing associations are retained.',
+    'overview' => 'Overview',
+    'no_linked_content' => 'No contents are linked yet.',
+    'linked_content' => 'Linked contents',
+    'back_to_initiative' => 'Back to initiative',
+    'archive_hint' => 'Archiving keeps existing links. Archived entries can be restored later.',
+    'confirm_archive' => 'Archive “{{name}}”?',
+    'confirm_restore' => 'Restore “{{name}}”?',
 ];

@@ -3,8 +3,15 @@
 /** All initiatives, with explicit access to archived and expired entries. */
 $status = $_GET['status'] ?? 'current';
 
-$objectives = $osiris->objectives->find([], ['sort' => ['start' => -1]])->toArray();
-$initiatives = $osiris->initiatives->find([], ['sort' => ['start' => -1]])->toArray();
+$objectives = Initiatives::sortCurrentFirst($osiris->objectives->find()->toArray());
+$initiatives = Initiatives::sortCurrentFirst($osiris->initiatives->find()->toArray());
+$initiativeNames = [];
+$objectiveCounts = [];
+foreach ($initiatives as $entry) $initiativeNames[(string) $entry['_id']] = Initiatives::text($entry['name'] ?? '');
+foreach ($objectives as $entry) {
+    $parent = (string) $entry['initiative'];
+    $objectiveCounts[$parent] = ($objectiveCounts[$parent] ?? 0) + 1;
+}
 if (!in_array($status, ['current', 'past', 'all', 'objectives'], true)) $status = 'current';
 if ($status === 'objectives') {
     $datas = $objectives;
@@ -23,7 +30,7 @@ $shown = 0;
         vertical-align: middle;
     }
 </style>
-<div class="container w-800 mw-full">
+<div>
     <h1><i class="ph-duotone ph-compass"></i> <?= e(translate('common.initiatives')) ?></h1>
     <div class="btn-toolbar">
         <?php if ($Settings->hasPermission('initiatives.edit')): ?>
@@ -62,14 +69,27 @@ $shown = 0;
             <div class="box padded">
                 <?php if ($status === 'objectives' && !empty($data['code'])): ?><span class="badge"><?= e($data['code']) ?></span><?php endif; ?>
                 <h4 class="title">
-                    <a href="<?= ROOTPATH ?>/initiatives/view/<?= e($status === 'objectives' ? $data['initiative'] : $data['_id']) ?><?= $status === 'objectives' ? '#objective-' . e($data['_id']) : '' ?>">
+                    <i class="ph-duotone <?= $status === 'objectives' ? 'ph-target' : 'ph-compass' ?>"></i>
+                    <a class="colorless" href="<?= ROOTPATH ?>/initiatives/<?= $status === 'objectives' ? 'objectives/' : '' ?>view/<?= e($data['_id']) ?>">
                         <?= e(Initiatives::text($data['name'] ?? '')) ?>
                     </a>
                 </h4>
                 <?php if ($archived): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?>
                 <?php if ($expired): ?><span class="badge warning"><?= translate('initiatives.expired') ?></span><?php endif; ?>
+                <?php if ($status === 'objectives'): ?>
+                    <p><a href="<?= ROOTPATH ?>/initiatives/view/<?= e($data['initiative']) ?>#objectives"><i class="ph ph-compass"></i> <?= e($initiativeNames[(string) $data['initiative']] ?? '') ?></a></p>
+                <?php elseif (!empty($data['title'])): ?>
+                    <p class="font-weight-bold"><?= e(Initiatives::text($data['title'])) ?></p>
+                <?php endif; ?>
+                <?php if (!empty($data['description'])): ?><p class="text-muted"><?= e(get_preview(strip_tags(Initiatives::text($data['description'])), 250)) ?></p><?php endif; ?>
                 <div class="text-muted">
                     <?= e(Initiatives::period($data)) ?>
+                </div>
+                <div class="mt-10">
+                    <a href="<?= ROOTPATH ?>/initiatives/<?= $status === 'objectives' ? 'objectives/' : '' ?>view/<?= e($data['_id']) ?>"><?= translate('topics.view_details') ?> <i class="ph ph-arrow-right"></i></a>
+                    <?php if ($status !== 'objectives' && !empty($objectiveCounts[(string) $data['_id']])): ?>
+                        <a class="ml-20" href="<?= ROOTPATH ?>/initiatives/view/<?= e($data['_id']) ?>#objectives"><i class="ph ph-target"></i> <?= $objectiveCounts[(string) $data['_id']] ?> <?= translate('initiatives.objectives') ?></a>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>

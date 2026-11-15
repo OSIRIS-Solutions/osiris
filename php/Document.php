@@ -1414,7 +1414,7 @@ class Document extends Settings
                     }
                     $description = trim(strip_tags(localized($objective['description'] ?? '', $this->lang)));
                     $tooltip = $description === '' ? '' : ' title="' . e($description) . '"';
-                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/view/' . e($objective['initiative']) . '#objective-' . e($objective['_id']) . '"' . $tooltip . '><i class="ph ph-target" aria-hidden="true"></i> ' . $name . '</a>';
+                    $names[] = '<a class="badge" href="' . ROOTPATH . '/initiatives/objectives/view/' . e($objective['_id']) . '"' . $tooltip . '><i class="ph ph-target" aria-hidden="true"></i> ' . $name . '</a>';
                 }
                 return implode(', ', $names);
             case 'institute-role':

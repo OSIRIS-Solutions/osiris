@@ -1,126 +1,77 @@
 <?php
-
-/** Initiative overview with formatted metadata and optional objectives. */
-include_once BASEPATH . '/php/Vocabulary.php';
 $initiative = DB::doc2Arr($initiative);
 $id = (string) $initiative['_id'];
 $canEdit = $Settings->hasPermission('initiatives.edit');
-$Vocabulary = new Vocabulary();
-$objectiveTypes = $Vocabulary->getValues('objective-type');
 $fields = Initiatives::fields($osiris);
 $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
 $fields = Initiatives::visibleFields($fields, DB::doc2Arr($user['roles'] ?? []));
-$details = Initiatives::details($initiative, $fields);
-$objectiveDrafts = $_SESSION['objective_form'][$id] ?? [];
-unset($_SESSION['objective_form'][$id]);
-$objectives = $osiris->objectives->find(['initiative' => $initiative['_id']], ['sort' => ['inactive' => 1, 'end_date' => 1, 'name' => 1]]);
+$titleVisible = array_intersect(['title', 'title-loc'], array_column($fields, 'id'));
+$detailFields = array_values(array_filter($fields, fn($field) => !in_array($field['id'] ?? '', ['title', 'title-loc', 'topics', 'date-range-ongoing'], true)));
+$details = Initiatives::details($initiative, $detailFields);
+$objectives = Initiatives::sortCurrentFirst($osiris->objectives->find(['initiative' => $initiative['_id']])->toArray());
+$association = ['initiatives' => $initiative['_id']];
+$directTopics = in_array('topics', array_column($fields, 'id'), true) ? DB::doc2Arr($initiative['topics'] ?? []) : [];
+include BASEPATH . '/pages/initiatives/content-data.php';
 ?>
-<div class="container w-800 mw-full">
-    <h1>
-        <i class="ph-duotone ph-compass"></i> <?= e(Initiatives::text($initiative['name'] ?? '')) ?>
-    </h1>
-
-    <?php if (!empty($initiative['inactive'])): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?>
-    <?php if (Initiatives::isExpired($initiative)): ?><span class="badge warning"><?= translate('initiatives.expired') ?></span><?php endif; ?>
-
-    <div class="btn-toolbar my-20">
-        <a class="btn" href="<?= ROOTPATH ?>/initiatives"><i class="ph ph-arrow-left"></i> <?= e(translate('common.initiatives')) ?></a>
-        <?php if ($canEdit): ?>
+<div data-initiative-page>
+    <a class="" href="<?= ROOTPATH ?>/initiatives"><i class="ph ph-arrow-left"></i> <?= translate('common.initiatives') ?></a>
+    <!-- <div class="text-muted"><i class="ph ph-compass"></i> <?= translate('common.initiative') ?></div> -->
+    <h1><i class="ph-duotone ph-compass"></i> <?= e(Initiatives::text($initiative['name'] ?? '')) ?></h1>
+    <?php if ($titleVisible && !empty($initiative['title'])): ?><h2 class="subtitle"><?= e(Initiatives::text($initiative['title'])) ?></h2><?php endif; ?>
+    <p>
+        <span class="badge <?= !empty($initiative['inactive']) ? 'muted' : 'primary' ?>"><?= translate(!empty($initiative['inactive']) ? 'initiatives.archived' : (Initiatives::isExpired($initiative) ? 'initiatives.expired' : 'initiatives.current')) ?></span>
+        <span class="text-muted ml-10"><?= e(Initiatives::period($initiative)) ?></span>
+    </p>
+    <?php if ($canEdit): ?>
+        <div class="btn-toolbar my-20">
             <a class="btn secondary" href="<?= ROOTPATH ?>/initiatives/edit/<?= e($id) ?>"><i class="ph ph-edit"></i> <?= translate('action.edit') ?></a>
-            <form action="<?= ROOTPATH ?>/crud/initiatives/archive/<?= e($id) ?>" method="post">
-                <input type="hidden" name="inactive" value="<?= empty($initiative['inactive']) ? '1' : '0' ?>">
-                <button class="btn" type="submit"><?= translate(empty($initiative['inactive']) ? 'initiatives.archive' : 'initiatives.restore') ?></button>
-            </form>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 
-    <?php foreach ($details['texts'] as $text): ?>
-        <section class="my-20">
-            <h3><?= e($text['label']) ?></h3>
-            <div><?= $text['value'] ?></div>
-        </section>
-    <?php endforeach; ?>
-
-    <?php if ($details['metadata']): ?>
+    <?php if ($details['metadata'] || $linkedTopics): ?>
         <table class="table">
             <tbody>
                 <?php foreach ($details['metadata'] as $field): ?>
                     <tr>
-                        <td>
-                            <span class="key"><?= e($field['label']) ?></span>
-                            <?= $field['value'] ?>
-                        </td>
+                        <td><span class="key"><?= e($field['label']) ?></span><?= $field['value'] ?></td>
                     </tr>
                 <?php endforeach; ?>
+                <?php if ($linkedTopics): ?>
+                    <tr>
+                        <td><span class="key"><?= e($Settings->topicLabel()) ?></span><?= $Settings->printTopics(array_column($linkedTopics, 'id'), '', false) ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($details['texts']): ?>
+                    <tr>
+                        <td>
+                            <?php foreach ($details['texts'] as $text): ?>
+                                <h3 class="mt-10"><?= e($text['label']) ?></h3>
+                                <div><?= $text['value'] ?></div>
+                            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     <?php endif; ?>
 
-    <section id="objectives" class="mt-20">
-        <?php if ($canEdit): ?>
-            <a class="btn secondary float-right" href="#add-objective"><i class="ph ph-plus"></i> <?= translate('initiatives.add_objective') ?></a>
-        <?php endif; ?>
-        <h2><?= e(translate('initiatives.objectives')) ?></h2>
-        <p class="text-muted"><?= translate('initiatives.objectives_description') ?></p>
-        <?php $objectiveCount = 0;
-        foreach ($objectives as $objective): $objectiveCount++; ?>
+    <section id="objectives" class="">
+        <?php if ($canEdit): ?><a class="btn primary float-right" href="<?= ROOTPATH ?>/initiatives/<?= e($id) ?>/objectives/new"><i class="ph ph-plus"></i> <?= translate('initiatives.add_objective') ?></a><?php endif; ?>
+        <h2><i class="ph-duotone ph-target"></i> <?= translate('initiatives.objectives') ?> <small class="badge primary"><?= count($objectives) ?></small></h2>
+        <?php foreach ($objectives as $objective): ?>
             <div class="box padded" id="objective-<?= e($objective['_id']) ?>">
                 <?php if (!empty($objective['code'])): ?><span class="badge"><?= e($objective['code']) ?></span><?php endif; ?>
-                <h4><?= e(Initiatives::text($objective['name'])) ?></h4>
+                <h4 class="title"><i class="ph ph-target"></i> <a class="colorless" href="<?= ROOTPATH ?>/initiatives/objectives/view/<?= e($objective['_id']) ?>"><?= e(Initiatives::text($objective['name'])) ?></a></h4>
                 <?php if (!empty($objective['inactive'])): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?>
                 <?php if (Initiatives::isExpired($objective)): ?><span class="badge warning"><?= translate('initiatives.expired') ?></span><?php endif; ?>
-                <?php if (!empty($objective['type'])): ?><p class="text-muted"><?= translate('initiatives.type') ?>: <?= e($Vocabulary->getValue('objective-type', $objective['type'])) ?></p><?php endif; ?>
-                <?php if (!empty($objective['description'])): ?><p><?= nl2br(e($objective['description'])) ?></p><?php endif; ?>
-                <p><?= e(Initiatives::period($objective)) ?></p>
-                <?php if ($canEdit): ?>
-                    <a class="btn secondary" href="#edit-objective-<?= e($objective['_id']) ?>"><i class="ph ph-edit"></i> <?= translate('action.edit') ?></a>
-                    <div class="modal" id="edit-objective-<?= e($objective['_id']) ?>" tabindex="-1" role="dialog" aria-labelledby="edit-objective-<?= e($objective['_id']) ?>-title">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <a href="#close-modal" class="close" role="button" aria-label="<?= e(translate('action.cancel')) ?>"><span aria-hidden="true">&times;</span></a>
-                                <h3 class="title" id="edit-objective-<?= e($objective['_id']) ?>-title"><?= translate('action.edit') ?>: <?= translate('initiatives.objective') ?></h3>
-                                <form action="<?= ROOTPATH ?>/crud/initiatives/<?= e($id) ?>/objectives/update/<?= e($objective['_id']) ?>" method="post">
-                                    <?php
-                                    $objectiveForm = array_replace(DB::doc2Arr($objective), $objectiveDrafts[(string) $objective['_id']] ?? []);
-                                    $objectiveFormId = 'edit-objective-' . $objective['_id'];
-                                    include BASEPATH . '/pages/initiatives/objective-form.php';
-                                    ?>
-                                    <button class="btn secondary" type="submit"><?= translate('action.save') ?></button>
-                                    <a class="btn" href="#close-modal"><?= translate('action.cancel') ?></a>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <form class="mt-10" action="<?= ROOTPATH ?>/crud/initiatives/<?= e($id) ?>/objectives/archive/<?= e($objective['_id']) ?>" method="post">
-                        <input type="hidden" name="inactive" value="<?= empty($objective['inactive']) ? '1' : '0' ?>">
-                        <button class="btn" type="submit"><?= translate(empty($objective['inactive']) ? 'initiatives.archive' : 'initiatives.restore') ?></button>
-                    </form>
-                <?php endif; ?>
+                <div class="text-muted"><?= e(Initiatives::period($objective)) ?></div>
             </div>
         <?php endforeach; ?>
-        <?php if ($objectiveCount === 0): ?><p class="text-muted"><?= translate('initiatives.no_objectives') ?></p><?php endif; ?>
+        <?php if (!$objectives): ?><p class="text-muted"><?= translate('initiatives.no_objectives') ?></p><?php endif; ?>
+    </section>
+
+    <section id="contents" class="">
+        <?php include BASEPATH . '/pages/initiatives/content-tabs.php'; ?>
+        <?php include BASEPATH . '/pages/initiatives/linked-content.php'; ?>
     </section>
 </div>
-
-<?php if ($canEdit): ?>
-    <div class="modal" id="add-objective" tabindex="-1" role="dialog" aria-labelledby="add-objective-title">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <a href="#close-modal" class="close" role="button" aria-label="<?= e(translate('action.cancel')) ?>"><span aria-hidden="true">&times;</span></a>
-                <h3 class="title" id="add-objective-title"><?= translate('initiatives.add_objective') ?></h3>
-                <form action="<?= ROOTPATH ?>/crud/initiatives/<?= e($id) ?>/objectives/create" method="post">
-                    <?php
-                    $objectiveForm = array_replace([
-                        'start_date' => valueFromDateArray($initiative['start_date'] ?? $initiative['start'] ?? null),
-                        'end_date' => valueFromDateArray($initiative['end_date'] ?? $initiative['end'] ?? null),
-                    ], $objectiveDrafts['new'] ?? []);
-                    $objectiveFormId = 'new-objective';
-                    include BASEPATH . '/pages/initiatives/objective-form.php';
-                    ?>
-                    <button class="btn secondary" type="submit"><?= translate('action.save') ?></button>
-                    <a class="btn" href="#close-modal"><?= translate('action.cancel') ?></a>
-                </form>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>

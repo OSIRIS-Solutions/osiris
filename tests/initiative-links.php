@@ -77,7 +77,7 @@ check($xpath->query('//input[@name="values[objectives][]" and @checked]')->lengt
 check(str_contains($html, 'data-required="true"') && str_contains($html, 'ph-target'), 'The objective widget supports required selection and the target icon.');
 $format->doc = json_decode(json_encode(['objectives' => [$objectiveId]]), true);
 $rendered = $format->get_field('objectives');
-check(str_contains($rendered, '/initiatives/view/' . $first . '#objective-' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders Extended JSON references as escaped objective links with identifiers and description tooltips.');
+check(str_contains($rendered, '/initiatives/objectives/view/' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders Extended JSON references as escaped objective links with identifiers and description tooltips.');
 $format->usecase = 'print';
 check($format->get_field('objectives') === '26-01: Climate &amp; water', 'Printed objectives use plain names.');
 $format->usecase = 'portal';

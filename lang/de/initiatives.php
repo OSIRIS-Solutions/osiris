@@ -37,4 +37,11 @@ return [
     'outside_period' => 'Außerhalb der Auswahl für dieses Datum',
     'selection_outside_period' => 'Diese neue Zuordnung liegt außerhalb des Aktivitätszeitraums. Bitte das Datum ändern oder die Auswahl entfernen.',
     'selection_hint' => 'Die Auswahl folgt dem Aktivitätsdatum. Bestehende Zuordnungen bleiben erhalten.',
+    'overview' => 'Übersicht',
+    'no_linked_content' => 'Es sind noch keine Inhalte verknüpft.',
+    'linked_content' => 'Verknüpfte Inhalte',
+    'back_to_initiative' => 'Zurück zur Initiative',
+    'archive_hint' => 'Beim Archivieren bleiben bestehende Verknüpfungen erhalten. Archivierte Einträge können später wiederhergestellt werden.',
+    'confirm_archive' => '„{{name}}“ archivieren?',
+    'confirm_restore' => '„{{name}}“ wiederherstellen?',
 ];

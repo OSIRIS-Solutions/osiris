@@ -21,6 +21,8 @@ $Modules->setFields($fields);
         <?= e(translate($editing ? 'action.edit' : 'common.new')) ?>: <?= e(translate('common.initiative')) ?>
     </h1>
 
+    <?php if ($editing): ?><h2 class="subtitle"><?= e(Initiatives::text($initiative['name'] ?? '')) ?></h2><?php endif; ?>
+
     <form action="<?= e($formaction) ?>" method="post" id="initiative-form">
         <div id="data-modules" class="row row-eq-spacing">
             <?php $Modules->render_form($fields); ?>
@@ -32,4 +34,10 @@ $Modules->setFields($fields);
             <?= translate('action.cancel') ?>
         </a>
     </form>
+    <?php if ($editing):
+        $archiveAction = ROOTPATH . '/crud/initiatives/archive/' . $form['_id'];
+        $archiveName = $initiativeName ?? Initiatives::text($initiative['name'] ?? '');
+        $archiveInactive = !empty($initiative['inactive']);
+        include BASEPATH . '/pages/initiatives/archive-controls.php';
+    endif; ?>
 </div>

@@ -29,6 +29,52 @@ Route::get('/initiatives/new', function () {
     include BASEPATH . '/footer.php';
 }, 'login');
 
+Route::get('/initiatives/(.*)/objectives/new', function ($id) {
+    include_once BASEPATH . '/php/init.php';
+    Initiatives::requireAccess(true);
+    $initiative = Initiatives::find($osiris, $id);
+    $objective = [];
+    $breadcrumb = [
+        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $id],
+        ['name' => translate('initiatives.add_objective')],
+    ];
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/pages/initiatives/objective-edit.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
+Route::get('/initiatives/objectives/edit/(.*)', function ($id) {
+    include_once BASEPATH . '/php/init.php';
+    Initiatives::requireAccess(true);
+    $objective = Initiatives::findObjective($osiris, $id);
+    $initiative = Initiatives::find($osiris, (string) $objective['initiative']);
+    $breadcrumb = [
+        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $initiative['_id']],
+        ['name' => Initiatives::text($objective['name'] ?? ''), 'path' => '/initiatives/objectives/view/' . $id],
+        ['name' => translate('action.edit')],
+    ];
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/pages/initiatives/objective-edit.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
+Route::get('/initiatives/objectives/view/(.*)', function ($id) {
+    include_once BASEPATH . '/php/init.php';
+    Initiatives::requireAccess();
+    $objective = Initiatives::findObjective($osiris, $id);
+    $initiative = Initiatives::find($osiris, (string) $objective['initiative']);
+    $breadcrumb = [
+        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $initiative['_id']],
+        ['name' => Initiatives::text($objective['name'] ?? '')],
+    ];
+    include BASEPATH . '/header.php';
+    include BASEPATH . '/pages/initiatives/objective.php';
+    include BASEPATH . '/footer.php';
+}, 'login');
+
 Route::get('/initiatives/view/(.*)', function ($id) {
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess();
@@ -46,6 +92,7 @@ Route::get('/initiatives/edit/(.*)', function ($id) {
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess(true);
     $initiative = DB::doc2Arr(Initiatives::find($osiris, $id));
+    $initiativeName = Initiatives::text($initiative['name'] ?? '');
     if (isset($_SESSION['initiative_form'][$id])) {
         $initiative = array_replace($initiative, $_SESSION['initiative_form'][$id]);
         unset($_SESSION['initiative_form'][$id]);
@@ -127,22 +174,24 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess(true);
     $initiative = Initiatives::find($osiris, $id);
-    $target = '#objectives';
+    $target = ROOTPATH . '/initiatives/' . $id . '/objectives/new';
     try {
         if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
         $values = Initiatives::objectiveValues($_POST['values']);
         $values += [
-            'initiative' => $initiative['_id'], 'inactive' => false,
+            '_id' => new MongoDB\BSON\ObjectId(), 'initiative' => $initiative['_id'], 'inactive' => false,
             'created' => date('Y-m-d'), 'created_by' => $_SESSION['username'],
         ];
         $osiris->objectives->insertOne($values);
+        $target = ROOTPATH . '/initiatives/objectives/view/' . $values['_id'];
+        $_SESSION['msg'] = translate('initiatives.saved');
+        $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $e) {
         $_SESSION['objective_form'][$id]['new'] = Initiatives::objectiveDraft(is_array($_POST['values'] ?? null) ? $_POST['values'] : []);
-        $target = '#add-objective';
         $_SESSION['msg'] = e($e->getMessage());
         $_SESSION['msg_type'] = 'error';
     }
-    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . $target);
+    header('Location: ' . $target);
 }, 'login');
 
 Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function ($id, $action, $objectiveId) {
@@ -159,7 +208,7 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
         http_response_code(404);
         abortwith(404, translate('initiatives.objective'), '/initiatives/view/' . $id);
     }
-    $target = '#objectives';
+    $target = ROOTPATH . '/initiatives/objectives/view/' . $objectiveId;
     try {
         if ($action === 'archive') {
             $values = ['inactive' => ($_POST['inactive'] ?? '') === '1'];
@@ -170,11 +219,13 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
         $values['updated'] = date('Y-m-d');
         $values['updated_by'] = $_SESSION['username'];
         $osiris->objectives->updateOne($filter, ['$set' => $values]);
+        $_SESSION['msg'] = translate('initiatives.saved');
+        $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $e) {
-        $target = '#edit-objective-' . $objectiveId;
+        $target = ROOTPATH . '/initiatives/objectives/edit/' . $objectiveId;
         $_SESSION['objective_form'][$id][$objectiveId] = Initiatives::objectiveDraft(is_array($_POST['values'] ?? null) ? $_POST['values'] : []);
         $_SESSION['msg'] = e($e->getMessage());
         $_SESSION['msg_type'] = 'error';
     }
-    header('Location: ' . ROOTPATH . '/initiatives/view/' . $id . $target);
+    header('Location: ' . $target);
 }, 'login');

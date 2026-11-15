@@ -1,8 +1,7 @@
 <?php
-/** Fixed objective inputs, shared by the create modal and the edit form. */
+/** Fixed objective inputs shared by the create and edit pages. */
 $objectiveFormId = $objectiveFormId ?? 'objective-form';
 $objectiveTypes = $objectiveTypes ?? [];
-$objectiveDrafts = $objectiveDrafts ?? [];
 ?>
 <div class="row row-eq-spacing">
     <div class="col-sm-6">

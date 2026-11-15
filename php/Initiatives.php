@@ -298,6 +298,49 @@ final class Initiatives
         }
     }
 
+    /** Visible content for exactly one initiative or objective; saved initiative links include objective parents. */
+    public static function linkedContents($database, $settings, array $association): array
+    {
+        $contents = ['publications' => [], 'activities' => [], 'projects' => [], 'proposals' => [], 'events' => [], 'infrastructures' => [], 'deadlines' => []];
+        $activities = $database->activities->find($settings->getActivityFilter($association), ['sort' => ['year' => -1, 'month' => -1, 'day' => -1]]);
+        foreach ($activities as $activity) $contents[($activity['type'] ?? '') === 'publication' ? 'publications' : 'activities'][] = DB::doc2Arr($activity);
+        foreach (['projects' => 'projects', 'proposals' => 'projects', 'events' => null, 'infrastructures' => 'infrastructures', 'deadlines' => 'deadlines'] as $entity => $feature) {
+            if ($feature !== null && !$settings->featureEnabled($feature)) continue;
+            $filter = $association;
+            if (in_array($entity, ['projects', 'proposals'], true) && !$settings->hasPermission($entity . '.view')) {
+                $filter['$or'] = [['persons.user' => $_SESSION['username']], ['created_by' => $_SESSION['username']]];
+            }
+            if ($entity === 'infrastructures' && !$settings->hasPermission('infrastructures.view')) $filter['persons.user'] = $_SESSION['username'];
+            $collection = $entity === 'events' ? 'conferences' : $entity;
+            foreach ($database->$collection->find($filter, ['sort' => ['start_date' => -1, 'start' => -1, 'date' => -1]]) as $document) $contents[$entity][] = DB::doc2Arr($document);
+        }
+        return $contents;
+    }
+
+    /** Topics are derived only from the contents visible in this scope. */
+    public static function contentTopics($database, array $contents, array $direct = []): array
+    {
+        $ids = $direct;
+        foreach ($contents as $documents) foreach ($documents as $document) $ids = array_merge($ids, DB::doc2Arr($document['topics'] ?? []));
+        $ids = array_values(array_unique(array_filter($ids, 'is_string')));
+        return $ids ? $database->topics->find(['id' => ['$in' => $ids]], ['sort' => ['inactive' => 1, 'name' => 1]])->toArray() : [];
+    }
+
+    /** Current entries first, with past and archived entries still accessible. */
+    public static function sortCurrentFirst(array $documents): array
+    {
+        usort($documents, fn($a, $b) => ((int) (!empty($a['inactive']) || self::isExpired($a)) <=> (int) (!empty($b['inactive']) || self::isExpired($b)))
+            ?: strnatcasecmp(self::text($a['name'] ?? ''), self::text($b['name'] ?? '')));
+        return $documents;
+    }
+
+    public static function findObjective($database, string $id)
+    {
+        $objective = DB::is_ObjectID($id) ? $database->objectives->findOne(['_id' => DB::to_ObjectID($id)]) : null;
+        if (!$objective) return abortwith(404, translate('initiatives.objective'), '/initiatives');
+        return $objective;
+    }
+
     public static function find($database, string $id)
     {
         $initiative = DB::is_ObjectID($id) ? $database->initiatives->findOne(['_id' => DB::to_ObjectID($id)]) : null;
