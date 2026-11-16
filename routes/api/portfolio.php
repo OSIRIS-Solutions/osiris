@@ -125,8 +125,14 @@ function help_getGroup($osiris, $id)
 Route::get('/portfolio/(initiatives|objectives)', function ($entity) {
     include_once BASEPATH . '/php/init.php';
     require_once BASEPATH . '/php/Initiatives.php';
-    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
-    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) {
+        echo rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
     try {
         $filter = ['public' => true];
         if ($entity === 'objectives') {
@@ -152,7 +158,9 @@ Route::get('/portfolio/(initiatives|objectives)', function ($entity) {
             if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
             $output = Initiatives::portfolioMetadata($osiris, $entity, $record);
             $text = [];
-            array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
+            array_walk_recursive($output, function ($value) use (&$text) {
+                if (is_scalar($value)) $text[] = (string) $value;
+            });
             if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
             $result[] = $output;
         }
@@ -165,8 +173,14 @@ Route::get('/portfolio/(initiatives|objectives)', function ($entity) {
 Route::get('/portfolio/(initiative|objective)/([^/]+)', function ($entity, $id) {
     include_once BASEPATH . '/php/init.php';
     require_once BASEPATH . '/php/Initiatives.php';
-    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
-    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) {
+        echo rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
     $entity .= 's';
     $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id), 'public' => true]) : null;
     if ($document && ($document['public'] ?? false) !== true) $document = null;
@@ -175,16 +189,63 @@ Route::get('/portfolio/(initiative|objective)/([^/]+)', function ($entity, $id) 
         $parent = DB::is_ObjectID($parentId) ? $osiris->initiatives->findOne(['_id' => DB::to_ObjectID($parentId), 'public' => true]) : null;
         if (!$parent || ($parent['public'] ?? false) !== true) $document = null;
     }
-    if (!$document) { echo rest('Record not found.', 0, 404); return; }
+    if (!$document) {
+        echo rest('Record not found.', 0, 404);
+        return;
+    }
     $document = DB::doc2Arr($document);
-    echo rest(Initiatives::portfolioMetadata($osiris, $entity, $document), 1, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+    $result = Initiatives::portfolioMetadata($osiris, $entity, $document);
+    if ($entity === 'initiatives') {
+        $result['objectives'] = [];
+        $objectives = $osiris->objectives->find(['initiative' => (string) $document['_id'], 'public' => true])->toArray();
+        foreach (Initiatives::sortCurrentFirst($objectives) as $objective) {
+            if (($objective['public'] ?? false) !== true) continue;
+            $result['objectives'][] = Initiatives::portfolioMetadata($osiris, 'objectives', DB::doc2Arr($objective));
+        }
+    }
+
+    $result['numbers'] = [];
+    if ($entity === 'initiatives') $result['numbers']['objectives'] = count($result['objectives']);
+    foreach (['publications', 'activities', 'projects', 'events', 'infrastructures'] as $content) {
+        $result['numbers'][$content] = 0;
+        $feature = match ($content) {
+            'projects', 'infrastructures' => $content,
+            default => null
+        };
+        if ($feature !== null && !$Settings->featureEnabled($feature)) continue;
+        $collection = match ($content) {
+            'publications' => 'activities',
+            'events' => 'conferences',
+            default => $content
+        };
+        $filter = [$entity => (string) $document['_id']];
+        if (in_array($content, ['publications', 'activities'], true)) {
+            // Match the visibility rules of the corresponding related-content endpoints.
+            $filter += ['hide' => ['$ne' => true], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio($content === 'publications')]];
+            $filter['type'] = $content === 'publications' ? 'publication' : ['$ne' => 'publication'];
+            if ($Settings->featureEnabled('quality-workflow')) {
+                $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+                if ($visibility === 'only-approved') $filter['workflow.status'] = 'verified';
+                elseif ($visibility === 'approved-or-empty') $filter['$or'] = [['workflow' => ['$exists' => false]], ['workflow.status' => 'verified'], ['workflow.status' => ['$exists' => false]]];
+            }
+        } else $filter['public'] = true;
+        $result['numbers'][$content] = $osiris->$collection->countDocuments($filter);
+    }
+    echo rest($result, 1, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 });
 
-Route::get('/portfolio/(initiative|objective)/([^/]+)/(objectives|publications|activities|all-activities|projects|events|infrastructures)', function ($entity, $id, $relation) {
+Route::get('/portfolio/(initiative|objective)/([^/]+)/(publications|activities|all-activities|projects|events|infrastructures)', function ($entity, $id, $relation) {
     include_once BASEPATH . '/php/init.php';
     require_once BASEPATH . '/php/Initiatives.php';
-    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
-    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) {
+        echo rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) {
+        echo rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
     $entity .= 's';
     $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id), 'public' => true]) : null;
     if ($document && ($document['public'] ?? false) !== true) $document = null;
@@ -193,40 +254,23 @@ Route::get('/portfolio/(initiative|objective)/([^/]+)/(objectives|publications|a
         $parent = DB::is_ObjectID($parentId) ? $osiris->initiatives->findOne(['_id' => DB::to_ObjectID($parentId), 'public' => true]) : null;
         if (!$parent || ($parent['public'] ?? false) !== true) $document = null;
     }
-    if (!$document) { echo rest('Record not found.', 0, 404); return; }
+    if (!$document) {
+        echo rest('Record not found.', 0, 404);
+        return;
+    }
     $document = DB::doc2Arr($document);
     try {
-        if ($relation === 'objectives') {
-            if ($entity !== 'initiatives') { echo rest('Relation not found.', 0, 404); return; }
-            $parent = null;
-            if (isset($_GET['initiative'])) {
-                if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
-                $parent = strtolower($_GET['initiative']);
-            }
-            $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find(['initiative' => (string) $document['_id'], 'public' => true])->toArray();
-            $records = array_filter($records, fn($record) => ($record['public'] ?? false) === true);
-            $status = $_GET['status'] ?? 'current';
-            if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
-            $search = $_GET['search'] ?? '';
-            if (!is_string($search)) throw new InvalidArgumentException('Invalid search.');
-            $result = [];
-            foreach (Initiatives::sortCurrentFirst($records) as $record) {
-                $record = DB::doc2Arr($record);
-                $past = !empty($record['inactive']) || Initiatives::isExpired($record);
-                if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
-                $output = Initiatives::portfolioMetadata($osiris, 'objectives', $record);
-                $text = [];
-                array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
-                if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
-                $result[] = $output;
-            }
-            echo rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            return;
-        }
         $content = in_array($relation, ['publications', 'all-activities'], true) ? 'activities' : $relation;
         $collection = $content === 'events' ? 'conferences' : $content;
-        $feature = match ($content) { 'projects' => 'projects', 'infrastructures' => 'infrastructures', default => null };
-        if ($feature !== null && !$Settings->featureEnabled($feature)) { echo rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); return; }
+        $feature = match ($content) {
+            'projects' => 'projects',
+            'infrastructures' => 'infrastructures',
+            default => null
+        };
+        if ($feature !== null && !$Settings->featureEnabled($feature)) {
+            echo rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return;
+        }
         $filter = [$entity => (string) $document['_id']];
         if ($content === 'activities') {
             $filter += ['hide' => ['$ne' => true], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio($relation !== 'activities')]];
@@ -1543,7 +1587,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $Format->usecase = "list";
     $portfolio_fields = $Modules->getPortfolioFields();
 
-    
+
     // $hidden_modules = ['authors', "editors", "supervisors", "semester-select", 'abstract', 'doi', 'pubmed', 'depts', 'projects', 'correction', 'epub', 'title'];
     $fields = [];
     foreach ($selected as $module) {
@@ -3840,7 +3884,7 @@ Route::get('/portfolio/spectrum', function () {
     $recentYear = intval(date('Y')) - 5;
     $activityRows = $osiris->activities->aggregate([
         ['$match' => $baseMatch + ['year' => ['$gte' => $recentYear]]],
-        ['$project' => ['openalex.topics' => 1, 'year' => 1, 'score' => 1, 'id' => ['$toString' => '$_id'], 'html'=> '$rendered.portfolio', 'icon' => '$rendered.icon', 'type' => '$rendered.type', 'subtype' => '$rendered.subtype']],
+        ['$project' => ['openalex.topics' => 1, 'year' => 1, 'score' => 1, 'id' => ['$toString' => '$_id'], 'html' => '$rendered.portfolio', 'icon' => '$rendered.icon', 'type' => '$rendered.type', 'subtype' => '$rendered.subtype']],
         ['$unwind' => '$openalex.topics'],
         ['$match' => ['openalex.topics.id' => ['$exists' => true, '$ne' => null], 'openalex.topics.score' => ['$gte' => 0.8]]],
         ['$group' => [

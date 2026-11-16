@@ -82,6 +82,7 @@ class MemoryCollection
             public function getIterator(): Traversable { return new ArrayIterator($this->items); }
         };
     }
+    public function countDocuments(array $filter = []) { return count($this->find($filter)->toArray()); }
     public function insertOne(array $document) {
         $document['_id'] ??= new MongoDB\BSON\ObjectId();
         $this->documents[(string) $document['_id']] = $document;
@@ -150,6 +151,7 @@ $Settings = new class {
     public function __get($key) { global $osiris; return $key === 'osiris' ? $osiris : ($key === 'topics' ? $osiris->topics->find()->toArray() : null); }
 
     public function getActivityFilter($filter) { return $filter; }
+    public function getActivitiesPortfolio($all = true) { return $all ? ['article', 'lecture'] : ['lecture']; }
     public bool $enabled = true;
     public array $continuousTypes = [];
     public function contentLanguages() { return ['en', 'de']; }

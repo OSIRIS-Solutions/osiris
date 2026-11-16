@@ -31,7 +31,7 @@ function initiativeApiRequest(string $api, string $entity, ?string $id = null, ?
     $portfolio = $api === 'portfolio';
     $pattern = $id === null ? ($portfolio ? '/portfolio/(initiatives|objectives)' : '/api/(initiatives|objectives)')
         : ($portfolio ? '/portfolio/(initiative|objective)/([^/]+)' : '/api/(initiatives|objectives)/([^/]+)');
-    if ($relation !== null) $pattern .= $portfolio ? '/(objectives|publications|activities|all-activities|projects|events|infrastructures)' : '/(objectives|activities|projects|proposals|events|infrastructures|deadlines)';
+    if ($relation !== null) $pattern .= $portfolio ? '/(publications|activities|all-activities|projects|events|infrastructures)' : '/(objectives|activities|projects|proposals|events|infrastructures|deadlines)';
     $args = [$portfolio && $id !== null ? substr($entity, 0, -1) : $entity];
     if ($id !== null) $args[] = $id;
     if ($relation !== null) $args[] = $relation;
@@ -50,6 +50,9 @@ $osiris->initiatives->insertOne(['_id' => $privateId, 'name' => ['en' => 'Intern
 $osiris->objectives->insertOne(['_id' => $objectiveId, 'initiative' => (string) $publicId, 'name' => 'Public objective', 'code' => '001', 'public' => true, 'type' => 'objective']);
 $hiddenObjective = new MongoDB\BSON\ObjectId();
 $osiris->objectives->insertOne(['_id' => $hiddenObjective, 'initiative' => (string) $privateId, 'name' => 'Must remain hidden', 'public' => true]);
+$archivedObjectiveId = new MongoDB\BSON\ObjectId();
+$osiris->objectives->insertOne(['_id' => $archivedObjectiveId, 'initiative' => (string) $publicId, 'name' => 'Archived objective', 'public' => true, 'inactive' => true]);
+$osiris->objectives->insertOne(['initiative' => (string) $publicId, 'name' => 'Private objective', 'public' => false]);
 $fields = Initiatives::fields($osiris);
 foreach ($fields as &$field) if ($field['id'] === 'description') $field['props']['portfolio'] = false;
 unset($field);
@@ -58,6 +61,7 @@ check(initiativeApiRequest('portfolio', 'initiatives', (string) $privateId)['sta
 check(initiativeApiRequest('portfolio', 'objectives', (string) $hiddenObjective)['status'] === 404, 'A published objective remains private when its initiative is not published.');
 $visible = initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data'];
 check($visible['name'] === '001' && !isset($visible['description'], $visible['created_by'], $visible['persons']), 'Public metadata respects field visibility and omits audit data and raw person memberships.');
+check(array_column($visible['objectives'], 'id') === [(string) $objectiveId, (string) $archivedObjectiveId] && $visible['numbers']['objectives'] === 2, 'Initiative details embed only their public objectives, with archived entries last and a matching count.');
 $_GET = ['lang' => 'de'];
 check(initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data']['name'] === 'Wasser', 'Public metadata uses the requested language.');
 $_GET = ['lang' => 'all'];
@@ -95,10 +99,13 @@ $response = initiativeApiRequest('api', 'initiatives');
 check($response['count'] === 2 && count($response['data']) === 1, 'Offsets work without a limit.');
 $_GET = ['offset' => 1, 'limit' => 1];
 check(initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data']['name'] === '001', 'List pagination does not truncate detail documents.');
+check(count(initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data']['objectives']) === 2, 'List pagination does not truncate embedded objectives or their count.');
 class InitiativeContentCollection extends MemoryCollection
 {
     public array $filter = [];
     public array $options = [];
+    public array $countFilters = [];
+    public function countDocuments(array $filter = []) { $this->countFilters[] = $filter; return 3; }
     public function find(array $filter = [], array $options = []) {
         $this->filter = $filter; $this->options = $options;
         return parent::find([], $options);
@@ -114,7 +121,8 @@ $_GET = ['filter' => ['$or' => ['invalid']]];
 check(initiativeApiRequest('api', 'initiatives')['status'] === 400, 'Malformed logical groups return a controlled error.');
 $osiris->initiatives = $originalInitiatives;
 $contentSettings = new class {
-    public function featureEnabled($feature) { return true; }
+    public array $disabled = [];
+    public function featureEnabled($feature) { return !in_array($feature, $this->disabled, true); }
     public function getActivitiesPortfolio($all = true) { return $all ? ['article', 'lecture'] : ['lecture']; }
     public function get($key, $default = null) { return $key === 'portfolio-workflow-visibility' ? 'only-approved' : $default; }
 };
@@ -128,6 +136,17 @@ check($osiris->activities->filter['initiatives'] === (string) $publicId && $osir
 check($osiris->activities->filter['type'] === 'publication' && $osiris->activities->filter['subtype']['$in'] === ['article', 'lecture'], 'Publication relations honor the enabled Portfolio subtypes.');
 check($content[0]['html'] === '<p>Public</p>' && !isset($content[0]['rendered'], $content[0]['created_by'], $content[0]['private_note']), 'Public relations return the public activity rendering without internal caches or metadata.');
 initiativeApiRequest('portfolio', 'initiatives', (string) $publicId, 'activities');
+$osiris->projects = new InitiativeContentCollection();
+$osiris->conferences = new InitiativeContentCollection();
+$osiris->infrastructures = new InitiativeContentCollection();
+$details = initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data'];
+$countFilters = array_slice($osiris->activities->countFilters, -2);
+check($details['numbers']['publications'] === 3 && $details['numbers']['activities'] === 3 && $countFilters[0]['initiatives'] === (string) $publicId, 'Detail counters return database totals scoped to the initiative.');
+check($countFilters[0]['workflow.status'] === 'verified' && $countFilters[0]['hide']['$ne'] === true && $countFilters[0]['type'] === 'publication' && $countFilters[1]['type']['$ne'] === 'publication' && $countFilters[1]['subtype']['$in'] === ['lecture'], 'Publication and activity counters use the same workflow, hidden-record and subtype restrictions as their lists.');
+check($details['numbers']['projects'] === 3 && $osiris->projects->countFilters[0] === ['initiatives' => (string) $publicId, 'public' => true] && $osiris->conferences->countFilters[0]['public'] === true && $osiris->infrastructures->countFilters[0]['public'] === true, 'Project, event and infrastructure counters require public content and the parent association.');
+$contentSettings->disabled = ['projects', 'infrastructures'];
+$disabledDetails = initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data'];
+check($disabledDetails['numbers']['projects'] === 0 && $disabledDetails['numbers']['infrastructures'] === 0 && count($osiris->projects->countFilters) === 1 && count($osiris->infrastructures->countFilters) === 1, 'Disabled features have zero counts without querying their content.');
 $Settings = $originalSettings;
 check($osiris->activities->filter['type']['$ne'] === 'publication' && $osiris->activities->filter['subtype']['$in'] === ['lecture'], 'The activities endpoint follows the existing convention of excluding publications.');
 $_GET = [];
