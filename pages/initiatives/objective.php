@@ -29,7 +29,6 @@ include BASEPATH . '/pages/initiatives/content-data.php';
             <table class="table"><tbody>
                 <?php if (!empty($objective['code'])): ?><tr><td><span class="key"><?= translate('initiatives.identifier') ?></span><?= e($objective['code']) ?></td></tr><?php endif; ?>
                 <?php if (!empty($objective['type'])): ?><tr><td><span class="key"><?= translate('initiatives.type') ?></span><?= e($Vocabulary->getValue('objective-type', $objective['type'])) ?></td></tr><?php endif; ?>
-                <?php if ($linkedTopics): ?><tr><td><span class="key"><?= e($Settings->topicLabel()) ?></span><?= $Settings->printTopics(array_column($linkedTopics, 'id'), '', false) ?></td></tr><?php endif; ?>
             </tbody></table>
         </div>
     </div>

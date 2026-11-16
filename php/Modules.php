@@ -1009,7 +1009,7 @@ class Modules
             "description" => 'Project field: Research topics.',
             "width" => 12, "portfolio" => true,
             "tags" => ['general'], "section" => 'general',
-            "entities" => ['projects', 'events', 'infrastructures'],
+            "entities" => ['projects', 'events', 'infrastructures', 'initiatives'],
         ],
         "persons-project" => [
             "fields" => ["persons" => []],

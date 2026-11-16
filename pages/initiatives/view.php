@@ -10,7 +10,7 @@ $detailFields = array_values(array_filter($fields, fn($field) => !in_array($fiel
 $details = Initiatives::details($initiative, $detailFields);
 $objectives = Initiatives::sortCurrentFirst($osiris->objectives->find(['initiative' => (string) $initiative['_id']])->toArray());
 $association = ['initiatives' => (string) $initiative['_id']];
-$directTopics = in_array('topics', array_column($fields, 'id'), true) ? DB::doc2Arr($initiative['topics'] ?? []) : [];
+$directTopics = $Settings->featureEnabled('topics') && in_array('topics', array_column($fields, 'id'), true) ? DB::doc2Arr($initiative['topics'] ?? []) : [];
 include BASEPATH . '/pages/initiatives/content-data.php';
 ?>
 <div data-initiative-page>
@@ -28,7 +28,8 @@ include BASEPATH . '/pages/initiatives/content-data.php';
         </div>
     <?php endif; ?>
 
-    <?php if ($details['metadata'] || $linkedTopics || $details['texts']): ?>
+    <?php if ($details['metadata'] || $directTopics || $details['texts']): ?>
+    <section id="details" class="py-5">
         <table class="table">
             <tbody>
                 <?php foreach ($details['metadata'] as $field): ?>
@@ -36,9 +37,9 @@ include BASEPATH . '/pages/initiatives/content-data.php';
                         <td><span class="key"><?= e($field['label']) ?></span><?= $field['value'] ?></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if ($linkedTopics): ?>
+                <?php if ($directTopics): ?>
                     <tr>
-                        <td><span class="key"><?= e($Settings->topicLabel()) ?></span><?= $Settings->printTopics(array_column($linkedTopics, 'id'), '', false) ?></td>
+                        <td><span class="key"><?= e($Settings->topicLabel()) ?></span><?= $Settings->printTopics($directTopics, '', false) ?></td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($details['texts']): ?>
@@ -53,10 +54,11 @@ include BASEPATH . '/pages/initiatives/content-data.php';
                 <?php endif; ?>
             </tbody>
         </table>
+    </section>
     <?php endif; ?>
 
-    <section id="objectives" class="">
-        <?php if ($canEdit): ?><a class="btn primary float-right" href="<?= ROOTPATH ?>/initiatives/<?= e($id) ?>/objectives/new"><i class="ph ph-plus"></i> <?= translate('initiatives.add_objective') ?></a><?php endif; ?>
+    <section id="objectives" class="py-5">
+        <?php if ($canEdit): ?><a class="btn primary float-right mt-20" href="<?= ROOTPATH ?>/initiatives/<?= e($id) ?>/objectives/new"><i class="ph ph-plus"></i> <?= translate('initiatives.add_objective') ?></a><?php endif; ?>
         <h2><i class="ph-duotone ph-target"></i> <?= translate('initiatives.objectives') ?> <small class="badge primary"><?= count($objectives) ?></small></h2>
         <?php foreach ($objectives as $objective): ?>
             <div class="box padded" id="objective-<?= e($objective['_id']) ?>">
@@ -70,7 +72,7 @@ include BASEPATH . '/pages/initiatives/content-data.php';
         <?php if (!$objectives): ?><p class="text-muted"><?= translate('initiatives.no_objectives') ?></p><?php endif; ?>
     </section>
 
-    <section id="contents" class="">
+    <section id="contents" class="py-5">
         <?php include BASEPATH . '/pages/initiatives/content-tabs.php'; ?>
         <?php include BASEPATH . '/pages/initiatives/linked-content.php'; ?>
     </section>

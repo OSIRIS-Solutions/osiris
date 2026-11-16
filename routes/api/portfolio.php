@@ -230,7 +230,12 @@ Route::get('/portfolio/(initiative|objective)/([^/]+)', function ($entity, $id) 
                 elseif ($visibility === 'approved-or-empty') $filter['$or'] = [['workflow' => ['$exists' => false]], ['workflow.status' => 'verified'], ['workflow.status' => ['$exists' => false]]];
             }
         } else $filter['public'] = true;
+        if ($content === 'publications') $publicationFilter = $filter;
         $result['numbers'][$content] = $osiris->$collection->countDocuments($filter);
+    }
+    if ($Settings->featureEnabled('spectrum') && $Settings->featureEnabled('portfolio-spectrum')) {
+        require_once BASEPATH . '/php/Spectrum.php';
+        $result['spectrum'] = Spectrum::retrieve($osiris, $entity, (string) $document['_id'], $publicationFilter);
     }
     echo rest($result, 1, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 });

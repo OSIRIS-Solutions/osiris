@@ -105,7 +105,16 @@ class InitiativeContentCollection extends MemoryCollection
     public array $filter = [];
     public array $options = [];
     public array $countFilters = [];
-    public function countDocuments(array $filter = []) { $this->countFilters[] = $filter; return 3; }
+    public array $spectrumFilter = [];
+    public array $spectrumPipeline = [];
+    public function countDocuments(array $filter = []) {
+        if (isset($filter['openalex.topics'])) { $this->spectrumFilter = $filter; return 3; }
+        $this->countFilters[] = $filter; return 3;
+    }
+    public function aggregate(array $pipeline) {
+        $this->spectrumPipeline = $pipeline;
+        return new class { public function toArray() { return [['topic' => ['id' => 'T123', 'name' => 'Climate research'], 'total' => 3, 'weight' => 1]]; } };
+    }
     public function find(array $filter = [], array $options = []) {
         $this->filter = $filter; $this->options = $options;
         return parent::find([], $options);
@@ -143,6 +152,7 @@ $details = initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)[
 $countFilters = array_slice($osiris->activities->countFilters, -2);
 check($details['numbers']['publications'] === 3 && $details['numbers']['activities'] === 3 && $countFilters[0]['initiatives'] === (string) $publicId, 'Detail counters return database totals scoped to the initiative.');
 check($countFilters[0]['workflow.status'] === 'verified' && $countFilters[0]['hide']['$ne'] === true && $countFilters[0]['type'] === 'publication' && $countFilters[1]['type']['$ne'] === 'publication' && $countFilters[1]['subtype']['$in'] === ['lecture'], 'Publication and activity counters use the same workflow, hidden-record and subtype restrictions as their lists.');
+check($details['spectrum'][0]['topic']['id'] === 'T123' && $osiris->activities->spectrumFilter === $countFilters[0] + ['openalex.topics' => ['$exists' => true, '$ne' => []]] && $osiris->activities->spectrumPipeline[0]['$match'] === $osiris->activities->spectrumFilter, 'Portfolio spectra aggregate only the linked publications allowed by the public visibility and workflow filters.');
 check($details['numbers']['projects'] === 3 && $osiris->projects->countFilters[0] === ['initiatives' => (string) $publicId, 'public' => true] && $osiris->conferences->countFilters[0]['public'] === true && $osiris->infrastructures->countFilters[0]['public'] === true, 'Project, event and infrastructure counters require public content and the parent association.');
 $contentSettings->disabled = ['projects', 'infrastructures'];
 $disabledDetails = initiativeApiRequest('portfolio', 'initiatives', (string) $publicId)['data'];

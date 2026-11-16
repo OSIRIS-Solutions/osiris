@@ -343,15 +343,6 @@ final class Initiatives
         return $contents;
     }
 
-    /** Topics are derived only from the contents visible in this scope. */
-    public static function contentTopics($database, array $contents, array $direct = []): array
-    {
-        $ids = $direct;
-        foreach ($contents as $documents) foreach ($documents as $document) $ids = array_merge($ids, DB::doc2Arr($document['topics'] ?? []));
-        $ids = array_values(array_unique(array_filter($ids, 'is_string')));
-        return $ids ? $database->topics->find(['id' => ['$in' => $ids]], ['sort' => ['inactive' => 1, 'name' => 1]])->toArray() : [];
-    }
-
     /** Current entries first, with past and archived entries still accessible. */
     public static function sortCurrentFirst(array $documents): array
     {

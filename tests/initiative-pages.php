@@ -5,9 +5,16 @@ ob_start(); $baselineChecks = $checks;
 class InitiativePageCollection extends MemoryCollection
 {
     public array $lastFilter = [];
+    public array $spectrumPipeline = [];
+    public function aggregate(array $pipeline) {
+        $this->spectrumPipeline = $pipeline;
+        return new class { public function toArray() { return [['topic' => ['id' => 'T123', 'name' => 'Climate spectrum', 'field' => 'Environmental science', 'domain_id' => '3'], 'weight' => 1, 'count' => 1, 'total' => 1]]; } };
+    }
     public function find(array $filter = [], array $options = []) {
         $this->lastFilter = $filter;
         $documents = array_filter($this->documents, function ($document) use ($filter) {
+            if (isset($filter['type']) && $document['type'] !== $filter['type']) return false;
+            if (isset($filter['openalex.topics']) && empty($document['openalex']['topics'])) return false;
             foreach (['initiatives', 'objectives'] as $field) {
                 if (isset($filter[$field]) && !in_array($filter[$field], $document[$field] ?? [])) return false;
             }
@@ -24,7 +31,7 @@ $parentId = new MongoDB\BSON\ObjectId();
 $objectiveId = new MongoDB\BSON\ObjectId();
 $siblingId = new MongoDB\BSON\ObjectId();
 foreach (['activities', 'projects', 'proposals', 'conferences', 'infrastructures', 'deadlines'] as $collection) $osiris->$collection = new InitiativePageCollection();
-$osiris->activities->insertOne(['name' => 'Objective publication', 'type' => 'publication', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $objectiveId], 'topics' => ['climate'], 'year' => 2026]);
+$osiris->activities->insertOne(['name' => 'Objective publication', 'type' => 'publication', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $objectiveId], 'topics' => ['climate'], 'openalex' => ['topics' => [['id' => 'T123', 'name' => 'Climate spectrum', 'score' => 1]]], 'year' => 2026]);
 $osiris->activities->insertOne(['name' => 'Sibling activity', 'type' => 'other', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $siblingId], 'topics' => ['water'], 'year' => 2025]);
 $osiris->conferences->insertOne(['title' => 'Climate workshop', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $objectiveId], 'start' => '2026-11-01']);
 $osiris->topics->insertOne(['id' => 'climate', 'name' => 'Climate', 'color' => '#008899']);
@@ -34,8 +41,6 @@ check(count($parentContents['publications']) === 1 && count($parentContents['act
 check(isset($osiris->projects->lastFilter['$or']) && $osiris->infrastructures->lastFilter['persons.user'] === 'reviewer', 'Project and infrastructure queries retain ownership restrictions without global view permission.');
 $ownContents = Initiatives::linkedContents($osiris, $Settings, ['objectives' => (string) $objectiveId]);
 check(count($ownContents['publications']) === 1 && count($ownContents['activities']) === 0 && count($ownContents['events']) === 1, 'An objective includes only content explicitly linked to that objective.');
-check(array_column(Initiatives::contentTopics($osiris, $ownContents), 'id') === ['climate'], 'Objective topics derive from its own linked content, excluding sibling topics.');
-check(count(Initiatives::contentTopics($osiris, $parentContents)) === 2, 'The parent topic overview combines linked content without duplicate topics.');
 $settingsSpy = new class {
     public array $activityFilter = [];
     public function getActivityFilter($filter) { $this->activityFilter = $filter; return $filter + ['restricted' => true]; }
@@ -53,8 +58,18 @@ $view = str_replace("require_once BASEPATH . '/php/Vocabulary.php';", '', file_g
 $Settings->permissions = ['initiatives.view'];
 ob_start(); eval('?>' . $view); $html = ob_get_clean();
 check(str_contains($html, 'Objective publication') && str_contains($html, 'Climate workshop') && !str_contains($html, 'Sibling activity') && !str_contains($html, '>Water<'), 'The real objective page renders its scoped content and topics without sibling data.');
+check(str_contains($html, 'Climate spectrum') && $osiris->activities->spectrumPipeline[0]['$match']['objectives'] === (string) $objectiveId && $osiris->activities->spectrumPipeline[0]['$match']['type'] === 'publication', 'The objective page renders the shared spectrum widget from its linked publications only.');
+$fields = Initiatives::fields($osiris);
+$fields[] = ['id' => 'topics', 'type' => 'field', 'props' => []];
+$osiris->adminGeneral->updateOne(['id' => 'initiative-fields'], ['$set' => ['fields' => $fields]]);
+$initiative['topics'] = ['water'];
+ob_start(); loadIsolated('pages/initiatives/view.php'); $initiativeHtml = ob_get_clean();
+check(str_contains($initiativeHtml, '>Water<') && !str_contains($initiativeHtml, '>Climate<'), 'Initiative metadata shows only the configured direct research topics, regardless of publication topics.');
+$osiris->adminGeneral->updateOne(['id' => 'initiative-fields'], ['$set' => ['fields' => array_values(array_filter($fields, fn($field) => $field['id'] !== 'topics'))]]);
+ob_start(); loadIsolated('pages/initiatives/view.php'); $withoutTopics = ob_get_clean();
+check(!str_contains($withoutTopics, "class='topic-pill "), 'Removing the topics field hides stored topics instead of deriving them from linked content.');
 check(str_contains($html, '/initiatives/view/' . $parentId . '#objectives') && !str_contains($html, '#edit-objective-'), 'Objective pages provide parent navigation and hide edit actions for readers.');
-check(str_contains($html, "class='topic-pill ") && !str_contains($html, 'data-initiative-tab="topics"') && !str_contains($html, 'data-initiative-tab="general"'), 'Topics use the existing widget and overview metadata stays outside content tabs.');
+check(!str_contains($html, "class='topic-pill ") && !str_contains($html, 'data-initiative-tab="topics"') && !str_contains($html, 'data-initiative-tab="general"'), 'Objectives do not inherit research topics from their content or their parent initiative.');
 aborts(fn() => Route::$routes['GET /initiatives/objectives/view/(.*)'][0]('not-an-id'), 404);
 $Settings->permissions = [];
 aborts(fn() => Route::$routes['GET /initiatives/objectives/view/(.*)'][0]((string) $objectiveId), 403);

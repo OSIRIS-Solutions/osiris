@@ -1,6 +1,5 @@
 <?php
 $linkedContents = Initiatives::linkedContents($osiris, $Settings, $association);
-$linkedTopics = $Settings->featureEnabled('topics') ? Initiatives::contentTopics($osiris, $linkedContents, $directTopics ?? []) : [];
 $contentSections = [
     'publications' => ['common.publications', 'ph-books', 'activities'],
     'activities' => ['common.activities', 'ph-folders', 'activities'],

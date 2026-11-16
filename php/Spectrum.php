@@ -6,7 +6,7 @@
 
 class Spectrum
 {
-    public static function retrieve($osiris, $entity, $id)
+    public static function retrieve($osiris, $entity, $id, array $filter = [])
     {
         $spectrum_filter = [
             'type' => 'publication',
@@ -27,11 +27,16 @@ class Spectrum
             case 'topic':
                 $spectrum_filter['topics'] = $id;
                 break;
+            case 'initiatives':
+            case 'objectives':
+                $spectrum_filter[$entity] = (string) $id;
+                break;
             default:
                 return [];
         }
 
-        $count_spectrum = $osiris->activities->count($spectrum_filter);
+        $spectrum_filter = array_merge($filter, $spectrum_filter);
+        $count_spectrum = $osiris->activities->countDocuments($spectrum_filter);
         if ($count_spectrum === 0 || ($entity === 'person' && $count_spectrum < 4)) {
             return [];
         }

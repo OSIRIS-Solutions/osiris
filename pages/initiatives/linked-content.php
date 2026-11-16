@@ -2,7 +2,6 @@
     if (!$linkedContents[$key]) continue;
 ?>
 <section class="initiative-section mt-20" data-initiative-section="<?= $key ?>" id="contents-<?= $key ?>" hidden>
-    <h2><?= translate($label) ?></h2>
     <table class="table initiative-content-table w-full">
         <thead><tr><th><?= translate('common.name') ?></th><th><?= translate('common.date') ?></th></tr></thead>
         <tbody>
