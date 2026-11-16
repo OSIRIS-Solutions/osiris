@@ -69,6 +69,7 @@ check($xpath->query('//form | //div[@role="dialog"]')->length === 0 && !str_cont
 check(isset($_SESSION['objective_form'][$id]['new'], $_SESSION['objective_form'][$id][$objectiveId]), 'Reading the overview does not consume pending form input.');
 
 function renderObjectiveEditor(array $initiative, array $objective): string {
+    global $Settings;
     $source = str_replace("require_once BASEPATH . '/php/Vocabulary.php';", '', file_get_contents(BASEPATH . '/pages/initiatives/objective-edit.php'));
     ob_start(); eval('?>' . $source); return ob_get_clean();
 }

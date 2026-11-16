@@ -44,4 +44,7 @@ return [
     'archive_hint' => 'Archiving keeps existing links. Archived entries can be restored later.',
     'confirm_archive' => 'Archive “{{name}}”?',
     'confirm_restore' => 'Restore “{{name}}”?',
+    'api_read' => 'Read initiatives and objectives',
+    'portfolio_visibility' => 'Show in the public portfolio',
+    'portfolio_visibility_hint' => 'Objectives are only published if their initiative is also public.',
 ];

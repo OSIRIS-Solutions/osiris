@@ -28,7 +28,7 @@ include BASEPATH . '/pages/initiatives/content-data.php';
         </div>
     <?php endif; ?>
 
-    <?php if ($details['metadata'] || $linkedTopics): ?>
+    <?php if ($details['metadata'] || $linkedTopics || $details['texts']): ?>
         <table class="table">
             <tbody>
                 <?php foreach ($details['metadata'] as $field): ?>

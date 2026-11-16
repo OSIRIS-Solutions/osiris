@@ -21,6 +21,17 @@ $backUrl = ROOTPATH . ($editing ? '/initiatives/objectives/view/' . $objective['
     <?php if ($editing): ?><h2 class="subtitle"><?= e(Initiatives::text($objective['name'])) ?></h2><?php endif; ?>
     <form action="<?= e($formAction) ?>" method="post" id="objective-form">
         <?php include BASEPATH . '/pages/initiatives/objective-form.php'; ?>
+        <?php $publicValue = $objectiveForm['public'] ?? false;
+        if ($Settings->featureEnabled('portal')): ?>
+            <div class="form-group my-20">
+                <input type="hidden" name="values[public]" value="false">
+                <div class="custom-checkbox">
+                    <input type="checkbox" name="values[public]" id="initiative-portfolio-public" value="true" <?= filter_var($publicValue ?? false, FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' ?>>
+                    <label for="initiative-portfolio-public"><?= translate('initiatives.portfolio_visibility') ?></label>
+                </div>
+                <small class="text-muted"><?= translate('initiatives.portfolio_visibility_hint') ?></small>
+            </div>
+        <?php endif; ?>
         <div class="btn-toolbar mt-20">
             <button class="btn success" type="submit"><i class="ph ph-floppy-disk"></i> <?= translate('action.save') ?></button>
             <a class="btn" href="<?= e($backUrl) ?>"><?= translate('action.cancel') ?></a>

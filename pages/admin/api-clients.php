@@ -28,6 +28,7 @@ $scopeLabels = [
     'catalogs.read' => lang('admin.read_catalogs_e_g_organizational_groups'),
     'dashboards.read' => lang('admin.read_dashboard_data'),
     'events.read' => lang('admin.read_events_and_calendar_data'),
+    'initiatives.read' => translate('initiatives.api_read'),
     'infrastructures.read' => lang('admin.read_infrastructures'),
     'journals.read' => lang('admin.read_journals'),
     'organizations.read' => lang('admin.read_organizations'),

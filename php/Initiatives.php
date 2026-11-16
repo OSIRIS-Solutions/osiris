@@ -145,7 +145,7 @@ final class Initiatives
     public static function objectiveDraft(array $input): array
     {
         return array_filter(array_intersect_key($input, array_flip([
-            'code', 'name', 'description', 'type', 'start_date', 'end_date',
+            'code', 'name', 'description', 'type', 'start_date', 'end_date', 'public',
         ])), 'is_string');
     }
 

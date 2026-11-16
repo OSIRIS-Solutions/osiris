@@ -124,6 +124,7 @@ $saveInitiative = function ($id = null) {
         $raw = Initiatives::formValues($input, $fields, $config->modules);
         // Activity normalization derives publication years from dates; keep initiative dates separate.
         $values = validateValues(array_diff_key($raw, ['start' => true, 'end' => true]), $DB, 'initiatives');
+        if ($Settings->featureEnabled('portal') && isset($input['public'])) $values['public'] = filter_var($input['public'], FILTER_VALIDATE_BOOLEAN);
         if (is_string($raw['name'])) $values['name'] = $raw['name'];
         foreach (['start', 'end'] as $key) {
             if (array_key_exists($key, $raw)) {
@@ -134,6 +135,7 @@ $saveInitiative = function ($id = null) {
     } catch (InvalidArgumentException $e) {
         // Keep only editable fields when redisplaying invalid input.
         $_SESSION['initiative_form'][$id ?? 'new'] = is_array($input) ? Initiatives::editableValues($input, $fields, $config->modules) : [];
+        if ($Settings->featureEnabled('portal') && isset($input['public'])) $_SESSION['initiative_form'][$id ?? 'new']['public'] = filter_var($input['public'], FILTER_VALIDATE_BOOLEAN);
         $_SESSION['msg'] = e($e->getMessage());
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . ($id === null ? '/initiatives/new' : '/initiatives/edit/' . $id));
@@ -178,6 +180,7 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
     try {
         if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
         $values = Initiatives::objectiveValues($_POST['values']);
+        if ($Settings->featureEnabled('portal') && isset($_POST['values']['public'])) $values['public'] = filter_var($_POST['values']['public'], FILTER_VALIDATE_BOOLEAN);
         $values += [
             '_id' => new MongoDB\BSON\ObjectId(), 'initiative' => $initiative['_id'], 'inactive' => false,
             'created' => date('Y-m-d'), 'created_by' => $_SESSION['username'],
@@ -215,6 +218,7 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
         } else {
             if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
             $values = Initiatives::objectiveValues($_POST['values']);
+            if ($Settings->featureEnabled('portal') && isset($_POST['values']['public'])) $values['public'] = filter_var($_POST['values']['public'], FILTER_VALIDATE_BOOLEAN);
         }
         $values['updated'] = date('Y-m-d');
         $values['updated_by'] = $_SESSION['username'];

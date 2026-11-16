@@ -44,4 +44,7 @@ return [
     'archive_hint' => 'Beim Archivieren bleiben bestehende Verknüpfungen erhalten. Archivierte Einträge können später wiederhergestellt werden.',
     'confirm_archive' => '„{{name}}“ archivieren?',
     'confirm_restore' => '„{{name}}“ wiederherstellen?',
+    'api_read' => 'Initiativen und Objectives lesen',
+    'portfolio_visibility' => 'Im öffentlichen Portfolio anzeigen',
+    'portfolio_visibility_hint' => 'Objectives werden nur veröffentlicht, wenn auch ihre Initiative öffentlich ist.',
 ];

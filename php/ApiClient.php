@@ -18,6 +18,7 @@ class ApiClient
         'dashboards.read',
         'events.read',
         'infrastructures.read',
+        'initiatives.read',
         'journals.read',
         'organizations.read',
         'persons.read',

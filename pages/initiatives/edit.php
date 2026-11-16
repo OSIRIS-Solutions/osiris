@@ -1,4 +1,5 @@
 <?php
+
 /** Create or edit an initiative using the configured form. */
 include_once BASEPATH . '/header-editor.php';
 include_once BASEPATH . '/php/Modules.php';
@@ -27,6 +28,17 @@ $Modules->setFields($fields);
         <div id="data-modules" class="row row-eq-spacing">
             <?php $Modules->render_form($fields); ?>
         </div>
+        <?php $publicValue = $form['public'] ?? false;
+        if ($Settings->featureEnabled('portal')): ?>
+            <div class="form-group my-20">
+                <input type="hidden" name="values[public]" value="false">
+                <div class="custom-checkbox">
+                    <input type="checkbox" name="values[public]" id="initiative-portfolio-public" value="true" <?= filter_var($publicValue ?? false, FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' ?>>
+                    <label for="initiative-portfolio-public"><?= translate('initiatives.portfolio_visibility') ?></label>
+                </div>
+                <small class="text-muted"><?= translate('initiatives.portfolio_visibility_hint') ?></small>
+            </div>
+        <?php endif; ?>
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i> <?= translate('action.save') ?>
         </button>
