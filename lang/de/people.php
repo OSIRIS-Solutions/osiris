@@ -348,4 +348,13 @@ return [
     'please_enter_a_valid_matrix_id' => 'Bitte geben Sie eine gültige Matrix-ID ein.',
     'please_enter_a_valid_url' => 'Bitte geben Sie eine gültige URL ein.',
     'please_enter_your_old_password_to_change_your_password' => 'Bitte geben Sie Ihr altes Passwort ein, um Ihr Passwort zu ändern.',
+    'affiliations' => 'Zugehörigkeiten',
+    'affiliations_current' => 'Aktuelle Zugehörigkeiten',
+    'affiliations_upcoming' => 'Geplante Zugehörigkeiten',
+    'affiliations_past' => 'Frühere Zugehörigkeiten',
+    'affiliation_dates_unknown' => 'Kein Zeitraum angegeben',
+    'affiliation_implicit' => 'Über Untereinheiten zugeordnet',
+    'affiliation_unit_lead' => 'Leitung der Einheit',
+    'affiliation_timeline' => 'Zeitlicher Verlauf der Einheitenzugehörigkeit',
+    'affiliation_timeline_hint' => 'Angezeigt werden Zugehörigkeiten mit bekanntem Startdatum. Offene aktuelle Zugehörigkeiten reichen bis heute.',
 ];

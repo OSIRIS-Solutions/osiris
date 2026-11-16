@@ -348,4 +348,13 @@ return [
     'please_enter_a_valid_matrix_id' => 'Please enter a valid Matrix ID.',
     'please_enter_a_valid_url' => 'Please enter a valid URL.',
     'please_enter_your_old_password_to_change_your_password' => 'Please enter your old password to change your password.',
+    'affiliations' => 'Affiliations',
+    'affiliations_current' => 'Current affiliations',
+    'affiliations_upcoming' => 'Upcoming affiliations',
+    'affiliations_past' => 'Previous affiliations',
+    'affiliation_dates_unknown' => 'Dates not specified',
+    'affiliation_implicit' => 'Derived from subunits',
+    'affiliation_unit_lead' => 'Unit lead',
+    'affiliation_timeline' => 'Unit affiliation timeline',
+    'affiliation_timeline_hint' => 'Only memberships with a known start date are shown. Open-ended current memberships extend to today.',
 ];

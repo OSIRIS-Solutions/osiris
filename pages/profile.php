@@ -38,6 +38,7 @@ if (!isset($scientist['is_active'])) {
     // update in database because it leads to problems in the frontend otherwise
     $osiris->persons->updateOne(['username' => $user], ['$set' => ['is_active' => true]]);
 }
+include BASEPATH . '/pages/profile-affiliations-data.php';
 $full_spectrum = $_GET['fullspectrum'] ?? false;
 ?>
 
@@ -570,7 +571,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 $contactType = null;
             }
             $contactURL = null;
-            if($contact && $contactType) { 
+            if ($contact && $contactType) {
                 if ($contactType == 'mail') {
                     $contactURL = "mailto:" . $contact;
                 } elseif ($contactType == 'teams') {
@@ -585,15 +586,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 $contactLogo = socialLogo($contactType);
                 if ($contactType == 'other') {
                     $contactInfo = lang('people.prefered_contact_link');
-                }
-                else {
+                } else {
                     $contactInfo = ucfirst($contactType);
                 }
-                ?>
-                <div class="btn-group btn-group-lg" >
+        ?>
+                <div class="btn-group btn-group-lg">
                     <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('people.contact') . $scientist['first'] . lang('people.via') . $contactInfo ?>">
                         <i class="ph <?= $contactLogo ?>"></i>
-                        <?= lang('common.contact')?>
+                        <?= lang('common.contact') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -613,6 +613,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <i class="ph ph-info" aria-hidden="true"></i>
         <?= lang('common.general') ?>
     </a>
+
+    <?php if ($hasAffiliations): ?>
+        <a onclick="navigate('affiliations')" href="#section-affiliations" id="btn-affiliations" class="btn">
+            <i class="ph ph-intersect" aria-hidden="true"></i>
+            <?= translate('people.affiliations') ?>
+        </a>
+    <?php endif; ?>
 
     <?php
     $publication_filter = [
@@ -788,6 +795,122 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 
 
+<?php if ($hasAffiliations) { ?>
+    <section id="affiliations" class="profile-affiliations" style="display:none">
+        <link rel="stylesheet" href="<?= ROOTPATH ?>/css/profile-affiliations.css?v=<?= OSIRIS_BUILD ?>">
+        <div class="affiliation-intro">
+            <h2><?= translate('people.affiliations') ?></h2>
+        </div>
+
+        <?php if ($affiliationTopics): ?>
+            <div class="affiliation-block">
+                <div class="affiliation-heading">
+                    <h3><i class="ph-duotone ph-lightbulb" aria-hidden="true"></i> <?= e($Settings->topicLabel()) ?></h3>
+                    <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
+                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/edit/<?= e($user) ?>#section-research" aria-label="<?= e(translate('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
+                    <?php endif; ?>
+                </div>
+                <div class="mt-20"><?= $Settings->printTopics($affiliationTopics, '', false) ?></div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (array_filter($affiliationUnits)): ?>
+            <div class="affiliation-block">
+                <div class="affiliation-heading">
+                    <h3>
+                        <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
+                        <?= translate('people.organisational_unit_s') ?>
+                    </h3>
+                    <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
+                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/units/<?= e($user) ?>" aria-label="<?= e(translate('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
+                    <?php endif; ?>
+                </div>
+                <?php foreach ($affiliationUnits as $state => $entries): if (!$entries) continue; ?>
+                    <?php if ($state === 'past'): ?><details class="affiliation-history">
+                            <summary><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                        <div class="affiliation-grid">
+                            <?php foreach ($entries as $entry): ?>
+                                <article class="box affiliation-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>">
+                                    <div class="content">
+                                        <?php if ($entry['parents']): ?><div class="affiliation-parent"><?= e(implode(' / ', $entry['parents'])) ?></div><?php endif; ?>
+                                        <h4><a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a></h4>
+                                        <div class="affiliation-period">
+                                            <?php if ($entry['implicit']): ?>
+                                                <i class="ph ph-tree-structure" aria-hidden="true"></i> <?= translate('people.affiliation_implicit') ?>
+                                            <?php else: ?>
+                                                <i class="ph ph-calendar-blank" aria-hidden="true"></i> <?= $entry['start'] || $entry['end'] ? ($entry['start'] ? format_date($entry['start']) : translate('common.unknown')) . ' – ' . ($entry['end'] ? format_date($entry['end']) : translate('common.open_end')) : translate('people.affiliation_dates_unknown') ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="affiliation-badges">
+                                            <?php if ($entry['lead']): ?><span class="badge primary"><i class="ph ph-crown-simple" aria-hidden="true"></i> <?= translate('people.affiliation_unit_lead') ?></span><?php endif; ?>
+                                            <?php if ($entry['scientific']): ?><span class="badge"><?= translate('common.scientific') ?></span><?php endif; ?>
+                                        </div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if ($state === 'past'): ?>
+                        </details><?php endif; ?>
+                <?php endforeach; ?>
+
+                <?php if ($affiliationTimeline):
+                    $axisSpan = $affiliationAxisEnd - $affiliationAxisStart;
+                    $todayPosition = round(100 * (strtotime($affiliationToday) - $affiliationAxisStart) / $axisSpan, 3);
+                ?>
+                    <details class="affiliation-history affiliation-timeline-details" open>
+                        <summary><?= translate('people.affiliation_timeline') ?></summary>
+                        <p class="text-muted font-size-12"><?= translate('people.affiliation_timeline_hint') ?> <span class="affiliation-today-legend"><?= translate('common.today') ?></span></p>
+                        <div class="affiliation-timeline" style="--affiliation-today: <?= $todayPosition ?>%">
+                            <div class="affiliation-timeline-axis"><span></span>
+                                <div><span><?= date('Y', $affiliationAxisStart) ?></span><span><?= date('Y', $affiliationAxisEnd) ?></span></div>
+                            </div>
+                            <?php foreach ($affiliationTimeline as $entry):
+                                $left = min(99, round(100 * ($entry['from'] - $affiliationAxisStart) / $axisSpan, 3));
+                                $width = max(1, round(100 * ($entry['to'] - $entry['from']) / $axisSpan, 3));
+                            ?>
+                                <div class="affiliation-timeline-row">
+                                    <a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a>
+                                    <div class="affiliation-track" aria-hidden="true"><span class="affiliation-bar affiliation-bar-<?= $entry['state'] ?>" style="left:<?= $left ?>%;width:<?= min(100 - $left, $width) ?>%"></span></div>
+                                    <small class="text-muted"><?= format_date($entry['start']) ?> – <?= $entry['end'] ? format_date($entry['end']) : translate('common.open_end') ?></small>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </details>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (array_filter($affiliationInitiatives)): ?>
+            <div class="affiliation-block">
+                <div class="affiliation-heading">
+                    <h3>
+                        <i class="ph-duotone ph-compass" aria-hidden="true"></i>
+                        <?= translate('common.initiatives') ?>
+                    </h3>
+                </div>
+                <?php foreach ($affiliationInitiatives as $state => $entries): if (!$entries) continue; ?>
+                    <?php if ($state === 'past'): ?><details class="affiliation-history">
+                            <summary><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                        <div class="affiliation-grid">
+                            <?php foreach ($entries as $initiative): ?>
+                                <article class="box affiliation-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>">
+                                    <div class="content">
+                                        <h4><a href="<?= ROOTPATH ?>/initiatives/view/<?= e($initiative['_id']) ?>"><?= e(Initiatives::text($initiative['name'] ?? '')) ?></a></h4>
+                                        <?php if ($initiative['affiliation_title'] !== ''): ?><p class="affiliation-parent"><?= e($initiative['affiliation_title']) ?></p><?php endif; ?>
+                                        <div class="affiliation-period"><i class="ph ph-calendar-blank" aria-hidden="true"></i> <?= e(Initiatives::period($initiative)) ?></div>
+                                        <div class="affiliation-badges"><?php foreach ($initiative['affiliation_roles'] as $role): ?><span class="badge primary"><?= e($role) ?></span><?php endforeach; ?><?php if (!empty($initiative['inactive'])): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?></div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if ($state === 'past'): ?>
+                        </details><?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </section>
+<?php } ?>
+
 <section id="general">
 
     <div class="row row-eq-spacing my-0">
@@ -935,11 +1058,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     <span class="key">ORCID</span>
 
                                     <a href="http://orcid.org/<?= $scientist['orcid'] ?>" target="_blank" rel="noopener noreferrer">
-                                    <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
-                                    <?= $scientist['orcid'] ?>
-                                    <?php if ($Settings->featureEnabled('orcid')) { ?>
-                                        </a><?= lang('people.unauthenticated') ?>
-                                    <?php } ?>
+                                        <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
+                                        <?= $scientist['orcid'] ?>
+                                        <?php if ($Settings->featureEnabled('orcid')) { ?>
+                                    </a><?= lang('people.unauthenticated') ?>
+                                <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -1623,7 +1746,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <?php } ?>
         <?php
             include_once BASEPATH . "/php/Spectrum.php";
-            Spectrum::render($spectrum, $count_spectrum, '', '{"rendered.users":"'.$user.'"}');
+            Spectrum::render($spectrum, $count_spectrum, '', '{"rendered.users":"' . $user . '"}');
         else : ?>
             <p>
                 <?= lang('people.we_do_not_have_enough_data_to_display_a_research_spectrum_for_this_scientis') ?>
