@@ -269,6 +269,18 @@ class SidebarNav
                         'hasSearch' => false
                     ],
                     [
+                        'id' => 'patent',
+                        'label' => lang('Patents', 'Patente'),
+                        'icon' => 'vault',
+                        'url' => '/patents',
+                        'active' => ['^/patents($|/)'],
+                        'feature' => 'patent',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
                         'id' => 'portal-public',
                         'label' => lang('Go to portal', 'Zum Portal'),
                         'icon' => 'globe-hemisphere-west',

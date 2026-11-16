@@ -33,7 +33,7 @@ $end   = $year . "-12-31";
 
 // Filter Lehrveranstaltungen im Semester
 $filter = [
-    'subtype' => 'patent',
+    'subtype' => 'patents',
     'year' => $year
 ];
 
@@ -56,7 +56,7 @@ $patents = $osiris->activities->find(
 
 $all = $osiris->activities->count(
     [
-        'subtype' => 'patent'
+        'subtype' => 'patents'
     ]
 );
 
@@ -217,11 +217,11 @@ foreach ($countries as $iso => $data) {
 <div class="container">
     <h1>
         <i class="ph-duotone ph-airplane"></i>
-        <?= $Settings->patentLabel() ?>
+        <?= lang('Patents', 'Patente') ?>
     </h1>
 
     <div class="btn-toolbar">
-        <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=patent">
+        <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=patents">
             <i class="ph ph-plus-circle"></i>
             <?= lang('Add patent', 'Patent hinzufügen') ?>
         </a>

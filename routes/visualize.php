@@ -80,7 +80,7 @@ Route::get('/pivot', function () {
 });
 
 
-// pivot table
+// trips
 Route::get('/trips', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
@@ -88,5 +88,16 @@ Route::get('/trips', function () {
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/trips.php";
+    include BASEPATH . "/footer.php";
+});
+
+// patent
+Route::get('/patents', function () {
+    include_once BASEPATH . "/php/init.php";
+    $breadcrumb = [
+        ['name' => lang('Patents', 'Patente')]
+    ];
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/patents.php";
     include BASEPATH . "/footer.php";
 });
