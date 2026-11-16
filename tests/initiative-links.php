@@ -47,6 +47,8 @@ check(str_contains($rendered, 'Climate &amp; Water') && str_contains($rendered, 
 check(substr_count($rendered, ' title=') === 1, 'No tooltip is emitted when the title is absent.');
 $format->usecase = 'print';
 check($format->get_field('initiatives') === 'Climate &amp; Water, Archived initiative', 'Print rendering uses plain names without internal links.');
+$format->usecase = 'word';
+check($format->get_field('initiatives') === 'Climate &amp; Water, Archived initiative', 'Word renders initiatives as plain names without links or badge markup.');
 $format->usecase = 'portal';
 check($format->get_field('initiatives') === '', 'Initiatives are not exposed by the optional portfolio integration yet.');
 $format->usecase = 'web';
@@ -83,6 +85,8 @@ $rendered = $format->get_field('objectives');
 check(str_contains($rendered, '/initiatives/objectives/view/' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders string references as escaped objective links with identifiers and description tooltips.');
 $format->usecase = 'print';
 check($format->get_field('objectives') === '26-01: Climate &amp; water', 'Printed objectives use plain names.');
+$format->usecase = 'word';
+check($format->get_field('objectives') === '26-01: Climate &amp; water', 'Word renders objectives as plain names without links or badge markup.');
 $format->usecase = 'portal';
 check($format->get_field('objectives') === '', 'Objectives are not exposed through the optional portfolio integration.');
 $format->usecase = 'web';

@@ -1390,7 +1390,7 @@ class Document extends Settings
                 $names = [];
                 foreach ($this->DB->db->initiatives->find(['_id' => ['$in' => array_map([DB::class, 'to_ObjectID'], $ids)]]) as $initiative) {
                     $name = e(trim(strip_tags(localized($initiative['name'] ?? '', $this->lang))));
-                    if ($this->usecase === 'print') {
+                    if (in_array($this->usecase, ['print', 'word'], true)) {
                         $names[] = $name;
                         continue;
                     }
@@ -1408,7 +1408,7 @@ class Document extends Settings
                     $name = trim(strip_tags(localized($objective['name'] ?? '', $this->lang)));
                     $code = trim((string) ($objective['code'] ?? ''));
                     $name = e(($code === '' ? '' : $code . ': ') . $name);
-                    if ($this->usecase === 'print') {
+                    if (in_array($this->usecase, ['print', 'word'], true)) {
                         $names[] = $name;
                         continue;
                     }

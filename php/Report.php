@@ -584,9 +584,7 @@ class Report
                         $cell = date('d.m.Y', strtotime($cell));
                     } elseif ($f == 'boolean') {
                         $cell = $cell ? lang('common.yes') : lang('common.no');
-                    } elseif ($f == 'list' && is_array($cell)) {
-                        $cell = implode(', ', $cell);
-                    } elseif ($f == 'list' && $cell instanceof MongoDB\Model\BSONArray) {
+                    } elseif ($f == 'list' && (is_array($cell) || $cell instanceof MongoDB\Model\BSONArray)) {
                         $cell = DB::doc2Arr($cell);
                         if ($t) {
                             $cell = array_map(function ($v) use ($t) {

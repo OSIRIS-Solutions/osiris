@@ -115,6 +115,28 @@
         <?php } ?>
 
 
+        <?php if ($Settings->featureEnabled('initiatives')) {
+            $initiativeNames = [];
+            foreach ($osiris->initiatives->find() as $initiative) $initiativeNames[(string) $initiative['_id']] = strip_tags(localized($initiative['name'] ?? ''));
+            foreach (['initiative' => 'initiatives', 'objective' => 'objectives'] as $parameter => $collection) { ?>
+                <div class="form-group">
+                    <label for="filter-<?= $parameter ?>"><?= translate($collection === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives') ?></label>
+                    <select name="filter[<?= $parameter ?>]" id="filter-<?= $parameter ?>" class="form-control">
+                        <option value=""><?= lang('documents.do_not_filter') ?></option>
+                        <?php foreach ($osiris->$collection->find([], ['sort' => ['inactive' => 1, 'name' => 1]]) as $entry) {
+                            $name = strip_tags(localized($entry['name'] ?? ''));
+                            if ($collection === 'objectives') {
+                                $parent = $initiativeNames[(string) $entry['initiative']] ?? '';
+                                $name = ($parent === '' ? '' : $parent . ' – ') . (empty($entry['code']) ? '' : $entry['code'] . ': ') . $name;
+                            }
+                        ?>
+                            <option value="<?= e($entry['_id']) ?>"><?= e($name) ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            <?php } ?>
+        <?php } ?>
+
         <div class="form-group">
             <label for="filter-year"><?= lang('documents.filter_by_time_frame') ?></label>
             <div class="input-group">

@@ -253,6 +253,16 @@ Route::post('/download', function () {
         $filename .= "_" . trim($params['topic']);
     }
 
+    foreach (['initiative' => 'initiatives', 'objective' => 'objectives'] as $parameter => $field) {
+        if (!isset($params[$parameter]) || $params[$parameter] === '') continue;
+        if (!is_string($params[$parameter]) || !DB::is_ObjectID($params[$parameter])) {
+            return abortwith(400, translate('error.no_values'));
+        }
+        $id = strtolower($params[$parameter]);
+        $filter['$and'][] = [$field => $id];
+        $filename .= '_' . $parameter . '_' . $id;
+    }
+
     if (isset($params['workflow']) && !empty($params['workflow'])) {
         if ($params['workflow'] == 'verified-or-empty') {
             $filter['$and'][] = array('$or' => [['workflow.status' => 'verified'], ['workflow' => ['$exists' => false]], ['workflow' => null]]);

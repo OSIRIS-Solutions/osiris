@@ -7,6 +7,7 @@
 
 $aggregate_filter = fn($f) => !empty($f['module_of']) && in_array('aggregate', $f['usage']);
 $sort_filter = fn($f) => !in_array($f['type'], ['boolean', 'list']) && !str_contains($f['id'], '.') && !empty($f['module_of']) && in_array('filter', $f['usage']);
+$additional_filter = fn($f) => $sort_filter($f) || (!empty($f['module_of']) && in_array($f['id'], ['initiatives', 'objectives'], true) && in_array('columns', $f['usage']));
 
 $data_fields = [];
 
@@ -14,7 +15,7 @@ include_once BASEPATH . "/php/activity_fields.php";
 $FIELDS = new ActivityFields();
 $data_fields['activities']['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
 $data_fields['activities']['sort'] = array_filter($FIELDS->fields, $sort_filter);
-$data_fields['activities']['add'] = array_filter($data_fields['activities']['sort'], $sort_filter);
+$data_fields['activities']['add'] = array_filter($FIELDS->fields, $additional_filter);
 $data_fields['activities']['sort'][] = [
     'id' => 'rendered.plain',
     'label' => lang('reports.alphabetically'),
@@ -35,7 +36,7 @@ if ($Settings->featureEnabled('projects')) {
 
         $data_fields[$collection]['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
         $data_fields[$collection]['sort'] = array_filter($FIELDS->fields, $sort_filter);
-        $data_fields[$collection]['add'] = array_filter($data_fields[$collection]['sort'], $sort_filter);
+        $data_fields[$collection]['add'] = array_filter($FIELDS->fields, $additional_filter);
     }
 }
 
@@ -45,7 +46,7 @@ if ($Settings->featureEnabled('events')) {
 
     $data_fields['conferences']['aggregate'] = array_filter($FIELDS->fields, $aggregate_filter);
     $data_fields['conferences']['sort'] = array_filter($FIELDS->fields, $sort_filter);
-    $data_fields['conferences']['add'] = array_filter($data_fields['conferences']['sort'], $sort_filter);
+    $data_fields['conferences']['add'] = array_filter($FIELDS->fields, $additional_filter);
 }
 
 // convert all into arrays for easier access in js

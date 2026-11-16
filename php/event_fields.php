@@ -138,7 +138,7 @@ class EventFields extends Fields
                 $FIELDS[] = [
                     'id' => $id,
                     'module_of' => ['general'],
-                    'usage' => ['filter', 'columns'],
+                    'usage' => ['filter', 'columns', 'aggregate'],
                     'label' => translate($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
                     'type' => 'list',
                     'input' => 'select',
