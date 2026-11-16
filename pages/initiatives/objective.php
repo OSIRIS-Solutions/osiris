@@ -1,7 +1,7 @@
 <?php
 require_once BASEPATH . '/php/Vocabulary.php';
 $Vocabulary = new Vocabulary();
-$association = ['objectives' => $objective['_id']];
+$association = ['objectives' => (string) $objective['_id']];
 include BASEPATH . '/pages/initiatives/content-data.php';
 ?>
 <div data-initiative-page>

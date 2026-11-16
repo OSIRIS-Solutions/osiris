@@ -182,7 +182,7 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
         $values = Initiatives::objectiveValues($_POST['values']);
         if ($Settings->featureEnabled('portal') && isset($_POST['values']['public'])) $values['public'] = filter_var($_POST['values']['public'], FILTER_VALIDATE_BOOLEAN);
         $values += [
-            '_id' => new MongoDB\BSON\ObjectId(), 'initiative' => $initiative['_id'], 'inactive' => false,
+            '_id' => new MongoDB\BSON\ObjectId(), 'initiative' => (string) $initiative['_id'], 'inactive' => false,
             'created' => date('Y-m-d'), 'created_by' => $_SESSION['username'],
         ];
         $osiris->objectives->insertOne($values);
@@ -201,7 +201,7 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess(true);
     $initiative = Initiatives::find($osiris, $id);
-    $filter = ['initiative' => $initiative['_id']];
+    $filter = ['initiative' => (string) $initiative['_id']];
     if (!DB::is_ObjectID($objectiveId)) {
         http_response_code(404);
         abortwith(404, translate('initiatives.objective'), '/initiatives/view/' . $id);

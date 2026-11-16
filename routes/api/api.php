@@ -144,7 +144,7 @@ Route::get('/api/(initiatives|objectives)', function ($entity) {
         if (isset($_GET['json']) && !is_string($_GET['json'])) throw new InvalidArgumentException('Invalid JSON filter.');
         $filter = $_GET['filter'] ?? (isset($_GET['json']) ? json_decode($_GET['json'], true, 512, JSON_THROW_ON_ERROR) : []);
         if (!is_array($filter)) throw new InvalidArgumentException('Invalid filter.');
-        // Walk logical groups and convert only known reference fields to BSON IDs.
+        // Only the primary key uses BSON; relationship filters remain strings.
         $groups = [&$filter];
         for ($i = 0; $i < count($groups); $i++) {
             foreach ($groups[$i] as $field => &$value) {
@@ -155,7 +155,7 @@ Route::get('/api/(initiatives|objectives)', function ($entity) {
                         $groups[] = &$group;
                     }
                     unset($group);
-                } elseif (in_array($field, ['_id', 'initiative', 'initiatives', 'objectives'], true)) {
+                } elseif ($field === '_id') {
                     if (!is_array($value)) {
                         if (is_string($value) && DB::is_ObjectID($value)) $value = DB::to_ObjectID($value);
                     } else {
@@ -176,7 +176,7 @@ Route::get('/api/(initiatives|objectives)', function ($entity) {
         $parent = null;
         if (isset($_GET['initiative']) && $entity === 'objectives') {
             if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
-            $parent = DB::to_ObjectID($_GET['initiative']);
+            $parent = strtolower($_GET['initiative']);
         }
         if ($parent !== null) $filter = $filter ? ['$and' => [$filter, ['initiative' => $parent]]] : ['initiative' => $parent];
         $records = $osiris->$entity->find($filter)->toArray();
@@ -252,7 +252,7 @@ Route::get('/api/(initiatives|objectives)/([^/]+)/(objectives|activities|project
             if (isset($_GET['json']) && !is_string($_GET['json'])) throw new InvalidArgumentException('Invalid JSON filter.');
             $filter = $_GET['filter'] ?? (isset($_GET['json']) ? json_decode($_GET['json'], true, 512, JSON_THROW_ON_ERROR) : []);
             if (!is_array($filter)) throw new InvalidArgumentException('Invalid filter.');
-            // Walk logical groups and convert only known reference fields to BSON IDs.
+            // Only the primary key uses BSON; relationship filters remain strings.
             $groups = [&$filter];
             for ($i = 0; $i < count($groups); $i++) {
                 foreach ($groups[$i] as $field => &$value) {
@@ -263,7 +263,7 @@ Route::get('/api/(initiatives|objectives)/([^/]+)/(objectives|activities|project
                             $groups[] = &$group;
                         }
                         unset($group);
-                    } elseif (in_array($field, ['_id', 'initiative', 'initiatives', 'objectives'], true)) {
+                    } elseif ($field === '_id') {
                         if (!is_array($value)) {
                             if (is_string($value) && DB::is_ObjectID($value)) $value = DB::to_ObjectID($value);
                         } else {
@@ -284,9 +284,9 @@ Route::get('/api/(initiatives|objectives)/([^/]+)/(objectives|activities|project
             $parent = null;
             if (isset($_GET['initiative'])) {
                 if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
-                $parent = DB::to_ObjectID($_GET['initiative']);
+                $parent = strtolower($_GET['initiative']);
             }
-            $constraint = ['initiative' => $document['_id']];
+            $constraint = ['initiative' => (string) $document['_id']];
             $filter = $filter ? ['$and' => [$filter, $constraint]] : $constraint;
             $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find($filter)->toArray();
             $status = $_GET['status'] ?? 'all';
@@ -314,7 +314,7 @@ Route::get('/api/(initiatives|objectives)/([^/]+)/(objectives|activities|project
         $collection = $relation === 'events' ? 'conferences' : $relation;
         $feature = match ($relation) { 'projects', 'proposals' => 'projects', 'infrastructures' => 'infrastructures', 'deadlines' => 'deadlines', default => null };
         if ($feature !== null && !$Settings->featureEnabled($feature)) { echo return_rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); return; }
-        $filter = [$entity => $document['_id']];
+        $filter = [$entity => (string) $document['_id']];
         if (!empty($_SESSION['loggedin']) && !empty($_SESSION['username'])) {
             if ($relation === 'activities') $filter = $Settings->getActivityFilter($filter);
             if (in_array($relation, ['projects', 'proposals'], true) && !$Settings->hasPermission($relation . '.view')) $filter['$or'] = [['persons.user' => $_SESSION['username']], ['created_by' => $_SESSION['username']]];
@@ -1220,29 +1220,6 @@ Route::get('/api/search/(projects|proposals|activities|conferences|journals|pers
             $value = DB::to_ObjectID($value);
         }
     });
-
-    // Reference filters arrive as strings from the query builder, but are stored as ObjectIds.
-    $convertLinkFilters = function (array $filter) use (&$convertLinkFilters): array {
-        $toId = fn($value) => is_string($value) && DB::is_ObjectID($value) ? DB::to_ObjectID($value) : $value;
-        foreach ($filter as $field => &$value) {
-            if (in_array($field, ['$and', '$or', '$nor'], true) && is_array($value)) {
-                $value = array_map($convertLinkFilters, $value);
-            } elseif (in_array($field, ['initiatives', 'objectives'], true)) {
-                if (!is_array($value)) {
-                    $value = $toId($value);
-                    continue;
-                }
-                foreach ($value as $operator => &$operand) {
-                    if (in_array($operator, ['$eq', '$ne'], true)) $operand = $toId($operand);
-                    elseif (in_array($operator, ['$in', '$nin', '$all'], true) && is_array($operand)) $operand = array_map($toId, $operand);
-                }
-                unset($operand);
-            }
-        }
-        unset($value);
-        return $filter;
-    };
-    $filter = $convertLinkFilters($filter);
 
     if (isset($_GET['search'])) {
         $j = new \MongoDB\BSON\Regex(trim($_GET['search']), 'i');

@@ -16,15 +16,18 @@ foreach (['activities', 'projects', 'proposals', 'events'] as $entity) {
     check(isset($config->modules['initiatives']), "Initiative links are available for $entity.");
     $saved = validateValues(['initiatives' => [(string) $first, (string) $second, (string) $first, 'bad', ['nested']]], $DB, $entity);
     check(array_map('strval', $saved['initiatives']) === [(string) $first, (string) $second], 'Valid references survive normalization without numeric conversion or duplicates.');
-    check($saved['initiatives'][0] instanceof MongoDB\BSON\ObjectId, 'References use BSON ObjectIds.');
+    check(is_string($saved['initiatives'][0]), 'References are stored as strings.');
 }
 check(validateValues(['initiatives' => true], $DB)['initiatives'] === true, 'Feature switches are not interpreted as association fields.');
 check(validateValues(['initiatives' => ''], $DB)['initiatives'] === [], 'Clearing the selection saves an empty array.');
-check(count(Initiatives::normalizeLinks(new ArrayIterator([$first]))) === 1, 'Stored BSON arrays are accepted.');
-$jsonLinks = json_decode(json_encode([$first, $second]), true);
-check(array_map('strval', Initiatives::normalizeLinks($jsonLinks)) === [(string) $first, (string) $second], 'Extended JSON references from activity detail pages are retained.');
+Initiatives::validateActivitySelection(['year' => 2026, 'initiatives' => [(string) $first]], [], $osiris, $Settings);
+check(true, 'Activity period validation resolves string links through the primary ObjectId.');
+aborts(fn() => Initiatives::validateActivitySelection(['year' => 2026, 'initiatives' => [(string) $second]], [], $osiris, $Settings), 403);
+check(count(Initiatives::normalizeLinks(new ArrayIterator([(string) $first]))) === 1, 'Stored BSON arrays are accepted.');
+$jsonLinks = json_decode(json_encode([(string) $first, (string) $second]), true);
+check(array_map('strval', Initiatives::normalizeLinks($jsonLinks)) === [(string) $first, (string) $second], 'JSON round trips preserve string references.');
 check(Initiatives::normalizeLinks([['$oid' => 'bad'], ['$oid' => ['nested']], ['unexpected' => (string) $first]]) === [], 'Malformed Extended JSON references are ignored.');
-$renderer = new Modules(['initiatives' => [$first, $second]]);
+$renderer = new Modules(['initiatives' => [(string) $first, (string) $second]]);
 ob_start(); $renderer->print_module('initiatives', true, ['help' => 'Selection help']); $html = ob_get_clean();
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
 check($xpath->query('//input[@type="checkbox" and @name="values[initiatives][]" and @checked]')->length === 2, 'Existing associations, including archived ones, remain selected.');
@@ -35,7 +38,7 @@ check(strpos($html, 'Climate &amp; Water') < strpos($html, 'Archived initiative'
 check(str_contains($html, 'data-required="true"'), 'Required group validation is enabled.');
 if (isset($argv[1])) file_put_contents($argv[1] . '/initiative-module.html', $html);
 $format = new Document(false, 'web');
-$format->doc = ['initiatives' => [$first, $second]];
+$format->doc = ['initiatives' => [(string) $first, (string) $second]];
 $rendered = $format->get_field('initiatives');
 $format->doc = json_decode(json_encode($format->doc), true);
 check($format->get_field('initiatives') === $rendered, 'Activity detail JSON conversion preserves rendered initiative links and tooltips.');
@@ -52,11 +55,11 @@ check($format->get_field('initiatives') === '', 'Missing or malformed references
 // Objective links use the same reference schema and an independent selection widget.
 $objectiveId = new MongoDB\BSON\ObjectId();
 $osiris->objectives->documents = [];
-$osiris->objectives->insertOne(['_id' => $objectiveId, 'initiative' => $first, 'code' => '26-01', 'name' => 'Climate & water', 'description' => '<b>Evaluate</b> "results"', 'inactive' => true]);
+$osiris->objectives->insertOne(['_id' => $objectiveId, 'initiative' => (string) $first, 'code' => '26-01', 'name' => 'Climate & water', 'description' => '<b>Evaluate</b> "results"', 'inactive' => true]);
 foreach (['activities', 'projects', 'proposals'] as $entity) {
     $config = new FormBuilder('Test', '', entity: $entity);
     $saved = validateValues(['objectives' => [(string) $objectiveId, (string) $objectiveId, 'bad']], $DB, $entity);
-    check(isset($config->modules['objectives']) && count($saved['objectives']) === 1 && $saved['objectives'][0] instanceof MongoDB\BSON\ObjectId && array_map('strval', $saved['initiatives']) === [(string) $first], "Objective links are normalized and their parent initiative is stored for $entity.");
+    check(isset($config->modules['objectives']) && count($saved['objectives']) === 1 && is_string($saved['objectives'][0]) && array_map('strval', $saved['initiatives']) === [(string) $first], "Objective links are normalized and their parent initiative is stored for $entity.");
 }
 check(validateValues(['objectives' => ''], $DB)['objectives'] === [], 'Clearing objectives saves an empty array.');
 $cleared = validateValues(['objectives' => ''], $DB, 'activities');
@@ -64,20 +67,20 @@ check($cleared['objectives'] === [] && $cleared['initiatives'] === [], 'Clearing
 $merged = validateValues(['initiatives' => [(string) $second, (string) $first], 'objectives' => [(string) $objectiveId]], $DB, 'projects');
 check(array_map('strval', $merged['initiatives']) === [(string) $second, (string) $first], 'Explicit and implicit initiatives form one deduplicated list.');
 $otherObjective = new MongoDB\BSON\ObjectId();
-$osiris->objectives->insertOne(['_id' => $otherObjective, 'initiative' => $second, 'name' => 'Another objective']);
+$osiris->objectives->insertOne(['_id' => $otherObjective, 'initiative' => (string) $second, 'name' => 'Another objective']);
 $switched = validateValues(['objectives' => [(string) $otherObjective]], $DB, 'projects');
 check(array_map('strval', $switched['initiatives']) === [(string) $second], 'A changed objective selection replaces derived initiatives instead of retaining old parents.');
 $both = validateValues(['objectives' => [(string) $objectiveId, (string) $otherObjective]], $DB, 'activities');
 check(count($both['initiatives']) === 2, 'Objectives from different initiatives contribute all their parents.');
 check(!array_key_exists('initiatives', validateValues(['comment' => 'Only a comment'], $DB, 'activities')), 'Partial updates without association fields leave stored links untouched.');
-$objectiveRenderer = new Modules(['objectives' => [$objectiveId]]);
+$objectiveRenderer = new Modules(['objectives' => [(string) $objectiveId]]);
 ob_start(); $objectiveRenderer->print_module('objectives', true, ['help' => 'Objective help']); $html = ob_get_clean();
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
 check($xpath->query('//input[@name="values[objectives][]" and @checked]')->length === 1 && str_contains($html, 'Archived') && str_contains($html, 'Climate &amp; Water') && str_contains($html, 'Objective help'), 'The objective widget retains archived selections, groups by initiative and renders help.');
 check(str_contains($html, 'data-required="true"') && str_contains($html, 'ph-target'), 'The objective widget supports required selection and the target icon.');
-$format->doc = json_decode(json_encode(['objectives' => [$objectiveId]]), true);
+$format->doc = json_decode(json_encode(['objectives' => [(string) $objectiveId]]), true);
 $rendered = $format->get_field('objectives');
-check(str_contains($rendered, '/initiatives/objectives/view/' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders Extended JSON references as escaped objective links with identifiers and description tooltips.');
+check(str_contains($rendered, '/initiatives/objectives/view/' . $objectiveId) && str_contains($rendered, '26-01: Climate &amp; water') && str_contains($rendered, 'title="Evaluate &quot;results&quot;"'), 'Document renders string references as escaped objective links with identifiers and description tooltips.');
 $format->usecase = 'print';
 check($format->get_field('objectives') === '26-01: Climate &amp; water', 'Printed objectives use plain names.');
 $format->usecase = 'portal';

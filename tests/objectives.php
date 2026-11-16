@@ -42,7 +42,7 @@ check(str_contains(Initiatives::period(['start_date' => '2026-11-01']), 'Open-en
 postRoute('/crud/initiatives/(.*)/objectives/create', ['values' => $input + ['initiative' => 'spoof', '_id' => 'spoof']], $id);
 $objective = end($osiris->objectives->documents);
 $objectiveId = (string) $objective['_id'];
-check($objective['initiative'] === $parent['_id'] && $objective['_id'] instanceof MongoDB\BSON\ObjectId, 'New fields cannot override identity or parentage.');
+check($objective['initiative'] === (string) $parent['_id'] && $objective['_id'] instanceof MongoDB\BSON\ObjectId, 'New fields cannot override identity or parentage.');
 check($objective['code'] === 'EA-01' && $objective['type'] === 'research', 'Create persists all new objective fields.');
 postRoute('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', ['values' => array_replace($input, [
     'code' => 'EA-02', 'description' => 'Updated description', 'type' => 'validation', 'end_date' => '',
@@ -50,7 +50,7 @@ postRoute('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', ['values' =
 $updated = $osiris->objectives->findOne(['_id' => $objective['_id']]);
 check($updated['code'] === 'EA-02' && $updated['description'] === 'Updated description' && $updated['type'] === 'validation', 'Editing persists code, description and type.');
 check($updated['end'] === null && $updated['end_date'] === null && $updated['start_date'] === $input['start_date'], 'Clearing an end date clears both representations.');
-check($updated['created_by'] === 'reviewer' && $updated['initiative'] === $parent['_id'], 'Editing preserves creation metadata and parentage.');
+check($updated['created_by'] === 'reviewer' && $updated['initiative'] === (string) $parent['_id'], 'Editing preserves creation metadata and parentage.');
 
 $count = count($osiris->objectives->documents);
 postRoute('/crud/initiatives/(.*)/objectives/create', ['values' => array_replace($input, ['name' => '', 'initiative' => 'spoof'])], $id);

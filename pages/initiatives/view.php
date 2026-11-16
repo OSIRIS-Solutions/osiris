@@ -8,8 +8,8 @@ $fields = Initiatives::visibleFields($fields, DB::doc2Arr($user['roles'] ?? []))
 $titleVisible = array_intersect(['title', 'title-loc'], array_column($fields, 'id'));
 $detailFields = array_values(array_filter($fields, fn($field) => !in_array($field['id'] ?? '', ['title', 'title-loc', 'topics', 'date-range-ongoing'], true)));
 $details = Initiatives::details($initiative, $detailFields);
-$objectives = Initiatives::sortCurrentFirst($osiris->objectives->find(['initiative' => $initiative['_id']])->toArray());
-$association = ['initiatives' => $initiative['_id']];
+$objectives = Initiatives::sortCurrentFirst($osiris->objectives->find(['initiative' => (string) $initiative['_id']])->toArray());
+$association = ['initiatives' => (string) $initiative['_id']];
 $directTopics = in_array('topics', array_column($fields, 'id'), true) ? DB::doc2Arr($initiative['topics'] ?? []) : [];
 include BASEPATH . '/pages/initiatives/content-data.php';
 ?>

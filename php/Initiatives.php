@@ -190,19 +190,17 @@ final class Initiatives
         return $value;
     }
 
-    /** Stable, unique database references submitted by association fields. */
+    /** Canonical, unique string IDs for stored initiative and objective relationships. */
     public static function normalizeLinks($values): array
     {
         if ($values instanceof Traversable) $values = iterator_to_array($values);
         if (!is_array($values)) $values = empty($values) ? [] : [$values];
         $links = [];
         foreach ($values as $value) {
-            // Activity detail pages convert BSON references to Extended JSON.
-            if (is_array($value)) $value = $value['$oid'] ?? null;
             if ($value instanceof MongoDB\BSON\ObjectId) $value = (string) $value;
             if (!is_string($value) || !DB::is_ObjectID($value)) continue;
-            $id = DB::to_ObjectID($value);
-            $links[(string) $id] = $id;
+            $id = strtolower($value);
+            $links[$id] = $id;
         }
         return array_values($links);
     }
@@ -214,7 +212,7 @@ final class Initiatives
         $values['objectives'] = self::normalizeLinks($values['objectives']);
         $initiatives = self::normalizeLinks($values['initiatives'] ?? []);
         if ($values['objectives'] !== []) {
-            foreach ($database->objectives->find(['_id' => ['$in' => $values['objectives']]], ['projection' => ['initiative' => 1]]) as $objective) {
+            foreach ($database->objectives->find(['_id' => ['$in' => array_map([DB::class, 'to_ObjectID'], $values['objectives'])]], ['projection' => ['initiative' => 1]]) as $objective) {
                 $initiatives[] = $objective['initiative'] ?? null;
             }
         }
@@ -277,11 +275,11 @@ final class Initiatives
         $period = self::activityPeriod($activity);
         foreach (['initiatives', 'objectives'] as $field) {
             if (!array_key_exists($field, $input)) continue;
-            $old = array_map('strval', self::normalizeLinks($previous[$field] ?? []));
-            $new = array_filter(self::normalizeLinks($input[$field]), fn($id) => !in_array((string) $id, $old, true));
+            $old = self::normalizeLinks($previous[$field] ?? []);
+            $new = array_filter(self::normalizeLinks($input[$field]), fn($id) => !in_array($id, $old, true));
             foreach ($new as $id) {
-                $document = $database->$field->findOne(['_id' => $id]);
-                $parent = $field === 'objectives' && $document ? $database->initiatives->findOne(['_id' => $document['initiative']]) : [];
+                $document = $database->$field->findOne(['_id' => DB::to_ObjectID($id)]);
+                $parent = $field === 'objectives' && $document ? $database->initiatives->findOne(['_id' => DB::to_ObjectID($document['initiative'])]) : [];
                 if (!$document || ($field === 'objectives' && !$parent) || !self::matchesPeriod(self::selectionBounds($document, $parent), $period)) {
                     abortwith(403, translate('initiatives.selection_outside_period'));
                 }

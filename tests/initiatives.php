@@ -254,7 +254,7 @@ rejects(fn() => Initiatives::objectiveValues(['name' => 'Goal', 'end_date' => '2
 postRoute('/crud/initiatives/(.*)/objectives/create', ['values' => ['name' => 'Goal', 'end_date' => '2027-01-01', 'initiative' => 'spoof']], $id);
 $objective = array_values($osiris->objectives->documents)[0];
 $objectiveId = (string) $objective['_id'];
-check($objective['initiative'] === $initiative['_id'], 'Objective belongs to its actual parent.');
+check($objective['initiative'] === (string) $initiative['_id'], 'Objective belongs to its actual parent.');
 postRoute('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', ['values' => ['name' => 'Updated goal', 'end_date' => '']], $id, 'update', $objectiveId);
 check($osiris->objectives->findOne(['_id' => $objective['_id']])['end_date'] === null, 'Objective deadline can be cleared.');
 postRoute('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', ['inactive' => '1'], $id, 'archive', $objectiveId);

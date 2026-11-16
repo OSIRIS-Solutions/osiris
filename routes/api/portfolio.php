@@ -131,13 +131,13 @@ Route::get('/portfolio/(initiatives|objectives)', function ($entity) {
         $filter = ['public' => true];
         if ($entity === 'objectives') {
             $parents = $osiris->initiatives->find(['public' => true], ['projection' => ['_id' => 1, 'public' => 1]])->toArray();
-            $parentIds = array_column(array_filter($parents, fn($parent) => ($parent['public'] ?? false) === true), '_id');
+            $parentIds = array_map('strval', array_column(array_filter($parents, fn($parent) => ($parent['public'] ?? false) === true), '_id'));
             $parent = null;
             if (isset($_GET['initiative'])) {
                 if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
-                $parent = DB::to_ObjectID($_GET['initiative']);
+                $parent = strtolower($_GET['initiative']);
             }
-            if ($parent !== null) $parentIds = in_array((string) $parent, array_map('strval', $parentIds), true) ? [$parent] : [];
+            if ($parent !== null) $parentIds = in_array($parent, $parentIds, true) ? [$parent] : [];
             $filter['initiative'] = ['$in' => $parentIds];
         }
         $records = array_filter($osiris->$entity->find($filter)->toArray(), fn($record) => ($record['public'] ?? false) === true);
@@ -201,9 +201,9 @@ Route::get('/portfolio/(initiative|objective)/([^/]+)/(objectives|publications|a
             $parent = null;
             if (isset($_GET['initiative'])) {
                 if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
-                $parent = DB::to_ObjectID($_GET['initiative']);
+                $parent = strtolower($_GET['initiative']);
             }
-            $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find(['initiative' => $document['_id'], 'public' => true])->toArray();
+            $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find(['initiative' => (string) $document['_id'], 'public' => true])->toArray();
             $records = array_filter($records, fn($record) => ($record['public'] ?? false) === true);
             $status = $_GET['status'] ?? 'current';
             if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
@@ -227,7 +227,7 @@ Route::get('/portfolio/(initiative|objective)/([^/]+)/(objectives|publications|a
         $collection = $content === 'events' ? 'conferences' : $content;
         $feature = match ($content) { 'projects' => 'projects', 'infrastructures' => 'infrastructures', default => null };
         if ($feature !== null && !$Settings->featureEnabled($feature)) { echo rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); return; }
-        $filter = [$entity => $document['_id']];
+        $filter = [$entity => (string) $document['_id']];
         if ($content === 'activities') {
             $filter += ['hide' => ['$ne' => true], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio($relation !== 'activities')]];
             if ($relation === 'publications') $filter['type'] = 'publication';

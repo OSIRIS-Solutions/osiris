@@ -24,15 +24,15 @@ $parentId = new MongoDB\BSON\ObjectId();
 $objectiveId = new MongoDB\BSON\ObjectId();
 $siblingId = new MongoDB\BSON\ObjectId();
 foreach (['activities', 'projects', 'proposals', 'conferences', 'infrastructures', 'deadlines'] as $collection) $osiris->$collection = new InitiativePageCollection();
-$osiris->activities->insertOne(['name' => 'Objective publication', 'type' => 'publication', 'initiatives' => [$parentId], 'objectives' => [$objectiveId], 'topics' => ['climate'], 'year' => 2026]);
-$osiris->activities->insertOne(['name' => 'Sibling activity', 'type' => 'other', 'initiatives' => [$parentId], 'objectives' => [$siblingId], 'topics' => ['water'], 'year' => 2025]);
-$osiris->conferences->insertOne(['title' => 'Climate workshop', 'initiatives' => [$parentId], 'objectives' => [$objectiveId], 'start' => '2026-11-01']);
+$osiris->activities->insertOne(['name' => 'Objective publication', 'type' => 'publication', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $objectiveId], 'topics' => ['climate'], 'year' => 2026]);
+$osiris->activities->insertOne(['name' => 'Sibling activity', 'type' => 'other', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $siblingId], 'topics' => ['water'], 'year' => 2025]);
+$osiris->conferences->insertOne(['title' => 'Climate workshop', 'initiatives' => [(string) $parentId], 'objectives' => [(string) $objectiveId], 'start' => '2026-11-01']);
 $osiris->topics->insertOne(['id' => 'climate', 'name' => 'Climate', 'color' => '#008899']);
 $osiris->topics->insertOne(['id' => 'water', 'name' => 'Water', 'color' => '#008899']);
-$parentContents = Initiatives::linkedContents($osiris, $Settings, ['initiatives' => $parentId]);
+$parentContents = Initiatives::linkedContents($osiris, $Settings, ['initiatives' => (string) $parentId]);
 check(count($parentContents['publications']) === 1 && count($parentContents['activities']) === 1 && count($parentContents['events']) === 1, 'An initiative includes content from both objectives and partitions publications from other activities.');
 check(isset($osiris->projects->lastFilter['$or']) && $osiris->infrastructures->lastFilter['persons.user'] === 'reviewer', 'Project and infrastructure queries retain ownership restrictions without global view permission.');
-$ownContents = Initiatives::linkedContents($osiris, $Settings, ['objectives' => $objectiveId]);
+$ownContents = Initiatives::linkedContents($osiris, $Settings, ['objectives' => (string) $objectiveId]);
 check(count($ownContents['publications']) === 1 && count($ownContents['activities']) === 0 && count($ownContents['events']) === 1, 'An objective includes only content explicitly linked to that objective.');
 check(array_column(Initiatives::contentTopics($osiris, $ownContents), 'id') === ['climate'], 'Objective topics derive from its own linked content, excluding sibling topics.');
 check(count(Initiatives::contentTopics($osiris, $parentContents)) === 2, 'The parent topic overview combines linked content without duplicate topics.');
@@ -42,12 +42,12 @@ $settingsSpy = new class {
     public function hasPermission($permission) { return false; }
     public function featureEnabled($feature) { return false; }
 };
-$restricted = Initiatives::linkedContents($osiris, $settingsSpy, ['objectives' => $objectiveId]);
-check($settingsSpy->activityFilter === ['objectives' => $objectiveId] && $osiris->activities->lastFilter['restricted'] === true && $restricted['projects'] === [], 'Activity permissions receive the association scope and disabled features are omitted.');
+$restricted = Initiatives::linkedContents($osiris, $settingsSpy, ['objectives' => (string) $objectiveId]);
+check($settingsSpy->activityFilter === ['objectives' => (string) $objectiveId] && $osiris->activities->lastFilter['restricted'] === true && $restricted['projects'] === [], 'Activity permissions receive the association scope and disabled features are omitted.');
 $sorted = Initiatives::sortCurrentFirst([['name' => 'Archived', 'inactive' => true], ['name' => 'Expired', 'end_date' => '2000-01-01'], ['name' => 'Current']]);
 check($sorted[0]['name'] === 'Current', 'Current entries appear before expired and archived entries.');
 $initiative = ['_id' => $parentId, 'name' => 'Mission overview'];
-$objective = ['_id' => $objectiveId, 'initiative' => $parentId, 'name' => 'Objective overview', 'code' => '26-01', 'description' => 'Objective description', 'type' => 'objective'];
+$objective = ['_id' => $objectiveId, 'initiative' => (string) $parentId, 'name' => 'Objective overview', 'code' => '26-01', 'description' => 'Objective description', 'type' => 'objective'];
 // Keep the shared page includes; only the already loaded vocabulary bootstrap is removed.
 $view = str_replace("require_once BASEPATH . '/php/Vocabulary.php';", '', file_get_contents(BASEPATH . '/pages/initiatives/objective.php'));
 $Settings->permissions = ['initiatives.view'];

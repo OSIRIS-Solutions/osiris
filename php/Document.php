@@ -1388,7 +1388,7 @@ class Document extends Settings
                 $ids = Initiatives::normalizeLinks($this->doc['initiatives'] ?? []);
                 if (empty($ids) || $this->usecase === 'portal') return '';
                 $names = [];
-                foreach ($this->DB->db->initiatives->find(['_id' => ['$in' => $ids]]) as $initiative) {
+                foreach ($this->DB->db->initiatives->find(['_id' => ['$in' => array_map([DB::class, 'to_ObjectID'], $ids)]]) as $initiative) {
                     $name = e(trim(strip_tags(localized($initiative['name'] ?? '', $this->lang))));
                     if ($this->usecase === 'print') {
                         $names[] = $name;
@@ -1404,7 +1404,7 @@ class Document extends Settings
                 $ids = Initiatives::normalizeLinks($this->doc['objectives'] ?? []);
                 if (empty($ids) || $this->usecase === 'portal') return '';
                 $names = [];
-                foreach ($this->DB->db->objectives->find(['_id' => ['$in' => $ids]]) as $objective) {
+                foreach ($this->DB->db->objectives->find(['_id' => ['$in' => array_map([DB::class, 'to_ObjectID'], $ids)]]) as $objective) {
                     $name = trim(strip_tags(localized($objective['name'] ?? '', $this->lang)));
                     $code = trim((string) ($objective['code'] ?? ''));
                     $name = e(($code === '' ? '' : $code . ': ') . $name);

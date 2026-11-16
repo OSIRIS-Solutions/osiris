@@ -123,7 +123,7 @@ final class InfrastructureForms
         $values['end_date'] = $end;
         if (array_key_exists('collaborative', $values)) {
             $values['collaborative'] = in_array($values['collaborative'], [true, 'true', 'yes', '1'], true);
-            $values['collaborators'] = Initiatives::normalizeLinks($values['collaborators'] ?? []);
+            $values['collaborators'] = array_map([DB::class, 'to_ObjectID'], Initiatives::normalizeLinks($values['collaborators'] ?? []));
             $coordinator = $values['coordinator'] ?? '';
             if (!is_string($coordinator)) throw new InvalidArgumentException(translate('error.no_values'));
             $organization = DB::is_ObjectID($coordinator) ? DB::to_ObjectID($coordinator) : null;
@@ -154,7 +154,7 @@ final class InfrastructureForms
             $value = $input[$key];
             $input[$key] = normalizeLocalizedValues(is_array($value) ? $value : ['en' => is_string($value) ? $value : ''], false, $key === 'description');
         }
-        $input['collaborators'] = Initiatives::normalizeLinks($input['collaborators'] ?? []);
+        $input['collaborators'] = array_map([DB::class, 'to_ObjectID'], Initiatives::normalizeLinks($input['collaborators'] ?? []));
         if (isset($input['coordinator'])) {
             $input['coordinator_institute'] = $input['coordinator'] === '0';
             $input['coordinator_organization'] = DB::is_ObjectID($input['coordinator']) ? DB::to_ObjectID($input['coordinator']) : null;
