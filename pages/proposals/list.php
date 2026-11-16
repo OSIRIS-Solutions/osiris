@@ -440,7 +440,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     function renderRole(data) {
         if (data == 'coordinator') {
             return `<span class="badge text-signal">
-        <i class="ph ph-crown"></i>
+        <i class="ph ph-crown-simple text-signal"></i>
         ${<?= json_encode(lang('common.coordinator'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
         </span>`
         }

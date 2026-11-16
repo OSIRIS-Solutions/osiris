@@ -562,7 +562,7 @@ include_once BASEPATH . '/header-editor.php';
                     <td><?= $p['last'] ?>, <?= $p['first'] ?></td>
                     <td>
                         <?php if ($is_head) { ?>
-                            <i class="ph ph-crown-simple text-secondary"></i>
+                            <i class="ph ph-flag-banner text-secondary"></i>
                         <?php } elseif ($unit['editor'] ?? false) { ?>
                             <i class="ph ph-clipboard-text text-primary"></i>
                         <?php } ?>

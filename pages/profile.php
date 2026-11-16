@@ -310,7 +310,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                     </a>
                                     <?php if ($head) { ?>
                                         <span data-toggle="tooltip" data-title="<?= lang('people.the_person_is_leading_this_unit') ?>">
-                                            <i class="ph ph-crown-simple text-signal"></i>
+                                            <i class="ph ph-flag-banner text-signal"></i>
                                         </span>
                                     <?php } ?>
                                 </td>
@@ -616,7 +616,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <?php if ($hasAffiliations): ?>
         <a onclick="navigate('affiliations')" href="#section-affiliations" id="btn-affiliations" class="btn">
-            <i class="ph ph-intersect" aria-hidden="true"></i>
+            <i class="ph ph-handshake" aria-hidden="true"></i>
             <?= translate('people.affiliations') ?>
         </a>
     <?php endif; ?>
@@ -842,7 +842,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                             <?php endif; ?>
                                         </div>
                                         <div class="affiliation-badges">
-                                            <?php if ($entry['lead']): ?><span class="badge primary"><i class="ph ph-crown-simple" aria-hidden="true"></i> <?= translate('people.affiliation_unit_lead') ?></span><?php endif; ?>
+                                            <?php if ($entry['lead']): ?><span class="badge primary"><i class="ph ph-flag-banner" aria-hidden="true"></i> <?= translate('people.affiliation_unit_lead') ?></span><?php endif; ?>
                                             <?php if ($entry['scientific']): ?><span class="badge"><?= translate('common.scientific') ?></span><?php endif; ?>
                                         </div>
                                     </div>

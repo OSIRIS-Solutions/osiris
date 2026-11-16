@@ -419,7 +419,7 @@ if ($Settings->featureEnabled('spectrum')) {
                                     if (is_string($heads)) $heads = [$heads];
                                     $heads = array_map([$DB, 'getNameFromId'], $heads);
                                     ?>
-                                    <i class="ph ph-crown text-signal"></i>
+                                    <i class="ph ph-flag-banner text-signal"></i>
                                     <?= implode(', ', $heads) ?>
                                 </div>
                             <?php } ?>

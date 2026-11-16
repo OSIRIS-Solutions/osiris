@@ -544,7 +544,7 @@ class Project extends Vocabulary
     {
         $label = $this->getRoleRaw();
         if (($this->project['role'] ?? '') == 'coordinator') {
-            return "<span class='badge no-wrap'>" . '<i class="ph ph-crown text-signal"></i> ' . $label . "</span>";
+            return "<span class='badge no-wrap'>" . '<i class="ph ph-crown-simple text-signal"></i> ' . $label . "</span>";
         }
         if (($this->project['role'] ?? '') == 'associated') {
             return "<span class='badge no-wrap'>" . '<i class="ph ph-address-book text-muted"></i> ' . $label . "</span>";

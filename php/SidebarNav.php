@@ -182,7 +182,7 @@ class SidebarNav
             ],
             [
                 'id' => 'sidebar-users',
-                'label' => lang('topics.groups'),
+                'label' => lang('navigation.groups'),
                 'items' => [
                     [
                         'id' => 'users',
@@ -195,6 +195,18 @@ class SidebarNav
                         'permission' => null,
                         'favoritable' => true,
                         'hasSearch' => true
+                    ],
+                    [
+                        'id' => 'groups',
+                        'label' => lang('navigation.organisational_units'),
+                        'icon' => 'users-three',
+                        'url' => '/groups',
+                        'active' => ['^/groups($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
                     ],
                     [
                         'id' => 'topics',
@@ -217,18 +229,6 @@ class SidebarNav
                         'feature' => 'initiatives',
                         'default' => false,
                         'permission' => 'initiatives.view|initiatives.edit',
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'groups',
-                        'label' => lang('navigation.organisational_units'),
-                        'icon' => 'users-three',
-                        'url' => '/groups',
-                        'active' => ['^/groups($|/)'],
-                        'feature' => null,
-                        'default' => false,
-                        'permission' => null,
                         'favoritable' => true,
                         'hasSearch' => false
                     ],
