@@ -220,7 +220,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                     <details class="collapse-panel">
                         <summary class="collapse-header">
                             <i class="ph ph-<?= $group['icon'] ?? 'gear' ?>"></i>
-                            <?= lang($group['en'], $group['de']) ?>
+                            <?= isset($group['label']) ? translate($group['label']) : lang($group['en'], $group['de']) ?>
                         </summary>
                         <div class="collapse-content">
                             <table class="table simple">
@@ -236,7 +236,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                                                 <input id="role-<?= $right ?>-<?= $role ?>" type="checkbox" <?= $val ? 'checked' : '' ?> onchange="$(this).next().val(Number(this.checked))">
                                                 <input type="hidden" name="values[<?= $right ?>][<?= $role ?>]" value="<?= $val ? 1 : 0 ?>">
                                                 <label for="role-<?= $right ?>-<?= $role ?>">
-                                                    <?= lang($field['en'], $field['de']) ?>
+                                                    <?= isset($field['label']) ? translate($field['label'], ['initiatives' => translate('common.initiatives'), 'objectives' => translate('initiatives.objectives')]) : lang($field['en'], $field['de']) ?>
                                                 </label>
                                                 <?php if (isset($field['comment_en'])) { ?>
                                                     <p class="description"><?= lang($field['comment_en'], $field['comment_de']) ?></p>
@@ -368,7 +368,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                 ?>
                     <tr>
                         <th colspan="<?= count($roles) + 1 ?>">
-                            <?= lang($group['en'], $group['de']) ?>
+                            <?= isset($group['label']) ? translate($group['label']) : lang($group['en'], $group['de']) ?>
                         </th>
                     </tr>
                     <?php foreach ($group['fields'] as $field) {
@@ -377,7 +377,7 @@ foreach ($osiris->adminRights->find([]) as $row) {
                     ?>
                         <tr>
                             <td class="pl-20">
-                                <?= lang($field['en'], $field['de']) ?>
+                                <?= isset($field['label']) ? translate($field['label'], ['initiatives' => translate('common.initiatives'), 'objectives' => translate('initiatives.objectives')]) : lang($field['en'], $field['de']) ?>
                                 <code class="code font-size-12 text-muted"><?= $right ?></code>
                             </td>
                             <?php foreach ($roles as $role) {

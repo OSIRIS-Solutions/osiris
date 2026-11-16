@@ -47,10 +47,10 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
 
             <?php if (!$Settings->featureEnabled('initiatives')) { ?>
                 <div class="alert signal">
-                    <?= lang(
-                        'The Initiatives feature is not enabled. Please enable it in the <a href="' . ROOTPATH . '/admin/features#initiatives">Features</a> section of the admin panel to use initiatives.',
-                        'Die Initiativen-Funktion ist nicht aktiviert. Bitte aktiviere sie im Bereich <a href="' . ROOTPATH . '/admin/features#initiatives">"Funktionen"</a> des Admin-Panels, um Initiativen nutzen zu können.'
-                    ) ?>
+                    <?= translate('initiatives.feature_disabled', [
+                        'entity' => translate('common.initiatives'),
+                        'link' => new Html('<a href="' . ROOTPATH . '/admin/features#initiatives">' . e(translate('admin.features')) . '</a>'),
+                    ]) ?>
                 </div>
             <?php } ?>
 

@@ -515,22 +515,26 @@
         ]
     },
     {
+        "label": "common.initiatives",
         "de": "Initiativen",
         "en": "Initiatives",
         "icon": "compass",
         "fields": [
             {
                 "id": "initiatives.view",
+                "label": "initiatives.permission_view",
                 "de": "Initiativen sehen",
                 "en": "See initiatives"
             },
             {
                 "id": "initiatives.edit",
+                "label": "initiatives.permission_edit",
                 "de": "Initiativen bearbeiten",
                 "en": "Edit initiatives"
             },
             {
                 "id": "initiatives.select-outside-period",
+                "label": "initiatives.permission_outside_period",
                 "de": "Initiativen und Objectives außerhalb der Laufzeit zuordnen",
                 "en": "Assign initiatives and objectives outside their period"
             }

@@ -47,4 +47,11 @@ return [
     'api_read' => 'Initiativen und Objectives lesen',
     'portfolio_visibility' => 'Im öffentlichen Portfolio anzeigen',
     'portfolio_visibility_hint' => 'Objectives werden nur veröffentlicht, wenn auch ihre Initiative öffentlich ist.',
+    'enable_feature' => '{{entity}} aktivieren',
+    'feature_configuration_hint' => 'Nach dem Aktivieren kannst du {{entity}} unter {{link}} konfigurieren.',
+    'feature_disabled' => 'Die Funktion {{entity}} ist nicht aktiviert. Aktiviere sie unter {{link}}, um sie zu nutzen.',
+    'association_help' => 'Wähle einen oder mehrere Einträge aus, die mit diesem Datensatz verknüpft werden sollen.',
+    'permission_view' => '{{initiatives}} ansehen',
+    'permission_edit' => '{{initiatives}} bearbeiten',
+    'permission_outside_period' => '{{initiatives}} und {{objectives}} außerhalb der Laufzeit zuordnen',
 ];

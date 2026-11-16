@@ -63,7 +63,7 @@
                 <td>
                     <div class="search-text">
                         <h4 class="mt-0">
-                            <?= lang($vals['name'], $vals['name_de']) ?>
+                            <?= $Modules->get_name($key) ?>
                             <span class="code font-size-16 border ml-10"><?= $key ?></span>
                         </h4>
                         <p class="text-muted ">

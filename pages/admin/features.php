@@ -663,11 +663,11 @@
 
                 <div class="box padded">
                     <h4 class="title" id="initiatives">
-                        <?= lang('Initiatives', 'Initiativen') ?>
+                        <?= translate('common.initiatives') ?>
                     </h4>
                     <div class="form-group mt-10">
                         <label for="" class="label">
-                            <?= lang('Enable Initiatives', 'Aktiviere Initiativen') ?>
+                            <?= translate('initiatives.enable_feature', ['entity' => translate('common.initiatives')]) ?>
                         </label>
                         <?php
                         renderCheckbox('initiatives');
@@ -675,7 +675,7 @@
                     </div>
 
                     <p class="description">
-                        <?= lang('More configuration options for Initiatives can be found after enabling in the "Initiatives" section of the admin panel.', 'Weitere Konfigurationsmöglichkeiten für Initiativen finden sich nach dem Aktivieren im Bereich "Initiativen" des Admin-Panels.') ?>
+                        <?= translate('initiatives.feature_configuration_hint', ['entity' => translate('common.initiatives'), 'link' => new Html('<a href="' . ROOTPATH . '/admin/data-model">' . e(translate('common.data_model')) . '</a>')]) ?>
                     </p>
                 </div>
             </section>

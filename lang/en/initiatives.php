@@ -47,4 +47,11 @@ return [
     'api_read' => 'Read initiatives and objectives',
     'portfolio_visibility' => 'Show in the public portfolio',
     'portfolio_visibility_hint' => 'Objectives are only published if their initiative is also public.',
+    'enable_feature' => 'Enable {{entity}}',
+    'feature_configuration_hint' => 'After enabling, configure {{entity}} under {{link}}.',
+    'feature_disabled' => 'The {{entity}} feature is not enabled. Enable the feature under {{link}} to use it.',
+    'association_help' => 'Select one or more entries to associate with this record.',
+    'permission_view' => 'View {{initiatives}}',
+    'permission_edit' => 'Edit {{initiatives}}',
+    'permission_outside_period' => 'Assign {{initiatives}} and {{objectives}} outside their period',
 ];

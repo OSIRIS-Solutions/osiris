@@ -380,7 +380,7 @@ Route::get('/admin/initiatives/fields', function () {
     }
     $fields = Initiatives::fields($osiris);
     
-    $name = lang('Initiatives', 'Initiativen');
+    $name = translate('common.initiatives');
 
     $color = '#000000';
     $copy = false;
