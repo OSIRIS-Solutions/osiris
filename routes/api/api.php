@@ -68,20 +68,19 @@ function return_permission_denied()
     ), JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }
 
-function return_rest($data, $count = 0, $status = 200)
+function return_rest($data, $count = 0, $status = 200, $jsonFlags = JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES)
 {
+    http_response_code($status);
     $result = array();
-    $limit = intval($_GET['limit'] ?? 0);
-
-    if (!empty($limit) && $count > $limit && is_array($data)) {
-        $offset = intval($_GET['offset'] ?? 0) || 0;
-        $data = array_slice($data, $offset, min($limit, $count - $offset));
-        $result += array(
-            'limit' => $limit,
-            'offset' => $offset
-        );
+    // Paginate lists only; detail documents must retain all their fields.
+    $offset = max(0, (int) ($_GET['offset'] ?? 0));
+    $limit = max(0, (int) ($_GET['limit'] ?? 0));
+    if ($status == 200 && is_array($data) && array_is_list($data) && ($offset || $limit)) {
+        $data = array_slice($data, $offset, $limit ?: null);
+        $result += ['limit' => $limit, 'offset' => $offset];
     }
-    header("Content-Type: application/json");
+    header("Content-Type: application/json; charset=utf-8");
+    header("Cache-Control: no-store");
     header("Pragma: no-cache");
     header("Expires: 0");
     if ($status == 200) {
@@ -101,11 +100,11 @@ function return_rest($data, $count = 0, $status = 200)
         $result += array(
             'status' => $status,
             'count' => 0,
-            'error' => 'DataNotFound',
+            'error' => $status == 403 ? 'PermissionDenied' : 'DataNotFound',
             'msg' => $data
         );
     }
-    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES);
+    return json_encode($result, $jsonFlags);
 }
 
 function return_rest_stream($data)
@@ -128,6 +127,211 @@ function return_rest_stream($data)
     }
     echo '],"count":' . $i . '}';
 }
+
+Route::get('/api/(initiatives|objectives)', function ($entity) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!apikey_check($_GET['apikey'] ?? null, 'initiatives.read')
+        || (!empty($_SESSION['loggedin']) && !empty($_SESSION['username']) && !Initiatives::canView($Settings))) {
+        echo return_rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives')) {
+        echo return_rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
+    try {
+        if (isset($_GET['json']) && !is_string($_GET['json'])) throw new InvalidArgumentException('Invalid JSON filter.');
+        $filter = $_GET['filter'] ?? (isset($_GET['json']) ? json_decode($_GET['json'], true, 512, JSON_THROW_ON_ERROR) : []);
+        if (!is_array($filter)) throw new InvalidArgumentException('Invalid filter.');
+        // Walk logical groups and convert only known reference fields to BSON IDs.
+        $groups = [&$filter];
+        for ($i = 0; $i < count($groups); $i++) {
+            foreach ($groups[$i] as $field => &$value) {
+                if (in_array($field, ['$and', '$or', '$nor'], true)) {
+                    if (!is_array($value) || !array_is_list($value)) throw new InvalidArgumentException('Invalid logical filter.');
+                    foreach ($value as &$group) {
+                        if (!is_array($group)) throw new InvalidArgumentException('Invalid logical filter.');
+                        $groups[] = &$group;
+                    }
+                    unset($group);
+                } elseif (in_array($field, ['_id', 'initiative', 'initiatives', 'objectives'], true)) {
+                    if (!is_array($value)) {
+                        if (is_string($value) && DB::is_ObjectID($value)) $value = DB::to_ObjectID($value);
+                    } else {
+                        foreach ($value as $operator => &$operand) {
+                            if (in_array($operator, ['$eq', '$ne'], true) && is_string($operand) && DB::is_ObjectID($operand)) $operand = DB::to_ObjectID($operand);
+                            elseif (in_array($operator, ['$in', '$nin', '$all'], true) && is_array($operand)) {
+                                foreach ($operand as &$reference) if (is_string($reference) && DB::is_ObjectID($reference)) $reference = DB::to_ObjectID($reference);
+                                unset($reference);
+                            }
+                        }
+                        unset($operand);
+                    }
+                }
+            }
+            unset($value);
+        }
+        unset($groups);
+        $parent = null;
+        if (isset($_GET['initiative']) && $entity === 'objectives') {
+            if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
+            $parent = DB::to_ObjectID($_GET['initiative']);
+        }
+        if ($parent !== null) $filter = $filter ? ['$and' => [$filter, ['initiative' => $parent]]] : ['initiative' => $parent];
+        $records = $osiris->$entity->find($filter)->toArray();
+        $status = $_GET['status'] ?? 'all';
+        if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
+        $search = $_GET['search'] ?? '';
+        if (!is_string($search)) throw new InvalidArgumentException('Invalid search.');
+        $result = [];
+        foreach (Initiatives::sortCurrentFirst($records) as $record) {
+            $record = DB::doc2Arr($record);
+            $past = !empty($record['inactive']) || Initiatives::isExpired($record);
+            if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
+            $output = $record;
+            $output['id'] = (string) $output['_id'];
+            unset($output['_id']);
+            if (isset($output['initiative'])) $output['initiative'] = (string) $output['initiative'];
+            $output = apiLocalizedFields($output, ['name', 'title', 'description']);
+            $text = [];
+            array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
+            if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
+            $result[] = $output;
+        }
+        echo return_rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } catch (InvalidArgumentException | JsonException $error) {
+        echo return_rest($error->getMessage(), 0, 400);
+    }
+});
+
+Route::get('/api/(initiatives|objectives)/([^/]+)', function ($entity, $id) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!apikey_check($_GET['apikey'] ?? null, 'initiatives.read')
+        || (!empty($_SESSION['loggedin']) && !empty($_SESSION['username']) && !Initiatives::canView($Settings))) {
+        echo return_rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives')) {
+        echo return_rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
+    $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id)]) : null;
+    if (!$document) { echo return_rest('Record not found.', 0, 404); return; }
+    $document = DB::doc2Arr($document);
+    $document['id'] = (string) $document['_id'];
+    unset($document['_id']);
+    if (isset($document['initiative'])) $document['initiative'] = (string) $document['initiative'];
+    echo return_rest(apiLocalizedFields($document, ['name', 'title', 'description']), 1, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+});
+
+Route::get('/api/(initiatives|objectives)/([^/]+)/(objectives|activities|projects|proposals|events|infrastructures|deadlines)', function ($entity, $id, $relation) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!apikey_check($_GET['apikey'] ?? null, 'initiatives.read')
+        || (!empty($_SESSION['loggedin']) && !empty($_SESSION['username']) && !Initiatives::canView($Settings))) {
+        echo return_rest('You do not have permission to access these initiatives.', 0, 403);
+        return;
+    }
+    if (!$Settings->featureEnabled('initiatives')) {
+        echo return_rest('Initiatives are not enabled.', 0, 404);
+        return;
+    }
+    $contentScopes = ['activities' => 'activities.read', 'projects' => 'projects.read', 'proposals' => 'projects.read', 'events' => 'events.read', 'infrastructures' => 'infrastructures.read', 'deadlines' => 'events.read'];
+    if ($relation !== 'objectives' && !apikey_check($_GET['apikey'] ?? null, $contentScopes[$relation])) {
+        echo return_rest('The API client does not have the content read scope.', 0, 403);
+        return;
+    }
+    $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id)]) : null;
+    if (!$document) { echo return_rest('Record not found.', 0, 404); return; }
+    $document = DB::doc2Arr($document);
+    try {
+        if ($relation === 'objectives') {
+            if ($entity !== 'initiatives') { echo return_rest('Relation not found.', 0, 404); return; }
+            if (isset($_GET['json']) && !is_string($_GET['json'])) throw new InvalidArgumentException('Invalid JSON filter.');
+            $filter = $_GET['filter'] ?? (isset($_GET['json']) ? json_decode($_GET['json'], true, 512, JSON_THROW_ON_ERROR) : []);
+            if (!is_array($filter)) throw new InvalidArgumentException('Invalid filter.');
+            // Walk logical groups and convert only known reference fields to BSON IDs.
+            $groups = [&$filter];
+            for ($i = 0; $i < count($groups); $i++) {
+                foreach ($groups[$i] as $field => &$value) {
+                    if (in_array($field, ['$and', '$or', '$nor'], true)) {
+                        if (!is_array($value) || !array_is_list($value)) throw new InvalidArgumentException('Invalid logical filter.');
+                        foreach ($value as &$group) {
+                            if (!is_array($group)) throw new InvalidArgumentException('Invalid logical filter.');
+                            $groups[] = &$group;
+                        }
+                        unset($group);
+                    } elseif (in_array($field, ['_id', 'initiative', 'initiatives', 'objectives'], true)) {
+                        if (!is_array($value)) {
+                            if (is_string($value) && DB::is_ObjectID($value)) $value = DB::to_ObjectID($value);
+                        } else {
+                            foreach ($value as $operator => &$operand) {
+                                if (in_array($operator, ['$eq', '$ne'], true) && is_string($operand) && DB::is_ObjectID($operand)) $operand = DB::to_ObjectID($operand);
+                                elseif (in_array($operator, ['$in', '$nin', '$all'], true) && is_array($operand)) {
+                                    foreach ($operand as &$reference) if (is_string($reference) && DB::is_ObjectID($reference)) $reference = DB::to_ObjectID($reference);
+                                    unset($reference);
+                                }
+                            }
+                            unset($operand);
+                        }
+                    }
+                }
+                unset($value);
+            }
+            unset($groups);
+            $parent = null;
+            if (isset($_GET['initiative'])) {
+                if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
+                $parent = DB::to_ObjectID($_GET['initiative']);
+            }
+            $constraint = ['initiative' => $document['_id']];
+            $filter = $filter ? ['$and' => [$filter, $constraint]] : $constraint;
+            $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find($filter)->toArray();
+            $status = $_GET['status'] ?? 'all';
+            if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
+            $search = $_GET['search'] ?? '';
+            if (!is_string($search)) throw new InvalidArgumentException('Invalid search.');
+            $result = [];
+            foreach (Initiatives::sortCurrentFirst($records) as $record) {
+                $record = DB::doc2Arr($record);
+                $past = !empty($record['inactive']) || Initiatives::isExpired($record);
+                if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
+                $output = $record;
+                $output['id'] = (string) $output['_id'];
+                unset($output['_id']);
+                if (isset($output['initiative'])) $output['initiative'] = (string) $output['initiative'];
+                $output = apiLocalizedFields($output, ['name', 'title', 'description']);
+                $text = [];
+                array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
+                if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
+                $result[] = $output;
+            }
+            echo return_rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        $collection = $relation === 'events' ? 'conferences' : $relation;
+        $feature = match ($relation) { 'projects', 'proposals' => 'projects', 'infrastructures' => 'infrastructures', 'deadlines' => 'deadlines', default => null };
+        if ($feature !== null && !$Settings->featureEnabled($feature)) { echo return_rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); return; }
+        $filter = [$entity => $document['_id']];
+        if (!empty($_SESSION['loggedin']) && !empty($_SESSION['username'])) {
+            if ($relation === 'activities') $filter = $Settings->getActivityFilter($filter);
+            if (in_array($relation, ['projects', 'proposals'], true) && !$Settings->hasPermission($relation . '.view')) $filter['$or'] = [['persons.user' => $_SESSION['username']], ['created_by' => $_SESSION['username']]];
+            if ($relation === 'infrastructures' && !$Settings->hasPermission('infrastructures.view')) $filter['persons.user'] = $_SESSION['username'];
+        }
+        $result = [];
+        foreach ($osiris->$collection->find($filter, ['sort' => ['year' => -1, 'start_date' => -1, 'start' => -1]]) as $record) {
+            $record = DB::doc2Arr($record);
+            $record['id'] = (string) ($record['id'] ?? $record['_id']);
+            unset($record['_id']);
+            $result[] = apiLocalizedFields($record, ['name', 'title', 'subtitle', 'abstract', 'description']);
+        }
+        echo return_rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } catch (InvalidArgumentException | JsonException $error) {
+        echo return_rest($error->getMessage(), 0, 400);
+    }
+});
 
 Route::get('/api/activities', function () {
     error_reporting(E_ERROR | E_PARSE);

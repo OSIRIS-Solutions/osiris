@@ -6,6 +6,34 @@ require_once __DIR__ . '/../setup/defaults.php';
 /** Shared rules for initiative forms and their simple objectives. */
 final class Initiatives
 {
+    /** Publish only configured metadata, without audit data or raw memberships. */
+    public static function portfolioMetadata($database, string $entity, array $document): array
+    {
+        if ($entity === 'initiatives') {
+            require_once BASEPATH . '/php/Modules.php';
+            $modules = new Modules($document);
+            $fields = array_values(array_filter(self::fields($database), fn($field) => empty($field['props']['roles'])));
+            $modules->setFields($fields);
+            $keys = [];
+            foreach ($modules->getPortfolioFields() as $module) {
+                $keys = array_merge($keys, array_keys($modules->all_modules[$module]['fields'] ?? [$module => '']));
+            }
+            // Operational fields and person memberships are never published as raw metadata.
+            $keys = array_diff($keys, ['_id', 'id', 'public', 'created', 'created_by', 'updated', 'updated_by', 'history', 'persons', 'initiatives', 'objectives']);
+            $result = array_intersect_key($document, array_flip($keys));
+            $result += array_intersect_key($document, ['inactive' => true]);
+            foreach (['start', 'end'] as $key) if (array_key_exists($key, $result) && isset($document[$key . '_date'])) $result[$key . '_date'] = $document[$key . '_date'];
+            foreach ($database->adminFields->find() as $field) {
+                if (isset($result[$field['id']]) && CustomFields::isLocalized($field)) $result[$field['id']] = apiLocalized($result[$field['id']]);
+            }
+        } else {
+            $result = array_intersect_key($document, array_flip(['initiative', 'code', 'name', 'description', 'type', 'start_date', 'end_date', 'inactive']));
+        }
+        $result['id'] = (string) $document['_id'];
+        if (isset($result['initiative'])) $result['initiative'] = (string) $result['initiative'];
+        return apiLocalizedFields($result, ['name', 'title', 'description']);
+    }
+
     public static function fields($database): array
     {
         $definition = $database->adminGeneral->findOne(['id' => 'initiative-fields']);

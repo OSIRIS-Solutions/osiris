@@ -31,27 +31,23 @@ function portfolio_apikey_check($key)
     return false;
 }
 
-function rest($data, $count = 0, $status = 200)
+function rest($data, $count = 0, $status = 200, $jsonFlags = JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
 {
+    http_response_code($status);
     $result = array();
-    $limit = intval($_GET['limit'] ?? 0);
-    if ($count == 0 && is_countable($data)) {
-        $count = count($data);
+    if ($count == 0 && is_countable($data)) $count = count($data);
+    // Paginate lists only; detail documents must retain all their fields.
+    $offset = max(0, (int) ($_GET['offset'] ?? 0));
+    $limit = max(0, (int) ($_GET['limit'] ?? 0));
+    if ($status == 200 && is_array($data) && array_is_list($data) && ($offset || $limit)) {
+        $data = array_slice($data, $offset, $limit ?: null);
+        $result += ['limit' => $limit, 'offset' => $offset];
     }
-
-    if (!empty($limit) && $count > $limit && is_array($data)) {
-        $offset = intval($_GET['offset'] ?? 0) || 0;
-        $data = array_slice($data, $offset, min($limit, $count - $offset));
-        $result += array(
-            'limit' => $limit,
-            'offset' => $offset
-        );
-    }
-
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET');
-    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    header("Content-Type: application/json");
+    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, X-API-Key');
+    header("Content-Type: application/json; charset=utf-8");
+    header("Cache-Control: no-store");
     header("Pragma: no-cache");
     header("Expires: 0");
     if ($status == 200) {
@@ -71,11 +67,11 @@ function rest($data, $count = 0, $status = 200)
         $result += array(
             'status' => $status,
             'count' => 0,
-            'error' => 'DataNotFound',
+            'error' => $status == 403 ? 'PermissionDenied' : 'DataNotFound',
             'msg' => $data
         );
     }
-    return json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    return json_encode($result, $jsonFlags);
 }
 
 /**
@@ -126,6 +122,149 @@ function help_getGroup($osiris, $id)
     return $group;
 }
 
+Route::get('/portfolio/(initiatives|objectives)', function ($entity) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    try {
+        $filter = ['public' => true];
+        if ($entity === 'objectives') {
+            $parents = $osiris->initiatives->find(['public' => true], ['projection' => ['_id' => 1, 'public' => 1]])->toArray();
+            $parentIds = array_column(array_filter($parents, fn($parent) => ($parent['public'] ?? false) === true), '_id');
+            $parent = null;
+            if (isset($_GET['initiative'])) {
+                if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
+                $parent = DB::to_ObjectID($_GET['initiative']);
+            }
+            if ($parent !== null) $parentIds = in_array((string) $parent, array_map('strval', $parentIds), true) ? [$parent] : [];
+            $filter['initiative'] = ['$in' => $parentIds];
+        }
+        $records = array_filter($osiris->$entity->find($filter)->toArray(), fn($record) => ($record['public'] ?? false) === true);
+        $status = $_GET['status'] ?? 'current';
+        if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
+        $search = $_GET['search'] ?? '';
+        if (!is_string($search)) throw new InvalidArgumentException('Invalid search.');
+        $result = [];
+        foreach (Initiatives::sortCurrentFirst($records) as $record) {
+            $record = DB::doc2Arr($record);
+            $past = !empty($record['inactive']) || Initiatives::isExpired($record);
+            if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
+            $output = Initiatives::portfolioMetadata($osiris, $entity, $record);
+            $text = [];
+            array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
+            if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
+            $result[] = $output;
+        }
+        echo rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } catch (InvalidArgumentException | JsonException $error) {
+        echo rest($error->getMessage(), 0, 400);
+    }
+});
+
+Route::get('/portfolio/(initiative|objective)/([^/]+)', function ($entity, $id) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    $entity .= 's';
+    $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id), 'public' => true]) : null;
+    if ($document && ($document['public'] ?? false) !== true) $document = null;
+    if ($document && $entity === 'objectives') {
+        $parentId = (string) ($document['initiative'] ?? '');
+        $parent = DB::is_ObjectID($parentId) ? $osiris->initiatives->findOne(['_id' => DB::to_ObjectID($parentId), 'public' => true]) : null;
+        if (!$parent || ($parent['public'] ?? false) !== true) $document = null;
+    }
+    if (!$document) { echo rest('Record not found.', 0, 404); return; }
+    $document = DB::doc2Arr($document);
+    echo rest(Initiatives::portfolioMetadata($osiris, $entity, $document), 1, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+});
+
+Route::get('/portfolio/(initiative|objective)/([^/]+)/(objectives|publications|activities|all-activities|projects|events|infrastructures)', function ($entity, $id, $relation) {
+    include_once BASEPATH . '/php/init.php';
+    require_once BASEPATH . '/php/Initiatives.php';
+    if (!portfolio_apikey_check($_GET['apikey'] ?? null)) { echo rest('You do not have permission to access these initiatives.', 0, 403); return; }
+    if (!$Settings->featureEnabled('initiatives') || !$Settings->featureEnabled('portal')) { echo rest('Initiatives are not enabled.', 0, 404); return; }
+    $entity .= 's';
+    $document = DB::is_ObjectID($id) ? $osiris->$entity->findOne(['_id' => DB::to_ObjectID($id), 'public' => true]) : null;
+    if ($document && ($document['public'] ?? false) !== true) $document = null;
+    if ($document && $entity === 'objectives') {
+        $parentId = (string) ($document['initiative'] ?? '');
+        $parent = DB::is_ObjectID($parentId) ? $osiris->initiatives->findOne(['_id' => DB::to_ObjectID($parentId), 'public' => true]) : null;
+        if (!$parent || ($parent['public'] ?? false) !== true) $document = null;
+    }
+    if (!$document) { echo rest('Record not found.', 0, 404); return; }
+    $document = DB::doc2Arr($document);
+    try {
+        if ($relation === 'objectives') {
+            if ($entity !== 'initiatives') { echo rest('Relation not found.', 0, 404); return; }
+            $parent = null;
+            if (isset($_GET['initiative'])) {
+                if (!is_string($_GET['initiative']) || !DB::is_ObjectID($_GET['initiative'])) throw new InvalidArgumentException('Invalid initiative ID.');
+                $parent = DB::to_ObjectID($_GET['initiative']);
+            }
+            $records = $parent !== null && (string) $parent !== $id ? [] : $osiris->objectives->find(['initiative' => $document['_id'], 'public' => true])->toArray();
+            $records = array_filter($records, fn($record) => ($record['public'] ?? false) === true);
+            $status = $_GET['status'] ?? 'current';
+            if (!is_string($status) || !in_array($status, ['current', 'past', 'all'], true)) throw new InvalidArgumentException('Invalid status. Use current, past or all.');
+            $search = $_GET['search'] ?? '';
+            if (!is_string($search)) throw new InvalidArgumentException('Invalid search.');
+            $result = [];
+            foreach (Initiatives::sortCurrentFirst($records) as $record) {
+                $record = DB::doc2Arr($record);
+                $past = !empty($record['inactive']) || Initiatives::isExpired($record);
+                if (($status === 'current' && $past) || ($status === 'past' && !$past)) continue;
+                $output = Initiatives::portfolioMetadata($osiris, 'objectives', $record);
+                $text = [];
+                array_walk_recursive($output, function ($value) use (&$text) { if (is_scalar($value)) $text[] = (string) $value; });
+                if ($search !== '' && mb_stripos(strip_tags(implode(' ', $text)), trim($search)) === false) continue;
+                $result[] = $output;
+            }
+            echo rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        $content = in_array($relation, ['publications', 'all-activities'], true) ? 'activities' : $relation;
+        $collection = $content === 'events' ? 'conferences' : $content;
+        $feature = match ($content) { 'projects' => 'projects', 'infrastructures' => 'infrastructures', default => null };
+        if ($feature !== null && !$Settings->featureEnabled($feature)) { echo rest([], 0, 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); return; }
+        $filter = [$entity => $document['_id']];
+        if ($content === 'activities') {
+            $filter += ['hide' => ['$ne' => true], 'subtype' => ['$in' => $Settings->getActivitiesPortfolio($relation !== 'activities')]];
+            if ($relation === 'publications') $filter['type'] = 'publication';
+            elseif ($relation === 'activities') $filter['type'] = ['$ne' => 'publication'];
+            if ($Settings->featureEnabled('quality-workflow')) {
+                $visibility = $Settings->get('portfolio-workflow-visibility', 'all');
+                if ($visibility === 'only-approved') $filter['workflow.status'] = 'verified';
+                elseif ($visibility === 'approved-or-empty') $filter['$or'] = [['workflow' => ['$exists' => false]], ['workflow.status' => 'verified'], ['workflow.status' => ['$exists' => false]]];
+            }
+        } else $filter['public'] = true;
+        $fields = [
+            'activities' => ['title', 'type', 'subtype', 'year', 'month', 'day', 'doi', 'topics', 'rendered.portfolio', 'rendered.plain'],
+            'projects' => ['name', 'title', 'abstract', 'acronym', 'start', 'end', 'topics'],
+            'events' => ['title', 'title_full', 'description', 'start', 'end', 'location', 'country', 'url', 'type', 'topics'],
+            'infrastructures' => ['id', 'name', 'subtitle', 'description', 'start_date', 'end_date', 'type', 'topics'],
+        ];
+        $options = ['sort' => ['year' => -1, 'start_date' => -1, 'start' => -1], 'projection' => array_fill_keys(array_merge(['_id'], $fields[$content]), 1)];
+        $result = [];
+        foreach ($osiris->$collection->find($filter, $options) as $record) {
+            $record = DB::doc2Arr($record);
+            $keys = array_merge(['_id'], array_map(fn($key) => explode('.', $key)[0], $fields[$content]));
+            $record = array_intersect_key($record, array_flip($keys));
+            $record['id'] = (string) ($record['id'] ?? $record['_id']);
+            unset($record['_id']);
+            if ($content === 'activities') {
+                $record['html'] = $record['rendered']['portfolio'] ?? '';
+                $record['search'] = $record['rendered']['plain'] ?? '';
+                unset($record['rendered']);
+            }
+            $result[] = apiLocalizedFields($record, ['name', 'title', 'subtitle', 'abstract', 'description']);
+        }
+        echo rest($result, count($result), 200, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } catch (InvalidArgumentException | JsonException $error) {
+        echo rest($error->getMessage(), 0, 400);
+    }
+});
+
 Route::get('/portfolio/settings', function () {
     error_reporting(E_ERROR | E_PARSE);
     include(BASEPATH . '/php/init.php');
@@ -140,6 +279,7 @@ Route::get('/portfolio/settings', function () {
     $result = [
         'version' => OSIRIS_VERSION,
         'features' => [
+            'initiatives' => $Settings->featureEnabled('initiatives') && $Settings->featureEnabled('portal'),
             'projects' => $Settings->featureEnabled('projects'),
             'infrastructures' => $Settings->featureEnabled('infrastructures'),
             'topics' => $Settings->featureEnabled('topics'),
@@ -164,6 +304,11 @@ Route::get('/portfolio/settings', function () {
     $infrastructureLabel = $Settings->get('infrastructures_label');
     if (!empty($infrastructureLabel) && isset($infrastructureLabel['en'])) {
         $labels['infrastructures'] = $infrastructureLabel;
+    }
+    foreach (['initiatives' => 'common.initiatives', 'objectives' => 'initiatives.objectives'] as $key => $translationKey) {
+        foreach (array_unique(array_merge(['en', 'de'], $Settings->contentLanguages())) as $language) {
+            $labels[$key][$language] = $Translations->resolve($translationKey, $language, OSIRIS_BASE_LANGUAGE);
+        }
     }
     $result['labels'] = $labels;
 
