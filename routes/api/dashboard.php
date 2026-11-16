@@ -1827,6 +1827,53 @@ Route::get('/api/command-palette/search', function () {
 
     $groups = [];
 
+    // --- Initiatives and objectives
+    if ($Settings->featureEnabled('initiatives') && ($Settings->hasPermission('initiatives.view') || $Settings->hasPermission('initiatives.edit'))) {
+        require_once BASEPATH . '/php/Initiatives.php';
+        $viewer = $osiris->persons->findOne(['username' => $_SESSION['username'] ?? '']);
+        $initiativeFields = Initiatives::visibleFields(Initiatives::fields($osiris), DB::doc2Arr($viewer['roles'] ?? []));
+        $initiativeSearchFields = ['name'];
+        if (array_intersect(['title', 'title-loc'], array_column($initiativeFields, 'id'))) $initiativeSearchFields[] = 'title';
+        $languages = array_unique(array_merge([OSIRIS_BASE_LANGUAGE], $Settings->contentLanguages()));
+        foreach (['initiatives' => $initiativeSearchFields, 'objectives' => ['code', 'name']] as $collection => $fields) {
+            $matches = [];
+            $prefixes = [];
+            foreach ($fields as $field) {
+                $paths = [$field];
+                if ($field !== 'code') foreach ($languages as $language) $paths[] = $field . '.' . $language;
+                foreach ($paths as $path) {
+                    $matches[] = [$path => ['$regex' => $rxContain, '$options' => 'i']];
+                    $prefixes[] = ['$cond' => [
+                        ['$regexMatch' => ['input' => ['$convert' => ['input' => '$' . $path, 'to' => 'string', 'onError' => '', 'onNull' => '']], 'regex' => $rxPrefix, 'options' => 'i']],
+                        $field === 'code' ? 60 : ($field === 'name' ? 40 : 20), 0,
+                    ]];
+                }
+            }
+            $pipeline = [
+                ['$match' => ['$or' => $matches]],
+                ['$addFields' => ['_cp_score' => ['$max' => $prefixes]]],
+                ['$sort' => ['_cp_score' => -1, 'inactive' => 1, 'name' => 1]],
+                ['$limit' => 6],
+                ['$project' => ['_id' => 1, 'name' => 1, 'code' => 1, '_cp_score' => 1]],
+            ];
+            $items = [];
+            $objective = $collection === 'objectives';
+            foreach ($osiris->$collection->aggregate($pipeline) as $record) {
+                $record = DB::doc2Arr($record);
+                $id = (string) $record['_id'];
+                $label = trim(strip_tags(localized($record['name'] ?? ''))) ?: $id;
+                if ($objective && !empty($record['code'])) $label = $record['code'] . ': ' . $label;
+                $items[] = [
+                    'id' => ($objective ? 'objective:' : 'initiative:') . $id,
+                    'type' => lang('common.entity'), 'entity' => $objective ? 'objective' : 'initiative',
+                    'label' => $label, 'url' => '/initiatives/' . ($objective ? 'objectives/' : '') . 'view/' . $id,
+                    'icon' => $objective ? 'target' : 'compass', 'priority' => (int) $record['_cp_score'],
+                ];
+            }
+            if ($items) $groups[] = ['id' => $collection, 'label' => translate($objective ? 'initiatives.objectives' : 'common.initiatives'), 'items' => $items];
+        }
+    }
+
     // --- Projects
     if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.view')) {
 

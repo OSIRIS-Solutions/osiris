@@ -474,6 +474,21 @@ class CommandPalette
             ]
         ];
 
+        if ($this->settings->featureEnabled('initiatives') && ($this->settings->hasPermission('initiatives.view') || $this->settings->hasPermission('initiatives.edit'))) {
+            $elements[] = [
+                'url' => '/initiatives', 'type' => 'Navigation', 'icon' => 'compass',
+                'label' => translate('common.initiatives'),
+                'keywords' => ['initiatives', 'initiativen', 'missions', 'missionen', 'working groups', 'arbeitsgruppen'],
+                'priority' => 80,
+            ];
+            $elements[] = [
+                'url' => '/initiatives?status=objectives', 'type' => 'Navigation', 'icon' => 'target',
+                'label' => translate('initiatives.objectives'),
+                'keywords' => ['objectives', 'goals', 'ziele'],
+                'priority' => 70,
+            ];
+        }
+
         foreach ($elements as $e) {
             $this->add($e);
         }
