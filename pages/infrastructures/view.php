@@ -233,20 +233,20 @@ if ($edit_perm) { ?>
                 $modules->setFields($infrastructureFields);
                 $document = new Document(false, 'list');
                 foreach ($infrastructureFields as $field):
-                    $id = $field['id'] ?? '';
-                    $type = $field['type'] ?? 'field';
+                    $field_id = $field['id'] ?? '';
+                    $field_type = $field['type'] ?? 'field';
                     $props = $field['props'] ?? [];
-                    if (in_array($id, ['name-loc', 'subtitle-loc', 'description-loc'], true)) continue;
+                    if (in_array($field_id, ['name-loc', 'subtitle-loc', 'description-loc'], true)) continue;
                 ?>
                     <tr><td>
-                        <?php if ($type === 'heading'): ?>
+                        <?php if ($field_type === 'heading'): ?>
                             <strong><?= e(lang($props['text'] ?? '', $props['text_de'] ?? null)) ?></strong>
-                        <?php elseif ($type === 'paragraph'): ?>
+                        <?php elseif ($field_type === 'paragraph'): ?>
                             <?= nl2br(e(lang($props['text'] ?? '', $props['text_de'] ?? null))) ?>
-                        <?php elseif ($type === 'hr'): ?><hr>
+                        <?php elseif ($field_type === 'hr'): ?><hr>
                         <?php else: ?>
-                            <span class="key"><?= e($modules->get_name($id)) ?></span>
-                            <?= $document->getInfrastructureField(DB::doc2Arr($infrastructure), $id) ?: '-' ?>
+                            <span class="key"><?= e($modules->get_name($field_id)) ?></span>
+                            <?= $document->getInfrastructureField(DB::doc2Arr($infrastructure), $field_id) ?: '-' ?>
                         <?php endif; ?>
                     </td></tr>
                 <?php endforeach; ?>

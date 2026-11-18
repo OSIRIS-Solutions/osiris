@@ -109,8 +109,8 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
         $osiris_id = $DB->to_ObjectID($id);
         $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
-        $form = $osiris->infrastructures->findOne(['name.en' => $id]);
-        $id = strval($infrastructure['_id'] ?? '');
+        $form = $osiris->infrastructures->findOne(['id' => $id]);
+        $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
         abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
@@ -153,8 +153,8 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
         $osiris_id = $DB->to_ObjectID($id);
         $form = $osiris->infrastructures->findOne(['_id' => $osiris_id]);
     } else {
-        $form = $osiris->infrastructures->findOne(['name.en' => $id]);
-        $id = strval($infrastructure['_id'] ?? '');
+        $form = $osiris->infrastructures->findOne(['id' => $id]);
+        $id = strval($form['_id'] ?? '');
     }
     if (empty($form)) {
         abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
