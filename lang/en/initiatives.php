@@ -54,4 +54,13 @@ return [
     'permission_view' => 'View {{initiatives}}',
     'permission_edit' => 'Edit {{initiatives}}',
     'permission_outside_period' => 'Assign {{initiatives}} and {{objectives}} outside their period',
+    'statistics_without_archived' => 'Without archived entries',
+    'statistics_basis' => 'Contents are counted when their dates or duration overlap the selected period. Proposals use their submission date; partial activity dates cover the known month or year. Report exclusions apply. The analysis uses currently stored links and data; it does not reconstruct earlier versions.',
+    'statistics_undated' => '{{count}} linked contents have no usable date and are excluded from this analysis.',
+    'statistics_no_content' => 'No linked contents of this type in the selected period.',
+    'statistics_chart_hint' => 'The diagram shows up to 20 entries with the most linked contents. The table includes all entries.',
+    'statistics_counting_hint' => 'Each content is counted once per initiative or objective. Multiple assignments can contribute to several rows, so adding the rows does not give a unique total. Activities exclude publications.',
+    'statistics_period' => 'Duration',
+    'statistics_download_data' => 'Download analysis data (CSV)',
+    'statistics_evidence' => 'Counted contents',
 ];

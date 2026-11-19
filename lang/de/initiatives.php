@@ -54,4 +54,13 @@ return [
     'permission_view' => '{{initiatives}} ansehen',
     'permission_edit' => '{{initiatives}} bearbeiten',
     'permission_outside_period' => '{{initiatives}} und {{objectives}} außerhalb der Laufzeit zuordnen',
+    'statistics_without_archived' => 'Ohne archivierte Einträge',
+    'statistics_basis' => 'Gezählt werden Inhalte, deren Datum oder Laufzeit den gewählten Zeitraum überschneidet. Bei Anträgen zählt das Einreichungsdatum; unvollständige Aktivitätsdaten gelten für den bekannten Monat oder das bekannte Jahr. Berichtsausschlüsse werden berücksichtigt. Grundlage sind die aktuell gespeicherten Verknüpfungen und Daten; frühere Datenstände werden nicht rekonstruiert.',
+    'statistics_undated' => '{{count}} verknüpfte Inhalte haben kein auswertbares Datum und werden hier nicht mitgezählt.',
+    'statistics_no_content' => 'Keine verknüpften Inhalte dieses Typs im gewählten Zeitraum.',
+    'statistics_chart_hint' => 'Das Diagramm zeigt bis zu 20 Einträge mit den meisten verknüpften Inhalten. Die Tabelle enthält alle Einträge.',
+    'statistics_counting_hint' => 'Jeder Inhalt wird je Initiative oder Objective einmal gezählt. Mehrfachzuordnungen können in mehreren Zeilen vorkommen; die Summe der Zeilen ist daher keine eindeutige Gesamtzahl. Aktivitäten enthalten keine Publikationen.',
+    'statistics_period' => 'Laufzeit',
+    'statistics_download_data' => 'Auswertungsdaten herunterladen (CSV)',
+    'statistics_evidence' => 'Gezählte Inhalte',
 ];

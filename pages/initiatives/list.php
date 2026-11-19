@@ -33,6 +33,7 @@ $shown = 0;
 <div>
     <h1><i class="ph-duotone ph-compass"></i> <?= e(translate('common.initiatives')) ?></h1>
     <div class="btn-toolbar">
+        <a class="btn" href="<?= ROOTPATH ?>/initiatives/statistics<?= $status === 'objectives' ? '?view=objectives' : '' ?>"><i class="ph ph-chart-line-up" aria-hidden="true"></i> <?= translate('common.statistics') ?></a>
         <?php if ($Settings->hasPermission('initiatives.edit')): ?>
             <a class="btn secondary" href="<?= ROOTPATH ?>/initiatives/new">
                 <i class="ph ph-plus"></i> <?= translate('common.new') ?>
