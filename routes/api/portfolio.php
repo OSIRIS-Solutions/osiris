@@ -1519,6 +1519,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     include_once(BASEPATH . '/php/Document.php');
     $Format = new Document();
     $Format->setDocument($doc);
+    $Format->setLanguage($_GET['lang'] ?? 'en');
 
     $result = [
         'id' => strval($doc['_id']),
@@ -1529,7 +1530,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         'abstract' => $doc['abstract'] ?? null,
         'doi' => $doc['doi'] ?? null,
         'pubmed' => $doc['pubmed'] ?? null,
-        'title' => $doc['rendered']['title'],
+        'title' => $Format->getTitle(),
         'authors' => [],
         'depts' => [],
         'projects' => [],
@@ -1588,8 +1589,6 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         $result['projects'] = $projects;
     }
 
-    $Format = new Document;
-    $Format->setDocument($doc);
     $selected = $Format->subtypeArr['modules'] ?? array();
     $Modules = new Modules($doc);
 
@@ -1663,7 +1662,7 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
     $result['fields'] = $fields;
 
     // bibtex format
-    $result['print'] = $doc['rendered']['print'];
+    $result['print'] = $Format->format();
     $result['bibtex'] = $Format->bibtex();
     $result['ris'] = $Format->ris();
 

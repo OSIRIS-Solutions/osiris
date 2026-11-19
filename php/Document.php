@@ -251,6 +251,11 @@ class Document extends Settings
         return $en;
     }
 
+    public function setLanguage($lang)
+    {
+        $this->lang = $lang;
+    }
+
 
     public static function selectContributorPreviewIndices(array $authors, int $limit = 10): array
     {
