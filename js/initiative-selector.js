@@ -4,17 +4,17 @@
         if (widget.dataset.initialized) return;
         widget.dataset.initialized = 'true';
         const form = widget.closest('form');
-        if (!form) return;
-        const activity = form.id === 'activity-form';
+        const activity = form?.id === 'activity-form';
+        const objectivePicker = widget.hasAttribute('data-objective-selector');
         const controls = widget.querySelector('[data-selection-controls]');
         const toggle = controls.querySelector('[data-show-all]');
-        const search = controls.querySelector('[data-selection-search]');
+        const search = objectivePicker ? widget.querySelector('[data-objective-search]') : controls.querySelector('[data-selection-search]');
         const status = controls.querySelector('[data-selection-status]');
         const empty = controls.querySelector('[data-selection-empty]');
         const options = [...widget.querySelectorAll('[data-selection-option]')].map(label => ({
             label, input: label.querySelector('input'), bounds: JSON.parse(label.dataset.period)
         }));
-        const editing = form.getAttribute('action')?.includes('/crud/activities/update/');
+        const editing = form?.getAttribute('action')?.includes('/crud/activities/update/');
         const preserved = new Set(editing ? options.filter(option => option.input.defaultChecked).map(option => option.input.value) : []);
         const hint = status.textContent;
         let showAll = false;
@@ -40,15 +40,19 @@
         };
         const update = () => {
             const dates = activity ? period() : null;
-            const query = showAll ? (search?.value ?? '').trim().toLocaleLowerCase() : '';
+            const query = objectivePicker || showAll ? (search?.value ?? '').trim().toLocaleLowerCase() : '';
             options.forEach(({ label, input, bounds }) => {
                 const matches = !activity || (dates && !bounds.archived
                     && (!bounds.start || !bounds.end || bounds.start <= bounds.end)
                     && (!bounds.start || bounds.start <= dates[1]) && (!bounds.end || bounds.end >= dates[0]));
                 const allowed = matches || preserved.has(input.value) || Boolean(toggle);
-                label.hidden = !input.checked && (!(showAll || matches) || !label.dataset.searchText.toLocaleLowerCase().includes(query));
+                const searchMatch = label.dataset.searchText.toLocaleLowerCase().includes(query);
+                label.hidden = objectivePicker
+                    ? !(showAll || matches || input.checked) || !searchMatch
+                    : !input.checked && (!(showAll || matches) || !searchMatch);
                 if (activity) label.classList.toggle('inactive', !matches);
-                label.querySelector('[data-period-warning]').hidden = !activity || matches || !input.checked;
+                if (objectivePicker) label.classList.toggle('outside-period', activity && !matches);
+                label.querySelector('[data-period-warning]').hidden = !activity || matches || (!objectivePicker && !input.checked);
                 input.setCustomValidity(input.checked && !allowed ? controls.dataset.invalid : '');
                 input.required = false;
             });
@@ -57,20 +61,28 @@
             });
             const visible = options.filter(option => !option.label.hidden);
             const needsSelection = widget.dataset.required === 'true' && !options.some(option => option.input.checked);
-            if (needsSelection && visible.length) visible[0].input.required = true;
-            empty.disabled = !needsSelection || visible.length > 0;
-            empty.hidden = empty.disabled;
-            status.hidden = !activity && options.length > 0;
+            if (objectivePicker) {
+                search.setCustomValidity(needsSelection ? widget.dataset.requiredLabel : '');
+                if (!needsSelection) search.removeAttribute('aria-invalid');
+                empty.disabled = true;
+                empty.hidden = true;
+            } else {
+                if (needsSelection && visible.length) visible[0].input.required = true;
+                empty.disabled = !needsSelection || visible.length > 0;
+                empty.hidden = empty.disabled;
+            }
+            status.hidden = !activity && options.length > 0 && (!objectivePicker || visible.length > 0);
             empty.options[0].textContent = !options.length ? controls.dataset.noEntries : controls.dataset.noMatches;
             status.textContent = !options.length ? controls.dataset.noEntries
                 : (activity && !dates && !showAll ? controls.dataset.chooseDate : (!visible.length ? controls.dataset.noMatches : hint));
+            widget.dispatchEvent(new CustomEvent('initiative-selection:updated'));
         };
         toggle?.addEventListener('click', () => {
             showAll = !showAll;
             toggle.setAttribute('aria-expanded', String(showAll));
             toggle.textContent = showAll ? toggle.dataset.hideLabel : toggle.dataset.showLabel;
-            search.hidden = !showAll;
-            if (!showAll) search.value = '';
+            search.hidden = !objectivePicker && !showAll;
+            if (!showAll && !objectivePicker) search.value = '';
             update();
             if (showAll) search.focus();
         });
@@ -79,14 +91,14 @@
         const onDateChange = event => {
             if (/^values\[(year|month|day|start|end)\]$/.test(event.target.name)) update();
         };
-        form.addEventListener('input', onDateChange);
-        form.addEventListener('change', onDateChange);
-        form.addEventListener('reset', () => setTimeout(() => {
+        form?.addEventListener('input', onDateChange);
+        form?.addEventListener('change', onDateChange);
+        form?.addEventListener('reset', () => setTimeout(() => {
             showAll = false;
             if (toggle) {
                 toggle.setAttribute('aria-expanded', 'false');
                 toggle.textContent = toggle.dataset.showLabel;
-                search.hidden = true;
+                search.hidden = !objectivePicker;
                 search.value = '';
             }
             update();

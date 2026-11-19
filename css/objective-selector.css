@@ -1,0 +1,54 @@
+.objective-selector [hidden] { display: none !important; }
+.objective-selector .module { padding: 1.5rem; }
+.objective-selector .objective-selection-empty { margin: 0 0 1rem; }
+.objective-selector .objective-selected { list-style: none; padding: 0; margin: 0 0 1.2rem; display: grid; gap: .8rem; max-height: 34rem; overflow-y: auto; }
+.objective-selector .objective-selected-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--primary-color); border-left-width: 3px; border-radius: var(--border-radius); background: var(--primary-color-20); }
+.objective-selector .objective-selected-card > div { min-width: 0; }
+.objective-selector .objective-selected-card strong { display: block; font-weight: 500; overflow-wrap: anywhere; }
+.objective-selector .objective-selected-card small { display: block; }
+.objective-selector .objective-selected-parent { color: var(--text-color); margin-bottom: .25rem; }
+.objective-selector .objective-remove { flex-shrink: 0; display: grid; place-items: center; width: 3.2rem; height: 3.2rem; min-height: 3.2rem; padding: 0; border-color: transparent; background: transparent; box-shadow: none; }
+.objective-selector .objective-remove:hover { background: var(--box-bg-color); border-color: var(--border-color); }
+.objective-selector .objective-picker { position: relative; }
+.objective-selector .objective-picker-button { display: flex; align-items: center; gap: 1rem; width: 100%; height: auto; white-space: normal; text-align: left; padding: 1rem 1.2rem; line-height: 1.4; background-color: var(--body-color);}
+.objective-selector .objective-picker-button-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.objective-selector .objective-picker-button-text strong, .objective-selector .objective-picker-button-text small { display: block; }
+.objective-selector .objective-picker-button-text small { font-weight: 400; }
+.objective-selector .objective-picker-button[aria-expanded="true"] > .ph-caret-down { transform: rotate(180deg); }
+.objective-selector .objective-picker-panel { padding: 1.2rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--box-bg-color); }
+.objective-selector-ready .objective-picker-panel { position: absolute; z-index: 100; display: flex; flex-direction: column; max-height: var(--objective-panel-space, 70vh); top: calc(100% + .5rem); left: 0; width: 100%; box-shadow: var(--box-shadow); }
+.objective-selector-ready .objective-picker-panel.opens-up { top: auto; bottom: calc(100% + .5rem); }
+.objective-selector .objective-picker-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .8rem 1rem; align-items: center; }
+.objective-selector .objective-picker-toolbar [data-selection-controls] { display: contents; }
+.objective-selector .objective-picker-toolbar [data-show-all] { height: auto; min-height: 4.2rem; margin: 0; }
+.objective-selector .objective-picker-toolbar [data-selection-status], .objective-selector .objective-picker-toolbar [data-selection-empty] { grid-column: 1 / -1; }
+.objective-selector .objective-picker-toolbar [data-selection-status] { margin: 0 0 .5rem; }
+.objective-selector .objective-picker-search { min-width: 0; grid-column: 1; }
+.objective-selector .objective-picker-search input::placeholder { color: var(--text-color); opacity: .75; }
+.objective-selector .objective-picker-panel > :not(.objective-picker-options) { flex-shrink: 0; }
+.objective-selector .objective-picker-options { min-height: 0; max-height: min(30rem, 42vh); overflow-y: auto; overscroll-behavior: contain; padding: .3rem; }
+.objective-selector .objective-result-count { margin: 1rem 0 .6rem; font-size: 1.3rem; font-weight: 600; color: var(--text-color); }
+.objective-selector .objective-group + .objective-group { margin-top: 1.2rem; }
+.objective-selector .objective-group-heading { display: flex; align-items: center; gap: .7rem; font-size: 1.4rem; font-weight: 600; color: var(--text-color); background: var(--body-color); border-radius: .4rem; padding: .8rem 1rem; margin-bottom: .4rem; }
+.objective-selector .objective-group-heading .ph { color: var(--primary-color); font-size: 1.8rem; flex-shrink: 0; }
+.objective-selector .objective-options { display: grid; gap: .4rem; }
+.objective-selector .objective-option { display: flex; align-items: flex-start; gap: 1rem; min-height: 4.4rem; padding: 1rem; margin: 0; border: 1px solid transparent; border-radius: .4rem; cursor: pointer; }
+.objective-selector .objective-option:hover { background: var(--gray-color-very-light); }
+.objective-selector .objective-option:has(input:checked) { border-color: var(--primary-color); background: var(--primary-color-20); }
+.objective-selector .objective-option input { flex-shrink: 0; position: static; width: 1.8rem; height: 1.8rem; margin: .2rem 0 0; opacity: 1; accent-color: var(--primary-color); }
+.objective-selector .objective-option-content { min-width: 0; overflow-wrap: anywhere; }
+.objective-selector .objective-option-title { display: block; font-weight: 500; }
+.objective-selector .objective-option small { display: block; }
+.objective-selector .objective-option-description { color: var(--text-color); display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.objective-selector .objective-option.inactive { color: var(--muted-color); }
+.objective-selector .objective-option.outside-period .objective-option-description { display: none !important; }
+.objective-selector .objective-option .objective-period-marker { color: var(--signal-color); font-size: 1.1rem; }
+.objective-selector .objective-option:has(input:checked) .objective-period-marker { color: var(--danger-color); }
+.objective-selector .objective-option:focus-within, .objective-selector .objective-remove:focus-visible, .objective-selector .objective-picker-button:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+@media (max-width: 576px) {
+    .objective-selector .objective-picker-panel { padding: .8rem; }
+    .objective-selector .objective-picker-toolbar { grid-template-columns: minmax(0, 1fr); }
+    .objective-selector .objective-picker-toolbar [data-show-all] { justify-self: start; }
+    .objective-selector .objective-picker-button { gap: .7rem; }
+    .objective-selector .objective-picker-button .badge { font-size: 1.1rem; }
+}
