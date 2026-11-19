@@ -51,7 +51,7 @@ class Fields
     public function addCustomFields($FIELDS, $osiris, $typeModules = [], $exclusive = false)
     {
         foreach ($osiris->adminFields->find() as $field) {
-            if (!isset($field['id']) || ($exclusive && in_array($field['id'], $typeModules) === false)) {
+            if (!isset($field['id']) || ($exclusive && (!array_key_exists($field['id'], $typeModules)))) {
                 continue;
             }
             // make sure that id does not exist yet
