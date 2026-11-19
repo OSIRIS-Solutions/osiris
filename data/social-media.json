@@ -5,7 +5,7 @@
         "profileUrl": "https://github.com/"
     },
     "linkedin": {
-        "validator": "^(((https?://)?(www\\.)?)?linkedin.com/in/)?(?<username>[a-zA-Z0-9-]+)$",
+        "validator": "^(((https?://)?(www\\.)?)?(.*\\.)?linkedin.com/in/)?(?<username>[a-zA-Z0-9%-]+)\/?$",
         "placeholder": "LinkedIn profile URL",
         "profileUrl": "https://www.linkedin.com/in/"
     },
