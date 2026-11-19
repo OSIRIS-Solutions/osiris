@@ -1516,6 +1516,10 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
             }
         }
     }
+    include_once(BASEPATH . '/php/Document.php');
+    $Format = new Document();
+    $Format->setDocument($doc);
+
     $result = [
         'id' => strval($doc['_id']),
         'type' => $doc['type'],
@@ -1530,8 +1534,8 @@ Route::get('/portfolio/activity/([^/]*)', function ($id) {
         'depts' => [],
         'projects' => [],
         'affiliated' => false,
-        'typeStr' => $doc['rendered']['type'] ?? $doc['type'],
-        'subtypeStr' => $doc['rendered']['subtype'] ?? $doc['subtype']
+        'typeStr' => $Format->activity_type(),
+        'subtypeStr' => $Format->activity_subtype()
     ];
 
     foreach ($doc['authors'] as $a) {

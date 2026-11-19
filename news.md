@@ -111,6 +111,11 @@ Mit dem Umzug der Projektformulare sind außerdem die bisherigen projektspezifis
 Projektpersonen werden außerhalb der Ablehnungsphase als Systemfeld eingebunden. Weitere systemseitig benötigte Felder hängen von der Projektphase ab; ihre Position im Formular bleibt konfigurierbar.
 
 
+### Bugfixes
+
+- Die Portfolio-API für Aktivitäten liefert jetzt die Typ- und Subtypinformationen in der angeforderten Sprache zurück.
+
+
 <time datetime="2026-08-18">18.08.2026</time>
 <a class="anchor" href="#version-2.1.1" id="version-2.1.1"></a>
 
