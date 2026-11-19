@@ -134,6 +134,7 @@ class Document extends Settings
         "student-category" => ["category"],
         "subtitle" => ["subtitle"],
         "subtype" => ["subtype"],
+        "supervisor-thesis-details" => ["supervisors"],
         "supervisor-thesis" => ["supervisors"],
         "supervisor" => ["supervisors"],
         "tags" => ["tags"],
@@ -1285,6 +1286,7 @@ class Document extends Settings
             case "supervisor": // ["authors"],
             case "supervisors": // ["authors"],
             case "supervisor-thesis": // ["authors"],
+            case "supervisor-thesis-details": // ["authors"],
                 return $this->formatAuthorsNew('supervisors-last-f.');
             case "book-series": // ["series"],
                 return $this->getVal('series');
