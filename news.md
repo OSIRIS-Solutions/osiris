@@ -12,6 +12,89 @@
 - Im Parallelbetrieb bleibt ein vorhandenes OSIRIS-Passwort beim Verknüpfen erhalten. Auch direkt über SSO registrierte Personen können in ihren Account-Einstellungen ein lokales Passwort festlegen. „Passwort vergessen“ und der Passwort-Reset durch berechtigte Admins stehen ebenfalls für SSO-Konten zur Verfügung. Bereits früher entfernte Passwörter müssen neu gesetzt werden.
 - Fehlermeldungen bei der Anmeldung wurden vereinheitlicht, damit sie keine Auskunft über das Vorhandensein eines Kontos oder dessen Anmeldeverfahren geben. Passwort-Reset-Anfragen erhalten auch während der Wartefrist dieselbe neutrale Rückmeldung.
 
+### Überarbeiteter Anmeldebereich
+
+Der gesamte Anmeldebereich wurde neu gestaltet. Anmeldung, Registrierung, Passwort-Reset sowie die Auswahl und Verknüpfung einer SSO-Anmeldung verwenden nun eine gemeinsame, responsive Oberfläche. Die neue Darstellung verbessert die Orientierung, berücksichtigt Tastaturbedienung, hohe Kontraste und reduzierte Bewegungen und funktioniert auch auf kleinen Bildschirmen zuverlässig.
+
+Ist das öffentliche OSIRIS Portfolio aktiviert, wird es auf der Anmeldeseite als eigenständiger Einstieg angeboten. Besucher:innen können dadurch direkt zur öffentlichen Forschungsdarstellung wechseln, ohne sich zuvor anmelden zu müssen.
+
+### Redaktioneller Workflow für Neuigkeiten
+
+Neuigkeiten können jetzt für verschiedene **Outlets** aufbereitet werden, beispielsweise für die Webseite, einen Newsletter oder Social Media. Der redaktionelle Workflow lässt sich unter „Administration → Features“ ausdrücklich aktivieren. Ohne Aktivierung bleibt die bisherige Nutzung der Neuigkeiten erhalten.
+
+Im Admin-Bereich werden die Outlets mit deutsch- und englischsprachigen Namen und Beschreibungen eingerichtet. Für jedes Outlet lässt sich festlegen, ob Titel, Teaser und Beitrag benötigt werden und ob freigegebene Fassungen in Portfolio erscheinen dürfen. Die Portfolio-Ausgabe des Originalbeitrags wird unabhängig davon konfiguriert.
+
+Autor:innen wählen beim Anlegen einer Neuigkeit die gewünschten Outlets aus. Die Redaktion wird über die OSIRIS-Inbox benachrichtigt und findet offene Vorgänge mit ihrem Status in einer eigenen **Redaktionsübersicht**. Sie kann für jedes Outlet einen eigenen Text erstellen, weitere Outlets ergänzen oder einzelne Anfragen mit Begründung ablehnen. Die Inhalte des Originals lassen sich per Klick übernehmen; Verknüpfungen zu Personen, Aktivitäten und weiteren Informationen gelten gemeinsam für alle Fassungen.
+
+Der Originalbeitrag bleibt unabhängig von den redaktionellen Fassungen bearbeitbar. Änderungen daran überschreiben keine Outlet-Texte und heben bestehende Freigaben nicht auf. Englisch steht im Outlet-Editor an erster Stelle; ist nur eine Sprache befüllt, wird diese zunächst vorausgewählt. Die Beiträge unterstützen formatierten Text, Links und eingebettete Bilder.
+
+Optional kann die Redaktion alle fertig vorbereiteten Fassungen gemeinsam zur **Autorenprüfung** versenden. Die Autor:innen erhalten eine Benachrichtigung und können zustimmen oder Änderungswünsche zurückmelden. Eine Zustimmung gibt die Fassungen unmittelbar frei. Alternativ kann die Redaktion direkt freigeben oder eine ausstehende Prüfung ausdrücklich beenden und ohne Rückmeldung abschließen.
+
+Portfolio erhält ausschließlich die dafür konfigurierten Originalbeiträge und freigegebenen Outlet-Fassungen. Die Auswahl **„Nur intern“** verhindert jede Portfolio-Ausgabe. Bestehende Neuigkeiten behalten ihre bisherige Freigabe, solange ihre Veröffentlichungsauswahl nicht ausdrücklich geändert wird.
+
+Für Berichte steht mit eigener Berechtigung ein **Export nach HTML oder Word** zur Verfügung. Die Auswahl lässt sich nach Outlet einschließlich Originalbeitrag, Zeitraum und Sprache filtern. Das gemeinsame Titelbild sowie zusätzliche Bilder und Links im Beitrag werden in den Export übernommen.
+
+
+### Ressourcen-Hub
+
+Mit dem neuen **Ressourcen-Hub** können Einrichtungen interne und externe Angebote an einem zentralen Ort bündeln. Die Bezeichnung und das Icon lassen sich frei konfigurieren – so kann der Hub beispielsweise auch als „Provider Lounge“ oder mit einem anderen einrichtungsspezifischen Namen auftreten. Das Feature kann vollständig aktiviert oder deaktiviert werden.
+
+Die Inhalte werden im Admin-Bereich als frei sortierbare Karten gepflegt. Jede Karte kann ein Icon, deutsch- und englischsprachige Titel und Inhalte sowie mehrere Links enthalten. Für die Darstellung stehen zwei Ansichten zur Verfügung:
+
+- Eine responsive Kartenansicht stellt alle Inhalte übersichtlich und direkt zugänglich dar.
+- Optional kann ein Hintergrundbild als interaktive **Image-Map** verwendet werden. Die Karten werden dafür in einem visuellen Editor auf dem Bild positioniert. Ihre Titel bleiben auf der Image-Map sichtbar; beim Anklicken öffnet sich ein Popover mit dem vollständigen Inhalt und allen Links.
+
+Beide Ansichten greifen auf dieselben Inhalte zurück. Nutzer:innen können zwischen ihnen wechseln; die bevorzugte Darstellung wird im eigenen Profil gespeichert. Der Ressourcen-Hub kann außerdem als persönlicher Startbildschirm ausgewählt werden.
+
+Der Hub ist in die Navigation und die OSIRIS-Suche integriert. Dort können nicht nur die Übersichtsseite, sondern auch einzelne Karten über ihre Titel, Inhalte und Linkbezeichnungen gefunden werden. Ein Suchtreffer führt direkt zur betreffenden Karte: In der Kartenansicht wird sie hervorgehoben, in der Image-Map wird der zugehörige Hotspot mit seinen Informationen geöffnet.
+
+### Zentrale Dokumentenbibliothek
+
+Mit der neuen **zentralen Dokumentenbibliothek** lassen sich allgemein benötigte Dateien einmalig in OSIRIS hinterlegen und anschließend über einen stabilen internen Link an verschiedenen Stellen verwenden. Geeignet ist sie beispielsweise für Richtlinien, Vorlagen, Handreichungen, Präsentationen oder Informationsmaterialien. Wird eine Datei ersetzt, bleibt ihr Link bestehen.
+
+Die Verwaltung ist bewusst vom allgemeinen Admin-Bereich getrennt. Über das Recht `documents.manage` kann sie auch Personen aus Bereichen wie Kommunikation, Personal oder Verwaltung zugänglich gemacht werden, ohne ihnen Zugriff auf sämtliche OSIRIS-Einstellungen zu geben. Berechtigte Personen können Dokumente hochladen, ihre Metadaten bearbeiten, die zugehörige Datei ersetzen oder den Eintrag vollständig löschen. Neben Titel und Kurzbeschreibung können eine Kategorie und frei wählbare Schlagwörter gepflegt werden; außerdem hält OSIRIS fest, wer eine Datei wann angelegt beziehungsweise zuletzt hochgeladen hat.
+
+Nutzer:innen mit dem Recht `documents.central` finden die zentralen Inhalte in einer eigenen Kartenansicht innerhalb des Dokumentenbereichs. Die Bibliothek bietet:
+
+- eine Suche über Titel, Beschreibung, Kategorie, Schlagwörter und Dateiname,
+- Filter nach Kategorie, Dateityp und Schlagwort,
+- verschiedene Sortierungen,
+- eine Vorschau für unterstützte Bilddateien sowie passende Dateisymbole für andere Formate,
+- Funktionen zum Öffnen, Herunterladen und Kopieren eines stabilen Links.
+
+Zentrale und bereits mit anderen OSIRIS-Inhalten verknüpfte Dokumente bleiben voneinander getrennt und können – abhängig von den persönlichen Rechten – über eigene Reiter aufgerufen werden. Die zentralen Dokumente sind außerdem in die OSIRIS-Suche integriert. Ein Treffer führt direkt zur betreffenden, hervorgehobenen Dokumentkarte in der Bibliothek.
+
+Der Zugriff auf die Dateien erfolgt ausschließlich über geschützte Routen. Dabei werden sowohl die Anmeldung als auch die notwendigen Berechtigungen geprüft; ein direkter öffentlicher Zugriff auf Dateien im Upload-Verzeichnis ist nicht vorgesehen.
+
+### Aktivitätstypen kopieren
+
+Bestehende Aktivitätstypen können jetzt im Admin-Bereich kopiert und als Ausgangspunkt für einen neuen Typ verwendet werden. OSIRIS übernimmt dabei die vorhandene Konfiguration einschließlich der Formularfelder und befüllt das neue Formular entsprechend vor. Anschließend müssen nur noch die neue ID, Bezeichnungen und gegebenenfalls abweichende Einstellungen angepasst werden. Das erleichtert insbesondere die Einrichtung mehrerer ähnlich aufgebauter Aktivitätstypen.
+
+
+### Kontakt-Button in Personenprofilen
+
+Ein neuer **Kontakt-Button** ermöglicht die direkte Kontaktaufnahme per E-Mail, Slack, Microsoft Teams oder Matrix. Im Admin-Bereich unter „Personen“ lässt sich das Feature aktivieren und festlegen, welche Kontaktwege die Einrichtung anbietet.
+
+Der Button verwendet die bereits im Profil hinterlegte E-Mail-Adresse und die Links bei den sozialen Medien. Slack und Teams können dort nun ebenfalls ergänzt werden. Zur Auswahl stehen nur Kontaktwege, die von der Einrichtung freigegeben und im jeweiligen Profil hinterlegt sind; eine erneute Eingabe der Kontaktangaben ist nicht nötig.
+
+Bei aktivierter Funktion ist der Button standardmäßig eingeschaltet. Nutzer:innen können in ihren Profileinstellungen einen bevorzugten Kontaktweg wählen oder den Button deaktivieren. Der Hauptbutton öffnet den bevorzugten Kontaktweg; über den Pfeil daneben lassen sich weitere verfügbare Kontaktmöglichkeiten auswählen. Ist kein freigegebener Kontaktweg hinterlegt, wird kein Button angezeigt.
+
+### Weitere Entwicklungen
+
+- Aktive Filter der zentralen Dokumentenbibliothek werden in der URL gespeichert. Gefilterte Ansichten, beispielsweise für eine bestimmte Kategorie oder ein Schlagwort, können dadurch als stabiler Link geteilt und später erneut geöffnet werden.
+- Die Portfolio-API unterstützt bei der Ausgabe von Aktivitäten eine zusätzliche Filterung nach Aktivitätskategorie.
+- Der Hintergrundjob zum Abruf von OpenAlex-Daten unterstützt die Authentifizierung mit einem Bearer-Token. Fehlgeschlagene Abrufe werden nicht länger dauerhaft als abgeschlossen behandelt, sondern bei einem späteren Durchlauf erneut versucht.
+- Die Sophie-Illustrationen wurden in einem einheitlichen Stil überarbeitet. Auch die Darstellungen der Fehlerseiten wurden entsprechend aktualisiert und übersichtlicher angeordnet.
+
+### Bugfixes
+
+- Lehrveranstaltungen werden in Personenprofilen wieder korrekt sortiert.
+- Die Jahres- und Aktivitätsspalten in Journalansichten erhalten verlässliche Standardinhalte.
+- Projektdetails können auch dann fehlerfrei angezeigt werden, wenn kein Startdatum hinterlegt ist.
+- Forschungsprofil und Ausbildung werden auch bei unerwarteten oder leeren Werten zuverlässig im Nutzerprofil dargestellt.
+- Die ORCID-Validierung wurde gegen fehlende Werte abgesichert.
+- Weitere kleinere Robustheitskorrekturen verhindern Fehlermeldungen bei unvollständigen Einheiten- und Baumzuordnungen.
+
 
 <time datetime="2026-10-27">27.10.2026</time>
 <a class="anchor" href="#version-2.1.3" id="version-2.1.3"></a>
