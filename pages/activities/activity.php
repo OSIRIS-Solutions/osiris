@@ -1124,7 +1124,7 @@ if ($edit_perm) {
 
                 <?php
 
-                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'editor'];
+                $authorModules = ['authors', 'author-table', 'scientist', 'supervisor', 'supervisor-thesis', 'supervisor-thesis-details', 'editor'];
 
                 foreach ($typeFields as $field_id => $props) {
 
