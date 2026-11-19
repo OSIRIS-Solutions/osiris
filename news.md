@@ -1,4 +1,17 @@
 
+<time datetime="2026-XX-XX">XX.XX.2026</time>
+<a class="anchor" href="#version-2.X" id="version-2.X"></a>
+
+## Version 2.X (Beta)
+
+### Anmeldung mit Single Sign-On
+
+- Single Sign-On über OpenID Connect, beispielsweise mit Life Science Login, kann nun parallel zum OSIRIS Auth-Addon verwendet werden. Die Zugangsdaten werden weiterhin in `CONFIG.php` konfiguriert; bei `USER_MANAGEMENT = 'AUTH'` erscheint eine zusätzlich konfigurierte OAuth-Anmeldung als weitere Option auf der Login-Seite.
+- Bestehende Profile können in den eigenen Account-Einstellungen mit einem SSO-Konto verknüpft werden. Profilinformationen und Zuordnungen bleiben erhalten; die E-Mail-Adresse wird aus SSO übernommen. Die Zuordnung erfolgt über eine stabile SSO-Kennung und bleibt dadurch auch bei Änderungen des externen Nutzernamens oder der E-Mail-Adresse bestehen.
+- Neue SSO-Nutzer:innen bestätigen die Kontoerstellung ausdrücklich und ergänzen fehlende Profilangaben. Die Einstellungen zur Selbstregistrierung und ein gegebenenfalls erforderliches Registrierungstoken gelten auch für die SSO-Registrierung.
+- Im Parallelbetrieb bleibt ein vorhandenes OSIRIS-Passwort beim Verknüpfen erhalten. Auch direkt über SSO registrierte Personen können in ihren Account-Einstellungen ein lokales Passwort festlegen. „Passwort vergessen“ und der Passwort-Reset durch berechtigte Admins stehen ebenfalls für SSO-Konten zur Verfügung. Bereits früher entfernte Passwörter müssen neu gesetzt werden.
+- Fehlermeldungen bei der Anmeldung wurden vereinheitlicht, damit sie keine Auskunft über das Vorhandensein eines Kontos oder dessen Anmeldeverfahren geben. Passwort-Reset-Anfragen erhalten auch während der Wartefrist dieselbe neutrale Rückmeldung.
+
 
 <time datetime="2026-10-27">27.10.2026</time>
 <a class="anchor" href="#version-2.1.3" id="version-2.1.3"></a>

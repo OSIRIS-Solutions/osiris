@@ -89,7 +89,7 @@ if (empty($_SESSION['loggedin']) && !empty($_COOKIE['osiris-remember'])) {
         if ($remember && password_verify($token, $remember['token_hash'])) {
             $USER = $osiris->persons->findOne(['username' => $remember['username']]);
 
-            if ($USER && !osirisOAuthLinked($USER)) {
+            if ($USER) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $USER['username'];
                 $_SESSION['name'] = $USER['displayname'];

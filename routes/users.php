@@ -563,9 +563,6 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     $old = $DB->getPerson($user);
     if (osirisOAuthLinked($old)) {
         unset($person['mail']);
-        if (!empty($_POST['password'])) {
-            abortwith(403, lang('Password changes are disabled for SSO accounts.', 'Passwortänderungen sind für SSO-Konten deaktiviert.'));
-        }
     }
 
     $contactProfile = array_merge($old, $person);
@@ -639,26 +636,28 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     // if new password is set, update password
-    if (isset($_POST['password']) && !empty($_POST['password']) && $user == $_SESSION['username']) {
+    if (strtoupper(USER_MANAGEMENT) === 'AUTH' && is_string($_POST['password'] ?? null) && $_POST['password'] !== ''
+        && $user === $_SESSION['username'] && ($_SESSION['realuser'] ?? $user) === $user) {
         // check if old password matches
         $account = $osiris->accounts->findOne(['username' => $user]);
-        if (!empty($account['password'] ?? null) && !password_verify($_POST['old_password'], $account['password'])) {
+        if (!empty($account['password'] ?? null) && !password_verify(is_string($_POST['old_password'] ?? null) ? $_POST['old_password'] : '', $account['password'])) {
             $_SESSION['msg'] = lang("Old password is incorrect.", "Vorheriges Passwort ist falsch.");
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
-        } else if ($_POST['password'] != $_POST['password2']) {
+        } else if ($_POST['password'] !== ($_POST['password2'] ?? null)) {
             $_SESSION['msg'] = lang("Passwords do not match.", "Passwörter stimmen nicht überein.");
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
         } else {
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $osiris->accounts->deleteOne(['username' => $user]);
-            $osiris->accounts->insertOne([
-                'username' => $user,
-                'password' => $password
-            ]);
+            $osiris->accounts->updateOne(
+                ['username' => $user],
+                ['$set' => ['password' => $password], '$unset' => ['hash' => '', 'reset' => '']],
+                ['upsert' => true]
+            );
+            $osiris->rememberTokens->deleteMany(['username' => $user]);
             $osiris->persons->updateOne(
                 ['username' => $user],
                 ['$unset' => ['new' => '']]

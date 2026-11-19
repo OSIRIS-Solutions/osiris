@@ -51,7 +51,7 @@ Route::post('/user/oauth-link', function () {
             'secure' => !empty($_SERVER['HTTPS']), 'httponly' => true, 'samesite' => 'Lax']);
         $person = $osiris->persons->findOne(['username' => $username]);
         osirisOAuthSession($person);
-        $_SESSION['msg'] = lang('Your profile is now linked. Please use single sign-on for future logins.', 'Dein Profil ist jetzt verknüpft. Bitte nutze künftig Single Sign-On zur Anmeldung.');
+        $_SESSION['msg'] = lang('Your profile is now linked. You can log in using single sign-on or your OSIRIS username and password.', 'Dein Profil ist jetzt verknüpft. Du kannst dich über Single Sign-On oder mit deinem OSIRIS-Nutzernamen und Passwort anmelden.');
         $_SESSION['msg_type'] = 'success';
         header('Location: ' . ROOTPATH . '/user/edit/' . rawurlencode($username));
         exit;

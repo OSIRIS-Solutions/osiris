@@ -141,9 +141,9 @@ function osirisOAuthLinkProfile($database, string $username, array $identity): v
     if ($result->getMatchedCount() !== 1) {
         throw new \RuntimeException('Account already linked or missing.');
     }
-    // Profile state is authoritative: all local password paths check it, even if cleanup fails.
+    // Keep the local password; invalidate reset links issued before the email change.
     $database->accounts->updateOne(['username' => $username],
-        ['$unset' => ['password' => '', 'hash' => '', 'reset' => '']]);
+        ['$unset' => ['hash' => '', 'reset' => '']]);
     $database->rememberTokens->deleteMany(['username' => $username]);
 }
 

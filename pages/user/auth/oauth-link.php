@@ -4,8 +4,8 @@
     <?php if ($pendingLink) { ?>
         <p class="card-copy"><?= lang('Your existing profile and all assignments will be retained. Your email address will be replaced with:', 'Dein bestehendes Profil und alle Zuordnungen bleiben erhalten. Deine E-Mail-Adresse wird ersetzt durch:') ?></p>
         <p><strong><?= e($pendingLink['mail']) ?></strong></p>
-        <p class="card-copy"><?= lang('After confirmation, you can only log in using single sign-on. Your OSIRIS password and password reset links will no longer work.', 'Nach der Bestätigung kannst du dich ausschließlich über Single Sign-On anmelden. Dein OSIRIS-Passwort und Links zum Zurücksetzen des Passworts funktionieren dann nicht mehr.') ?></p>
-        <button class="submit" name="action" value="confirm" type="submit"><?= lang('Confirm switch to single sign-on', 'Wechsel zu Single Sign-On bestätigen') ?></button>
+        <p class="card-copy"><?= lang('After confirmation, you can log in using single sign-on or your existing OSIRIS username and password.', 'Nach der Bestätigung kannst du dich über Single Sign-On oder weiterhin mit deinem bisherigen OSIRIS-Nutzernamen und Passwort anmelden.') ?></p>
+        <button class="submit" name="action" value="confirm" type="submit"><?= lang('Confirm link to single sign-on', 'Verknüpfung mit Single Sign-On bestätigen') ?></button>
     <?php } else { ?>
         <p class="card-copy"><?= e(lang('Confirm your OSIRIS password, then log in with ' . osirisOAuthLabel() . '.', 'Bestätige dein OSIRIS-Passwort und melde dich anschließend mit ' . osirisOAuthLabel() . ' an.')) ?></p>
         <div class="form-group">

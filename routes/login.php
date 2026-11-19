@@ -86,7 +86,7 @@ Route::post('/user/login', function () {
         // check if user is allowed to login
         $auth = login($_POST['username'], $_POST['password']);
         if (isset($auth["success"]) && $auth["success"] == false) {
-            $_SESSION['msg'] = $auth["msg"];
+            $_SESSION['msg'] = lang('Login failed. Please check your username and password.', 'Anmeldung fehlgeschlagen. Bitte prüfe deinen Nutzernamen und dein Passwort.');
             $_SESSION['msg_type'] = 'error';
         } else if (isset($auth["success"]) && $auth["success"] == true) {
             // check if user exists in our database

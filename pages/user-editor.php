@@ -749,9 +749,9 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             && ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']) { ?>
             <h5><?= e(osirisOAuthLabel()) ?></h5>
             <?php if (osirisOAuthLinked($data)) { ?>
-                <p><?= lang('This profile uses single sign-on. Local password login is disabled.', 'Dieses Profil verwendet Single Sign-On. Die lokale Passwortanmeldung ist deaktiviert.') ?></p>
+                <p><?= lang('This profile is linked to single sign-on. You can also log in with your OSIRIS username and password. If you do not have a local password yet, you can set one below.', 'Dieses Profil ist mit Single Sign-On verknüpft. Du kannst dich auch mit deinem OSIRIS-Nutzernamen und Passwort anmelden. Wenn du noch kein lokales Passwort hast, kannst du unten eines festlegen.') ?></p>
             <?php } else { ?>
-                <p><?= lang('Link your existing profile and switch to single sign-on.', 'Verknüpfe dein bestehendes Profil und wechsle zu Single Sign-On.') ?></p>
+                <p><?= lang('Link your existing profile to use single sign-on as an additional login option.', 'Verknüpfe dein bestehendes Profil, um Single Sign-On als zusätzliche Anmeldemöglichkeit zu nutzen.') ?></p>
                 <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= lang('Link single sign-on', 'Single Sign-On verknüpfen') ?></a>
             <?php } ?>
         <?php } ?>
@@ -771,18 +771,26 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         <?php } ?>
 
         <?php if (
-            USER_MANAGEMENT == 'AUTH' && !osirisOAuthLinked($data) &&
-            $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
-        ) { ?>
+            strtoupper(USER_MANAGEMENT) === 'AUTH' &&
+            $data['username'] === ($_SESSION['username'] ?? '') &&
+            ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']
+        ) {
+            $localAccount = $osiris->accounts->findOne(['username' => $data['username']]);
+            $hasLocalPassword = !empty($localAccount['password']);
+        ?>
 
             <h5>
-                <?= lang('Change password', 'Passwort ändern') ?>
+                <?= $hasLocalPassword ? lang('Change password', 'Passwort ändern') : lang('Set OSIRIS password', 'OSIRIS-Passwort festlegen') ?>
             </h5>
 
+            <?php if ($hasLocalPassword) { ?>
             <div class="form-group">
                 <label for="old_password"><?= lang('Old password', 'Vorheriges Password') ?></label>
-                <input type="password" name="old_password" id="old_password" class="form-control">
+                <input type="password" name="old_password" id="old_password" class="form-control" autocomplete="current-password">
             </div>
+            <?php } else { ?>
+                <p><?= lang('Set a local password to log in even when single sign-on is unavailable. Your OSIRIS username is:', 'Lege ein lokales Passwort fest, um dich auch bei einem Ausfall von Single Sign-On anzumelden. Dein OSIRIS-Nutzername lautet:') ?> <strong><?= e($data['username']) ?></strong></p>
+            <?php } ?>
 
             <div class="form-row row-eq-spacing">
                 <div class="col-sm-6">
