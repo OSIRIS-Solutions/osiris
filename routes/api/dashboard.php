@@ -1788,6 +1788,65 @@ Route::get('/api/command-palette/search', function () {
 
     $groups = [];
 
+    // --- Central documents
+    if ($Settings->hasPermission('documents.central') || $Settings->hasPermission('documents.manage')) {
+        $cursor = $osiris->uploads->find(
+            [
+                'type' => 'central',
+                '$or' => [
+                    ['name' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['description' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['category' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['tags' => ['$regex' => $rxContain, '$options' => 'i']],
+                    ['filename' => ['$regex' => $rxContain, '$options' => 'i']],
+                ],
+            ],
+            [
+                'projection' => [
+                    '_id' => 1,
+                    'name' => 1,
+                    'description' => 1,
+                    'category' => 1,
+                    'filename' => 1,
+                    'extension' => 1,
+                ],
+                'sort' => ['uploaded' => -1],
+                'limit' => 8,
+            ]
+        );
+        $items = [];
+
+        foreach ($cursor as $document) {
+            $id = (string) $document->_id;
+            $filename = trim((string) ($document->filename ?? ''));
+            $label = trim((string) ($document->name ?? '')) ?: $filename;
+            $description = trim((string) ($document->description ?? ''));
+            if (mb_strlen($description) > 180) $description = mb_substr($description, 0, 177) . '…';
+            $category = trim((string) ($document->category ?? ''));
+            $extension = strtolower(trim((string) ($document->extension ?? '')));
+            $meta = array_values(array_filter([$category, $description]));
+
+            $items[] = [
+                'id' => 'central-document:' . $id,
+                'type' => lang('Central document', 'Zentrales Dokument'),
+                'entity' => 'central-document',
+                'label' => $label ?: lang('Untitled document', 'Unbenanntes Dokument'),
+                'description' => implode(' · ', $meta),
+                'url' => '/documents/central?document=' . rawurlencode($id),
+                'icon' => getFileIcon($extension),
+                'priority' => 45,
+            ];
+        }
+
+        if ($items) {
+            $groups[] = [
+                'id' => 'central-documents',
+                'label' => lang('Central documents', 'Zentrale Dokumente'),
+                'items' => $items,
+            ];
+        }
+    }
+
     // --- Projects
     if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.view')) {
 
