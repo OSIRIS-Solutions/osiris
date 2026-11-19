@@ -1012,6 +1012,30 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 });
             </script>
 
+            <?php if ($Settings->featureEnabled('resource-hub')) {
+                $homeScreen = in_array(($data['home_screen'] ?? 'home'), ['home', 'resource-hub'], true)
+                    ? ($data['home_screen'] ?? 'home')
+                    : 'home';
+            ?>
+                <h5><?= lang('Start screen', 'Startbildschirm') ?></h5>
+                <p class="text-muted">
+                    <?= lang(
+                        'Choose which page opens when you start OSIRIS.',
+                        'Wähle, welche Seite beim Start von OSIRIS geöffnet wird.'
+                    ) ?>
+                </p>
+                <div class="form-group">
+                    <div class="custom-radio d-inline-block mr-20">
+                        <input type="radio" name="values[home_screen]" id="home-screen-home" value="home" <?= $homeScreen === 'home' ? 'checked' : '' ?>>
+                        <label for="home-screen-home"><?= lang('OSIRIS home', 'OSIRIS-Startseite') ?></label>
+                    </div>
+                    <div class="custom-radio d-inline-block mr-20">
+                        <input type="radio" name="values[home_screen]" id="home-screen-resource-hub" value="resource-hub" <?= $homeScreen === 'resource-hub' ? 'checked' : '' ?>>
+                        <label for="home-screen-resource-hub"><?= e($Settings->resourceHubLabel()) ?></label>
+                    </div>
+                </div>
+            <?php } ?>
+
 
             <h5>
                 <?= lang('Display of Activities', 'Darstellung der Aktivitäten') ?>

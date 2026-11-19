@@ -558,6 +558,12 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     foreach (array_keys($person) as $key) {
         if ($key === 'sso' || str_starts_with($key, 'sso.')) unset($person[$key]);
     }
+    if (isset($person['home_screen'])) {
+        $allowedHomeScreens = ['home', 'resource-hub'];
+        if (!in_array($person['home_screen'], $allowedHomeScreens, true)) {
+            $person['home_screen'] = 'home';
+        }
+    }
     // $account = [];
     // get old value for rendering
     $old = $DB->getPerson($user);
@@ -1305,6 +1311,14 @@ Route::post('/crud/users/set-preference', function () {
     $value = $_POST['value'] ?? null;
     if (empty($key)) {
         abortwith(400, lang("No preference key provided.", "Kein Präferenzschlüssel angegeben."));
+    }
+    $allowedPreferences = [
+        'activity_view' => ['new', 'legacy'],
+        'resource_hub_view' => ['cards', 'image-map'],
+        'home_screen' => ['home', 'resource-hub'],
+    ];
+    if (!isset($allowedPreferences[$key]) || !in_array($value, $allowedPreferences[$key], true)) {
+        abortwith(400, lang('Invalid preference.', 'Ungültige Präferenz.'));
     }
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],

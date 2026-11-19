@@ -60,7 +60,12 @@ Route::get('/', function () {
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
         header("Location: " . ROOTPATH . "/user/login");
     } else {
-        $path = ROOTPATH . "/home";
+        $homeScreen = (string) ($USER['home_screen'] ?? 'home');
+        $path = ROOTPATH . (
+            $homeScreen === 'resource-hub' && $Settings->featureEnabled('resource-hub')
+                ? '/hub'
+                : '/home'
+        );
         if (!empty($_SERVER['QUERY_STRING'])) $path .= "?" . $_SERVER['QUERY_STRING'];
         header("Location: $path");
     }

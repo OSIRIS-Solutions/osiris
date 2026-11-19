@@ -24,7 +24,7 @@ Route::get('/user/login', function () {
         ['name' => lang('User login', 'Login')]
     ];
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true  && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-        header("Location: " . ROOTPATH . "/home");
+        header("Location: " . ROOTPATH . "/");
         die;
     }
     if (!defined('USER_MANAGEMENT')) {
@@ -59,7 +59,7 @@ Route::get('/user/oauth-callback', function () {
 Route::post('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-        header("Location: " . ROOTPATH . "/home");
+        header("Location: " . ROOTPATH . "/");
         die;
     }
 

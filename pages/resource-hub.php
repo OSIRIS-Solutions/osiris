@@ -100,6 +100,10 @@ $hubIcon = $Settings->resourceHubIcon();
     /* hide top navbar here */
     .page-wrapper > .navbar-top { display: none; }
     .resource-hub-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+    .resource-hub-home-prompt { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .resource-hub-home-prompt-copy { min-width: 0; }
+    .resource-hub-home-prompt-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: .5rem; }
+    .resource-hub-home-prompt-actions form { margin: 0; }
     .resource-hub-card-heading h1 { margin: 0; }
     .resource-hub-heading-copy { min-width: 0; }
     .resource-hub-card-description { max-width: 60rem; margin: .4rem 0 0; color: var(--muted-color); line-height: 1.4; }
@@ -135,12 +139,44 @@ $hubIcon = $Settings->resourceHubIcon();
     .resource-hub-popover-title i { color: var(--primary-color); font-size: 1.8rem !important; }
     .resource-hub-popover-content { line-height: 1.45; font-size: 1.2rem;}
     @media (max-width: 767px) {
+        .resource-hub-home-prompt { align-items: flex-start; flex-direction: column; }
         .resource-hub-card-heading { align-items: flex-start; }
         .resource-hub-image-heading { padding: 1rem; }
         .resource-hub-image-heading h1 { font-size: 2rem; }
         .resource-hub-image-description { max-width: 28rem; font-size: 1.2rem; }
     }
 </style>
+
+<?php if (!isset($USER['home_screen']) || !in_array($USER['home_screen'], ['home', 'resource-hub'], true)) { ?>
+    <div class="alert primary resource-hub-home-prompt">
+        <div class="resource-hub-home-prompt-copy">
+            <b><?= lang('Use this as your start screen?', 'Als Startbildschirm verwenden?') ?></b><br>
+            <span><?= lang(
+                'Would you like to open this page whenever you start OSIRIS?',
+                'Möchtest du künftig beim Start von OSIRIS direkt diese Seite öffnen?'
+            ) ?></span>
+        </div>
+        <div class="resource-hub-home-prompt-actions">
+            <form action="<?= ROOTPATH ?>/crud/users/set-preference" method="post">
+                <input type="hidden" name="key" value="home_screen">
+                <input type="hidden" name="value" value="resource-hub">
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/hub">
+                <button type="submit" class="btn small primary">
+                    <i class="ph ph-house" aria-hidden="true"></i>
+                    <?= lang('Use as start screen', 'Als Startbildschirm verwenden') ?>
+                </button>
+            </form>
+            <form action="<?= ROOTPATH ?>/crud/users/set-preference" method="post">
+                <input type="hidden" name="key" value="home_screen">
+                <input type="hidden" name="value" value="home">
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/hub">
+                <button type="submit" class="btn small">
+                    <?= lang('Keep OSIRIS home', 'OSIRIS-Startseite behalten') ?>
+                </button>
+            </form>
+        </div>
+    </div>
+<?php } ?>
 
 <div id="resource-hub-card-heading" class="resource-hub-card-heading <?= $currentView === 'cards' ? '' : 'd-none' ?>">
     <div class="resource-hub-heading-copy">

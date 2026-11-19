@@ -6,7 +6,7 @@ function osirisOAuthRegistrationPending(): array
     if (!osirisOAuthEnabled()) osirisOAuthFail('SSO is not configured.');
     if (!empty($_SESSION['loggedin'])) {
         osirisOAuthClearAttempt();
-        header('Location: ' . ROOTPATH . '/home');
+        header('Location: ' . ROOTPATH . '/');
         exit;
     }
     $pending = $_SESSION['oauth_registration'] ?? null;
