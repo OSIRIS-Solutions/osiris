@@ -531,6 +531,7 @@ function centralDocumentUpload(): array
         'jpg',
         'jpeg',
         'png',
+        'svg',
     ];
     if ($filename === '' || !in_array($extension, $allowedExtensions, true)) {
         redirectFromCentralDocuments(lang(
@@ -554,6 +555,35 @@ function centralDocumentUpload(): array
                 'Das ausgewählte Bild ist ungültig oder entspricht nicht seiner Dateiendung.'
             ));
         }
+    }
+
+    if ($extension === 'svg') {
+        $allowedSvgMimes = ['image/svg+xml', 'application/xml', 'text/xml', 'text/plain'];
+        $svgSource = file_get_contents($file['tmp_name']);
+        $containsDocumentType = $svgSource !== false && preg_match('/<!DOCTYPE|<!ENTITY/i', $svgSource);
+
+        $previousLibxmlState = libxml_use_internal_errors(true);
+        $svgDocument = new DOMDocument();
+        $svgLoaded = $svgSource !== false
+            && !$containsDocumentType
+            && $svgDocument->loadXML($svgSource, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_COMPACT);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previousLibxmlState);
+
+        $root = $svgLoaded ? $svgDocument->documentElement : null;
+        $isSvg = $root !== null
+            && strtolower($root->localName) === 'svg'
+            && $root->namespaceURI === 'http://www.w3.org/2000/svg';
+
+        if (!in_array($mime, $allowedSvgMimes, true) || !$isSvg) {
+            redirectFromCentralDocuments(lang(
+                'The selected SVG file is invalid or does not match its file extension.',
+                'Die ausgewählte SVG-Datei ist ungültig oder entspricht nicht ihrer Dateiendung.'
+            ));
+        }
+
+        // Keep metadata consistent across systems where finfo reports SVG as XML or text.
+        $mime = 'image/svg+xml';
     }
 
     return [$file, $filename, $extension, $mime];
@@ -601,10 +631,13 @@ Route::get('/documents/central/file/([a-f0-9]{24})', function ($id) {
     if (!is_file($path)) abortwith(404, lang('File not found.', 'Datei nicht gefunden.'), '/documents');
 
     $filename = basename((string) ($document['filename'] ?? ('document.' . $extension)));
-    $disposition = isset($_GET['download']) ? 'attachment' : 'inline';
-    header('Content-Type: ' . ($document['mimetype'] ?? 'application/octet-stream'));
+    $isSvg = $extension === 'svg';
+    $disposition = isset($_GET['download']) || $isSvg ? 'attachment' : 'inline';
+    $mimeType = $isSvg ? 'application/octet-stream' : ($document['mimetype'] ?? 'application/octet-stream');
+    header('Content-Type: ' . $mimeType);
     header('Content-Length: ' . filesize($path));
     header('X-Content-Type-Options: nosniff');
+    if ($isSvg) header("Content-Security-Policy: sandbox; default-src 'none'");
     header("Content-Disposition: $disposition; filename=\"document.$extension\"; filename*=UTF-8''" . rawurlencode($filename));
     readfile($path);
     die;

@@ -891,6 +891,7 @@ function getFileIcon($type)
         case 'gif':
         case 'jpg':
         case 'jpeg':
+        case 'svg':
             return 'file-image';
         case 'mp4':
         case 'mpeg':
