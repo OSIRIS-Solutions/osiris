@@ -81,6 +81,7 @@ Bei aktivierter Funktion ist der Button standardmäßig eingeschaltet. Nutzer:in
 
 ### Weitere Entwicklungen
 
+- Die Indizes für die Datenbank werden nun in der OSIRIS Info (Admin-Bereich) überprüft und bei Bedarf erstellt, um die Performance zu gewährleisten.
 - Aktive Filter der zentralen Dokumentenbibliothek werden in der URL gespeichert. Gefilterte Ansichten, beispielsweise für eine bestimmte Kategorie oder ein Schlagwort, können dadurch als stabiler Link geteilt und später erneut geöffnet werden.
 - Die Portfolio-API unterstützt bei der Ausgabe von Aktivitäten eine zusätzliche Filterung nach Aktivitätskategorie.
 - Der Hintergrundjob zum Abruf von OpenAlex-Daten unterstützt die Authentifizierung mit einem Bearer-Token. Fehlgeschlagene Abrufe werden nicht länger dauerhaft als abgeschlossen behandelt, sondern bei einem späteren Durchlauf erneut versucht.

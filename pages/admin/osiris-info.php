@@ -163,5 +163,9 @@ foreach ($data as $item) {
             </tr>
         </tbody>
     </table>
+
+    <?php
+    include BASEPATH . '/routes/migration/ensureindexes.php';
+    ?>
 </div>
 
