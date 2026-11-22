@@ -48,8 +48,8 @@
     ensureIndex($osiris->infrastructures, ['name_de' => 1]);
 
     /* events */
-    ensureIndex($osiris->events, ['title' => 1]);
-    ensureIndex($osiris->events, ['title_full' => 1]);
+    ensureIndex($osiris->conferences, ['title' => 1]);
+    ensureIndex($osiris->conferences, ['title_full' => 1]);
 
     /* activities */
     ensureIndex($osiris->activities, ['journal_id' => 1]);
