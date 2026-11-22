@@ -33,25 +33,40 @@ foreach ($unitMemberships as $membership) {
     $state = $end !== '' && $end < $affiliationToday ? 'past' : ($start > $affiliationToday ? 'upcoming' : 'current');
     $parents = $Groups->getParents($unitId);
     array_pop($parents);
+    // Use the saved level-1 color, not Groups::getGroup()'s automatic palette fallback.
+    $colorGroup = $Groups->groups[$unitId] ?? $group;
+    $affiliationColor = (int) ($colorGroup['level'] ?? -1) === 0 ? '#000000' : 'var(--primary-color)';
+    if ((int) ($colorGroup['level'] ?? -1) !== 0) {
+        foreach ([...$parents, $unitId] as $parentId) {
+            $parent = $Groups->groups[$parentId] ?? $Groups->getGroup($parentId);
+            if ((int) ($parent['level'] ?? -1) !== 1) continue;
+            $color = $parent['color'] ?? '';
+            if (is_string($color) && preg_match('/^#(?:[a-f0-9]{3}|[a-f0-9]{6})$/i', $color)
+                && !in_array(strtolower($color), ['#000', '#000000'], true)) $affiliationColor = $color;
+            break;
+        }
+    }
     $entry = [
-        'id' => $unitId, 'name' => strip_tags($Groups->getName($unitId)),
+        'id' => $unitId, 'name' => strip_tags($Groups->getName($unitId)), 'color' => $affiliationColor,
         'parents' => array_map(fn($id) => strip_tags($Groups->getName($id)), $parents),
         'start' => $start, 'end' => $end, 'state' => $state, 'implicit' => !empty($membership['implicit']),
         'lead' => $state === 'current' && in_array($user, DB::doc2Arr($group['head'] ?? []), true),
         'scientific' => !empty($membership['scientific']),
     ];
     $affiliationUnits[$state][] = $entry;
-    if ($start !== '' && ($end === '' || $end >= $start)) {
-        $entry['from'] = strtotime($start);
+    // Keep every membership visible, even when only its end (or no date) is known.
+    $entry['from'] = $entry['to'] = null;
+    if (($start !== '' || $end !== '') && ($start === '' || $end === '' || $end >= $start)) {
+        $entry['from'] = strtotime($start ?: $end);
         $entry['to'] = strtotime($end ?: max($start, $affiliationToday));
-        $affiliationTimeline[] = $entry;
         $affiliationDates[] = $entry['from'];
         $affiliationDates[] = $entry['to'];
     }
+    $affiliationTimeline[] = $entry;
 }
 foreach ($affiliationUnits as &$entries) usort($entries, fn($a, $b) => strcmp($b['start'], $a['start']) ?: strnatcasecmp($a['name'], $b['name']));
 unset($entries);
-usort($affiliationTimeline, fn($a, $b) => $a['from'] <=> $b['from']);
+usort($affiliationTimeline, fn($a, $b) => (($a['from'] ?? PHP_INT_MAX) <=> ($b['from'] ?? PHP_INT_MAX)) ?: strnatcasecmp($a['name'], $b['name']));
 $affiliationAxisStart = min($affiliationDates);
 $affiliationAxisEnd = max(max($affiliationDates), $affiliationAxisStart + 86400);
 

@@ -87,7 +87,7 @@ Namen, Untertitel und Beschreibungen werden als Sprachfelder gespeichert. Bisher
 
 ### Zugehörigkeiten in Personenprofilen
 
-Der neue Profilreiter „Zugehörigkeiten“ bündelt Forschungsbereiche, Organisationseinheiten und direkte Mitgliedschaften in Initiativen. Aktuelle, zukünftige und vergangene Zugehörigkeiten werden getrennt dargestellt. Für Einheiten mit bekannten Zeiträumen ergänzt eine Zeitleiste die Übersicht; aus untergeordneten Einheiten abgeleitete Zugehörigkeiten sind ausdrücklich als solche gekennzeichnet.
+Der neue Profilreiter „Zugehörigkeiten“ bündelt Forschungsbereiche, Organisationseinheiten und direkte Mitgliedschaften in Initiativen. Aktuelle, zukünftige und vergangene Zugehörigkeiten werden getrennt dargestellt. Eine Zeitleiste zeigt auch frühere Einheitenzugehörigkeiten und getrennte Mitgliedschaftszeiträume derselben Einheit. Ist nur ein Enddatum bekannt, erscheint eine Markierung; undatierte und abgeleitete Zugehörigkeiten bleiben ohne erfundenen Zeitraum sichtbar. Verlauf und Historie verwenden die einheitlichen aufklappbaren Akkordeons. Aus untergeordneten Einheiten abgeleitete Zugehörigkeiten sind ausdrücklich als solche gekennzeichnet.
 
 Initiativen erscheinen hier, wenn die Person über das Personenfeld der Initiative zugeordnet wurde und die notwendigen Sichtbarkeitsrechte vorliegen. Verknüpfte Publikationen oder Projekte allein begründen keine Mitgliedschaft.
 

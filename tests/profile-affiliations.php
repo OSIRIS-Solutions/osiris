@@ -31,14 +31,33 @@ $osiris->initiatives->insertOne(['name' => 'Future mission', 'start_date' => ((i
 $osiris->initiatives->insertOne(['name' => 'Unrelated mission', 'persons' => [['user' => 'bob']]]);
 $osiris->activities->insertOne(['initiatives' => ['unrelated'], 'rendered' => ['users' => ['alice']]]);
 $Groups = new class {
-    public function getGroup($id) { return ['head' => $id === 'lab' ? ['alice'] : []]; }
-    public function getName($id) { return ['lab' => 'Climate Laboratory', 'old' => 'Ocean Observations', 'next' => 'Future Lab', 'legacy' => 'Shared Services', 'today' => 'Transition Team', 'institute' => 'ANKH Institute'][$id] ?? $id; }
-    public function getParents($id) { return ['institute', $id]; }
+    public array $groups = [
+        'institute' => ['level' => 0, 'color' => '#000000'],
+        'department' => ['level' => 1, 'color' => '#ab3377'],
+        'plain-department' => ['level' => 1, 'color' => '#000000'],
+        'lab' => ['level' => 2, 'color' => '#222222', 'head' => ['alice']],
+        'old' => ['level' => 2], 'end-only' => ['level' => 2],
+        'next' => ['level' => 2], 'legacy' => ['level' => 2],
+        'today' => ['level' => 1, 'color' => '#ff9900'],
+    ];
+    public function getGroup($id) {
+        $group = $this->groups[$id] ?? [];
+        // Match the real group's palette fallback; the profile should use the saved color.
+        if (($group['level'] ?? null) === 1 && ($group['color'] ?? '') === '#000000') $group['color'] = '#ff00ff';
+        return $group;
+    }
+    public function getName($id) { return ['lab' => 'Climate Laboratory', 'old' => 'Ocean Observations', 'end-only' => 'Earlier Field Station', 'next' => 'Future Lab', 'legacy' => 'Shared Services', 'today' => 'Transition Team', 'institute' => 'ANKH Institute'][$id] ?? $id; }
+    public function getParents($id) {
+        if (in_array($id, ['lab', 'old', 'end-only'], true)) return ['department', $id];
+        if ($id === 'next') return ['plain-department', $id];
+        return [$id];
+    }
 };
 $profile = ['topics' => ['climate'], 'current_units' => ['lab', 'institute'], 'units' => [
     ['unit' => 'legacy'],
     ['unit' => 'lab', 'start' => '2021-01-01', 'end' => null, 'scientific' => true],
     ['unit' => 'old', 'start' => '2016-01-01', 'end' => '2020-12-31'],
+    ['unit' => 'end-only', 'end' => '2014-12-31'],
     ['unit' => 'next', 'start' => ((int) date('Y') + 1) . '-01-01', 'end' => null],
     ['unit' => 'today', 'start' => '2025-01-01', 'end' => date('Y-m-d')],
 ]];
@@ -55,14 +74,33 @@ $render = function ($scientist, $profileUser = 'alice') use ($dataSource, $Group
     return compact('html', 'hasAffiliations', 'affiliationUnits', 'affiliationInitiatives', 'affiliationTimeline');
 };
 $result = $render($profile);
-check(count($result['affiliationUnits']['current']) === 4 && count($result['affiliationUnits']['past']) === 1 && count($result['affiliationUnits']['upcoming']) === 1, 'Current, past, future and undated cached unit affiliations are classified without losing history; end dates include today.');
-check(count($result['affiliationTimeline']) === 4, 'Only memberships with known start dates appear on the timeline.');
+check(count($result['affiliationUnits']['current']) === 4 && count($result['affiliationUnits']['past']) === 2 && count($result['affiliationUnits']['upcoming']) === 1, 'Current, past, future and undated cached unit affiliations are classified without losing history; end dates include today.');
+check(count($result['affiliationTimeline']) === 7, 'The timeline retains current, previous, future, undated and derived memberships.');
+$timelineById = array_column($result['affiliationTimeline'], null, 'id');
+check($timelineById['lab']['color'] === '#ab3377' && $timelineById['old']['color'] === '#ab3377', 'Current and previous subunits inherit the saved level-1 color, ignoring their own color.');
+check($timelineById['today']['color'] === '#ff9900' && $timelineById['institute']['color'] === '#000000', 'Direct level-1 affiliations use their own color; the institute stays black.');
+check($timelineById['next']['color'] === 'var(--primary-color)' && $timelineById['legacy']['color'] === 'var(--primary-color)', 'Black or missing level-1 colors use the theme primary color instead of the automatic palette.');
+check($timelineById['old']['state'] === 'past' && $timelineById['old']['from'] === strtotime('2016-01-01') && $timelineById['old']['to'] === strtotime('2020-12-31'), 'Previous dated memberships keep their complete time range.');
+check($timelineById['end-only']['from'] === strtotime('2014-12-31') && $timelineById['end-only']['to'] === strtotime('2014-12-31'), 'A known end without a start produces an endpoint, not an invented period.');
+check($timelineById['legacy']['from'] === null && $timelineById['institute']['from'] === null, 'Undated and implicit units remain visible without invented dates.');
+$dom = new DOMDocument(); @$dom->loadHTML($result['html']); $xpath = new DOMXPath($dom);
+check($xpath->query('//article[contains(@class,"affiliation-unit-card") and @style="--affiliation-accent: #ab3377"]')->length === 3
+    && $xpath->query('//div[contains(@class,"affiliation-timeline-row") and @style="--affiliation-accent: #ab3377"]')->length === 3, 'Cards and timeline rows receive the same inherited color, including historical memberships.');
+check($xpath->query('//div[contains(@class,"affiliation-timeline-row") and @data-affiliation-state="past"]')->length === 2, 'The rendered timeline shows previous memberships, including those with only an end date.');
+check($xpath->query('//details[contains(@class,"affiliation-history") and contains(@class,"collapse-panel")]/summary[contains(@class,"collapse-header")]')->length === 3
+    && $xpath->query('//details[contains(@class,"affiliation-history")]/div[contains(@class,"collapse-content")]')->length === 3, 'Unit history, initiative history and timeline use the shared details accordion.');
 $currentUnits = array_column($result['affiliationUnits']['current'], null, 'id');
 check($currentUnits['institute']['implicit'] && !$currentUnits['legacy']['implicit'] && str_contains($result['html'], 'Derived from subunits') && str_contains($result['html'], 'Dates not specified'), 'Derived parent units are marked explicitly; direct memberships without dates keep the missing-dates label.');
 $withPastParent = $profile;
 $withPastParent['units'][] = ['unit' => 'institute', 'start' => '2010-01-01', 'end' => '2015-12-31'];
 $pastParentResult = $render($withPastParent);
-check(array_column($pastParentResult['affiliationUnits']['current'], null, 'id')['institute']['implicit'] && count($pastParentResult['affiliationUnits']['past']) === 2, 'A previous direct parent assignment does not hide its current implicit affiliation.');
+check(array_column($pastParentResult['affiliationUnits']['current'], null, 'id')['institute']['implicit'] && count($pastParentResult['affiliationUnits']['past']) === 3, 'A previous direct parent assignment does not hide its current implicit affiliation.');
+
+$returning = $profile;
+$returning['units'][] = ['unit' => 'lab', 'start' => '2012-01-01', 'end' => '2013-12-31'];
+$returningTimeline = $render($returning)['affiliationTimeline'];
+check(count(array_filter($returningTimeline, fn($entry) => $entry['id'] === 'lab')) === 2, 'Separate membership periods of the same unit remain separate timeline entries.');
+check(!str_contains($render(['units' => [['unit' => 'legacy']]])['html'], 'affiliation-timeline-row'), 'A profile with no dated affiliations does not show a misleading time axis.');
 
 check(count($result['affiliationInitiatives']['current']) === 1 && count($result['affiliationInitiatives']['past']) === 1 && count($result['affiliationInitiatives']['upcoming']) === 1, 'Explicit initiative memberships are split into current, archived and upcoming entries.');
 check(str_contains($result['html'], 'Climate Futures') && str_contains($result['html'], '>Lead<') && !str_contains($result['html'], 'Unrelated mission') && !str_contains($result['html'], 'Co-Lead'), 'The profile shows the person’s own initiative roles, not roles or associations belonging to other people.');

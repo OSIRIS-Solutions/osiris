@@ -10,15 +10,13 @@
 .profile-affiliations .affiliation-card h4 { margin: .25rem 0 .75rem; font-size: 1.8rem; }
 .profile-affiliations .affiliation-card h4 a { color: inherit; }
 .profile-affiliations .affiliation-card h4 a:hover { color: var(--affiliation-accent); }
-.profile-affiliations .affiliation-card-past { border-left-color: var(--muted-color); }
+.profile-affiliations .affiliation-card-past:not(.affiliation-unit-card) { border-left-color: var(--muted-color); }
 .profile-affiliations .affiliation-parent { color: var(--muted-color); font-size: 1.3rem; margin-bottom: .5rem; }
 .profile-affiliations .affiliation-period { display: flex; gap: .5rem; font-size: 1.4rem; color: var(--muted-color); }
 .profile-affiliations .affiliation-badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
 .profile-affiliations .affiliation-badges:empty { display: none; }
 .profile-affiliations .affiliation-history { margin-top: 1.5rem; }
-.profile-affiliations .affiliation-history summary { cursor: pointer; padding: .75rem 0; font-weight: 600; }
 .profile-affiliations .affiliation-history summary .badge { margin-left: .5rem; }
-.profile-affiliations .affiliation-timeline-details { padding: .5rem 1.5rem 1.5rem; background: var(--box-bg-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); }
 .profile-affiliations .affiliation-today-legend { white-space: nowrap; margin-left: 1rem; }
 .profile-affiliations .affiliation-today-legend::before { content: ''; display: inline-block; height: .9em; margin-right: .4rem; border-left: 1px dashed var(--muted-color); vertical-align: middle; }
 .profile-affiliations .affiliation-timeline-axis, .profile-affiliations .affiliation-timeline-row { display: grid; grid-template-columns: minmax(10rem, 1fr) minmax(0, 3fr); gap: .5rem 1.5rem; }
@@ -31,9 +29,9 @@
 .profile-affiliations .affiliation-bar { position: absolute; top: 0; height: 100%; background: var(--affiliation-accent); border-radius: .4rem; }
 .profile-affiliations .affiliation-bar-past { opacity: .45; }
 .profile-affiliations .affiliation-bar-upcoming { background: transparent; border: 1px dashed var(--affiliation-accent); }
+.profile-affiliations .affiliation-bar-end { width: 0 !important; border-left: 2px solid var(--affiliation-accent); border-radius: 0; }
 @media (max-width: 576px) {
     .profile-affiliations .affiliation-timeline-axis { display: block; }
     .profile-affiliations .affiliation-timeline-row { grid-template-columns: 1fr; }
     .profile-affiliations .affiliation-timeline-row > small { grid-column: 1; }
-    .profile-affiliations .affiliation-timeline-details { padding-left: 1rem; padding-right: 1rem; }
 }

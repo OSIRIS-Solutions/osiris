@@ -825,11 +825,11 @@ if (isset($_GET['verbose'])) {
                     <?php endif; ?>
                 </div>
                 <?php foreach ($affiliationUnits as $state => $entries): if (!$entries) continue; ?>
-                    <?php if ($state === 'past'): ?><details class="affiliation-history">
-                            <summary><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                    <?php if ($state === 'past'): ?><details class="collapse-panel affiliation-history">
+                            <summary class="collapse-header"><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
                         <div class="affiliation-grid">
                             <?php foreach ($entries as $entry): ?>
-                                <article class="box affiliation-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>">
+                                <article class="box affiliation-card affiliation-unit-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>" style="--affiliation-accent: <?= e($entry['color']) ?>">
                                     <div class="content">
                                         <?php if ($entry['parents']): ?><div class="affiliation-parent"><?= e(implode(' / ', $entry['parents'])) ?></div><?php endif; ?>
                                         <h4><a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a></h4>
@@ -849,30 +849,34 @@ if (isset($_GET['verbose'])) {
                             <?php endforeach; ?>
                         </div>
                         <?php if ($state === 'past'): ?>
-                        </details><?php endif; ?>
+                        </div></details><?php endif; ?>
                 <?php endforeach; ?>
 
-                <?php if ($affiliationTimeline):
+                <?php if ($affiliationTimeline && count($affiliationDates) > 1):
                     $axisSpan = $affiliationAxisEnd - $affiliationAxisStart;
                     $todayPosition = round(100 * (strtotime($affiliationToday) - $affiliationAxisStart) / $axisSpan, 3);
                 ?>
-                    <details class="affiliation-history affiliation-timeline-details" open>
-                        <summary><?= translate('people.affiliation_timeline') ?></summary>
-                        <p class="text-muted font-size-12"><?= translate('people.affiliation_timeline_hint') ?> <span class="affiliation-today-legend"><?= translate('common.today') ?></span></p>
-                        <div class="affiliation-timeline" style="--affiliation-today: <?= $todayPosition ?>%">
-                            <div class="affiliation-timeline-axis"><span></span>
-                                <div><span><?= date('Y', $affiliationAxisStart) ?></span><span><?= date('Y', $affiliationAxisEnd) ?></span></div>
-                            </div>
-                            <?php foreach ($affiliationTimeline as $entry):
-                                $left = min(99, round(100 * ($entry['from'] - $affiliationAxisStart) / $axisSpan, 3));
-                                $width = max(1, round(100 * ($entry['to'] - $entry['from']) / $axisSpan, 3));
-                            ?>
-                                <div class="affiliation-timeline-row">
-                                    <a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a>
-                                    <div class="affiliation-track" aria-hidden="true"><span class="affiliation-bar affiliation-bar-<?= $entry['state'] ?>" style="left:<?= $left ?>%;width:<?= min(100 - $left, $width) ?>%"></span></div>
-                                    <small class="text-muted"><?= format_date($entry['start']) ?> – <?= $entry['end'] ? format_date($entry['end']) : translate('common.open_end') ?></small>
+                    <details class="collapse-panel affiliation-history" open>
+                        <summary class="collapse-header"><?= translate('people.affiliation_timeline') ?></summary>
+                        <div class="collapse-content">
+                            <p class="text-muted font-size-12"><?= translate('people.affiliation_timeline_hint') ?> <span class="affiliation-today-legend"><?= translate('common.today') ?></span></p>
+                            <div class="affiliation-timeline" style="--affiliation-today: <?= $todayPosition ?>%">
+                                <div class="affiliation-timeline-axis"><span></span>
+                                    <div><span><?= date('Y', $affiliationAxisStart) ?></span><span><?= date('Y', $affiliationAxisEnd) ?></span></div>
                                 </div>
-                            <?php endforeach; ?>
+                                <?php foreach ($affiliationTimeline as $entry): ?>
+                                    <div class="affiliation-timeline-row" data-affiliation-state="<?= $entry['state'] ?>" style="--affiliation-accent: <?= e($entry['color']) ?>">
+                                        <a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a>
+                                        <?php if ($entry['from'] !== null):
+                                            $left = min(99, round(100 * ($entry['from'] - $affiliationAxisStart) / $axisSpan, 3));
+                                            $width = max(1, round(100 * ($entry['to'] - $entry['from']) / $axisSpan, 3));
+                                        ?>
+                                            <div class="affiliation-track" aria-hidden="true"><span class="affiliation-bar affiliation-bar-<?= $entry['state'] ?><?= $entry['start'] === '' ? ' affiliation-bar-end' : '' ?>" style="left:<?= $left ?>%;width:<?= min(100 - $left, $width) ?>%"></span></div>
+                                        <?php endif; ?>
+                                        <small class="text-muted"><?php if ($entry['implicit']): ?><?= translate('people.affiliation_implicit') ?><?php elseif ($entry['start'] || $entry['end']): ?><?= $entry['start'] ? format_date($entry['start']) : translate('common.unknown') ?> – <?= $entry['end'] ? format_date($entry['end']) : translate('common.open_end') ?><?php else: ?><?= translate('people.affiliation_dates_unknown') ?><?php endif; ?></small>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </details>
                 <?php endif; ?>
@@ -888,8 +892,8 @@ if (isset($_GET['verbose'])) {
                     </h3>
                 </div>
                 <?php foreach ($affiliationInitiatives as $state => $entries): if (!$entries) continue; ?>
-                    <?php if ($state === 'past'): ?><details class="affiliation-history">
-                            <summary><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                    <?php if ($state === 'past'): ?><details class="collapse-panel affiliation-history">
+                            <summary class="collapse-header"><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
                         <div class="affiliation-grid">
                             <?php foreach ($entries as $initiative): ?>
                                 <article class="box affiliation-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>">
@@ -903,7 +907,7 @@ if (isset($_GET['verbose'])) {
                             <?php endforeach; ?>
                         </div>
                         <?php if ($state === 'past'): ?>
-                        </details><?php endif; ?>
+                        </div></details><?php endif; ?>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>

@@ -356,7 +356,7 @@ return [
     'affiliation_implicit' => 'Derived from subunits',
     'affiliation_unit_lead' => 'Unit lead',
     'affiliation_timeline' => 'Unit affiliation timeline',
-    'affiliation_timeline_hint' => 'Only memberships with a known start date are shown. Open-ended current memberships extend to today.',
+    'affiliation_timeline_hint' => 'All unit memberships are listed. Bars show known periods; a marker shows a known end date when the start is unknown. Open-ended current memberships extend to today.',
     'contact_via' => 'Contact via ',
     'now' => 'now',
     'other_contact_methods' => 'Other contact methods',

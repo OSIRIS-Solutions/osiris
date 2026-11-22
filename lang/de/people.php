@@ -356,7 +356,7 @@ return [
     'affiliation_implicit' => 'Über Untereinheiten zugeordnet',
     'affiliation_unit_lead' => 'Leitung der Einheit',
     'affiliation_timeline' => 'Zeitlicher Verlauf der Einheitenzugehörigkeit',
-    'affiliation_timeline_hint' => 'Angezeigt werden Zugehörigkeiten mit bekanntem Startdatum. Offene aktuelle Zugehörigkeiten reichen bis heute.',
+    'affiliation_timeline_hint' => 'Alle Einheitenzugehörigkeiten werden aufgeführt. Balken zeigen bekannte Zeiträume; bei unbekanntem Beginn markiert ein Strich das bekannte Ende. Offene aktuelle Zugehörigkeiten reichen bis heute.',
     'contact_via' => 'Kontakt per ',
     'now' => 'jetzt',
     'other_contact_methods' => 'Weitere Kontaktwege',
