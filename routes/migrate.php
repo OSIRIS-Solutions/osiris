@@ -56,7 +56,7 @@ Route::get('/migration-needed', function () {
                 <?= lang('admin.osiris_will_be_updated_and_set_up_automatically_depending_on_the_version_th') ?>
             </p>
             <p class="text-muted">
-                <small><?= lang('admin.installed') ?>: <?= $version['value'] ?></small> | <small><?= lang('admin.latest') ?>: <?= OSIRIS_VERSION ?></small>
+                <span><?= lang('admin.installed') ?>: <?= $version['value'] ?></span> | <b><?= lang('admin.latest') ?>: <?= OSIRIS_VERSION ?></b>
             </p>
             <a href="<?= ROOTPATH ?>/migrate" class="btn cta large">
                 <?= lang('admin.update_osiris') ?>

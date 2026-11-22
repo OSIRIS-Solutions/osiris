@@ -62,8 +62,9 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
         ROOTPATH . '/user/oauth',
         ROOTPATH . '/user/oauth-callback',
     ];
+    $allowed_route_starts = ROOTPATH . '/(portfolio|api|image)/';
     $uri = strtok($_SERVER['REQUEST_URI'], '?');   // strip query string
-    if (!in_array($uri, $allowed_routes)) {
+    if (!in_array($uri, $allowed_routes) && !preg_match('#^' . $allowed_route_starts . '#', $uri)) {
         header('Location: ' . ROOTPATH . '/migration-needed');
         die;
     }
