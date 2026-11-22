@@ -1,3 +1,4 @@
+<?php $registrationIsSso = $registrationIsSso ?? false; ?>
 <a class="back-link" href="<?= ROOTPATH ?>/user/login">
     <i class="ph ph-arrow-left" aria-hidden="true"></i>
     <?= lang('common.back_to_login') ?>
@@ -28,20 +29,25 @@
         <?= lang('people.create_your_personal_osiris_account_required_fields_are_marked_with_an_aste') ?>
     </p>
 
-    <?php $registrationData = $_POST['values'] ?? []; ?>
-    <form action="<?= ROOTPATH ?>/auth/new-user<?= !empty($registrationToken) ? '?token=' . urlencode($registrationToken) : '' ?>" method="post">
-        <?php if (!empty($registrationToken)) { ?>
+    <?php $registrationData = $registrationData ?? ($_POST['values'] ?? []); ?>
+    <form action="<?= ROOTPATH ?><?= e($registrationAction ?? '/auth/new-user') ?>" method="post">
+        <?php if ($registrationIsSso) { ?>
+            <input type="hidden" name="csrf" value="<?= e($registrationCsrf) ?>">
+            <input type="hidden" name="action" value="create">
+        <?php } ?>
+        <?php if (!$registrationIsSso && !empty($registrationToken)) { ?>
             <input type="hidden" name="token" value="<?= e($registrationToken) ?>">
         <?php } ?>
 
-        <div class="form-grid form-grid--2">
+        <div class="form-grid <?= $registrationIsSso ? '' : 'form-grid--2' ?>">
             <div class="form-group">
                 <label class="required" for="register-username"><?= lang('common.username_guest_account_add') ?></label>
                 <div class="input-wrap">
                     <i class="ph ph-user" aria-hidden="true"></i>
-                    <input class="form-control" id="register-username" type="text" name="username" value="<?= e($_POST['username'] ?? '') ?>" autocomplete="username" required autofocus>
+                    <input class="form-control" id="register-username" type="text" name="username" value="<?= e($registrationUsername ?? ($_POST['username'] ?? '')) ?>" autocomplete="username" required autofocus>
                 </div>
             </div>
+            <?php if (!$registrationIsSso) { ?>
             <div class="form-group">
                 <label class="required" for="register-password"><?= lang('common.password') ?></label>
                 <div class="input-wrap">
@@ -52,6 +58,7 @@
                     </button>
                 </div>
             </div>
+            <?php } ?>
         </div>
 
         <div class="form-grid form-grid--name">
@@ -77,7 +84,7 @@
         <div class="form-grid form-grid--2">
             <div class="form-group">
                 <label class="required" for="register-mail"><?= lang('common.email_address') ?></label>
-                <input class="form-control" id="register-mail" type="email" name="values[mail]" value="<?= e($registrationData['mail'] ?? '') ?>" autocomplete="email" required>
+                <input class="form-control" id="register-mail" type="email" name="values[mail]" value="<?= e($registrationData['mail'] ?? '') ?>" autocomplete="email" <?= $registrationIsSso && $registrationMailLocked ? 'readonly' : '' ?> required>
             </div>
             <div class="form-group">
                 <label for="telephone"><?= lang('common.telephone') ?></label>
@@ -108,6 +115,25 @@
             <span><?= lang('people.i_am_a_scientist') ?></span>
         </label>
 
+        <?php if ($registrationIsSso) { ?>
+            <div class="form-group">
+                <label for="registration-units"><?= lang('people.organisational_units') ?></label>
+                <select class="form-control" id="registration-units" name="units[]" multiple size="4">
+                    <?php foreach ($Groups->groups as $group) { if (!empty($group['inactive'])) continue; ?>
+                        <option value="<?= e((string) $group['id']) ?>" <?= in_array((string) $group['id'], $registrationUnits, true) ? 'selected' : '' ?>><?= e($group[lang('common.field_name_language')] ?? $group['name']) ?></option>
+                    <?php } ?>
+                </select>
+                <small><?= lang('people.you_can_select_several_units_if_you_select_i_am_a_scientist_these_affiliations_are_re') ?></small>
+            </div>
+            <?php if ($registrationTokenRequired) { ?>
+                <div class="form-group">
+                    <label class="required" for="sso-registration-token"><?= lang('admin.auth_token') ?></label>
+                    <input class="form-control" id="sso-registration-token" name="token" type="password" value="<?= e($registrationToken) ?>" autocomplete="off" required>
+                    <small><?= lang('people.enter_the_registration_token_provided_by_your_administrator') ?></small>
+                </div>
+            <?php } ?>
+        <?php } ?>
+
         <?php if ($affiliation === 'LISI') { ?>
             <div class="demo">
                 <strong>Demo:</strong>
@@ -119,5 +145,8 @@
             <span><?= lang('common.create_account') ?></span>
             <i class="ph ph-user-plus" aria-hidden="true"></i>
         </button>
+        <?php if ($registrationIsSso) { ?>
+            <p class="secondary-action"><button class="btn" type="submit" name="action" value="cancel" formnovalidate><?= lang('action.cancel') ?></button></p>
+        <?php } ?>
     </form>
 <?php } ?>

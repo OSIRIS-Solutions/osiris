@@ -491,6 +491,38 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 <?php } else { ?>
     <div class="btn-toolbar">
+        
+        <!-- Contact button -->
+        <?php
+        $contactMethods = $Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? true)
+            ? getProfileContactMethods($scientist, DB::doc2Arr($Settings->get('contact-button', []))) : [];
+        if ($contactMethods) {
+            $preferredContact = $scientist['contact-button-type'] ?? 'mail';
+            if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
+            $contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'];
+        ?>
+            <div class="dropdown with-arrow btn-group btn-group-lg d-inline-flex">
+                <a class="btn secondary outline d-flex align-items-center gap-5" href="<?= e($contactMethods[$preferredContact]) ?>" target="_blank" rel="noopener noreferrer" data-toggle="tooltip" data-title="<?= e(lang('people.contact_via') . $contactLabels[$preferredContact]) ?>">
+                    <i class="ph <?= socialLogo($preferredContact) ?>" aria-hidden="true"></i>
+                    <b class="font-size-14"><?= lang('people.contact') ?> <?= $scientist['first'] ?? lang('people.now') ?></b>
+                </a>
+                <?php if (count($contactMethods) > 1) { ?>
+                    <button class="btn secondary outline px-10" type="button" id="contact-methods" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="<?= lang('people.other_contact_methods') ?>">
+                        <i class="ph ph-caret-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="contact-methods">
+                        <?php foreach ($contactMethods as $type => $contactURL) {
+                            if ($type === $preferredContact) continue; ?>
+                            <a class="item" href="<?= e($contactURL) ?>" target="_blank" rel="noopener noreferrer">
+                                <i class="ph <?= socialLogo($type) ?>" aria-hidden="true"></i>
+                                <?= e($contactLabels[$type]) ?>
+                            </a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
         <div class="btn-group btn-group-lg">
             <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('people.the_year_of') . $scientist['first'] ?> ">
                 <i class="ph ph-calendar ph-fw"></i>
@@ -560,46 +592,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </div>
             </div>
         <?php } ?>
-
-        <!--- Contact Button --->
-        <?php
-        if ($Settings->featureEnabled('contact-button') && ($scientist['contact-button'] ?? false)) {
-            $contact = $scientist['contact'] ?? null;
-            $contactType = $scientist['contact-button-type'] ?? null;
-            $contactTypeSettings = $Settings->get('contact-button')->getArrayCopy();
-            if (!isset($contactTypeSettings[$contactType]) || !($contactTypeSettings[$contactType] === '1')) {
-                $contactType = null;
-            }
-            $contactURL = null;
-            if ($contact && $contactType) {
-                if ($contactType == 'mail') {
-                    $contactURL = "mailto:" . $contact;
-                } elseif ($contactType == 'teams') {
-                    $contactURL = "https://teams.microsoft.com/l/chat/0/0?users=" . $contact;
-                } elseif ($contactType == 'slack') {
-                    $contactURL = "https://slack.com/app_redirect?channel=" . $contact;
-                } elseif ($contactType == 'matrix') {
-                    $contactURL = "https://matrix.to/#/" . $contact;
-                } elseif ($contactType == 'other') {
-                    $contactURL = $contact;
-                }
-                $contactLogo = socialLogo($contactType);
-                if ($contactType == 'other') {
-                    $contactInfo = lang('people.prefered_contact_link');
-                } else {
-                    $contactInfo = ucfirst($contactType);
-                }
-        ?>
-                <div class="btn-group btn-group-lg">
-                    <a class="btn secondary outline" href="<?= $contactURL ?>" target="_blank" data-toggle="tooltip" data-title="<?= lang('people.contact') . $scientist['first'] . lang('people.via') . $contactInfo ?>">
-                        <i class="ph <?= $contactLogo ?>"></i>
-                        <?= lang('common.contact') ?>
-                    </a>
-                </div>
-            <?php } ?>
-        <?php } ?>
     </div>
-
 <?php } ?>
 
 
@@ -740,6 +733,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             'rendered.users' => $user,
             'module_id' => ['$ne' => null]
         ]],
+        ['$sort' => ['start_date' => -1]],
         [
             '$group' => [
                 '_id' => '$module_id',
@@ -793,6 +787,11 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
 
 
+<?php
+if (isset($_GET['verbose'])) {
+    dump($scientist, true);
+}
+?>
 
 
 <?php if ($hasAffiliations) { ?>
@@ -1774,11 +1773,3 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
     </section>
 <?php } ?>
-
-
-
-<?php
-if (isset($_GET['verbose'])) {
-    dump($scientist, true);
-}
-?>

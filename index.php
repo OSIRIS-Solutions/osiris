@@ -219,15 +219,22 @@ function lang($en, ?string $de = null, array $replace = []): string
 include_once BASEPATH . "/php/Route.php";
 
 Route::get('/', function () {
-    if (isset($_GET['code']) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
-        header("Location: " . ROOTPATH . "/user/oauth-callback?code=" . $_GET['code']);
+    if ((isset($_GET['code']) || isset($_GET['error'])) && defined('USER_MANAGEMENT') && strtoupper(USER_MANAGEMENT) == 'OAUTH') {
+        // Legacy root callback must preserve state and provider cancellation.
+        $callback = array_intersect_key($_GET, array_flip(['code', 'state', 'error']));
+        header("Location: " . ROOTPATH . "/user/oauth-callback?" . http_build_query($callback));
         exit();
     }
     include_once BASEPATH . "/php/init.php";
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === false) {
         header("Location: " . ROOTPATH . "/user/login");
     } else {
-        $path = ROOTPATH . "/home";
+        $homeScreen = (string) ($USER['home_screen'] ?? 'home');
+        $path = ROOTPATH . (
+            $homeScreen === 'resource-hub' && $Settings->featureEnabled('resource-hub')
+                ? '/hub'
+                : '/home'
+        );
         if (!empty($_SERVER['QUERY_STRING'])) $path .= "?" . $_SERVER['QUERY_STRING'];
         header("Location: $path");
     }
@@ -375,6 +382,7 @@ if (
     // include_once BASEPATH . "/routes/adminRoles.php";
 
     include_once BASEPATH . "/addons/ida/index.php";
+    include_once BASEPATH . "/routes/aggregate.php";
 }
 include_once BASEPATH . "/routes/migrate.php";
 

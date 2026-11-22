@@ -120,7 +120,7 @@ class CommandPalette
                 "priority" => 10
             ],
             [
-                "url" => "/new-stuff",
+                "url" => "/news",
                 "type" => "Navigation",
                 "icon" => "bell-ringing",
                 "label" => lang('common.news'),
@@ -493,6 +493,51 @@ class CommandPalette
             $this->add($e);
         }
 
+        // Resource Hub cards are few and configuration-backed, so keeping them in
+        // the local palette index makes their titles and contents instantly searchable.
+        if ($this->settings->featureEnabled('resource-hub')) {
+            $resourceHub = DB::doc2Arr($this->settings->get('resource-hub') ?? []);
+            foreach (DB::doc2Arr($resourceHub['cards'] ?? []) as $index => $rawCard) {
+                $card = DB::doc2Arr($rawCard);
+                $cardId = trim((string) ($card['id'] ?? 'resource-' . $index));
+                if ($cardId === '') continue;
+
+                $titles = DB::doc2Arr($card['title'] ?? []);
+                $contents = DB::doc2Arr($card['content'] ?? []);
+                $label = $this->localizedText($titles);
+                $description = $this->searchText($this->localizedText($contents));
+                if ($label === '' && $description === '') continue;
+
+                $keywords = ['resource hub', 'ressourcen-hub', $this->settings->resourceHubLabel()];
+                foreach ([$titles, $contents] as $localizedValues) {
+                    foreach ((array) $localizedValues as $value) {
+                        $keywords[] = $this->searchText($value);
+                    }
+                }
+                foreach (DB::doc2Arr($card['links'] ?? []) as $rawLink) {
+                    $link = DB::doc2Arr($rawLink);
+                    foreach ((array) DB::doc2Arr($link['title'] ?? []) as $linkTitle) {
+                        $keywords[] = $this->searchText($linkTitle);
+                    }
+                }
+
+                $icon = trim((string) ($card['icon'] ?? ''));
+                if (!preg_match('/^[a-z0-9-]+$/', $icon)) $icon = 'link';
+
+                $this->add([
+                    'id' => 'resource-hub:' . $cardId,
+                    'url' => '/hub?card=' . rawurlencode($cardId),
+                    'type' => $this->settings->resourceHubLabel(),
+                    'icon' => $icon ?: $this->settings->resourceHubIcon(),
+                    'label' => $label ?: $this->settings->resourceHubLabel(),
+                    'description' => mb_strlen($description) > 180 ? mb_substr($description, 0, 177) . '…' : $description,
+                    'feature' => 'resource-hub',
+                    'keywords' => array_values(array_filter(array_unique($keywords))),
+                    'priority' => 65,
+                ]);
+            }
+        }
+
         foreach ($this->settings->topics as $t) {
             $this->add([
                 "url" => "/topics/view/" . $t['id'],
@@ -559,6 +604,23 @@ class CommandPalette
     public function get(): array
     {
         return $this->groupAndSort($this->items);
+    }
+
+    protected function localizedText($value): string
+    {
+        $value = DB::doc2Arr($value ?? []);
+        if (!is_array($value)) return trim((string) $value);
+
+        $language = lang('en', 'de');
+        $fallback = $language === 'de' ? 'en' : 'de';
+        $localized = trim((string) ($value[$language] ?? ''));
+        return $localized !== '' ? $localized : trim((string) ($value[$fallback] ?? ''));
+    }
+
+    protected function searchText($value): string
+    {
+        $text = html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return trim(preg_replace('/\s+/u', ' ', $text) ?? $text);
     }
 
     protected function isVisible(array $item): bool

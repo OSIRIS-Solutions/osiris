@@ -38,7 +38,11 @@ $renderer = new Modules($fixture);
 $rendered = [];
 foreach ($newModules as $id) {
     check(isset($projectConfig->modules[$id]), "$id is available to project builders.");
-    check($renderer->all_modules[$id]['entities'] === ['projects'] && !isset($proposalConfig->modules[$id]), "$id is limited to projects.");
+    if ($id === 'topics') {
+        check(in_array('projects', $renderer->all_modules[$id]['entities'], true), 'Shared research topics remain available to project forms.');
+    } else {
+        check($renderer->all_modules[$id]['entities'] === ['projects'] && !isset($proposalConfig->modules[$id]), "$id is limited to projects.");
+    }
     ob_start(); $renderer->print_module($id, true, ['label' => 'Custom label', 'help' => 'Help & context']); $html = ob_get_clean();
     $rendered[$id] = $html;
     check(str_contains($html, 'data-module="' . $id . '"') && str_contains($html, 'Custom label') && str_contains($html, 'Help & context'), "$id renders with configurable labels and help.");

@@ -213,6 +213,20 @@ class Settings
                 return $default;
         }
     }
+    /** News outlet definitions, including the independent original contribution. */
+    function getNewsOutlets(): array
+    {
+        require_once __DIR__ . '/NewsOutlets.php';
+        return ['enabled' => $this->featureEnabled('news-editorial')] + NewsOutlets::read($this->get('news-outlets', []));
+    }
+
+    /** Include enabled originals and news with released Portfolio outlet contributions. */
+    function getNewsPortfolioFilter(array $filter): array
+    {
+        require_once __DIR__ . '/Portfolio.php';
+        return Portfolio::newsFilter($filter, $this->getNewsOutlets());
+    }
+
     function set($key, $value)
     {
         $this->osiris->adminGeneral->updateOne(

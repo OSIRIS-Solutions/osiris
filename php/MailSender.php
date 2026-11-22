@@ -75,7 +75,7 @@ function sendMail(
 
 function buildNotificationMail($title, $html, $linkText, $linkUrl)
 {
-    $linkUrl = $_SERVER['HTTP_HOST'] . ROOTPATH . $linkUrl;
+    $linkUrl = BASE_URL . ROOTPATH . $linkUrl;
     return '
         <div style="font-family: Arial, sans-serif; color: #333;">
             <h2 style="color: #008083;">' . e($title) . '</h2>
@@ -108,8 +108,7 @@ function build_digest_email(array $user, array $n, string $frequency = "weekly")
 
 
     $subject = $lang('Your OSIRIS digest', 'Dein OSIRIS-Digest');
-    $baseUrl = ($_SERVER['HTTPS'] ?? 'off') === 'on' ? 'https' : 'http';
-    $baseUrl .= '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ROOTPATH;
+    $baseUrl = BASE_URL . ROOTPATH;
 
     $colors = $Settings->get('colors');
     $primary = $colors['primary'] ?? '#008083';

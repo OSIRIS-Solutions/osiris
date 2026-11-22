@@ -67,11 +67,12 @@ Route::post('/auth/forgot-password', function () {
 
         $osiris->accounts->updateOne(
             ['username' => $user['username']],
-            ['$set' => ['reset' => time(), 'hash' => $hash]]
+            ['$set' => ['reset' => time(), 'hash' => $hash]],
+            ['upsert' => true]
         );
 
 
-        $link = $_SERVER['HTTP_HOST'] . ROOTPATH . "/auth/reset-password?hash=$hash";
+        $link = BASE_URL . ROOTPATH . "/auth/reset-password?hash=$hash";
         // send mail
         sendMail(
             $user['mail'],
@@ -126,13 +127,16 @@ Route::post('/auth/admin-reset-password', function () {
         die;
     }
     $id = DB::to_ObjectID($_POST['id']);
+    $person = $osiris->persons->findOne(['_id' => $id]);
+    if (empty($person)) abortwith(404, lang('User not found.', 'Person nicht gefunden.'));
     $hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
     $osiris->accounts->updateOne(
-        ['username' => $osiris->persons->findOne(['_id' => $id])['username']],
-        ['$set' => ['reset' => time(), 'hash' => $hash]]
+        ['username' => $person['username']],
+        ['$set' => ['reset' => time(), 'hash' => $hash]],
+        ['upsert' => true]
     );
 
-    $link = $_SERVER['HTTP_HOST'] . ROOTPATH . "/auth/reset-password?hash=$hash";
+    $link = BASE_URL . ROOTPATH . "/auth/reset-password?hash=$hash";
 
     // return the link to the admin to share it with the user
     include BASEPATH . "/header.php";
@@ -165,7 +169,7 @@ Route::get('/auth/reset-password', function () {
 
     // check if hash is valid
     $hash = $_GET['hash'] ?? '';
-    $account = $osiris->accounts->findOne(['hash' => $hash]);
+    $account = is_string($hash) && $hash !== '' ? $osiris->accounts->findOne(['hash' => $hash]) : null;
     if (empty($account)) {
         $_SESSION['msg'] = lang('auth.password_reset_link_invalid');
         $_SESSION['msg_type'] = 'error';
@@ -209,7 +213,7 @@ Route::post('/auth/reset-password', function () {
 
     // check everything again, just to be sure
     $hash = $_POST['hash'];
-    $account = $osiris->accounts->findOne(['hash' => $hash]);
+    $account = is_string($hash) && $hash !== '' ? $osiris->accounts->findOne(['hash' => $hash]) : null;
     if (empty($account)) {
         $_SESSION['msg'] = lang('auth.password_reset_link_invalid');
         $_SESSION['msg_type'] = 'error';
@@ -234,8 +238,9 @@ Route::post('/auth/reset-password', function () {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $osiris->accounts->updateOne(
         ['hash' => $hash],
-        ['$set' => ['password' => $password], '$unset' => ['hash' => '']]
+        ['$set' => ['password' => $password], '$unset' => ['hash' => '', 'reset' => '']]
     );
+    $osiris->rememberTokens->deleteMany(['username' => $account['username']]);
     $_SESSION['msg'] = lang('auth.password_reset_success');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/user/login");
@@ -284,6 +289,9 @@ Route::post('/auth/new-user', function () {
         exit('Bitte ein Passwort angeben.');
     }
     $person = $_POST['values'];
+    foreach (array_keys($person) as $key) {
+        if ($key === 'sso' || str_starts_with($key, 'sso.')) unset($person[$key]);
+    }
 
     if ($osiris->persons->count(['username' => $username]) > 0) {
         $page = 'register';

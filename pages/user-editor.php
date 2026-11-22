@@ -45,8 +45,11 @@ if (!is_null($data_fields)) {
 $active = function ($field) use ($data_fields) {
     return in_array($field, $data_fields);
 };
-?>
 
+$contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'];
+$contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
+
+?>
 
 <script>
     const selectedOrgIds = JSON.parse('<?= json_encode($depts) ?>');
@@ -215,7 +218,7 @@ $active = function ($field) use ($data_fields) {
                     <div class="input-group d-inline-flex w-auto m-5">
                         <input type="text" name="values[names][]" value="<?= $n ?>" required class="form-control">
                         <div class="input-group-append">
-                            <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                            <a class="btn text-danger" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">×</a>
                         </div>
                     </div>
                 <?php } ?>
@@ -289,7 +292,7 @@ $active = function ($field) use ($data_fields) {
             require_once BASEPATH . "/php/Modules.php";
             $Modules = new Modules($data);
 
-            // echo "<h5>" . lang('Institutional fields', 'Institutionelle Felder') . "</h5>";
+            // echo "<h5>" . lang('projects.institutional_fields') . "</h5>";
             foreach ($custom_fields as $field) {
                 $key = $field['id'] ?? null;
                 if ($active($key)) {
@@ -492,7 +495,7 @@ $active = function ($field) use ($data_fields) {
         <h4 class="title"><?= lang('common.contact') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
-            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) ? 'disabled' : '' ?> onblur="validateEmail(this)">
+            <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) || osirisOAuthLinked($data) ? 'disabled' : '' ?> onblur="validateEmail(this)">
             <?php if (in_array('mail', $ldap_fields)) {
                 echo $ldap_msg;
             } ?>
@@ -603,13 +606,12 @@ $active = function ($field) use ($data_fields) {
 
                 <?php
                 if ($data['username'] == $_SESSION['username'] && $Settings->featureEnabled('orcid')) {
-                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
                 ?>
                     <small class="text-muted">
                         <?= lang('common.or_auth_page') ?>
                     </small>
                     <br>
-                    <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= $protocol . $_SERVER['HTTP_HOST'] . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
+                    <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= BASE_URL . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
                         <?= lang('common.connect_orcid') ?>
                     </a>
@@ -643,6 +645,10 @@ $active = function ($field) use ($data_fields) {
             <div id="socials">
                 <input type="hidden" name="values[socials]" value="">
                 <?php
+                $socialData = json_decode(
+                    file_get_contents( BASEPATH . '/data/social-media.json'),
+                    true
+                );
                 $socials = DB::doc2Arr($data['socials'] ?? []);
                 foreach ($socials as $t => $url) {
                     $logo = socialLogo($t);
@@ -655,9 +661,9 @@ $active = function ($field) use ($data_fields) {
                                     <?= ucfirst($t) ?>
                                 </span>
                             </div>
-                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= $url ?>" placeholder="<?= lang('common.url') ?>">
+                            <input type="text" name="values[socials][<?= $t ?>]" class="form-control need-validation" data-validator="social" value="<?= e($url) ?>" placeholder="<?= $socialData[$t]['placeholder'] ?? '' ?>">
                             <div class="input-group-append">
-                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">×</a>
                             </div>
                         </div>
                     </div>
@@ -671,7 +677,8 @@ $active = function ($field) use ($data_fields) {
                     <?= lang('people.add_new_social') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
-                    <?php foreach (['researchgate', 'youtube', 'github', 'linkedin', 'mastodon', 'bluesky', 'instagram', 'facebook', 'X', 'matrix', 'website'] as $s) {
+                    <?php 
+                    foreach (array_keys($socialData) as $s) {
                         if (array_key_exists($s, $socials)) continue;
                         $logo = socialLogo($s);
                     ?>
@@ -684,25 +691,25 @@ $active = function ($field) use ($data_fields) {
             </div>
 
             <script>
+                initSocialMedia();
+
                 function addSocial(e, type, logo) {
                     e.preventDefault();
-                    // var i = $(btn).closest('form').find('select[name^="values[socials]"]').last().attr('name').match(/\[(\d+)\]/)[1];
-                    // get last index
                     var html = `
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="ph ${logo} mr-5 text-primary"></i>
-                        ${type.toUpperCase()}
-                    </span>
-                </div>
-                <input type="text" name="values[socials][${type}]" class="form-control need-validation" data-validator="social" value="" placeholder="URL">
-                <div class="input-group-append">
-                    <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
-                </div>
-            </div>
-        `;
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="ph ${logo} mr-5 text-primary"></i>
+                                    ${type.toUpperCase()}
+                                </span>
+                            </div>
+                            <input type="text" name="values[socials][${type}]" class="form-control need-validation" data-validator="social" value="" placeholder="${socialMedia[type]['placeholder']}">
+                            <div class="input-group-append">
+                                <a class="btn text-danger" onclick="$(this).closest('.input-group').remove();">×</a>
+                            </div>
+                        </div>
+                    `;
                     $('#socials').append(html);
                 }
 
@@ -713,16 +720,14 @@ $active = function ($field) use ($data_fields) {
             </script>
         <?php } ?>
 
-        <!-- Contact Button -->
-        <?php if ($Settings->featureEnabled('contact-button') && !empty($Settings->get('contact-button'))) { ?>
-            <h4>
-                <?= lang('people.contact_button') ?>
-            </h4>
-            <?php
-            $contact_button = $data['contact-button'] ?? false;
-            $contact_button_type = $data['contact-button-type'] ?? 'mail';
-            ?>
-
+        <!-- Contact button -->
+        <?php if ($Settings->featureEnabled('contact-button')) {
+            $contact_button = $data['contact-button'] ?? true;
+            $contactMethods = getProfileContactMethods($data, $contactSettings);
+            $preferredContact = $data['contact-button-type'] ?? 'mail';
+            if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
+        ?>
+            <h4><?= lang('people.contact_button') ?></h4>
             <div class="form-group">
                 <div>
                     <div class="custom-radio d-inline-block ml-10">
@@ -734,87 +739,21 @@ $active = function ($field) use ($data_fields) {
                         <label for="contact-button-false"><?= lang('common.disabled_features') ?></label>
                     </div>
                 </div>
-                <small class="text-muted">
-                    <?= lang('people.the_contact_button_will_be_displayed_on_your_osiris_profile_page_you_can_ch') ?>
-                </small>
-                <div class="form-row row-eq-spacing" style="display: none;" id="contact-button-settings">
-                    <div class="col-sm">
-                        <label for="contact-button-type"><?= lang('common.contact_type') ?></label>
-                        <select id="contact-button-type" name="values[contact-button-type]" class="form-control" onchange="toggleContact(this)">
-                            <?php foreach ($Settings->get('contact-button')->getArrayCopy() as $type => $enabled) {
-                                if (!$enabled) continue; ?>
-                                <option value="<?= $type ?>" <?= $contact_button_type == $type ? 'selected' : '' ?>><?= ucfirst($type) ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="col-sm">
-                        <label for="contact"><?= lang('common.contact') ?></label>
-                        <input type="text" name="values[contact]" id="contact-button-input" class="form-control need-validation" data-validator="contact" value="<?= $data['contact'] ?? '' ?>" oninput="validateContact(this)">
-                        <small class="text-muted" id="contact-button-input-help"></small>
-                    </div>
+                <small class="d-block text-muted"><?= lang('people.the_button_uses_the_contact_details_in_your_profile_that_your_organisation_allows_oth') ?></small>
+                <div id="contact-button-settings" class="mt-10" <?= $contact_button ? '' : 'hidden' ?>>
+                    <label for="contact-button-type"><?= lang('people.preferred_contact_method') ?></label>
+                    <select id="contact-button-type" name="values[contact-button-type]" class="form-control" <?= $contactMethods ? '' : 'disabled' ?>>
+                        <?php foreach ($contactMethods as $type => $url) { ?>
+                            <option value="<?= $type ?>" <?= $preferredContact === $type ? 'selected' : '' ?>><?= e($contactLabels[$type]) ?></option>
+                        <?php } ?>
+                    </select>
+                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= lang('people.no_permitted_contact_details_are_available_add_an_email_address_or_a_slack_teams_or_m') ?></small>
                 </div>
-                <script>
-                    $(document).ready(function() {
-                        function toggleContactButtonSettings() {
-                            if ($('#contact-button-true').is(':checked')) {
-                                $('#contact-button-settings').show();
-                                toggleContact($('#contact-button-type'));
-                            } else {
-                                $('#contact-button-settings').hide();
-                            }
-                        }
-                        toggleContactButtonSettings();
-                        $('input[name="values[contact-button]"]').change(toggleContactButtonSettings);
-                    });
-
-                    function toggleContact(select) {
-                        var type = $(select).val();
-                        var contactInput = $('#contact-button-input');
-                        var contactHelp = $('#contact-button-input-help');
-                        if (type === 'mail' || type === 'teams') {
-                            contactInput.attr('placeholder', '<?= lang('people.enter_email_address') ?>');
-                            contactHelp.text('<?= lang('people.please_add_an_email_address_it_will_be_used_for_the_contact_button') ?>');
-                            if (('<?= $data['contact-button-type'] ?? false ?>' === 'mail' || '<?= $data['contact-button-type'] ?? false ?>' === 'teams') && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else if ('<?= $data['mail'] ?? false ?>') {
-                                contactInput.val('<?= $data['mail'] ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'slack') {
-                            contactInput.attr('placeholder', '<?= lang('people.enter_slack_user_id') ?>');
-                            contactHelp.text('<?= lang('people.please_add_a_slack_user_id_in_the_format_u12345678_it_will_be_used_for_the') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'slack' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'matrix') {
-                            contactInput.attr('placeholder', '<?= lang('people.enter_matrix_id') ?>');
-                            contactHelp.text('<?= lang('people.please_add_a_matrix_id_in_the_format_username_server_it_will_be_used_for_th') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'matrix' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else if ('<?= $data['socials']['matrix'] ?? false ?>') {
-                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
-                                matrix = '<?= $data['socials']['matrix'] ?? '' ?>';
-                                matrixId = matrix.includes('/#/') ? matrix.split('/#/')[1] : matrix;
-                                contactInput.val(matrixId);
-                            } else {
-                                contactInput.val('');
-                            }
-                        } else if (type === 'other') {
-                            contactInput.attr('placeholder', '<?= lang('people.enter_contact_url') ?>');
-                            contactHelp.text('<?= lang('people.please_add_a_contact_url_it_will_be_used_for_the_contact_button') ?>');
-                            if ('<?= $data['contact-button-type'] ?? false ?>' === 'other' && '<?= $data['contact'] ?? false ?>') {
-                                contactInput.val('<?= $data['contact'] ?? '' ?>');
-                            } else {
-                                contactInput.val('');
-                            }
-                        }
-                        validateContact(contactInput);
-                    }
-                </script>
             </div>
+            <script>
+                const allowedContactMethods = <?= json_encode($contactSettings, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+                const contactMethodLabels = <?= json_encode($contactLabels, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+            </script>
         <?php } ?>
 
     </section>
@@ -822,6 +761,18 @@ $active = function ($field) use ($data_fields) {
 
 
     <section id="account" style="display:none;">
+        <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && osirisOAuthEnabled()
+            && $data['username'] === ($_SESSION['username'] ?? '')
+            && ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']) { ?>
+            <h5><?= e(osirisOAuthLabel()) ?></h5>
+            <?php if (osirisOAuthLinked($data)) { ?>
+                <p><?= lang('people.this_profile_is_linked_to_single_sign_on_you_can_also_log_in_with_your_osiris_usernam') ?></p>
+            <?php } else { ?>
+                <p><?= lang('people.link_your_existing_profile_to_use_single_sign_on_as_an_additional_login_option') ?></p>
+                <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= lang('people.link_single_sign_on') ?></a>
+            <?php } ?>
+        <?php } ?>
+
         <h2 class="title">
             <?= lang('people.account_settings') ?>
         </h2>
@@ -837,18 +788,26 @@ $active = function ($field) use ($data_fields) {
         <?php } ?>
 
         <?php if (
-            USER_MANAGEMENT == 'AUTH' &&
-            $data['username'] == ($_SESSION['realuser'] ?? $_SESSION['username'])
-        ) { ?>
+            strtoupper(USER_MANAGEMENT) === 'AUTH' &&
+            $data['username'] === ($_SESSION['username'] ?? '') &&
+            ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']
+        ) {
+            $localAccount = $osiris->accounts->findOne(['username' => $data['username']]);
+            $hasLocalPassword = !empty($localAccount['password']);
+        ?>
 
             <h5>
-                <?= lang('people.change_password') ?>
+                <?= $hasLocalPassword ? lang('people.change_password') : lang('people.set_osiris_password') ?>
             </h5>
 
+            <?php if ($hasLocalPassword) { ?>
             <div class="form-group">
                 <label for="old_password"><?= lang('people.old_password') ?></label>
-                <input type="password" name="old_password" id="old_password" class="form-control">
+                <input type="password" name="old_password" id="old_password" class="form-control" autocomplete="current-password">
             </div>
+            <?php } else { ?>
+                <p><?= lang('people.set_a_local_password_to_log_in_even_when_single_sign_on_is_unavailable_your_osiris_us') ?> <strong><?= e($data['username']) ?></strong></p>
+            <?php } ?>
 
             <div class="form-row row-eq-spacing">
                 <div class="col-sm-6">
@@ -1067,6 +1026,27 @@ $active = function ($field) use ($data_fields) {
                 });
             </script>
 
+            <?php if ($Settings->featureEnabled('resource-hub')) {
+                $homeScreen = in_array(($data['home_screen'] ?? 'home'), ['home', 'resource-hub'], true)
+                    ? ($data['home_screen'] ?? 'home')
+                    : 'home';
+            ?>
+                <h5><?= lang('people.start_screen') ?></h5>
+                <p class="text-muted">
+                    <?= lang('people.choose_which_page_opens_when_you_start_osiris') ?>
+                </p>
+                <div class="form-group">
+                    <div class="custom-radio d-inline-block mr-20">
+                        <input type="radio" name="values[home_screen]" id="home-screen-home" value="home" <?= $homeScreen === 'home' ? 'checked' : '' ?>>
+                        <label for="home-screen-home"><?= lang('people.osiris_home') ?></label>
+                    </div>
+                    <div class="custom-radio d-inline-block mr-20">
+                        <input type="radio" name="values[home_screen]" id="home-screen-resource-hub" value="resource-hub" <?= $homeScreen === 'resource-hub' ? 'checked' : '' ?>>
+                        <label for="home-screen-resource-hub"><?= e($Settings->resourceHubLabel()) ?></label>
+                    </div>
+                </div>
+            <?php } ?>
+
 
             <h5>
                 <?= lang('people.display_of_activities') ?>
@@ -1256,7 +1236,7 @@ $active = function ($field) use ($data_fields) {
                 <div class="input-group d-inline-flex w-auto mr-5 mb-10">
                     <input type="text" name="values[expertise][]" value="<?= $n ?>" list="expertise-list" required class="form-control">
                     <div class="input-group-append">
-                        <a class="btn" onclick="$(this).closest('.input-group').remove();">&times;</a>
+                        <a class="btn" onclick="$(this).closest('.input-group').remove(); updateContactMethods();">&times;</a>
                     </div>
                 </div>
             <?php } ?>

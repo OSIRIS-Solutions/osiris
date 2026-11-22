@@ -595,9 +595,37 @@ Route::post('/crud/users/update/(.*)', function ($user) {
 
     // separate personal and account information
     $person = $values;
+    // Authentication identity can only be changed by the dedicated linking flow.
+    foreach (array_keys($person) as $key) {
+        if ($key === 'sso' || str_starts_with($key, 'sso.')) unset($person[$key]);
+    }
+    if (isset($person['home_screen'])) {
+        $allowedHomeScreens = ['home', 'resource-hub'];
+        if (!in_array($person['home_screen'], $allowedHomeScreens, true)) {
+            $person['home_screen'] = 'home';
+        }
+    }
     // $account = [];
     // get old value for rendering
     $old = $DB->getPerson($user);
+    if (osirisOAuthLinked($old)) {
+        unset($person['mail']);
+    }
+
+    $contactProfile = array_merge($old, $person);
+    $validLinks = getProfileContactMethods($contactProfile, array_fill_keys(['mail', 'slack', 'teams', 'matrix'], true));
+    foreach (['slack', 'teams', 'matrix'] as $type) {
+        $value = $person['socials'][$type] ?? null;
+        if (!empty($value) && !isset($validLinks[$type])) {
+            abortwith(400, lang('people.please_enter_a_valid_contact_url'));
+        }
+    }
+    if (array_key_exists('contact-button', $person)) {
+        $person['contact-button'] = filter_var($person['contact-button'], FILTER_VALIDATE_BOOLEAN);
+        $availableContacts = getProfileContactMethods($contactProfile, DB::doc2Arr($Settings->get('contact-button', [])));
+        $preferredContact = $person['contact-button-type'] ?? $old['contact-button-type'] ?? 'mail';
+        $person['contact-button-type'] = is_string($preferredContact) && isset($availableContacts[$preferredContact]) ? $preferredContact : array_key_first($availableContacts);
+    }
 
     // update name information
     if (isset($values['last']) && isset($values['first'])) {
@@ -655,26 +683,28 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     // if new password is set, update password
-    if (isset($_POST['password']) && !empty($_POST['password']) && $user == $_SESSION['username']) {
+    if (strtoupper(USER_MANAGEMENT) === 'AUTH' && is_string($_POST['password'] ?? null) && $_POST['password'] !== ''
+        && $user === $_SESSION['username'] && ($_SESSION['realuser'] ?? $user) === $user) {
         // check if old password matches
         $account = $osiris->accounts->findOne(['username' => $user]);
-        if (!empty($account['password'] ?? null) && !password_verify($_POST['old_password'], $account['password'])) {
+        if (!empty($account['password'] ?? null) && !password_verify(is_string($_POST['old_password'] ?? null) ? $_POST['old_password'] : '', $account['password'])) {
             $_SESSION['msg'] = lang('people.old_password_is_incorrect');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
-        } else if ($_POST['password'] != $_POST['password2']) {
+        } else if ($_POST['password'] !== ($_POST['password2'] ?? null)) {
             $_SESSION['msg'] = lang('common.passwords_do_not_match');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
         } else {
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $osiris->accounts->deleteOne(['username' => $user]);
-            $osiris->accounts->insertOne([
-                'username' => $user,
-                'password' => $password
-            ]);
+            $osiris->accounts->updateOne(
+                ['username' => $user],
+                ['$set' => ['password' => $password], '$unset' => ['hash' => '', 'reset' => '']],
+                ['upsert' => true]
+            );
+            $osiris->rememberTokens->deleteMany(['username' => $user]);
             $osiris->persons->updateOne(
                 ['username' => $user],
                 ['$unset' => ['new' => '']]
@@ -697,6 +727,28 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     // set orcid_validated to false if orcid is changed while orcid validaiton is disabled
     if (isset($values['orcid']) && $values['orcid'] != ($old['orcid'] ?? null) && !$Settings->featureEnabled('orcid')) {
         $person['orcid_validated'] = false;
+    }
+
+    // social media validation
+    $socialMedia = json_decode(file_get_contents(BASEPATH . "/data/social-media.json"), true);
+    if (isset($values['socials']) && is_array($values['socials'])) {
+        foreach ($values['socials'] as $type => $value) {
+            if (isset($socialMedia[$type])) {
+                $pattern = $socialMedia[$type]['validator'] ?? null;
+                $profileUrl = $socialMedia[$type]['profileUrl'] ?? '';
+                if ($pattern) {
+                    $regex = '~' . $pattern . '~i';
+                    if (preg_match($regex, trim($value), $matches) === 1) {
+                        $username = $matches['username'] ?? null;
+                        if ($username) {
+                            $person['socials'][$type] = $profileUrl . $username;
+                            continue; // skip setting to null if a valid username was found
+                        }
+                    }
+                }
+            }
+            $person['socials'][$type] = null; // set to null if no valid username was found
+        }
     }
 
     $updateResult = $osiris->persons->updateOne(
@@ -1157,7 +1209,8 @@ Route::post('/crud/queries', function () {
         'aggregate_value' => $_POST['aggregate_value'] ?? null,
         'columns' => $_POST['columns'] ?? null,
         'type' => $_POST['type'] ?? 'activity',
-        'expert' => (($_POST['expert'] ?? 'false') == 'true')
+        'expert' => (($_POST['expert'] ?? 'false') == 'true'),
+        'collection' => $_POST['collection'] ?? null,
     ]);
     return $updateResult->getInsertedId();
 });
@@ -1310,6 +1363,14 @@ Route::post('/crud/users/set-preference', function () {
     $value = $_POST['value'] ?? null;
     if (empty($key)) {
         abortwith(400, lang('people.no_preference_key_provided'));
+    }
+    $allowedPreferences = [
+        'activity_view' => ['new', 'legacy'],
+        'resource_hub_view' => ['cards', 'image-map'],
+        'home_screen' => ['home', 'resource-hub'],
+    ];
+    if (!isset($allowedPreferences[$key]) || !in_array($value, $allowedPreferences[$key], true)) {
+        abortwith(400, lang('people.invalid_preference'));
     }
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],

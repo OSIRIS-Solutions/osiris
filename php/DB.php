@@ -160,6 +160,7 @@ class DB
     }
     function notifications($force = false, $user = null)
     {
+        $Settings = new Settings;
         $notifications = [
             'approval' => lang('common.approval_of_activities'),
             'epub' => '<em>Online ahead of print</em>-' . lang('common.publications'),
@@ -170,6 +171,7 @@ class DB
             'infrastructure' => lang('common.updating_infrastructures'),
             'rejected' => lang('common.rejected_activities'),
             'nagoya' => lang('common.nagoya_protocol_compliance'),
+            'news-editorial' => lang('common.news_editorial'),
         ];
 
         $now = time();
@@ -184,6 +186,7 @@ class DB
         if (!isset($scientist)) {
             $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
         }
+        $roles = DB::doc2Arr($scientist['roles'] ?? []);
 
         // Immer: aktuelles Notifications-Dokument laden (falls vorhanden)
         $existing = $this->db->notifications->findOne(['user' => $user]);
@@ -234,19 +237,40 @@ class DB
             // $scientist = $this->db->persons->findOne(['username' => $user], ['projection' => ['lastversion' => 1, 'approved' => 1, 'roles' => 1]]);
             // if (lang('common.this_language') == 'de' && (empty($scientist['lastversion'] ?? '') || $scientist['lastversion'] !== OSIRIS_VERSION)) {
             //     $issues['version'] = [
-            //         'name' => lang('New version available', 'Neue Version verfügbar'),
+            //         'name' => lang('common.new_version_available'),
             //         'count' => 1,
             //         'key' => 'version',
             //     ];
             //     $hasNotification += 1;
             // }
+            if (!isset($_SESSION['username'])) return false;
+            $permission = $this->db->adminRights->findOne([
+                'role' => ['$in' => $roles],
+                'right' => 'news.editorial',
+                'value' => true
+            ]);
+            $permission = !empty($permission);
+            if ($permission && $this->featureEnabled('news-editorial')) {
+                $count = $this->db->news->countDocuments([
+                    'internal_only' => ['$ne' => true],
+                    'outlet_requests.status' => [
+                        '$in' => ['requested', 'in_progress', 'ready']
+                    ]
+                ]);
+                if ($count > 0) {
+                    $issues['news-editorial'] = [
+                        'name' => lang('common.news_editorial'),
+                        'count' => $count,
+                        'key' => 'news-editorial'
+                    ];
+                }
+            }
 
             // Prüfe auf Quartalsfreigabe
             $reportingEnabled = $this->db->adminFeatures->findOne(['feature' => 'quarterly-reporting']);
             $reportingEnabled = $reportingEnabled['enabled'] ?? true;
             if ($reportingEnabled) {
                 $approvedQ = DB::doc2Arr($scientist['approved'] ?? []);
-                $roles = DB::doc2Arr($scientist['roles'] ?? []);
                 $lastquarter = $this->getLastQuarter();
                 if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
                     $issues['approval'] = [
@@ -1221,7 +1245,7 @@ class DB
         echo self::getLogo($item, $class, $alt);
     }
 
-    
+
     public static function build_person_search_text(array $p): string
     {
         $parts = [];
@@ -1247,5 +1271,4 @@ class DB
 
         return $text;
     }
-
 }

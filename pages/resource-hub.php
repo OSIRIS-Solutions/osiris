@@ -93,6 +93,21 @@ foreach ($cards as $index => $rawCard) {
 
 $preferredView = (string) ($USER['resource_hub_view'] ?? 'cards');
 $currentView = $hasImageMap && $preferredView === 'image-map' ? 'image-map' : 'cards';
+$requestedCardId = trim((string) ($_GET['card'] ?? ''));
+$targetCardId = '';
+$targetCardHasPlacement = false;
+foreach ($displayCards as $card) {
+    if ($requestedCardId !== '' && hash_equals($card['id'], $requestedCardId)) {
+        $targetCardId = $card['id'];
+        $targetCardHasPlacement = $card['x'] !== null && $card['y'] !== null;
+        break;
+    }
+}
+// An unplaced card cannot be shown on the image map. Show its card without
+// changing the user's saved preference.
+if ($targetCardId !== '' && $currentView === 'image-map' && !$targetCardHasPlacement) {
+    $currentView = 'cards';
+}
 $hubIcon = $Settings->resourceHubIcon();
 ?>
 
@@ -100,11 +115,16 @@ $hubIcon = $Settings->resourceHubIcon();
     /* hide top navbar here */
     .page-wrapper > .navbar-top { display: none; }
     .resource-hub-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+    .resource-hub-home-prompt { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .resource-hub-home-prompt-copy { min-width: 0; }
+    .resource-hub-home-prompt-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: .5rem; }
+    .resource-hub-home-prompt-actions form { margin: 0; }
     .resource-hub-card-heading h1 { margin: 0; }
     .resource-hub-heading-copy { min-width: 0; }
     .resource-hub-card-description { max-width: 60rem; margin: .4rem 0 0; color: var(--muted-color); line-height: 1.4; }
     #resource-hub-card-view > [class^="col"] { display: flex; }
-    .resource-hub-card { display: flex; flex-direction: column; width: 100%; padding: 2rem; margin-bottom: 2rem; }
+    .resource-hub-card { display: flex; flex-direction: column; width: 100%; padding: 2rem; margin-bottom: 2rem; transition: border-color .2s ease, box-shadow .2s ease; }
+    .resource-hub-card.is-targeted { border-color: var(--primary-color); box-shadow: 0 0 0 .3rem var(--primary-color-20), 0 .8rem 2.4rem rgba(0, 0, 0, .12); }
     .resource-hub-card-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
     .resource-hub-card-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 4.5rem; width: 4.5rem; height: 4.5rem; color: var(--primary-color); background: var(--primary-color-20); border-radius: 50%; font-size: 2.4rem; }
     .resource-hub-card-title { margin: 0; overflow-wrap: anywhere; }
@@ -127,20 +147,49 @@ $hubIcon = $Settings->resourceHubIcon();
     .resource-hub-hotspot-label { position: absolute; top: 50%; width: max-content; max-width: 18rem; padding: .7rem 1rem; overflow: hidden; color: var(--text-color); background: #ffffffa0; border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); box-shadow: 0 .15rem .6rem rgba(0, 0, 0, .2); font-size: 1.2rem; font-weight: 600; line-height: 1.2; text-align: left; text-overflow: ellipsis; white-space: nowrap; transform: translateY(-50%); transition: border-color .15s ease, box-shadow .15s ease; }
     .resource-hub-hotspot.label-right .resource-hub-hotspot-label { left: calc(100% + .5rem); }
     .resource-hub-hotspot.label-left .resource-hub-hotspot-label { right: calc(100% + .5rem); }
-    .resource-hub-hotspot:hover, .resource-hub-hotspot:focus, .resource-hub-hotspot.active { z-index: 3; color: var(--box-bg-color); background: var(--primary-color); transform: translate(-50%, -50%) scale(1.12); }
-    .resource-hub-hotspot:hover .resource-hub-hotspot-label, .resource-hub-hotspot:focus .resource-hub-hotspot-label, .resource-hub-hotspot.active .resource-hub-hotspot-label { border-color: var(--primary-color); box-shadow: 0 .2rem .8rem rgba(0, 0, 0, .28); background: var(--box-bg-color); }
+    .resource-hub-hotspot:hover, .resource-hub-hotspot:focus, .resource-hub-hotspot.active, .resource-hub-hotspot.is-targeted { z-index: 3; color: var(--box-bg-color); background: var(--primary-color); transform: translate(-50%, -50%) scale(1.12); }
+    .resource-hub-hotspot:hover .resource-hub-hotspot-label, .resource-hub-hotspot:focus .resource-hub-hotspot-label, .resource-hub-hotspot.active .resource-hub-hotspot-label, .resource-hub-hotspot.is-targeted .resource-hub-hotspot-label { border-color: var(--primary-color); box-shadow: 0 .2rem .8rem rgba(0, 0, 0, .28); background: var(--box-bg-color); }
     .resource-hub-popover { width: 24rem; max-width: calc(100vw - 2rem); }
     .resource-hub-popover .popover-title { font-size: 1.2rem; }
     .resource-hub-popover-title { display: flex; align-items: center; gap: .5rem; }
     .resource-hub-popover-title i { color: var(--primary-color); font-size: 1.8rem !important; }
     .resource-hub-popover-content { line-height: 1.45; font-size: 1.2rem;}
     @media (max-width: 767px) {
+        .resource-hub-home-prompt { align-items: flex-start; flex-direction: column; }
         .resource-hub-card-heading { align-items: flex-start; }
         .resource-hub-image-heading { padding: 1rem; }
         .resource-hub-image-heading h1 { font-size: 2rem; }
         .resource-hub-image-description { max-width: 28rem; font-size: 1.2rem; }
     }
 </style>
+
+<?php if (!isset($USER['home_screen']) || !in_array($USER['home_screen'], ['home', 'resource-hub'], true)) { ?>
+    <div class="alert primary resource-hub-home-prompt">
+        <div class="resource-hub-home-prompt-copy">
+            <b><?= lang('common.use_this_as_your_start_screen') ?></b><br>
+            <span><?= lang('common.would_you_like_to_open_this_page_whenever_you_start_osiris') ?></span>
+        </div>
+        <div class="resource-hub-home-prompt-actions">
+            <form action="<?= ROOTPATH ?>/crud/users/set-preference" method="post">
+                <input type="hidden" name="key" value="home_screen">
+                <input type="hidden" name="value" value="resource-hub">
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/hub">
+                <button type="submit" class="btn small primary">
+                    <i class="ph ph-house" aria-hidden="true"></i>
+                    <?= lang('common.use_as_start_screen') ?>
+                </button>
+            </form>
+            <form action="<?= ROOTPATH ?>/crud/users/set-preference" method="post">
+                <input type="hidden" name="key" value="home_screen">
+                <input type="hidden" name="value" value="home">
+                <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/hub">
+                <button type="submit" class="btn small">
+                    <?= lang('common.keep_osiris_home') ?>
+                </button>
+            </form>
+        </div>
+    </div>
+<?php } ?>
 
 <div id="resource-hub-card-heading" class="resource-hub-card-heading <?= $currentView === 'cards' ? '' : 'd-none' ?>">
     <div class="resource-hub-heading-copy">
@@ -183,7 +232,7 @@ $hubIcon = $Settings->resourceHubIcon();
     <div id="resource-hub-card-view" class="row row-eq-spacing <?= $currentView === 'cards' ? '' : 'd-none' ?>">
         <?php foreach ($displayCards as $card) { ?>
             <div class="col-md-6 col-xl-4">
-                <article class="card resource-hub-card" id="resource-hub-card-<?= e($card['id']) ?>">
+                <article class="card resource-hub-card <?= $targetCardId === $card['id'] ? 'is-targeted' : '' ?>" id="resource-hub-card-<?= e($card['id']) ?>" data-resource-card-id="<?= e($card['id']) ?>">
                     <header class="resource-hub-card-header">
                         <?php if ($card['icon'] !== '') { ?><span class="resource-hub-card-icon"><i class="ph ph-<?= e($card['icon']) ?>" aria-hidden="true"></i></span><?php } ?>
                         <?php if ($card['title'] !== '') { ?><h2 class="resource-hub-card-title"><?= e($card['title']) ?></h2><?php } ?>
@@ -229,7 +278,7 @@ $hubIcon = $Settings->resourceHubIcon();
                         $markerIcon = $card['icon'] !== '' ? $card['icon'] : 'map-pin';
                         $labelSide = $card['x'] > 65 ? 'label-left' : 'label-right';
                     ?>
-                        <button type="button" class="resource-hub-hotspot <?= $labelSide ?>" style="left: <?= number_format($card['x'], 2, '.', '') ?>%; top: <?= number_format($card['y'], 2, '.', '') ?>%;" data-popover-id="resource-hub-popover-<?= $index ?>" aria-label="<?= e($card['title'] !== '' ? $card['title'] : lang('common.open_resource')) ?>">
+                        <button type="button" class="resource-hub-hotspot <?= $labelSide ?> <?= $targetCardId === $card['id'] ? 'is-targeted' : '' ?>" style="left: <?= number_format($card['x'], 2, '.', '') ?>%; top: <?= number_format($card['y'], 2, '.', '') ?>%;" data-popover-id="resource-hub-popover-<?= $index ?>" data-resource-card-id="<?= e($card['id']) ?>" aria-label="<?= e($card['title'] !== '' ? $card['title'] : lang('common.open_resource')) ?>">
                             <i class="ph ph-<?= e($markerIcon) ?>" aria-hidden="true"></i>
                             <?php if ($card['title'] !== '') { ?>
                                 <span class="resource-hub-hotspot-label"><?= e($card['title']) ?></span>
@@ -278,6 +327,7 @@ $hubIcon = $Settings->resourceHubIcon();
             const imageView = document.getElementById('resource-hub-image-view');
             const hotspots = $('.resource-hub-hotspot');
             let currentView = <?= json_encode($currentView) ?>;
+            const targetCardId = <?= json_encode($targetCardId) ?>;
 
             hotspots.popover({
                 placement: 'auto top',
@@ -318,6 +368,25 @@ $hubIcon = $Settings->resourceHubIcon();
                 });
             }
 
+            function revealTarget() {
+                if (!targetCardId) return;
+
+                if (currentView === 'image-map') {
+                    const targetHotspot = hotspots.filter(function() {
+                        return this.dataset.resourceCardId === targetCardId;
+                    }).first();
+                    if (!targetHotspot.length) return;
+                    targetHotspot.get(0).scrollIntoView({ block: 'center', inline: 'center' });
+                    targetHotspot.popover('show').addClass('active is-targeted');
+                    return;
+                }
+
+                const targetCard = Array.from(document.querySelectorAll('[data-resource-card-id]')).find(function(element) {
+                    return element.classList.contains('resource-hub-card') && element.dataset.resourceCardId === targetCardId;
+                });
+                if (targetCard) targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
             function setResourceHubView(view) {
                 if (view !== 'cards' && view !== 'image-map') return;
                 cardHeading.classList.toggle('d-none', view !== 'cards');
@@ -328,6 +397,7 @@ $hubIcon = $Settings->resourceHubIcon();
                     currentView = view;
                     savePreference(view);
                 }
+                requestAnimationFrame(revealTarget);
             }
 
             viewButtons.forEach(function(button) {
@@ -335,6 +405,20 @@ $hubIcon = $Settings->resourceHubIcon();
                     setResourceHubView(button.dataset.resourceHubView);
                 });
             });
+
+            requestAnimationFrame(revealTarget);
         })();
+    </script>
+<?php } ?>
+
+<?php if ($targetCardId !== '' && !$hasImageMap) { ?>
+    <script>
+        requestAnimationFrame(function() {
+            const targetCardId = <?= json_encode($targetCardId) ?>;
+            const targetCard = Array.from(document.querySelectorAll('.resource-hub-card')).find(function(card) {
+                return card.dataset.resourceCardId === targetCardId;
+            });
+            if (targetCard) targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
     </script>
 <?php } ?>

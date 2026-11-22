@@ -399,108 +399,99 @@ function validateORCID(element) {
     }
 }
 
-// allowed social media domains
-const socialHostRules = {
-    github: ['github.com', 'www.github.com'],
-    linkedin: ['linkedin.com', 'www.linkedin.com', 'de.linkedin.com'],
-    researchgate: ['researchgate.net', 'www.researchgate.net'],
-    youtube: ['youtube.com', 'www.youtube.com', 'youtu.be'],
-    mastodon: [], // hard to pin to one domain; allow any valid URL
-    bluesky: ['bsky.app', 'www.bsky.app'],
-    instagram: ['instagram.com', 'www.instagram.com'],
-    facebook: ['facebook.com', 'www.facebook.com', 'fb.com', 'www.fb.com'],
-    x: ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'],
-    matrix: ['matrix.to', 'www.matrix.to'],
-    website: [] // personal website: allow any valid URL
-};
+async function loadSocialMediaConfig() {
+    try {
+        const response = await fetch('/data/social-media');
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        const socialMediaConfig = await response.json();
+        return socialMediaConfig;
 
-function validateSocial(element){
+    } catch (error) {
+        console.error('Could not load social media configuration:', error);
+        return null;
+    }
+}
+
+let socialMedia = null;
+async function initSocialMedia() {
+    socialMedia = await loadSocialMediaConfig();
+}
+
+function validateSocial(element) {
     let msg = '';
     const name = $(element).attr('name') || '';
     const match = name.match(/\[socials\]\[([^\]]+)\]/i);
     if (!match) return [true, msg];
 
-    const type = match[1].toLowerCase();
-    const url = String($(element).val() || '').trim();
+    const socialType = match[1].toLowerCase();
+    const socialValue = String($(element).val() || '').trim();
 
-    if (url === '') {
+    if (socialValue === '') {
         $(element).toggleClass('is-invalid', false);
         return [true, msg];
     }
 
-    
-    let parsedUrl;
-    try {
-        parsedUrl = new URL(url);
-    } catch (e) {
-        msg = lang(`Socials: ${type} - please enter a valid URL.`, `Soziale Medien: ${type} - bitte geben Sie eine gültige URL ein.`);
-        $(element).toggleClass('is-invalid', true);
-        return [false, msg];
+    const social = socialMedia[socialType];
+    if (!social) {
+        return [true, msg];
     }
 
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-        msg = lang(`Socials: ${type} - URL must start with http:// or https://`, `Soziale Medien: ${type} - URL muss mit http:// oder https:// beginnen`);
-        $(element).toggleClass('is-invalid', true);
-        return [false, msg];
+    const pattern = social.validator;
+
+    if (!pattern) {
+        $(element).toggleClass('is-invalid', false);
+        return [true, msg];
     }
 
-    if (socialHostRules[type] && socialHostRules[type].length > 0) {
-        const hostname = parsedUrl.hostname;
-        if (!socialHostRules[type].includes(hostname)) {
-            msg = lang(`Socials: ${type} - URL must point to ${socialHostRules[type].join(', ')}`, `Soziale Medien: ${type} - URL muss auf ${socialHostRules[type].join(', ')} zeigen`);
-            $(element).toggleClass('is-invalid', true);
-            return [false, msg];
-        };
+    const regex = new RegExp(pattern);
+    if (regex.test(socialValue)) {
+        $(element).toggleClass('is-invalid', false);
+        return [true, msg];
     }
 
-    $(element).toggleClass('is-invalid', false);
-    return [true, msg];
+    // Invalid value
+    msg = 'Invalid ' + socialType + ' value';
+    $(element).toggleClass('is-invalid', true);
+    return [false, msg];
 }
 
-function validateContact(element) {
-    const contactType = $('#contact-button-type').val();
-    const contactValue = $(element).val().trim();
-
-    if (contactValue === '') {
-        $(element).toggleClass('is-invalid', true);
-        $(element).toggleClass('is-valid', false);
-        return [true, ''];
-    }
-    
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (contactType === 'mail' || contactType === 'teams') {
-        if (!emailPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('people.please_enter_a_valid_email_address')];
+// Keep the preference list in sync with the profile fields, including unsaved changes.
+function updateContactMethods() {
+    if (typeof allowedContactMethods === 'undefined') return;
+    const select = $('#contact-button-type');
+    const preferred = select.val();
+    select.empty();
+    Object.keys(contactMethodLabels).forEach(type => {
+        if (![true, 1, '1'].includes(allowedContactMethods[type])) return;
+        const input = type === 'mail' ? $('#mail') : $(`#socials input[name="values[socials][${type}]"]`);
+        const value = String(input.val() || '').trim();
+        if (!value) return;
+        if (type === 'mail') {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return;
+        } else {
+            const social = socialMedia[type];
+            if (!social) return;
+            const pattern = social.validator;
+            if (!pattern) return;
+            const regex = new RegExp(pattern);
+            if (!regex.test(value)) return;
         }
-    } else if (contactType === 'slack') {
-        const slackPattern = /^[a-zA-Z0-9._-]+$/;
-        if (!slackPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('people.please_enter_a_valid_slack_username')];
-        }
-    } else if (contactType === 'matrix') {
-        const matrixPattern = /^@.+:.+$/;
-        if (!matrixPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('people.please_enter_a_valid_matrix_id')];
-        }
-    } else if (contactType === 'other') {
-        const urlPattern = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(\/[\w-]*)*\/?$/;
-        if (!urlPattern.test(contactValue)) {
-            $(element).toggleClass('is-invalid', true);
-            $(element).toggleClass('is-valid', false);
-            return [false, lang('people.please_enter_a_valid_url')];
-        }
-    }
-
-    $(element).toggleClass('is-invalid', false);
-    $(element).toggleClass('is-valid', true);
-    return [true, ''];
+        select.append($('<option>').val(type).text(contactMethodLabels[type]));
+    });
+    const types = select.find('option').map((_, option) => option.value).get();
+    select.val(types.includes(preferred) ? preferred : types[0]);
+    select.prop('disabled', !types.length);
+    $('#contact-methods-empty').prop('hidden', !!types.length);
 }
+
+$(document).ready(function () {
+    $('input[name="values[contact-button]"]').on('change', function () {
+        $('#contact-button-settings').prop('hidden', !$('#contact-button-true').is(':checked'));
+    });
+    $(document).on('input change', '#mail, #socials input', updateContactMethods);
+});
 
 function cleanEmptySocials() {
     $('#socials input').each(function() {
@@ -537,8 +528,7 @@ const validators = {
     password: validatePassword,
     password2: validatePassword2,
     email: validateEmail,
-    telephone: validateTelephone,
-    contact: validateContact
+    telephone: validateTelephone
 }
 
 
@@ -547,6 +537,10 @@ function validateUserForm(event) {
     let firstInvalidElement = null;
     
     $('.need-validation').each(function() {
+        // Ignore elements with 'disabled' attribute
+        if ($(this).is(':disabled')) {
+            return;
+        }
         const validatorName = $(this).data('validator');
         const validator = validators[validatorName];
         if (validator) {

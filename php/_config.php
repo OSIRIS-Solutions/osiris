@@ -932,6 +932,7 @@ function getFileIcon($type)
         case 'gif':
         case 'jpg':
         case 'jpeg':
+        case 'svg':
             return 'file-image';
         case 'mp4':
         case 'mpeg':
@@ -991,6 +992,47 @@ function lastDayOf($period, $date = null)
     return $newDate;
 }
 
+/** Available contact links from profile details, in fallback order. */
+function getProfileContactMethods($person, $allowed): array
+{
+    $socials = $person['socials'] ?? [];
+    $values = [
+        'mail' => $person['mail'] ?? '',
+        'slack' => $socials['slack'] ?? '',
+        'teams' => $socials['teams'] ?? '',
+        'matrix' => $socials['matrix'] ?? ''
+    ];
+    $hosts = [
+        'slack' => ['slack.com'],
+        'teams' => ['teams.microsoft.com', 'teams.cloud.microsoft'],
+        'matrix' => ['matrix.to', 'www.matrix.to']
+    ];
+    $methods = [];
+    foreach ($values as $type => $value) {
+        if (!filter_var($allowed[$type] ?? false, FILTER_VALIDATE_BOOLEAN) || !is_string($value)) continue;
+        $value = trim($value);
+        if ($type === 'mail') {
+            if (filter_var($value, FILTER_VALIDATE_EMAIL)) $methods[$type] = 'mailto:' . $value;
+            continue;
+        }
+        // if (!filter_var($value, FILTER_VALIDATE_URL) || !in_array(strtolower(parse_url($value, PHP_URL_SCHEME) ?? ''), ['http', 'https'])) continue;
+        // $host = strtolower(parse_url($value, PHP_URL_HOST) ?? '');
+        // if (isset($hosts[$type]) && !in_array($host, $hosts[$type], true)
+        //     && !($type === 'slack' && str_ends_with($host, '.slack.com'))) continue;
+        $socialMedia = json_decode(file_get_contents(BASEPATH . "/data/social-media.json"), true);
+        if (isset($socialMedia[$type])) {
+            $pattern = $socialMedia[$type]['validator'] ?? null;
+            if ($pattern) {
+                $regex = '~' . $pattern . '~i';
+                if (preg_match($regex, $value)) {
+                    $methods[$type] = $value;
+                }
+            }
+        }
+    }
+    return $methods;
+}
+
 function socialLogo($type)
 {
     switch ($type) {
@@ -1014,6 +1056,8 @@ function socialLogo($type)
             return 'ph-facebook-logo';
         case 'X':
             return 'ph-x-logo';
+        case 'x':
+            return 'ph-x-logo';
         case 'matrix':
             return 'ph-matrix-logo';
         case 'website':
@@ -1030,6 +1074,12 @@ function socialLogo($type)
             return 'ph-slack-logo';
         case 'mail':
             return 'ph-envelope';
+        case 'telegram':
+            return 'ph-telegram-logo';
+        case 'reddit':
+            return 'ph-reddit-logo';
+        case 'tiktok':
+            return 'ph-tiktok-logo';
         default:
             return 'ph-link';
     }

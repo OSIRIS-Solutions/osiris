@@ -406,7 +406,7 @@ function val($index, $default = '')
     if (
         !empty($orcid['client_id'])
         && !empty($orcid['client_secret'])
-        && (isset($user['orcid_validated']) && $user['orcid_validated'])
+        && ($user['orcid_validated'] ?? false)
     ) { ?>
         <a href="<?= ROOTPATH ?>/orcid/import" class="link mb-10 d-inline-block"><?= lang('activities.import_from_orcid') ?></a>
     <?php } ?>

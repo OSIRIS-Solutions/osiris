@@ -21,7 +21,7 @@ $formatSize = static function ($bytes): string {
     return number_format($bytes / (1024 * 1024), 1, ',', '.') . ' MB';
 };
 
-$acceptedFiles = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.rtf,.txt,.csv,.zip,.jpg,.jpeg,.png';
+$acceptedFiles = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.rtf,.txt,.csv,.zip,.jpg,.jpeg,.png,.svg';
 
 $filesize = Settings::getMaxFileSize('25M');
 ?>

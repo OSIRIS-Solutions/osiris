@@ -141,6 +141,7 @@
             <?php
             switch (strtoupper(USER_MANAGEMENT)) {
                 case 'AUTH':
+                case 'OAUTH':
             ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/authentication">
                         <i class="ph-duotone ph-users"></i>
@@ -180,9 +181,10 @@
             </a>
         </div>
     <?php endif; ?>
-    <?php if ($adminPerm) : ?>
+    <?php if ($adminPerm || $newsOutletsPerm) : ?>
         <div class="col-md-6 col-lg-4" id="content-settings">
             <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('admin.data_model_and_content') ?></h2>
+            <?php if ($adminPerm) { ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                 <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
                 <b><?= lang('common.activities') ?></b>
@@ -206,9 +208,18 @@
             <a class="card" href="<?= ROOTPATH ?>/admin/data-model">
                 <i class="ph-duotone ph-gear-six" aria-hidden="true"></i>
                 <b><?= lang('common.data_model') ?></b>
-                <p><?= lang('Manage other data model settings', 'Verwalte weitere Datenmodell-Einstellungen') ?></p>
+                <p><?= lang('admin.manage_other_data_model_settings') ?></p>
             </a>
 
+            <?php } ?> 
+
+            <?php if ($newsOutletsPerm) { ?>
+                <a class="card" href="<?= ROOTPATH ?>/admin/news">
+                    <i class="ph-duotone ph-newspaper" aria-hidden="true"></i>
+                    <b><?= lang('admin.news_outlets') ?></b>
+                    <p><?= lang('admin.manage_editorial_outlets_and_their_portfolio_output') ?></p>
+                </a>
+            <?php } ?>
         </div><?php endif; ?>
 
     <?php if ($adminPerm) : ?>
@@ -324,6 +335,12 @@
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
                 <b><?= lang('admin.php_info') ?></b>
                 <p><?= lang('admin.view_php_configuration_information') ?></p>
+            </a>
+
+            <a class="card" href="<?= ROOTPATH ?>/admin/logs">
+                <i class="ph-duotone ph-file-text" aria-hidden="true"></i>
+                <b><?= lang('admin.import_logs') ?></b>
+                <p><?= lang('admin.view_import_logs') ?></p>
             </a>
         </div>
     <?php endif; ?>

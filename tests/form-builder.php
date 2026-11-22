@@ -63,11 +63,22 @@ check(FormBuilder::prepareFields($moved, []) === $moved, 'Activities without sys
 FormBuilder::validateSystemFields([], []);
 
 // Render both variants with small stand-ins for unrelated application services.
-function lang($en, $de = null) { return $en; }
+require_once __DIR__ . '/fixtures/interface-language.php';
 function localized($value) { return is_array($value) ? $value['en'] : $value; }
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 $Settings = new class { public function getRoles() { return ['user', 'admin']; } };
-$osiris = (object) ['adminTypes' => new class { public function find() { return []; } }];
+$osiris = (object) ['adminTypes' => new class {
+    public function find($filter = []) {
+        $types = [
+            ['id' => 'example', 'name' => 'Current form', 'parent' => 'publications'],
+            ['id' => 'other', 'name' => 'A different category', 'parent' => 'events'],
+            ['id' => 'z', 'name' => 'Z article', 'parent' => 'publications'],
+            ['id' => 'a', 'name' => 'A article', 'parent' => 'publications'],
+        ];
+        $types = array_values(array_filter($types, fn($type) => $type['id'] !== ($filter['id']['$ne'] ?? null)));
+        return new class($types) extends ArrayIterator { public function toArray() { return $this->getArrayCopy(); } };
+    }
+}];
 set_error_handler(function ($severity, $message, $file, $line) {
     if (!(error_reporting() & $severity)) return false;
     throw new ErrorException($message, 0, $severity, $file, $line);
@@ -80,7 +91,7 @@ foreach (['initiatives', 'activities'] as $entity) {
         'modules' => ['title' => ['id' => 'title', 'name' => 'Title', 'type' => 'field', 'width' => 12]],
     ];
     $fields = [['id' => 'custom-example', 'type' => 'custom', 'props' => []]];
-    $type = ['id' => 'example', 'name' => 'Example'];
+    $type = ['id' => 'example', 'name' => 'Example', 'parent' => 'publications'];
     $copy = false;
     ob_start();
     include BASEPATH . '/pages/admin/form-builder.php';
@@ -91,6 +102,12 @@ foreach (['initiatives', 'activities'] as $entity) {
     if ($entity === 'initiatives') {
         check(str_contains($html, 'ph-lock-simple'), 'System fields must have a visible lock.');
         check(str_contains($html, 'const SYSTEM_FIELDS = ' . json_encode((object) FormBuilder::INITIATIVE_SYSTEM_FIELDS)), 'Trusted system rules must reach the UI.');
+    }
+    if ($entity === 'activities') {
+        check(!str_contains($html, 'Current form'), 'The current form cannot be copied onto itself.');
+        check(strpos($html, '>A article</option>') < strpos($html, '>Z article</option>')
+            && strpos($html, '>Z article</option>') < strpos($html, '>A different category</option>'),
+            'Copy choices retain category priority and alphabetical ordering.');
     }
     // Optional output for checking the rendered JavaScript syntax.
     if (isset($argv[1])) file_put_contents($argv[1] . '/' . $entity . '.html', $html);

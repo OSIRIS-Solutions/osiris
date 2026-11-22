@@ -349,7 +349,19 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                     <label for="load-form-select"><?= lang('admin.select_form') ?></label>
                     <select id="load-form-select" class="form-control" name="copy" required>
                         <option value="" disabled selected><?= lang('admin.select_a_form') ?></option>
-                        <?php foreach ($osiris->adminTypes->find() as $at): ?>
+                        <?php 
+                        $formTypes = $osiris->adminTypes->find(['id' => ['$ne' => $type['id']]])->toArray();
+                        $currentParent = $type['parent'] ?? null;
+                        usort($formTypes, static function ($a, $b) use ($currentParent) {
+                            $parentOrder = (($b['parent'] ?? null) === $currentParent)
+                                <=> (($a['parent'] ?? null) === $currentParent);
+                            return $parentOrder ?: strcasecmp(
+                                lang($a['name'], $a['name_de'] ?? null),
+                                lang($b['name'], $b['name_de'] ?? null)
+                            );
+                        });
+
+                        foreach ($formTypes as $at): ?>
                             <option value="<?= $at['id'] ?>"><?= lang($at['name'], $at['name_de'] ?? null) ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -535,7 +547,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                     <p id="system-field-note" class="text-muted" hidden>
                         <i class="ph ph-lock-simple"></i>
-                        <?= lang('System field: can be moved, but cannot be removed or hidden.', 'Systemfeld: kann verschoben, aber nicht entfernt oder ausgeblendet werden.') ?>
+                        <?= lang('admin.system_field_can_be_moved_but_cannot_be_removed_or_hidden') ?>
                     </p>
 
                     <div id="props-field" style="display:none;">
@@ -732,7 +744,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                         <div class="flex-fill">
                                             <div class="title">
                                                 <?php if (isset($systemFields[$it['id']])): ?>
-                                                    <i class="ph ph-lock-simple" title="<?= lang('System field', 'Systemfeld') ?>"></i>
+                                                    <i class="ph ph-lock-simple" title="<?= lang('admin.system_field') ?>"></i>
                                                 <?php endif; ?>
                                                 <?= e($label) ?>
                                             </div>
@@ -1290,12 +1302,12 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
             }
 
             if (ids.some(id => id.endsWith('-loc') && ids.includes(id.slice(0, -4)))) {
-                toastError(<?= json_encode(lang('Use only one version of each field.', 'Verwende nur eine Variante je Datenfeld.')) ?>);
+                toastError(<?= json_encode(lang('admin.use_only_one_version_of_each_field')) ?>);
                 return;
             }
             const personModules = schema.items.filter(item => item.type === 'field' && ['persons', 'persons-role'].includes(item.id));
             if (personModules.length > 1) {
-                toastError(<?= json_encode(lang('Use either Persons or Persons with roles.', 'Verwende entweder Personen oder Personen mit Rollen.')) ?>);
+                toastError(<?= json_encode(lang('admin.use_either_persons_or_persons_with_roles')) ?>);
                 return;
             }
 

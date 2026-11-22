@@ -119,42 +119,6 @@ class SidebarNav
                         'hasSearch' => true
                     ],
                     [
-                        'id' => 'events',
-                        'label' => lang('common.events_home'),
-                        'icon' => 'calendar-dots',
-                        'url' => '/conferences', // legacy
-                        'active' => ['^/conferences($|/)'],
-                        'feature' => 'events',
-                        'default' => true,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => true
-                    ],
-                    [
-                        'id' => 'calendar',
-                        'label' => lang('dashboard.calendar'),
-                        'icon' => 'calendar',
-                        'url' => '/calendar',
-                        'active' => ['^/calendar($|/)'],
-                        'feature' => 'calendar',
-                        'default' => false,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
-                        'id' => 'teaching-modules',
-                        'label' => lang('teaching.teaching_modules'),
-                        'icon' => 'chalkboard-simple',
-                        'url' => '/teaching',
-                        'active' => ['^/teaching($|/)'],
-                        'feature' => 'teaching-modules',
-                        'default' => true,
-                        'permission' => null,
-                        'favoritable' => true,
-                        'hasSearch' => false
-                    ],
-                    [
                         'id' => 'infrastructures',
                         'label' => $this->settings->infrastructureLabel(),
                         'icon' => 'cube-transparent',
@@ -247,6 +211,60 @@ class SidebarNav
                 ]
             ],
             [
+                'id' => 'news-events',
+                'label' => lang('common.news_events'),
+                'items' => [
+                    [
+                        'id' => 'news',
+                        'label' => lang('common.news'),
+                        'icon' => 'newspaper',
+                        'url' => '/news',
+                        'active' => ['^/news($|/)'],
+                        'feature' => 'news',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'events',
+                        'label' => lang('common.events_home'),
+                        'icon' => 'calendar-dots',
+                        'url' => '/conferences', // legacy
+                        'active' => ['^/conferences($|/)'],
+                        'feature' => 'events',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => true
+                    ],
+                    [
+                        'id' => 'calendar',
+                        'label' => lang('dashboard.calendar'),
+                        'icon' => 'calendar',
+                        'url' => '/calendar',
+                        'active' => ['^/calendar($|/)'],
+                        'feature' => 'calendar',
+                        'default' => false,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'teaching-modules',
+                        'label' => lang('common.teaching_modules'),
+                        'icon' => 'chalkboard-simple',
+                        'url' => '/teaching',
+                        'active' => ['^/teaching($|/)'],
+                        'feature' => 'teaching-modules',
+                        'default' => true,
+                        'permission' => null,
+                        'favoritable' => true,
+                        'hasSearch' => false
+                    ],
+                ]
+            ],
+            [
                 'id' => 'sidebar-tools',
                 'label' => lang('navigation.analysis'),
                 'items' => [
@@ -320,6 +338,18 @@ class SidebarNav
                         'default' => false,
                         'permission' => null,
                         'favoritable' => false,
+                        'hasSearch' => false
+                    ],
+                    [
+                        'id' => 'aggregate',
+                        'label' => lang('search.aggregate'),
+                        'icon' => 'chart-bar',
+                        'url' => '/aggregate',
+                        'active' => ['^/aggregate($|/)'],
+                        'feature' => null,
+                        'default' => false,
+                        'permission' => 'aggregate.see',
+                        'favoritable' => true,
                         'hasSearch' => false
                     ]
                 ]
@@ -415,7 +445,7 @@ class SidebarNav
                         'active' => ['^/admin($|/)'],
                         'feature' => null,
                         'default' => false,
-                        'permission' => 'admin.see|user.synchronize|report.templates',
+                        'permission' => 'admin.see|user.synchronize|report.templates|news.outlets',
                         'favoritable' => false,
                         'hasSearch' => false
                     ],

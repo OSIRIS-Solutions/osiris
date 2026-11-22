@@ -20,3 +20,5 @@ upload.sh
 dump
 src
 logs/*
+# Local Python virtual environments
+.venv/

@@ -338,6 +338,46 @@
                     </div>
                 </div>
 
+                
+
+                <div class="box padded">
+                    <h4 class="title" id="news">
+                        <?= lang('common.news') ?>
+                    </h4>
+
+                    <div class="form-group mt-10">
+                        <label for="" class="label">
+                            <?= lang('admin.show_news_on_the_home_page') ?>
+                        </label>
+                        <?php
+                        renderCheckbox('news', true);
+                        ?>
+                    </div>
+
+                    <div class="form-group" id="news-editorial">
+                        <label class="label"><?= lang('admin.editorial_news_workflow') ?></label>
+                        <?php renderCheckbox('news-editorial'); ?>
+                        <small><?= lang('admin.let_authors_request_outlet_contributions_and_editors_prepare_review_and_release_them') ?></small>
+                    </div>
+
+                    <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('admin.manage_news_outlets_and_portfolio_output') ?></a></p>
+
+                    <div class="form-group">
+                        <?php
+                        $news_lang = $Settings->get('news-language', 'both');
+                        ?>
+
+                        <label for="news-language">
+                            <?= lang('admin.language_of_news') ?>
+                        </label>
+                        <select name="general[news-language]" id="news-language" class="form-control small">
+                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('admin.only_one_language') ?></option>
+                            <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('common.both_languages') ?></option>
+                        </select>
+                    </div>
+
+                </div>
+
                 <div class="box padded">
                     <h4 class="title" id="trips">
                         <?= lang('admin.research_trips') ?>
@@ -571,30 +611,6 @@
                         renderCheckbox('new-colleagues');
                         ?>
                     </div>
-
-                    <div class="form-group mt-10" id="news">
-                        <label for="" class="label">
-                            <?= lang('admin.show_news_on_the_home_page') ?>
-                        </label>
-                        <?php
-                        renderCheckbox('news', true);
-                        ?>
-                    </div>
-
-                    <div class="form-group">
-                        <?php
-                        $news_lang = $Settings->get('news-language', 'both');
-                        ?>
-
-                        <label for="news-language">
-                            <?= lang('admin.language_of_news') ?>
-                        </label>
-                        <select name="general[news-language]" id="news-language" class="form-control small">
-                            <option value="one" <?= $news_lang == 'en' ? 'selected' : '' ?>><?= lang('admin.only_one_language') ?></option>
-                            <option value="both" <?= $news_lang == 'both' ? 'selected' : '' ?>><?= lang('common.both_languages') ?></option>
-                        </select>
-                    </div>
-
                 </div>
 
                 <div class="box padded">
@@ -702,6 +718,7 @@
                     <a href="#infrastructures" class="submenu"><?= lang('common.infrastructures') ?></a>
                     <a href="#calendar" class="submenu"><?= lang('admin.calendar_and_events') ?></a>
                     <a href="#tags" class="submenu"><?= lang('common.tags') ?></a>
+                    <a href="#news" class="submenu"><?= lang('common.news') ?></a>
                     <a href="#trips" class="submenu"><?= lang('admin.research_trips') ?></a>
                     <a href="#wordcloud" class="submenu"><?= lang('admin.word_clouds') ?></a>
 

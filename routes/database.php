@@ -113,6 +113,104 @@ Route::get('/uploads/(.*)', function ($requestedPath) {
 }, 'login');
 
 
+Route::get('/uploads/(.*)', function ($requestedPath) {
+    include_once BASEPATH . '/php/init.php';
+
+    if ($requestedPath === '') {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+
+    // Resolve the requested file and make sure it really is inside /uploads.
+    $uploadsDirectory = realpath(BASEPATH . '/uploads');
+    $filePath = realpath(BASEPATH . '/uploads/' . $requestedPath);
+    if ($uploadsDirectory === false || $filePath === false) {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+    if ($filePath !== $uploadsDirectory && !str_starts_with($filePath, $uploadsDirectory . DIRECTORY_SEPARATOR)) {
+        return abortwith(403, lang('Access denied', 'Zugriff verweigert'));
+    }
+
+    if (!is_file($filePath)) {
+        return abortwith(404, lang('File', 'Datei'));
+    }
+    if (!is_readable($filePath)) {
+        return abortwith(403, lang('File is not readable.', 'Datei ist nicht lesbar.'));
+    }
+    $downloadFilename = basename($filePath);
+
+    // Files created by the generic upload are named after their MongoDB ID.
+    // Apply the same permissions that are used in the corresponding views.
+    if (preg_match('/^([a-f0-9]{24})\.[a-z0-9]+$/i', $requestedPath, $matches)) {
+        $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($matches[1])]);
+        if (empty($document)) {
+            return abortwith(404, lang('File', 'Datei'));
+        }
+        $downloadFilename = basename((string) ($document['filename'] ?? $downloadFilename));
+
+        $type = (string) ($document['type'] ?? '');
+        $allowed = false;
+
+        if ($type === 'central') {
+            $allowed = $Settings->hasPermission('documents.central')
+                || $Settings->hasPermission('documents.manage');
+        } elseif ($type === 'activities') {
+            // Activities and their documents are visible to logged-in users.
+            $activityId = (string) ($document['id'] ?? '');
+            $allowed = DB::is_ObjectID($activityId)
+                && $osiris->activities->count(['_id' => DB::to_ObjectID($activityId)]) > 0;
+        } elseif ($type === 'proposals' || $type === 'nagoya-permit') {
+            $allowed = $Settings->hasPermission('documents')
+                || $Settings->hasPermission('proposals.view-documents')
+                || ($type === 'nagoya-permit' && $Settings->hasPermission('nagoya.view'));
+
+            if (!$allowed && DB::is_ObjectID((string) ($document['id'] ?? ''))) {
+                $proposal = $osiris->proposals->findOne(['_id' => DB::to_ObjectID((string) $document['id'])]);
+                if (!empty($proposal)) {
+                    $persons = DB::doc2Arr($proposal['persons'] ?? []);
+                    $personIds = array_map('strval', array_column($persons, 'user'));
+                    $allowed = in_array($_SESSION['username'], $personIds, true)
+                        || ($proposal['created_by'] ?? null) === $_SESSION['username'];
+                }
+            }
+        }
+
+        if (!$allowed) {
+            return abortwith(403, lang('You do not have permission to view this file.', 'Du hast keine Berechtigung, diese Datei anzusehen.'));
+        }
+    } else {
+        // Legacy guest documents are stored in /uploads/{guest-id}/{filename}.
+        // Other subfolders contain internal images or legacy activity files and
+        // are protected by the login requirement of this route.
+        $pathParts = explode('/', $requestedPath, 2);
+        if (count($pathParts) === 2) {
+            $guest = $osiris->guests->findOne([
+                'id' => $pathParts[0],
+                'files.filename' => basename($pathParts[1]),
+            ]);
+            if (
+                !empty($guest)
+                && !$Settings->hasPermission('guests.see.documents')
+                && !$Settings->hasPermission('guests.edit.documents')
+            ) {
+                return abortwith(403, lang('You do not have permission to view this file.', 'Du hast keine Berechtigung, diese Datei anzusehen.'));
+            }
+        }
+    }
+
+    // Deliver file
+    $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+    $inlineMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $disposition = in_array($mimeType, $inlineMimeTypes, true) ? 'inline' : 'attachment';
+
+    header('Content-Type: ' . $mimeType);
+    header('Content-Length: ' . filesize($filePath));
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: private, max-age=3600');
+    header("Content-Disposition: $disposition; filename=\"file\"; filename*=UTF-8''" . rawurlencode($downloadFilename));
+    readfile($filePath);
+    die;
+}, 'login');
+
 Route::get('/rerender', function () {
     set_time_limit(6000);
     # Do not chache this page
@@ -424,6 +522,7 @@ function centralDocumentUpload(): array
         'jpg',
         'jpeg',
         'png',
+        'svg',
     ];
     if ($filename === '' || !in_array($extension, $allowedExtensions, true)) {
         redirectFromCentralDocuments(lang('common.this_file_type_is_not_supported_please_upload_a_common_document_spreadsheet'));
@@ -441,6 +540,35 @@ function centralDocumentUpload(): array
         if ($image === false || $mime !== $expectedMime || ($image['mime'] ?? null) !== $expectedMime) {
             redirectFromCentralDocuments(lang('common.the_selected_image_is_invalid_or_does_not_match_its_file_extension'));
         }
+    }
+
+    if ($extension === 'svg') {
+        $allowedSvgMimes = ['image/svg+xml', 'application/xml', 'text/xml', 'text/plain'];
+        $svgSource = file_get_contents($file['tmp_name']);
+        $containsDocumentType = $svgSource !== false && preg_match('/<!DOCTYPE|<!ENTITY/i', $svgSource);
+
+        $previousLibxmlState = libxml_use_internal_errors(true);
+        $svgDocument = new DOMDocument();
+        $svgLoaded = $svgSource !== false
+            && !$containsDocumentType
+            && $svgDocument->loadXML($svgSource, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_COMPACT);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previousLibxmlState);
+
+        $root = $svgLoaded ? $svgDocument->documentElement : null;
+        $isSvg = $root !== null
+            && strtolower($root->localName) === 'svg'
+            && $root->namespaceURI === 'http://www.w3.org/2000/svg';
+
+        if (!in_array($mime, $allowedSvgMimes, true) || !$isSvg) {
+            redirectFromCentralDocuments(lang(
+                'The selected SVG file is invalid or does not match its file extension.',
+                'Die ausgewählte SVG-Datei ist ungültig oder entspricht nicht ihrer Dateiendung.'
+            ));
+        }
+
+        // Keep metadata consistent across systems where finfo reports SVG as XML or text.
+        $mime = 'image/svg+xml';
     }
 
     return [$file, $filename, $extension, $mime];
@@ -488,10 +616,13 @@ Route::get('/documents/central/file/([a-f0-9]{24})', function ($id) {
     if (!is_file($path)) abortwith(404, lang('common.file_not_found'), '/documents');
 
     $filename = basename((string) ($document['filename'] ?? ('document.' . $extension)));
-    $disposition = isset($_GET['download']) ? 'attachment' : 'inline';
-    header('Content-Type: ' . ($document['mimetype'] ?? 'application/octet-stream'));
+    $isSvg = $extension === 'svg';
+    $disposition = isset($_GET['download']) || $isSvg ? 'attachment' : 'inline';
+    $mimeType = $isSvg ? 'application/octet-stream' : ($document['mimetype'] ?? 'application/octet-stream');
+    header('Content-Type: ' . $mimeType);
     header('Content-Length: ' . filesize($path));
     header('X-Content-Type-Options: nosniff');
+    if ($isSvg) header("Content-Security-Policy: sandbox; default-src 'none'");
     header("Content-Disposition: $disposition; filename=\"document.$extension\"; filename*=UTF-8''" . rawurlencode($filename));
     readfile($path);
     die;

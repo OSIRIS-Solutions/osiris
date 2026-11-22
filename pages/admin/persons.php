@@ -170,7 +170,7 @@ $persons = $osiris->adminPersons->find();
                         <label for="contact-button-false"><?= lang('common.disabled_features') ?></label>
                     </div>
                     <small class="d-block text-muted">
-                        <?= lang('admin.if_this_function_is_activated_a_contact_button_will_be_displayed_in_the_use') ?>
+                        <?= lang('admin.if_this_function_is_activated_a_contact_button_will_be_displayed_in_the_user_profiles') ?>
                     </small>
                 </div>
                 <script>
@@ -190,12 +190,9 @@ $persons = $osiris->adminPersons->find();
                     });
                 </script>
                 <?php
-                $standardContactTypes = ['mail' => "0", 'slack' => "0", 'teams' => "0", 'matrix' => "0", 'other' => "0"];
-                $contactSettings = $Settings->get('contact-button');
-                if (!empty($contactSettings)){
-                    $contactSettings = DB::doc2Arr($contactSettings);
-                }
-                $contactTypes = array_merge($standardContactTypes, $contactSettings ?? []);
+                $standardContactTypes = ['mail' => "0", 'slack' => "0", 'teams' => "0", 'matrix' => "0"];
+                $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
+                $contactTypes = array_replace($standardContactTypes, array_intersect_key($contactSettings, $standardContactTypes));
                 ?>
                 <div class="form-group" style="display: none;" id="contact-button-allowed">
                     <table class="table simple w-full small mb-10">
@@ -211,10 +208,11 @@ $persons = $osiris->adminPersons->find();
                             ?>
                                 <tr>
                                     <td>
+                                        <input type="hidden" name="general[contact-button][<?= $type ?>]" value="0">
                                         <input type="checkbox" name="general[contact-button][<?= $type ?>]" id="contact-button-<?= $type ?>" value="1" <?= $enabled ? 'checked' : '' ?>>
                                     </td>
                                     <td>
-                                        <?= ucfirst($type) ?>
+                                        <?= e(['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'][$type] ?? $type) ?>
                                     </td>
                                 </tr>
                             <?php } ?>

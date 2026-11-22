@@ -803,5 +803,14 @@ return [
     'item_added_to_collection' => 'Item added to your collection. <a class="link" href="{{rootpath}}/cart">View collection</a>',
     'initiative' => 'Initiative',
     'initiatives' => 'Initiatives',
-    'data_model' => 'Other data models'
+    'data_model' => 'Other data models',
+    'news_events' => 'News & Events',
+    'news_editorial' => 'News Editorial',
+    'new_version_available' => 'New version available',
+    'use_this_as_your_start_screen' => 'Use this as your start screen?',
+    'would_you_like_to_open_this_page_whenever_you_start_osiris' => 'Would you like to open this page whenever you start OSIRIS?',
+    'use_as_start_screen' => 'Use as start screen',
+    'keep_osiris_home' => 'Keep OSIRIS home',
+    'central_document' => 'Central document',
+    'this_phase_is_being_prepared_and_is_not_yet_available' => 'This phase is being prepared and is not yet available.',
 ];

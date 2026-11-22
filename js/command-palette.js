@@ -178,7 +178,6 @@
 
   function applyFilterAndRender(q) {
     const query = q || '';
-    console.log(state.dynamicData);
 
     const staticFiltered = filterGroups(state.staticData, query);
 

@@ -212,10 +212,10 @@ if ($is_subproject) {
             try {
                 $phaseDefinition = ProjectForms::phase($project_type, $phase);
             } catch (InvalidArgumentException $error) {
-                $phaseError = lang('Unknown project phase.', 'Unbekannte Projektphase.');
+                $phaseError = lang('admin.unknown_project_phase');
             }
             if (!empty($phaseDefinition['planned']) && $status !== $phase && !$editingPastPhase) {
-                $phaseError = lang('This phase is being prepared and is not yet available.', 'Diese Phase wird vorbereitet und ist noch nicht verfügbar.');
+                $phaseError = lang('common.this_phase_is_being_prepared_and_is_not_yet_available');
             }
             if (isset($phaseError)) {
                 echo '<div class="alert danger" role="alert">' . e($phaseError) . '</div></div>';

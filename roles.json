@@ -132,6 +132,11 @@
                 "id": "queries.global",
                 "de": "Globale Abfragen speichern",
                 "en": "Save global queries"
+            },
+            {
+                "id": "aggregate.see",
+                "de": "Zugriff auf das Aggregations-Tool",
+                "en": "Access to the aggregation tool"
             }
         ]
     },
@@ -476,13 +481,43 @@
         "icon": "newspaper",
         "fields": [
             {
+                "id": "news.add",
+                "de": "News anlegen und Outlets beantragen",
+                "en": "Create news and request outlets"
+            },
+            {
+                "id": "news.see-future",
+                "de": "In der Zukunft geplante News sehen",
+                "en": "See news planned for the future"
+            },
+            {
+                "id": "news.edit-own",
+                "de": "Eigene News und offene Outlet-Anfragen bearbeiten",
+                "en": "Edit own news and open outlet requests"
+            },
+            {
+                "id": "news.editorial",
+                "de": "News redaktionell bearbeiten und Outlet-Anfragen in der Inbox erhalten",
+                "en": "Edit editorial news contributions and receive outlet requests in the inbox"
+            },
+            {
                 "id": "news.edit",
-                "de": "Nachrichten hinzufügen und bearbeiten",
+                "de": "Neuigkeiten hinzufügen und bearbeiten",
                 "en": "Add and edit news"
             },
             {
+                "id": "news.export",
+                "de": "News-Berichte als HTML oder Word exportieren",
+                "en": "Export news reports as HTML or Word"
+            },
+            {
+                "id": "news.outlets",
+                "de": "News-Outlets und deren Portfolio-Ausgabe verwalten",
+                "en": "Manage news outlets and their Portfolio output"
+            },
+            {
                 "id": "news.delete",
-                "de": "Nachrichten löschen",
+                "de": "Neuigkeiten löschen",
                 "en": "Delete news"
             }
         ]

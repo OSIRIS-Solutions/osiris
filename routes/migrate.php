@@ -174,80 +174,9 @@ Route::get('/migrate/localization', function () {
 
 Route::get('/migrate/index', function () {
     include_once BASEPATH . "/php/init.php";
-    include_once BASEPATH . "/php/Country.php";
-
     set_time_limit(6000);
     include BASEPATH . "/header.php";
-
-    function ensureIndex($collection, array $keys, array $options = [])
-    {
-        try {
-            if (empty($options['name'])) {
-                $parts = [];
-                foreach ($keys as $k => $v) $parts[] = $k . '_' . $v;
-                $options['name'] = 'cp_' . implode('__', $parts);
-            }
-
-            $name = $collection->createIndex($keys, $options);
-
-            echo '<li class="migration-ok">✓ ';
-            echo e($collection->getCollectionName()) . ' → <code>' . e($name) . '</code>';
-            echo '</li>';
-
-            return true;
-        } catch (Throwable $e) {
-            echo '<li class="migration-error">✗ ';
-            echo e($collection->getCollectionName()) . ' → ' . e($e->getMessage());
-            echo '</li>';
-
-            return false;
-        }
-    }
-
-    echo '<div class="migration-card">';
-    echo '<h3>' . lang('common.creating_or_confirming_indexes_for_fast_journal_table') . '</h3>';
-    echo '<p class="migration-muted">' . lang('common.osiris_is_creating_or_confirming_the_indexes_required_for_fast_journal_tabl') . '</p>';
-    echo '<ul class="migration-index-list">';
-    ensureIndex($osiris->activities, ['rendered.plain' => 'text']);
-    ensureIndex($osiris->activities, ['journal_id' => 1]);
-
-    /* persons */
-    ensureIndex($osiris->persons, ['search_text' => 1]);
-    ensureIndex($osiris->persons, ['username' => 1]); // optional but usually helpful
-    ensureIndex($osiris->persons, ['current_units' => 1]);
-
-    /* projects */
-    ensureIndex($osiris->projects, ['acronym' => 1]);
-    ensureIndex($osiris->projects, ['name' => 1]);
-
-    /* infrastructures */
-    ensureIndex($osiris->infrastructures, ['name.en' => 1]);
-    ensureIndex($osiris->infrastructures, ['name.de' => 1]);
-
-    /* events */
-    ensureIndex($osiris->events, ['title' => 1]);
-    ensureIndex($osiris->events, ['title_full' => 1]);
-
-    /* activities */
-    ensureIndex($osiris->activities, ['journal_id' => 1]);
-
-    /* journals */
-    ensureIndex($osiris->journals, ['journal' => 1]);
-    ensureIndex($osiris->journals, ['abbr' => 1]);
-    ensureIndex($osiris->journals, ['issn' => 1]); // for exact match boost
-
-    /* groups (units) */
-    ensureIndex($osiris->groups, ['id' => 1]);
-    ensureIndex($osiris->groups, ['name.en' => 1]);
-    ensureIndex($osiris->groups, ['name.de' => 1]);
-
-    /* organizations */
-    ensureIndex($osiris->organizations, ['name' => 1]);
-    ensureIndex($osiris->organizations, ['synonyms' => 1]); // multikey index (array)
-
-    echo '</ul>';
-    echo '</div>';
-
+    include_once BASEPATH . "/routes/migration/ensureindexes.php";
     include BASEPATH . "/footer.php";
 });
 

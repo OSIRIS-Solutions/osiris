@@ -19,7 +19,8 @@ Route::get('/admin', function () {
     $adminPerm = $Settings->hasPermission('admin.see');
     $userSyncPerm = $Settings->hasPermission('user.synchronize');
     $reportPerm = $Settings->hasPermission('report.templates');
-    if (!$adminPerm && !$userSyncPerm && !$reportPerm) {
+    $newsOutletsPerm = ($adminPerm || $Settings->hasPermission('news.outlets')) && $Settings->featureEnabled('news-editorial');
+    if (!$adminPerm && !$userSyncPerm && !$reportPerm && !$newsOutletsPerm) {
         abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
     $breadcrumb = [
@@ -32,6 +33,7 @@ Route::get('/admin', function () {
 
 
 include_once BASEPATH . "/routes/admin.fields.php";
+include_once BASEPATH . "/routes/admin.news.php";
 
 
 Route::get('/admin/users', function () {
@@ -365,7 +367,7 @@ Route::post('/crud/admin/deadlinesFields', function () {
 Route::get('/admin/initiatives/fields', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('You do not have permission to access the admin area.', 'Du hast keine Berechtigung, auf den Admin-Bereich zuzugreifen.'), "/", lang('Go back to homepage', 'Zurück zur Startseite'));
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
     }
 
     require_once BASEPATH . '/php/Initiatives.php';
@@ -395,9 +397,9 @@ Route::get('/admin/initiatives/fields', function () {
     );
 
     $breadcrumb = [
-        ['name' => lang('Settings', 'Einstellungen'), 'path' => '/admin'],
+        ['name' => lang('common.settings'), 'path' => '/admin'],
         ['name' => $name, 'path' => "/admin/data-model"],
-        ['name' => lang("Data fields", "Datenfelder")]
+        ['name' => lang('common.data_fields')]
     ];
 
     global $form;
@@ -534,6 +536,48 @@ Route::get('/admin/types/new', function () {
     include BASEPATH . "/footer.php";
 }, 'login');
 
+
+Route::get('/admin/types/(.*)/copy', function ($id) {
+    // just prefill the form
+
+    include_once BASEPATH . "/php/init.php";
+    if (!$Settings->hasPermission('admin.see')) {
+        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+    }
+
+    $user = $_SESSION['username'];
+
+    $type = $osiris->adminTypes->findOne(['id' => $id]);
+    if (empty($type)) {
+        abortwith(404, lang('common.type'), "/admin/categories");
+    }
+    $name = lang($type['name'], $type['name_de']);
+
+    $t = $type['parent'];
+    $parent = $osiris->adminCategories->findOne(['id' => $t]);
+    $color = $parent['color'] ?? '#000000';
+    $st = $type['id'].'-copy';
+    $submember = [];
+
+    $breadcrumb = [
+        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
+        ['name' => lang('Copy of '.$parent['name'], 'Kopie von '. $parent['name_de']), 'path' => "/admin/categories/" . $t],
+        ['name' => $name]
+    ];
+
+    global $form;
+    $form = DB::doc2Arr($type);
+    unset($form['_id']);
+    unset($type['_id']);
+    $form['id'] = $st;
+    $type['id'] = $st;
+    $copy = $id;
+
+    include BASEPATH . "/header.php";
+    include BASEPATH . "/pages/admin/category-type.php";
+    include BASEPATH . "/footer.php";
+}, 'login');
 
 
 Route::get('/admin/types/(.*)', function ($id) {
@@ -707,7 +751,7 @@ Route::get('/admin/projects/([^/]+)/fields/(draft|proposed|approved|rejected|pro
         $config = ProjectForms::builder($project, $phase);
         $fields = ProjectForms::fields($project, $phase, (new Project())->FIELDS);
     } catch (InvalidArgumentException $error) {
-        return abortwith(404, lang('Unknown project phase.', 'Unbekannte Projektphase.'), '/admin/projects/2/' . rawurlencode($id));
+        return abortwith(404, lang('admin.unknown_project_phase'), '/admin/projects/2/' . rawurlencode($id));
     }
     $unavailable = ProjectForms::unavailable($fields, $config);
     $builderUrl = ROOTPATH . '/admin/projects/' . rawurlencode($id) . '/fields/' . $phase;
@@ -735,18 +779,18 @@ Route::post('/crud/admin/projects/fields/([^/]+)/(draft|proposed|approved|reject
     try {
         ProjectForms::phase($project, $phase);
     } catch (InvalidArgumentException $error) {
-        return abortwith(404, lang('Unknown project phase.', 'Unbekannte Projektphase.'));
+        return abortwith(404, lang('admin.unknown_project_phase'));
     }
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     if (!is_array($schema) || !is_array($schema['items'] ?? null)) {
-        return abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+        return abortwith(400, lang('admin.invalid_form_schema'));
     }
     try {
         ProjectForms::save($osiris->adminProjects, $project, $phase, $schema['items']);
     } catch (InvalidArgumentException $error) {
-        return abortwith(400, lang('Check the phase-specific fields and system fields.', 'Prüfe die phasenspezifischen Felder und die Systemfelder.'));
+        return abortwith(400, lang('admin.check_the_phase_specific_fields_and_system_fields'));
     }
-    $_SESSION['msg'] = lang('Form updated.', 'Formular aktualisiert.');
+    $_SESSION['msg'] = lang('admin.form_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/projects/2/' . rawurlencode($id));
 }, 'login');
@@ -1336,6 +1380,13 @@ Route::post('/crud/admin/general', function () {
                     $value['image-map'] = $imageMap;
                 }
             }
+            if ($key === 'orcid' && is_array($value) && array_key_exists('client_secret', $value) && str_starts_with($value['client_secret'], '****')){
+                $current = $osiris->adminGeneral->findOne(['key' => 'orcid']);
+                $currentValue = DB::doc2Arr($current['value'] ?? []);
+                if (isset($currentValue['client_secret']) && !empty($currentValue['client_secret'])) {
+                    $value['client_secret'] = $currentValue['client_secret'];
+                }
+            }
             $osiris->adminGeneral->deleteOne(['key' => $key]);
             $osiris->adminGeneral->insertOne([
                 'key' => $key,
@@ -1578,7 +1629,7 @@ Route::post('/crud/admin/update-user-roles', function () {
 //         }
 //     }
 
-//     $_SESSION['msg'] = lang('Settings saved successfully.', 'Einstellungen erfolgreich gespeichert.');
+//     $_SESSION['msg'] = lang('admin.settings_saved_successfully');
 //     $_SESSION['msg_type'] = 'success';
 //     header("Location: " . ROOTPATH . "/admin/general#features");
 // }, 'login');
@@ -1623,6 +1674,15 @@ Route::post('/crud/(categories|types)/create', function ($col) {
         "authors*",
         "date*"
     ];
+
+    // if copy then copy modules and fields from copy
+    if ($col == 'types' && isset($_POST['copy'])){
+        $copy = $collection->findOne(['id' => $_POST['copy']], ['projection' => ['modules'=> 1, 'fields' => 1]]);
+        if (!empty($copy)){
+            $values['modules'] = $copy['modules'] ?? [];
+            $values['fields'] = $copy['fields'] ?? [];
+        }
+    }
 
     $insertOneResult  = $collection->insertOne($values);
     // $id = $insertOneResult->getInsertedId();
@@ -1797,19 +1857,19 @@ Route::post('/crud/admin/initiativesFields', function () {
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     if (!is_array($schema) || !isset($schema['items']) || !is_array($schema['items'])
         || !array_is_list($schema['items'])) {
-        abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+        abortwith(400, lang('admin.invalid_form_schema'));
     }
     $fields = $schema['items'];
     foreach ($fields as $field) {
         if (!is_array($field) || !is_string($field['type'] ?? null)
             || (isset($field['props']) && !is_array($field['props']))) {
-            abortwith(400, lang('Invalid form schema.', 'Ungültige Formulardefinition.'));
+            abortwith(400, lang('admin.invalid_form_schema'));
         }
     }
     try {
         FormBuilder::validateFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('Check the system fields and use only one version of each data field.', 'Prüfe die Systemfelder und verwende nur eine Variante je Datenfeld.'));
+        abortwith(400, lang('admin.check_the_system_fields_and_use_only_one_version_of_each_data_field'));
     }
     $osiris->adminGeneral->updateOne(
         ['id' => 'initiative-fields'],
@@ -1818,7 +1878,7 @@ Route::post('/crud/admin/initiativesFields', function () {
         ]],
         ['upsert' => true]
     );
-    $_SESSION['msg'] = lang('Form updated.', 'Formular aktualisiert.');
+    $_SESSION['msg'] = lang('admin.form_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/initiatives/fields');
     die();
@@ -1845,7 +1905,7 @@ Route::post('/crud/admin/activity-fields', function () {
     try {
         FormBuilder::validateFields($fields);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('Use only one module for each data field.', 'Verwende nur ein Modul je Datenfeld.'));
+        abortwith(400, lang('admin.use_only_one_module_for_each_data_field'));
     }
     $modules = [];
     foreach ($fields as $field) {

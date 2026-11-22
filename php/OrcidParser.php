@@ -344,4 +344,14 @@ class OrcidParser
         $id = $add->getInsertedId();
         return $id;
     }
+
+    function skipWork($orcid_put_code)
+    {
+        // TODO implement function to mark the work as skipped in Osiris
+        // This could involve adding the put code to a list of skipped works in the database
+        $this->osiris->persons->updateOne(
+            ['username' => $this->username],
+            ['$addToSet' => ['skipped_orcid_works' => $orcid_put_code]]
+        );
+    }
 }

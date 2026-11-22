@@ -103,4 +103,7 @@ return [
     'page_page_of_numpages' => 'Seite {PAGE} von {NUMPAGES}',
     'no_data_available_for_the_selected_criteria' => 'Keine Daten für die ausgewählten Kriterien verfügbar.',
     'empty' => 'Leer',
+    'this_block_could_not_be_fully_exported_please_check_its_results' => 'Dieser Baustein konnte nicht vollständig exportiert werden. Bitte die Ergebnisse prüfen.',
+    'the_report_was_exported_with_warnings_please_check_the_marked_blocks_in_the_document' => 'Der Bericht wurde mit Warnungen exportiert. Bitte die markierten Bausteine im Dokument prüfen.',
+    'the_report_could_not_be_exported_please_check_the_template_or_contact_support' => 'Der Bericht konnte nicht exportiert werden. Bitte die Vorlage prüfen oder den Support kontaktieren.',
 ];

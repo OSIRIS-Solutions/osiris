@@ -103,4 +103,7 @@ return [
     'page_page_of_numpages' => 'Page {PAGE} of {NUMPAGES}',
     'no_data_available_for_the_selected_criteria' => 'No data available for the selected criteria.',
     'empty' => 'Empty',
+    'this_block_could_not_be_fully_exported_please_check_its_results' => 'This block could not be fully exported. Please check its results.',
+    'the_report_was_exported_with_warnings_please_check_the_marked_blocks_in_the_document' => 'The report was exported with warnings. Please check the marked blocks in the document.',
+    'the_report_could_not_be_exported_please_check_the_template_or_contact_support' => 'The report could not be exported. Please check the template or contact support.',
 ];

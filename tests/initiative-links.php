@@ -32,7 +32,7 @@ ob_start(); $renderer->print_module('initiatives', true, ['help' => 'Selection h
 $dom = new DOMDocument(); @$dom->loadHTML($html); $xpath = new DOMXPath($dom);
 check($xpath->query('//input[@type="checkbox" and @name="values[initiatives][]" and @checked]')->length === 2, 'Existing associations, including archived ones, remain selected.');
 check($xpath->query('//input[@type="hidden" and @name="values[initiatives]"]')->length === 1, 'The form submits an empty-selection sentinel.');
-check($xpath->query('//label[@title=\'Title "quoted"\']')->length === 1, 'The chooser tooltip uses the plain localized title.');
+check($xpath->query('//label[@data-title=\'Title "quoted"\']')->length === 1, 'The chooser tooltip uses the plain localized title.');
 check(str_contains($html, 'Climate &amp; Water') && str_contains($html, 'Archived') && str_contains($html, 'Selection help'), 'The chooser escapes names, marks archived initiatives and renders help.');
 check(strpos($html, 'Climate &amp; Water') < strpos($html, 'Archived initiative'), 'Active initiatives are listed first.');
 check(str_contains($html, 'data-required="true"'), 'Required group validation is enabled.');
@@ -97,7 +97,7 @@ $Settings->enabled = true;
 $osiris->initiatives->documents = [];
 ob_start(); $renderer->print_module('initiatives', true); $empty = ob_get_clean();
 check(str_contains($empty, 'No matching entries.') && str_contains($empty, 'data-selection-empty required'), 'An empty required chooser explains why submission is blocked.');
-// Institution overrides reach chooser legends and Form Builder metadata.
+// Institution overrides reach chooser labels and Form Builder metadata.
 $originalLanguage = $language;
 $originalTranslations = $Translations;
 $osiris->languageOverrides = new MemoryCollection();
@@ -108,7 +108,7 @@ $language->useDatabase($osiris);
 $Translations = $language;
 $renamed = new Modules();
 ob_start(); $renamed->print_module('initiatives'); $renamed->print_module('objectives'); $renamedHtml = ob_get_clean();
-check($renamed->get_name('initiatives') === 'Missions' && $renamed->get_name('objectives') === 'Goals' && str_contains($renamedHtml, '>Missions</legend>') && str_contains($renamedHtml, '>Goals</legend>'), 'Module names and chooser legends honor institutional terminology overrides.');
+check($renamed->get_name('initiatives') === 'Missions' && $renamed->get_name('objectives') === 'Goals' && str_contains($renamedHtml, '>Missions</label>') && str_contains($renamedHtml, '>Goals</label>'), 'Module names and chooser labels honor institutional terminology overrides.');
 $config = new FormBuilder('Test', '', entity: 'activities');
 check($config->modules['initiatives']['label'] === 'Missions' && $config->modules['objectives']['label'] === 'Goals', 'The Form Builder exposes the overridden standard labels.');
 $rights = json_decode(file_get_contents(BASEPATH . '/roles.json'), true, 512, JSON_THROW_ON_ERROR);

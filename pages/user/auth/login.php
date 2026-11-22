@@ -75,14 +75,28 @@
             </div>
         <?php } ?>
     </form>
-<?php } elseif ($userManagement === 'OAUTH') { ?>
-    <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
-        <span><?= e(lang('people.log_in_with_oauth', replace: ['oauth' => OAUTH])) ?></span>
-        <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
-    </a>
-<?php } else { ?>
+<?php } elseif ($userManagement !== 'OAUTH') { ?>
     <div class="alert" role="alert">
         <i class="ph ph-warning-circle" aria-hidden="true"></i>
         <div><?= lang('people.user_management_is_not_configured') ?></div>
     </div>
+<?php } ?>
+
+
+<?php if (osirisOAuthEnabled() || $userManagement === 'OAUTH') { ?>
+    <?php if ($oauthError = osirisOAuthConfigurationError()) { ?>
+        <div class="alert" role="alert">
+            <i class="ph ph-warning-circle" aria-hidden="true"></i>
+            <div><?= e($oauthError) ?></div>
+        </div>
+    <?php } else { ?>
+        <?php if ($userManagement === 'AUTH') { ?>
+            <div class="auth-divider"><span><?= lang('common.or') ?></span></div>
+            <!-- <p class="sso-caption"><?= lang('people.use_single_sign_on') ?></p> -->
+        <?php } ?>
+        <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
+            <span><?= e(lang('Log in with ' . osirisOAuthLabel(), 'Mit ' . osirisOAuthLabel() . ' anmelden')) ?></span>
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
+        </a>
+    <?php } ?>
 <?php } ?>

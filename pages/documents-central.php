@@ -41,6 +41,17 @@ foreach ($documents as $document) {
 uasort($categoryCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']));
 ksort($typeCounts, SORT_NATURAL | SORT_FLAG_CASE);
 uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']));
+
+$requestedDocumentId = trim((string) ($_GET['document'] ?? ''));
+$targetDocumentId = '';
+if (preg_match('/^[a-f0-9]{24}$/', $requestedDocumentId)) {
+    foreach ($documents as $document) {
+        if (hash_equals((string) $document['_id'], $requestedDocumentId)) {
+            $targetDocumentId = $requestedDocumentId;
+            break;
+        }
+    }
+}
 ?>
 
 <style>
@@ -56,6 +67,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
     .central-document-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr)); }
     .central-document-card { background: var(--box-bg-color); border: var(--border-width) solid var(--border-color); border-radius: var(--border-radius); display: flex; flex-direction: column; min-width: 0; overflow: hidden; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
     .central-document-card:hover { border-color: var(--primary-color); box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .08); transform: translateY(-.2rem); }
+    .central-document-card.is-targeted { border-color: var(--primary-color); box-shadow: 0 0 0 .3rem var(--primary-color-20), 0 .8rem 2.4rem rgba(0, 0, 0, .12); }
     .central-document-preview { align-items: center; background: var(--muted-color-20); display: flex; height: 15rem; justify-content: center; overflow: hidden; position: relative; }
     .central-document-preview img, .central-document-preview iframe { border: 0; height: 100%; object-fit: cover; pointer-events: none; width: 100%; }
     .central-document-preview iframe { background: white; object-fit: initial; position: absolute; inset: 0; }
@@ -153,7 +165,8 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
                     $isImage = in_array($extension, ['jpg', 'jpeg', 'png'], true);
                     $isPdf = $extension === 'pdf';
                 ?>
-                    <article class="central-document-card"
+                    <article class="central-document-card <?= $targetDocumentId === $id ? 'is-targeted' : '' ?>"
+                        data-document-id="<?= e($id) ?>"
                         data-title="<?= e(mb_strtolower($title)) ?>"
                         data-search="<?= e($searchText) ?>"
                         data-category="<?= e(mb_strtolower($category)) ?>"
@@ -254,6 +267,7 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             const count = document.getElementById('central-document-result-count');
             const activeFilters = document.getElementById('central-document-active-filters');
             const noResults = document.getElementById('central-document-no-results');
+            const targetDocumentId = <?= json_encode($targetDocumentId) ?>;
             const filterLabels = <?= json_encode([
                 'category' => lang('common.category'),
                 'fileType' => lang('common.file_type'),
@@ -384,7 +398,6 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
             //     pdfPreviews.forEach(loadPdfPreview);
             // }
 
-            console.log(hash);
             for (const key in hash) {
                 if (!Object.hasOwn(hash, key)) continue;
                 const value = hash[key];
@@ -395,6 +408,16 @@ uasort($tagCounts, static fn($a, $b) => strnatcasecmp($a['label'], $b['label']))
 
             sortCards();
             filterCards();
+            if (targetDocumentId) {
+                const targetDocument = cards.find(function(card) {
+                    return card.dataset.documentId === targetDocumentId;
+                });
+                if (targetDocument) {
+                    requestAnimationFrame(function() {
+                        targetDocument.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
+                }
+            }
         })();
     </script>
 <?php } ?>
