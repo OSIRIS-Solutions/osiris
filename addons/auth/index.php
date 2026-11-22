@@ -55,8 +55,8 @@ Route::post('/auth/forgot-password', function () {
         // check if user has recently requested a password reset
         $account = $osiris->accounts->findOne(['username' => $user['username']]);
         if (!empty($account) && isset($account['reset']) && $account['reset'] > time() - 10 * 60) {
-            $_SESSION['msg'] = lang('auth.password_forgot_please_wait');
-            $_SESSION['msg_type'] = 'info';
+            $_SESSION['msg'] = lang('auth.password_forgot_if_mail_correct');
+            $_SESSION['msg_type'] = 'success';
             header("Location: " . ROOTPATH . "/auth/forgot-password");
             die;
         }

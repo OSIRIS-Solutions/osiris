@@ -1,33 +1,52 @@
-<time datetime="XXXX-XX-XX">XX.XX.XXXX</time>
+<time datetime="2026-12-XX">XX.12.2026</time>
 <a class="anchor" href="#version-3.0.0" id="version-3.0.0"></a>
 
-## Version 3.0.0
+## Version 3.0.0 (Beta)
 
-In dieser Version haben wir Sprache in OSIRIS neu gedacht. OSIRIS unterstützt nun mehr Sprachen im Interface und bietet eine verbesserte Benutzeroberfläche für die Verwaltung von Übersetzungen.
+OSIRIS 3.0 erweitert die Mehrsprachigkeit und vereinheitlicht die konfigurierbaren Erfassungsformulare. Mit Initiativen und Objectives, dem Ressourcen-Hub und einer zentralen Dokumentenbibliothek kommen neue Möglichkeiten für die Zusammenarbeit im Institut hinzu. Die Version umfasst außerdem einen redaktionellen News-Workflow und die parallele Anmeldung über Single Sign-On.
 
 ### Mehrsprachigkeit
 
+Die Oberfläche bietet neben Englisch und Deutsch auch Italienisch, Japanisch, Spanisch, Französisch, Polnisch und Niederländisch. Welche Sprachen zur Auswahl stehen, legt die Einrichtung unter „Administration → Sprachen“ fest. Fehlende Übersetzungen von Sprach-Keys fallen auf die Ausgangssprache zurück; einzelne neue Bereiche verwenden weiterhin englische und deutsche Texte.
+
+Beschriftungen lassen sich dort je Sprache suchen und für die eigene Einrichtung überschreiben. So können beispielsweise Initiativen als „Missionen“ oder „Arbeitsgruppen“ bezeichnet werden. Eigene Übersetzungen werden getrennt von den mitgelieferten Sprachdateien gespeichert und können wieder auf den Standard zurückgesetzt werden. Platzhalter in Meldungen bleiben bei der Bearbeitung erhalten.
+
+Mehrsprachige Inhalte erhalten einen gemeinsamen Sprachumschalter, wenn die entsprechenden Felder im Form-Builder direkt aufeinander folgen. Pflichtangaben beziehen sich auf die englische Ausgangssprache; weitere Übersetzungen sind optional. Die Anzeige berücksichtigt die gewählte Sprache und fällt bei fehlenden Übersetzungen auf die Ausgangssprache zurück.
+
+Auch Position, Forschungsprofil, Biografie, Ausbildung und Forschungsinteressen in Personenprofilen sowie Namen, Beschreibungen und Forschungsangaben von Organisationseinheiten unterstützen Sprachfelder. Für bestehende englische und deutsche Angaben steht eine Migration bereit.
+
 Eigene Datenfelder der Formate „Normaler Text“, „Langer Text“ und „Text mit Formatierung“ können als mehrsprachig konfiguriert werden. Die Eingabe bietet dann einen Sprachumschalter. Neue Felder können direkt mehrsprachig angelegt werden. Bestehende Textfelder werden über eine separate, bewusst zu bestätigende Aktion dauerhaft konvertiert; vorhandene Texte bleiben dabei als englische Ausgangswerte erhalten. Bestehende Filter und gespeicherte Suchen verwenden weiterhin den englischen Wert; zusätzliche Übersetzungen werden bei der Anzeige entsprechend der Oberflächensprache aufgelöst. Die Konvertierung kann nicht rückgängig gemacht werden. Das normale Speichern der Feldkonfiguration löst keine Datenmigration aus.
 
-TODO
 
 ### Initiativen
 
 Mit Initiativen lassen sich gemeinsame Vorhaben wie Missionen, strategische Programme oder bereichsübergreifende Arbeitsgruppen in OSIRIS abbilden. Sie bündeln Personen, Projekte und Aktivitäten rund um ein gemeinsames Anliegen und können durch konkrete Ziele – sogenannte Objectives – untergliedert werden.
 
-<!-- Zur Einordnung: **Organisationseinheiten (Units)** bilden die organisatorische Zugehörigkeit und Hierarchie ab. **Forschungsbereiche (Topics)** beschreiben thematische Schwerpunkte und Querschnitte. **Initiativen** stehen für konkrete gemeinsame Vorhaben mit eigener Laufzeit sowie optionalen Mitgliedern und Zielen. Welche Struktur sinnvoll ist, richtet sich nach dem jeweiligen Institut; eine Arbeitsgruppe innerhalb der regulären Organisationshierarchie kann weiterhin als Organisationseinheit abgebildet werden. Grundlagen zur bisherigen Unterscheidung erklärt der Wiki-Beitrag [Organisationsstrukturen in OSIRIS](https://wiki.osiris-app.de/topics/organizational-structure/). -->
+Zur Einordnung: **Organisationseinheiten (Units)** bilden die organisatorische Hierarchie ab. **Forschungsbereiche (Topics)** beschreiben thematische Schwerpunkte. **Initiativen** bündeln gemeinsame Vorhaben mit eigener Laufzeit, optionalen Mitgliedern und Zielen. Die passende Bezeichnung kann die Einrichtung selbst wählen.
 
 Die Funktion lässt sich im Admin-Bereich aktivieren. Initiativen erhalten einen eigenen Navigationsbereich mit Übersichts- und Detailansichten. Ihr Erfassungsformular wird über den Form-Builder konfiguriert, einschließlich eigener Datenfelder, Beschriftungen und Pflichtfelder. Mehrsprachige Angaben sowie optionale Personenzuordnungen mit Rollen, etwa Mitglied oder Leitung, werden unterstützt.
 
-Objectives gehören jeweils zu genau einer Initiative. Sie erhalten eine Kennung, einen Titel, eine Beschreibung, einen über das Vokabular konfigurierbaren Typ und eine Laufzeit. Anlegen und Bearbeiten erfolgen direkt auf der Initiativenseite in einem Dialog. Beim Anlegen wird die Laufzeit der Initiative als Vorgabe übernommen. Die Nutzung von Objectives ist optional.
+Objectives gehören jeweils zu genau einer Initiative. Sie erhalten eine Kennung, einen Titel, eine Beschreibung, einen über das Vokabular konfigurierbaren Typ und eine Laufzeit. Objectives haben eigene Detail- und Bearbeitungsseiten. Von der Initiative aus führen Links direkt zu den zugehörigen Objectives und deren verknüpften Inhalten. Beim Anlegen wird die Laufzeit der Initiative als Vorgabe übernommen. Die Nutzung von Objectives ist optional.
 
-Über die neuen Formularmodule können Aktivitäten, Projekte, Anträge und Events mehreren Initiativen oder Objectives zugeordnet werden. Bei der Auswahl von Objectives werden die zugehörigen Initiativen automatisch mitgespeichert; zusätzliche direkte Initiativenzuordnungen werden ohne Doppelungen ergänzt. Beide Zuordnungen stehen in den erweiterten Suchen als Filter und Tabellenspalten zur Verfügung.
+Über die neuen Formularmodule können Aktivitäten, Projekte, Anträge, Events, Deadlines und Infrastrukturen mehreren Initiativen oder Objectives zugeordnet werden. Bei der Auswahl von Objectives werden die zugehörigen Initiativen automatisch mitgespeichert; zusätzliche direkte Initiativenzuordnungen werden ohne Doppelungen ergänzt. Bei Aktivitäten, Projekten, Anträgen und Events stehen beide Zuordnungen in den erweiterten Suchen als Filter und Tabellenspalten zur Verfügung. Im Report-Builder können sie als zusätzliche Spalten und zur Gruppierung verwendet werden.
 
-Bei Aktivitäten folgt die reguläre Auswahl dem Aktivitätsdatum und passt sich bei Datumsänderungen unmittelbar an. Auch nachträgliche Zuordnungen zu vergangenen Laufzeiten sind damit möglich. Mit dem zusätzlichen Recht „Initiativen und Objectives außerhalb der Laufzeit zuordnen“ öffnet „Alle anzeigen“ die vollständige Auswahl mit Suchfunktion. Bereits gespeicherte Zuordnungen bleiben bei Datumsänderungen erhalten.
+Die Objective-Auswahl bietet ein durchsuchbares Dropdown, das die Einträge nach Initiative gruppiert. Ausgewählte Objectives bleiben als entfernbare Karten sichtbar. Die Suche berücksichtigt Initiative, Kennung, Titel und Beschreibung; Tastaturbedienung und beschriftete Bedienelemente unterstützen die Auswahl auch ohne Maus.
+
+Bei Aktivitäten folgt die reguläre Auswahl dem Aktivitätsdatum und passt sich bei Datumsänderungen unmittelbar an. Auch nachträgliche Zuordnungen zu vergangenen Laufzeiten sind damit möglich. Mit dem zusätzlichen Recht „Initiativen und Objectives außerhalb der Laufzeit zuordnen“ öffnet „Alle anzeigen“ die vollständige Auswahl mit Suchfunktion. Bereits gespeicherte Zuordnungen bleiben bei Datumsänderungen erhalten. Objectives außerhalb des passenden Zeitraums zeigen statt ihrer Beschreibung einen kompakten Hinweis.
 
 Initiativen und Objectives können archiviert und wiederhergestellt werden. Abgelaufene Einträge werden gekennzeichnet; vergangene Initiativen bleiben über die Übersicht erreichbar. Vorhandene Verknüpfungen bleiben erhalten. Lese- und Bearbeitungsrechte werden über das bestehende Rollen- und Rechtesystem vergeben.
 
-Die öffentliche Portfolio-Integration ist optional vorgesehen. Eine stichtagsbezogene Auswertung ist als spätere Erweiterung geplant.
+Die Statistikseite bietet Auswertungen für ein Jahr, einen frei gewählten Zeitraum oder einen Stichtag. Wenn Objectives vorhanden sind, kann zwischen Initiativen und Objectives umgeschaltet werden. Verfügbar sind ein Balkendiagramm nach Inhaltstyp, eine Übersicht der Zuordnungszahlen und eine aufklappbare Liste der gezählten Inhalte. Tabellen lassen sich nach Excel exportieren; für die Weiterverarbeitung steht zusätzlich ein CSV-Download der Zuordnungszahlen bereit.
+
+Gezählt werden Inhalte, deren Datum oder Laufzeit den gewählten Zeitraum überschneidet. Mehrfachzuordnungen werden je Initiative beziehungsweise Objective gezählt; Summen über mehrere Zeilen sind daher keine eindeutigen Gesamtzahlen. Nicht datierbare Inhalte werden mit einem Hinweis ausgelassen. Die Auswertung verwendet die aktuell gespeicherten Daten und Beziehungen und rekonstruiert keine früheren Datenstände.
+
+Initiativen und Objectives sind außerdem über die OSIRIS-Suche erreichbar. Die zugehörigen Inhaltstabellen auf den Detailseiten bieten Excel-Exporte.
+
+### Gemeinsamer Formular-Builder
+
+Neben Aktivitäten und Initiativen verwenden jetzt auch Projekte, Anträge, Events, Deadlines und Infrastrukturen den Formular-Builder. Unter „Administration → Weitere Datenmodelle“ werden die gemeinsamen Einstellungen für Initiativen, Events, Deadlines und Infrastrukturen gebündelt; Projektformulare bleiben nach Projekttyp und Phase konfigurierbar.
+
+Systemfelder können innerhalb des Formulars verschoben, aber nicht entfernt oder für einzelne Rollen ausgeblendet werden. Wo das System einen Wert benötigt, bleibt die Pflichtangabe erhalten. Andere Felder lassen sich als Pflicht- oder Kann-Feld konfigurieren. Einsprachige und mehrsprachige Varianten desselben Datenfelds können nicht gleichzeitig verwendet werden.
 
 ### Projekte
 
@@ -41,7 +60,7 @@ Das Personenfeld bündelt die Zuordnung von Personen, Rollen und Organisationsei
 
 Mit dem zusätzlichen Recht „Frühere Antragsphasen korrigieren“ lassen sich bereits durchlaufene Phasen eines Antrags nachträglich bearbeiten, etwa zur Korrektur importierter Altdaten. Das normale Bearbeitungsrecht für den jeweiligen Antrag bleibt Voraussetzung. Der aktuelle Status und die bewilligte Laufzeit bleiben bei der Korrektur beantragter Angaben erhalten; es wird kein erneuter Statuswechsel ausgelöst. Die bearbeitete Phase wird in der Historie vermerkt. Gemeinsam verwendete Felder wie Titel und Personen bleiben gemeinsame Angaben des Antrags.
 
-Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt.
+Eine zusätzliche Entwurfsphase (`draft`) ist für einen späteren institutsinternen Freigabeprozess vorbereitet. Der bisherige Ablauf bleibt erhalten: Neue Anträge starten weiterhin als beantragt. Ein Draft-Genehmigungsprozess ist in dieser Version noch nicht enthalten.
 
 
 ### Events
@@ -66,6 +85,12 @@ Die Stammdatenformulare für Infrastrukturen verwenden jetzt ebenfalls den Form-
 
 Namen, Untertitel und Beschreibungen werden als Sprachfelder gespeichert. Bisherige Texte werden nach Englisch übernommen, deutsche Angaben bleiben als optionale Übersetzungen erhalten. Das neue Modul `subtitle-loc` ermöglicht mehrsprachige Untertitel auch in anderen dafür freigegebenen Formularen. Die KDSF-Zuordnungen bleiben als technisches Mapping erhalten; die Kennzeichnungen in der Infrastruktur-Oberfläche entfallen.
 
+### Zugehörigkeiten in Personenprofilen
+
+Der neue Profilreiter „Zugehörigkeiten“ bündelt Forschungsbereiche, Organisationseinheiten und direkte Mitgliedschaften in Initiativen. Aktuelle, zukünftige und vergangene Zugehörigkeiten werden getrennt dargestellt. Für Einheiten mit bekannten Zeiträumen ergänzt eine Zeitleiste die Übersicht; aus untergeordneten Einheiten abgeleitete Zugehörigkeiten sind ausdrücklich als solche gekennzeichnet.
+
+Initiativen erscheinen hier, wenn die Person über das Personenfeld der Initiative zugeordnet wurde und die notwendigen Sichtbarkeitsrechte vorliegen. Verknüpfte Publikationen oder Projekte allein begründen keine Mitgliedschaft.
+
 ### Neue Datenfelder
 
 Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Verknüpfungen. Welche Module zur Auswahl stehen, richtet sich nach der Entität und bei Projekten nach der jeweiligen Phase. Die technischen Modulnamen sind hier zur Orientierung im Feldkatalog angegeben; die angezeigten Beschriftungen lassen sich im Form-Builder anpassen.
@@ -75,6 +100,7 @@ Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Ver
 | Name (`name`) | Ein allgemeines Namensfeld, etwa für den Kurznamen einer Initiative oder eines Projekts. |
 | Beschreibung (`description`) | Eine Beschreibung mit Textformatierung für Aktivitäten, Initiativen und Projekte. |
 | Name, mehrsprachig (`name-loc`) | Ein Name mit getrennten Eingaben für die konfigurierten Inhaltssprachen. |
+| Untertitel, mehrsprachig (`subtitle-loc`) | Ein Untertitel in den konfigurierten Inhaltssprachen, unter anderem für Infrastrukturen. |
 | Titel, mehrsprachig (`title-loc`) | Ein mehrsprachiger Titel für Aktivitäten, Initiativen und Projekte. |
 | Zusammenfassung, mehrsprachig (`abstract-loc`) | Eine mehrsprachige Zusammenfassung für Aktivitäten und Projekte. |
 | Beschreibung, mehrsprachig (`description-loc`) | Eine mehrsprachige Beschreibung mit Textformatierung. |
@@ -93,6 +119,9 @@ Der Form-Builder bietet zusätzliche Standardmodule für Texte, Personen und Ver
 | Event-Beschreibung (`event-description`) | Beschreibung eines Events mit den bisherigen vollständigen Formatierungsmöglichkeiten; speichert in `description`. |
 | Event-Webseite (`url`) | Weblink eines Events im bisherigen Feld `url`. |
 | Event-Sichtbarkeit im Portfolio (`event-public`) | Checkbox für die öffentliche Freigabe eines Events im Feld `public`. Bei aktiviertem Portfolio ist sie für neue Events standardmäßig angekreuzt. |
+| Deadline-Titel, Termin und Typ (`deadline-title`, `deadline-date`, `deadline-type`) | Die bisherigen Deadline-Pflichtangaben als positionierbare Systemmodule. |
+| Infrastruktur-ID und Laufzeit (`infrastructure-id`, `infrastructure-date`) | Die eindeutige Infrastruktur-ID und der zugehörige Zeitraum. |
+| Infrastrukturangaben (`infrastructure-category`, `infrastructure-type`, `infrastructure-access`, `infrastructure-link`, `contact-email`, `infrastructure-collaborative`) | Kategorie, Typ, Zugang, Webseite, Kontaktadresse und Angaben zu Verbundinfrastrukturen. |
 
 Die mehrsprachigen Textmodule ersetzen im jeweiligen Formular ihre einsprachige Variante; beide Varianten desselben Feldes können nicht gleichzeitig verwendet werden. Pflichtangaben beziehen sich auf die Ausgangssprache, weitere Übersetzungen sind optional. Die oben beschriebenen mehrsprachigen Custom Fields ergänzen diese Standardmodule um frei definierbare Textfelder.
 
@@ -111,16 +140,15 @@ Mit dem Umzug der Projektformulare sind außerdem die bisherigen projektspezifis
 Projektpersonen werden außerhalb der Ablehnungsphase als Systemfeld eingebunden. Weitere systemseitig benötigte Felder hängen von der Projektphase ab; ihre Position im Formular bleibt konfigurierbar.
 
 
-### Bugfixes
+### Schnittstellen
 
-- Die Portfolio-API für Aktivitäten liefert jetzt die Typ- und Subtypinformationen in der angeforderten Sprache zurück.
+Die OSIRIS-API bietet Listen-, Detail- und Beziehungsendpunkte für Initiativen und Objectives. API-Clients benötigen das Leserecht `initiatives.read`; für verknüpfte Inhalte gelten zusätzlich deren eigene Leserechte. Die Endpunkte dienen der Abfrage der Daten. Die neuen Endpunkte sind im API-Bereich des Wikis dokumentiert.
 
+Auch die Portfolio-API stellt freigegebene Initiativen und Objectives sowie deren öffentliche Inhalte bereit. Die Detailantwort einer Initiative enthält die freigegebenen Objectives und Anzahlen der verknüpften öffentlichen Inhalte. Sichtbarkeitsregeln der Formularfelder werden berücksichtigt; interne Personenzuordnungen und Bearbeitungsinformationen werden nicht als rohe Metadaten veröffentlicht. Ein Objective wird nur ausgegeben, wenn auch seine Initiative öffentlich freigegeben ist. Öffentliche Portfolio-Seiten selbst sind eine getrennte Erweiterung.
 
+Forschungsbereiche werden aus den expliziten Zuordnungen der Initiative übernommen. Das optionale Forschungsspektrum wird dagegen aus den zugehörigen öffentlichen Publikationen abgeleitet.
 
-<time datetime="2026-XX-XX">XX.XX.2026</time>
-<a class="anchor" href="#version-2.X" id="version-2.X"></a>
-
-## Version 2.X (Beta)
+Lokalisierte API-Felder berücksichtigen die angefragte Sprache; `lang=all` ermöglicht bei den entsprechend umgestellten Ausgaben die vollständigen Sprachwerte. Die Portfolio-API für Aktivitäten liefert auch Typ und Subtyp in der angeforderten Sprache. Aktivitätslisten lassen sich zusätzlich nach Aktivitätskategorie filtern. Über `/portfolio/activities/details` können Aktivitätsdetails gebündelt mit Cursor-Paginierung abgerufen werden; pro Anfrage sind bis zu 500 Einträge möglich.
 
 ### Anmeldung mit Single Sign-On
 
@@ -128,7 +156,7 @@ Projektpersonen werden außerhalb der Ablehnungsphase als Systemfeld eingebunden
 - Bestehende Profile können in den eigenen Account-Einstellungen mit einem SSO-Konto verknüpft werden. Profilinformationen und Zuordnungen bleiben erhalten; die E-Mail-Adresse wird aus SSO übernommen. Die Zuordnung erfolgt über eine stabile SSO-Kennung und bleibt dadurch auch bei Änderungen des externen Nutzernamens oder der E-Mail-Adresse bestehen.
 - Neue SSO-Nutzer:innen bestätigen die Kontoerstellung ausdrücklich und ergänzen fehlende Profilangaben. Die Einstellungen zur Selbstregistrierung und ein gegebenenfalls erforderliches Registrierungstoken gelten auch für die SSO-Registrierung.
 - Im Parallelbetrieb bleibt ein vorhandenes OSIRIS-Passwort beim Verknüpfen erhalten. Auch direkt über SSO registrierte Personen können in ihren Account-Einstellungen ein lokales Passwort festlegen. „Passwort vergessen“ und der Passwort-Reset durch berechtigte Admins stehen ebenfalls für SSO-Konten zur Verfügung. Bereits früher entfernte Passwörter müssen neu gesetzt werden.
-- Fehlermeldungen bei der Anmeldung wurden vereinheitlicht, damit sie keine Auskunft über das Vorhandensein eines Kontos oder dessen Anmeldeverfahren geben. Passwort-Reset-Anfragen erhalten auch während der Wartefrist dieselbe neutrale Rückmeldung.
+- Die Anmeldung unterstützt gemeinsame Fehlermeldungen für ungültige Zugangsdaten. Passwort-Reset-Anfragen erhalten bei unbekannten Konten, nach dem Versand und innerhalb der Wartefrist dieselbe neutrale Rückmeldung. Innerhalb der Wartefrist wird keine weitere E-Mail versendet und der vorhandene Rücksetzlink bleibt gültig.
 
 ### Überarbeiteter Anmeldebereich
 
@@ -182,6 +210,8 @@ Nutzer:innen mit dem Recht `documents.central` finden die zentralen Inhalte in e
 
 Zentrale und bereits mit anderen OSIRIS-Inhalten verknüpfte Dokumente bleiben voneinander getrennt und können – abhängig von den persönlichen Rechten – über eigene Reiter aufgerufen werden. Die zentralen Dokumente sind außerdem in die OSIRIS-Suche integriert. Ein Treffer führt direkt zur betreffenden, hervorgehobenen Dokumentkarte in der Bibliothek.
 
+Die zentrale Bibliothek unterstützt auch SVG-Dateien. Sie werden als Download ausgeliefert und nicht direkt als aktive Grafik im Browser geöffnet.
+
 Der Zugriff auf die Dateien erfolgt ausschließlich über geschützte Routen. Dabei werden sowohl die Anmeldung als auch die notwendigen Berechtigungen geprüft; ein direkter öffentlicher Zugriff auf Dateien im Upload-Verzeichnis ist nicht vorgesehen.
 
 ### Aktivitätstypen kopieren
@@ -199,14 +229,25 @@ Bei aktivierter Funktion ist der Button standardmäßig eingeschaltet. Nutzer:in
 
 ### Weitere Entwicklungen
 
-- Die Indizes für die Datenbank werden nun in der OSIRIS Info (Admin-Bereich) überprüft und bei Bedarf erstellt, um die Performance zu gewährleisten.
+- Beim Öffnen der OSIRIS-Info im Admin-Bereich werden die hinterlegten Datenbankindizes angelegt beziehungsweise bestätigt. Die Prüfung ist außerdem über die Index-Migration erreichbar; die Indexdefinitionen werden für das neue Sprachdatenmodell noch überprüft.
 - Aktive Filter der zentralen Dokumentenbibliothek werden in der URL gespeichert. Gefilterte Ansichten, beispielsweise für eine bestimmte Kategorie oder ein Schlagwort, können dadurch als stabiler Link geteilt und später erneut geöffnet werden.
-- Die Portfolio-API unterstützt bei der Ausgabe von Aktivitäten eine zusätzliche Filterung nach Aktivitätskategorie.
-- Der Hintergrundjob zum Abruf von OpenAlex-Daten unterstützt die Authentifizierung mit einem Bearer-Token. Fehlgeschlagene Abrufe werden nicht länger dauerhaft als abgeschlossen behandelt, sondern bei einem späteren Durchlauf erneut versucht.
+- Der Hintergrundjob zum Abruf von OpenAlex-Daten unterstützt einen optionalen API-Key als Bearer-Token aus der Job-Konfiguration. Fehlgeschlagene Abrufe werden nicht länger dauerhaft als abgeschlossen behandelt, sondern bei einem späteren Durchlauf erneut versucht.
 - Die Sophie-Illustrationen wurden in einem einheitlichen Stil überarbeitet. Auch die Darstellungen der Fehlerseiten wurden entsprechend aktualisiert und übersichtlicher angeordnet.
+
+### Hinweise zum Upgrade und Beta-Test
+
+Neue Installationen erhalten Standardformulare für einen Drittmittel-Projekttyp, Events, Deadlines, Initiativen und Infrastrukturen. Vorhandene institutionelle Formularkonfigurationen werden bei der Initialisierung nicht überschrieben. Beim Upgrade werden die bisherigen Projekt- und Infrastrukturkonfigurationen übernommen; Events und Deadlines erhalten die entsprechende Standarddefinition.
+
+Bestehende Texte werden bei der Sprachmigration grundsätzlich als Englisch behandelt, bisherige deutsche Angaben bleiben als optionale Übersetzungen erhalten. Personenprofile, Organisationseinheiten und das Positionsvokabular werden beim allgemeinen Upgrade auf 3.0 ebenfalls migriert. Die Route `/migrate/localization` bleibt für einen gesonderten oder wiederholten Durchlauf verfügbar; bereits vorhandene Sprachwerte werden dabei beibehalten. Die Migration von Projekt-, Antrags- und Infrastrukturtexten ist in die jeweilige Formularmigration eingebunden. Schnittstellenanbindungen und eigene Abfragen müssen die neuen Sprachfelder berücksichtigen.
+
+Die PHP-Abhängigkeiten müssen beim Update anhand der mitgelieferten `composer.lock` aktualisiert werden; die neue SSO-Anbindung verwendet eine zusätzliche OpenID-Connect-Bibliothek.
+
+Die Draftphase ist nur vorbereitet. Historische Datenstände von Initiativenzuordnungen werden durch die Statistik nicht rekonstruiert. Die öffentlichen Portfolio-Ansichten sind unabhängig von den bereits vorhandenen API-Endpunkten zu ergänzen.
 
 ### Bugfixes
 
+- Die Portfolio-API für Aktivitäten löst Typ- und Subtypbezeichnungen in der angeforderten Sprache auf. Bei der gemeinsamen Detailausgabe bleiben auch verknüpfte Projektnamen und -titel mehrsprachig.
+- HTML- und Word-Berichte exportieren auch einzelne Listeneinträge. Fehlerhafte Bausteine werden mit Hinweisen behandelt, ohne nachfolgende Inhalte vollständig zu überspringen; Warnungen und temporäre Dateien werden gesondert behandelt.
 - Lehrveranstaltungen werden in Personenprofilen wieder korrekt sortiert.
 - Die Jahres- und Aktivitätsspalten in Journalansichten erhalten verlässliche Standardinhalte.
 - Projektdetails können auch dann fehlerfrei angezeigt werden, wenn kein Startdatum hinterlegt ist.

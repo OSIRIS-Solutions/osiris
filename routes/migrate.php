@@ -596,6 +596,7 @@ Route::get('/migrate', function () {
     }
     if (version_compare($DBversion, '3.0.0', '<')) {
         include BASEPATH . "/routes/migration/languages.php";
+        include BASEPATH . "/routes/migration/localization.php";
         include BASEPATH . "/routes/migration/project-forms.php";
         include BASEPATH . "/routes/migration/event-forms.php";
         include BASEPATH . "/routes/migration/deadline-forms.php";
