@@ -266,8 +266,8 @@ Route::get('/install', function () {
 
     // check version
     $version = $osiris->system->findOne(['key' => 'version']);
-    if (!empty($version) && !isset($_GET['force'])) {
-        echo "<p>Es sieht so aus, als wäre OSIRIS bereits initialisiert. Falls du eine Neu-Initialisierung erzwingen möchtest, klicke bitte <a href='?force'>hier</a>.</p>";
+    if (!empty($version)) {
+        echo "<p>Es sieht so aus, als wäre OSIRIS bereits initialisiert.</p>";
         include BASEPATH . "/footer.php";
         die;
     }
