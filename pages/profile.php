@@ -804,7 +804,7 @@ if (isset($_GET['verbose'])) {
         <?php if ($affiliationTopics): ?>
             <div class="affiliation-block">
                 <div class="affiliation-heading">
-                    <h3><i class="ph-duotone ph-lightbulb" aria-hidden="true"></i> <?= e($Settings->topicLabel()) ?></h3>
+                    <h3><i class="ph-duotone ph-puzzle-piece" aria-hidden="true"></i> <?= e($Settings->topicLabel()) ?></h3>
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
                         <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/edit/<?= e($user) ?>#section-research" aria-label="<?= e(translate('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
                     <?php endif; ?>
@@ -817,7 +817,7 @@ if (isset($_GET['verbose'])) {
             <div class="affiliation-block">
                 <div class="affiliation-heading">
                     <h3>
-                        <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
+                        <i class="ph-duotone ph-users-three" aria-hidden="true"></i>
                         <?= translate('people.organisational_unit_s') ?>
                     </h3>
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
