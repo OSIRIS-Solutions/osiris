@@ -28,6 +28,7 @@ foreach ($project['phases'] as $phase) {
     $config = ProjectForms::builder($project, $phase['id']);
     $ids = array_column(array_filter($phase['fields'], fn($field) => ($field['type'] ?? '') === 'field'), 'id');
     check(array_diff($ids, array_keys($config->modules)) === [], 'All default modules are available in phase ' . $phase['id']);
+    if (in_array('comment', $ids, true)) check(end($phase['fields'])['id'] === 'comment', 'Installed project forms place comments after every other field.');
 }
 $database->adminGeneral->updateOne(['id' => 'initiative-fields'], ['$set' => ['fields' => []]]);
 $before = serialize($database);

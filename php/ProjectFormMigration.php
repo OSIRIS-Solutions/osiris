@@ -7,11 +7,11 @@ final class ProjectFormMigration
 {
     // The order and sections come from the legacy pages/proposals/edit.php form,
     // rather than the differently ordered field catalogue or checkbox submission.
+    // Comments deliberately follow all other fields.
     private const SECTIONS = [
         ['projects.submission', ['submission_date']],
         ['common.approval', ['approval_date']],
         ['common.rejection', ['rejection_date']],
-        [null, ['comment']],
         ['projects.general_information', ['acronym', 'name', 'name_de', 'title', 'title_de', 'start_proposed', 'end_proposed', 'start', 'end', 'purpose', 'internal_number']],
         ['common.persons', ['persons-project']],
         ['projects.scholarship', ['scholarship', 'university']],
@@ -92,7 +92,10 @@ final class ProjectFormMigration
         }
         // Preserve unrecognized/retired fields as well, so no configuration is
         // silently lost while the shared project module catalogue is built.
-        foreach (array_keys($selected) as $id) $append($id);
+        foreach (array_keys($selected) as $id) {
+            if ($id !== 'comment') $append($id);
+        }
+        $append('comment');
         return $this->upgradeFields($fields, $phase);
     }
 

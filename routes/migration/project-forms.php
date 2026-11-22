@@ -21,6 +21,10 @@ foreach ($osiris->adminProjects->find() as $projectType) {
         $fields = $hasFields
             ? $projectForms->upgradeFields(DB::doc2Arr($phase['fields']), $phase['id'])
             : $projectForms->fields($phase['id'], $phase['modules'] ?? []);
+        // Apply the new default during migration, including earlier migrated forms.
+        $comments = array_filter($fields, fn($field) => ($field['type'] ?? 'field') === 'field' && ($field['id'] ?? '') === 'comment');
+        $fields = array_values(array_filter($fields, fn($field) => ($field['type'] ?? 'field') !== 'field' || ($field['id'] ?? '') !== 'comment'));
+        $fields = array_merge($fields, array_values($comments));
         if ($hasFields && json_encode($fields) === json_encode($phase['fields'])) {
             $existing++;
             continue;

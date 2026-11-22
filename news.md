@@ -52,7 +52,7 @@ Systemfelder können innerhalb des Formulars verschoben, aber nicht entfernt ode
 
 Die Erfassungsformulare für Projekte und Projektanträge verwenden jetzt den Form-Builder. Im Admin-Bereich lässt sich für jeden Projekttyp und jede Phase ein eigenes Formular zusammenstellen. Felder können angeordnet, beschriftet und als Pflichtfelder festgelegt werden; Überschriften, Hinweise und Trennlinien helfen bei der Strukturierung. Systemseitig benötigte Felder bleiben erhalten und können innerhalb des Formulars positioniert werden. Die Detailansichten übernehmen ebenfalls die konfigurierte Feldreihenfolge, Beschriftungen und Gliederung.
 
-Bestehende Formularkonfigurationen werden einschließlich Feldreihenfolge, Abschnitten und Pflichtfeldern übernommen. Die bisherige Konfiguration bleibt während der Umstellung zusätzlich erhalten.
+Bestehende Formularkonfigurationen werden einschließlich Abschnitten und Pflichtfeldern übernommen. Die Feldreihenfolge bleibt erhalten; ein vorhandenes Kommentarfeld wird bei der Migration ans Formularende gesetzt. Anschließend bleibt seine Position im Form-Builder frei anpassbar. Die bisherige Konfiguration bleibt während der Umstellung zusätzlich erhalten.
 
 Kurznamen, Titel und Zusammenfassungen können mehrsprachig erfasst werden. Vorhandene Texte werden als englische Ausgangswerte übernommen; bisherige deutsche Texte bleiben als Übersetzungen erhalten. Deutsche Übersetzungen sind künftig optional.
 

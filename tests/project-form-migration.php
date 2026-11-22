@@ -113,7 +113,7 @@ $modules = [
 $fields = $migration->fields('proposed', new MongoDB\Model\BSONArray(array_map(fn($m) => new MongoDB\Model\BSONDocument($m), $modules)));
 $byId = array_column(array_filter($fields, fn($f) => isset($f['id'])), null, 'id');
 $ids = array_keys($byId);
-check($ids === ['submission_date', 'comment', 'name-loc', 'title-loc', 'project-date-proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field', 'initiatives'], 'Fields follow the old visible form, including custom catalogue order and retained unknown fields.');
+check($ids === ['submission_date', 'name-loc', 'title-loc', 'project-date-proposed', 'persons-project', 'funder', 'funding_program_select', 'funding_program', 'abstract-loc', 'website', 'topics', 'custom-first', 'custom-second', 'nagoya', 'personnel', 'retired-field', 'initiatives', 'comment'], 'Fields retain their sections and custom catalogue order, with comments after all known and unknown fields.');
 foreach (['name-loc', 'title-loc', 'submission_date', 'project-date-proposed', 'persons-project', 'funder'] as $id) {
     check($byId[$id]['props']['required'] === true, "System requirement retained for $id.");
 }
@@ -126,6 +126,10 @@ check($byId['topics']['props']['label'] === 'Research areas', 'Institutional top
 $headings = array_values(array_filter($fields, fn($f) => $f['type'] === 'heading'));
 check(array_column(array_column($headings, 'props'), 'text') === ['Submission', 'General information', 'Persons', 'Funding', 'Project description', 'Institutional fields', 'Nagoya Protocol', 'Resources and Personnel'], 'Existing section headings are explicit ordered builder elements.');
 check($headings[1]['props']['text_de'] === $language->resolve('projects.general_information', 'de', 'en'), 'Headings include German translations.');
+foreach (['proposed', 'approved', 'rejected', 'project'] as $phaseId) {
+    $generated = $migration->fields($phaseId, ['comment*', 'website', 'retired-field']);
+    check(end($generated)['id'] === 'comment' && end($generated)['props']['required'], "New $phaseId forms place configured comments last without changing their requirements.");
+}
 $empty = $migration->fields('rejected', []);
 check(array_column($empty, 'id') === ['rejection_date'], 'Rejected phases only require the rejection date.');
 check(count(array_filter($empty, fn($f) => $f['type'] === 'heading')) === 1, 'Only sections containing fields are emitted.');
@@ -233,4 +237,14 @@ check($migration->upgradeFields($customized) === $customized, 'Existing project-
 $osiris->projects->documents[0]['name'] = new MongoDB\Model\BSONDocument(['en' => 'Old English', 'de' => 'Altes Deutsch']);
 runMigration();
 check($osiris->projects->writes === 1, 'Already migrated BSON language maps do not trigger another write.');
+// Re-running the production migration moves an earlier comment but preserves its properties.
+$comment = ['id' => 'comment', 'type' => 'field', 'props' => ['required' => true, 'label' => 'Internal notes', 'width' => 6]];
+$stored = $osiris->adminProjects->documents[0]['phases'][0]['fields'];
+$remaining = array_values(array_filter($stored, fn($field) => ($field['id'] ?? '') !== 'comment'));
+$osiris->adminProjects->documents[0]['phases'][0]['fields'] = array_merge([$comment], $remaining);
+check(runMigration() === [1, 4], 'Previously migrated forms with an early comment are updated once.');
+check($osiris->adminProjects->documents[0]['phases'][0]['fields'] === array_merge($remaining, [$comment]), 'Only the comment position changes; all other fields, headings and properties stay intact.');
+check(runMigration() === [0, 5], 'A comment already at the end causes no further migration write.');
+check($migration->upgradeFields(array_merge([$comment], $remaining), 'proposed')[0] === $comment, 'Reading or editing a configured form does not force its comment to the end.');
+
 echo "Project form migration tests passed ($checks checks).\n";
