@@ -88,11 +88,6 @@
                     <p><?= lang('admin.portfolio_description') ?></p>
                 </a>
             <?php } ?>
-            <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
-                <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
-                <b><?= lang('common.resource_hub') ?></b>
-                <p><?= lang('admin.settings_for_the_resource_hub') ?></p>
-            </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
@@ -185,33 +180,39 @@
         <div class="col-md-6 col-lg-4" id="content-settings">
             <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('admin.data_model_and_content') ?></h2>
             <?php if ($adminPerm) { ?>
-            <a class="card" href="<?= ROOTPATH ?>/admin/categories">
-                <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
-                <b><?= lang('common.activities') ?></b>
-                <p><?= lang('admin.activities_description') ?></p>
-            </a>
-
-            <?php if ($Settings->featureEnabled('projects')) { ?>
-                <a class="card" href="<?= ROOTPATH ?>/admin/projects">
-                    <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
-                    <b><?= lang('common.projects') ?></b>
-                    <p><?= lang('admin.projects_description') ?></p>
+                <a class="card" href="<?= ROOTPATH ?>/admin/categories">
+                    <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
+                    <b><?= lang('common.activities') ?></b>
+                    <p><?= lang('admin.activities_description') ?></p>
                 </a>
+
+                <?php if ($Settings->featureEnabled('projects')) { ?>
+                    <a class="card" href="<?= ROOTPATH ?>/admin/projects">
+                        <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
+                        <b><?= lang('common.projects') ?></b>
+                        <p><?= lang('admin.projects_description') ?></p>
+                    </a>
+                <?php } ?>
+
+                <a class="card" href="<?= ROOTPATH ?>/admin/journals">
+                    <i class="ph-duotone ph-stack" aria-hidden="true"></i>
+                    <b><?= lang('common.journals') ?></b>
+                    <p><?= lang('admin.journals_description') ?></p>
+                </a>
+
+                <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
+                    <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
+                    <b><?= lang('common.resource_hub') ?></b>
+                    <p><?= lang('admin.settings_for_the_resource_hub') ?></p>
+                </a>
+
+                <a class="card" href="<?= ROOTPATH ?>/admin/data-model">
+                    <i class="ph-duotone ph-gear-six" aria-hidden="true"></i>
+                    <b><?= lang('common.data_model') ?></b>
+                    <p><?= lang('admin.manage_other_data_model_settings') ?></p>
+                </a>
+
             <?php } ?>
-
-            <a class="card" href="<?= ROOTPATH ?>/admin/journals">
-                <i class="ph-duotone ph-stack" aria-hidden="true"></i>
-                <b><?= lang('common.journals') ?></b>
-                <p><?= lang('admin.journals_description') ?></p>
-            </a>
-
-            <a class="card" href="<?= ROOTPATH ?>/admin/data-model">
-                <i class="ph-duotone ph-gear-six" aria-hidden="true"></i>
-                <b><?= lang('common.data_model') ?></b>
-                <p><?= lang('admin.manage_other_data_model_settings') ?></p>
-            </a>
-
-            <?php } ?> 
 
             <?php if ($newsOutletsPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/news">
