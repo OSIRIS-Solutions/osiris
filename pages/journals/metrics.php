@@ -91,7 +91,7 @@ if (isset($_GET['year'])) {
             <p class="mt-5">
                 <?= t('journals.we_found') ?>
                 <strong class="highlight" id="total"><?= $count ?></strong>
-                <?= lang("{$label} that do not have metrics for this year. ", "Für {$label} gefunden, die noch keine Metriken für dieses Jahr haben. ") ?>
+                <?= t('journals.label_that_do_not_have_metrics_for_this_year', ['label' => $label]) ?>
             </p>
 
             <button id="startBtn" onclick="startProcess()" class="btn primary">

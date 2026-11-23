@@ -12,6 +12,8 @@ return [
     'do_you_want_to_delete_this_event' => 'Wilt u deze gebeurtenis verwijderen?',
     'participating_persons' => 'Deelnemende personen',
     'withdraw_participation' => 'Deelname intrekken',
+    'invalid_event_type' => 'Selecteer een geldig gebeurtenistype.',
+    'i_participate' => 'Ik doe mee',
     'participate' => 'Doe mee',
     'no_one_will_participate_or_has_participated' => 'Niemand zal deelnemen of heeft deelgenomen',
     'interested_persons' => 'Geïnteresseerden',
@@ -37,4 +39,6 @@ return [
     'deadline_deleted_successfully' => 'Deadline succesvol verwijderd.',
     'no_activities_found_for_this_year' => 'Er zijn geen activiteiten gevonden voor dit jaar.',
     'country_iso_code' => 'Land (ISO-code)',
+    'a_deadline_with_the_same_title_and_date_already_exists' => 'Er bestaat al een deadline met dezelfde titel en datum.',
+    'deadline_added_successfully' => 'Deadline succesvol toegevoegd.',
 ];

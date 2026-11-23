@@ -524,4 +524,6 @@ return [
     'thesis_status' => 'Status (Thesis)',
     'thesis' => 'Thesis',
     'volume' => 'Volume',
+    'add_files' => 'Add files',
+    'no_departments_assigned' => 'No departments assigned.',
 ];

@@ -92,7 +92,7 @@ final class DeadlineForms
         $vocabulary = new Vocabulary();
         $knownType = in_array($values['type'] ?? '', array_column($vocabulary->getValues('deadline-type'), 'id'), true);
         if (!$knownType && ($values['type'] ?? '') !== ($previous['type'] ?? null)) {
-            throw new InvalidArgumentException(lang('Invalid deadline type.', 'Ungültiger Termintyp.'));
+            throw new InvalidArgumentException(t('common.invalid_deadline_type'));
         }
         // Keep the existing date and text keys; normalize custom fields and associations separately.
         $plain = array_intersect_key($values, array_flip(self::TEXT_FIELDS));

@@ -823,7 +823,7 @@ class Settings
         if (!$this->featureEnabled('resource-hub')) return '';
         $rh = $this->get('resource-hub');
         $label = $rh['label'] ?? [];
-        if (empty($label) || !isset($label['en'])) return lang('Resource Hub', 'Ressourcen-Hub');
+        if (empty($label) || !isset($label['en'])) return t('common.resource_hub');
         return lang($label['en'], $label['de'] ?? null);
         return t('common.resource_hub');
     }
@@ -959,8 +959,8 @@ class Settings
             </select>
             <script>
                 $('#tag-select').multiSelect({
-                    noneText: '<?= lang('No ' . $tagName . ' selected', 'Keine ' . $tagName . ' ausgewählt') ?>',
-                    allText: '<?= lang('All ' . $tagName . 's', 'Alle ' . $tagName . 's') ?>',
+                    noneText: <?= json_encode(t('admin.no_tag_selected', ['tag' => $tagName]), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>,
+                    allText: <?= json_encode(t('admin.all_tags', ['tags' => $tagName . 's']), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>,
                 });
             </script>
         </div>
@@ -1055,17 +1055,17 @@ class Settings
     public static function getHistoryType($type)
     {
         $mapping = [
-            'created' => lang('Created by ', 'Erstellt von '),
-            'edited' => lang('Edited by ', 'Bearbeitet von '),
-            'imported' => lang('Imported by ', 'Importiert von '),
-            'workflow-reset' => lang('Workflow reset by ', 'Workflow zurückgesetzt von '),
-            'workflow-approve' => lang('Workflow step approved by ', 'Workflow-Schritt genehmigt von '),
-            'workflow-reject' => lang('Workflow step rejected by ', 'Workflow-Schritt abgelehnt von '),
-            'workflow-reply' => lang('Workflow rejection commented by ', 'Workflow-Ablehnung kommentiert von '),
-            'modified-spectrum' => lang('Spectrum modified by ', 'Spektrum bearbeitet von '),
-            'restored-spectrum' => lang('Spectrum restored by ', 'Spektrum wiederhergestellt von '),
+            'created' => t('common.created_by'),
+            'edited' => t('common.edited_by'),
+            'imported' => t('common.imported_by'),
+            'workflow-reset' => t('admin.workflow_reset_by'),
+            'workflow-approve' => t('admin.workflow_step_approved_by'),
+            'workflow-reject' => t('admin.workflow_step_rejected_by'),
+            'workflow-reply' => t('admin.workflow_rejection_commented_by'),
+            'modified-spectrum' => t('admin.spectrum_modified_by'),
+            'restored-spectrum' => t('admin.spectrum_restored_by'),
         ];
-        return $mapping[$type] ?? ucfirst($type) . lang(' by ', ' von ');
+        return $mapping[$type] ?? ucfirst($type) . t('common.by');
     }
 
     public function getDOImappings()

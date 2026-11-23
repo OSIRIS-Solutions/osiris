@@ -1,7 +1,7 @@
 <?php
 $jsTranslations = [];
 foreach (require BASEPATH . '/lang/js_keys.php' as $key) {
-    $jsTranslations[$key] = lang($key);
+    $jsTranslations[$key] = t($key);
 }
 ?>
 <script>

@@ -14,4 +14,5 @@ return [
     'back_to_profile' => 'プロフィールに戻る',
     'orcid_not_authenticated' => 'ORCID 認証されていません',
     'your_orcid_has_been_disconnected' => 'ORCIDが切断されました。',
+    'show_skipped_works' => 'スキップされた作品を表示',
 ];

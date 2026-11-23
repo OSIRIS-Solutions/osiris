@@ -14,4 +14,5 @@ return [
     'back_to_profile' => 'Torna al profilo',
     'orcid_not_authenticated' => 'ORCID Non autenticato',
     'your_orcid_has_been_disconnected' => 'Il tuo ORCID è stato disconnesso.',
+    'show_skipped_works' => 'Mostra i lavori saltati',
 ];

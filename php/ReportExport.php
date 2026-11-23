@@ -8,7 +8,7 @@ class ReportExport
 
     public function setBlock(int $number, array|ArrayAccess $step): void
     {
-        $this->block = lang('Block', 'Baustein') . ' ' . $number . ' (' .
+        $this->block = t('reports.block') . ' ' . $number . ' (' .
             ($step['title'] ?? $step['name'] ?? $step['type'] ?? '?') . ')';
     }
 
@@ -55,8 +55,7 @@ class ReportExport
             });
         } catch (Throwable $error) {
             $this->issue($container,
-                lang('Formatting could not be exported; the content follows as plain text.',
-                    'Die Formatierung konnte nicht exportiert werden; der Inhalt folgt als Klartext.'),
+                t('reports.formatting_could_not_be_exported_the_content_follows_as_plain_text'),
                 $error->getMessage());
             $container->addText($this->plainText($html));
         }

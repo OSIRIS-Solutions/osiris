@@ -12,6 +12,8 @@ return [
     'do_you_want_to_delete_this_event' => 'Vuoi eliminare questo evento?',
     'participating_persons' => 'Partecipanti',
     'withdraw_participation' => 'Ritira la partecipazione',
+    'invalid_event_type' => 'Seleziona un tipo di evento valido.',
+    'i_participate' => 'Partecipo',
     'participate' => 'Partecipa',
     'no_one_will_participate_or_has_participated' => 'Nessuno parteciperà o ha partecipato',
     'interested_persons' => 'Persone interessate',
@@ -37,4 +39,6 @@ return [
     'deadline_deleted_successfully' => 'Scadenza eliminata con successo.',
     'no_activities_found_for_this_year' => 'Nessuna attività trovata per quest\'anno.',
     'country_iso_code' => 'Paese (codice ISO)',
+    'a_deadline_with_the_same_title_and_date_already_exists' => 'Esiste già una scadenza con lo stesso titolo e la stessa data.',
+    'deadline_added_successfully' => 'Scadenza aggiunta con successo.',
 ];

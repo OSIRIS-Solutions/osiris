@@ -81,12 +81,12 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                 ?>
                     <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
                         <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
-                        <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
+                        <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(t('admin.system_field')) ?>"></i><?php endif; ?>
                     </span>
                 <?php endforeach; ?>
             </div>
             <a class="btn secondary" href="<?= ROOTPATH ?>/admin/initiatives/fields">
-                <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
+                <i class="ph ph-edit"></i> <?= t('admin.edit_in_form_builder') ?>
             </a>
         </div>
     </div>
@@ -127,12 +127,12 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                     ?>
                         <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
                             <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
-                            <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
+                            <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(t('admin.system_field')) ?>"></i><?php endif; ?>
                         </span>
                     <?php endforeach; ?>
                 </div>
                 <a class="btn secondary" href="<?= ROOTPATH ?>/admin/<?= e($entity) ?>/fields">
-                    <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
+                    <i class="ph ph-edit"></i> <?= t('admin.edit_in_form_builder') ?>
                 </a>
             </div>
         </div>
@@ -175,12 +175,12 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                 ?>
                     <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
                         <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
-                        <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
+                        <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(t('admin.system_field')) ?>"></i><?php endif; ?>
                     </span>
                 <?php endforeach; ?>
             </div>
             <a class="btn secondary" href="<?= ROOTPATH ?>/admin/infrastructures/fields">
-                <i class="ph ph-edit"></i> <?= lang('Edit in Form Builder', 'Im Form-Builder bearbeiten') ?>
+                <i class="ph ph-edit"></i> <?= t('admin.edit_in_form_builder') ?>
             </a>
 
             <hr>

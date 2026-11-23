@@ -29,7 +29,7 @@ if (is_array($uploadId) || $uploadId instanceof Traversable) $uploadId = $upload
         uploading = true;
         file.disabled = true;
         widget.querySelector('.remove-image').disabled = true;
-        status.textContent = <?= json_encode(lang('Uploading…', 'Wird hochgeladen…'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        status.textContent = <?= json_encode(t('projects.uploading'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         try {
             const data = new FormData(); data.append('image', file.files[0]); data.append('project_id', <?= json_encode((string) $uploadId, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
             const response = await fetch(<?= json_encode(ROOTPATH . '/crud/upload-image') ?>, {method: 'POST', body: data});

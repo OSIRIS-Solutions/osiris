@@ -12,8 +12,7 @@ if (!empty($fixture['capture_output'])) {
     require dirname(__DIR__, 2) . '/vendor/autoload.php';
     ob_start();
 }
-function lang($en, $de = null) { return $en; }
-function t($key, array $replace = []) { return $key; }
+require_once __DIR__ . '/interface-language.php';
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function abortwith($code, $message = '', ...$unused) { throw new RuntimeException($message, $code); }
 

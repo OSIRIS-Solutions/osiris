@@ -115,7 +115,7 @@ if (!empty($works_to_import)) { ?>
                     <?= t('orcid.import') ?>
                 </button>
                 <button type="submit" name="skip" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn secondary small">
-                    <?= lang('Skip', 'Überspringen') ?>
+                    <?= t('admin.skip') ?>
                 </button>
             </form>
         </div>
@@ -129,7 +129,7 @@ if (!empty($works_to_import)) { ?>
 <?php if(!empty($skipped_works)) { ?>
     <br>
     <button class="btn secondary small" type="button" onclick="document.querySelector('.skipped-works').style.display = document.querySelector('.skipped-works').style.display === 'none' ? 'block' : 'none';">
-        <?= lang('Show skipped works', 'Übersprungene Werke anzeigen') . ' ' . '[' . count($skipped_works) . ']' ?> 
+        <?= t('orcid.show_skipped_works') . ' ' . '[' . count($skipped_works) . ']' ?>
     </button>
     <div class="skipped-works" style="display:none;">
         <?php    
@@ -178,7 +178,7 @@ if (!empty($works_to_import)) { ?>
                 </p>
                 <form method="post">
                     <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn success small">
-                        <?= lang('Import', 'Importieren') ?>
+                        <?= t('orcid.import') ?>
                     </button>
                 </form>
             </div>

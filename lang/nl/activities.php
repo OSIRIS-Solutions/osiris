@@ -525,4 +525,6 @@ return [
     'thesis_status' => 'Status (Scriptie)',
     'thesis' => 'Scriptie',
     'volume' => 'Omvang',
+    'add_files' => 'Bestanden toevoegen',
+    'no_departments_assigned' => 'Er zijn geen afdelingen toegewezen.',
 ];

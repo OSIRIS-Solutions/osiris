@@ -15,17 +15,17 @@
  */
 
 
-function migrationCard($title_en, $title_de, $text_en, $text_de, $count = null, $label_en = null, $label_de = null)
+function migrationCard(string $title, string $text, $count = null, ?string $label = null)
 {
     echo '<div class="migration-card">';
-    echo '<h3 class="migration-ok">✓ ' . lang($title_en, $title_de) . '</h3>';
-    echo '<p>' . lang($text_en, $text_de) . '</p>';
+    echo '<h3 class="migration-ok">✓ ' . e($title) . '</h3>';
+    echo '<p>' . e($text) . '</p>';
 
     if ($count !== null) {
         echo '<div class="migration-summary">';
         echo '<div class="migration-stat">';
         echo '<strong>' . intval($count) . '</strong>';
-        echo '<span>' . lang($label_en ?? 'documents updated', $label_de ?? 'Dokumente aktualisiert') . '</span>';
+        echo '<span>' . e($label ?? t('admin.documents_updated')) . '</span>';
         echo '</div>';
         echo '</div>';
     }

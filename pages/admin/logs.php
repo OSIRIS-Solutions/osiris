@@ -22,11 +22,11 @@ $parsedown = new Parsedown();
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-        <?= lang('Import Logs', 'Importprotokolle') ?>
+        <?= t('admin.import_logs') ?>
     </h1>
 
     <p>
-        <?= lang('In case you run supported import or other automated processes, you can view the logs here.', 'Falls du unterstützte Importe oder andere automatisierte Prozesse ausführst, kannst du die Protokolle hier einsehen.') ?>
+        <?= t('admin.in_case_you_run_supported_import_or_other_automated_processes_you') ?>
     </p>
 
     <!-- load import logs from ./logs -->
@@ -59,7 +59,7 @@ $parsedown = new Parsedown();
         <?php } ?>
     <?php
     } else {
-        echo '<p>' . lang('No import logs found.', 'Keine Importprotokolle gefunden.') . '</p>';
+        echo '<p>' . t('admin.no_import_logs_found') . '</p>';
     }
     ?>
 </div>

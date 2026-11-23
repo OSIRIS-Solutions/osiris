@@ -29,4 +29,5 @@ return [
     'teaching_category' => 'Categoría de la actividad docente',
     'teaching_course_module' => 'Curso para el siguiente módulo',
     'publication_place' => 'Lugar de publicación',
+    'please_select' => '-- Selecciona una opción --',
 ];

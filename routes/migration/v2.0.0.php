@@ -55,13 +55,10 @@ if (!empty($ops)) {
 }
 
 migrationCard(
-    'Person search index updated',
-    'Personen-Suchindex aktualisiert',
-    'Search text fields for persons were rebuilt where necessary. This improves person search and command palette results.',
-    'Suchtexte für Personen wurden bei Bedarf neu aufgebaut. Das verbessert die Personensuche und die Treffer in der Command Palette.',
+    t('admin.person_search_index_updated'),
+    t('admin.search_text_fields_for_persons_were_rebuilt_where_necessary_this_i'),
     $updated,
-    'person records updated',
-    'Personendatensätze aktualisiert'
+    t('admin.person_records_updated')
 );
 
 
@@ -95,13 +92,10 @@ foreach ($users as $user) {
     $cvUpdated++;
 }
 migrationCard(
-    'CV date format migrated',
-    'CV-Datumsformat migriert',
-    'CV date entries were converted to the current OSIRIS format where needed.',
-    'CV-Datumseinträge wurden bei Bedarf in das aktuelle OSIRIS-Format überführt.',
+    t('admin.cv_date_format_migrated'),
+    t('admin.cv_date_entries_were_converted_to_the_current_osiris_format_where'),
     $cvUpdated,
-    'person records checked and updated',
-    'Personendatensätze geprüft und aktualisiert'
+    t('admin.person_records_checked_and_updated')
 );
 
 
@@ -132,13 +126,10 @@ foreach ($activities as $activity) {
 }
 
 migrationCard(
-    'Activity update metadata restored',
-    'Aktualisierungsmetadaten für Aktivitäten wiederhergestellt',
-    'The fields updated and updated_by were reconstructed from existing activity history entries.',
-    'Die Felder updated und updated_by wurden aus bestehenden Änderungshistorien der Aktivitäten rekonstruiert.',
+    t('admin.activity_update_metadata_restored'),
+    t('admin.the_fields_updated_and_updated_by_were_reconstructed_from_existing'),
     $N,
-    'activities updated',
-    'Aktivitäten aktualisiert'
+    t('admin.activities_updated')
 );
 
 // Migrate OpenAlex IDs from 'openalex' field to 'openalex_id' and create indexes for command palette search
@@ -154,13 +145,10 @@ foreach ($activities as $activity) {
     $N++;
 }
 migrationCard(
-    'OpenAlex IDs migrated',
-    'OpenAlex-IDs migriert',
-    'OpenAlex identifiers were moved to the new openalex_id field to make them consistent with the new data model.',
-    'OpenAlex-IDs wurden in das neue Feld openalex_id verschoben, um sie mit dem neuen Datenmodell konsistent zu machen.',
+    t('admin.openalex_ids_migrated'),
+    t('admin.openalex_identifiers_were_moved_to_the_new_openalex_id_field_to_ma'),
     $N,
-    'activities updated',
-    'Aktivitäten aktualisiert'
+    t('admin.activities_updated')
 );
 
 /* Create an index if it doesn't already exist. */

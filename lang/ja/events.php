@@ -12,6 +12,8 @@ return [
     'do_you_want_to_delete_this_event' => 'このイベントを削除しますか？',
     'participating_persons' => '参加者',
     'withdraw_participation' => '参加を取り消す',
+    'invalid_event_type' => '有効なイベントタイプを選択してください。',
+    'i_participate' => '参加します',
     'participate' => '参加する',
     'no_one_will_participate_or_has_participated' => '参加者はいない、またはすでに参加済みです',
     'interested_persons' => '関心のある方',
@@ -37,4 +39,6 @@ return [
     'deadline_deleted_successfully' => '期限が正常に削除されました。',
     'no_activities_found_for_this_year' => '今年度のアクティビティは見つかりませんでした。',
     'country_iso_code' => '国（ISOコード）',
+    'a_deadline_with_the_same_title_and_date_already_exists' => '同じタイトルと日付の締め切りがすでに存在します。',
+    'deadline_added_successfully' => '締切日が正常に追加されました。',
 ];

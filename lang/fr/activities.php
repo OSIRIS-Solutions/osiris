@@ -525,4 +525,6 @@ return [
     'thesis_status' => 'Statut (Thèse)',
     'thesis' => 'Thèse',
     'volume' => 'Volume',
+    'add_files' => 'Ajouter des fichiers',
+    'no_departments_assigned' => 'Aucun département n\'est attribué.',
 ];

@@ -95,7 +95,7 @@
             <!-- <p class="sso-caption"><?= t('people.use_single_sign_on') ?></p> -->
         <?php } ?>
         <a class="submit" href="<?= ROOTPATH ?>/user/oauth">
-            <span><?= e(lang('Log in with ' . osirisOAuthLabel(), 'Mit ' . osirisOAuthLabel() . ' anmelden')) ?></span>
+            <span><?= e(t('people.log_in_with_oauth', ['oauth' => osirisOAuthLabel()])) ?></span>
             <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
         </a>
     <?php } ?>

@@ -15,7 +15,7 @@ Route::get('/news/editorial', function () {
         $queue[] = ['news' => $news, 'requests' => $open, 'actionable' => $actionable];
     }
     usort($queue, static fn($a, $b) => ($b['actionable'] <=> $a['actionable']) ?: strcmp($a['news']['date'] ?? '', $b['news']['date'] ?? ''));
-    $breadcrumb = [['path' => '/news', 'name' => lang('News', 'News')], ['path' => '/news/editorial', 'name' => lang('Editorial overview', 'Redaktionsübersicht')]];
+    $breadcrumb = [['path' => '/news', 'name' => t('common.news')], ['path' => '/news/editorial', 'name' => t('news.editorial_overview')]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/news/queue.php';
     include BASEPATH . '/footer.php';
@@ -39,7 +39,7 @@ Route::get('/news/export', function () {
     $exportChannelName = $exportOutlet ? (($exportOutlet['name'][$filters['language']] ?? '') ?: NewsOutlets::label($exportOutlet['name'])) : ($filters['language'] === 'de' ? 'Originalbeiträge' : 'Original contributions');
     $reportTitle = ($filters['language'] === 'de' ? 'News-Bericht' : 'News report') . ': ' . $exportChannelName;
     if (isset($_GET['download']) && !$entries) {
-        $error = lang('No contributions match these filters. Adjust the channel or date range.', 'Keine Beiträge für diese Filter gefunden. Passe den Kanal oder den Zeitraum an.');
+        $error = t('news.no_contributions_match_these_filters_adjust_the_channel_or_date_ra');
     }
     if (isset($_GET['download']) && $entries) {
         $filename = 'News_' . $filters['channel'] . '_' . date('Y-m-d') . '.' . $filters['format'];
@@ -55,7 +55,7 @@ Route::get('/news/export', function () {
         }
         exit;
     }
-    $breadcrumb = [['path' => '/news', 'name' => lang('News', 'News')], ['path' => '/news/export', 'name' => lang('Export report', 'Bericht exportieren')]];
+    $breadcrumb = [['path' => '/news', 'name' => t('common.news')], ['path' => '/news/export', 'name' => t('news.export_report')]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/news/export.php';
     include BASEPATH . '/footer.php';

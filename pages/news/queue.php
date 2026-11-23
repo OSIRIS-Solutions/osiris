@@ -5,28 +5,28 @@ $actionableCount = count(array_filter($queue, static fn($row) => $row['actionabl
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/news-workflow.css?v=<?= OSIRIS_BUILD ?>">
 
 <div class="container news-workflow">
-    <h1><i class="ph-duotone ph-highlighter"></i> <?= lang('Editorial overview', 'Redaktionsübersicht') ?></h1>
-    <p class="text-muted"><?= lang('Open outlet requests. Contributions with an editorial task appear first.', 'Offene Outlet-Anfragen. Beiträge mit einer Aufgabe für die Redaktion stehen zuerst.') ?></p>
+    <h1><i class="ph-duotone ph-highlighter"></i> <?= t('news.editorial_overview') ?></h1>
+    <p class="text-muted"><?= t('news.open_outlet_requests_contributions_with_an_editorial_task_appear_f') ?></p>
     <div class="btn-toolbar mb-20">
-        <a class="btn" href="<?= ROOTPATH ?>/news"><i class="ph ph-arrow-left"></i> <?= lang('News', 'News') ?></a>
-        <span class="badge signal"><?= $actionableCount ?> <?= lang('with editorial tasks', 'mit redaktionellen Aufgaben') ?></span>
-        <span class="badge"><?= count($queue) - $actionableCount ?> <?= lang('awaiting author response', 'warten auf Rückmeldung') ?></span>
+        <a class="btn" href="<?= ROOTPATH ?>/news"><i class="ph ph-arrow-left"></i> <?= t('common.news') ?></a>
+        <span class="badge signal"><?= $actionableCount ?> <?= t('news.with_editorial_tasks') ?></span>
+        <span class="badge"><?= count($queue) - $actionableCount ?> <?= t('news.awaiting_author_response') ?></span>
     </div>
     <div class="row row-eq-spacing mb-20">
         <div class="col-sm-8">
-            <label for="queue-search"><?= lang('Search', 'Suche') ?></label>
-            <input class="form-control" id="queue-search" type="search" placeholder="<?= lang('Title or author', 'Titel oder Autor:in') ?>">
+            <label for="queue-search"><?= t('action.search') ?></label>
+            <input class="form-control" id="queue-search" type="search" placeholder="<?= t('news.title_or_author') ?>">
         </div>
         <div class="col-sm-4">
-            <label for="queue-scope"><?= lang('Tasks', 'Aufgaben') ?></label>
-            <select class="form-control" id="queue-scope"><option value="all"><?= lang('All open items', 'Alle offenen Vorgänge') ?></option>
-                <option value="actionable"><?= lang('Editorial tasks', 'Redaktionelle Aufgaben') ?></option>
-                <option value="waiting"><?= lang('Awaiting response', 'Rückmeldung ausstehend') ?></option></select>
+            <label for="queue-scope"><?= t('news.tasks') ?></label>
+            <select class="form-control" id="queue-scope"><option value="all"><?= t('news.all_open_items') ?></option>
+                <option value="actionable"><?= t('news.editorial_tasks') ?></option>
+                <option value="waiting"><?= t('news.awaiting_response') ?></option></select>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table news-queue-table">
-            <thead><tr><th><?= lang('News item', 'Nachricht') ?></th><th><?= lang('Outlets and status', 'Outlets und Status') ?></th><th><?= lang('Next step', 'Nächster Schritt') ?></th></tr></thead>
+            <thead><tr><th><?= t('news.news_item') ?></th><th><?= t('news.outlets_and_status') ?></th><th><?= t('news.next_step') ?></th></tr></thead>
             <tbody id="editorial-queue">
             <?php foreach ($queue as $row) {
                 $news = $row['news'];
@@ -46,14 +46,14 @@ $actionableCount = count(array_filter($queue, static fn($row) => $row['actionabl
                     </td>
                     <td>
                         <?php if ($row['actionable']) { ?>
-                            <a class="btn small primary" href="<?= ROOTPATH ?>/news/view/<?= e($news['_id']) ?>#<?= $nextSection ?>"><i class="ph <?= $needsEditing ? 'ph-pencil-line' : 'ph-check-circle' ?>"></i> <?= $needsEditing ? lang('Continue editing', 'Jetzt bearbeiten') : lang('Review release', 'Freigabe prüfen') ?></a>
+                            <a class="btn small primary" href="<?= ROOTPATH ?>/news/view/<?= e($news['_id']) ?>#<?= $nextSection ?>"><i class="ph <?= $needsEditing ? 'ph-pencil-line' : 'ph-check-circle' ?>"></i> <?= $needsEditing ? t('activities.continue_editing') : t('news.review_release') ?></a>
                         <?php } else { ?>
-                            <span class="text-muted"><i class="ph ph-hourglass"></i> <?= lang('Awaiting author response', 'Wartet auf Autor:in') ?></span>
+                            <span class="text-muted"><i class="ph ph-hourglass"></i> <?= t('news.awaiting_author_response') ?></span>
                         <?php } ?>
                     </td>
                 </tr>
             <?php } ?>
-            <tr id="queue-empty" <?= $queue ? 'hidden' : '' ?>><td colspan="3" class="text-muted"><?= lang('No open items found.', 'Keine offenen Vorgänge gefunden.') ?></td></tr>
+            <tr id="queue-empty" <?= $queue ? 'hidden' : '' ?>><td colspan="3" class="text-muted"><?= t('news.no_open_items_found') ?></td></tr>
             </tbody>
         </table>
     </div>

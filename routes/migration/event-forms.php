@@ -11,4 +11,4 @@ $osiris->adminGeneral->updateOne(
     ['$set' => ['fields' => $fields]],
     ['upsert' => true]
 );
-echo '<p>' . e(lang('Event form configuration prepared. Existing field settings and event data are preserved.', 'Event-Formularkonfiguration vorbereitet. Vorhandene Feldeinstellungen und Eventdaten bleiben erhalten.')) . '</p>';
+echo '<p>' . e(t('admin.event_form_configuration_prepared_existing_field_settings_and_even')) . '</p>';

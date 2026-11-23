@@ -38,4 +38,6 @@ return [
     'deadline_deleted_successfully' => 'Deadline deleted successfully.',
     'no_activities_found_for_this_year' => 'No activities found for this year.',
     'country_iso_code' => 'Country (ISO Code)',
+    'a_deadline_with_the_same_title_and_date_already_exists' => 'A deadline with the same title and date already exists.',
+    'deadline_added_successfully' => 'Deadline added successfully.',
 ];

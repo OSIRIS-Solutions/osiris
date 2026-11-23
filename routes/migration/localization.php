@@ -90,10 +90,8 @@ $osiris->groups->createIndex(['name.en' => 1]);
 $osiris->groups->createIndex(['name.de' => 1]);
 
 migrationCard(
-    'Group localization migrated',
-    'Gruppenlokalisierung migriert',
-    "Group names, descriptions and research texts now use language maps. $unchanged documents were already up to date.",
-    "Gruppennamen, Beschreibungen und Forschungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell.",
+    t('admin.group_localization_migrated'),
+    t('admin.group_names_descriptions_and_research_texts_now_use_language_maps', ['count' => $unchanged]),
     $updated
 );
 
@@ -137,13 +135,10 @@ if (!empty($staffDocument)) {
 }
 
 migrationCard(
-    'Position vocabulary localized',
-    'Positionsvokabular lokalisiert',
-    'The optional position vocabulary now uses language maps.',
-    'Das optionale Positionsvokabular verwendet jetzt Sprachobjekte.',
+    t('admin.position_vocabulary_localized'),
+    t('admin.the_optional_position_vocabulary_now_uses_language_maps'),
     $staffUpdated,
-    'configuration updated',
-    'Konfiguration aktualisiert'
+    t('admin.configuration_updated')
 );
 
 $updated = 0;
@@ -213,11 +208,8 @@ foreach ($osiris->persons->find() as $document) {
 }
 
 migrationCard(
-    'Person profile localization migrated',
-    'Lokalisierung der Personenprofile migriert',
-    "Positions, research interests, research profiles, biographies and education texts now use language maps. $unchanged documents were already up to date."
-        . ($researchLengthMismatches > 0 ? " $researchLengthMismatches records had different EN/DE research list lengths; all existing entries were preserved by their position." : ''),
-    "Positionen, Forschungsinteressen, Forschungsprofile, Biografien und Ausbildungstexte verwenden jetzt Sprachobjekte. $unchanged Dokumente waren bereits aktuell."
-        . ($researchLengthMismatches > 0 ? " Bei $researchLengthMismatches Datensätzen waren die EN/DE-Listen unterschiedlich lang; alle vorhandenen Einträge wurden anhand ihrer Position erhalten." : ''),
+    t('admin.person_profile_localization_migrated'),
+    t('admin.positions_research_interests_research_profiles_biographies_and_edu', ['count' => $unchanged])
+        . ($researchLengthMismatches > 0 ? ' ' . t('admin.count_records_had_different_en_de_research_list_lengths_all_existi', ['count' => $researchLengthMismatches]) : ''),
     $updated
 );

@@ -525,6 +525,11 @@ return [
     'collaborators_ror' => 'Collaborators (ROR)',
     'collaborators_type' => 'Collaborators (Type)',
     'not_abs_relevant' => 'Not ABS-relevant',
+    'nagoya_incomplete' => 'Incomplete',
+    'nagoya_country_review_pending' => 'Country review pending',
+    'nagoya_researcher_input_required' => 'Researcher input required',
+    'nagoya_awaiting_abs_evaluation' => 'Awaiting ABS evaluation',
+    'nagoya_compliant' => 'Compliant',
     'not_abs_relevant_Nagoya' => 'not ABS-relevant',
     'abs_unknown' => 'ABS unknown',
     'permits_pending_Nagoya' => 'permits pending',
@@ -553,4 +558,6 @@ return [
     'correcting_past_phase' => 'You are correcting the {{phase}} phase. The current status remains {{status}}.',
     'past_phase_correction' => 'Correction of a past phase',
     'draft' => 'Draft',
+    'unable_to_load_organization_search' => 'Unable to load organization search.',
+    'uploading' => 'Uploading…',
 ];

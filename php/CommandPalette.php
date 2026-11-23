@@ -611,7 +611,7 @@ class CommandPalette
         $value = DB::doc2Arr($value ?? []);
         if (!is_array($value)) return trim((string) $value);
 
-        $language = lang('en', 'de');
+        $language = currentLanguage() === 'de' ? 'de' : 'en';
         $fallback = $language === 'de' ? 'en' : 'de';
         $localized = trim((string) ($value[$language] ?? ''));
         return $localized !== '' ? $localized : trim((string) ($value[$fallback] ?? ''));

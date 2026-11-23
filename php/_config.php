@@ -1150,7 +1150,7 @@ function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
     $html .= t('common.the_entity_you_are_looking_for_does_not_exist_or_has_been_deleted', replace: ['entity' => $entity]);
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
-    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
+    $html .= $linkMsg ?: t('admin.go_back_to_overview');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';
@@ -1174,7 +1174,7 @@ function noPermissionPage($message = "", $link = '', $linkMsg = '')
     $html .= $message;
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
-    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zurück zur Übersicht');
+    $html .= $linkMsg ?: t('admin.go_back_to_overview');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';
@@ -1209,10 +1209,10 @@ function errorPage($message, $link = '/', $linkMsg = '')
     $html .= t('common.an_error_occurred');
     $html .= '</h1>';
     $html .= '<p>';
-    $html .= lang($message, $message);
+    $html .= $message;
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
-    $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
+    $html .= $linkMsg ?: t('admin.go_back_to_overview');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';

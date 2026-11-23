@@ -12,6 +12,8 @@ return [
     'do_you_want_to_delete_this_event' => 'Czy chcesz usunąć to zdarzenie?',
     'participating_persons' => 'Osoby uczestniczące',
     'withdraw_participation' => 'Wycofaj udział',
+    'invalid_event_type' => 'Proszę wybrać prawidłowy typ zdarzenia.',
+    'i_participate' => 'Biorę udział',
     'participate' => 'Weź udział',
     'no_one_will_participate_or_has_participated' => 'Nikt nie weźmie udziału ani nie wziął udziału',
     'interested_persons' => 'Osoby zainteresowane',
@@ -37,4 +39,6 @@ return [
     'deadline_deleted_successfully' => 'Termin został pomyślnie usunięty.',
     'no_activities_found_for_this_year' => 'Nie znaleziono żadnych działań w tym roku.',
     'country_iso_code' => 'Kraj (kod ISO)',
+    'a_deadline_with_the_same_title_and_date_already_exists' => 'Istnieje już termin o tym samym tytule i dacie.',
+    'deadline_added_successfully' => 'Termin został pomyślnie dodany.',
 ];

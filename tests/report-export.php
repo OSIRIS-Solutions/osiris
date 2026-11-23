@@ -3,7 +3,7 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once dirname(__DIR__) . '/php/ReportExport.php';
 
-function lang($english, $german = null) { return $english; }
+require_once __DIR__ . '/fixtures/interface-language.php';
 function expect($condition, string $message): void
 {
     if (!$condition) throw new RuntimeException($message);

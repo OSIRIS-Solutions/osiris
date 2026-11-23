@@ -1,4 +1,5 @@
 <?php
+
 return [
     'no_label_found' => 'Keine {{label}} gefunden',
     'no_publications_available' => 'Für dieses {{label}} sind noch keine Publikationen verfügbar.',
@@ -97,4 +98,5 @@ return [
     'issn' => 'ISSN',
     'value' => '-Wert',
     'year' => '-Jahr',
+    'label_that_do_not_have_metrics_for_this_year' => '{{label}}, für die es in diesem Jahr keine Kennzahlen gibt.',
 ];

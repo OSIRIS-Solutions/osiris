@@ -19,7 +19,7 @@ $end = valueFromDateArray($form[$endKey] ?? $form[$endKey . '_date'] ?? null);
                             <input type="date" class="form-control" name="values[<?= e($startKey) ?>]" value="<?= $start ?>" id="<?= e($startKey) ?>" required placeholder=" ">
 
                             <label for="<?= e($startKey) ?>" class="required">
-                                <?= lang($proposed ? 'projects.proposed_start_date' : 'projects.project_start') ?>
+                                <?= t($proposed ? 'projects.proposed_start_date' : 'projects.project_start') ?>
                             </label>
                         </div>
                         <div class="col-sm-4">
@@ -36,7 +36,7 @@ $end = valueFromDateArray($form[$endKey] ?? $form[$endKey . '_date'] ?? null);
                             <input type="date" class="form-control" name="values[<?= e($endKey) ?>]" value="<?= $end ?>" id="<?= e($endKey) ?>" required placeholder=" ">
 
                             <label for="<?= e($endKey) ?>" class="required">
-                                <?= lang($proposed ? 'projects.proposed_end_date' : 'projects.project_end') ?>
+                                <?= t($proposed ? 'projects.proposed_end_date' : 'projects.project_end') ?>
                             </label>
                         </div>
                     </div>

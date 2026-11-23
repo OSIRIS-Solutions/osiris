@@ -4,25 +4,25 @@ $news_lang = $Settings->get('news-language', 'one');
     <!-- add activities -->
 
     <div class="connections">
-        <!-- <h2 class="title"><?= lang('Connected people and research', 'Verknüpfte Personen und Forschung') ?></h2 class="title"> -->
+        <!-- <h2 class="title"><?= t('news.connected_people_and_research') ?></h2 class="title"> -->
 
         <?php
         $persons = $osiris->persons->find([], ['sort' => ['displayname' => 1], 'projection' => ['_id' => 1, 'displayname' => 1]])->toArray();
         ?>
         <details class="collapse-panel person-panel" <?= !empty($persons) ? 'open' : '' ?>>
             <summary class="collapse-header">
-                <?= lang('People', 'Personen') ?>
+                <?= t('common.people') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
-                    <select id="person-select" class="form-control" placeholder="<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>">
-                        <option value=""><?= lang('Please select a person', 'Bitte wähle eine Person aus') ?></option>
+                    <select id="person-select" class="form-control" placeholder="<?= t('common.please_select_a_person') ?>">
+                        <option value=""><?= t('common.please_select_a_person') ?></option>
                         <?php
                         foreach ($persons as $s) { ?>
                             <option value="<?= $s['_id'] ?>"><?= $s['displayname'] ?></option>
                         <?php } ?>
                     </select>
-                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                    <button class="btn primary" type="button" onclick="addPersonRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                 </div>
 
                 <!-- Make sure that empty person connections are also submitted. -->
@@ -30,7 +30,7 @@ $news_lang = $Settings->get('news-language', 'one');
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected people', 'Verknüpfte Personen') ?>:</th>
+                            <th><?= t('news.connected_people') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -61,12 +61,12 @@ $news_lang = $Settings->get('news-language', 'one');
                 const personId = $('#person-select').val();
                 const personName = $('#person-select option:selected').text();
                 if (!personId) {
-                    alert('<?= lang('Please select a person', 'Bitte wähle eine Person aus') ?>');
+                    alert(<?= json_encode(t('common.please_select_a_person'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                     return;
                 }
                 // Check if the person is already connected.
                 if ($('#person-list').find(`#person-${personId}`).length > 0) {
-                    toastError('<?= lang('This person is already connected', 'Diese Person ist bereits verbunden') ?>');
+                    toastError(<?= json_encode(t('news.this_person_is_already_connected'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                     return;
                 }
                 const row = $('<tr>')
@@ -87,12 +87,12 @@ $news_lang = $Settings->get('news-language', 'one');
 
         <details class="collapse-panel activity-panel" <?= !empty($news['activities']) ? 'open' : '' ?> id="activity-panel">
             <summary class="collapse-header">
-                <?= lang('Activities', 'Aktivitäten') ?>
+                <?= t('common.activities') ?>
             </summary>
             <div class="collapse-content">
                 <div class="d-flex gap-10 mb-20">
-                    <input type="text" id="activity-search" class="form-control" placeholder="<?= lang('Search for an activity', 'Nach einer Aktivität suchen') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
-                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= lang('Search', 'Suchen') ?></button>
+                    <input type="text" id="activity-search" class="form-control" placeholder="<?= t('news.search_for_an_activity') ?>" onkeydown="if(event.key === 'Enter'){searchActivities();return false;}">
+                    <button class="btn primary" type="button" onclick="searchActivities()"><i class="ph ph-magnifying-glass"></i> <?= t('action.search') ?></button>
                 </div>
 
                 <div class="suggestions" style="display:none;"></div>
@@ -102,7 +102,7 @@ $news_lang = $Settings->get('news-language', 'one');
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('Connected activities', 'Verknüpfte Aktivitäten') ?>:</th>
+                            <th><?= t('common.connected_activities') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -137,7 +137,7 @@ $news_lang = $Settings->get('news-language', 'one');
         ?>
             <details class="collapse-panel project-panel" <?= !empty($projects) ? 'open' : '' ?>>
                 <summary class="collapse-header">
-                    <?= lang('Projects', 'Projekte') ?>
+                    <?= t('common.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -153,21 +153,21 @@ $news_lang = $Settings->get('news-language', 'one');
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>">
-                            <option value=""><?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= t('forms.project_select') ?>">
+                            <option value=""><?= t('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                     </div>
                     <!-- make sure that empty projects are also submitted -->
                     <input type="hidden" name="news[projects]" value="">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected projects', 'Verknüpfte Projekte') ?>:</th>
+                                <th><?= t('common.connected_projects') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -199,12 +199,12 @@ $news_lang = $Settings->get('news-language', 'one');
                     <?php if ($full_permission) { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only projects are shown here. You cannot connect proposals.', 'Bemerkung: nur Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= t('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } else { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('Note: only <b>your own</b> projects are shown here. You cannot connect proposals.', 'Bemerkung: nur <b>deine eigenen</b> Projekte werden hier gezeigt. Du kannst keine Anträge verknüpfen.') ?>
+                            <?= t('common.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } ?>
 
@@ -216,12 +216,12 @@ $news_lang = $Settings->get('news-language', 'one');
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('Please select a project', 'Bitte wähle ein Projekt aus') ?>');
+                                alert(<?= json_encode(t('forms.project_select'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                                 return;
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('This project is already connected', 'Dieses Projekt ist bereits verbunden') ?>');
+                                toastError(<?= json_encode(t('common.this_project_is_already_connected'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -255,7 +255,7 @@ $news_lang = $Settings->get('news-language', 'one');
         ?>
             <details class="collapse-panel event-panel" <?= !empty($events) ? 'open' : '' ?>>
                 <summary class="collapse-header">
-                    <?= lang('Events', 'Veranstaltungen') ?>
+                    <?= t('common.events') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -266,8 +266,8 @@ $news_lang = $Settings->get('news-language', 'one');
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="event-select" class="form-control" placeholder="<?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?>">
-                            <option value=""><?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?></option>
+                        <select id="event-select" class="form-control" placeholder="<?= t('news.please_select_an_event') ?>">
+                            <option value=""><?= t('news.please_select_an_event') ?></option>
                             <?php
                             foreach ($event_list as $ev) { ?>
                                 <option value="<?= $ev['_id'] ?>">
@@ -279,14 +279,14 @@ $news_lang = $Settings->get('news-language', 'one');
                                 </option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addEventRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                     </div>
                     <!-- make sure that empty events are also submitted -->
                     <input type="hidden" name="news[events]" value="">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected events', 'Verknüpfte Veranstaltungen') ?>:</th>
+                                <th><?= t('news.connected_events') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -322,12 +322,12 @@ $news_lang = $Settings->get('news-language', 'one');
                             const eventId = $('#event-select').val();
                             const eventName = $('#event-select option:selected').text();
                             if (!eventId) {
-                                alert('<?= lang('Please select an event', 'Bitte wähle eine Veranstaltung aus') ?>');
+                                alert(<?= json_encode(t('news.please_select_an_event'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                                 return;
                             }
                             // check if event already exists
                             if ($('#event-list').find(`#event-${eventId}`).length > 0) {
-                                toastError('<?= lang('This event is already connected', 'Diese Veranstaltung ist bereits verbunden') ?>');
+                                toastError(<?= json_encode(t('news.this_event_is_already_connected'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -371,14 +371,14 @@ $news_lang = $Settings->get('news-language', 'one');
                     )->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>">
-                            <option value=""><?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?></option>
+                        <select id="infrastructure-select" class="form-control" placeholder="<?= t('forms.select_infrastructure') ?>">
+                            <option value=""><?= t('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('Add', 'Hinzufügen') ?></button>
+                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                     </div>
 
                     <!-- make sure that empty infrastructures are also submitted -->
@@ -387,7 +387,7 @@ $news_lang = $Settings->get('news-language', 'one');
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('Connected', 'Verknüpfte') ?> <?= $Settings->infrastructureLabel() ?>:</th>
+                                <th><?= t('common.connected') ?> <?= $Settings->infrastructureLabel() ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -420,12 +420,12 @@ $news_lang = $Settings->get('news-language', 'one');
                         const infraId = $('#infrastructure-select').val();
                         const infraName = $('#infrastructure-select option:selected').text();
                         if (!infraId) {
-                            alert('<?= lang('Please select an infrastructure', 'Bitte wähle eine Infrastruktur aus') ?>');
+                            alert(<?= json_encode(t('forms.select_infrastructure'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                             return;
                         }
                         // check if infrastructure already exists
                         if ($('#infrastructure-list').find(`input[value="${infraId}"]`).length > 0) {
-                            toastError('<?= lang('This infrastructure is already connected', 'Diese Infrastruktur ist bereits verbunden') ?>');
+                            toastError(<?= json_encode(t('common.this_infrastructure_is_already_connected'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                             return;
                         }
                         row.append(`<td class="w-full">
@@ -453,17 +453,17 @@ $news_lang = $Settings->get('news-language', 'one');
         <div class="featured-editor mt-20 empty" id="featured-editor">
             <h3 class="featured-title">
                 <i class="ph-duotone ph-star"></i>
-                <?= lang('Featured entity', 'Hervorgehobene Entität') ?>
+                <?= t('news.featured_entity') ?>
             </h3>
 
             <p class="text-muted mb-10" id="featured-empty-hint">
-                <?= lang('Connect at least one entity before choosing a featured entity.', 'Verknüpfe zuerst mindestens eine Entität, bevor du eine hervorhebst.') ?>
+                <?= t('news.connect_at_least_one_entity_before_choosing_a_featured_entity') ?>
             </p>
 
             <div class="form-group mb-0">
-                <label for="featured-entity"><?= lang('Entity', 'Entität') ?></label>
+                <label for="featured-entity"><?= t('common.entity') ?></label>
                 <select id="featured-entity" class="form-control" disabled>
-                    <option value=""><?= lang('No featured entity', 'Keine Hervorhebung') ?></option>
+                    <option value=""><?= t('news.no_featured_entity') ?></option>
                 </select>
                 <input type="hidden" name="news[featured][type]" id="featured-type" value="<?= e($featured['type'] ?? '') ?>">
                 <input type="hidden" name="news[featured][id]" id="featured-id" value="<?= e($featured['id'] ?? '') ?>">
@@ -472,7 +472,7 @@ $news_lang = $Settings->get('news-language', 'one');
             <div id="featured-text-fields" class="mt-15" style="display:none;">
                 <?php if ($news_lang == 'one') { ?>
                     <div class="form-group mb-0">
-                        <label for="featured-text"><?= lang('Short description', 'Kurzbeschreibung') ?></label>
+                        <label for="featured-text"><?= t('common.short_description') ?></label>
                         <textarea name="news[featured][text]" id="featured-text" class="form-control" rows="3" maxlength="240"><?= e($featured['text'] ?? '') ?></textarea>
                         <small class="character-count"><span>0</span>/240</small>
                     </div>
@@ -524,7 +524,7 @@ $news_lang = $Settings->get('news-language', 'one');
                     event.preventDefault();
                     const activityId = $(this).data('id').toString();
                     if ($(`#activity-${activityId}`).length > 0) {
-                        toastError('<?= lang('This activity is already connected', 'Diese Aktivität ist bereits verbunden') ?>');
+                        toastError(<?= json_encode(t('news.this_activity_is_already_connected'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                         return;
                     }
 
@@ -554,10 +554,10 @@ $news_lang = $Settings->get('news-language', 'one');
         const featuredEditor = $('#featured-editor');
         const featuredTextFields = $('#featured-text-fields');
         const typeLabels = {
-            person: <?= json_encode(lang('People', 'Personen')) ?>,
-            activity: <?= json_encode(lang('Activities', 'Aktivitäten')) ?>,
-            project: <?= json_encode(lang('Projects', 'Projekte')) ?>,
-            event: <?= json_encode(lang('Events', 'Veranstaltungen')) ?>,
+            person: <?= json_encode(t('common.people')) ?>,
+            activity: <?= json_encode(t('common.activities')) ?>,
+            project: <?= json_encode(t('common.projects')) ?>,
+            event: <?= json_encode(t('common.events')) ?>,
             infrastructure: <?= json_encode($Settings->infrastructureLabel()) ?>
         };
 
@@ -587,7 +587,7 @@ $news_lang = $Settings->get('news-language', 'one');
             });
 
             featuredSelect.empty().append(
-                $('<option>', {value: '', text: <?= json_encode(lang('No featured entity', 'Keine Hervorhebung')) ?>})
+                $('<option>', {value: '', text: <?= json_encode(t('news.no_featured_entity')) ?>})
             );
 
             Object.keys(typeLabels).forEach(function(type) {

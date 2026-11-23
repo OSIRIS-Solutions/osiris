@@ -390,7 +390,7 @@ Route::post('/crud/deadlines/add', function () {
     }
     $existing = $osiris->deadlines->findOne(['title' => $values['title'], 'date' => $values['date']]);
     if ($existing) {
-        $message = lang('A deadline with the same title and date already exists.', 'Ein Termin mit demselben Titel und Datum existiert bereits.');
+        $message = t('events.a_deadline_with_the_same_title_and_date_already_exists');
         if ($accept_json) {
             header('Content-Type: application/json');
             echo json_encode(['status' => 'warning', 'msg' => $message, 'id' => (string) $existing['_id']]);
@@ -409,7 +409,7 @@ Route::post('/crud/deadlines/add', function () {
         echo json_encode(['status' => 'success', 'id' => (string) $id]);
         return;
     }
-    $_SESSION['msg'] = lang('Deadline added successfully.', 'Termin erfolgreich hinzugefügt.');
+    $_SESSION['msg'] = t('events.deadline_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/deadlines/view/' . $id);
 }, 'login');

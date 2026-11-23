@@ -7,56 +7,47 @@ final class Nagoya
     'incomplete' => [
       'color' => 'signal',
       'icon' => 'ph-list-magnifying-glass',
-      'title_en' => 'Incomplete',
-      'title_de' => 'Unvollständig'
+      'title_key' => 'projects.nagoya_incomplete',
     ],
     'abs-review' => [
       'color' => 'signal',
       'icon' => 'ph-users-three',
-      'title_en' => 'Country review pending',
-      'title_de' => 'Länderbewertung ausstehend'
+      'title_key' => 'projects.nagoya_country_review_pending',
     ],
     'not-relevant' => [
       'color' => 'muted',
       'icon' => 'ph-x-circle',
-      'title_en' => 'not ABS-relevant',
-      'title_de' => 'nicht ABS-relevant'
+      'title_key' => 'projects.not_abs_relevant',
     ],
     'researcher-input' => [
       'color' => 'signal',
       'icon' => 'ph-user-gear',
-      'title_en' => 'Researcher input required',
-      'title_de' => 'Eingabe durch Forschende erforderlich'
+      'title_key' => 'projects.nagoya_researcher_input_required',
     ],
     'awaiting-abs-evaluation' => [
       'color' => 'signal',
       'icon' => 'ph-file-search',
-      'title_en' => 'Awaiting ABS evaluation',
-      'title_de' => 'Wartet auf ABS-Bewertung'
+      'title_key' => 'projects.nagoya_awaiting_abs_evaluation',
     ],
     'out-of-scope' => [
       'color' => 'muted',
       'icon' => 'ph-circle',
-      'title_en' => 'Out of scope',
-      'title_de' => 'Außerhalb des Geltungsbereichs'
+      'title_key' => 'projects.out_of_scope',
     ],
     'permits-pending' => [
       'color' => 'signal',
       'icon' => 'ph-handshake',
-      'title_en' => 'Permits pending',
-      'title_de' => 'Genehmigungen ausstehend'
+      'title_key' => 'projects.permits_pending',
     ],
     'compliant' => [
       'color' => 'success',
       'icon' => 'ph-check-circle',
-      'title_en' => 'Compliant',
-      'title_de' => 'Compliant'
+      'title_key' => 'projects.nagoya_compliant',
     ],
     'unknown' => [
       'color' => 'muted',
       'icon' => 'ph-question',
-      'title_en' => 'Unknown',
-      'title_de' => 'Unbekannt'
+      'title_key' => 'common.unknown',
     ],
   ];
 
@@ -344,9 +335,7 @@ final class Nagoya
   public static function statusLabel(string $status): string
   {
     $map = self::MAP[$status] ?? self::MAP['unknown'];
-    $label_en = $map['title_en'] ?? 'Unknown';
-    $label_de = $map['title_de'] ?? 'Unbekannt';
-    return lang($label_en, $label_de);
+    return t($map['title_key']);
   }
 
   /**

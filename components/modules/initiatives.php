@@ -54,7 +54,7 @@ $labelId = uniqid('initiative-label-');
                 <label data-selection-option data-period="<?= e(json_encode(Initiatives::selectionBounds($initiative))) ?>" data-search-text="<?= e(Initiatives::text($initiative['name'] ?? '') . ' ' . $title) ?>" class="initiative-option<?= $class ?>" <?= $title !== '' ? 'data-toggle="tooltip" data-title="' . e($title) . '"' : '' ?>>
                     <input type="checkbox" name="values[initiatives][]" value="<?= e($id) ?>" <?= in_array($id, $selected, true) ? 'checked' : '' ?>>
                     <span class="initiative-option-name"><i class="ph ph-compass" aria-hidden="true"></i> <?= e(trim(strip_tags(localized($initiative['name'] ?? '')))) ?>
-                        <?php if ($archived || $expired): ?><small class="text-muted">(<?= $archived ? lang('Archived', 'Archiviert') : lang('Expired', 'Abgelaufen') ?>)</small><?php endif; ?>
+                        <?php if ($archived || $expired): ?><small class="text-muted">(<?= $archived ? t('initiatives.archived') : t('initiatives.expired') ?>)</small><?php endif; ?>
                         <small class="text-danger" data-period-warning hidden><?= t('initiatives.outside_period') ?></small>
                     </span>
                 </label>

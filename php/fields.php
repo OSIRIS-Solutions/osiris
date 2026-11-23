@@ -91,7 +91,7 @@ class Fields
                         // Array: first value as key, language-dependent as value
                         try {
                             $key = $v[0];
-                            $langKey = lang(0, 1);
+                            $langKey = currentLanguage() === 'de' ? 1 : 0;
                             $newValues[$key] = $v[$langKey] ?? $key;
                         } catch (\Throwable $th) {
                             // log error and continue

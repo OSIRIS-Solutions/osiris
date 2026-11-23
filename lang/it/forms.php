@@ -29,4 +29,5 @@ return [
     'teaching_category' => 'Categoria dell’attività didattica',
     'teaching_course_module' => 'Corso relativo al seguente modulo',
     'publication_place' => 'Luogo di pubblicazione',
+    'please_select' => '-- Selezionare --',
 ];

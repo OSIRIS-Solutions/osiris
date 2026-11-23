@@ -13,4 +13,5 @@ return [
     'back_to_profile' => 'Back to Profile',
     'orcid_not_authenticated' => 'ORCID not authenticated',
     'your_orcid_has_been_disconnected' => 'Your ORCID has been disconnected.',
+    'show_skipped_works' => 'Show skipped works',
 ];

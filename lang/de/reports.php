@@ -1,4 +1,5 @@
 <?php
+
 return [
     'pivot_tables_and_charts' => 'Pivot-Tabellen und Diagramme',
     'standard' => 'Standard',
@@ -106,4 +107,27 @@ return [
     'this_block_could_not_be_fully_exported_please_check_its_results' => 'Dieser Baustein konnte nicht vollständig exportiert werden. Bitte die Ergebnisse prüfen.',
     'the_report_was_exported_with_warnings_please_check_the_marked_blocks_in_the_document' => 'Der Bericht wurde mit Warnungen exportiert. Bitte die markierten Bausteine im Dokument prüfen.',
     'the_report_could_not_be_exported_please_check_the_template_or_contact_support' => 'Der Bericht konnte nicht exportiert werden. Bitte die Vorlage prüfen oder den Support kontaktieren.',
+    'conferences' => 'Konferenzen',
+    'organizations' => 'Organisationen',
+    'saved_pipelines' => 'Gespeicherte Pipelines',
+    'save_current_pipeline' => 'Aktuelle Pipeline speichern',
+    'name_of_pipeline' => 'Name der Pipeline',
+    'save_pipeline' => 'Pipeline speichern',
+    'you_have_not_saved_any_pipelines_yet' => 'Du hast noch keine Pipelines gespeichert.',
+    'search_saved_pipelines' => 'Gespeicherte Pipelines suchen...',
+    'pipeline_shared_successfully' => 'Pipeline erfolgreich geteilt.',
+    'apply_pipeline' => 'Pipeline anwenden',
+    'pipeline' => 'Pipeline',
+    'only_the_creator_of_the_pipeline_can_delete_or_modify_it' => 'Nur der Ersteller der Pipeline kann diese löschen oder ändern.',
+    'delete_pipeline' => 'Pipeline löschen',
+    'example_pipelines' => 'Beispiel-Pipelines',
+    'no_example_pipelines_available' => 'Es sind keine Beispiel-Pipelines verfügbar.',
+    'search_example_pipelines' => 'Beispiel-Pipelines suchen...',
+    'aggregation' => 'Zusammenfassung',
+    'choose_collection' => 'Sammelband auswählen',
+    'show_examples' => 'Beispiele anzeigen',
+    'download_raw_data' => 'Rohdaten herunterladen',
+    'block' => 'Block',
+    'formatting_could_not_be_exported_the_content_follows_as_plain_text' => 'Die Formatierung konnte nicht exportiert werden; der Inhalt folgt als reiner Text.',
+    'you_do_not_have_permission_to_access_the_area' => 'Du hast keine Berechtigung, auf diesen Bereich zuzugreifen.',
 ];

@@ -8,18 +8,18 @@ function login($username, $password)
     $USER = $osiris->accounts->findOne(['username' => $username]);
 
     if (empty($USER)) {
-        $return["msg"] = lang('Login failed. Please check your username and password.', 'Anmeldung fehlgeschlagen. Bitte prüfe deinen Nutzernamen und dein Passwort.');
+        $return["msg"] = t('auth.login_failed_please_check_your_username_and_password');
         return $return;
     }
 
     if (empty($USER['password'])) {
-        $return["msg"] = lang('Login failed. Please check your username and password.', 'Anmeldung fehlgeschlagen. Bitte prüfe deinen Nutzernamen und dein Passwort.');
+        $return["msg"] = t('auth.login_failed_please_check_your_username_and_password');
         return $return;
     }
 
     // check if password is correct
     if (!password_verify($password, $USER['password'])) {
-        $return["msg"] = lang('Login failed. Please check your username and password.', 'Anmeldung fehlgeschlagen. Bitte prüfe deinen Nutzernamen und dein Passwort.');
+        $return["msg"] = t('auth.login_failed_please_check_your_username_and_password');
         return $return;
     }
 

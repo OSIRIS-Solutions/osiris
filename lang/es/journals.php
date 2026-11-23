@@ -98,4 +98,5 @@ return [
     'issn' => 'ISSN',
     'value' => ' Valor',
     'year' => ' Año',
+    'label_that_do_not_have_metrics_for_this_year' => '{{label}} que no tienen métricas para este año.',
 ];

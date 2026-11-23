@@ -57,4 +57,5 @@ return [
     'import' => 'Importa',
     'admin' => 'Amministrazione',
     'favorites' => 'Preferiti',
+    'groups' => 'Persone &amp; Gruppi',
 ];

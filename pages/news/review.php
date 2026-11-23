@@ -16,7 +16,7 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
 <?php }; ?>
 
 <section class="news-workflow mt-20" id="news-author-review">
-    <h2><i class="ph-duotone ph-check-circle" aria-hidden="true"></i> <?= lang('Author review and release', 'Autorenprüfung und Freigabe') ?></h2>
+    <h2><i class="ph-duotone ph-check-circle" aria-hidden="true"></i> <?= t('news.author_review_and_release') ?></h2>
     <?php foreach ($declinedOutlets as $declined) { ?>
         <details class="collapse-panel mb-20" open>
             <summary class="collapse-header">
@@ -25,7 +25,7 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
             </summary>
             <div class="collapse-content">
                 <?php if (!empty($declined['decline_reason'])) { ?>
-                    <p><b><?= lang('Editorial reason', 'Begründung der Redaktion') ?></b></p>
+                    <p><b><?= t('news.editorial_reason') ?></b></p>
                     <p><?= nl2br(e($declined['decline_reason'])) ?></p>
                 <?php } ?>
                 <?php if (!empty($declined['declined_by']) || !empty($declined['declined_at'])) { ?>
@@ -52,14 +52,14 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
     ?>
         <details class="collapse-panel mb-20" id="author-review-<?= e($review['id']) ?>" <?= $reviewPending ? 'open' : '' ?>>
             <summary class="collapse-header">
-                <?= $reviewPending && NewsEditorial::isAuthor($news) ? lang('Your review', 'Deine Prüfung') : lang('Author review', 'Autorenprüfung') ?> · <?= e(date('d.m.Y H:i', strtotime($review['requested_at']))) ?>
+                <?= $reviewPending && NewsEditorial::isAuthor($news) ? t('news.your_review') : t('news.author_review') ?> · <?= e(date('d.m.Y H:i', strtotime($review['requested_at']))) ?>
                 <span class="badge <?= $reviewPending ? 'primary' : '' ?>"><?= e(NewsReview::statusLabel($review['status'])) ?></span>
             </summary>
             <div class="collapse-content">
-                <p class="text-muted"><?= lang('Requested by', 'Angefordert von') ?> <?= e($DB->getNameFromId($review['requested_by'])) ?>.
-                    <?= lang('The versions shown below were sent together for review. Your approval releases these contributions. Outlets enabled for Portfolio then appear there.', 'Die folgenden Fassungen wurden gemeinsam zur Prüfung geschickt. Mit deiner Zustimmung sind diese Beiträge freigegeben. Für Portfolio aktivierte Outlets erscheinen anschließend dort.') ?></p>
+                <p class="text-muted"><?= t('news.requested_by') ?> <?= e($DB->getNameFromId($review['requested_by'])) ?>.
+                    <?= t('news.the_versions_shown_below_were_sent_together_for_review_your_approv') ?></p>
                 <?php if ($reviewPending && !$reviewCurrent) { ?>
-                    <div class="alert warning"><?= lang('The submitted outlet texts have changed. These contributions can no longer be approved. The editorial team needs to end this review and prepare a new one.', 'Die versendeten Outlet-Texte wurden geändert. Diese Beiträge können nicht mehr freigegeben werden. Die Redaktion muss diese Prüfung beenden und eine neue vorbereiten.') ?></div>
+                    <div class="alert warning"><?= t('news.the_submitted_outlet_texts_have_changed_these_contributions_can_no') ?></div>
                 <?php } ?>
                 <?php foreach ($review['contributions'] as $snapshot) { ?>
                     <div class="box padded">
@@ -70,7 +70,7 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
                         ?>
                             <h4><?= $language === 'de' ? 'Deutsch' : 'English' ?></h4>
                             <?php foreach ($reviewTexts as $field) { ?>
-                                <div class="news-review-field"><b><?= match ($field) { 'title' => lang('Title', 'Titel'), 'teaser' => lang('Teaser', 'Teaser'), default => lang('Contribution', 'Beitrag') } ?></b>
+                                <div class="news-review-field"><b><?= match ($field) { 'title' => t('common.title'), 'teaser' => t('news.teaser'), default => t('news.contribution') } ?></b>
                                     <div><?= render_rich_text($snapshot[$field][$language], $field === 'content' ? ($snapshot['format'] ?? 'plain') : 'plain') ?></div>
                                 </div>
                             <?php } ?>
@@ -78,7 +78,7 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
                     </div>
                 <?php } ?>
                 <?php if (!empty($review['comment'])) { ?>
-                    <div class="alert warning"><b><?= lang('Requested change', 'Änderungswunsch') ?></b><br><?= nl2br(e($review['comment'])) ?></div>
+                    <div class="alert warning"><b><?= t('news.requested_change') ?></b><br><?= nl2br(e($review['comment'])) ?></div>
                 <?php } ?>
                 <?php if (isset($review['closed_at'])) { ?>
                     <p class="text-muted"><?= e(NewsReview::statusLabel($review['status'])) ?> · <?= e($DB->getNameFromId($review['closed_by'])) ?> · <?= e(date('d.m.Y H:i', strtotime($review['closed_at']))) ?></p>
@@ -87,18 +87,18 @@ $reviewFormFields = static function (array $review) use ($news) { ?>
                     <?php if ($reviewCurrent) { ?>
                         <form action="<?= ROOTPATH ?>/crud/news/editorial/<?= e($news['_id']) ?>" method="post">
                             <?php $reviewFormFields($review); ?>
-                            <button class="btn success" name="action" value="approve_review"><i class="ph ph-check" aria-hidden="true"></i> <?= lang('Approve all contributions', 'Alle Beiträge freigeben') ?></button>
+                            <button class="btn success" name="action" value="approve_review"><i class="ph ph-check" aria-hidden="true"></i> <?= t('news.approve_all_contributions') ?></button>
                         </form>
                     <?php } ?>
                     <details class="mt-10">
-                        <summary class="cursor-pointer"><?= lang('Request a change', 'Änderung anfragen') ?></summary>
+                        <summary class="cursor-pointer"><?= t('news.request_a_change') ?></summary>
                         <form class="mt-10" action="<?= ROOTPATH ?>/crud/news/editorial/<?= e($news['_id']) ?>" method="post">
                             <?php $reviewFormFields($review); ?>
                             <div class="form-group">
-                                <label class="required" for="author-review-comment"><?= lang('What should be changed?', 'Was soll geändert werden?') ?></label>
+                                <label class="required" for="author-review-comment"><?= t('news.what_should_be_changed') ?></label>
                                 <textarea class="form-control" id="author-review-comment" name="editorial[comment]" rows="3" maxlength="4000" required></textarea>
                             </div>
-                            <button class="btn primary" name="action" value="request_changes"><?= lang('Send change request', 'Änderungswunsch senden') ?></button>
+                            <button class="btn primary" name="action" value="request_changes"><?= t('news.send_change_request') ?></button>
                         </form>
                     </details>
                 <?php } ?>

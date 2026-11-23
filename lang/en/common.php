@@ -813,4 +813,6 @@ return [
     'keep_osiris_home' => 'Keep OSIRIS home',
     'central_document' => 'Central document',
     'this_phase_is_being_prepared_and_is_not_yet_available' => 'This phase is being prepared and is not yet available.',
+    'invalid_deadline_type' => 'Invalid deadline type.',
+    'the_selected_svg_file_is_invalid_or_does_not_match_its_file_extens' => 'The selected SVG file is invalid or does not match its file extension.',
 ];

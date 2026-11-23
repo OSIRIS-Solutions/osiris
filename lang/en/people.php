@@ -380,4 +380,7 @@ return [
     'use_single_sign_on' => 'Use single sign-on',
     'you_can_select_several_units_if_you_select_i_am_a_scientist_these_affiliations_are_re' => 'You can select several units. If you select “I am a scientist”, these affiliations are recorded as scientific. You can refine them later in your profile.',
     'enter_the_registration_token_provided_by_your_administrator' => 'Enter the registration token provided by your administrator.',
+    'individual_membership_dates_toggle_to_use_project_dates' => 'Individual membership dates (toggle to use project dates)',
+    'individual_membership_dates' => 'Individual membership dates',
+    'membership_covers_the_project_duration_use_the_clock_to_specify_a' => 'Membership covers the project duration. Use the clock to specify a different period.',
 ];

@@ -525,4 +525,6 @@ return [
     'thesis_status' => 'ステータス（論文）',
     'thesis' => '論文',
     'volume' => 'ボリューム',
+    'add_files' => 'ファイルを追加',
+    'no_departments_assigned' => '所属部署は指定されていません。',
 ];

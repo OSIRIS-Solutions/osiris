@@ -562,7 +562,7 @@ Route::get('/admin/types/(.*)/copy', function ($id) {
     $breadcrumb = [
         ['name' => t('common.settings'), 'path' => '/admin'],
         ['name' => t('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang('Copy of '.$parent['name'], 'Kopie von '. $parent['name_de']), 'path' => "/admin/categories/" . $t],
+        ['name' => t('admin.copy_of_name', ['name' => lang($parent['name'], $parent['name_de'] ?? null)]), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
 
@@ -919,7 +919,7 @@ Route::get('/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang
     $breadcrumb = [
         ['name' => t('common.settings'), 'path' => '/admin'],
         ['name' => t('admin.languages'), 'path' => '/admin/languages'],
-        ['name' => lang('common.lang_' . $lang)]
+        ['name' => t('common.lang_' . $lang)]
     ];
 
     include BASEPATH . "/header.php";

@@ -8,22 +8,23 @@ class NewsExport
     public static function filters(array $input, array $configuration): array
     {
         $result = [];
-        foreach (['channel' => 'original', 'from' => '', 'until' => '', 'language' => lang('en', 'de'), 'format' => 'html'] as $key => $default) {
-            if (isset($input[$key]) && !is_string($input[$key])) throw new InvalidArgumentException(lang('Invalid report filter.', 'Ungültiger Berichtsfilter.'));
+        $defaultLanguage = currentLanguage() === 'de' ? 'de' : 'en';
+        foreach (['channel' => 'original', 'from' => '', 'until' => '', 'language' => $defaultLanguage, 'format' => 'html'] as $key => $default) {
+            if (isset($input[$key]) && !is_string($input[$key])) throw new InvalidArgumentException(t('news.invalid_report_filter'));
             $result[$key] = trim($input[$key] ?? $default);
         }
         if (!in_array($result['channel'], array_merge(['original'], array_column($configuration['outlets'], 'id')), true)
             || !in_array($result['language'], ['en', 'de'], true) || !in_array($result['format'], ['html', 'docx'], true)) {
-            throw new InvalidArgumentException(lang('Invalid report selection.', 'Ungültige Berichtsauswahl.'));
+            throw new InvalidArgumentException(t('news.invalid_report_selection'));
         }
         foreach (['from', 'until'] as $key) {
             $value = $result[$key];
             if ($value === '') continue;
             $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
-            if (!$date || $date->format('Y-m-d') !== $value) throw new InvalidArgumentException(lang('Please enter a valid date.', 'Bitte gib ein gültiges Datum ein.'));
+            if (!$date || $date->format('Y-m-d') !== $value) throw new InvalidArgumentException(t('initiatives.invalid_date'));
         }
         if ($result['from'] !== '' && $result['until'] !== '' && $result['from'] > $result['until']) {
-            throw new InvalidArgumentException(lang('The start date must precede the end date.', 'Das Startdatum muss vor dem Enddatum liegen.'));
+            throw new InvalidArgumentException(t('news.the_start_date_must_precede_the_end_date'));
         }
         return $result;
     }

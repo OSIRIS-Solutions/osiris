@@ -662,7 +662,7 @@ class Project extends Vocabulary
         }
         if (!isset($this->project['start']) || !isset($this->project['start']['year'])) {
             // no start date set
-            return lang('unknown', 'unbekannt');
+            return t('common.unknown');
         }
         return sprintf('%02d', $this->project['start']['month']) . "/" . $this->project['start']['year'];
     }

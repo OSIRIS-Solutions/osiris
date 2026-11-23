@@ -29,4 +29,5 @@ return [
     'teaching_category' => 'Categorie van de onderwijsactiviteit',
     'teaching_course_module' => 'Cursus voor de volgende module',
     'publication_place' => 'Plaats van uitgave',
+    'please_select' => '-- Maak een keuze --',
 ];

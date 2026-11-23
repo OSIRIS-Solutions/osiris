@@ -7,7 +7,6 @@ define('DB_STRING', 'mongodb://localhost:27017');
 define('ROOTPATH', '');
 $_GET = $fixture['get'] ?? [];
 define('OSIRIS_BASE_LANGUAGE', 'en');
-function currentLanguage() { return 'en'; }
 // Load the production content-language helpers without registering application routes.
 $source = str_replace("\r\n", "\n", file_get_contents($fixture['repository'] . '/index.php'));
 foreach (['localized', 'apiLanguage', 'apiLocalized', 'apiLocalizedFields', 'apiLocalizedList'] as $helper) {

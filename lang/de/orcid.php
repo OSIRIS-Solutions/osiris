@@ -1,4 +1,5 @@
 <?php
+
 return [
     'your_orcid_is_not_yet_validated_please_validate_your_orcid_before_importing' => 'Deine ORCID ist noch nicht validiert. Bitte validiere deine ORCID, bevor du Werke importierst.',
     'error_fetching_works_from_orcid' => 'Fehler beim Abrufen der Werke von ORCID ',
@@ -13,4 +14,5 @@ return [
     'back_to_profile' => 'Zurück zum Profil',
     'orcid_not_authenticated' => 'Noch nicht mit ORCID authentifiziert',
     'your_orcid_has_been_disconnected' => 'Deine ORCID wurde getrennt.',
+    'show_skipped_works' => 'Übersprungene Werke anzeigen',
 ];

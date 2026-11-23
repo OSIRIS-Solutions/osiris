@@ -4,10 +4,8 @@ $osiris->persons->createIndex(['current_units' => 1]);
 $updated = renderCurrentUnits();
 
 migrationCard(
-    'Current Units updated',
-    'Current units of users were updated.',
-    'Die aktuellen Einheiten der Benutzer wurden aktualisiert.',
+    t('admin.current_units_updated'),
+    t('admin.current_units_of_users_were_updated'),
     $updated,
-    'person records checked and updated',
-    'Personendatensätze geprüft und aktualisiert'
+    t('admin.person_records_checked_and_updated')
 );

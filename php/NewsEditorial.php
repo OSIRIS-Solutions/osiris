@@ -47,14 +47,14 @@ class NewsEditorial
         if ($available && ($news === null || self::usesOutletWorkflow($news) || $changed || ($input['internal_only'] ?? null) === '1')) {
             $value = $input['internal_only'] ?? (self::internalOnly($news ?? []) ? '1' : '0');
             if (!in_array($value, ['0', '1'], true)) {
-                throw new InvalidArgumentException(lang('Invalid outlet selection.', 'Ungültige Outlet-Auswahl.'));
+                throw new InvalidArgumentException(t('news.invalid_outlet_selection'));
             }
             $internalOnly = $value === '1';
             if ($internalOnly && !self::canChooseInternalOnly($news ?? [])) {
-                throw new InvalidArgumentException(lang('The editorial team has already started work. Contact them to stop the outlet contributions.', 'Die Redaktion hat bereits mit der Bearbeitung begonnen. Bitte kontaktiere sie, um die Outlet-Beiträge zu stoppen.'));
+                throw new InvalidArgumentException(t('news.the_editorial_team_has_already_started_work_contact_them_to_stop_t'));
             }
             if ($internalOnly && !empty($input['outlets'])) {
-                throw new InvalidArgumentException(lang('Choose either internal only or editorial outlets.', 'Wähle entweder nur intern oder redaktionelle Outlets.'));
+                throw new InvalidArgumentException(t('news.choose_either_internal_only_or_editorial_outlets'));
             }
             return ['publication_mode' => 'outlets', 'internal_only' => $internalOnly];
         }
@@ -63,7 +63,7 @@ class NewsEditorial
         }
         $visibility = $input['visibility'] ?? $news['visibility'] ?? 'internal';
         if (!in_array($visibility, ['internal', 'public'], true)) {
-            throw new InvalidArgumentException(lang('Invalid news visibility.', 'Ungültige News-Sichtbarkeit.'));
+            throw new InvalidArgumentException(t('news.invalid_news_visibility'));
         }
         return ['visibility' => $visibility];
     }
@@ -108,15 +108,15 @@ class NewsEditorial
     private static function status(string $status): array
     {
         return match ($status) {
-            'requested' => [lang('Requested', 'Beantragt'), 'badge', 'ph-hourglass'],
-            'withdrawn' => [lang('Withdrawn', 'Zurückgezogen'), 'badge muted', 'ph-x-circle'],
-            'declined' => [lang('Declined by the editorial team', 'Von der Redaktion abgelehnt'), 'badge danger', 'ph-x-circle'],
-            'in_progress' => [lang('In progress', 'In Bearbeitung'), 'badge signal', 'ph-spinner'],
-            'ready' => [lang('Ready', 'Fertig vorbereitet'), 'badge success', 'ph-check-circle'],
-            'pending_approval' => [lang('Awaiting author review', 'Wartet auf Autorenprüfung'), 'badge signal', 'ph-hourglass'],
-            'approved', 'released' => [lang('Released', 'Freigegeben'), 'badge success', 'ph-check-circle'],
-            'published' => [lang('Published', 'Veröffentlicht'), 'badge success', 'ph-check-circle'],
-            default => [lang('Managed by the editorial team', 'In redaktioneller Bearbeitung'), 'badge', 'ph-circle'],
+            'requested' => [t('common.requested'), 'badge', 'ph-hourglass'],
+            'withdrawn' => [t('projects.withdrawn'), 'badge muted', 'ph-x-circle'],
+            'declined' => [t('news.declined_by_the_editorial_team'), 'badge danger', 'ph-x-circle'],
+            'in_progress' => [t('common.in_progress'), 'badge signal', 'ph-spinner'],
+            'ready' => [t('news.ready'), 'badge success', 'ph-check-circle'],
+            'pending_approval' => [t('news.awaiting_author_review'), 'badge signal', 'ph-hourglass'],
+            'approved', 'released' => [t('news.released'), 'badge success', 'ph-check-circle'],
+            'published' => [t('news.published'), 'badge success', 'ph-check-circle'],
+            default => [t('news.managed_by_the_editorial_team'), 'badge', 'ph-circle'],
         };
     }
 
@@ -144,15 +144,15 @@ class NewsEditorial
             $format = $field === 'content' ? ($contribution['format'] ?? 'plain') : 'plain';
             if (rich_text_has_text($contribution[$field]['en'] ?? '', $format) || rich_text_has_text($contribution[$field]['de'] ?? '', $format)) return;
         }
-        throw new InvalidArgumentException(lang('Please enter text in the configured fields before completing this outlet.', 'Bitte erfasse Text in den konfigurierten Feldern, bevor du dieses Outlet fertigstellst.'));
+        throw new InvalidArgumentException(t('news.please_enter_text_in_the_configured_fields_before_completing_this'));
     }
 
     public static function releaseLabel(string $mode): string
     {
         return match ($mode) {
-            'author_approved' => lang('Released by the author', 'Von Autor:in freigegeben'),
-            'without_response' => lang('Released without an author response', 'Ohne Rückmeldung redaktionell freigegeben'),
-            default => lang('Released without author review', 'Ohne Autorenprüfung freigegeben'),
+            'author_approved' => t('news.released_by_the_author'),
+            'without_response' => t('news.released_without_an_author_response'),
+            default => t('news.released_without_author_review'),
         };
     }
 
@@ -178,24 +178,24 @@ class NewsEditorial
     public static function reconcileRequests($selection, array $configuration, array $news, string $actor, string $now): array
     {
         if (($news['created_by'] ?? $actor) !== $actor) {
-            throw new InvalidArgumentException(lang('Only the author can change outlet requests here.', 'Nur die Autorin oder der Autor kann hier Outlet-Anfragen ändern.'));
+            throw new InvalidArgumentException(t('news.only_the_author_can_change_outlet_requests_here'));
         }
         if (!is_array($selection)) {
-            throw new InvalidArgumentException(lang('Invalid outlet selection.', 'Ungültige Outlet-Auswahl.'));
+            throw new InvalidArgumentException(t('news.invalid_outlet_selection'));
         }
         if ($selection && !self::workflowAvailable($configuration, $news)) {
-            throw new InvalidArgumentException(lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
+            throw new InvalidArgumentException(t('news.the_editorial_news_workflow_is_disabled'));
         }
         $outlets = array_column($configuration['outlets'], null, 'id');
         $requests = array_column(self::requests($news), null, 'outlet_id');
         $selected = [];
         foreach ($selection as $id) {
             if (!is_string($id) || !preg_match('/^[a-f0-9]{24}$/', $id)) {
-                throw new InvalidArgumentException(lang('Invalid outlet selection.', 'Ungültige Outlet-Auswahl.'));
+                throw new InvalidArgumentException(t('news.invalid_outlet_selection'));
             }
             $request = $requests[$id] ?? null;
             if (empty($outlets[$id]['active']) && ($request === null || ($request['status'] ?? '') === 'withdrawn')) {
-                throw new InvalidArgumentException(lang('An outlet is no longer available. Reload the news form.', 'Ein Outlet ist nicht mehr verfügbar. Bitte lade das News-Formular neu.'));
+                throw new InvalidArgumentException(t('news.an_outlet_is_no_longer_available_reload_the_news_form'));
             }
             $selected[$id] = true;
         }
@@ -298,16 +298,16 @@ class NewsEditorial
 
     private static function text($value, int $limit): string
     {
-        if (!is_string($value)) throw new InvalidArgumentException(lang('Invalid editorial text.', 'Ungültiger Redaktionstext.'));
+        if (!is_string($value)) throw new InvalidArgumentException(t('news.invalid_editorial_text'));
         $value = trim($value);
         $length = function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
-        if ($length > $limit) throw new InvalidArgumentException(lang('The editorial text is too long.', 'Der Redaktionstext ist zu lang.'));
+        if ($length > $limit) throw new InvalidArgumentException(t('news.the_editorial_text_is_too_long'));
         return $value;
     }
 
     private static function localized($value, int $limit): array
     {
-        if (!is_array($value)) throw new InvalidArgumentException(lang('Invalid localized editorial text.', 'Ungültiger mehrsprachiger Redaktionstext.'));
+        if (!is_array($value)) throw new InvalidArgumentException(t('news.invalid_localized_editorial_text'));
         return ['en' => self::text($value['en'] ?? '', $limit), 'de' => self::text($value['de'] ?? '', $limit)];
     }
 
@@ -319,36 +319,36 @@ class NewsEditorial
     public static function actionLabel(string $action): string
     {
         return match ($action) {
-            'add' => lang('Outlet added', 'Outlet ergänzt'),
-            'start' => lang('Editing started', 'Bearbeitung gestartet'),
-            'reopen' => lang('Editing reopened', 'Bearbeitung wieder aufgenommen'),
-            'save' => lang('Draft saved', 'Entwurf gespeichert'),
-            'ready' => lang('Editorial work completed', 'Redaktionell fertiggestellt'),
-            'decline' => lang('Outlet declined', 'Outlet abgelehnt'),
-            'connections' => lang('Shared connections updated', 'Gemeinsame Verknüpfungen aktualisiert'),
-            'request_review' => lang('Author review requested', 'Autorenprüfung angefordert'),
-            'approve_review' => lang('Contributions released by the author', 'Beiträge von Autor:in freigegeben'),
-            'request_changes' => lang('Author requested changes', 'Änderung von Autor:in angefragt'),
-            'cancel_review' => lang('Author review ended', 'Autorenprüfung beendet'),
-            'release' => lang('Prepared outlets released', 'Vorbereitete Outlets freigegeben'),
-            'revise' => lang('Outlet reopened for revision', 'Outlet zur Überarbeitung geöffnet'),
-            default => lang('Editorial change', 'Redaktionelle Änderung'),
+            'add' => t('news.outlet_added'),
+            'start' => t('news.editing_started'),
+            'reopen' => t('news.editing_reopened'),
+            'save' => t('news.draft_saved'),
+            'ready' => t('news.editorial_work_completed'),
+            'decline' => t('news.outlet_declined'),
+            'connections' => t('news.shared_connections_updated'),
+            'request_review' => t('news.author_review_requested'),
+            'approve_review' => t('news.contributions_released_by_the_author'),
+            'request_changes' => t('news.author_requested_changes'),
+            'cancel_review' => t('news.author_review_ended'),
+            'release' => t('news.prepared_outlets_released'),
+            'revise' => t('news.outlet_reopened_for_revision'),
+            default => t('news.editorial_change'),
         };
     }
 
     public static function apply(string $action, array $input, array $news, array $configuration, string $actor, string $now): array
     {
         if (!in_array($action, ['add', 'start', 'reopen', 'save', 'ready', 'decline'], true)) {
-            throw new InvalidArgumentException(lang('Unknown editorial action.', 'Unbekannte Redaktionsaktion.'));
+            throw new InvalidArgumentException(t('news.unknown_editorial_action'));
         }
         if (!self::workflowAvailable($configuration, $news)) {
-            throw new InvalidArgumentException(lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
+            throw new InvalidArgumentException(t('news.the_editorial_news_workflow_is_disabled'));
         }
         if (NewsEditorial::internalOnly($news)) {
-            throw new InvalidArgumentException(lang('The author selected internal only. Outlet contributions cannot be edited.', 'Die Autorin oder der Autor hat Nur intern gewählt. Outlet-Beiträge können nicht bearbeitet werden.'));
+            throw new InvalidArgumentException(t('news.the_author_selected_internal_only_outlet_contributions_cannot_be_e'));
         }
         $id = self::text($input['outlet_id'] ?? '', 24);
-        if (!preg_match('/^[a-f0-9]{24}$/', $id)) throw new InvalidArgumentException(lang('Invalid outlet.', 'Ungültiges Outlet.'));
+        if (!preg_match('/^[a-f0-9]{24}$/', $id)) throw new InvalidArgumentException(t('news.invalid_outlet'));
         $outlets = array_column($configuration['outlets'], null, 'id');
         $requests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
         $contributions = self::contributions($news);
@@ -358,24 +358,24 @@ class NewsEditorial
 
         if ($action === 'add') {
             if ($request !== null || empty($outlets[$id]['active'])) {
-                throw new InvalidArgumentException(lang('This outlet already exists or is inactive.', 'Dieses Outlet ist bereits vorhanden oder deaktiviert.'));
+                throw new InvalidArgumentException(t('news.this_outlet_already_exists_or_is_inactive'));
             }
             $request = ['outlet_id' => $id, 'source' => 'editorial', 'requested_by' => $actor, 'requested_at' => $now];
         } elseif ($request === null) {
-            throw new InvalidArgumentException(lang('Outlet request not found.', 'Outlet-Anfrage nicht gefunden.'));
+            throw new InvalidArgumentException(t('news.outlet_request_not_found'));
         }
 
         if ($action === 'start' && $before !== 'requested') {
-            throw new InvalidArgumentException(lang('This request can no longer be started.', 'Diese Anfrage kann nicht mehr gestartet werden.'));
+            throw new InvalidArgumentException(t('news.this_request_can_no_longer_be_started'));
         }
         if ($action === 'reopen' && (!in_array($before, ['withdrawn', 'declined'], true) || empty($outlets[$id]['active']))) {
-            throw new InvalidArgumentException(lang('This outlet cannot be reopened.', 'Dieses Outlet kann nicht wieder aufgenommen werden.'));
+            throw new InvalidArgumentException(t('news.this_outlet_cannot_be_reopened'));
         }
         if (in_array($action, ['save', 'ready'], true) && !in_array($before, ['in_progress', 'ready'], true)) {
-            throw new InvalidArgumentException(lang('Start editing this outlet first.', 'Starte zuerst die Bearbeitung dieses Outlets.'));
+            throw new InvalidArgumentException(t('news.start_editing_this_outlet_first'));
         }
         if ($action === 'decline' && !in_array($before, ['requested', 'in_progress', 'ready'], true)) {
-            throw new InvalidArgumentException(lang('This outlet can no longer be declined here.', 'Dieses Outlet kann hier nicht mehr abgelehnt werden.'));
+            throw new InvalidArgumentException(t('news.this_outlet_can_no_longer_be_declined_here'));
         }
 
         if (in_array($action, ['add', 'start', 'reopen'], true)) {
@@ -397,19 +397,19 @@ class NewsEditorial
             ];
         } elseif ($action === 'decline') {
             $reason = self::text($input['decline_reason'] ?? '', 2000);
-            if ($reason === '') throw new InvalidArgumentException(lang('Please give a reason for declining this outlet.', 'Bitte begründe die Ablehnung dieses Outlets.'));
+            if ($reason === '') throw new InvalidArgumentException(t('news.please_give_a_reason_for_declining_this_outlet'));
             $request['status'] = 'declined';
             $request['decline_reason'] = $reason;
             $request['declined_at'] = $now;
             $request['declined_by'] = $actor;
             unset($request['ready_at'], $request['ready_by']);
         } else {
-            if (!isset($contributions[$id])) throw new InvalidArgumentException(lang('Editorial draft not found.', 'Redaktioneller Entwurf nicht gefunden.'));
+            if (!isset($contributions[$id])) throw new InvalidArgumentException(t('news.editorial_draft_not_found'));
             $textFields = NewsOutlets::fields($outlets[$id] ?? []);
             $format = $contributions[$id]['format'] ?? 'plain';
             if (in_array('content', $textFields, true) && array_key_exists('content', $input)) {
                 $format = $input['format'] ?? $format;
-                if (!in_array($format, ['plain', 'html'], true)) throw new InvalidArgumentException(lang('Invalid contribution format.', 'Ungültiges Beitragsformat.'));
+                if (!in_array($format, ['plain', 'html'], true)) throw new InvalidArgumentException(t('news.invalid_contribution_format'));
             }
             $texts = [];
             foreach ($textFields as $field) {
@@ -454,13 +454,13 @@ class NewsEditorial
         foreach (['persons', 'activities', 'projects', 'events', 'infrastructures'] as $field) {
             $values = array_key_exists($field, $input) ? $input[$field] : DB::doc2Arr($news[$field] ?? []);
             if ($values === '') $values = [];
-            if (!is_array($values)) throw new InvalidArgumentException(lang('Invalid news connections.', 'Ungültige News-Verknüpfungen.'));
+            if (!is_array($values)) throw new InvalidArgumentException(t('news.invalid_news_connections'));
             $clean = [];
             foreach ($values as $value) {
                 $value = self::text($value, 200);
                 if ($value === '') continue;
                 if ($field !== 'infrastructures' && !preg_match('/^[a-f0-9]{24}$/', $value)) {
-                    throw new InvalidArgumentException(lang('Invalid linked entity.', 'Ungültige verknüpfte Entität.'));
+                    throw new InvalidArgumentException(t('news.invalid_linked_entity'));
                 }
                 $clean[] = $value;
             }

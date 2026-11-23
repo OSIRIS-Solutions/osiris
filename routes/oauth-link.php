@@ -25,7 +25,7 @@ Route::post('/user/oauth-link', function () {
     $username = osirisOAuthOwnAccount();
     if (!is_string($_POST['csrf'] ?? null) || empty($_SESSION['oauth_link_csrf'])
         || !hash_equals($_SESSION['oauth_link_csrf'], $_POST['csrf'])) {
-        osirisOAuthFail(lang('Invalid request. Please start again.', 'Ungültige Anfrage. Bitte beginne erneut.'));
+        osirisOAuthFail(t('auth.invalid_request_please_start_again'));
     }
     if (($_POST['action'] ?? '') === 'cancel') {
         osirisOAuthClearAttempt();
@@ -33,17 +33,17 @@ Route::post('/user/oauth-link', function () {
         exit;
     }
     $person = $osiris->persons->findOne(['username' => $username]);
-    if (!$person || osirisOAuthLinked($person)) osirisOAuthFail(lang('Account is already linked or missing.', 'Konto ist bereits verknüpft oder nicht vorhanden.'));
+    if (!$person || osirisOAuthLinked($person)) osirisOAuthFail(t('auth.account_is_already_linked_or_missing'));
     if (($_POST['action'] ?? '') === 'confirm') {
         $identity = $_SESSION['oauth_link'] ?? null;
         if (!$identity || $identity['username'] !== $username || $identity['created'] < time() - 600) {
-            osirisOAuthFail(lang('Link request expired. Please start again.', 'Die Verknüpfungsanfrage ist abgelaufen. Bitte beginne erneut.'));
+            osirisOAuthFail(t('auth.link_request_expired_please_start_again'));
         }
         try {
             osirisOAuthLinkProfile($osiris, $username, $identity);
         } catch (\Throwable $e) {
             error_log('OSIRIS: SSO linking failed (' . get_class($e) . ')');
-            osirisOAuthFail(lang('The link could not be completed. Please check your account settings before trying again.', 'Die Verknüpfung konnte nicht abgeschlossen werden. Bitte prüfe deine Account-Einstellungen, bevor du es erneut versuchst.'));
+            osirisOAuthFail(t('auth.the_link_could_not_be_completed_please_check_your_account_settings'));
         }
         osirisOAuthClearAttempt();
         unset($_SESSION['oauth_link_csrf']);
@@ -51,7 +51,7 @@ Route::post('/user/oauth-link', function () {
             'secure' => !empty($_SERVER['HTTPS']), 'httponly' => true, 'samesite' => 'Lax']);
         $person = $osiris->persons->findOne(['username' => $username]);
         osirisOAuthSession($person);
-        $_SESSION['msg'] = lang('Your profile is now linked. You can log in using single sign-on or your OSIRIS username and password.', 'Dein Profil ist jetzt verknüpft. Du kannst dich über Single Sign-On oder mit deinem OSIRIS-Nutzernamen und Passwort anmelden.');
+        $_SESSION['msg'] = t('auth.your_profile_is_now_linked_you_can_log_in_using_single_sign_on_or');
         $_SESSION['msg_type'] = 'success';
         header('Location: ' . ROOTPATH . '/user/edit/' . rawurlencode($username));
         exit;
@@ -60,7 +60,7 @@ Route::post('/user/oauth-link', function () {
     $account = $osiris->accounts->findOne(['username' => $username]);
     if (!is_string($_POST['password'] ?? null) || empty($account['password'])
         || !password_verify($_POST['password'], $account['password'])) {
-        $_SESSION['msg'] = lang('Your OSIRIS password is incorrect.', 'Dein OSIRIS-Passwort ist falsch.');
+        $_SESSION['msg'] = t('auth.your_osiris_password_is_incorrect');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/user/oauth-link');
         exit;

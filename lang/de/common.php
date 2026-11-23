@@ -804,6 +804,7 @@ return [
     'item_added_to_collection' => 'Aktivität zu deiner Sammlung hinzugefügt. <a class="link" href="{{rootpath}}/cart">Sammlung ansehen</a>',
     'initiative' => 'Initiative',
     'initiatives' => 'Initiativen',
+    'data_model' => 'Weitere Datenmodelle',
     'news_events' => 'News & Events',
     'news_editorial' => 'News-Redaktion',
     'new_version_available' => 'Neue Version verfügbar',
@@ -813,5 +814,6 @@ return [
     'keep_osiris_home' => 'OSIRIS-Startseite behalten',
     'central_document' => 'Zentrales Dokument',
     'this_phase_is_being_prepared_and_is_not_yet_available' => 'Diese Phase wird vorbereitet und ist noch nicht verfügbar.',
-    'data_model' => 'Weitere Datenmodelle',
+    'invalid_deadline_type' => 'Ungültiger Fristtyp.',
+    'the_selected_svg_file_is_invalid_or_does_not_match_its_file_extens' => 'Die ausgewählte SVG-Datei ist ungültig oder stimmt nicht mit ihrer Dateiendung überein.',
 ];

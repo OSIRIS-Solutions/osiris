@@ -22,7 +22,7 @@
             <?= t('admin.portfolio_settings') ?>
         </h1>
 
-        <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= lang('Configure news sources for Portfolio', 'News-Quellen für Portfolio konfigurieren') ?></a></p>
+        <p><a href="<?= ROOTPATH ?>/admin/news"><i class="ph ph-newspaper" aria-hidden="true"></i> <?= t('admin.configure_news_sources_for_portfolio') ?></a></p>
 
         <!-- portfolio url -->
         <div class="form-group">

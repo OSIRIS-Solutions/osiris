@@ -52,11 +52,11 @@ class NewsReview
     public static function statusLabel(string $status): string
     {
         return match ($status) {
-            'pending' => lang('Awaiting response', 'Rückmeldung ausstehend'),
-            'approved' => lang('Released by the author', 'Von Autor:in freigegeben'),
-            'changes_requested' => lang('Changes requested', 'Änderung angefragt'),
-            'cancelled' => lang('Ended by the editorial team', 'Von der Redaktion beendet'),
-            'closed_without_response' => lang('Closed without a response', 'Ohne Rückmeldung abgeschlossen'),
+            'pending' => t('news.awaiting_response'),
+            'approved' => t('news.released_by_the_author'),
+            'changes_requested' => t('news.changes_requested'),
+            'cancelled' => t('news.ended_by_the_editorial_team'),
+            'closed_without_response' => t('news.closed_without_a_response'),
             default => $status,
         };
     }
@@ -65,12 +65,12 @@ class NewsReview
     {
         $authorAction = in_array($action, ['approve_review', 'request_changes'], true);
         if ($authorAction ? $actor !== ($news['created_by'] ?? null) : !$isEditor) {
-            throw new InvalidArgumentException(lang('You cannot perform this review action.', 'Du darfst diese Prüfaktion nicht ausführen.'));
+            throw new InvalidArgumentException(t('news.you_cannot_perform_this_review_action'));
         }
         if (!in_array($action, ['request_review', 'approve_review', 'request_changes', 'cancel_review', 'release', 'revise'], true)) {
-            throw new InvalidArgumentException(lang('Unknown review action.', 'Unbekannte Prüfaktion.'));
+            throw new InvalidArgumentException(t('news.unknown_review_action'));
         }
-        if (NewsEditorial::internalOnly($news)) throw new InvalidArgumentException(lang('This news is internal only.', 'Diese News ist nur intern.'));
+        if (NewsEditorial::internalOnly($news)) throw new InvalidArgumentException(t('news.this_news_is_internal_only'));
         $requests = array_column(NewsEditorial::requests($news), null, 'outlet_id');
         $contributions = NewsEditorial::contributions($news);
         $outlets = array_column($configuration['outlets'], null, 'id');
@@ -81,35 +81,35 @@ class NewsReview
         $pendingIndex = $pending === null ? null : array_search($pending['id'], array_column($reviews, 'id'), true);
 
         if ($action === 'request_review') {
-            if ($pending !== null) throw new InvalidArgumentException(lang('An author review is already open.', 'Es läuft bereits eine Autorenprüfung.'));
-            if (empty($news['created_by'])) throw new InvalidArgumentException(lang('This news has no author to contact.', 'Für diese News ist keine Autorin oder kein Autor hinterlegt.'));
+            if ($pending !== null) throw new InvalidArgumentException(t('news.an_author_review_is_already_open'));
+            if (empty($news['created_by'])) throw new InvalidArgumentException(t('news.this_news_has_no_author_to_contact'));
             $snapshots = [];
             $reviewId = bin2hex(random_bytes(12));
             foreach ($requests as $id => &$request) {
                 if ($request['status'] !== 'ready') continue;
-                if (!isset($contributions[$id])) throw new InvalidArgumentException(lang('Editorial draft not found.', 'Redaktioneller Entwurf nicht gefunden.'));
+                if (!isset($contributions[$id])) throw new InvalidArgumentException(t('news.editorial_draft_not_found'));
                 NewsEditorial::assertReady($contributions[$id], $outlets[$id] ?? []);
                 $snapshots[] = self::snapshot($request, $contributions[$id], $outlets[$id] ?? []);
                 $request['status'] = 'pending_approval';
                 $request['author_review_id'] = $reviewId;
             }
             unset($request);
-            if (!$snapshots) throw new InvalidArgumentException(lang('Mark at least one outlet ready first.', 'Markiere zuerst mindestens ein Outlet als fertig.'));
+            if (!$snapshots) throw new InvalidArgumentException(t('news.mark_at_least_one_outlet_ready_first'));
             $reviews[] = ['id' => $reviewId, 'status' => 'pending', 'requested_by' => $actor, 'requested_at' => $now,
                 'contributions' => $snapshots];
             $event['review_id'] = $reviewId;
         } elseif ($authorAction || $action === 'cancel_review') {
             if ($pending === null || !is_string($input['review_id'] ?? null) || $input['review_id'] !== $pending['id']) {
-                throw new InvalidArgumentException(lang('This review is no longer open. Reload the news item.', 'Diese Prüfung ist nicht mehr offen. Bitte lade die News neu.'));
+                throw new InvalidArgumentException(t('news.this_review_is_no_longer_open_reload_the_news_item'));
             }
             if ($action === 'approve_review' && !self::matches($pending, $news)) {
-                throw new InvalidArgumentException(lang('The outlet texts have changed. The editorial team needs to prepare a new review.', 'Die Outlet-Texte wurden geändert. Die Redaktion muss eine neue Prüfung vorbereiten.'));
+                throw new InvalidArgumentException(t('news.the_outlet_texts_have_changed_the_editorial_team_needs_to_prepare'));
             }
             $status = match ($action) { 'approve_review' => 'approved', 'request_changes' => 'changes_requested', default => 'cancelled' };
             $comment = $input['comment'] ?? '';
             if ($action === 'request_changes') {
                 if (!is_string($comment) || trim($comment) === '' || (function_exists('mb_strlen') ? mb_strlen($comment) : strlen($comment)) > 4000) {
-                    throw new InvalidArgumentException(lang('Describe the requested change (up to 4,000 characters).', 'Beschreibe die gewünschte Änderung (maximal 4.000 Zeichen).'));
+                    throw new InvalidArgumentException(t('news.describe_the_requested_change_up_to_4_000_characters'));
                 }
                 $reviews[$pendingIndex]['comment'] = trim($comment);
                 $event['comment'] = trim($comment);
@@ -120,7 +120,7 @@ class NewsReview
             foreach ($pending['contributions'] as $snapshot) {
                 $id = $snapshot['outlet_id'];
                 if (($requests[$id]['status'] ?? '') !== 'pending_approval' || ($requests[$id]['author_review_id'] ?? '') !== $pending['id']) {
-                    throw new InvalidArgumentException(lang('The review has changed. Reload the news item.', 'Die Prüfung wurde geändert. Bitte lade die News neu.'));
+                    throw new InvalidArgumentException(t('news.the_review_has_changed_reload_the_news_item'));
                 }
                 $requests[$id]['status'] = match ($action) { 'approve_review' => 'released', 'request_changes' => 'in_progress', default => 'ready' };
                 if ($action === 'approve_review') {
@@ -133,17 +133,17 @@ class NewsReview
             $event['review_id'] = $pending['id'];
         } elseif ($action === 'release') {
             if ($pending !== null && ($input['confirm_without_response'] ?? null) !== '1') {
-                throw new InvalidArgumentException(lang('Confirm that you want to release without the pending author response.', 'Bestätige, dass du ohne die ausstehende Rückmeldung freigeben möchtest.'));
+                throw new InvalidArgumentException(t('news.confirm_that_you_want_to_release_without_the_pending_author_respon'));
             }
             $releasedIds = [];
             foreach ($requests as $id => &$request) {
                 if (!in_array($request['status'], ['ready', 'pending_approval'], true)) continue;
-                if (!isset($contributions[$id])) throw new InvalidArgumentException(lang('Editorial draft not found.', 'Redaktioneller Entwurf nicht gefunden.'));
+                if (!isset($contributions[$id])) throw new InvalidArgumentException(t('news.editorial_draft_not_found'));
                 NewsEditorial::assertReady($contributions[$id], $outlets[$id] ?? []);
                 if ($request['status'] === 'pending_approval') {
                     $reviewIndex = array_search($request['author_review_id'] ?? '', array_column($reviews, 'id'), true);
                     if ($reviewIndex === false || !self::matches($reviews[$reviewIndex], $news)) {
-                        throw new InvalidArgumentException(lang('The reviewed version has changed. Prepare the outlet again.', 'Die geprüfte Fassung wurde geändert. Bereite das Outlet erneut vor.'));
+                        throw new InvalidArgumentException(t('news.the_reviewed_version_has_changed_prepare_the_outlet_again'));
                     }
                 }
                 $request['release_mode'] = match ($request['status']) {
@@ -155,7 +155,7 @@ class NewsReview
                 $releasedIds[] = $id;
             }
             unset($request);
-            if (!$releasedIds) throw new InvalidArgumentException(lang('No prepared outlets are available for release.', 'Es sind keine fertigen Outlets zur Freigabe vorhanden.'));
+            if (!$releasedIds) throw new InvalidArgumentException(t('news.no_prepared_outlets_are_available_for_release'));
             if ($pending !== null) {
                 $reviews[$pendingIndex]['status'] = 'closed_without_response';
                 $reviews[$pendingIndex]['closed_by'] = $actor;
@@ -167,7 +167,7 @@ class NewsReview
         } else {
             $id = $input['outlet_id'] ?? null;
             if (!is_string($id) || !isset($requests[$id]) || !in_array($requests[$id]['status'], ['approved', 'released'], true)) {
-                throw new InvalidArgumentException(lang('This outlet cannot be revised here.', 'Dieses Outlet kann hier nicht erneut bearbeitet werden.'));
+                throw new InvalidArgumentException(t('news.this_outlet_cannot_be_revised_here'));
             }
             $requests[$id]['status'] = 'in_progress';
             unset($requests[$id]['author_review_id'], $requests[$id]['release_mode'], $requests[$id]['released_by'], $requests[$id]['released_at'], $requests[$id]['released_revision']);

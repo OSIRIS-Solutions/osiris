@@ -5,44 +5,44 @@ require_once BASEPATH . '/php/NewsReview.php';
 
 Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->featureEnabled('news', true)) abortwith(500, lang('News are not enabled.', 'News sind nicht aktiviert.'));
+    if (!$Settings->featureEnabled('news', true)) abortwith(500, t('error.news_not_enabled'));
     if (!$Settings->featureEnabled('news-editorial')) abortwith(403);
     $authorAction = in_array($_POST['action'] ?? null, ['approve_review', 'request_changes'], true);
     if (!$authorAction && !$Settings->hasPermission('news.editorial')) {
-        abortwith(403, lang('You do not have editorial permission.', 'Du hast keine Redaktionsberechtigung.'));
+        abortwith(403, t('news.you_do_not_have_editorial_permission'));
     }
     if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
-        abortwith(403, lang('The form has expired. Reload the news item.', 'Das Formular ist abgelaufen. Bitte lade die News neu.'));
+        abortwith(403, t('news.the_form_has_expired_reload_the_news_item'));
     }
     $action = $_POST['action'] ?? '';
     $input = $_POST['editorial'] ?? [];
-    if (!is_string($action) || !is_array($input)) abortwith(400, lang('Invalid editorial data.', 'Ungültige Redaktionsdaten.'));
+    if (!is_string($action) || !is_array($input)) abortwith(400, t('news.invalid_editorial_data'));
     $outletActions = ['start', 'reopen', 'save', 'ready', 'decline', 'revise'];
     $scope = in_array($action, $outletActions, true) ? 'outlet:' . (is_string($input['outlet_id'] ?? null) ? $input['outlet_id'] : '') : ($action === 'connections' ? 'connections' : 'review');
     for ($attempt = 0; $attempt < 3; $attempt++) {
         $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
-        if (!$news) abortwith(404, lang('News item not found.', 'Nachricht nicht gefunden.'));
+        if (!$news) abortwith(404, t('news.news_item_not_found'));
         $news = DB::doc2Arr($news);
         if (!NewsEditorial::workflowAvailable($Settings->getNewsOutlets(), $news)) {
-            abortwith(400, lang('The editorial news workflow is disabled.', 'Der redaktionelle News-Workflow ist deaktiviert.'));
+            abortwith(400, t('news.the_editorial_news_workflow_is_disabled'));
         }
         if ($authorAction && !NewsEditorial::isAuthor($news)) {
-            abortwith(403, lang('Only the author can respond to this review.', 'Nur die Autorin oder der Autor kann auf diese Prüfung antworten.'));
+            abortwith(403, t('news.only_the_author_can_respond_to_this_review'));
         }
         if (!$authorAction && (!is_string($_POST['edit_token'] ?? null) || !hash_equals(NewsEditorial::editToken($news, $scope), $_POST['edit_token']))) {
-            abortwith(409, lang('These fields have changed. Keep your draft and reload before saving again.', 'Diese Felder wurden inzwischen geändert. Sichere deinen Entwurf und lade die Seite vor dem erneuten Speichern neu.'));
+            abortwith(409, t('news.these_fields_have_changed_keep_your_draft_and_reload_before_saving'));
         }
         try {
             if ($action === 'connections') {
                 $data = $_POST['news'] ?? [];
-                if (!is_array($data)) throw new InvalidArgumentException(lang('Invalid news connections.', 'Ungültige News-Verknüpfungen.'));
+                if (!is_array($data)) throw new InvalidArgumentException(t('news.invalid_news_connections'));
                 $fields = NewsEditorial::connections($data, $news);
                 $fields['featured'] = normalize_news_featured(['featured' => $data['featured'] ?? DB::doc2Arr($news['featured'] ?? [])], $fields);
                 if (array_key_exists('topics', $data)) {
                     if ($data['topics'] === '') $data['topics'] = [];
-                    if (!is_array($data['topics'])) throw new InvalidArgumentException(lang('Invalid topics.', 'Ungültige Forschungsbereiche.'));
+                    if (!is_array($data['topics'])) throw new InvalidArgumentException(t('news.invalid_topics'));
                     foreach ($data['topics'] as $topic) {
-                        if (!is_string($topic) || strlen($topic) > 200) throw new InvalidArgumentException(lang('Invalid topics.', 'Ungültige Forschungsbereiche.'));
+                        if (!is_string($topic) || strlen($topic) > 200) throw new InvalidArgumentException(t('news.invalid_topics'));
                     }
                     $fields['topics'] = array_values(array_unique($data['topics']));
                 }
@@ -71,16 +71,16 @@ Route::post('/crud/news/editorial/([a-f0-9]{24})', function ($id) {
         if ($result->getMatchedCount() === 1) break;
     }
     if ($result->getMatchedCount() !== 1) {
-        abortwith(409, lang('The news is being edited simultaneously. Keep your draft and try again.', 'Die News wird gleichzeitig bearbeitet. Sichere deinen Entwurf und versuche es erneut.'));
+        abortwith(409, t('news.the_news_is_being_edited_simultaneously_keep_your_draft_and_try_again'));
     }
     NewsReview::notify($DB, $action, array_merge($news, $fields));
     $_SESSION['msg'] = match ($action) {
-        'request_review' => lang('Author review requested.', 'Autorenprüfung angefordert.'),
-        'approve_review' => lang('Contributions released.', 'Beiträge freigegeben.'),
-        'request_changes' => lang('Change request sent to the editorial team.', 'Änderungswunsch an die Redaktion gesendet.'),
-        'cancel_review' => lang('Author review ended.', 'Autorenprüfung beendet.'),
-        'release' => lang('Prepared outlets released.', 'Vorbereitete Outlets freigegeben.'),
-        default => lang('Editorial changes saved.', 'Redaktionelle Änderungen gespeichert.'),
+        'request_review' => t('news.author_review_requested'),
+        'approve_review' => t('news.contributions_released'),
+        'request_changes' => t('news.change_request_sent_to_the_editorial_team'),
+        'cancel_review' => t('news.author_review_ended'),
+        'release' => t('news.prepared_outlets_released'),
+        default => t('news.editorial_changes_saved'),
     };
     $_SESSION['msg_type'] = 'success';
     $anchor = $authorAction ? 'news-author-review' : ($action === 'connections' ? 'editorial-connections' : 'news-editorial');

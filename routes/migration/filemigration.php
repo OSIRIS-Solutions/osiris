@@ -49,7 +49,7 @@ $summary = [
 
 
 <p>
-    <?= lang($DRY_RUN ? 'admin.dry_run_mode_description' : 'admin.actual_migration_mode_description') ?>
+    <?= t($DRY_RUN ? 'admin.dry_run_mode_description' : 'admin.actual_migration_mode_description') ?>
 </p>
 
 <form action="#" method="get">

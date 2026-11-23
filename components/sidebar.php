@@ -223,7 +223,7 @@ $cart = readCart();
                     <?php if ($Settings->featureEnabled('news-editorial') && isset($notifications['news-editorial'])) { ?>
                         <a href="<?= ROOTPATH ?>/news/editorial" class="with-icon <?= $pageactive('news-editorial') ?>">
                             <i class="ph ph-pencil" aria-hidden="true"></i>
-                            <?= lang('News Editorial', 'News-Redaktion') ?>
+                            <?= t('common.news_editorial') ?>
                             <span class="sidebar-index info" id="news-editorial-counter"><?= $notifications['news-editorial']['count'] ?? 0 ?></span>
                         </a>
                     <?php } ?>

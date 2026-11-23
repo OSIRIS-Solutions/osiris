@@ -1725,7 +1725,7 @@ if ($edit_perm) {
                 <?php include_once BASEPATH . '/pages/activities/activity-modals.php'; ?>
                 <div class="mb-20">
                     <a href="#edit-files" class="btn mt-20 primary">
-                        <?= lang('Add files', 'Dateien hinzufügen') ?>
+                        <?= t('activities.add_files') ?>
                     </a>
                 </div>
             <?php } ?>

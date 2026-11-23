@@ -29,4 +29,5 @@ return [
     'teaching_category' => '教育活動のカテゴリー',
     'teaching_course_module' => '以下のモジュール向けのコース',
     'publication_place' => '出版地',
+    'please_select' => '-- 選択してください --',
 ];

@@ -51,7 +51,7 @@ foreach ($storedLabels as $document) {
             'language' => '—',
             'value' => '',
             'status' => 'skipped',
-            'message' => lang('No matching translation key is configured.', 'Es ist kein passender Sprachschlüssel konfiguriert.'),
+            'message' => t('admin.no_matching_translation_key_is_configured'),
         ];
         $skipped++;
         continue;
@@ -75,19 +75,19 @@ foreach ($storedLabels as $document) {
 
         if ($value === '') {
             $row['status'] = 'skipped';
-            $row['message'] = lang('No stored value exists for this language.', 'Für diese Sprache ist kein Wert gespeichert.');
+            $row['message'] = t('admin.no_stored_value_exists_for_this_language');
             $skipped++;
         } elseif (!isset($catalogues[$language][$translationKey])) {
             $row['status'] = 'skipped';
-            $row['message'] = lang('The target translation key does not exist.', 'Der Ziel-Sprachschlüssel existiert nicht.');
+            $row['message'] = t('admin.the_target_translation_key_does_not_exist');
             $skipped++;
         } elseif (isset($existingOverrides[$language][$translationKey])) {
             $row['status'] = 'existing';
-            $row['message'] = lang('An override already exists and was not changed.', 'Es existiert bereits eine Anpassung, die nicht verändert wurde.');
+            $row['message'] = t('admin.an_override_already_exists_and_was_not_changed');
             $existing++;
         } elseif ($value === $catalogues[$language][$translationKey]['default']) {
             $row['status'] = 'unchanged';
-            $row['message'] = lang('The value matches the standard translation; no override is needed.', 'Der Wert entspricht der Standardübersetzung; es ist keine Anpassung nötig.');
+            $row['message'] = t('admin.the_value_matches_the_standard_translation_no_override_is_needed');
             $unchanged++;
         } else {
             try {
@@ -99,7 +99,7 @@ foreach ($storedLabels as $document) {
                 );
                 $existingOverrides[$language][$translationKey] = ['value' => $value];
                 $row['status'] = 'created';
-                $row['message'] = lang('Override created.', 'Anpassung angelegt.');
+                $row['message'] = t('admin.override_created');
                 $created++;
             } catch (Throwable $exception) {
                 $row['status'] = 'skipped';
@@ -114,38 +114,35 @@ foreach ($storedLabels as $document) {
 
 ?>
 <div class="migration-report">
-    <h1><?= lang('Migrate language labels', 'Sprachbezeichnungen migrieren') ?></h1>
+    <h1><?= t('admin.migrate_language_labels') ?></h1>
 
     <div class="migration-card">
-        <h3 class="migration-ok">✓ <?= lang('Language label migration completed', 'Migration der Sprachbezeichnungen abgeschlossen') ?></h3>
+        <h3 class="migration-ok">✓ <?= t('admin.language_label_migration_completed') ?></h3>
         <p>
-            <?= lang(
-                'Stored English and German label settings were converted to language overrides. Existing overrides and legacy settings were left unchanged.',
-                'Gespeicherte deutsche und englische Label-Einstellungen wurden in Sprachanpassungen überführt. Bestehende Anpassungen und die alten Einstellungen wurden nicht verändert.'
-            ) ?>
+            <?= t('admin.stored_english_and_german_label_settings_were_converted_to_languag') ?>
         </p>
         <div class="migration-summary">
-            <div class="migration-stat"><strong><?= $created ?></strong><span><?= lang('created', 'angelegt') ?></span></div>
-            <div class="migration-stat"><strong><?= $existing ?></strong><span><?= lang('already present', 'bereits vorhanden') ?></span></div>
-            <div class="migration-stat"><strong><?= $unchanged ?></strong><span><?= lang('standard values', 'Standardwerte') ?></span></div>
-            <div class="migration-stat"><strong><?= $skipped ?></strong><span><?= lang('skipped', 'übersprungen') ?></span></div>
+            <div class="migration-stat"><strong><?= $created ?></strong><span><?= t('common.created') ?></span></div>
+            <div class="migration-stat"><strong><?= $existing ?></strong><span><?= t('admin.already_present') ?></span></div>
+            <div class="migration-stat"><strong><?= $unchanged ?></strong><span><?= t('admin.standard_values') ?></span></div>
+            <div class="migration-stat"><strong><?= $skipped ?></strong><span><?= t('admin.skipped') ?></span></div>
         </div>
     </div>
 
     <?php if (empty($storedLabels)) { ?>
         <div class="alert signal">
-            <?= lang('No stored label settings were found.', 'Es wurden keine gespeicherten Label-Einstellungen gefunden.') ?>
+            <?= t('admin.no_stored_label_settings_were_found') ?>
         </div>
     <?php } else { ?>
         <div class="table-responsive">
             <table class="table simple small">
                 <thead>
                     <tr>
-                        <th><?= lang('Legacy setting', 'Alte Einstellung') ?></th>
-                        <th><?= lang('Translation key', 'Sprachschlüssel') ?></th>
-                        <th><?= lang('Language', 'Sprache') ?></th>
-                        <th><?= lang('Value', 'Wert') ?></th>
-                        <th><?= lang('Result', 'Ergebnis') ?></th>
+                        <th><?= t('admin.legacy_setting') ?></th>
+                        <th><?= t('admin.translation_key') ?></th>
+                        <th><?= t('news.language') ?></th>
+                        <th><?= t('common.value') ?></th>
+                        <th><?= t('admin.result') ?></th>
                     </tr>
                 </thead>
                 <tbody>

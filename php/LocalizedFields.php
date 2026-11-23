@@ -77,7 +77,7 @@ function localizedField($form, string $name, string $label, array $options = [])
                     $hasValue = localizedValueHasContent($translation, $type);
                     $flag = localizedLanguageFlag($language);
                     $isBaseLanguage = $language === $baseLanguage;
-                    $tabLabel = lang('common.lang_' . $language);
+                    $tabLabel = t('common.lang_' . $language);
                     if ($isBaseLanguage) {
                         $tabLabel .= ' · ' . t('common.default_language');
                     }
@@ -109,7 +109,7 @@ function localizedField($form, string $name, string $label, array $options = [])
                     <?php foreach ($languages as $language) {
                         $flag = localizedLanguageFlag($language);
                         $isBaseLanguage = $language === $baseLanguage;
-                        $languageLabel = lang('common.lang_' . $language);
+                        $languageLabel = t('common.lang_' . $language);
                         ?>
                         <span data-language="<?= e($language) ?>"
                               aria-label="<?= e($languageLabel) ?>"

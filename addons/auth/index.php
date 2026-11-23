@@ -128,7 +128,7 @@ Route::post('/auth/admin-reset-password', function () {
     }
     $id = DB::to_ObjectID($_POST['id']);
     $person = $osiris->persons->findOne(['_id' => $id]);
-    if (empty($person)) abortwith(404, lang('User not found.', 'Person nicht gefunden.'));
+    if (empty($person)) abortwith(404, t('error.user_not_found'));
     $hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
     $osiris->accounts->updateOne(
         ['username' => $person['username']],

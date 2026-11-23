@@ -82,7 +82,7 @@ function osirisOAuthOwnAccount(): string
 {
     $username = $_SESSION['username'] ?? '';
     if (empty($_SESSION['loggedin']) || !$username || ($_SESSION['realuser'] ?? $username) !== $username) {
-        osirisOAuthFail(lang('Please log in with your own OSIRIS account first.', 'Bitte melde dich zuerst mit deinem eigenen OSIRIS-Konto an.'));
+        osirisOAuthFail(t('auth.please_log_in_with_your_own_osiris_account_first'));
     }
     return $username;
 }
@@ -104,7 +104,7 @@ function osirisOAuthStart(string $purpose, ?string $username = null): void
         }
         $detail = ': ' . str_replace(["\r", "\n"], ' ', $message) . ' in ' . $e->getFile() . ':' . $e->getLine();
         error_log('OSIRIS: unable to start OIDC authentication (' . get_class($e) . ')' . $detail);
-        osirisOAuthFail(lang('Unable to contact the single sign-on provider. Please check the configuration.', 'Der SSO-Anbieter konnte nicht erreicht werden. Bitte prüfe die Konfiguration.'));
+        osirisOAuthFail(t('auth.unable_to_contact_the_single_sign_on_provider_please_check_the_con'));
     }
     exit;
 }
@@ -183,13 +183,13 @@ function osirisOAuthCallback(): void
     if (!is_array($attempt) || ($attempt['created'] ?? 0) < time() - 600
         || !is_string($_GET['state'] ?? null) || empty($_SESSION['openid_connect_state'])
         || !hash_equals($_SESSION['openid_connect_state'], $_GET['state'])) {
-        osirisOAuthFail(lang('Invalid or expired login request. Please try again.', 'Ungültige oder abgelaufene Login-Anfrage. Bitte versuche es erneut.'));
+        osirisOAuthFail(t('auth.invalid_or_expired_login_request_please_try_again'));
     }
     if (!is_string($_GET['code'] ?? null) || $_GET['code'] === '' || isset($_GET['error'])) {
-        osirisOAuthFail(lang('Single sign-on was cancelled or failed.', 'Single Sign-On wurde abgebrochen oder ist fehlgeschlagen.'));
+        osirisOAuthFail(t('auth.single_sign_on_was_cancelled_or_failed'));
     }
     if ($attempt['purpose'] === 'link' && osirisOAuthOwnAccount() !== $attempt['username']) {
-        osirisOAuthFail(lang('Your OSIRIS session changed. Please start again.', 'Deine OSIRIS-Sitzung hat sich geändert. Bitte beginne erneut.'));
+        osirisOAuthFail(t('auth.your_osiris_session_changed_please_start_again'));
     }
     try {
         $expectedNonce = $_SESSION['openid_connect_nonce'] ?? '';
@@ -208,14 +208,14 @@ function osirisOAuthCallback(): void
             'mail' => $info->email ?? $claims->email ?? ''];
     } catch (\Throwable $e) {
         error_log('OSIRIS: OIDC authentication failed (' . get_class($e) . ')');
-        osirisOAuthFail(lang('Single sign-on could not be verified. Please try again.', 'Single Sign-On konnte nicht geprüft werden. Bitte versuche es erneut.'));
+        osirisOAuthFail(t('auth.single_sign_on_could_not_be_verified_please_try_again'));
     }
     osirisOAuthClearAttempt();
     $person = $osiris->persons->findOne(['sso.issuer' => $identity['issuer'], 'sso.subject' => $identity['subject']]);
     if ($attempt['purpose'] === 'link') {
-        if ($person) osirisOAuthFail(lang('This SSO account is already linked to an OSIRIS profile.', 'Dieses SSO-Konto ist bereits mit einem OSIRIS-Profil verknüpft.'));
+        if ($person) osirisOAuthFail(t('auth.this_sso_account_is_already_linked_to_an_osiris_profile'));
         if (!is_string($identity['mail']) || !filter_var($identity['mail'], FILTER_VALIDATE_EMAIL)) {
-            osirisOAuthFail(lang('The provider did not return a valid email address. Your account was not changed.', 'Der Anbieter hat keine gültige E-Mail-Adresse geliefert. Dein Konto wurde nicht geändert.'));
+            osirisOAuthFail(t('auth.the_provider_did_not_return_a_valid_email_address_your_account_was'));
         }
         $_SESSION['oauth_link'] = $identity + ['username' => $attempt['username'], 'created' => time()];
         header('Location: ' . ROOTPATH . '/user/oauth-link');
@@ -226,7 +226,7 @@ function osirisOAuthCallback(): void
             $person = osirisOAuthUpgradeLegacy($osiris, $identity, $info, $claims);
         } catch (\Throwable $e) {
             error_log('OSIRIS: legacy SSO migration failed (' . get_class($e) . ')');
-            osirisOAuthFail(lang('Your existing profile could not be assigned. Please try again or contact the administrator.', 'Dein bestehendes Profil konnte nicht zugeordnet werden. Bitte versuche es erneut oder kontaktiere die Administration.'));
+            osirisOAuthFail(t('auth.your_existing_profile_could_not_be_assigned_please_try_again_or_co'));
         }
     }
     if (!$person) {

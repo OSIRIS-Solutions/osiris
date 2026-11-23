@@ -14,4 +14,5 @@ return [
     'back_to_profile' => 'Powrót do profilu',
     'orcid_not_authenticated' => 'ORCID – brak uwierzytelnienia',
     'your_orcid_has_been_disconnected' => 'Twoje ORCID zostało odłączone.',
+    'show_skipped_works' => 'Pokaż pominięte prace',
 ];

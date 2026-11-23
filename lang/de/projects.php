@@ -1,4 +1,5 @@
 <?php
+
 return [
     'approved' => 'Bewilligt',
     'applied' => 'Beantragt',
@@ -523,6 +524,11 @@ return [
     'collaborators_ror' => 'Kooperationspartner (ROR)',
     'collaborators_type' => 'Kooperationspartner (Typ)',
     'not_abs_relevant' => 'Nicht ABS-relevant',
+    'nagoya_incomplete' => 'Unvollständig',
+    'nagoya_country_review_pending' => 'Länderprüfung ausstehend',
+    'nagoya_researcher_input_required' => 'Eingabe durch dich erforderlich',
+    'nagoya_awaiting_abs_evaluation' => 'Wartet auf ABS-Bewertung',
+    'nagoya_compliant' => 'Konform',
     'not_abs_relevant_Nagoya' => 'nicht ABS-relevant',
     'abs_unknown' => 'ABS unbekannt',
     'permits_pending_Nagoya' => 'Genehmigungen ausstehend',
@@ -551,4 +557,6 @@ return [
     'correcting_past_phase' => 'Du korrigierst die Phase „{{phase}}“. Der aktuelle Status bleibt „{{status}}“.',
     'past_phase_correction' => 'Korrektur einer früheren Phase',
     'draft' => 'Entwurf',
+    'unable_to_load_organization_search' => 'Die Organisationssuche kann nicht geladen werden.',
+    'uploading' => 'Wird hochgeladen…',
 ];

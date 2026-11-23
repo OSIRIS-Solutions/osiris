@@ -11,7 +11,7 @@ function osirisOAuthRegistrationPending(): array
     }
     $pending = $_SESSION['oauth_registration'] ?? null;
     if (!is_array($pending) || ($pending['created'] ?? 0) < time() - 1800) {
-        osirisOAuthFail(lang('Your SSO registration has expired. Please log in with SSO again.', 'Deine SSO-Registrierung ist abgelaufen. Bitte melde dich erneut über SSO an.'));
+        osirisOAuthFail(t('auth.your_sso_registration_has_expired_please_log_in_with_sso_again'));
     }
     return $pending;
 }
@@ -48,16 +48,16 @@ function osirisOAuthRegistrationPerson(array $pending, array $input, array $grou
     }
     $person['username'] = is_string($input['username'] ?? null) ? trim($input['username']) : '';
     if (!preg_match('/^[a-zA-Z0-9_.-]{1,100}$/D', $person['username'])) {
-        throw new \InvalidArgumentException(lang('Use letters, numbers, dots, underscores or hyphens for the username.', 'Verwende für den Nutzernamen Buchstaben, Zahlen, Punkte, Unterstriche oder Bindestriche.'));
+        throw new \InvalidArgumentException(t('auth.use_letters_numbers_dots_underscores_or_hyphens_for_the_username'));
     }
     if ($person['first'] === '' || $person['last'] === '') {
-        throw new \InvalidArgumentException(lang('Please enter your first and last name.', 'Bitte gib Vor- und Nachnamen an.'));
+        throw new \InvalidArgumentException(t('auth.please_enter_your_first_and_last_name'));
     }
     // A valid provider email is authoritative; missing email can be completed in the form.
     $person['mail'] = is_string($pending['mail']) && filter_var($pending['mail'], FILTER_VALIDATE_EMAIL)
         ? $pending['mail'] : (is_string($values['mail'] ?? null) ? trim($values['mail']) : '');
     if (!filter_var($person['mail'], FILTER_VALIDATE_EMAIL)) {
-        throw new \InvalidArgumentException(lang('Please enter a valid email address.', 'Bitte gib eine gültige E-Mail-Adresse an.'));
+        throw new \InvalidArgumentException(t('people.please_enter_a_valid_email_address'));
     }
     $person['is_scientist'] = ($values['is_scientist'] ?? '') === '1';
     $person['roles'] = $person['is_scientist'] ? ['scientist'] : [];
@@ -71,12 +71,12 @@ function osirisOAuthRegistrationPerson(array $pending, array $input, array $grou
     $person['sso'] = ['issuer' => $pending['issuer'], 'subject' => $pending['subject'], 'linked' => date('Y-m-d H:i:s')];
     $person['units'] = [];
     $selected = $input['units'] ?? [];
-    if (!is_array($selected)) throw new \InvalidArgumentException(lang('Invalid organisational units.', 'Ungültige Organisationseinheiten.'));
+    if (!is_array($selected)) throw new \InvalidArgumentException(t('auth.invalid_organisational_units'));
     $available = [];
     foreach ($groups as $group) if (empty($group['inactive'])) $available[(string) $group['id']] = $group['id'];
     foreach (array_unique($selected, SORT_REGULAR) as $unit) {
         if (!is_string($unit) || !array_key_exists($unit, $available)) {
-            throw new \InvalidArgumentException(lang('Please select valid organisational units.', 'Bitte wähle gültige Organisationseinheiten aus.'));
+            throw new \InvalidArgumentException(t('auth.please_select_valid_organisational_units'));
         }
         $person['units'][] = ['id' => bin2hex(random_bytes(8)), 'unit' => $available[$unit],
             'start' => null, 'end' => null, 'scientific' => $person['is_scientist']];
@@ -93,7 +93,7 @@ Route::get('/user/oauth-register', function () {
         return;
     }
     if (!$Settings->get('auth-self-registration', true)) {
-        osirisOAuthFail(lang('Self-registration is disabled. Please contact the administrator.', 'Die Selbstregistrierung ist deaktiviert. Bitte kontaktiere die Administration.'));
+        osirisOAuthFail(t('auth.self_registration_is_disabled_please_contact_the_administrator'));
     }
     osirisOAuthRegistrationPage($pending);
 });
@@ -102,14 +102,14 @@ Route::post('/user/oauth-register', function () {
     include_once BASEPATH . '/php/init.php';
     $pending = osirisOAuthRegistrationPending();
     if (!is_string($_POST['csrf'] ?? null) || !hash_equals($pending['csrf'], $_POST['csrf'])) {
-        osirisOAuthFail(lang('Invalid request. Please start again.', 'Ungültige Anfrage. Bitte beginne erneut.'));
+        osirisOAuthFail(t('auth.invalid_request_please_start_again'));
     }
     $action = $_POST['action'] ?? '';
     if ($action === 'existing' && strtoupper(USER_MANAGEMENT) !== 'AUTH') osirisOAuthFail('Invalid request.');
     if ($action === 'cancel' || $action === 'existing') {
         osirisOAuthClearAttempt();
         if ($action === 'existing') {
-            $_SESSION['msg'] = lang('Log in with your existing OSIRIS account, then link SSO in your account settings.', 'Melde dich mit deinem bestehenden OSIRIS-Konto an und verknüpfe SSO in den Account-Einstellungen.');
+            $_SESSION['msg'] = t('auth.log_in_with_your_existing_osiris_account_then_link_sso_in_your_acc');
             $_SESSION['msg_type'] = 'info';
         }
         header('Location: ' . ROOTPATH . '/user/login?redirect=' . urlencode(ROOTPATH . '/user/edit/#section-account'));
@@ -117,7 +117,7 @@ Route::post('/user/oauth-register', function () {
     }
     // Recheck these settings on every request, including the final submission.
     if (!$Settings->get('auth-self-registration', true)) {
-        osirisOAuthFail(lang('Self-registration is disabled. Please contact the administrator.', 'Die Selbstregistrierung ist deaktiviert. Bitte kontaktiere die Administration.'));
+        osirisOAuthFail(t('auth.self_registration_is_disabled_please_contact_the_administrator'));
     }
     if ($action === 'new') {
         $_SESSION['oauth_registration']['confirmed'] = true;
@@ -127,16 +127,16 @@ Route::post('/user/oauth-register', function () {
     if ($action !== 'create' || empty($pending['confirmed'])) osirisOAuthFail('Invalid request.');
     $authToken = (string) ($Settings->get('auth-token') ?? '');
     if ($authToken !== '' && (!is_string($_POST['token'] ?? null) || !hash_equals($authToken, $_POST['token']))) {
-        osirisOAuthRegistrationPage($pending, [['type' => 'error', 'text' => lang('The provided AUTH token is not valid.', 'Das angegebene AUTH-Token ist nicht gültig.')]]);
+        osirisOAuthRegistrationPage($pending, [['type' => 'error', 'text' => t('auth.token_invalid')]]);
         return;
     }
     try {
         $person = osirisOAuthRegistrationPerson($pending, $_POST, $Groups->groups);
         if ($osiris->persons->findOne(['username' => $person['username']]) || $osiris->accounts->findOne(['username' => $person['username']])) {
-            throw new \InvalidArgumentException(lang('The username is already taken. Please choose another one.', 'Der Nutzername ist bereits vergeben. Bitte wähle einen anderen.'));
+            throw new \InvalidArgumentException(t('auth.the_username_is_already_taken_please_choose_another_one'));
         }
         if ($osiris->persons->findOne(['sso.issuer' => $pending['issuer'], 'sso.subject' => $pending['subject']])) {
-            osirisOAuthFail(lang('This SSO account is already linked. Please log in with SSO again.', 'Dieses SSO-Konto ist bereits verknüpft. Bitte melde dich erneut über SSO an.'));
+            osirisOAuthFail(t('auth.this_sso_account_is_already_linked_please_log_in_with_sso_again'));
         }
         osirisOAuthIdentityIndex($osiris);
         // One document holds profile and identity. No local password account is created.
@@ -146,12 +146,12 @@ Route::post('/user/oauth-register', function () {
         return;
     } catch (\Throwable $e) {
         error_log('OSIRIS: SSO registration failed (' . get_class($e) . ')');
-        osirisOAuthRegistrationPage($pending, [['type' => 'error', 'text' => lang('The account could not be created. Please try again or contact the administrator.', 'Das Konto konnte nicht erstellt werden. Bitte versuche es erneut oder kontaktiere die Administration.')]]);
+        osirisOAuthRegistrationPage($pending, [['type' => 'error', 'text' => t('auth.the_account_could_not_be_created_please_try_again_or_contact_the_a')]]);
         return;
     }
     osirisOAuthClearAttempt();
     osirisOAuthSession($person);
-    $_SESSION['msg'] = lang('Your SSO account was created successfully.', 'Dein SSO-Konto wurde erfolgreich erstellt.');
+    $_SESSION['msg'] = t('auth.your_sso_account_was_created_successfully');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/user/edit/' . rawurlencode($person['username']));
     exit;

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'module_selected' => 'Modul <code class="code">{{title}}</code> ausgewählt.',
     'journal_selected' => 'Journal <code class="code">{{journal}}</code> ausgewählt.',
@@ -524,4 +525,6 @@ return [
     'thesis_status' => 'Status (Abschlussarbeit)',
     'thesis' => 'Abschlussarbeit',
     'volume' => 'Band',
+    'add_files' => 'Dateien hinzufügen',
+    'no_departments_assigned' => 'Keine Abteilungen zugewiesen.',
 ];

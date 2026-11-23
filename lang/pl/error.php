@@ -34,6 +34,13 @@ return [
                     Zostały one umieszczone w OSIRIS
                     , aby nie stracić ich z oczu oraz ponieważ stanowią one już osiągnięte wyniki. Z tego powodu regularnie pojawia się pytanie, czy dana publikacja została już opublikowana. Tylko wtedy można ją uwzględnić w raportowaniu.
                     ',
+    'the_bibliographic_data_must_be_checked_again_the_check_mark_for_online_ahea' => '
+                    <b>
+                    Dane bibliograficzne należy ponownie sprawdzić.</b>
+                    Należy usunąć znacznik wyboru przy <q>
+                    Online ahead of print</q>
+                    , a data publikacji zazwyczaj również wymaga korekty. Ponadto zdarza się również, że zmieniają się same dane bibliograficzne. Dlatego prosimy o dokładne sprawdzenie, czy wszystkie dane są poprawne.
+                    ',
     'why_do_i_have_to_review_these_activities' => 'Dlaczego muszę sprawdzać te zadania?',
     'in_order_to_ensure_that_the_correct_status_and_completion_date_is_always_in' => '
                     

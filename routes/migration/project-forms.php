@@ -39,15 +39,12 @@ foreach ($osiris->adminProjects->find() as $projectType) {
 }
 
 migrationCard(
-    'Project phase forms prepared',
-    'Formulare für Projektphasen vorbereitet',
-    'The new fields configuration preserves sections, field order and required fields. German companion fields use localized modules; German translations become optional. Project forms always include persons-project; institute-role and project-date replace their legacy inputs. Legacy project modules remain unchanged.',
-    'Die neue fields-Konfiguration übernimmt Abschnitte, Feldreihenfolge und Pflichtfelder. Deutsche Zusatzfelder werden zu lokalisierten Modulen; deutsche Übersetzungen werden optional. Projektformulare enthalten immer persons-project; institute-role und project-date ersetzen die bisherigen Eingaben. Die bisherigen Projekt-modules bleiben unverändert.',
+    t('admin.project_phase_forms_prepared'),
+    t('admin.the_new_fields_configuration_preserves_sections_field_order_and_re'),
     $created,
-    'phase forms created',
-    'Phasenformulare angelegt'
+    t('admin.phase_forms_created')
 );
-echo '<p>' . e(lang('Existing phase forms preserved', 'Bestehende Phasenformulare beibehalten')) . ': ' . $existing . '</p>';
+echo '<p>' . e(t('admin.existing_phase_forms_preserved')) . ': ' . $existing . '</p>';
 
 $activitiesUpdated = 0;
 foreach ($osiris->adminTypes->find() as $activityType) {
@@ -65,7 +62,7 @@ foreach ($osiris->adminTypes->find() as $activityType) {
     $osiris->adminTypes->updateOne(['_id' => $activityType['_id']], ['$set' => ['modules' => $modules, 'fields' => $fields]]);
     $activitiesUpdated++;
 }
-echo '<p>' . e(lang('Activity university fields migrated', 'University-Felder in Aktivitäten umgestellt')) . ': ' . $activitiesUpdated . '</p>';
+echo '<p>' . e(t('admin.activity_university_fields_migrated')) . ': ' . $activitiesUpdated . '</p>';
 
 // Migrate document content alongside the form configuration.
 $contentUpdated = 0;
@@ -92,8 +89,8 @@ foreach (['projects', 'proposals'] as $collection) {
     }
 }
 migrationCard(
-    'Project content localized', 'Projektinhalte lokalisiert',
-    'Names, titles and abstracts now store English and German translations together. Existing translations are preserved.',
-    'Namen, Titel und Zusammenfassungen speichern Englisch und Deutsch jetzt gemeinsam. Vorhandene Übersetzungen bleiben erhalten.',
-    $contentUpdated, 'project and proposal records updated', 'Projekt- und Antragsdatensätze aktualisiert'
+    t('admin.project_content_localized'),
+    t('admin.names_titles_and_abstracts_now_store_english_and_german_translatio'),
+    $contentUpdated,
+    t('admin.project_and_proposal_records_updated')
 );

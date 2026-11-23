@@ -25,11 +25,8 @@
     }
 
     echo '<div class="migration-card">';
-    echo '<h2>' . lang('Check Indexes', 'Indizes überprüfen') . '</h2>';
-    echo '<p class="text-muted">' . lang(
-        'OSIRIS is creating or confirming the indexes required for the database.',
-        'OSIRIS erstellt oder bestätigt die Indizes, die für die Datenbank erforderlich sind.'
-    ) . '</p>';
+    echo '<h2>' . t('admin.check_indexes') . '</h2>';
+    echo '<p class="text-muted">' . t('admin.osiris_is_creating_or_confirming_the_indexes_required_for_the_data') . '</p>';
     echo '<table class="table">';
     ensureIndex($osiris->activities, ['rendered.plain' => 'text']);
     ensureIndex($osiris->activities, ['journal_id' => 1]);

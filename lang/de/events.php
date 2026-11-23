@@ -1,4 +1,5 @@
 <?php
+
 return [
     'new_event' => 'Neues Event',
     'events_were_added_by_users_of_the_osiris_system' => 'Events wurden von Nutzenden des OSIRIS-Systems angelegt.',
@@ -38,4 +39,6 @@ return [
     'deadline_deleted_successfully' => 'Deadline erfolgreich gelöscht.',
     'no_activities_found_for_this_year' => 'Keine Aktivitäten für dieses Jahr gefunden.',
     'country_iso_code' => 'Land (ISO-Code)',
+    'a_deadline_with_the_same_title_and_date_already_exists' => 'Es gibt bereits eine Frist mit demselben Titel und Datum.',
+    'deadline_added_successfully' => 'Frist erfolgreich hinzugefügt.',
 ];

@@ -812,7 +812,7 @@ endswitch; ?>
                 location.href = '#' + type;
             };
             getOrganization(INPUT.val());
-        }).catch(() => toastError(<?= json_encode(lang('Unable to load organization search.', 'Die Organisationssuche konnte nicht geladen werden.')) ?>));
+        }).catch(() => toastError(<?= json_encode(t('projects.unable_to_load_organization_search')) ?>));
         return false;
     };
 })();

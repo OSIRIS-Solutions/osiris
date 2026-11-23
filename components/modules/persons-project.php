@@ -29,7 +29,7 @@ $renderRow = function ($index, $person = []) use ($roles, $accounts, $showDates,
 ?>
 <tr>
     <td><input type="hidden" name="values[persons][<?= e($index) ?>][name]" value="<?= e($person['name'] ?? '') ?>"><select class="form-control project-person-user" name="values[persons][<?= e($index) ?>][user]" required>
-        <option value=""><?= lang('Select a person', 'Person auswählen') ?></option>
+        <option value=""><?= t('guests.select_a_person') ?></option>
         <?php foreach ($accounts as $username => $account): ?>
             <option value="<?= e($username) ?>" <?= $username === $user ? 'selected' : '' ?>><?= e($account['name'] . ' (' . $username . ')') ?></option>
         <?php endforeach; ?>
@@ -68,7 +68,7 @@ $renderRow = function ($index, $person = []) use ($roles, $accounts, $showDates,
     </td>
     <td class="text-nowrap">
         <?php if ($showDates): ?>
-            <button type="button" class="btn toggle-project-person-dates <?= $customDates ? 'secondary' : '' ?>" aria-expanded="<?= $customDates ? 'true' : 'false' ?>" aria-controls="project-person-dates-<?= e($index) ?>" title="<?= e(lang('Individual membership dates (toggle to use project dates)', 'Individuelle Laufzeit (erneut klicken für Projektlaufzeit)')) ?>" aria-label="<?= e(lang('Individual membership dates', 'Individuelle Laufzeit')) ?>"><i class="ph ph-clock"></i></button>
+            <button type="button" class="btn toggle-project-person-dates <?= $customDates ? 'secondary' : '' ?>" aria-expanded="<?= $customDates ? 'true' : 'false' ?>" aria-controls="project-person-dates-<?= e($index) ?>" title="<?= e(t('people.individual_membership_dates_toggle_to_use_project_dates')) ?>" aria-label="<?= e(t('people.individual_membership_dates')) ?>"><i class="ph ph-clock"></i></button>
         <?php endif; ?>
         <button type="button" class="btn text-danger remove-project-person" aria-label="<?= e(t('action.delete')) ?>"><i class="ph ph-trash"></i></button></td>
 </tr>
@@ -81,7 +81,7 @@ $renderRow = function ($index, $person = []) use ($roles, $accounts, $showDates,
         <tbody><?php foreach ($persons as $index => $person) $renderRow($index, $person); ?></tbody>
     </table></div>
     <button type="button" class="btn add-project-person"><i class="ph ph-plus"></i> <?= t('activities.add_person') ?></button>
-    <?php if ($showDates): ?><p class="text-muted small"><?= lang('Membership covers the project duration. Use the clock to specify a different period.', 'Die Mitgliedschaft gilt für die gesamte Projektlaufzeit. Über die Uhr lässt sich ein abweichender Zeitraum festlegen.') ?></p><?php endif; ?>
+    <?php if ($showDates): ?><p class="text-muted small"><?= t('people.membership_covers_the_project_duration_use_the_clock_to_specify_a') ?></p><?php endif; ?>
     <?= $this->render_help($help) ?>
     <template><?php $renderRow('__INDEX__'); ?></template>
 </div>

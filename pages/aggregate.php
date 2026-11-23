@@ -22,17 +22,17 @@
 $Format = new Document(true);
 
 $collections = [
-    "activities" => lang('Activities', 'Aktivitäten'),
-    "conferences" => lang('Conferences', 'Konferenzen'),
-    "countries" => lang('Countries', 'Länder'),
-    "events" => lang('Events', 'Veranstaltungen'),
-    "groups" => lang('Groups', 'Gruppen'),
-    "infrastructures" =>  lang('Infrastructures', 'Infrastrukturen'),
-    "journals" => lang('Journals', 'Zeitschriften'),
-    "organizations" => lang('Organizations', 'Organisationen'),
-    "persons" => lang('Persons', 'Personen'),
-    "projects" => lang('Projects', 'Projekte'),
-    "proposals" => lang('Proposals', 'Vorschläge')
+    "activities" => t('common.activities'),
+    "conferences" => t('reports.conferences'),
+    "countries" => t('common.countries'),
+    "events" => t('common.events'),
+    "groups" => t('topics.groups'),
+    "infrastructures" =>  t('common.infrastructures'),
+    "journals" => t('common.journals'),
+    "organizations" => t('reports.organizations'),
+    "persons" => t('common.persons'),
+    "projects" => t('common.projects'),
+    "proposals" => t('common.proposals')
 ];
 
 ?>
@@ -49,18 +49,18 @@ $collections = [
                 <span aria-hidden="true">&times;</span>
             </a>
             <h2 class="title">
-                <?= lang('Saved pipelines', 'Gespeicherte Abfragen') ?>
+                <?= t('reports.saved_pipelines') ?>
             </h2>
 
 
             <div class="mb-20">
                 <button class="btn" aria-expanded="true" onclick="$(this).next().slideToggle();">
-                    <i class="ph ph-floppy-disk"></i> <?= lang('Save current pipeline', 'Aktuelle Abfrage speichern') ?>
+                    <i class="ph ph-floppy-disk"></i> <?= t('reports.save_current_pipeline') ?>
                 </button>
 
                 <div style="display:none;" class="box padded mt-10">
-                    <input type="text" class="form-control" id="pipeline-name" placeholder="<?= lang('Name of pipeline', 'Name der Abfrage') ?>">
-                    <button class="btn primary mt-10" onclick="savePipeline()"><?= lang('Save pipeline', 'Abfrage speichern') ?></button>
+                    <input type="text" class="form-control" id="pipeline-name" placeholder="<?= t('reports.name_of_pipeline') ?>">
+                    <button class="btn primary mt-10" onclick="savePipeline()"><?= t('reports.save_pipeline') ?></button>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@ $collections = [
             ];
             $queries = $osiris->queries->find($filter)->toArray();
             if (empty($queries)) {
-                echo '<p>' . lang('You have not saved any pipelines yet.', 'Du hast noch keine Abfragen gespeichert.') . '</p>';
+                echo '<p>' . t('reports.you_have_not_saved_any_pipelines_yet') . '</p>';
             } else {
                 // sort by created by current user first, then by created date
                 usort($queries, function ($a, $b) {
@@ -89,7 +89,7 @@ $collections = [
                 });
             ?>
 
-                <input type="search" class="form-control mb-10" id="pipeline-search" placeholder="<?= lang('Search saved pipelines...', 'Gespeicherte Abfragen suchen...') ?>" oninput="$('#saved-queries details').each(function() {
+                <input type="search" class="form-control mb-10" id="pipeline-search" placeholder="<?= t('reports.search_saved_pipelines') ?>" oninput="$('#saved-queries details').each(function() {
                     var summary = $(this).find('summary').text().toLowerCase();
                     var filter = $('#pipeline-search').val().toLowerCase();
                     if (summary.indexOf(filter) > -1) {
@@ -111,22 +111,22 @@ $collections = [
                             <summary class="collapse-header font-weight-bold d-flex justify-content-between align-items-center">
                                 <?= $query['name'] ?>
                                 <?php if ($query['global'] ?? false) { ?>
-                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= lang('Global', 'Global') ?></span>
+                                    <span class="badge badge-info"><i class="ph ph-globe"></i> <?= t('search.global') ?></span>
                                 <?php } elseif (isset($query['role'])) { ?>
-                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= lang('Role:', 'Rolle:') ?> <?= ucfirst($query['role']) ?></span>
+                                    <span class="badge badge-secondary"><i class="ph ph-shield-checkered"></i> <?= t('search.role') ?> <?= ucfirst($query['role']) ?></span>
                                 <?php } ?>
                             </summary>
                             <div class="collapse-content">
                                 <div class="dropdown float-right">
                                     <button class="btn" data-toggle="dropdown" type="button" id="dropdown-pipeline-<?= $query_id ?>" aria-haspopup="true" aria-expanded="false">
-                                        <i class="ph ph-share-network"></i> <?= lang('Share', 'Teilen') ?>
+                                        <i class="ph ph-share-network"></i> <?= t('common.share') ?>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-pipeline-<?= $query_id ?>">
                                         <!-- share globally -->
                                         <div class="content">
                                             <!-- copy Link with ID to clipboard -->
                                             <button class="btn block mb-5" onclick="sharePipeline('<?= $query['_id'] ?>', 'global')">
-                                                <i class="ph ph-globe"></i> <?= lang('Share globally', 'Global teilen') ?>
+                                                <i class="ph ph-globe"></i> <?= t('search.share_globally') ?>
                                             </button>
                                             <hr>
                                             <select class="form-control mb-5" id="role-select-<?= $query_id ?>">
@@ -135,7 +135,7 @@ $collections = [
                                                 <?php } ?>
                                             </select>
                                             <button class="btn block" onclick="sharePipeline('<?= $query_id ?>', 'role')">
-                                                <i class="ph ph-shield-checkered"></i> <?= lang('Share with role', 'Mit Rolle teilen') ?>
+                                                <i class="ph ph-shield-checkered"></i> <?= t('search.share_with_role') ?>
                                             </button>
                                         </div>
                                     </div>
@@ -153,44 +153,44 @@ $collections = [
                                             data.role = role;
                                         }
                                         $.post(ROOTPATH + '/crud/queries', data, function(response) {
-                                            toastSuccess('<?= lang('Pipeline shared successfully.', 'Pipeline erfolgreich geteilt.') ?>');
+                                            toastSuccess(<?= json_encode(t('reports.pipeline_shared_successfully'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
                                         });
                                     }
                                 </script>
-                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>')"><?= lang('Apply pipeline', 'Pipeline anwenden') ?></a>
+                                <a class="btn primary" onclick="applyFilter('<?= $query['_id'] ?>')"><?= t('reports.apply_pipeline') ?></a>
 
                                 <table class="table simple my-10">
 
                                     <?php if ($query['user'] != $_SESSION['username']) { ?>
                                         <tr>
-                                            <th><?= lang('Shared by', 'Geteilt von') ?>:</th>
+                                            <th><?= t('search.shared_by') ?>:</th>
                                             <td><?= $DB->getNameFromId($query['user']) ?></td>
                                         </tr>
                                     <?php } ?>
 
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= t('reports.collection') ?>:</th>
                                         <td>
                                             <?= $collections[$collection] ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Pipeline', 'Pipeline') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= t('reports.pipeline') ?>:</th>
                                         <td>
                                             <?= var_export($rules) ?>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <th><?= lang('Created', 'Erstellt') ?>:</th>
+                                        <th><?= t('common.created') ?>:</th>
                                         <td><?= date('d.m.Y H:i', strtotime($query['created'])) ?></td>
                                     </tr>
                                 </table>
 
                                 <?php if ($query['user'] != $_SESSION['username']) { ?>
-                                    <small class="text-muted"><?= lang('Only the creator of the pipeline can delete or modify it.', 'Nur der Ersteller der Abfrage kann sie löschen oder bearbeiten.') ?></small>
+                                    <small class="text-muted"><?= t('reports.only_the_creator_of_the_pipeline_can_delete_or_modify_it') ?></small>
                                 <?php } else { ?>
-                                    <a class="btn danger small text-right" onclick="deletePipeline('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= lang('Delete Pipeline', 'Abfrage löschen') ?></a>
+                                    <a class="btn danger small text-right" onclick="deletePipeline('<?= $query['_id'] ?>')"><i class="ph ph-trash"></i> <?= t('reports.delete_pipeline') ?></a>
                                 <?php } ?>
                             </div>
                         </details>
@@ -206,7 +206,7 @@ $collections = [
             </script>
 
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= t('action.close') ?></a>
             </div>
         </div>
     </div>
@@ -219,19 +219,19 @@ $collections = [
                 <span aria-hidden="true">&times;</span>
             </a>
             <h2 class="title">
-                <?= lang('Example pipelines', 'Beispiel Pipelines') ?>
+                <?= t('reports.example_pipelines') ?>
             </h2>
                 <?php
                 $exampleQueries = json_decode(file_get_contents(BASEPATH . '/data/aggregation-pipelines.json'), true);
                 if (empty($exampleQueries)) {
-                    echo '<p>' . lang('No example pipelines available.', 'Keine Beispiel Pipelines verfügbar.') . '</p>';
+                    echo '<p>' . t('reports.no_example_pipelines_available') . '</p>';
                 } else {
                     // sort by name
                     usort($exampleQueries, function ($a, $b) {
                         return strcmp($a['name'], $b['name']);
                     });
                 ?>
-                <input type="search" class="form-control mb-10" id="example-pipeline-search" placeholder="<?= lang('Search example pipelines...', 'Beispiel Pipeline suchen...') ?>" oninput="$('#example-pipelines-modal details').each(function() {
+                <input type="search" class="form-control mb-10" id="example-pipeline-search" placeholder="<?= t('reports.search_example_pipelines') ?>" oninput="$('#example-pipelines-modal details').each(function() {
                     var summary = $(this).find('summary').text().toLowerCase();
                     var filter = $('#example-pipeline-search').val().toLowerCase();
                     if (summary.indexOf(filter) > -1) {
@@ -254,17 +254,17 @@ $collections = [
                             </summary>
                             <div class="collapse-content">
 
-                                <a class="btn primary" onclick="applyExamplePipeline('<?= $query['name'] ?>')"><?= lang('Apply pipeline', 'Pipeline anwenden') ?></a>
+                                <a class="btn primary" onclick="applyExamplePipeline('<?= $query['name'] ?>')"><?= t('reports.apply_pipeline') ?></a>
 
                                 <table class="table simple my-10">
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Collection', 'Sammlung') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= t('reports.collection') ?>:</th>
                                         <td>
                                             <?= $collections[$collection] ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th style="vertical-align: baseline;"><?= lang('Pipeline', 'Pipeline') ?>:</th>
+                                        <th style="vertical-align: baseline;"><?= t('reports.pipeline') ?>:</th>
                                         <td>
                                             <?= var_export(json_encode($rules)) ?>
                                         </td>
@@ -284,7 +284,7 @@ $collections = [
             </script>
 
             <div class="text-right mt-20">
-                <a href="#/" class="btn mr-5" role="button"><?= lang('Close', 'Schließen') ?></a>
+                <a href="#/" class="btn mr-5" role="button"><?= t('action.close') ?></a>
             </div>
         </div>
     </div>
@@ -295,13 +295,13 @@ $collections = [
 <div class="">
     <h1>
         <i class="ph-duotone ph-magnifying-glass-plus"></i>
-        <?= lang('Aggregation', 'Aggregation') ?>
+        <?= t('reports.aggregation') ?>
     </h1>
 
     <div class="box">
         <div class="content mb-0">
             
-            <h3 class="title"><?= lang('Choose collection', 'Sammlung auswählen') ?></h3>
+            <h3 class="title"><?= t('reports.choose_collection') ?></h3>
              <select id="collection" class="form-control w-auto">
                 <option value="activities"><?= $collections["activities"] ?></option>
                 <option value="conferences"><?= $collections["conferences"] ?></option>
@@ -316,7 +316,7 @@ $collections = [
                 <option value="proposals"><?= $collections["proposals"] ?></option>
             </select>
             <br>
-            <h3 class="title"><?= lang('Pipeline', 'Pipeline') ?></h3>
+            <h3 class="title"><?= t('reports.pipeline') ?></h3>
             <textarea name="pipeline" id="pipeline" cols="30" rows="10" class="form-control"></textarea>
             <br>
         </div>
@@ -324,12 +324,12 @@ $collections = [
 
         <div class="footer">
             <div class="btn-toolbar">
-                <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= lang('Apply', 'Anwenden') ?></button>
+                <button class="btn secondary" onclick="getResult()"><i class="ph ph-magnifying-glass"></i> <?= t('common.apply') ?></button>
                 <a href="#saved-queries-modal" class="btn" role="button">
-                    <i class="ph ph-floppy-disk"></i> <?= lang('Saved queries', 'Gespeicherte Abfragen') ?>
+                    <i class="ph ph-floppy-disk"></i> <?= t('search.saved_queries') ?>
                 </a>
                 <a href="#example-pipelines-modal" class="btn" role="button">
-                    <i class="ph ph-code"></i> <?= lang('Show examples', 'Zeige Beispiele') ?>
+                    <i class="ph ph-code"></i> <?= t('reports.show_examples') ?>
                 </a>
             </div>
             
@@ -583,7 +583,7 @@ $collections = [
                     text: '<i class="ph ph-file-xls"></i> Excel'
                 },
                 {
-                    text: '<i class="ph ph-brackets-curly"></i> <?= lang('Download Raw Data', 'Rohdaten herunterladen') ?>',
+                    text: '<i class="ph ph-brackets-curly"></i> ' + <?= json_encode(t('reports.download_raw_data'), JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) ?>,
                     className: 'btn small',
                     action: function(e, dt, node, config) {
                         downloadData();

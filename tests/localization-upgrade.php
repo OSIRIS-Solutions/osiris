@@ -9,6 +9,7 @@ define('ROOTPATH', '');
 define('OSIRIS_VERSION', '3.0.0');
 function lang($key, $de = null, array $replace = []) { return $key; }
 function t($key, array $replace = []) { return $key; }
+function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 class Route {
     public static array $posts = [];
     public static array $gets = [];

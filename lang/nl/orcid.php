@@ -14,4 +14,5 @@ return [
     'back_to_profile' => 'Terug naar profiel',
     'orcid_not_authenticated' => 'ORCID niet geauthenticeerd',
     'your_orcid_has_been_disconnected' => 'Je ORCID-link is verbroken.',
+    'show_skipped_works' => 'Overgeslagen werken weergeven',
 ];

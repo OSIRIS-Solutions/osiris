@@ -29,4 +29,5 @@ return [
     'teaching_category' => 'Kategoria zajęć dydaktycznych',
     'teaching_course_module' => 'Kurs dotyczący następującego modułu',
     'publication_place' => 'Miejsce publikacji',
+    'please_select' => '-- Proszę wybrać --',
 ];

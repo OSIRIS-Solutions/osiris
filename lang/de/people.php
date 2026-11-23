@@ -1,4 +1,5 @@
 <?php
+
 return [
     'user_management' => 'Nutzerverwaltung',
     'please_find_general_settings_on_user_data_fields_and_ldap_attribute_synchro' => 'Allgemeine Einstellungen zu Nutzerfeldern und LDAP-Attribut-Synchronisation findest du in den',
@@ -380,4 +381,7 @@ return [
     'use_single_sign_on' => 'Single Sign-On verwenden',
     'you_can_select_several_units_if_you_select_i_am_a_scientist_these_affiliations_are_re' => 'Du kannst mehrere Einheiten auswählen. Wenn du „Ich bin Wissenschaftler:in“ auswählst, werden diese Zugehörigkeiten als wissenschaftlich erfasst. Du kannst sie später im Profil genauer bearbeiten.',
     'enter_the_registration_token_provided_by_your_administrator' => 'Gib das Registrierungstoken ein, das du von der Administration erhalten hast.',
+    'individual_membership_dates_toggle_to_use_project_dates' => 'Einzelne Mitgliedschaftsdaten (umschalten, um Projektdaten zu verwenden)',
+    'individual_membership_dates' => 'Einzelne Mitgliedschaftsdaten',
+    'membership_covers_the_project_duration_use_the_clock_to_specify_a' => 'Die Mitgliedschaft gilt für die Projektlaufzeit. Nutze die Uhr, um einen anderen Zeitraum anzugeben.',
 ];

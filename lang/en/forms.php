@@ -29,4 +29,5 @@ return [
     'teaching_category' => 'Category of the teaching activity',
     'teaching_course_module' => 'Course for the following module',
     'publication_place' => 'Place of publication',
+    'please_select' => '-- Please select --',
 ];

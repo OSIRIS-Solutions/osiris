@@ -461,7 +461,7 @@
                                         <?php endforeach; ?>
                                     </p>
                                 <?php else: ?>
-                                    <p class="text-muted font-italic"><?= lang('No departments assigned.', 'Keine Abteilungen zugewiesen.') ?></p>
+                                    <p class="text-muted font-italic"><?= t('activities.no_departments_assigned') ?></p>
                                 <?php endif; ?>
 
                             </div>

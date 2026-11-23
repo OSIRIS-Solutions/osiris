@@ -525,4 +525,6 @@ return [
     'thesis_status' => 'Status (Praca dyplomowa)',
     'thesis' => 'Praca dyplomowa',
     'volume' => 'Objętość',
+    'add_files' => 'Dodaj pliki',
+    'no_departments_assigned' => 'Nie przypisano żadnych wydziałów.',
 ];

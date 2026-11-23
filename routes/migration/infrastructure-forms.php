@@ -27,4 +27,4 @@ foreach ($osiris->infrastructures->find() as $original) {
     $osiris->infrastructures->updateOne(['_id' => $original['_id']], $update);
     $updated++;
 }
-echo '<p>' . e(lang('Infrastructure forms prepared and content localized', 'Infrastrukturformulare vorbereitet und Inhalte lokalisiert')) . ': ' . $updated . '</p>';
+echo '<p>' . e(t('admin.infrastructure_forms_prepared_and_content_localized')) . ': ' . $updated . '</p>';

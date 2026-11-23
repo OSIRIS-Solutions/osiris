@@ -57,4 +57,5 @@ return [
     'import' => 'インポート',
     'admin' => '管理',
     'favorites' => 'お気に入り',
+    'groups' => '人物 &amp; グループ',
 ];

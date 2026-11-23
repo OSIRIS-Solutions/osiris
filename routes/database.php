@@ -463,10 +463,7 @@ function centralDocumentUpload(): array
             && $root->namespaceURI === 'http://www.w3.org/2000/svg';
 
         if (!in_array($mime, $allowedSvgMimes, true) || !$isSvg) {
-            redirectFromCentralDocuments(lang(
-                'The selected SVG file is invalid or does not match its file extension.',
-                'Die ausgewählte SVG-Datei ist ungültig oder entspricht nicht ihrer Dateiendung.'
-            ));
+            redirectFromCentralDocuments(t('common.the_selected_svg_file_is_invalid_or_does_not_match_its_file_extens'));
         }
 
         // Keep metadata consistent across systems where finfo reports SVG as XML or text.
