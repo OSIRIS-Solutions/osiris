@@ -40,19 +40,19 @@ if (!empty($person['current_units'])) {
 
 <h1>
     <i class="ph-duotone ph-calendar"></i>
-    <?= lang('dashboard.calendar') ?>
+    <?= t('dashboard.calendar') ?>
 </h1>
 
 <div class="row row-eq-spacing-md">
     <div class="col-12 col-md-4">
-        <h4 class="title"><?= lang('dashboard.filter') ?></h4>
+        <h4 class="title"><?= t('dashboard.filter') ?></h4>
 
         <div class="filter">
             <table id="filter-unit" class="table small simple">
                 <tr class="active" style="--highlight-color: var(--primary-color);">
                     <td>
                         <a data-type="all" onclick="updateCalendar(this, '')" class="item d-block colorless" id="all-btn">
-                            <span><?= lang('dashboard.only_my_own') ?></span>
+                            <span><?= t('dashboard.only_my_own') ?></span>
                         </a>
                     </td>
                 </tr>
@@ -280,7 +280,7 @@ function updateCalendar(el, unit) {
                 }
 
                 let type = info.event.extendedProps.type || 'na';
-                let label = <?= json_encode(lang('dashboard.unknown'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+                let label = <?= json_encode(t('dashboard.unknown'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                 let link = '#';
 
                 switch (type) {
@@ -289,7 +289,7 @@ function updateCalendar(el, unit) {
                         link = ROOTPATH + '/conferences/view/' + info.event.id;
                         break;
                     case 'research_trip':
-                        label = <?= json_encode(lang('dashboard.field_research'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+                        label = <?= json_encode(t('dashboard.field_research'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                         link = ROOTPATH + '/research-trips/' + info.event.id;
                         break;
                     case 'activity':
@@ -301,7 +301,7 @@ function updateCalendar(el, unit) {
                         link = ROOTPATH + '/projects/view/' + info.event.id;
                         break;
                     case 'guest':
-                        label = <?= json_encode(lang('dashboard.guest'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+                        label = <?= json_encode(t('dashboard.guest'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                         link = ROOTPATH + '/guests/view/' + info.event.id;
                         break;
                 }
@@ -318,7 +318,7 @@ function updateCalendar(el, unit) {
                             <h3>${info.event.title}</h3>
                             <p><strong>${lang('common.type')}:</strong> <span class="badge ${type}">${label}</span></p>
                             <p><strong>${lang('common.date')}:</strong> ${date}</p>
-                            <a class="btn small" href="${link}">${<?= json_encode(lang('dashboard.more_details'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</a>
+                            <a class="btn small" href="${link}">${<?= json_encode(t('dashboard.more_details'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</a>
                             <button class="btn small" onclick="$('.popover').remove()">
                                 Schließen
                             </button>

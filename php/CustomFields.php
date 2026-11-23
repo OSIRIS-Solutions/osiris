@@ -42,10 +42,10 @@ class CustomFields
             : filter_var($definition['localized'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $definition['format'] ??= $previous['format'] ?? 'string';
         if (self::isLocalized($previous) && $definition['format'] !== $previous['format']) {
-            throw new InvalidArgumentException(translate('admin.localized_field_locked'));
+            throw new InvalidArgumentException(t('admin.localized_field_locked'));
         }
         if ($definition['localized'] && !in_array($definition['format'], ['string', 'text', 'text-format'], true)) {
-            throw new InvalidArgumentException(translate('admin.localized_text_formats_only'));
+            throw new InvalidArgumentException(t('admin.localized_text_formats_only'));
         }
         return $definition;
     }
@@ -55,7 +55,7 @@ class CustomFields
     {
         if (self::isLocalized($field)) return;
         if (!in_array($field['format'] ?? '', ['string', 'text', 'text-format'], true)) {
-            throw new InvalidArgumentException(translate('admin.localized_text_formats_only'));
+            throw new InvalidArgumentException(t('admin.localized_text_formats_only'));
         }
         $id = $field['id'];
         if (!preg_match('/^[A-Za-z0-9_-]+$/D', $id)) throw new InvalidArgumentException('Invalid field ID.');
@@ -87,7 +87,7 @@ class CustomFields
         $this->fields = array_column($this->fields, null, 'id');
 
         $this->user = $_SESSION['username'] ?? '';
-        $this->lang = lang('common.this_language');
+        $this->lang = t('common.this_language');
     }
 
     public function name(string $module)
@@ -142,7 +142,7 @@ class CustomFields
         }
 
         if ($val === true || $val === false) {
-            if ($this->usecase == 'list') return $val ? lang('common.yes') : lang('common.no');
+            if ($this->usecase == 'list') return $val ? t('common.yes') : t('common.no');
             if (!isset($field['name'])) {
                 $field['name'] = $module;
             }
@@ -232,11 +232,11 @@ class CustomFields
             echo '<br>
                 <div class="custom-radio d-inline-block">
                     <input type="radio" id="' . $module . '-true" value="true" name="values[' . $module . ']" ' . ($val == true ? 'checked' : '') . '>
-                    <label for="' . $module . '-true">' . lang('common.yes') . '</label>
+                    <label for="' . $module . '-true">' . t('common.yes') . '</label>
                 </div>
                 <div class="custom-radio d-inline-block ml-20">
                     <input type="radio" id="' . $module . '-false" value="false" name="values[' . $module . ']" ' . ($val == false ? 'checked' : '') . '>
-                    <label for="' . $module . '-false">' . lang('common.no') . '</label>
+                    <label for="' . $module . '-false">' . t('common.no') . '</label>
                 </div>';
             echo $this->render_help($help);
             echo '</div>';
@@ -304,10 +304,10 @@ class CustomFields
                     justify-content: space-between;
                 }
             </style>
-            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> wikidata-widget" id="wikidata-widget-<?= $module ?>" data-lang="<?= t('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="wikidata-search-<?= $module ?>" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
                 <input type="text" class="wikidata-search form-control"
-                    placeholder="<?= lang('common.search_wikidata') ?>">
+                    placeholder="<?= t('common.search_wikidata') ?>">
 
                 <input type="hidden" name="values[<?= $module ?>][id]" class="wikidata-id" value="<?= $value['id'] ?? '' ?>">
                 <input type="hidden" name="values[<?= $module ?>][label]" class="wikidata-label" value="<?= $value['label'] ?? '' ?>">
@@ -336,7 +336,7 @@ class CustomFields
         if ($field['format'] == 'text-format') {
             $id = rand(1000, 9999);
         ?>
-            <div class="data-module col-sm-<?= $width ?> lang-<?= lang('common.this_language') ?>" data-module="<?= $module ?>">
+            <div class="data-module col-sm-<?= $width ?> lang-<?= t('common.this_language') ?>" data-module="<?= $module ?>">
                 <label for="description" class="floating-title <?= $labelClass ?>"><?= $label ?></label>
                 <div class="form-group title-editor" id="<?= $module ?>-quill"><?= $value ?></div>
                 <textarea name="values[<?= $module ?>]" id="<?= $module ?>" class="d-none" readonly><?= $value ?></textarea>
@@ -361,7 +361,7 @@ class CustomFields
                         class="list-widget-input"
                         type="text"
                         autocomplete="off"
-                        placeholder="<?= lang('common.enter_value_and_press_enter') ?>" />
+                        placeholder="<?= t('common.enter_value_and_press_enter') ?>" />
                 </div>
                 <?= $this->render_help($help) ?>
             </div>
@@ -464,7 +464,7 @@ class CustomFields
                 }
                 if ($field['others'] ?? false) {
                     // if nothing was selected but value is not empty, select others
-                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . lang('common.others_please_specify') . ':</option>';
+                    echo '<option ' . (!$any ? 'selected' : '') . ' value="others">' . t('common.others_please_specify') . ':</option>';
                     // echo '</select>';
             ?>
             <?php
@@ -507,7 +507,7 @@ class CustomFields
                 }
 
                 .other-input::before {
-                    content: '<?= lang('common.other_CustomFields') ?>';
+                    content: '<?= t('common.other_CustomFields') ?>';
                     display: inline-block;
                 }
             </style>

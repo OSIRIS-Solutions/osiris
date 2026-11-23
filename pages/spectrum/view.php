@@ -116,7 +116,7 @@ if ($level == 'topic') {
         <p class="lead"><?= e($description) ?></p>
     <?php } ?>
     <?php if ($keywords) { ?>
-        <p><strong><?= lang('spectrum.keywords') ?>:</strong>
+        <p><strong><?= t('spectrum.keywords') ?>:</strong>
             <?php foreach ($keywords as $k) { ?>
                 <span class="badge primary mb-5"><?= $k ?></span>
             <?php } ?>
@@ -149,8 +149,8 @@ if ($level == 'topic') {
 
     <div class="spectrum-meta">
         <div class="stats">
-            <div><strong><?= $totalPublications ?></strong> <?= lang('common.publications') ?></div>
-            <div><strong><?= round($share * 100, 1) ?> %</strong> <?= lang('spectrum.of_institutional_output') ?></div>
+            <div><strong><?= $totalPublications ?></strong> <?= t('common.publications') ?></div>
+            <div><strong><?= round($share * 100, 1) ?> %</strong> <?= t('spectrum.of_institutional_output') ?></div>
         </div>
     </div>
 
@@ -173,7 +173,7 @@ if ($level == 'topic') {
                 ])->toArray();
             ?>
                 <h2 id="subtopics">
-                    <?= lang('spectrum.subtopics') ?>
+                    <?= t('spectrum.subtopics') ?>
                 </h2>
                 <div class="spectrum-chart box padded">
                     <?php
@@ -249,7 +249,7 @@ if ($level == 'topic') {
             </script>
 
             <h2 id="publication-timeline">
-                <?= lang('spectrum.publication_timeline') ?>
+                <?= t('spectrum.publication_timeline') ?>
             </h2>
             <div class="box padded">
                 <div id="timeline-chart" style="width:100%; height:320px;"></div>
@@ -374,7 +374,7 @@ if ($level == 'topic') {
             unset($u);
             ?>
 
-            <h2 id="organizational-units"><?= lang('spectrum.organizational_units') ?></h2>
+            <h2 id="organizational-units"><?= t('spectrum.organizational_units') ?></h2>
 
 
             <div class="spectrum-chart box padded">
@@ -427,10 +427,10 @@ if ($level == 'topic') {
                 ['$sort' => ['_id' => 1]] // sort alphabetically by name
             ])->toArray();
             ?>
-            <h2 id="top-researchers"><?= lang('spectrum.researchers') ?></h2>
+            <h2 id="top-researchers"><?= t('spectrum.researchers') ?></h2>
 
             <p>
-                <?= lang('spectrum.this_section_shows_researchers_who_have_publications_in_osiris_that_are_ass') ?>
+                <?= t('spectrum.this_section_shows_researchers_who_have_publications_in_osiris_that_are_ass') ?>
             </p>
 
             <p class="font-size-16">
@@ -442,20 +442,20 @@ if ($level == 'topic') {
             </p>
 
             <p class="font-size-12 text-muted">
-                <?= lang('spectrum.only_up_to_ten_researchers_are_shown_the_list_is_alphabetically_ordered_if') ?>
+                <?= t('spectrum.only_up_to_ten_researchers_are_shown_the_list_is_alphabetically_ordered_if') ?>
             </p>
 
 
 
             <h2 id="related-publications">
-                <?= lang('spectrum.related_publications') ?>
+                <?= t('spectrum.related_publications') ?>
             </h2>
             <div class="mt-20 w-full">
                 <table class="table dataTable responsive" id="publications-table">
                     <thead>
                         <tr>
-                            <th><?= lang('common.type') ?></th>
-                            <th><?= lang('common.publication') ?></th>
+                            <th><?= t('common.type') ?></th>
+                            <th><?= t('common.publication') ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -478,17 +478,17 @@ if ($level == 'topic') {
             <nav class="on-this-page-nav">
                 <div class="content">
                     <div class="title">
-                        <?= lang('common.on_this_page') ?>
+                        <?= t('common.on_this_page') ?>
                     </div>
 
-                    <a href="#spectrum"><?= lang('common.overview') ?></a>
+                    <a href="#spectrum"><?= t('common.overview') ?></a>
                     <?php if ($childIdField && $childNameField) { ?>
-                        <a href="#subtopics"><?= lang('spectrum.subtopics') ?></a>
+                        <a href="#subtopics"><?= t('spectrum.subtopics') ?></a>
                     <?php } ?>
-                    <a href="#publication-timeline"><?= lang('spectrum.publication_timeline') ?></a>
-                    <a href="#organizational-units"><?= lang('spectrum.organizational_units') ?></a>
-                    <a href="#top-researchers"><?= lang('spectrum.top_researchers') ?></a>
-                    <a href="#related-publications"><?= lang('spectrum.related_publications') ?></a>
+                    <a href="#publication-timeline"><?= t('spectrum.publication_timeline') ?></a>
+                    <a href="#organizational-units"><?= t('spectrum.organizational_units') ?></a>
+                    <a href="#top-researchers"><?= t('spectrum.top_researchers') ?></a>
+                    <a href="#related-publications"><?= t('spectrum.related_publications') ?></a>
                 </div>
             </nav>
 

@@ -4,7 +4,7 @@ $data = $_POST['values'] ?? [];
 
 <h1>
     <i class="ph ph-user-plus" aria-hidden="true"></i>
-    <?= lang('common.register') ?>
+    <?= t('common.register') ?>
 </h1>
 
 <form action="#" method="post">
@@ -39,11 +39,11 @@ $data = $_POST['values'] ?? [];
             </select>
         </div>
         <div class="col-sm">
-            <label class="required" for="first"><?= lang('common.name_first') ?></label>
+            <label class="required" for="first"><?= t('common.name_first') ?></label>
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required>
         </div>
         <div class="col-sm">
-            <label class="required" for="last"><?= lang('common.name_last') ?></label>
+            <label class="required" for="last"><?= t('common.name_last') ?></label>
             <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required>
         </div>
     </div>
@@ -52,11 +52,11 @@ $data = $_POST['values'] ?? [];
 
     <div class="form-row row-eq-spacing">
         <div class="col-sm">
-            <label for="telephone"><?= lang('common.telephone') ?></label>
+            <label for="telephone"><?= t('common.telephone') ?></label>
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>">
         </div>
         <div class="col-sm">
-            <label for="mail" class="required"><?= lang('common.mail') ?></label>
+            <label for="mail" class="required"><?= t('common.mail') ?></label>
             <input type="email" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required>
         </div>
 
@@ -65,26 +65,26 @@ $data = $_POST['values'] ?? [];
 
 
     <div class="form-group">
-        <span><?= lang('common.gender') ?>:</span>
+        <span><?= t('common.gender') ?>:</span>
         <?php
         $gender = $data['gender'] ?? 'n';
         ?>
 
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-            <label for="gender-m"><?= lang('common.gender_male') ?></label>
+            <label for="gender-m"><?= t('common.gender_male') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-            <label for="gender-f"><?= lang('common.gender_female') ?></label>
+            <label for="gender-f"><?= t('common.gender_female') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-            <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
+            <label for="gender-d"><?= t('common.gender_non_binary') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-            <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
+            <label for="gender-n"><?= t('common.gender_not_specified') ?></label>
         </div>
 
     </div>
@@ -93,7 +93,7 @@ $data = $_POST['values'] ?? [];
     <div>
         <div class="form-group custom-checkbox d-inline-block ml-10">
             <input type="checkbox" id="is_scientist" value="1" name="values[is_scientist]" <?= ($data['is_scientist'] ?? false) ? 'checked' : '' ?>>
-            <label for="is_scientist"><?= lang('common.i_am_a_scientist') ?></label>
+            <label for="is_scientist"><?= t('common.i_am_a_scientist') ?></label>
         </div>
 
     </div>
@@ -106,7 +106,7 @@ $data = $_POST['values'] ?? [];
                 Demo
             </div>
 
-            <?= lang('auth.this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi_the_use_of') ?>
+            <?= t('auth.this_osiris_instance_is_a_demo_with_the_fictional_institute_lisi_the_use_of') ?>
         </div>
     <?php
     }

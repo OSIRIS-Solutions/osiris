@@ -2,7 +2,7 @@
 /** Original project inputs from pages/proposals/edit.php, adapted only to Modules. */
 $required = $req || !empty($props['required']);
 $floating = in_array($module, ['acronym', 'submission_date', 'approval_date', 'rejection_date', 'purpose', 'internal_number', 'funder', 'funding_program', 'funding_program_select', 'funding_number', 'coordinator', 'project_type', 'grant_sum', 'grant_income', 'grant_subproject', 'grant_sum_proposed', 'grant_income_proposed', 'grant_subproject_proposed', 'comment', 'personnel', 'in-kind', 'institute-role'], true);
-$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== translate($m['label']);
+$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== t($m['label']);
 $form = $this->form;
 $DB = $this->DB;
 $osiris = $DB->db;
@@ -111,7 +111,7 @@ case 'funding_program_select': ?>
                         <select class="form-control" name="values[funding_program_select]" id="funding_program_select" <?= $reqField('funding_program_select') ?> placeholder=" ">
                             <?php
                             if ($reqField('funding_program_select') == '' || (isset($form['_id']) && empty($form['funding_program_select']))) { ?>
-                                <option value=""><?= lang('projects.select_funding_program') ?></option>
+                                <option value=""><?= t('projects.select_funding_program') ?></option>
                             <?php }
                             $vocab = $Vocabulary->getValues('funding-program');
                             foreach ($vocab as $v) { ?>
@@ -127,7 +127,7 @@ case 'funding_number': ?>
 
                         <input type="text" class="form-control" name="values[funding_number]" value="<?= $val('funding_number') ?>" id="funding_number" placeholder="ABC123">
                         <label for="funding_number" class="<?= $reqField('funding_number') ?>"><?= e($label) ?></label>
-                        <small class="text-muted"><?= lang('projects.multiple_seperated_by_comma') ?></small>
+                        <small class="text-muted"><?= t('projects.multiple_seperated_by_comma') ?></small>
 
 
 <?php break;
@@ -159,7 +159,7 @@ case 'grant_sum': ?>
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_sum') ?> name="values[grant_sum]" id="grant_sum" value="<?= $val('grant_sum') ?>" placeholder="1234">
                             <label for="grant_sum" class="<?= $reqField('grant_sum') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.grant_sum_edit') ?> (<?= lang('common.total') ?>)
+                                <?= t('projects.grant_sum_edit') ?> (<?= t('common.total') ?>)
                             <?php endif; ?></label>
 
 
@@ -185,7 +185,7 @@ case 'grant_sum_proposed': ?>
 
                             <input type="text" step="1" class="form-control money-input" <?= $reqField('grant_sum_proposed') ?> name="values[grant_sum_proposed]" id="grant_sum_proposed" value="<?= $val('grant_sum_proposed') ?>" placeholder="112345">
                             <label for="grant_sum_proposed" class="<?= $reqField('grant_sum_proposed') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= lang('projects.proposed_grant') ?> (<?= lang('common.total') ?>)
+                                <?= t('projects.proposed_grant') ?> (<?= t('common.total') ?>)
                             <?php endif; ?></label>
 
 
@@ -215,7 +215,7 @@ case 'public': ?>
                         <div class="custom-checkbox">
                             <input type="checkbox" id="public-check" <?= $val('public', false) ? 'checked' : '' ?> name="values[public]">
                             <label for="public-check">
-                                <?= lang('projects.approval_of_the_internet_presentation_of_the_approved_project') ?>
+                                <?= t('projects.approval_of_the_internet_presentation_of_the_approved_project') ?>
                             </label>
                         </div>
                     </div>
@@ -237,21 +237,21 @@ case 'funding_organization': ?>
                 ?>
                     <a id="funding" class="box py-5 px-10 my-0 d-block colorless" href="#funding-org-modal">
                         <label for="funding_organization" class="floating-title <?= $reqField('funding_organization') ?>">
-                            <?= lang('common.funding_organizations') ?>
+                            <?= t('common.funding_organizations') ?>
                         </label>
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[funding_organization]" value="<?= e($org_id) ?>" <?= $reqField('funding_organization') ?> readonly />
 
                         <div id="funding-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('error.organization_select_missing') ?>
+                                <?= t('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= e(localized($collab['name'])) ?></b>
                                     <br><small class="text-muted"><?= e($collab['location']) ?></small>
                                 <?php } else { ?>
-                                    <?= lang('error.organization_select_missing') ?>:
+                                    <?= t('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= e($org_id) ?></small>
                             <?php }
                             } ?>
@@ -265,9 +265,9 @@ case 'funding_organization': ?>
                                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </a>
-                                <label for="funding-search"><?= lang('projects.search_funding_organization') ?></label>
+                                <label for="funding-search"><?= t('projects.search_funding_organization') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="funding-search" onkeydown="selectOrgEvent(event, 'funding')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="funding-search" onkeydown="selectOrgEvent(event, 'funding')" placeholder="<?= t('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'funding')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -295,21 +295,21 @@ case 'scholarship': ?>
 
                     <a id="scholarship" class="box py-5 px-10 my-0 d-block colorless" href="#scholarship-org-modal">
                         <label for="funding_organization" class="floating-title <?= $reqField('scholarship') ?>">
-                            <?= lang('projects.scholarship_institution') ?>
+                            <?= t('projects.scholarship_institution') ?>
                         </label>
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[funding_organization]" value="<?= e($org_id) ?>" <?= $reqField('funding_organization') ?> readonly />
 
                         <div id="scholarship-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('error.organization_select_missing') ?>
+                                <?= t('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= e(localized($collab['name'])) ?></b>
                                     <br><small class="text-muted"><?= e($collab['location']) ?></small>
                                 <?php } else { ?>
-                                    <?= lang('projects.no_organization_selected') ?>
+                                    <?= t('projects.no_organization_selected') ?>
                                     <br><small class="text-muted"><?= e($org_id) ?></small>
                             <?php }
                             } ?>
@@ -323,9 +323,9 @@ case 'scholarship': ?>
                                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </a>
-                                <label for="scholarship-search"><?= lang('projects.search_scholarship_institutions') ?></label>
+                                <label for="scholarship-search"><?= t('projects.search_scholarship_institutions') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="scholarship-search" onkeydown="selectOrgEvent(event, 'scholarship')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="scholarship-search" onkeydown="selectOrgEvent(event, 'scholarship')" placeholder="<?= t('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'scholarship')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -349,21 +349,21 @@ case 'university': ?>
                     if (DB::is_ObjectID($org_id)) $org_id = DB::to_ObjectID($org_id); ?>
                     <a id="university" class="box py-5 px-10 my-0 d-block colorless" href="#university-org-modal">
                         <label for="university" class="floating-title <?= $reqField('university') ?>">
-                            <?= lang('projects.partner_university') ?>
+                            <?= t('projects.partner_university') ?>
                         </label>
                         <i class="ph ph-edit float-right"></i>
                         <input hidden readonly name="values[university]" value="<?= e($org_id) ?>" <?= $reqField('university') ?> readonly />
 
                         <div id="university-org-value">
                             <?php if (empty($org_id)) { ?>
-                                <?= lang('error.organization_select_missing') ?>
+                                <?= t('error.organization_select_missing') ?>
                                 <?php } else {
                                 $collab = $osiris->organizations->findOne(['_id' => $org_id]);
                                 if (!empty($collab)) { ?>
                                     <b><?= e(localized($collab['name'])) ?></b>
                                     <br><small class="text-muted"><?= e($collab['location']) ?></small>
                                 <?php } else { ?>
-                                    <?= lang('error.organization_select_missing') ?>:
+                                    <?= t('error.organization_select_missing') ?>:
                                     <br><small class="text-muted"><?= e($org_id) ?></small>
                             <?php }
                             } ?>
@@ -377,9 +377,9 @@ case 'university': ?>
                                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </a>
-                                <label for="university-search"><?= lang('projects.search_for_partner_university') ?></label>
+                                <label for="university-search"><?= t('projects.search_for_partner_university') ?></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="university-search" onkeydown="selectOrgEvent(event, 'university')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
+                                    <input type="text" class="form-control" id="university-search" onkeydown="selectOrgEvent(event, 'university')" placeholder="<?= t('forms.search_for_organization') ?>" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'university')"><i class="ph ph-magnifying-glass"></i></button>
                                     </div>
@@ -399,21 +399,21 @@ case 'university': ?>
 case 'joint_project': ?>
 
                     <fieldset class="mt-20">
-                        <legend class="font-size-14"><?= lang('projects.joint_project') ?></legend>
+                        <legend class="font-size-14"><?= t('projects.joint_project') ?></legend>
 
                         <b>
-                            <?= lang('projects.is_this_project_part_of_a_joint_project_with_other_institutions') ?>
+                            <?= t('projects.is_this_project_part_of_a_joint_project_with_other_institutions') ?>
                         </b>
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_yes" name="values[joint_project]" value="true" <?= $val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_yes">
-                                <?= lang('common.yes') ?>
+                                <?= t('common.yes') ?>
                             </label>
                         </div>
                         <div class="custom-radio d-inline-block mr-10 joint-project-input">
                             <input type="radio" id="joint_project_no" name="values[joint_project]" value="false" <?= !$val('joint_project', false) ? 'checked' : '' ?>>
                             <label for="joint_project_no">
-                                <?= lang('common.no') ?>
+                                <?= t('common.no') ?>
                             </label>
                         </div>
 
@@ -421,13 +421,13 @@ case 'joint_project': ?>
                             <div class="form-group floating-form mt-20">
                                 <input type="text" class="form-control" name="values[joint_project_identifier]" id="joint_project_identifier" value="<?= $val('joint_project_identifier') ?>" placeholder="ABC123">
                                 <label for="joint_project_identifier" class="">
-                                    <?= lang('projects.identifier_of_the_joint_project') ?>
+                                    <?= t('projects.identifier_of_the_joint_project') ?>
                                 </label>
                             </div>
                             <div class="form-group floating-form">
                                 <input type="text" class="form-control" name="values[joint_project_title]" id="joint_project_title" value="<?= $val('joint_project_title') ?>" placeholder=" ">
                                 <label for="joint_project_title" class="">
-                                    <?= lang('projects.title_of_the_joint_project') ?>
+                                    <?= t('projects.title_of_the_joint_project') ?>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -436,7 +436,7 @@ case 'joint_project': ?>
                                 <div class="custom-checkbox">
                                     <input type="checkbox" id="joint_project_speaker" <?= $val('joint_project_speaker', false) ? 'checked' : '' ?> name="values[joint_project_speaker]" value="true">
                                     <label for="joint_project_speaker">
-                                        <?= lang('projects.speaker_coordinator_consortium_leader_role') ?>
+                                        <?= t('projects.speaker_coordinator_consortium_leader_role') ?>
                                     </label>
                                 </div>
                             </div>
@@ -458,16 +458,16 @@ case 'research-countries': ?><input type="hidden" name="values[research-countrie
                 $countries = $form['research-countries'] ?? [];
             ?>
                 <h5>
-                    <?= lang('projects.countries_you_will_do_research_on_in') ?>
+                    <?= t('projects.countries_you_will_do_research_on_in') ?>
                 </h5>
 
 
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('common.country') ?></th>
-                            <th><?= lang('common.research') ?></th>
-                            <th><?= lang('common.action') ?></th>
+                            <th><?= t('common.country') ?></th>
+                            <th><?= t('common.research') ?></th>
+                            <th><?= t('common.action') ?></th>
                         </tr>
                     </thead>
                     <tbody id="country-list">
@@ -477,10 +477,10 @@ case 'research-countries': ?><input type="hidden" name="values[research-countrie
                             $role = $country['role'] ?? 'both';
                         ?>
                             <tr>
-                                <td><?= $DB->getCountry($iso, lang('common.field_name_language')) ?></td>
+                                <td><?= $DB->getCountry($iso, t('common.field_name_language')) ?></td>
                                 <td><?= e($role) ?></td>
                                 <td>
-                                    <a onclick="$(this).closest('tr').remove()"><?= lang('action.remove') ?></a>
+                                    <a onclick="$(this).closest('tr').remove()"><?= t('action.remove') ?></a>
                                     <input type="text" name="values[research-countries][]" value="<?= e($iso) ?>;<?= e($role) ?>" hidden>
                                 </td>
                             </tr>
@@ -491,16 +491,16 @@ case 'research-countries': ?><input type="hidden" name="values[research-countrie
                             <td colspan="3">
                                 <div class="input-group small d-inline-flex w-auto">
                                     <select id="add-research-country" class="form-control">
-                                        <option value="" disabled checked><?= lang('common.please_select_a_country') ?></option>
-                                        <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
+                                        <option value="" disabled checked><?= t('common.please_select_a_country') ?></option>
+                                        <?php foreach ($DB->getCountries(t('common.field_name_language')) as $iso => $name) { ?>
                                             <option value="<?= e($iso) ?>"><?= $name ?></option>
                                         <?php } ?>
                                     </select>
                                     <select id="add-research-country-role" class="form-control">
-                                        <option value="" disabled checked><?= lang('projects.please_select_a_role') ?></option>
-                                        <option value="in"><?= lang('projects.research_in_this_country') ?></option>
-                                        <option value="about"><?= lang('projects.research_about_this_country') ?></option>
-                                        <option value="both"><?= lang('projects.both') ?></option>
+                                        <option value="" disabled checked><?= t('projects.please_select_a_role') ?></option>
+                                        <option value="in"><?= t('projects.research_in_this_country') ?></option>
+                                        <option value="about"><?= t('projects.research_about_this_country') ?></option>
+                                        <option value="both"><?= t('projects.both') ?></option>
                                     </select>
                                     <div class="input-group-append">
                                         <button class="btn secondary" type="button" onclick="addResearchCountry(event);">
@@ -524,7 +524,7 @@ case 'research-countries': ?><input type="hidden" name="values[research-countrie
                                 let tr = $('<tr>')
                                 tr.append('<td>' + el.find('option:selected').text() + '</td>')
                                 tr.append('<td>' + type + '</td>')
-                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= lang('action.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
+                                tr.append('<td><a onclick="$(this).closest(\'tr\').remove()"><?= t('action.remove') ?></a><input type="text" name="values[research-countries][]" value="' + data + ';' + type + '" hidden></td>')
                                 $('#country-list').append(tr)
                             }
                             $(el).$val('')
@@ -546,7 +546,7 @@ case 'nagoya': ?>
                 // if the form is not empty, and Nagoya was enabled just refer to the nagoya tab and do not show the fields here
                 if (!empty($form) && $enabled && !empty($countries)) { ?>
                     <div class="alert alert-info">
-                        <?= lang('projects.nagoya_protocol_settings_can_be_found_in_the_nagoya_protocol_tab_after_savi') ?>
+                        <?= t('projects.nagoya_protocol_settings_can_be_found_in_the_nagoya_protocol_tab_after_savi') ?>
                     </div>
                 <?php
                 } else {
@@ -554,7 +554,7 @@ case 'nagoya': ?>
 
                     <div class="nagoya-container">
                         <label for="nagoya">
-                            <?= lang('projects.do_you_plan_to_collect_obtain_or_utilise_genetic_resources_biological_sampl') ?>
+                            <?= t('projects.do_you_plan_to_collect_obtain_or_utilise_genetic_resources_biological_sampl') ?>
                         </label>
                         <div>
                             <input type="radio" name="values[nagoya]" id="nagoya-yes" value="yes" <?= ($enabled) ? 'checked' : '' ?>>
@@ -564,19 +564,19 @@ case 'nagoya': ?>
                         </div>
 
                         <!-- <small class="text-muted">
-                            <?= lang('projects.if_you_answer_yes_you_will_be_prompted_to_list_all_countries_from_which_you') ?>
+                            <?= t('projects.if_you_answer_yes_you_will_be_prompted_to_list_all_countries_from_which_you') ?>
                         </small> -->
 
                         <div id="ressource-nagoya" style="display: <?= ($enabled) ? 'block' : 'none' ?>;">
 
                             <b>
-                                <?= lang('projects.please_list_all_countries') ?>
+                                <?= t('projects.please_list_all_countries') ?>
                             </b>
 
                             <div class="author-widget" id="author-widget">
                                 <div class="author-list p-10" id="nagoya-countries-list">
                                     <?php
-                                    $lang = lang('common.field_name_language');
+                                    $lang = t('common.field_name_language');
                                     foreach ($countries as $country) {
                                         $iso = $country['code'] ?? '';
                                     ?>
@@ -591,8 +591,8 @@ case 'nagoya': ?>
                                 <div class="footer">
                                     <div class="input-group sm d-inline-flex w-auto">
                                         <select id="add-nagoya-country">
-                                            <option value="" disabled checked><?= lang('common.please_select_a_country') ?></option>
-                                            <?php foreach ($DB->getCountries(lang('common.field_name_language')) as $iso => $name) { ?>
+                                            <option value="" disabled checked><?= t('common.please_select_a_country') ?></option>
+                                            <?php foreach ($DB->getCountries(t('common.field_name_language')) as $iso => $name) { ?>
                                                 <option value="<?= e($iso) ?>"><?= $name ?></option>
                                             <?php } ?>
                                         </select>
@@ -645,13 +645,13 @@ case 'ressources': ?>
                     <div class="ressources">
                         <div class="form-group">
                             <label for="ressource1">
-                                <?= lang('projects.additional_material_resources') ?>
+                                <?= t('projects.additional_material_resources') ?>
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][material]" id="material-yes" value="yes" <?= $material ? 'checked' : '' ?>>
-                                <label for="material-yes"><?= lang('common.yes') ?></label>
+                                <label for="material-yes"><?= t('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][material]" id="material-no" value="no" <?= $material ? '' : 'checked' ?>>
-                                <label for="material-no"><?= lang('common.no') ?></label>
+                                <label for="material-no"><?= t('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][material_details]" id="ressource-material" style="display: <?= $material ? 'block' : 'none' ?>;" placeholder="Details"><?= e($res['material_details'] ?? '') ?></textarea>
@@ -667,13 +667,13 @@ case 'ressources': ?>
 
                         <div class="form-group">
                             <label for="ressource2">
-                                <?= lang('projects.additional_personnel_resources') ?>
+                                <?= t('projects.additional_personnel_resources') ?>
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-yes" value="yes" <?= $personnel ? 'checked' : '' ?>>
-                                <label for="personnel-yes"><?= lang('common.yes') ?></label>
+                                <label for="personnel-yes"><?= t('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][personnel]" id="personnel-no" value="no" <?= $personnel ? '' : 'checked' ?>>
-                                <label for="personnel-no"><?= lang('common.no') ?></label>
+                                <label for="personnel-no"><?= t('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][personnel_details]" id="ressource-personnel" style="display: <?= $personnel ? 'block' : 'none' ?>;" placeholder="Details"><?= e($res['personnel_details'] ?? '') ?></textarea>
@@ -688,13 +688,13 @@ case 'ressources': ?>
                         </div>
                         <div class="form-group">
                             <label for="ressource3">
-                                <?= lang('projects.additional_room_capacities') ?>
+                                <?= t('projects.additional_room_capacities') ?>
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][room]" id="room-yes" value="yes" <?= $room ? 'checked' : '' ?>>
-                                <label for="room-yes"><?= lang('common.yes') ?></label>
+                                <label for="room-yes"><?= t('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][room]" id="room-no" value="no" <?= $room ? '' : 'checked' ?>>
-                                <label for="room-no"><?= lang('common.no') ?></label>
+                                <label for="room-no"><?= t('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][room_details]" id="ressource-room" style="display: <?= $room ? 'block' : 'none' ?>;" placeholder="Details"><?= e($res['room_details'] ?? '') ?></textarea>
@@ -710,13 +710,13 @@ case 'ressources': ?>
                         </div>
                         <div class="form-group mb-0">
                             <label for="ressource4">
-                                <?= lang('projects.other_resources') ?>
+                                <?= t('projects.other_resources') ?>
                             </label>
                             <div>
                                 <input type="radio" name="values[ressources][other]" id="other-yes" value="yes" <?= $other ? 'checked' : '' ?>>
-                                <label for="other-yes"><?= lang('common.yes') ?></label>
+                                <label for="other-yes"><?= t('common.yes') ?></label>
                                 <input type="radio" name="values[ressources][other]" id="other-no" value="no" <?= $other ? '' : 'checked' ?>>
-                                <label for="other-no"><?= lang('common.no') ?></label>
+                                <label for="other-no"><?= t('common.no') ?></label>
                             </div>
 
                             <textarea type="text" class="form-control" name="values[ressources][other_details]" id="ressource-other" style="display: <?= $other ? 'block' : 'none' ?>;" placeholder="Details"><?= e($res['other_details'] ?? '') ?></textarea>
@@ -739,7 +739,7 @@ case 'personnel': ?>
                         <label for="personnel"><?= e($label) ?></label>
                         <small class="text-muted">
                             <!-- Einstellungen/Verlängerungen in Personenmonaten & Kategorie -->
-                            <?= lang('projects.hiring_extensions_in_person_months_category') ?>
+                            <?= t('projects.hiring_extensions_in_person_months_category') ?>
                         </small>
 
 <?php break;
@@ -749,7 +749,7 @@ case 'in-kind': ?>
 
                         <label for="in-kind"><?= e($label) ?></label>
                         <small class="text-muted">
-                            <?= lang('projects.informative_details_in_mentioning_the_collaborating_persons_e_g_applicant_1') ?>
+                            <?= t('projects.informative_details_in_mentioning_the_collaborating_persons_e_g_applicant_1') ?>
                         </small>
 
 <?php break;
@@ -765,7 +765,7 @@ case 'institute-role': ?>
                                 <?php } ?>
                             </select>
                             <label for="role" class="<?= $reqField('role') ?>"><?php if ($customLabel): ?><?= e($label) ?><?php else: ?>
-                                <?= translate('projects.role_of') ?> <?= e($Settings->get('affiliation')) ?>
+                                <?= t('projects.role_of') ?> <?= e($Settings->get('affiliation')) ?>
                             <?php endif; ?></label>
 
 

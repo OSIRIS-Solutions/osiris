@@ -17,13 +17,13 @@
 
 <h1>
     <i class="ph-duotone ph-highlighter"></i>
-    <?= lang('workflows.my_reviews') ?>
+    <?= t('workflows.my_reviews') ?>
 </h1>
 
 <div class="">
     <div class="mb-10">
         <div class="input-group">
-            <input id="q" class="form-control" placeholder="<?= lang('common.search') ?>">
+            <input id="q" class="form-control" placeholder="<?= t('common.search') ?>">
             <div class="input-group-append">
                 <button class="btn" id="refresh"><i class="ph ph-arrow-clockwise"></i></button>
             </div>
@@ -32,7 +32,7 @@
 
     <div class="filters mb-10 d-flex align-items-center" style="gap:1rem;">
         <select id="f-category" class="form-control w-auto">
-            <option value=""><?= lang('workflows.all_categories') ?></option>
+            <option value=""><?= t('workflows.all_categories') ?></option>
             <?php
             $cats = $osiris->adminCategories->find([], ['sort' => ['order' => 1]])->toArray();
             foreach ($cats as $cat) {
@@ -40,15 +40,15 @@
             }
             ?>
         </select>
-        <input type="date" id="f-since" class="form-control w-auto" placeholder="<?= lang('workflows.since') ?>">
-        <label class="w-200 m-0"><input type="checkbox" id="f-scope" class="form-check-input"> <?= lang('workflows.same_ou_only') ?></label>
+        <input type="date" id="f-since" class="form-control w-auto" placeholder="<?= t('workflows.since') ?>">
+        <label class="w-200 m-0"><input type="checkbox" id="f-scope" class="form-check-input"> <?= t('workflows.same_ou_only') ?></label>
     </div>
 
     <table class="table" id="review-list">
         <thead>
             <tr>
                 <th style="width:28px"></th>
-                <th><?= lang('common.activity') ?></th>
+                <th><?= t('common.activity') ?></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -57,7 +57,7 @@
     <div class="flex justify-between mt-10">
         <div id="pager"></div>
         <button class="btn success" id="batch-approve" disabled>
-            <i class="ph ph-check"></i> <?= lang('workflows.approve_selected') ?>
+            <i class="ph ph-check"></i> <?= t('workflows.approve_selected') ?>
         </button>
     </div>
 </div>
@@ -89,7 +89,7 @@
         function render() {
             $tb.empty();
             if (!items.length) {
-                $tb.append('<tr><td colspan="7"><em><?= lang('workflows.nothing_to_review') ?></em></td></tr>');
+                $tb.append('<tr><td colspan="7"><em><?= t('workflows.nothing_to_review') ?></em></td></tr>');
                 return;
             }
             for (const it of items) {
@@ -101,7 +101,7 @@
                 <p class="text-muted font-size-12 mb-0 d-flex align-items-center justify-content-between">
                     <span>
                         <b>${lang('common.completed')}</b>: ${it.completed} | 
-                        <b>${<?= json_encode(lang('workflows.your_step'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</b>: ${it.step.label}
+                        <b>${<?= json_encode(t('workflows.your_step'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</b>: ${it.step.label}
                     </span>
 
                     <span class="">
@@ -134,7 +134,7 @@
             const $tr = $(this).closest('tr'),
                 id = $tr.data('id'),
                 step = $tr.data('step');
-            const comment = prompt("<?= lang('common.comment') ?>");
+            const comment = prompt("<?= t('common.comment') ?>");
             if (comment === null) return;
             $.post('<?= ROOTPATH ?>/crud/activities/workflow/reject/' + id, {
                 stepId: step,
@@ -154,7 +154,7 @@
         $('#batch-approve').on('click', function() {
             const rows = $('.sel:checked').closest('tr').toArray();
             if (!rows.length) return;
-            if (!confirm('<?= lang('workflows.approve_all_selected') ?>')) return;
+            if (!confirm('<?= t('workflows.approve_all_selected') ?>')) return;
 
             // naive sequential (einfach halten)
             (async () => {

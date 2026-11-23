@@ -24,14 +24,14 @@ if (!$user) {
 ?>
 
 <h1>
-    <?= lang('people.inactivate') ?>
+    <?= t('people.inactivate') ?>
     <?= $data['name'] ?>
 </h1>
 
 <form action="<?= ROOTPATH ?>/crud/users/inactivate/<?= $user ?>" method="post">
 
     <p class="text-danger">
-        <?= lang('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
+        <?= t('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
     </p>
 
     <table class="table">
@@ -86,7 +86,7 @@ if (!$user) {
                     <td class="text-danger no-wrap">
                         <?php if ($delete) { ?>
                             <i class="ph ph-trash"></i>
-                            <?= lang('common.delete') ?>
+                            <?= t('common.delete') ?>
                         <?php } ?>
 
                     </td>
@@ -102,7 +102,7 @@ if (!$user) {
                     </td>
                     <td class="text-danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('common.delete') ?>
+                        <?= t('common.delete') ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -123,10 +123,10 @@ if (!$user) {
     )->toArray();
     if (count($running_projects) > 0) { ?>
         <h5>
-            <?= lang('people.running_projects') ?>
+            <?= t('people.running_projects') ?>
         </h5>
         <p>
-            <?= lang('people.the_user_is_assigned_to_the_following_running_projects_inactivating_the_use') ?>
+            <?= t('people.the_user_is_assigned_to_the_following_running_projects_inactivating_the_use') ?>
         </p>
         <ul class="list">
             <?php foreach ($running_projects as $project) { ?>
@@ -156,10 +156,10 @@ if (!$user) {
     )->toArray();
     if (count($ongoing_activities) > 0) { ?>
         <h5>
-            <?= lang('people.ongoing_activities') ?>
+            <?= t('people.ongoing_activities') ?>
         </h5>
         <p>
-            <?= lang('people.the_user_is_involved_as_only_person_in_the_following_ongoing_activities_ina') ?>
+            <?= t('people.the_user_is_involved_as_only_person_in_the_following_ongoing_activities_ina') ?>
         </p>
         <ul class="list">
             <?php foreach ($ongoing_activities as $activity) { ?>
@@ -186,10 +186,10 @@ if (!$user) {
     )->toArray();
     if (count($ongoing_infrastructures) > 0) { ?>
         <h5>
-            <?= lang('people.ongoing_infrastructures') ?>
+            <?= t('people.ongoing_infrastructures') ?>
         </h5>
         <p>
-            <?= lang('people.the_user_is_involved_in_the_following_ongoing_infrastructures_inactivating') ?>
+            <?= t('people.the_user_is_involved_in_the_following_ongoing_infrastructures_inactivating') ?>
         </p>
         <ul class="list">
             <?php foreach ($ongoing_infrastructures as $infrastructure) { ?>
@@ -206,12 +206,12 @@ if (!$user) {
 
 
     <p>
-        <?= lang('people.after_inactivation_a_hint_will_be_displayed_in_the_user_profile_indicating') ?>
+        <?= t('people.after_inactivation_a_hint_will_be_displayed_in_the_user_profile_indicating') ?>
     </p>
 
     <button class="btn danger">
         <i class="ph ph-trash"></i>
-        <?= lang('people.inactivate_inactivate') ?>
+        <?= t('people.inactivate_inactivate') ?>
     </button>
 
 </form>

@@ -30,15 +30,15 @@ $cart = readCart();
 <h1 class='m-0'>
     <?php if (isset($_GET['user'])) { ?>
         <i class="ph-duotone ph-folder-user"></i>
-        <?= lang('activities.activities_of') ?>
+        <?= t('activities.activities_of') ?>
         <a href="<?= ROOTPATH ?>/profile/<?= $user ?>"><?= $DB->getNameFromId($user) ?></a>
     <?php } elseif ($page == 'activities' || !$Settings->hasPermission('scientist')) { ?>
         <i class="ph-duotone ph-book-open"></i>
-        <?= lang('common.all_activities') ?>
+        <?= t('common.all_activities') ?>
     <?php
     } elseif ($page == 'my-activities') { ?>
         <i class="ph-duotone ph-folder-user"></i>
-        <?= lang('activities.my_activities') ?>
+        <?= t('activities.my_activities') ?>
     <?php } ?>
 </h1>
 
@@ -48,31 +48,31 @@ $cart = readCart();
     <?php if (isset($_GET['user']) || $page == 'my-activities') { ?>
         <a href="<?= ROOTPATH ?>/activities" class="btn" id="user-btn">
             <i class="ph ph-book-open"></i>
-            <?= lang('activities.show_all_activities') ?>
+            <?= t('activities.show_all_activities') ?>
         </a>
     <?php } else if ($Settings->hasPermission('scientist')) { ?>
         <a href="<?= ROOTPATH ?>/my-activities" class="btn" id="user-btn">
             <i class="ph ph-folder-user"></i>
-            <?= lang('activities.show_my_activities') ?>
+            <?= t('activities.show_my_activities') ?>
         </a>
     <?php } ?>
     <a href="<?= ROOTPATH ?>/activities/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('common.statistics') ?>
+        <?= t('common.statistics') ?>
     </a>
     <a href="<?= ROOTPATH ?>/activities/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('navigation.advanced_search') ?>
+        <?= t('navigation.advanced_search') ?>
     </a>
     <?php if ($Settings->hasPermission('activities.lock')) { ?>
         <a href="<?= ROOTPATH ?>/activities/locking" class="btn">
             <i class="ph ph-lock"></i>
-            <?= lang('activities.locking') ?>
+            <?= t('activities.locking') ?>
         </a>
     <?php } ?>
     <a href="<?= ROOTPATH ?>/add-activity">
         <i class="ph ph-plus"></i>
-        <?= lang('activities.add_activity') ?>
+        <?= t('activities.add_activity') ?>
     </a>
 </div>
 
@@ -91,22 +91,22 @@ $cart = readCart();
         <table class="table dataTable" id="result-table" style="width:100%">
             <thead>
                 <tr>
-                    <th><?= lang('common.quarter') ?></th>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.quarter') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th>Links</th>
-                    <th><?= lang('activities.print') ?></th>
+                    <th><?= t('activities.print') ?></th>
                     <th>Start</th>
-                    <th><?= lang('common.end') ?></th>
-                    <th><?= lang('common.units') ?></th>
-                    <th><?= lang('activities.online_ahead_of_print') ?></th>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('activities.subtype') ?></th>
-                    <th><?= lang('common.title') ?></th>
-                    <th><?= lang('common.authors_all_activities') ?></th>
-                    <th><?= lang('common.year') ?></th>
+                    <th><?= t('common.end') ?></th>
+                    <th><?= t('common.units') ?></th>
+                    <th><?= t('activities.online_ahead_of_print') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('activities.subtype') ?></th>
+                    <th><?= t('common.title') ?></th>
+                    <th><?= t('common.authors_all_activities') ?></th>
+                    <th><?= t('common.year') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
-                    <th><?= lang('common.affiliated') ?></th>
+                    <th><?= t('common.affiliated') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -127,7 +127,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-type')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('common.type') ?>
+                <?= t('common.type') ?>
                 <a class="float-right" onclick="filterActivities('#filter-type .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <style>
@@ -198,7 +198,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-affiliated')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('activities.affiliation') ?>
+                <?= t('activities.affiliation') ?>
                 <a class="float-right" onclick="filterActivities('#filter-affiliated .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -208,7 +208,7 @@ $cart = readCart();
                             <a data-type="yes" onclick="filterActivities(this, 'yes', 15)" class="item" id="yes-affiliated-btn">
                                 <span class="text-success">
                                     <span class="mr-5"><i class="ph ph-push-pin"></i></span>
-                                    <?= lang('common.affiliated') ?>
+                                    <?= t('common.affiliated') ?>
                                 </span>
                             </a>
                         </td>
@@ -218,7 +218,7 @@ $cart = readCart();
                             <a data-type="no" onclick="filterActivities(this, 'no', 15)" class="item" id="no-affiliated-btn">
                                 <span class="text-danger">
                                     <span class="mr-5"><i class="ph ph-push-pin-slash"></i></span>
-                                    <?= lang('common.not_affiliated') ?>
+                                    <?= t('common.not_affiliated') ?>
                                 </span>
                             </a>
                         </td>
@@ -255,7 +255,7 @@ $cart = readCart();
             <?php if ($workflowsEnabled) { ?>
                 <h6>
                     <a onclick="filterToggle(this, 'filter-workflows')"><i class="ph ph-caret-down"></i></a>
-                    <?= lang('activities.workflow_status') ?>
+                    <?= t('activities.workflow_status') ?>
                 </h6>
 
                 <div class="filter">
@@ -264,7 +264,7 @@ $cart = readCart();
                             <td>
                                 <a data-type="verified" onclick="filterActivities(this, 'verified', 16)" class="item" id="verified-btn">
                                     <span style="color: var(--highlight-color)">
-                                        <?= lang('activities.only_verified') ?>
+                                        <?= t('activities.only_verified') ?>
                                     </span>
                                 </a>
                             </td>
@@ -273,7 +273,7 @@ $cart = readCart();
                             <td>
                                 <a data-type="verif" onclick="filterActivities(this, 'verif', 16)" class="item" id="verified-empty-btn">
                                     <span style="color: var(--highlight-color)">
-                                        <?= lang('activities.verified_or_no_workflow') ?>
+                                        <?= t('activities.verified_or_no_workflow') ?>
                                     </span>
                                 </a>
                             </td>
@@ -285,7 +285,7 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-unit')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('activities.organisational_unit') ?>
+                <?= t('activities.organisational_unit') ?>
                 <a class="float-right" onclick="filterActivities('#filter-unit .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -329,29 +329,29 @@ $cart = readCart();
 
             <h6>
                 <a onclick="filterToggle(this, 'filter-time')"><i class="ph ph-caret-down"></i></a>
-                <?= lang('activities.time') ?>
+                <?= t('activities.time') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
 
             <div id="filter-time" class="filter border-0 bg-transparent p-0 shadow-none">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
+                        <label for="filter-from" class="input-group-text w-50"><?= t('common.from') ?></label>
                     </div>
                     <input type="date" name="from" id="filter-from" class="form-control">
                 </div>
                 <div class="input-group mt-10">
                     <div class="input-group-prepend">
-                        <label for="filter-to" class="input-group-text w-50"><?= lang('common.to_list') ?></label>
+                        <label for="filter-to" class="input-group-text w-50"><?= t('common.to_list') ?></label>
                     </div>
                     <input type="date" name="to" id="filter-to" class="form-control">
                 </div>
             </div>
 
-            <h6><?= lang('activities.more') ?></h6>
+            <h6><?= t('activities.more') ?></h6>
             <div class="custom-switch">
                 <input type="checkbox" id="epub-switch" value="" onchange="filterEpub(this)">
-                <label for="epub-switch"><?= lang('activities.without_online_ahead_of_print') ?></label>
+                <label for="epub-switch"><?= t('activities.without_online_ahead_of_print') ?></label>
             </div>
 
         </div>
@@ -369,7 +369,7 @@ $cart = readCart();
 
     const activeFilters = $('#active-filters')
     const headers = [{
-            title: <?= json_encode(lang('common.quarter'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('common.quarter'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'quarter'
         },
         {
@@ -385,7 +385,7 @@ $cart = readCart();
             'key': 'links'
         },
         {
-            title: <?= json_encode(lang('activities.print'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('activities.print'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'search-text'
         },
         {
@@ -409,7 +409,7 @@ $cart = readCart();
             'key': 'type'
         },
         {
-            title: <?= json_encode(lang('activities.subtype'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('activities.subtype'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'subtype'
         },
         {
@@ -417,7 +417,7 @@ $cart = readCart();
             'key': 'title'
         },
         {
-            title: <?= json_encode(lang('common.authors_all_activities'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('common.authors_all_activities'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'authors'
         },
         {
@@ -433,7 +433,7 @@ $cart = readCart();
             'key': 'affiliated'
         },
         {
-            title: <?= json_encode(lang('activities.workflow_status'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('activities.workflow_status'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'workflow'
         },
         {
@@ -479,7 +479,7 @@ $cart = readCart();
             buttons: [{
                     extend: 'colvis',
                     className: 'btn small',
-                    text: '<i class="ph ph-columns"></i> <?= lang('common.columns') ?>',
+                    text: '<i class="ph ph-columns"></i> <?= t('common.columns') ?>',
                     title: null,
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15]
                 },
@@ -489,7 +489,7 @@ $cart = readCart();
                         columns: [4]
                     },
                     className: 'btn small',
-                    text: '<i class="ph ph-clipboard"></i> <?= lang('activities.copy') ?>',
+                    text: '<i class="ph ph-clipboard"></i> <?= t('activities.copy') ?>',
                     title: null,
                 },
                 {
@@ -507,7 +507,7 @@ $cart = readCart();
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
-                    text: '<i class="ph ph-file-xls"></i> <?= lang('activities.excel') ?>',
+                    text: '<i class="ph ph-file-xls"></i> <?= t('activities.excel') ?>',
                     title: null,
                 },
                 {
@@ -526,7 +526,7 @@ $cart = readCart();
                         if (filters.length == 0) return "OSIRIS All Activities";
                         return 'OSIRIS ' + filters.join('_')
                     },
-                    text: '<i class="ph ph-file-csv"></i> <?= lang('activities.csv') ?>',
+                    text: '<i class="ph ph-file-csv"></i> <?= t('activities.csv') ?>',
                     title: null,
                 },
                 // {
@@ -535,7 +535,7 @@ $cart = readCart();
                 //         columns: [4]
                 //     },
                 //     className: 'btn small pdf-btn',
-                //     title: <?= json_encode(lang('activities.osiris_all_activities'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                //     title: <?= json_encode(t('activities.osiris_all_activities'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                 //     text: '<i class="ph ph-file-pdf"></i> PDF',
                 //     customize: function(doc) {
                 //         // doc.defaultStyle = doc.defaultStyle || {};
@@ -557,11 +557,11 @@ $cart = readCart();
                     render: function(data, type, row) {
                         if (workflowsEnabled) {
                             if (row.workflow && row.workflow == 'in_progress') {
-                                return `${data} <i class="ph ph-seal text-muted" title="<?= lang('activities.in_workflow') ?>"></i>`;
+                                return `${data} <i class="ph ph-seal text-muted" title="<?= t('activities.in_workflow') ?>"></i>`;
                             } else if (row.workflow && row.workflow == 'rejected') {
-                                return `${data} <i class="ph ph-x-circle text-danger" title="<?= lang('activities.rejected_in_workflow') ?>"></i>`;
+                                return `${data} <i class="ph ph-x-circle text-danger" title="<?= t('activities.rejected_in_workflow') ?>"></i>`;
                             } else if (row.workflow && row.workflow == 'verified') {
-                                return `${data} <i class="ph ph-seal-check text-success" title="<?= lang('activities.verified_in_workflow') ?>"></i>`;
+                                return `${data} <i class="ph ph-seal-check text-success" title="<?= t('activities.verified_in_workflow') ?>"></i>`;
                             }
                         }
                         return data;
@@ -592,10 +592,10 @@ $cart = readCart();
                             text += '</span>' + data
                         }
                         if (row.start == '') {
-                            text += ' <i class="ph ph-warning text-danger" title="' + <?= json_encode(lang('activities.no_date'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '"></i>';
+                            text += ' <i class="ph ph-warning text-danger" title="' + <?= json_encode(t('activities.no_date'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '"></i>';
                         }
                         if (row.authors == '' && row.editor == '') {
-                            text += ' <i class="ph ph-warning text-danger" title="' + <?= json_encode(lang('activities.no_persons'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '"></i>';
+                            text += ' <i class="ph ph-warning text-danger" title="' + <?= json_encode(t('activities.no_persons'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '"></i>';
                         }
                         return text;
                     }
@@ -606,10 +606,10 @@ $cart = readCart();
                     sortable: false,
                     className: 'unbreakable',
                     render: function(data, type, row) {
-                        var links = `<a class='btn link square' href='${ROOTPATH}/activities/view/${data}' title='<?= lang('common.view_activity') ?>'>
+                        var links = `<a class='btn link square' href='${ROOTPATH}/activities/view/${data}' title='<?= t('common.view_activity') ?>'>
                                 <i class='ph ph-arrow-fat-line-right'></i>
                             </a>
-                            <button class='btn link square' onclick='addToCart(this, "${data}")' title='<?= lang('activities.add_to_collection') ?>'>
+                            <button class='btn link square' onclick='addToCart(this, "${data}")' title='<?= t('activities.add_to_collection') ?>'>
                                 <i class='${cart.includes(data) ? 'ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus'}'></i>
                             </button>`;
                         return links;
@@ -618,7 +618,7 @@ $cart = readCart();
                 {
                     targets: 4,
                     data: 'search-text',
-                    title: '<?= lang('activities.print') ?>',
+                    title: '<?= t('activities.print') ?>',
                     searchable: true,
                     visible: false,
                     searchPanes: {
@@ -659,7 +659,7 @@ $cart = readCart();
                     defaultContent: '',
                     // searchPanes: {
                     //     name: 'units',
-                    //     header: <?= json_encode(lang('activities.organizational_units'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    //     header: <?= json_encode(t('activities.organizational_units'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     //     orthogonal: 'sp'
                     // }
                 },

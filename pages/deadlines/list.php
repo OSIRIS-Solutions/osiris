@@ -23,24 +23,24 @@ foreach ($deadlineTypes as $v) {
 
 <h1>
     <i class="ph-duotone ph-calendar"></i>
-    <?= lang('common.schedule') ?>
+    <?= t('common.schedule') ?>
 </h1>
 
 <div class="pills d-inline-block font-size-16">
     <a href="<?= ROOTPATH ?>/conferences" class="btn">
         <i class="ph-duotone ph-calendar-dots"></i>
-        <?= lang('common.events_home') ?>
+        <?= t('common.events_home') ?>
     </a>
     <a href="#" class="btn active font-weight-bold">
         <i class="ph-duotone ph-flag-checkered"></i>
-        <?= lang('common.deadlines') ?>
+        <?= t('common.deadlines') ?>
     </a>
 </div>
 
 <?php if ($Settings->hasPermission('deadlines.edit')) { ?>
     <a href="<?= ROOTPATH ?>/deadlines/new" class="ml-20">
         <i class="ph ph-plus"></i>
-        <?= lang('deadlines.new_deadline') ?>
+        <?= t('deadlines.new_deadline') ?>
     </a>
 <?php } ?>
 
@@ -63,7 +63,7 @@ $deadlines = $osiris->deadlines->find(
                     <div class="input-group-prepend">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                     </div>
-                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
+                    <input type="number" class="form-control" id="activity-year" placeholder="<?= t('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
                     <div class="input-group-append">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                     </div>
@@ -79,10 +79,10 @@ $deadlines = $osiris->deadlines->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.title') ?></th>
-                    <th><?= lang('common.date') ?></th>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('deadlines.relevance') ?></th>
+                    <th><?= t('common.title') ?></th>
+                    <th><?= t('common.date') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('deadlines.relevance') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -99,7 +99,7 @@ $deadlines = $osiris->deadlines->find(
 
 
             <h6>
-                <?= lang('deadlines.by_relevance') ?>
+                <?= t('deadlines.by_relevance') ?>
                 <a class="float-right" onclick="filterEvents('#filter-relevance .active', null, 3)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -108,7 +108,7 @@ $deadlines = $osiris->deadlines->find(
                         <td>
                             <a data-type="relevant" onclick="filterEvents(this, 'relevant', 3)" class="item" id="relevant-btn">
                                 <span>
-                                    <?= lang('deadlines.only_relevant_to_your_roles') ?>
+                                    <?= t('deadlines.only_relevant_to_your_roles') ?>
                                 </span>
                             </a>
                         </td>
@@ -117,7 +117,7 @@ $deadlines = $osiris->deadlines->find(
             </div>
 
             <h6>
-                <?= lang('common.by_type_list') ?>
+                <?= t('common.by_type_list') ?>
                 <a class="float-right" onclick="filterEvents('#filter-type .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -141,7 +141,7 @@ $deadlines = $osiris->deadlines->find(
 
             <!-- filter by year -->
             <h6>
-                <?= lang('common.by_year') ?>
+                <?= t('common.by_year') ?>
                 <a class="float-right" onclick="filterEvents('#filter-year .active', null, 1)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -197,7 +197,7 @@ $deadlines = $osiris->deadlines->find(
         },
         {
             'key': 'relevance',
-            'title': <?= json_encode(lang('deadlines.relevance'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+            'title': <?= json_encode(t('deadlines.relevance'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
         },
     ]
 
@@ -405,7 +405,7 @@ $deadlines = $osiris->deadlines->find(
             success: function(response) {
                 let events = response.data.events;
                 if (events.length === 0) {
-                    $(selector).html('<div class="content text-muted text-center">' + <?= json_encode(lang('deadlines.no_deadlines_found_for_this_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</div>');
+                    $(selector).html('<div class="content text-muted text-center">' + <?= json_encode(t('deadlines.no_deadlines_found_for_this_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</div>');
                     return;
                 }
                 let typeInfo = JSON.parse(JSON.stringify(<?= json_encode($typeInfo) ?>));

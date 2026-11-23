@@ -116,21 +116,21 @@ final class Initiatives
                     $value = is_array($value) ? ($value[OSIRIS_BASE_LANGUAGE] ?? '') : $value;
                 }
                 if ($required && ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === ''))) {
-                    throw new InvalidArgumentException(translate('initiatives.required_field') . ': ' . $key);
+                    throw new InvalidArgumentException(t('initiatives.required_field') . ': ' . $key);
                 }
             }
         }
         $name = $values['name'] ?? null;
         if (is_array($name)) $name = $name[OSIRIS_BASE_LANGUAGE] ?? '';
         if (!is_string($name) || trim($name) === '') {
-            throw new InvalidArgumentException(translate('initiatives.name_required'));
+            throw new InvalidArgumentException(t('initiatives.name_required'));
         }
         if (is_string($values['name'])) $values['name'] = trim($values['name']);
         foreach (['start', 'end'] as $key) {
             if (array_key_exists($key, $values)) $values[$key] = self::dateInput($values[$key]);
         }
         if (!empty($values['start']) && !empty($values['end']) && $values['end'] < $values['start']) {
-            throw new InvalidArgumentException(translate('initiatives.invalid_date_range'));
+            throw new InvalidArgumentException(t('initiatives.invalid_date_range'));
         }
         return $values;
     }
@@ -139,22 +139,22 @@ final class Initiatives
     {
         foreach (['code', 'name', 'description', 'type', 'start_date', 'end_date'] as $field) {
             if (isset($input[$field]) && !is_string($input[$field])) {
-                throw new InvalidArgumentException(translate('initiatives.invalid_objective_field') . ': ' . $field);
+                throw new InvalidArgumentException(t('initiatives.invalid_objective_field') . ': ' . $field);
             }
         }
         if (!is_string($input['name'] ?? null) || trim($input['name']) === '') {
-            throw new InvalidArgumentException(translate('initiatives.objective_title_required'));
+            throw new InvalidArgumentException(t('initiatives.objective_title_required'));
         }
         require_once __DIR__ . '/Vocabulary.php';
         $type = trim($input['type'] ?? '') ?: 'objective';
         $vocabulary = new Vocabulary();
         if (!in_array($type, array_column($vocabulary->getValues('objective-type'), 'id'), true)) {
-            throw new InvalidArgumentException(translate('initiatives.invalid_objective_field') . ': type');
+            throw new InvalidArgumentException(t('initiatives.invalid_objective_field') . ': type');
         }
         $start = self::dateInput($input['start_date'] ?? null);
         $end = self::dateInput($input['end_date'] ?? null);
         if ($start !== null && $end !== null && $end < $start) {
-            throw new InvalidArgumentException(translate('initiatives.invalid_date_range'));
+            throw new InvalidArgumentException(t('initiatives.invalid_date_range'));
         }
         return [
             'code' => trim($input['code'] ?? ''),
@@ -181,11 +181,11 @@ final class Initiatives
     {
         if ($value === null || $value === '') return null;
         if (!is_string($value) || !preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/D', $value)) {
-            throw new InvalidArgumentException(translate('initiatives.invalid_date'));
+            throw new InvalidArgumentException(t('initiatives.invalid_date'));
         }
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
         if (!$date || $date->format('Y-m-d') !== $value || !checkdate((int) substr($value, 5, 2), (int) substr($value, 8, 2), (int) substr($value, 0, 4))) {
-            throw new InvalidArgumentException(translate('initiatives.invalid_date'));
+            throw new InvalidArgumentException(t('initiatives.invalid_date'));
         }
         return $value;
     }
@@ -281,7 +281,7 @@ final class Initiatives
                 $document = $database->$field->findOne(['_id' => DB::to_ObjectID($id)]);
                 $parent = $field === 'objectives' && $document ? $database->initiatives->findOne(['_id' => DB::to_ObjectID($document['initiative'])]) : [];
                 if (!$document || ($field === 'objectives' && !$parent) || !self::matchesPeriod(self::selectionBounds($document, $parent), $period)) {
-                    abortwith(403, translate('initiatives.selection_outside_period'));
+                    abortwith(403, t('initiatives.selection_outside_period'));
                 }
             }
         }
@@ -292,9 +292,9 @@ final class Initiatives
         $start = $document['start_date'] ?? $document['start'] ?? null;
         $end = $document['end_date'] ?? $document['end'] ?? null;
         if (empty($start)) {
-            return empty($end) ? translate('common.open_end') : translate('initiatives.deadline') . ': ' . format_date($end);
+            return empty($end) ? t('common.open_end') : t('initiatives.deadline') . ': ' . format_date($end);
         }
-        return format_date($start) . ' – ' . (empty($end) ? translate('common.open_end') : format_date($end));
+        return format_date($start) . ' – ' . (empty($end) ? t('common.open_end') : format_date($end));
     }
 
     public static function isExpired($document, ?string $today = null): bool
@@ -316,11 +316,11 @@ final class Initiatives
         global $Settings;
         if (!$Settings->featureEnabled('initiatives')) {
             http_response_code(404);
-            abortwith(404, translate('common.initiatives'), '/');
+            abortwith(404, t('common.initiatives'), '/');
         }
         if ($edit ? !$Settings->hasPermission('initiatives.edit') : !self::canView($Settings)) {
             http_response_code(403);
-            abortwith(403, translate('initiatives.no_permission'), '/initiatives');
+            abortwith(403, t('initiatives.no_permission'), '/initiatives');
         }
     }
 
@@ -354,7 +354,7 @@ final class Initiatives
     public static function findObjective($database, string $id)
     {
         $objective = DB::is_ObjectID($id) ? $database->objectives->findOne(['_id' => DB::to_ObjectID($id)]) : null;
-        if (!$objective) return abortwith(404, translate('initiatives.objective'), '/initiatives');
+        if (!$objective) return abortwith(404, t('initiatives.objective'), '/initiatives');
         return $objective;
     }
 
@@ -363,7 +363,7 @@ final class Initiatives
         $initiative = DB::is_ObjectID($id) ? $database->initiatives->findOne(['_id' => DB::to_ObjectID($id)]) : null;
         if (empty($initiative)) {
             http_response_code(404);
-            abortwith(404, translate('common.initiative'), '/initiatives');
+            abortwith(404, t('common.initiative'), '/initiatives');
         }
         return $initiative;
     }
@@ -372,7 +372,7 @@ final class Initiatives
     public static function text($value): string
     {
         if ($value === null) return '';
-        if (is_bool($value)) return translate($value ? 'common.yes' : 'common.no');
+        if (is_bool($value)) return t($value ? 'common.yes' : 'common.no');
         if ($value instanceof Traversable) $value = iterator_to_array($value);
         if (is_array($value)) {
             if (isset($value['year'])) return sprintf('%04d-%02d-%02d', $value['year'], $value['month'] ?? 1, $value['day'] ?? 1);

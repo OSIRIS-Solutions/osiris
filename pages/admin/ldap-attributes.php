@@ -34,47 +34,47 @@ $attributeMappings = array_merge($attributeMappings, $availableLdapFields ?? [])
 
 $fields = [
     'first' => [
-        'name' => lang('common.name_first'),
+        'name' => t('common.name_first'),
         'example' => 'givenname', // Beispiel: "John"
     ],
     'last' => [
-        'name' => lang('common.name_last'),
+        'name' => t('common.name_last'),
         'example' => 'sn', // Beispiel: "Doe"
     ],
     'academic_title' => [
-        'name' => lang('admin.academic_title'),
+        'name' => t('admin.academic_title'),
         'example' => 'personalTitle', // Beispiel: "Dr."
     ],
     'mail' => [
-        'name' => lang('common.email'),
+        'name' => t('common.email'),
         'example' => 'mail', // Beispiel: "john.doe@example.com"
     ],
     'telephone' => [
-        'name' => lang('common.telephone'),
+        'name' => t('common.telephone'),
         'example' => 'telephonenumber', // Beispiel: "+1 555 123 456"
     ],
     'mobile' => [
-        'name' => lang('common.mobile'),
+        'name' => t('common.mobile'),
         'example' => 'mobile', // Beispiel: "+1 555 987 654"
     ],
     'position' => [
-        'name' => lang('common.position'),
+        'name' => t('common.position'),
         'example' => 'title', // Beispiel: "Software Engineer"
     ],
     'department' => [
-        'name' => lang('common.department'),
+        'name' => t('common.department'),
         'example' => 'department', // Beispiel: "IT Department"
     ], //description
     'is_active' => [
-        'name' => lang('common.active'),
+        'name' => t('common.active'),
         'example' => 'useraccountcontrol', // Beispiel: "512" (Aktiv) oder "514" (Deaktiviert)
     ],
     'room' => [
-        'name' => lang('common.room'),
+        'name' => t('common.room'),
         'example' => 'physicaldeliveryofficename', // Beispiel: "Room 101"
     ],
     'internal_id' => [
-        'name' => lang('common.internal_id'),
+        'name' => t('common.internal_id'),
         'example' => 'objectsid', // Beispiel: "12345"
     ],
 ];
@@ -84,7 +84,7 @@ $fields = [
 
         <h1>
             <i class="ph-duotone ph-user-switch" aria-hidden="true"></i>
-            LDAP: <?= lang('admin.attribute_synchronization') ?>
+            LDAP: <?= t('admin.attribute_synchronization') ?>
         </h1>
 
         <?php
@@ -93,24 +93,24 @@ $fields = [
         ?>
 
         <p>
-            <?= lang('admin.last_synchronization') ?> <b><?= $last_sync ? format_date($last_sync) : lang('common.never') ?></b>
+            <?= t('admin.last_synchronization') ?> <b><?= $last_sync ? format_date($last_sync) : t('common.never') ?></b>
         </p>
 
         <p>
-            <?= lang('admin.here_you_can_define_the_attributes_that_will_be_automatically_synchronized') ?>
+            <?= t('admin.here_you_can_define_the_attributes_that_will_be_automatically_synchronized') ?>
         </p>
 
         <p class="text-danger">
             <i class="ph ph-warning"></i>
-            <?= lang('admin.please_note_that_the_synchronized_attributes_cannot_be_edited_within_osiris') ?>
+            <?= t('admin.please_note_that_the_synchronized_attributes_cannot_be_edited_within_osiris') ?>
         </p>
 
         <table class="table w-auto mb-20">
             <thead>
                 <tr>
-                    <th><?= lang('admin.person_attribute_in_osiris') ?></th>
-                    <th><?= lang('admin.ldap_variable_leave_empty_to_manage_the_field_in_osiris') ?></th>
-                    <th><?= lang('common.example') ?></th>
+                    <th><?= t('admin.person_attribute_in_osiris') ?></th>
+                    <th><?= t('admin.ldap_variable_leave_empty_to_manage_the_field_in_osiris') ?></th>
+                    <th><?= t('common.example') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -126,7 +126,7 @@ $fields = [
                         </td>
                         <td class="text-muted">
                             <?= e($f['example']) ?>
-                            <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= lang('admin.take') ?></a>
+                            <a onclick="$('#field-<?= $field ?>').val('<?= $f['example'] ?>')"><?= t('admin.take') ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -134,7 +134,7 @@ $fields = [
         </table>
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('admin.save_amp_preview') ?>
+            <?= t('admin.save_amp_preview') ?>
         </button>
 
     </form>

@@ -17,7 +17,7 @@
 Route::get('/queue/(user|editor)', function ($role) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('import.queue')]
+        ['name' => t('import.queue')]
     ];
 
     include BASEPATH . "/header.php";

@@ -296,12 +296,12 @@ final class Nagoya
 
     // If module not enabled → green check (no ABS context)
     if (($n['enabled'] ?? false) === false) {
-      return '<i class="ph ph-check text-success" title="' . e(lang('projects.not_abs_relevant')) . '"></i>';
+      return '<i class="ph ph-check text-success" title="' . e(t('projects.not_abs_relevant')) . '"></i>';
     }
 
     $status = $n['status'] ?? null;
     if (!$status) {
-      return '<i class="ph ph-question text-muted" title="' . e(lang('common.unknown')) . '"></i>';
+      return '<i class="ph ph-question text-muted" title="' . e(t('common.unknown')) . '"></i>';
     }
 
     // Map statuses to icons/colors
@@ -317,12 +317,12 @@ final class Nagoya
     $n = $project['nagoya'] ?? [];
 
     if (($n['enabled'] ?? false) === false) {
-      return self::makeBadge('muted', 'ph-x-circle', lang('projects.not_abs_relevant_Nagoya'), $large);
+      return self::makeBadge('muted', 'ph-x-circle', t('projects.not_abs_relevant_Nagoya'), $large);
     }
 
     $status = $n['status'] ?? null;
     if (!$status) {
-      return self::makeBadge('muted', 'ph-question', lang('common.unknown'), $large);
+      return self::makeBadge('muted', 'ph-question', t('common.unknown'), $large);
     }
 
     // Map statuses to badge color + icon
@@ -382,16 +382,16 @@ final class Nagoya
     // Base classes / text depending on ABS relevance
     $classes = 'badge small ';
     $icon    = 'ph ph-question';
-    $text    = lang('projects.abs_unknown');
+    $text    = t('projects.abs_unknown');
 
     if ($abs === true) {
       $classes .= 'primary';
       $icon    = 'ph ph-shield-check';
-      $text    = lang('projects.abs_relevant');
+      $text    = t('projects.abs_relevant');
     } elseif ($abs === false) {
       $classes .= 'muted';
       $icon    = 'ph ph-x-circle';
-      $text    = lang('projects.not_abs_relevant');
+      $text    = t('projects.not_abs_relevant');
     }
 
     // A/B/C sublabel
@@ -406,12 +406,12 @@ final class Nagoya
       if ($hasNeeded || $hasRequested) {
         $permitHtml = sprintf(
           '<small class="badge warning ml-5">%s</small>',
-          e(lang('projects.permits_pending_Nagoya'))
+          e(t('projects.permits_pending_Nagoya'))
         );
       } elseif ($hasGranted) {
         $permitHtml = sprintf(
           '<small class="badge success ml-5">%s</small>',
-          e(lang('projects.permits_granted'))
+          e(t('projects.permits_granted'))
         );
       }
     }
@@ -431,19 +431,19 @@ final class Nagoya
     switch ($status) {
       case 'needed':
         return '<span class="badge no-wrap danger"><i class="ph ph-seal-warning"></i> ' .
-          e(lang('infrastructures.open')) . '</span>';
+          e(t('infrastructures.open')) . '</span>';
       case 'requested':
         return '<span class="badge no-wrap signal"><i class="ph ph-seal-question"></i> ' .
-          e(lang('common.requested')) . '</span>';
+          e(t('common.requested')) . '</span>';
       case 'granted':
         return '<span class="badge no-wrap success"><i class="ph ph-seal-check"></i> ' .
-          e(lang('common.granted')) . '</span>';
+          e(t('common.granted')) . '</span>';
       case 'not-applicable':
         return '<span class="badge no-wrap muted"><i class="ph ph-seal"></i> ' .
-          e(lang('projects.not_needed')) . '</span>';
+          e(t('projects.not_needed')) . '</span>';
       default:
         return '<span class="badge no-wrap muted"><i class="ph ph-seal-warning"></i> ' .
-          e(lang('projects.unknown_status')) . '</span>';
+          e(t('projects.unknown_status')) . '</span>';
     }
   }
 
@@ -452,13 +452,13 @@ final class Nagoya
     switch ($label) {
       case 'A':
         return '<small class="badge danger ml-5" data-toggle="tooltip" data-title="' .
-          lang('projects.project_within_the_scope_of_the_eu_abs_regulation') . '">A</small>';
+          t('projects.project_within_the_scope_of_the_eu_abs_regulation') . '">A</small>';
       case 'B':
         return '<small class="badge signal ml-5" data-toggle="tooltip" data-title="' .
-          lang('projects.project_out_of_the_scope_of_the_eu_abs_regulation_but_within_the_scope_of_a') . '">B</small>';
+          t('projects.project_out_of_the_scope_of_the_eu_abs_regulation_but_within_the_scope_of_a') . '">B</small>';
       case 'C':
         return '<small class="badge muted ml-5" data-toggle="tooltip" data-title="' .
-          lang('projects.project_out_of_the_scope_of_both_the_eu_abs_regulation_and_the_abs_measures') . '">C</small>';
+          t('projects.project_out_of_the_scope_of_both_the_eu_abs_regulation_and_the_abs_measures') . '">C</small>';
       default:
         return '';
     }

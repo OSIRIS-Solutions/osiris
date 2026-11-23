@@ -150,10 +150,10 @@ class Spectrum
                 <?php if ($count !== null) { ?>
                     <?php self::hint($count); ?>
                 <?php } elseif (isset($spectrum['manual'])) { ?>
-                    <small><?= lang('spectrum.these_topics_were_manually_adjusted') ?></small>
+                    <small><?= t('spectrum.these_topics_were_manually_adjusted') ?></small>
                 <?php } else { ?>
-                    <small><?= lang('spectrum.these_topics_are_automatically_assigned_by_openalex') ?></small>
-                    <a href="<?= ROOTPATH ?>/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> <?= lang('spectrum.learn_more') ?></a>
+                    <small><?= t('spectrum.these_topics_are_automatically_assigned_by_openalex') ?></small>
+                    <a href="<?= ROOTPATH ?>/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> <?= t('spectrum.learn_more') ?></a>
                 <?php } ?>
             </div>
 
@@ -172,11 +172,11 @@ class Spectrum
     public static function hint($count)
     {
         echo '<small>';
-        echo lang('spectrum.research_spectrum_is_based_on_the_analysis_of_count_publications_in_osiris', replace: ['count' => $count]);
+        echo t('spectrum.research_spectrum_is_based_on_the_analysis_of_count_publications_in_osiris', replace: ['count' => $count]);
         if ($count <= 10) {
-            echo lang('spectrum.since_there_are_only_a_few_publications_in_osiris_with_an_assigned_spectrum');
+            echo t('spectrum.since_there_are_only_a_few_publications_in_osiris_with_an_assigned_spectrum');
         }
         echo '</small>';
-        echo '<a href="' . ROOTPATH . '/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> ' . lang('spectrum.learn_more') . '</a>';
+        echo '<a href="' . ROOTPATH . '/spectrum#what-is-spectrum" class="ml-10" style="white-space: nowrap;"><i class="ph ph-question"></i> ' . t('spectrum.learn_more') . '</a>';
     }
 }

@@ -18,21 +18,21 @@ $labelId = uniqid('initiative-label-');
     <div class="module" role="group" aria-labelledby="<?= $labelId ?>">
         <input type="hidden" name="values[initiatives]" value="">
         <div data-selection-controls
-            data-choose-date="<?= e(translate('initiatives.choose_activity_date')) ?>"
-            data-no-entries="<?= e(translate('initiatives.no_entries')) ?>"
-            data-no-matches="<?= e(translate('initiatives.no_matching_entries')) ?>"
-            data-invalid="<?= e(translate('initiatives.selection_outside_period')) ?>">
+            data-choose-date="<?= e(t('initiatives.choose_activity_date')) ?>"
+            data-no-entries="<?= e(t('initiatives.no_entries')) ?>"
+            data-no-matches="<?= e(t('initiatives.no_matching_entries')) ?>"
+            data-invalid="<?= e(t('initiatives.selection_outside_period')) ?>">
             <?php if ($Settings->hasPermission('initiatives.select-outside-period')): ?>
                 <button type="button" class="btn small" data-show-all aria-expanded="false"
-                    data-show-label="<?= e(translate('initiatives.show_all')) ?>" data-hide-label="<?= e(translate('initiatives.show_matching')) ?>">
-                    <?= translate('initiatives.show_all') ?>
+                    data-show-label="<?= e(t('initiatives.show_all')) ?>" data-hide-label="<?= e(t('initiatives.show_matching')) ?>">
+                    <?= t('initiatives.show_all') ?>
                 </button>
                 <input type="search" class="form-control small mt-10" data-selection-search hidden
-                    placeholder="<?= e(translate('initiatives.search_selection')) ?>" aria-label="<?= e(translate('initiatives.search_selection')) ?>">
+                    placeholder="<?= e(t('initiatives.search_selection')) ?>" aria-label="<?= e(t('initiatives.search_selection')) ?>">
             <?php endif; ?>
-            <p class="text-muted font-size-12" data-selection-status role="status"><?= translate('initiatives.selection_hint') ?></p>
+            <p class="text-muted font-size-12" data-selection-status role="status"><?= t('initiatives.selection_hint') ?></p>
             <select class="form-control" data-selection-empty required hidden disabled aria-label="<?= e($label) ?>">
-                <option value=""><?= translate('initiatives.no_matching_entries') ?></option>
+                <option value=""><?= t('initiatives.no_matching_entries') ?></option>
             </select>
         </div>
         <style>
@@ -55,7 +55,7 @@ $labelId = uniqid('initiative-label-');
                     <input type="checkbox" name="values[initiatives][]" value="<?= e($id) ?>" <?= in_array($id, $selected, true) ? 'checked' : '' ?>>
                     <span class="initiative-option-name"><i class="ph ph-compass" aria-hidden="true"></i> <?= e(trim(strip_tags(localized($initiative['name'] ?? '')))) ?>
                         <?php if ($archived || $expired): ?><small class="text-muted">(<?= $archived ? lang('Archived', 'Archiviert') : lang('Expired', 'Abgelaufen') ?>)</small><?php endif; ?>
-                        <small class="text-danger" data-period-warning hidden><?= translate('initiatives.outside_period') ?></small>
+                        <small class="text-danger" data-period-warning hidden><?= t('initiatives.outside_period') ?></small>
                     </span>
                 </label>
             <?php endforeach; ?>

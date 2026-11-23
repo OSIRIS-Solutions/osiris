@@ -16,23 +16,23 @@
 
 $categories = [
     'General' => [
-        'label' => lang('common.general'), 
+        'label' => t('common.general'),
         'icon' => 'ph ph-users'
     ],
     'Project' => [
-        'label' => lang('common.projects'),
+        'label' => t('common.projects'),
         'icon' => 'ph ph-tree-structure'
     ],
     'Infrastructure' => [
-        'label' => lang('common.infrastructures'),
+        'label' => t('common.infrastructures'),
         'icon' => 'ph ph-cube-transparent'
     ],
     'Event' => [
-        'label' => lang('common.events'),
+        'label' => t('common.events'),
         'icon' => 'ph ph-calendar'
     ],
     'Activity' => [
-        'label' => lang('common.activities'),
+        'label' => t('common.activities'),
         'icon' => 'ph ph-folder'
     ],
 ];
@@ -42,14 +42,14 @@ $categories = [
 
     <h1>
         <i class="ph ph-book-bookmark text-primary"></i>
-        <?= lang('common.vocabulary') ?>
+        <?= t('common.vocabulary') ?>
     </h1>
 
     <p>
-        <?= lang('admin.vocabularies_are_used_to_manage_lists_of_values_for_dropdowns_and_other_sel') ?>
+        <?= t('admin.vocabularies_are_used_to_manage_lists_of_values_for_dropdowns_and_other_sel') ?>
     </p>
 
-    <input type="text" id="vocabulary-search" class="form-control" placeholder="<?= lang('admin.search_vocabularies') ?>">
+    <input type="text" id="vocabulary-search" class="form-control" placeholder="<?= t('admin.search_vocabularies') ?>">
 
     <div class="row row-eq-spacing mt-0">
 
@@ -81,7 +81,7 @@ $categories = [
         <div class="col-lg-3 d-none d-lg-block">
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <h4 class=""><?= lang('common.content') ?></h4>
+                    <h4 class=""><?= t('common.content') ?></h4>
                     <div class="list">
                         <?php
                         $cat = '';

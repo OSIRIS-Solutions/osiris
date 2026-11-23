@@ -22,7 +22,7 @@
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <div class="container">
-    <h1><?= lang('projects.public_information') ?></h1>
+    <h1><?= t('projects.public_information') ?></h1>
     <form action="<?= ROOTPATH ?>/crud/projects/update-public/<?= $project['_id'] ?>" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <div class="custom-checkbox">
@@ -36,17 +36,17 @@
         <div class="row row-eq-spacing mb-0">
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                    <legend class="d-flex"><?= t('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('common.title') ?> (EN)
+                            <?= t('common.title') ?> (EN)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title]" id="public_title" required value="<?= $project['public_title'] ?? localized($project['name'] ?? '', 'en') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="name" class="required">
-                            <?= lang('common.subtitle') ?> (EN)
+                            <?= t('common.subtitle') ?> (EN)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle]" id="public_subtitle" required value="<?= $project['public_subtitle'] ?? localized($project['title'] ?? '', 'en')  ?>">
                     </div>
@@ -54,17 +54,17 @@
             </div>
             <div class="col-md-6">
                 <fieldset>
-                    <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                    <legend class="d-flex"><?= t('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('common.title') ?> (DE)
+                            <?= t('common.title') ?> (DE)
                         </label>
                         <input type="text" class="form-control large" name="values[public_title_de]" id="public_title_de" value="<?= $project['public_title_de'] ?? '' ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="name_de">
-                            <?= lang('common.subtitle') ?> (DE)
+                            <?= t('common.subtitle') ?> (DE)
                         </label>
                         <input type="text" class="form-control" name="values[public_subtitle_de]" id="public_subtitle_de" value="<?= $project['public_subtitle_de'] ?? '' ?>">
                     </div>
@@ -75,7 +75,7 @@
 
 
         <div class="form-group">
-            <label for="website"><?= lang('projects.project_website') ?></label>
+            <label for="website"><?= t('projects.project_website') ?></label>
             <input type="url" class="form-control" id="website" name="values[website]" value="<?= $project['website'] ?? '' ?>">
         </div>
 
@@ -83,18 +83,18 @@
 
         <div class="form-group">
             <h5>
-                <?= lang('common.image') ?>
+                <?= t('common.image') ?>
             </h5>
             <p>
-                <?= lang('common.upload_an_image_e_g_logo_for_the_project_the_image_will_be_displayed_in_the') ?>
+                <?= t('common.upload_an_image_e_g_logo_for_the_project_the_image_will_be_displayed_in_the') ?>
             </p>
             <!-- show current image if any -->
             <?php if (!empty($project['public_image'])) : ?>
                 <img src="<?= ROOTPATH . '/uploads/' . $project['public_image'] ?>" alt="<?= $project['public_title'] ?>" class="w-400">
             <?php endif; ?>
             <div class="custom-file">
-                <input type="file" id="public_image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('common.no_image_uploaded') ?>">
-                <label for="public_image"><?= lang('common.upload_image') ?></label>
+                <input type="file" id="public_image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= t('common.no_image_uploaded') ?>">
+                <label for="public_image"><?= t('common.upload_image') ?></label>
             </div>
         </div>
 
@@ -103,8 +103,8 @@
 
 
         <h4>
-            <?= lang('projects.abstract') ?>
-            in <span class="d-inline-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
+            <?= t('projects.abstract') ?>
+            in <span class="d-inline-flex"><?= t('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract-quill"><?= $project['public_abstract'] ?? localized($project['abstract'] ?? '', 'en') ?></div>
@@ -116,8 +116,8 @@
 
 
         <h4>
-            <?= lang('projects.abstract') ?>
-            in <span class="d-inline-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
+            <?= t('projects.abstract') ?>
+            in <span class="d-inline-flex"><?= t('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></span>
         </h4>
         <div class="form-group">
             <div id="public_abstract_de-quill"><?= $project['public_abstract_de'] ?? '' ?></div>
@@ -127,6 +127,6 @@
                 quillEditor('public_abstract_de');
             </script>
         </div>
-        <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
+        <button type="submit" class="btn secondary"><?= t('action.save') ?></button>
     </form>
 </div>

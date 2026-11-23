@@ -25,17 +25,17 @@ $organizations  = $osiris->organizations->find(
 
 <h1>
     <i class="ph-duotone ph-building-office" aria-hidden="true"></i>
-    <?= lang('organizations.external_organisations') ?>
+    <?= t('organizations.external_organisations') ?>
 </h1>
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/organizations/map" class="btn">
         <i class="ph ph-map-pin"></i>
-        <?= lang('common.organization_map') ?>
+        <?= t('common.organization_map') ?>
     </a>
     <?php if ($Settings->hasPermission('organizations.edit')) { ?>
         <a href="<?= ROOTPATH ?>/organizations/new">
             <i class="ph ph-plus"></i>
-            <?= lang('organizations.add_new_organisation') ?>
+            <?= t('organizations.add_new_organisation') ?>
         </a>
     <?php } ?>
 </div>
@@ -43,12 +43,12 @@ $organizations  = $osiris->organizations->find(
 <table class="table" id="organizations-table">
     <thead>
         <tr>
-            <th><?= lang('common.organization') ?></th>
-            <th><?= lang('common.name') ?></th>
-            <th><?= lang('common.type') ?></th>
-            <th><?= lang('common.location') ?></th>
+            <th><?= t('common.organization') ?></th>
+            <th><?= t('common.name') ?></th>
+            <th><?= t('common.type') ?></th>
+            <th><?= t('common.location') ?></th>
             <th>ROR</th>
-            <th><?= lang('common.synonyms') ?></th>
+            <th><?= t('common.synonyms') ?></th>
         </tr>
     </thead>
     <tbody>

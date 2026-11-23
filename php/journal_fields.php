@@ -16,7 +16,7 @@ class JournalFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('common.id'),
+                'label' => t('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -26,7 +26,7 @@ class JournalFields extends Fields
             [
                 "id" => "journal",
                 "module_of" => ['general'],
-                "label" => lang('common.name'),
+                "label" => t('common.name'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -36,7 +36,7 @@ class JournalFields extends Fields
             [
                 "id" => "issn",
                 "module_of" => ['general'],
-                "label" => lang('journals.issn'),
+                "label" => t('journals.issn'),
                 'type' => 'list',
                 'usage' => [
                     'filter',
@@ -55,7 +55,7 @@ class JournalFields extends Fields
             [
                 "id" => "publisher",
                 "module_of" => ['general'],
-                "label" => lang('journals.publisher'),
+                "label" => t('journals.publisher'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -66,7 +66,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.impact",
                 "module_of" => ['general'],
-                "label" => $if_label . lang('journals.value'),
+                "label" => $if_label . t('journals.value'),
                 'type' => 'double',
                 'usage' => [
                     'aggregate',
@@ -77,7 +77,7 @@ class JournalFields extends Fields
             [
                 "id" => "impact.year",
                 "module_of" => ['general'],
-                "label" => $if_label . lang('journals.year'),
+                "label" => $if_label . t('journals.year'),
                 'type' => 'integer',
                 'usage' => [
                     'aggregate',
@@ -88,7 +88,7 @@ class JournalFields extends Fields
             [
                 "id" => "country",
                 "module_of" => ['general'],
-                "label" => lang('common.country'),
+                "label" => t('common.country'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -99,7 +99,7 @@ class JournalFields extends Fields
             [
                 "id" => "oa",
                 "module_of" => ['general'],
-                "label" => lang('journals.open_access'),
+                "label" => t('journals.open_access'),
                 'type' => 'boolean',
                 'usage' => [
                     'aggregate',

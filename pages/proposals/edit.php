@@ -57,23 +57,23 @@ if (!$new_project) {
         if ($_GET['phase'] == 'approved') {
             if (isset($form['start_proposed'])) {
                 $form['start'] = $form['start_proposed'];
-                $prefilled[] = lang('common.start_view');
+                $prefilled[] = t('common.start_view');
             }
             if (isset($form['end_proposed'])) {
                 $form['end'] = $form['end_proposed'];
-                $prefilled[] = lang('common.end');
+                $prefilled[] = t('common.end');
             }
             if (isset($form['grant_sum_proposed'])) {
                 $form['grant_sum'] = $form['grant_sum_proposed'];
-                $prefilled[] = lang('projects.grant_sum_total');
+                $prefilled[] = t('projects.grant_sum_total');
             }
             if (isset($form['grant_income_proposed'])) {
                 $form['grant_income'] = $form['grant_income_proposed'];
-                $prefilled[] = lang('projects.grant_sum_institute');
+                $prefilled[] = t('projects.grant_sum_institute');
             }
             if (isset($form['grant_subproject_proposed'])) {
                 $form['grant_subproject'] = $form['grant_subproject_proposed'];
-                $prefilled[] = lang('projects.grant_sum_subproject');
+                $prefilled[] = t('projects.grant_sum_subproject');
             }
         }
     }
@@ -113,7 +113,7 @@ if ($is_subproject) {
 <?php if (!empty($prefilled)) { ?>
     <script>
         toastInfo(
-            <?= json_encode(lang('projects.the_following_fields_have_been_prefilled_from_the_proposed_data'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
+            <?= json_encode(t('projects.the_following_fields_have_been_prefilled_from_the_proposed_data'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
             '<br> - <?= implode("<br> - ", $prefilled) ?>');
     </script>
 <?php } ?>
@@ -153,7 +153,7 @@ if ($is_subproject) {
 
         if (is_null($type) || empty($selected)) { ?>
             <div class="alert signal mt-10">
-                <?= lang('projects.please_select_a_project_type_to_continue') ?>
+                <?= t('projects.please_select_a_project_type_to_continue') ?>
             </div>
         <?php }
     }
@@ -168,39 +168,39 @@ if ($is_subproject) {
         if ($is_subproject && !empty($form['_id'] ?? null)) {
             $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
-            $title = lang('projects.edit_subproject') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
+            $title = t('projects.edit_subproject') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
             $phase = 'project';
         } else if ($is_subproject) {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/*";
-            $title = lang('projects.create_new_subproject') . ': ' . (localized($parent['name'] ?? '') ?: localized($parent['title'] ?? ''));
-            $subtitle = lang('projects.this_project_is_a_subproject_of_another_project_that_means_you_cannot_chang');
+            $title = t('projects.create_new_subproject') . ': ' . (localized($parent['name'] ?? '') ?: localized($parent['title'] ?? ''));
+            $subtitle = t('projects.this_project_is_a_subproject_of_another_project_that_means_you_cannot_chang');
             $phase = 'project';
         } else if (isset($from_proposal) && $from_proposal) {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
-            $title = lang('projects.create_new_project_from_proposal') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
+            $title = t('projects.create_new_project_from_proposal') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
             $phase = 'project';
         } else if ($new_project && $selected['process'] == 'proposal') {
             $formaction = ROOTPATH . "/crud/proposals/create";
             $url = ROOTPATH . "/proposals/view/*";
-            $title = lang('projects.new_project_proposal');
-            $subtitle = lang('projects.this_type_of_project_must_first_be_created_as_a_project_proposal_and_conver');
+            $title = t('projects.new_project_proposal');
+            $subtitle = t('projects.this_type_of_project_must_first_be_created_as_a_project_proposal_and_conver');
         } elseif ($new_project && $selected['process'] == 'project') {
             $formaction = ROOTPATH . "/crud/projects/create";
             $url = ROOTPATH . "/projects/view/*";
-            $title = lang('projects.new_project');
-            $subtitle = lang('projects.this_type_of_project_is_created_directly_as_a_project');
+            $title = t('projects.new_project');
+            $subtitle = t('projects.this_type_of_project_is_created_directly_as_a_project');
             $phase = 'project';
         } elseif ($collection === 'projects' || $selected['process'] == 'project' || $status == 'project') {
             $formaction = ROOTPATH . "/crud/projects/update/" . $form['_id'];
             $url = ROOTPATH . "/projects/view/" . $form['_id'];
-            $title = lang('projects.edit_project') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
+            $title = t('projects.edit_project') . ': ' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? ''));
             $phase = 'project';
         } else {
             $formaction = ROOTPATH . "/crud/proposals/update/" . $form['_id'];
             $url = ROOTPATH . "/proposals/view/" . $form['_id'];
-            $title = lang('projects.edit_project_proposal') . ': <q>' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? '')) . '</q>';
+            $title = t('projects.edit_project_proposal') . ': <q>' . (localized($form['name'] ?? '') ?: localized($form['title'] ?? '')) . '</q>';
             $phase = $_GET['edit_phase'] ?? $_GET['phase'] ?? $status;
         }
 
@@ -212,10 +212,10 @@ if ($is_subproject) {
             try {
                 $phaseDefinition = ProjectForms::phase($project_type, $phase);
             } catch (InvalidArgumentException $error) {
-                $phaseError = lang('admin.unknown_project_phase');
+                $phaseError = t('admin.unknown_project_phase');
             }
             if (!empty($phaseDefinition['planned']) && $status !== $phase && !$editingPastPhase) {
-                $phaseError = lang('common.this_phase_is_being_prepared_and_is_not_yet_available');
+                $phaseError = t('common.this_phase_is_being_prepared_and_is_not_yet_available');
             }
             if (isset($phaseError)) {
                 echo '<div class="alert danger" role="alert">' . e($phaseError) . '</div></div>';
@@ -224,7 +224,7 @@ if ($is_subproject) {
         }
         if (!$new_project && $collection === 'proposals'
             && !ProjectForms::canEditPhase($form, $phase, $Settings, $_SESSION['username'], $editingPastPhase)) {
-            echo '<div class="alert danger">' . e(translate('projects.phase_edit_denied')) . '</div></div>';
+            echo '<div class="alert danger">' . e(t('projects.phase_edit_denied')) . '</div></div>';
             return;
         }
         $fields = $phase === 'withdrawn' ? [] : ProjectForms::fields($project_type, $phase, $Project->FIELDS);
@@ -250,49 +250,49 @@ if ($is_subproject) {
 
         <?php if ($editingPastPhase) { ?>
             <div class="alert signal" role="status">
-                <?= e(translate('projects.correcting_past_phase', ['phase' => translate('projects.' . $phase), 'status' => translate('projects.' . $status)])) ?>
+                <?= e(t('projects.correcting_past_phase', ['phase' => t('projects.' . $phase), 'status' => t('projects.' . $status)])) ?>
             </div>
         <?php } elseif ($status == 'proposed' && $phase == 'approved') {
             if (!$status_perm) {
-                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . t('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
                 echo '</div>';
                 return;
             }
         ?>
-            <?= lang('projects.status_change') ?>:
-            <span class="badge signal"><?= lang('projects.proposed') ?></span>
+            <?= t('projects.status_change') ?>:
+            <span class="badge signal"><?= t('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
-            <span class="badge success"><?= lang('projects.approved') ?></span>
+            <span class="badge success"><?= t('projects.approved') ?></span>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
-                <?= lang('projects.after_saving_you_will_no_longer_be_able_to_change_the_status_or_update_the') ?>
+                <?= t('projects.after_saving_you_will_no_longer_be_able_to_change_the_status_or_update_the') ?>
             </p>
         <?php } else if ($status == 'proposed' && ($phase == 'rejected' || $phase == 'withdrawn')) {
             if (!$status_perm) {
-                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . t('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
                 echo '</div>';
                 return;
             }
         ?>
-            <?= lang('projects.status_change') ?>:
-            <span class="badge signal"><?= lang('projects.proposed') ?></span>
+            <?= t('projects.status_change') ?>:
+            <span class="badge signal"><?= t('projects.proposed') ?></span>
             <i class="ph ph-arrow-right"></i>
             <?php if ($phase == 'rejected') { ?>
-                <span class="badge danger"><?= lang('projects.rejected') ?></span>
+                <span class="badge danger"><?= t('projects.rejected') ?></span>
             <?php } else if ($phase == 'withdrawn') { ?>
-                <span class="badge muted"><?= lang('projects.withdrawn') ?></span>
+                <span class="badge muted"><?= t('projects.withdrawn') ?></span>
             <?php } ?>
             <p class="text-danger">
                 <i class="ph ph-warning"></i>
-                <?= lang('projects.after_saving_you_will_no_longer_be_able_to_change_the_status_or_update_the') ?>
+                <?= t('projects.after_saving_you_will_no_longer_be_able_to_change_the_status_or_update_the') ?>
             </p>
         <?php } else if (!$new_project && $status == $phase) {
             if (!$edit_perm) {
-                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . lang('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
+                echo '<p class="text-danger"><i class="ph ph-warning"></i>' . t('projects.you_do_not_have_permission_to_edit_this_project') . '</p>';
                 echo '</div>';
                 return;
             }
-            echo lang('projects.you_edit_the_following_status') . ': ';
+            echo t('projects.you_edit_the_following_status') . ': ';
             echo $Project->getStatus($status);
         } ?>
 
@@ -306,12 +306,12 @@ if ($is_subproject) {
 
             <?php if ($phase == 'withdrawn') { ?>
                 <div class="form-group">
-                    <label for="withdrawn_reason"><?= lang('projects.reason_for_withdrawal') ?></label>
+                    <label for="withdrawn_reason"><?= t('projects.reason_for_withdrawal') ?></label>
                     <textarea name="values[withdrawn_reason]" id="withdrawn_reason" class="form-control" rows="4"><?= e($form['withdrawn_reason'] ?? '') ?></textarea>
                 </div>
                 <p>
                     <i class="ph ph-warning text-danger"></i>
-                    <?= lang('projects.you_are_about_to_withdraw_this_project_proposal_this_means_that_it_will_no') ?>
+                    <?= t('projects.you_are_about_to_withdraw_this_project_proposal_this_means_that_it_will_no') ?>
                 </p>
             <?php } ?>
 
@@ -334,7 +334,7 @@ if ($is_subproject) {
             </div>
 
             <button class="btn secondary" type="button" id="submit-btn">
-                <i class="ph ph-check"></i> <?= lang('action.save') ?>
+                <i class="ph ph-check"></i> <?= t('action.save') ?>
             </button>
 
             <script>

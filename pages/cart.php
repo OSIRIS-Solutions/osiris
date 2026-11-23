@@ -21,16 +21,16 @@ $cart = readCart();
 <div class="container">
     <h1>
         <i class="ph-duotone ph-basket"></i>
-        <?= lang('documents.download_collection') ?>
+        <?= t('documents.download_collection') ?>
     </h1>
 
     <?php if (empty($cart)) { ?>
 
         <div class="alert info">
             <h4 class="title">
-                <?= lang('documents.your_collection_is_empty') ?>
+                <?= t('documents.your_collection_is_empty') ?>
             </h4>
-            <?= lang('documents.you_can_add_activities_to_your_collection_by_clicking_the_basket_icon_on_th') ?>
+            <?= t('documents.you_can_add_activities_to_your_collection_by_clicking_the_basket_icon_on_th') ?>
         </div>
 
     <?php
@@ -41,13 +41,13 @@ $cart = readCart();
 
     <a href="<?= ROOTPATH ?>/cart?empty=1" class="btn float-right">
         <i class="ph-duotone ph-trash text-danger"></i>
-        <?= lang('documents.empty_collection') ?>
+        <?= t('documents.empty_collection') ?>
     </a>
 
     <form action="<?= ROOTPATH ?>/download" method="post">
         <input type="hidden" name="cart" value="1">
         <p>
-            <?= lang('documents.the_following_activities_are_in_your_collection') ?>
+            <?= t('documents.the_following_activities_are_in_your_collection') ?>
         </p>
         <table class="table sm mb-20">
             <?php foreach ($cart as $id) {
@@ -79,21 +79,21 @@ $cart = readCart();
 
         <div class="form-group">
 
-            <?= lang('common.highlight') ?>
+            <?= t('common.highlight') ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-user" value="user" checked="checked">
-                <label for="highlight-user"><?= lang('common.me') ?></label>
+                <label for="highlight-user"><?= t('common.me') ?></label>
             </div>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-aoi" value="aoi">
-                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang('common.authors') ?></label>
+                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= t('common.authors') ?></label>
             </div>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-none" value="">
-                <label for="highlight-none"><?= lang('common.none_download') ?></label>
+                <label for="highlight-none"><?= t('common.none_download') ?></label>
             </div>
 
         </div>
@@ -101,7 +101,7 @@ $cart = readCart();
 
         <div class="form-group">
 
-            <?= lang('common.file_format') ?>
+            <?= t('common.file_format') ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="format" id="format-word" value="word" checked="checked">

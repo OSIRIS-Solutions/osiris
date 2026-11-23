@@ -44,6 +44,6 @@
                 ]
             ]
         );
-        echo json_encode(['success' => true, 'message' => lang('orcid.your_orcid_has_been_disconnected')]);
+        echo json_encode(['success' => true, 'message' => t('orcid.your_orcid_has_been_disconnected')]);
     });
 ?>

@@ -41,7 +41,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->persons->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('common.person');
+                $featuredCard['type_label'] = t('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = $entity['displayname'] ?? '';
                 if (!empty($entity['username'])) {
@@ -52,7 +52,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
         case 'activity':
             $entity = $DB->getActivity($featuredId);
             if ($entity) {
-                $featuredCard['type_label'] = lang('news.research_activity');
+                $featuredCard['type_label'] = t('news.research_activity');
                 $featuredCard['icon'] = 'ph-article';
                 $featuredCard['title'] = strip_tags($entity['rendered']['plain'] ?? $entity['title'] ?? '');
                 $featuredCard['url'] = ROOTPATH . '/activities/view/' . $featuredId;
@@ -63,7 +63,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->projects->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('common.project');
+                $featuredCard['type_label'] = t('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
                 $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . ($entity['name'] ?? '');
                 $featuredCard['subtitle'] = lang($entity['title'] ?? null, $entity['title_de'] ?? null);
@@ -75,7 +75,7 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
                 ? $osiris->conferences->findOne(['_id' => DB::to_ObjectID($featuredId)])
                 : null;
             if ($entity) {
-                $featuredCard['type_label'] = lang('common.event');
+                $featuredCard['type_label'] = t('common.event');
                 $featuredCard['icon'] = 'ph-calendar-blank';
                 $featuredCard['title'] = $entity['title'] ?? '';
                 $eventDetails = [];
@@ -243,19 +243,19 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('news.change_news_image') ?>
+                    <?= t('news.change_news_image') ?>
                 </h2>
 
                 <p>
-                    <?= lang('news.the_image_should_ideally_be_800_x_300_pixels_the_maximum_file_size_is_2_mb') ?>
+                    <?= t('news.the_image_should_ideally_be_800_x_300_pixels_the_maximum_file_size_is_2_mb') ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/crud/news/upload-picture/<?= $id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="<?= e(csrf_token('news')) ?>">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
-                        <label for="profile-input"><?= lang('news.select_new_image') ?></label>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>" accept="image/*" required>
+                        <label for="profile-input"><?= t('news.select_new_image') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
@@ -264,14 +264,14 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                toastError(<?= json_encode(t('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('action.upload') ?>
+                        <?= t('action.upload') ?>
                     </button>
                 </form>
 
@@ -281,7 +281,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('common.delete_current_picture') ?>
+                        <?= t('common.delete_current_picture') ?>
                     </button>
                 </form>
             </div>
@@ -298,25 +298,25 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if (NewsEditorial::canEdit($news, $Settings)) { ?>
             <a href="<?= ROOTPATH ?>/news/edit/<?= e($news['_id']) ?>" class="btn">
                 <i class="ph ph-pencil"></i>
-                <?= lang('action.edit') ?>
+                <?= t('action.edit') ?>
             </a>
             <a href="#change-picture" class="btn">
                 <i class="ph ph-image"></i>
-                <?= lang('news.change_image') ?>
+                <?= t('news.change_image') ?>
             </a>
         <?php } ?>
         <?php if ($authorPendingReview !== null) { ?>
-            <a class="btn primary" href="#author-review-<?= e($authorPendingReview['id']) ?>"><i class="ph ph-check-circle" aria-hidden="true"></i> <?= lang('news.review_contributions') ?></a>
+            <a class="btn primary" href="#author-review-<?= e($authorPendingReview['id']) ?>"><i class="ph ph-check-circle" aria-hidden="true"></i> <?= t('news.review_contributions') ?></a>
         <?php } ?>
         <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
-            <a class="btn" href="#news-editorial"><i class="ph ph-pencil-line" aria-hidden="true"></i> <?= lang('news.editorial_team') ?></a>
+            <a class="btn" href="#news-editorial"><i class="ph ph-pencil-line" aria-hidden="true"></i> <?= t('news.editorial_team') ?></a>
         <?php } ?>
         <?php if ($Settings->hasPermission('news.delete')) { ?>
-            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= lang('news.are_you_sure_you_want_to_delete_this_news_item') ?>');" class="d-inline ml-auto">
+            <form action="<?= ROOTPATH ?>/crud/news/delete" method="post" onsubmit="return confirm('<?= t('news.are_you_sure_you_want_to_delete_this_news_item') ?>');" class="d-inline ml-auto">
                 <input type="hidden" name="id" value="<?= e($news['_id']) ?>">
                 <button type="submit" class="btn text-danger">
                     <i class="ph ph-trash"></i>
-                    <?= lang('action.delete') ?>
+                    <?= t('action.delete') ?>
                 </button>
             </form>
         <?php } ?>
@@ -379,13 +379,13 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         $outletSelectionMode = 'view';
         include BASEPATH . '/pages/news/outlets.php';
         if (!empty($news['original_updated_at'])) { ?>
-            <p class="text-muted"><?= lang('news.original_last_updated') ?> <?= e(date('d.m.Y H:i', strtotime($news['original_updated_at']))) ?></p>
+            <p class="text-muted"><?= t('news.original_last_updated') ?> <?= e(date('d.m.Y H:i', strtotime($news['original_updated_at']))) ?></p>
         <?php }
     } ?>
 
     <h4>
         <i class="ph-duotone ph-link-simple"></i>
-        <?= lang('news.connected_information') ?>
+        <?= t('news.connected_information') ?>
     </h4>
     <div class="connections">
         <?php
@@ -432,14 +432,14 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         }
 
         if (empty($persons) && empty($projects) && empty($infrastructures) && empty($activities) && empty($events)) {
-            echo "<p>" . lang('news.no_connected_information_found') . "</p>";
+            echo "<p>" . t('news.no_connected_information_found') . "</p>";
         }
         ?>
 
         <?php if (!empty($persons)) : ?>
             <?php foreach ($persons as $person) { ?>
                 <div class="connection">
-                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= lang('common.people') ?></span>
+                    <span class="badge person-badge"><i class="ph ph-user"></i> <?= t('common.people') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/profile/<?= $person['_id']; ?>"> <?= $person['displayname']; ?> </a>
                     </h5>
@@ -451,7 +451,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if (!empty($projects)): ?>
             <?php foreach ($projects as $project): ?>
                 <div class="connection">
-                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= lang('common.project') ?></span>
+                    <span class="badge project-badge"><i class="ph ph-tree-structure"></i> <?= t('common.project') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/projects/view/<?= $project['_id']; ?>"> <?= localized($project['name'] ?? ''); ?> </a>
                     </h5>
@@ -467,7 +467,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if (!empty($infrastructures)): ?>
             <?php foreach ($infrastructures as $infrastructure): ?>
                 <div class="connection">
-                    <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= lang('common.infrastructure') ?></span>
+                    <span class="badge infrastructure-badge"><i class="ph ph-cube-transparent"></i> <?= t('common.infrastructure') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= e(localized($infrastructure['name'])); ?> </a>
                     </h5>
@@ -479,7 +479,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if (!empty($activities)) : ?>
             <?php foreach ($activities as $con) { ?>
                 <div class="connection">
-                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= lang('common.activity') ?></span>
+                    <span class="badge activity-badge"><?= $con['rendered']['icon'] ?> <?= t('common.activity') ?></span>
                     <p><?= $con['rendered']['web'] ?? '' ?></p>
                 </div>
             <?php } ?>
@@ -488,7 +488,7 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
         <?php if (!empty($events)) : ?>
             <?php foreach ($events as $event) { ?>
                 <div class="connection">
-                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= lang('common.event') ?></span>
+                    <span class="badge event-badge"><i class="ph ph-calendar-blank"></i> <?= t('common.event') ?></span>
                     <h5>
                         <a href="<?= ROOTPATH ?>/conferences/view/<?= $event['_id']; ?>"> <?= $event['title']; ?> </a>
                     </h5>
@@ -501,30 +501,30 @@ if (NewsEditorial::canEdit($news, $Settings)) { ?>
 
     <div class="metadata">
         <div>
-            <?= lang('news.published_on') ?>
+            <?= t('news.published_on') ?>
             <?= date('d.m.Y', strtotime($news['date'])) ?>
         </div>
         <?php if (isset($news['created_by'])) { ?>
             <div>
-                <?= lang('common.created_by_view') ?>
+                <?= t('common.created_by_view') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
-                <?= lang('common.on') ?>
+                <?= t('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['created'])) ?>
             </div>
         <?php } ?>
 
         <?php if (isset($news['updated_by'])) { ?>
             <div>
-                <?= lang('news.last_updated_by') ?>
+                <?= t('news.last_updated_by') ?>
                 <a href="<?= ROOTPATH ?>/profile/<?= e($news['updated_by']) ?>"><?= e($DB->getNameFromId($news['updated_by'])) ?></a>
-                <?= lang('common.on') ?>
+                <?= t('common.on') ?>
                 <?= date('d.m.Y', strtotime($news['updated'])) ?>
             </div>
         <?php } ?>
 
         <?php if (!NewsEditorial::workflowAvailable($Settings->getNewsOutlets(), $news)) { ?>
             <div>
-                <?= ($news['visibility'] ?? '') === 'public' ? lang('common.public') : lang('common.internal') ?>
+                <?= ($news['visibility'] ?? '') === 'public' ? t('common.public') : t('common.internal') ?>
             </div>
         <?php } ?>
 

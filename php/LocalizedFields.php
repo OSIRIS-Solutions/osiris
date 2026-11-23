@@ -79,7 +79,7 @@ function localizedField($form, string $name, string $label, array $options = [])
                     $isBaseLanguage = $language === $baseLanguage;
                     $tabLabel = lang('common.lang_' . $language);
                     if ($isBaseLanguage) {
-                        $tabLabel .= ' · ' . lang('common.default_language');
+                        $tabLabel .= ' · ' . t('common.default_language');
                     }
                     ?>
                     <button type="button"

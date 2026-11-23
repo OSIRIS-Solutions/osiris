@@ -28,9 +28,9 @@ $renderPersonRow = function ($index, $person = []) use ($withRoles, $personRoles
     <?php endif; ?>
     <td>
         <input type="hidden" name="values[persons][<?= e($index) ?>][aoi]" value="0">
-        <input type="checkbox" class="person-aoi" name="values[persons][<?= e($index) ?>][aoi]" value="1" <?= !empty($person['aoi']) ? 'checked' : '' ?> aria-label="<?= e(lang('common.affiliated')) ?>">
+        <input type="checkbox" class="person-aoi" name="values[persons][<?= e($index) ?>][aoi]" value="1" <?= !empty($person['aoi']) ? 'checked' : '' ?> aria-label="<?= e(t('common.affiliated')) ?>">
     </td>
-    <td><button type="button" class="btn text-danger remove-person" aria-label="<?= e(lang('action.delete')) ?>"><i class="ph ph-trash"></i></button></td>
+    <td><button type="button" class="btn text-danger remove-person" aria-label="<?= e(t('action.delete')) ?>"><i class="ph ph-trash"></i></button></td>
 </tr>
 <?php }; ?>
 <div class="data-module col-sm-<?= $width ?>" data-module="<?= e($module) ?>" id="<?= e($widgetId) ?>">
@@ -38,13 +38,13 @@ $renderPersonRow = function ($index, $person = []) use ($withRoles, $personRoles
     <input type="hidden" name="values[persons]" value="">
     <table class="table simple small">
         <thead><tr>
-            <th>Username</th><th><?= lang('common.name_last') ?></th><th><?= lang('common.name_first') ?></th>
-            <?php if ($withRoles): ?><th><?= lang('common.role') ?></th><?php endif; ?>
-            <th><?= lang('common.affiliated') ?></th><th></th>
+            <th>Username</th><th><?= t('common.name_last') ?></th><th><?= t('common.name_first') ?></th>
+            <?php if ($withRoles): ?><th><?= t('common.role') ?></th><?php endif; ?>
+            <th><?= t('common.affiliated') ?></th><th></th>
         </tr></thead>
         <tbody><?php foreach ($persons as $index => $person) $renderPersonRow($index, $person); ?></tbody>
     </table>
-    <button class="btn add-person" type="button"><i class="ph ph-plus"></i> <?= lang('activities.add_person') ?></button>
+    <button class="btn add-person" type="button"><i class="ph ph-plus"></i> <?= t('activities.add_person') ?></button>
     <?= $this->render_help($help) ?>
     <datalist id="<?= e($widgetId) ?>-users">
         <?php foreach ($this->userlist as $person): ?>

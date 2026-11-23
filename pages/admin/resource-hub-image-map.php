@@ -25,7 +25,7 @@ foreach ($cards as $rawCard) {
 
     $title = DB::doc2Arr($card['title'] ?? []);
     $displayTitle = lang($title['en'] ?? '', $title['de'] ?? null);
-    if (trim($displayTitle) === '') $displayTitle = lang('common.untitled_card');
+    if (trim($displayTitle) === '') $displayTitle = t('common.untitled_card');
 
     $placement = DB::doc2Arr($placements[$id] ?? []);
     $hasPlacement = isset($placement['x'], $placement['y'])
@@ -69,28 +69,28 @@ foreach ($cards as $rawCard) {
         <div>
             <h1 class="mb-5">
                 <i class="ph-duotone ph-map-pin"></i>
-                <?= lang('admin.arrange_image_map') ?>
+                <?= t('admin.arrange_image_map') ?>
             </h1>
             <p class="text-muted m-0">
-                <?= lang('admin.select_a_card_and_click_its_desired_position_on_the_image') ?>
+                <?= t('admin.select_a_card_and_click_its_desired_position_on_the_image') ?>
             </p>
         </div>
         <a href="<?= ROOTPATH ?>/admin/resource-hub#image-map-configuration" class="btn">
-            <i class="ph ph-arrow-left"></i> <?= lang('admin.back_to_settings') ?>
+            <i class="ph ph-arrow-left"></i> <?= t('admin.back_to_settings') ?>
         </a>
     </div>
 
     <?php if (!$hasBackgroundImage || empty($editorCards)) { ?>
         <div class="alert signal">
-            <div class="title"><?= lang('admin.image_map_is_not_ready_yet') ?></div>
-            <?= lang('admin.upload_a_background_image_and_create_at_least_one_card_before_arranging_the') ?>
+            <div class="title"><?= t('admin.image_map_is_not_ready_yet') ?></div>
+            <?= t('admin.upload_a_background_image_and_create_at_least_one_card_before_arranging_the') ?>
         </div>
     <?php } else { ?>
         <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image-map" method="post" id="image-map-editor-form">
             <div class="image-map-editor-layout">
                 <aside class="box padded m-0">
-                    <h2 class="title mt-0 mb-5"><?= lang('common.cards') ?></h2>
-                    <p class="text-muted mt-0 mb-15"><?= lang('admin.click_a_card_to_select_it') ?></p>
+                    <h2 class="title mt-0 mb-5"><?= t('common.cards') ?></h2>
+                    <p class="text-muted mt-0 mb-15"><?= t('admin.click_a_card_to_select_it') ?></p>
 
                     <div class="image-map-card-list" id="image-map-card-list">
                         <?php foreach ($editorCards as $card) { ?>
@@ -102,7 +102,7 @@ foreach ($cards as $rawCard) {
                                         <?php if ($card['x'] !== null) { ?>
                                             X: <?= number_format($card['x'], 2, '.', '') ?>% · Y: <?= number_format($card['y'], 2, '.', '') ?>%
                                         <?php } else { ?>
-                                            <?= lang('admin.not_positioned') ?>
+                                            <?= t('admin.not_positioned') ?>
                                         <?php } ?>
                                     </small>
                                 </span>
@@ -111,20 +111,20 @@ foreach ($cards as $rawCard) {
                     </div>
 
                     <button type="button" class="btn link danger mt-15 d-none" id="remove-image-map-placement">
-                        <i class="ph ph-x"></i> <?= lang('admin.remove_position') ?>
+                        <i class="ph ph-x"></i> <?= t('admin.remove_position') ?>
                     </button>
                 </aside>
 
                 <section>
                     <div class="alert primary image-map-help" id="image-map-help" aria-live="polite">
                         <i class="ph ph-cursor-click"></i>
-                        <span><?= lang('admin.select_a_card_on_the_left_to_begin') ?></span>
+                        <span><?= t('admin.select_a_card_on_the_left_to_begin') ?></span>
                     </div>
                     <div class="image-map-stage-shell">
                         <div class="image-map-stage" id="image-map-stage">
                             <img
                                 src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>"
-                                alt="<?= lang('common.image_map_background') ?>"
+                                alt="<?= t('common.image_map_background') ?>"
                                 draggable="false">
                         </div>
                     </div>
@@ -135,7 +135,7 @@ foreach ($cards as $rawCard) {
             <div class="image-map-actions">
                 <span class="text-muted" id="image-map-position-count"></span>
                 <button type="submit" class="btn success">
-                    <i class="ph ph-floppy-disk"></i> <?= lang('admin.save_positions') ?>
+                    <i class="ph ph-floppy-disk"></i> <?= t('admin.save_positions') ?>
                 </button>
             </div>
         </form>
@@ -147,10 +147,10 @@ foreach ($cards as $rawCard) {
     (function() {
         const cards = <?= json_encode($editorCards, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
         const labels = <?= json_encode([
-            'choosePosition' => lang('admin.now_click_the_desired_position_on_the_image'),
-            'notPositioned' => lang('admin.not_positioned'),
-            'positioned' => lang('admin.cards_positioned'),
-            'unsaved' => lang('admin.you_have_unsaved_changes_to_the_image_map'),
+            'choosePosition' => t('admin.now_click_the_desired_position_on_the_image'),
+            'notPositioned' => t('admin.not_positioned'),
+            'positioned' => t('admin.cards_positioned'),
+            'unsaved' => t('admin.you_have_unsaved_changes_to_the_image_map'),
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
         const stage = document.getElementById('image-map-stage');
         const form = document.getElementById('image-map-editor-form');

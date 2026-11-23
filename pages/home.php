@@ -2,29 +2,29 @@
 // say good morning or good afternoon or good evening depending on the time of day
 $hour = date('H');
 if ($hour < 10) {
-    $greeting = lang('dashboard.good_morning');
+    $greeting = t('dashboard.good_morning');
     $icon = 'sun-horizon';
 } elseif ($hour < 18) {
-    $greeting = lang('dashboard.good_afternoon');
+    $greeting = t('dashboard.good_afternoon');
     $icon = 'sun';
 } else {
-    $greeting = lang('dashboard.good_evening');
+    $greeting = t('dashboard.good_evening');
     $icon = 'moon';
 }
 // random welcome message
 $welcome_messages = [
-    lang('dashboard.welcome_back'),
-    lang('dashboard.good_to_see_you_again'),
-    lang('dashboard.here_is_an_overview_of_your_research_activities'),
-    lang('dashboard.let_s_see_what_s_new'),
-    lang('dashboard.your_dashboard_is_ready'),
-    lang('dashboard.everything_important_at_a_glance'),
-    lang('dashboard.here_is_what_s_happening_in_osiris'),
-    lang('dashboard.take_a_look_at_the_current_research_activities'),
-    lang('dashboard.stay_up_to_date_with_your_research_information'),
-    lang('dashboard.your_latest_updates_are_waiting_for_you'),
-    lang('dashboard.let_s_continue_where_you_left_off'),
-    lang('dashboard.welcome_to_your_research_dashboard'),
+    t('dashboard.welcome_back'),
+    t('dashboard.good_to_see_you_again'),
+    t('dashboard.here_is_an_overview_of_your_research_activities'),
+    t('dashboard.let_s_see_what_s_new'),
+    t('dashboard.your_dashboard_is_ready'),
+    t('dashboard.everything_important_at_a_glance'),
+    t('dashboard.here_is_what_s_happening_in_osiris'),
+    t('dashboard.take_a_look_at_the_current_research_activities'),
+    t('dashboard.stay_up_to_date_with_your_research_information'),
+    t('dashboard.your_latest_updates_are_waiting_for_you'),
+    t('dashboard.let_s_continue_where_you_left_off'),
+    t('dashboard.welcome_to_your_research_dashboard'),
 ];
 $welcome = $welcome_messages[array_rand($welcome_messages)];
 
@@ -399,13 +399,13 @@ $lastquarter = $Y . "Q" . $Q;
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a href="<?= ROOTPATH ?>/add-activity" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('dashboard.add_activity') ?>">
+            <a href="<?= ROOTPATH ?>/add-activity" class="btn primary outline" data-toggle="tooltip" data-title="<?= t('dashboard.add_activity') ?>">
                 <i class="ph-duotone ph-plus-circle ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('common.my_activities') ?>">
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= t('common.my_activities') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
             </a>
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.my_year') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('common.my_year') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
             </a>
         </div>
@@ -418,18 +418,18 @@ $lastquarter = $Y . "Q" . $Q;
             if ($googlescholar || $openalex || $orcid) { ?>
                 <div class="btn-group btn-group-lg">
                     <?php if ($orcid) { ?>
-                        <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('common.import_from_orcid') ?>">
+                        <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= t('common.import_from_orcid') ?>">
                             <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
                         </a>
                     <?php } ?>
                     <?php if ($openalex) { ?>
-                        <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.import_from_openalex') ?>">
+                        <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('common.import_from_openalex') ?>">
                             <i class="ph-duotone ph-globe-hemisphere-west ph-fw"></i>
                         </a>
                     <?php } ?>
                     <?php if ($googlescholar) { ?>
                         <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $USER['google_scholar'] ?>" method="get">
-                            <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('common.import_from_google_scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
+                            <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= t('common.import_from_google_scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
                                 <img src="<?= ROOTPATH ?>/img/google-scholar.svg" alt="Google Scholar" width="24" height="24">
                             </button>
                         </form>
@@ -460,11 +460,11 @@ $lastquarter = $Y . "Q" . $Q;
                         ?>
                         <button class="btn primary small" onclick="dismissAnnouncement()">
                             <i class="ph ph-x-circle"></i>
-                            <?= lang('dashboard.don_t_show_again') ?>
+                            <?= t('dashboard.don_t_show_again') ?>
                         </button>
                         <button class="btn outline small" onclick="dismissAnnouncementSession()">
                             <i class="ph ph-clock"></i>
-                            <?= lang('dashboard.remind_me_later') ?>
+                            <?= t('dashboard.remind_me_later') ?>
                         </button>
                     </div>
                     <script>
@@ -501,9 +501,9 @@ $lastquarter = $Y . "Q" . $Q;
 
 
             <?php if ($Settings->featureEnabled('events', false)) {
-                $title = lang('dashboard.upcoming_events');
+                $title = t('dashboard.upcoming_events');
                 if ($Settings->featureEnabled('deadlines', false)) {
-                    $title = lang('dashboard.upcoming_events_deadlines');
+                    $title = t('dashboard.upcoming_events_deadlines');
                 }
             ?>
                 <div class="box padded">
@@ -513,7 +513,7 @@ $lastquarter = $Y . "Q" . $Q;
                             <?= $title ?>
                         </h2>
                         <a href="<?= ROOTPATH ?>/conferences" class="link-sm">
-                            <?= lang('action.view_all') ?>
+                            <?= t('action.view_all') ?>
                         </a>
                     </div>
                     <div id="timeline"></div>
@@ -535,7 +535,7 @@ $lastquarter = $Y . "Q" . $Q;
                             d3.select(divSelector)
                                 .html(`
                                     <div class="timeline-empty">
-                                            <p>${<?= json_encode(lang('dashboard.there_are_no_events_in_the_next_6_months'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</p>
+                                            <p>${<?= json_encode(t('dashboard.there_are_no_events_in_the_next_6_months'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</p>
                                     </div>
                                 `);
                             return;
@@ -610,7 +610,7 @@ $lastquarter = $Y . "Q" . $Q;
                             .attr('text-anchor', 'middle')
                             .attr('fill', '#64748b')
                             .attr('font-size', 12)
-                            .text(<?= json_encode(lang('dashboard.today'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                            .text(<?= json_encode(t('dashboard.today'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
 
                         // Month labels
                         const monthFormat = d => {
@@ -790,10 +790,10 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="widget-header">
                                 <h2>
                                     <i class="ph-duotone ph-chart-pie"></i>
-                                    <?= lang('dashboard.last_quarter') ?>
+                                    <?= t('dashboard.last_quarter') ?>
                                 </h2>
                                 <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $Q ?>', y: '<?= $Y ?>'})">
-                                    <i class="ph ph-magnifying-glass-plus"></i> <?= lang('common.details') ?>
+                                    <i class="ph ph-magnifying-glass-plus"></i> <?= t('common.details') ?>
                                 </button>
                             </div>
                             <div class="progress">
@@ -801,7 +801,7 @@ $lastquarter = $Y . "Q" . $Q;
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-10 font-size-12">
                                 <span class="text-muted">
-                                    <?= lang('dashboard.n_approved_of_n_scientists_scientists_have_approved_their_activities', replace: ['n_approved' => $n_approved, 'n_scientists' => $n_scientists]) ?>
+                                    <?= t('dashboard.n_approved_of_n_scientists_scientists_have_approved_their_activities', replace: ['n_approved' => $n_approved, 'n_scientists' => $n_scientists]) ?>
                                 </span>
                                 <b class="badge success"><?= $lastquarter ?></b>
                             </div>
@@ -858,7 +858,7 @@ $lastquarter = $Y . "Q" . $Q;
                         <div class="widget-header">
                             <h2>
                                 <i class="ph-duotone ph-clipboard-text"></i>
-                                <?= lang('dashboard.my_tasks') ?>
+                                <?= t('dashboard.my_tasks') ?>
                             </h2>
                         </div>
                         <?php
@@ -873,7 +873,7 @@ $lastquarter = $Y . "Q" . $Q;
                                             <i class="ph ph-bell" aria-hidden="true"></i>
                                             <span class="index danger issue-counter"><?= $n_issues ?></span>
                                         </div>
-                                        <?= lang('dashboard.issues') ?>
+                                        <?= t('dashboard.issues') ?>
                                     </a>
                                 <?php } ?>
 
@@ -884,7 +884,7 @@ $lastquarter = $Y . "Q" . $Q;
                                         <div>
                                             <i class="ph ph-calendar-check" aria-hidden="true"></i>
                                         </div>
-                                        <?= lang('dashboard.quarterly_approval') ?>
+                                        <?= t('dashboard.quarterly_approval') ?>
                                     </a>
                                 <?php } ?>
 
@@ -896,7 +896,7 @@ $lastquarter = $Y . "Q" . $Q;
                                             <i class="ph ph-queue" aria-hidden="true"></i>
                                             <span class="index queue-counter"><?= $queue ?></span>
                                         </div>
-                                        <?= lang('dashboard.to_review') ?>
+                                        <?= t('dashboard.to_review') ?>
                                     </a>
                                 <?php } ?>
 
@@ -907,7 +907,7 @@ $lastquarter = $Y . "Q" . $Q;
                                             <i class="ph ph-highlighter" aria-hidden="true"></i>
                                             <span class="index review-counter">0</span>
                                         </div>
-                                        <?= lang('dashboard.reviews') ?>
+                                        <?= t('dashboard.reviews') ?>
                                     </a>
                                 <?php } ?>
 
@@ -919,7 +919,7 @@ $lastquarter = $Y . "Q" . $Q;
                                             <i class="ph ph-envelope" aria-hidden="true"></i>
                                             <span class="index info message-counter"><?= $n_messages ?></span>
                                         </div>
-                                        <?= lang('common.messages') ?>
+                                        <?= t('common.messages') ?>
                                     </a>
                                 <?php } ?>
 
@@ -929,7 +929,7 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="empty-state">
                                 <div class="text-center">
                                     <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-tasks.png" alt="" class="sophie-img">
-                                    <p><?= lang('common.here_is_currently_nothing_that_requires_your_attention_great_work') ?></p>
+                                    <p><?= t('common.here_is_currently_nothing_that_requires_your_attention_great_work') ?></p>
                                 </div>
                             </div>
                         <?php } ?>
@@ -940,25 +940,25 @@ $lastquarter = $Y . "Q" . $Q;
                         <div class="widget-header">
                             <h2>
                                 <i class="ph-duotone ph-link"></i>
-                                <?= lang('dashboard.quick_links') ?>
+                                <?= t('dashboard.quick_links') ?>
                             </h2>
                         </div>
                         <div class="notification-list">
                             <!-- Add Activities, projects and favorites here -->
                             <a href="<?= ROOTPATH ?>/add-activity">
                                 <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
-                                <?= lang('dashboard.add_activity') ?>
+                                <?= t('dashboard.add_activity') ?>
                             </a>
                             <?php if ($Settings->featureEnabled('projects') && $Settings->hasPermission('projects.add')) { ?>
                                 <?php if ($Settings->canProposalsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/proposals/new">
                                         <i class="ph ph-tree-structure"></i>
-                                        <?= lang('dashboard.add_project_proposal') ?>
+                                        <?= t('dashboard.add_project_proposal') ?>
                                     </a>
                                 <?php } else if ($Settings->canProjectsBeCreated()) { ?>
                                     <a href="<?= ROOTPATH ?>/projects/new">
                                         <i class="ph ph-tree-structure"></i>
-                                        <?= lang('dashboard.add_project') ?>
+                                        <?= t('dashboard.add_project') ?>
                                     </a>
                                 <?php } ?>
                             <?php }
@@ -973,7 +973,7 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="widget-header">
                                 <h2>
                                     <i class="ph-duotone ph-link-simple-horizontal"></i>
-                                    <?= lang('dashboard.useful_links') ?>
+                                    <?= t('dashboard.useful_links') ?>
                                 </h2>
                             </div>
                             <div class="notification-list">
@@ -999,10 +999,10 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="widget-header">
                                 <h2>
                                     <i class="ph-duotone ph-calendar-dots"></i>
-                                    <?= lang('common.events_home') ?>
+                                    <?= t('common.events_home') ?>
                                 </h2>
                                 <a href="<?= ROOTPATH ?>/conferences" class="link-sm">
-                                    <?= lang('action.view_all') ?>
+                                    <?= t('action.view_all') ?>
                                 </a>
                             </div>
 
@@ -1028,7 +1028,7 @@ $lastquarter = $Y . "Q" . $Q;
                                 <div class="empty-state">
                                     <div class="text-center">
                                         <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-events.png" alt="" class="sophie-img">
-                                        <p><?= lang('dashboard.currently_there_are_no_upcoming_events_check_back_later') ?></p>
+                                        <p><?= t('dashboard.currently_there_are_no_upcoming_events_check_back_later') ?></p>
                                     </div>
                                 </div>
                             <?php } else {
@@ -1043,12 +1043,12 @@ $lastquarter = $Y . "Q" . $Q;
                                     $participate = in_array($user, $participants);
 
                                     $interestTooltip = $interest
-                                        ? lang('dashboard.click_to_remove_interest')
-                                        : lang('dashboard.click_to_show_interest');
+                                        ? t('dashboard.click_to_remove_interest')
+                                        : t('dashboard.click_to_show_interest');
 
                                     $participateTooltip = $participate
-                                        ? lang('dashboard.click_to_remove_participation')
-                                        : lang('dashboard.click_to_show_participation');
+                                        ? t('dashboard.click_to_remove_participation')
+                                        : t('dashboard.click_to_show_participation');
                                 ?>
 
                                     <div class="conference-item <?= $n > 3 ? 'hidden' : '' ?>">
@@ -1063,14 +1063,14 @@ $lastquarter = $Y . "Q" . $Q;
                                             <div class="conference-actions">
                                                 <a href="<?= ROOTPATH ?>/conference/ics/<?= $c['_id'] ?>"
                                                     data-toggle="tooltip"
-                                                    data-title="<?= lang('common.add_to_calendar') ?>">
+                                                    data-title="<?= t('common.add_to_calendar') ?>">
                                                     <i class="ph ph-calendar-plus"></i>
                                                 </a>
 
                                                 <a class="text-danger"
                                                     onclick="conferenceToggle(this, '<?= $c['_id'] ?>', 'dismissed')"
                                                     data-toggle="tooltip"
-                                                    data-title="<?= lang('dashboard.dismiss') ?>">
+                                                    data-title="<?= t('dashboard.dismiss') ?>">
                                                     <i class="ph ph-x"></i>
                                                 </a>
                                             </div>
@@ -1104,7 +1104,7 @@ $lastquarter = $Y . "Q" . $Q;
                                                     data-title="<?= $interestTooltip ?>">
                                                     <i class="<?= $interest ? 'ph-duotone' : 'ph' ?> ph-star"></i>
                                                     <span class="conference-count"><?= count($interests) ?></span>
-                                                    <?= lang('dashboard.interested') ?>
+                                                    <?= t('dashboard.interested') ?>
                                                 </a>
 
                                                 <a class="conference-status <?= $participate ? 'active' : '' ?>"
@@ -1113,7 +1113,7 @@ $lastquarter = $Y . "Q" . $Q;
                                                     data-title="<?= $participateTooltip ?>">
                                                     <i class="<?= $participate ? 'ph-duotone' : 'ph' ?> ph-check-circle"></i>
                                                     <span class="conference-count"><?= count($participants) ?></span>
-                                                    <?= lang('dashboard.participants') ?>
+                                                    <?= t('dashboard.participants') ?>
                                                 </a>
 
                                             <?php } else { ?>
@@ -1121,7 +1121,7 @@ $lastquarter = $Y . "Q" . $Q;
                                                 <a class="conference-status primary"
                                                     href="<?= ROOTPATH ?>/add-activity?conference=<?= $c['_id'] ?>">
                                                     <i class="ph ph-plus-circle"></i>
-                                                    <?= lang('common.add_contribution') ?>
+                                                    <?= t('common.add_contribution') ?>
                                                 </a>
 
                                             <?php } ?>
@@ -1134,7 +1134,7 @@ $lastquarter = $Y . "Q" . $Q;
                                 <?php if ($n_events > 4) { ?>
                                     <div class="text-center mt-10">
                                         <a onclick="$('.conference-item.hidden').removeClass('hidden'); $(this).parent().remove();" class="font-size-12">
-                                            <?= lang('dashboard.view_all') ?> (<?= $n_events - 4 ?> <?=lang('dashboard.more')?>)
+                                            <?= t('dashboard.view_all') ?> (<?= $n_events - 4 ?> <?=t('dashboard.more')?>)
                                         </a>
                                     </div>
                                     <?php } ?>
@@ -1151,10 +1151,10 @@ $lastquarter = $Y . "Q" . $Q;
                                 <div class="widget-header">
                                     <h2>
                                         <i class="ph-duotone ph-flag"></i>
-                                        <?= lang('dashboard.upcoming_deadlines') ?>
+                                        <?= t('dashboard.upcoming_deadlines') ?>
                                     </h2>
                                     <a href="<?= ROOTPATH ?>/deadlines" class="link-sm">
-                                        <?= lang('action.view_all') ?>
+                                        <?= t('action.view_all') ?>
                                     </a>
                                 </div>
                                 <?php
@@ -1184,7 +1184,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     <div class="empty-state">
                                         <div class="text-center">
                                             <img src="<?= ROOTPATH ?>/img/sophie/sophie-no-deadlines.png" alt="" class="sophie-img">
-                                            <p><?= lang('dashboard.currently_there_are_no_upcoming_deadlines_check_back_later') ?></p>
+                                            <p><?= t('dashboard.currently_there_are_no_upcoming_deadlines_check_back_later') ?></p>
                                         </div>
                                     </div>
                                 <?php } else { 
@@ -1208,7 +1208,7 @@ $lastquarter = $Y . "Q" . $Q;
                                     <?php if ($n_deadlines > 6) { ?>
                                         <div class="text-center mt-10">
                                             <a onclick="$('.deadline.hidden').removeClass('hidden'); $(this).parent().remove();" class="font-size-12">
-                                                <?= lang('dashboard.view_all') ?> (<?= $n_deadlines - 6 ?> <?=lang('dashboard.more')?>)
+                                                <?= t('dashboard.view_all') ?> (<?= $n_deadlines - 6 ?> <?=t('dashboard.more')?>)
                                             </a>
                                         </div>
                                         <?php } ?>
@@ -1233,13 +1233,13 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="d-flex align-items-center">
                                 <div>
                                     <b>
-                                        <?= lang('common.you_can_now_approve_the_past_quarter') ?>
+                                        <?= t('common.you_can_now_approve_the_past_quarter') ?>
                                     </b>
                                     <p class="text-muted my-5 font-size-12">
-                                        <?= lang('common.to_complete_the_quarterly_review_please_confirm_that_all_activities_from_th') ?>
+                                        <?= t('common.to_complete_the_quarterly_review_please_confirm_that_all_activities_from_th') ?>
                                     </p>
                                     <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
-                                        <?= lang('common.review_approve') ?>
+                                        <?= t('common.review_approve') ?>
                                     </a>
                                 </div>
 
@@ -1254,10 +1254,10 @@ $lastquarter = $Y . "Q" . $Q;
                         <div class="widget-header">
                             <h2>
                                 <i class="ph-duotone ph-megaphone"></i>
-                                <?= lang('common.news') ?>
+                                <?= t('common.news') ?>
                             </h2>
                             <a href="<?= ROOTPATH ?>/news" class="link-sm">
-                                <?= lang('action.view_all') ?>
+                                <?= t('action.view_all') ?>
                             </a>
                         </div>
                         <?php foreach ($osiris->news->find(['date' => ['$lte' => date('Y-m-d')]], ['sort' => ['date' => -1], 'limit' => 4]) as $news) { ?>
@@ -1299,10 +1299,10 @@ $lastquarter = $Y . "Q" . $Q;
                         <div class="widget-header">
                             <h2>
                                 <i class="ph-duotone ph-user"></i>
-                                <?= lang('dashboard.new_colleagues') ?>
+                                <?= t('dashboard.new_colleagues') ?>
                             </h2>
                             <a href="<?= ROOTPATH ?>/user/browse" class="link-sm">
-                                <?= lang('action.view_all') ?>
+                                <?= t('action.view_all') ?>
                             </a>
                         </div>
                         <?php
@@ -1327,7 +1327,7 @@ $lastquarter = $Y . "Q" . $Q;
                                             <?= e(localized($colleague['position'])) ?>
                                             &#x2219;
                                         <?php } ?>
-                                        <?= lang('dashboard.added_home') . time_elapsed_string($colleague['created']) ?>
+                                        <?= t('dashboard.added_home') . time_elapsed_string($colleague['created']) ?>
                                     </div>
                                 </div>
                             </a>
@@ -1343,10 +1343,10 @@ $lastquarter = $Y . "Q" . $Q;
                             <div class="widget-header">
                                 <h2>
                                     <i class="ph-duotone ph-newspaper"></i>
-                                    <?= lang('dashboard.newest_publications') ?>
+                                    <?= t('dashboard.newest_publications') ?>
                                 </h2>
                                 <a href="<?= ROOTPATH ?>/activities#type=publication" class="link-sm">
-                                    <?= lang('action.view_all') ?>
+                                    <?= t('action.view_all') ?>
                                 </a>
                             </div>
                             <?php
@@ -1374,7 +1374,7 @@ $lastquarter = $Y . "Q" . $Q;
                                         }
                                     }
                                     if (count($authors) == 0) {
-                                        $authorStr = lang('dashboard.unknown_author');
+                                        $authorStr = t('dashboard.unknown_author');
                                     } elseif (count($authors) == 2) {
                                         $authorStr = implode(' and ', $authors);
                                     } else if (count($authors) > 2) {

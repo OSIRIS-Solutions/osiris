@@ -2,10 +2,10 @@
 require_once BASEPATH . '/php/DeadlineForms.php';
 
 $action = ROOTPATH . "/crud/deadlines/add";
-$btn = lang('deadlines.add_deadline');
+$btn = t('deadlines.add_deadline');
 if (!empty($form ?? []) && isset($form['_id'])) {
     $action = ROOTPATH . "/crud/deadlines/update/" . $form['_id'];
-    $btn = lang('deadlines.save_deadline');
+    $btn = t('deadlines.save_deadline');
 }
 ?>
 
@@ -16,11 +16,11 @@ if (!empty($form ?? []) && isset($form['_id'])) {
 
     <h1>
         <i class="ph-duotone ph-flag-pennant"></i>
-        <?= isset($form['_id']) ? lang('deadlines.edit_deadline') : lang('deadlines.add_deadline') ?>
+        <?= isset($form['_id']) ? t('deadlines.edit_deadline') : t('deadlines.add_deadline') ?>
     </h1>
 
     <p class="text-muted">
-        <?= lang('deadlines.the_deadline_will_be_shown_on_the_start_page_of_people_it_can_be_used_to_in') ?>
+        <?= t('deadlines.the_deadline_will_be_shown_on_the_start_page_of_people_it_can_be_used_to_in') ?>
     </p>
 
     <form action="<?= $action ?>" method="post" id="deadline-form">
@@ -30,7 +30,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
         </div>
 
         <div class="form-group">
-            <b class="floating-title"><?= lang('common.roles') ?></b><br>
+            <b class="floating-title"><?= t('common.roles') ?></b><br>
             <?php
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
@@ -47,7 +47,7 @@ if (!empty($form ?? []) && isset($form['_id'])) {
             }
             ?><br>
             <small class="text-muted">
-                <?= lang('deadlines.the_deadline_will_only_be_shown_to_users_with_the_selected_roles_if_no_role') ?>
+                <?= t('deadlines.the_deadline_will_only_be_shown_to_users_with_the_selected_roles_if_no_role') ?>
             </small>
         </div>
 

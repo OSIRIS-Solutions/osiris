@@ -36,13 +36,13 @@
     <div class="container w-800 mw-full" id="custom-footer">
         <h1>
             <i class="ph-duotone ph-scales"></i>
-            <?= lang('admin.footer_contents') ?>
+            <?= t('admin.footer_contents') ?>
         </h1>
         <p>
-            <?= lang('admin.you_can_add_custom_link_to_the_footer_of_your_osiris_installation_and_manag') ?>
+            <?= t('admin.you_can_add_custom_link_to_the_footer_of_your_osiris_installation_and_manag') ?>
         </p>
 
-        <h2><?= lang('admin.legal_notice') ?></h2>
+        <h2><?= t('admin.legal_notice') ?></h2>
         <?php
         $impress = $Settings->get('impress');
         if (empty($impress)) {
@@ -59,7 +59,7 @@
                 quillEditor('impress');
             </script>
         </div>
-        <h2><?= lang('admin.privacy_policy') ?></h2>
+        <h2><?= t('admin.privacy_policy') ?></h2>
         <?php
         $privacy = $Settings->get('privacy');
         if (empty($privacy)) {
@@ -76,9 +76,9 @@
             </script>
         </div>
 
-        <h3><?= lang('common.links') ?></h3>
+        <h3><?= t('common.links') ?></h3>
         <p>
-            <?= lang('admin.you_can_add_links_to_external_resources_that_are_relevant_for_your_users_th') ?>
+            <?= t('admin.you_can_add_links_to_external_resources_that_are_relevant_for_your_users_th') ?>
         </p>
 
         <?php
@@ -89,26 +89,26 @@
         <table class="table mb-20" id="footer-links-table">
             <thead>
                 <tr>
-                    <th><?= lang('admin.title_en') ?></th>
-                    <th><?= lang('admin.title_de') ?></th>
-                    <th><?= lang('admin.link_url_complete') ?></th>
-                    <th><?= lang('common.actions') ?></th>
+                    <th><?= t('admin.title_en') ?></th>
+                    <th><?= t('admin.title_de') ?></th>
+                    <th><?= t('admin.link_url_complete') ?></th>
+                    <th><?= t('common.actions') ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($links as $link): ?>
                     <tr>
                         <td>
-                            <input type="text" class="form-control" name="footer_links[name][]" value="<?= e($link['name'] ?? '') ?>" placeholder="<?= lang('admin.link_name_en') ?>">
+                            <input type="text" class="form-control" name="footer_links[name][]" value="<?= e($link['name'] ?? '') ?>" placeholder="<?= t('admin.link_name_en') ?>">
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= e($link['name_de'] ?? '') ?>" placeholder="<?= lang('admin.link_name_de') ?>">
+                            <input type="text" class="form-control" name="footer_links[name_de][]" value="<?= e($link['name_de'] ?? '') ?>" placeholder="<?= t('admin.link_name_de') ?>">
                         </td>
                         <td>
-                            <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= lang('admin.link_url_complete') ?>">
+                            <input type="url" class="form-control" name="footer_links[url][]" value="<?= e($link['url'] ?? '') ?>" placeholder="<?= t('admin.link_url_complete') ?>">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= t('action.delete') ?>"></i></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -116,7 +116,7 @@
             <tfoot>
                 <tr>
                     <td colspan="4">
-                        <button type="button" class="btn btn-primary" onclick="addLink()"><?= lang('admin.add_new_link') ?></button>
+                        <button type="button" class="btn btn-primary" onclick="addLink()"><?= t('admin.add_new_link') ?></button>
                     </td>
                 </tr>
             </tfoot>
@@ -127,10 +127,10 @@
                 const tbody = $('#footer-links-table tbody');
                 const newRow = `
                             <tr>
-                                <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= lang('admin.link_name_en') ?>"></td>
-                                <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= lang('admin.link_name_de') ?>"></td>
-                                <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= lang('admin.link_url_complete') ?>"></td>
-                                <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= lang('action.delete') ?>"></i></button></td>
+                                <td><input type="text" class="form-control" name="footer_links[name][]" placeholder="<?= t('admin.link_name_en') ?>"></td>
+                                <td><input type="text" class="form-control" name="footer_links[name_de][]" placeholder="<?= t('admin.link_name_de') ?>"></td>
+                                <td><input type="url" class="form-control" name="footer_links[url][]" placeholder="<?= t('admin.link_url_complete') ?>"></td>
+                                <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class="ph ph-trash" title="<?= t('action.delete') ?>"></i></button></td>
                             </tr>`;
                 tbody.append(newRow);
             }
@@ -139,7 +139,7 @@
         <div class="bottom-buttons">
             <button class="btn success large">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('action.save') ?>
+                <?= t('action.save') ?>
             </button>
         </div>
     </div>

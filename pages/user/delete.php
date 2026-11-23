@@ -19,27 +19,27 @@
 ?>
 
 <h1>
-    <?= lang('people.delete') ?>
+    <?= t('people.delete') ?>
     <?= $data['username'] ?>
 </h1>
 
 <div class="alert danger">
     <h5 class="title">
-        <?= lang('people.warning_destructive_action') ?>
+        <?= t('people.warning_destructive_action') ?>
     </h5>
-    <?= lang('people.you_are_about_to_delete_the_user_account') ?>
+    <?= t('people.you_are_about_to_delete_the_user_account') ?>
     <b><?= $data['username'] ?></b>
     <br>
-    <?= lang('people.all_data_of_this_account_will_be_deleted_including_all_associated_activitie') ?>
+    <?= t('people.all_data_of_this_account_will_be_deleted_including_all_associated_activitie') ?>
     <br>
-    <?= lang('people.please_note_that_activities_projects_etc_won_t_be_deleted_but_only_connecti') ?>
+    <?= t('people.please_note_that_activities_projects_etc_won_t_be_deleted_but_only_connecti') ?>
     <br>
-    <b class="text-danger"><?= lang('people.this_action_cannot_be_undone') ?></b>
+    <b class="text-danger"><?= t('people.this_action_cannot_be_undone') ?></b>
 </div>
 
 <form action="<?= ROOTPATH ?>/crud/users/delete/<?= $user ?>" method="post">
     <p class="text-danger">
-        <?= lang('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
+        <?= t('common.be_aware_that_all_personal_data_will_be_deleted_except_for_the_name_and_the') ?>
     </p>
 
     <table class="table">
@@ -71,7 +71,7 @@
                     <td class="text-danger">
                         <?php if ($delete) { ?>
                             <i class="ph ph-trash"></i>
-                            <?= lang('common.delete') ?>
+                            <?= t('common.delete') ?>
                         <?php } ?>
 
                     </td>
@@ -87,7 +87,7 @@
                     </td>
                     <td class="text-danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('common.delete') ?>
+                        <?= t('common.delete') ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -98,7 +98,7 @@
     </table>
 
     <p>
-        <?=lang('people.furthermore_the_connection_to_the_following_entities_will_be_removed')?>
+        <?=t('people.furthermore_the_connection_to_the_following_entities_will_be_removed')?>
     </p>
     
     <table class="table">
@@ -107,7 +107,7 @@
             $n = $osiris->activities->count(['rendered.users' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('common.activities') ?></th>
+                    <th><?= t('common.activities') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -116,7 +116,7 @@
             $n = $osiris->projects->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('common.projects') ?></th>
+                    <th><?= t('common.projects') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -125,7 +125,7 @@
             $n = $osiris->proposals->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('common.proposals') ?></th>
+                    <th><?= t('common.proposals') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -134,7 +134,7 @@
             $n = $osiris->infrastructures->count(['persons.user' => $user]);
             ?>
                 <tr>
-                    <th><?= lang('common.infrastructures') ?></th>
+                    <th><?= t('common.infrastructures') ?></th>
                     <td>
                         <?= $n ?>
                     </td>
@@ -145,7 +145,7 @@
 
     <button class="btn danger">
         <i class="ph ph-trash"></i>
-        <?= lang('action.delete') ?>
+        <?= t('action.delete') ?>
     </button>
 
 </form>

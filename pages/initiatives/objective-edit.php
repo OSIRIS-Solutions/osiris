@@ -16,8 +16,8 @@ $formAction = ROOTPATH . '/crud/initiatives/' . $parentId . '/objectives/' . ($e
 $backUrl = ROOTPATH . ($editing ? '/initiatives/objectives/view/' . $objective['_id'] : '/initiatives/view/' . $parentId . '#objectives');
 ?>
 <div class="container w-800 mw-full">
-    <div class="text-muted"><?= translate('common.initiative') ?>: <a href="<?= ROOTPATH ?>/initiatives/view/<?= e($parentId) ?>#objectives"><i class="ph ph-compass"></i> <?= e(Initiatives::text($initiative['name'])) ?></a></div>
-    <h1><i class="ph-duotone ph-target"></i> <?= $editing ? translate('action.edit') . ': ' . translate('initiatives.objective') : translate('initiatives.add_objective') ?></h1>
+    <div class="text-muted"><?= t('common.initiative') ?>: <a href="<?= ROOTPATH ?>/initiatives/view/<?= e($parentId) ?>#objectives"><i class="ph ph-compass"></i> <?= e(Initiatives::text($initiative['name'])) ?></a></div>
+    <h1><i class="ph-duotone ph-target"></i> <?= $editing ? t('action.edit') . ': ' . t('initiatives.objective') : t('initiatives.add_objective') ?></h1>
     <?php if ($editing): ?><h2 class="subtitle"><?= e(Initiatives::text($objective['name'])) ?></h2><?php endif; ?>
     <form action="<?= e($formAction) ?>" method="post" id="objective-form">
         <?php include BASEPATH . '/pages/initiatives/objective-form.php'; ?>
@@ -27,14 +27,14 @@ $backUrl = ROOTPATH . ($editing ? '/initiatives/objectives/view/' . $objective['
                 <input type="hidden" name="values[public]" value="false">
                 <div class="custom-checkbox">
                     <input type="checkbox" name="values[public]" id="initiative-portfolio-public" value="true" <?= filter_var($publicValue ?? false, FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' ?>>
-                    <label for="initiative-portfolio-public"><?= translate('initiatives.portfolio_visibility') ?></label>
+                    <label for="initiative-portfolio-public"><?= t('initiatives.portfolio_visibility') ?></label>
                 </div>
-                <small class="text-muted"><?= translate('initiatives.portfolio_visibility_hint') ?></small>
+                <small class="text-muted"><?= t('initiatives.portfolio_visibility_hint') ?></small>
             </div>
         <?php endif; ?>
         <div class="btn-toolbar mt-20">
-            <button class="btn success" type="submit"><i class="ph ph-floppy-disk"></i> <?= translate('action.save') ?></button>
-            <a class="btn" href="<?= e($backUrl) ?>"><?= translate('action.cancel') ?></a>
+            <button class="btn success" type="submit"><i class="ph ph-floppy-disk"></i> <?= t('action.save') ?></button>
+            <a class="btn" href="<?= e($backUrl) ?>"><?= t('action.cancel') ?></a>
         </div>
     </form>
     <?php if ($editing):

@@ -17,22 +17,22 @@
 
 
 $time_frame = '';
-$phrase = lang('common.in_the_reporting_year');
+$phrase = t('common.in_the_reporting_year');
 // today is the default reportyear
 if (isset($_GET['reportyear']) && !empty($_GET['reportyear'])) {
     $reportyear = intval($_GET['reportyear']);
-    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
+    $time_frame = t('common.reporting_year') . ': ' . $reportyear;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
 } elseif (isset($_GET['reportstart']) && !empty($_GET['reportstart']) && isset($_GET['reportend']) && !empty($_GET['reportend'])) {
     $reportstart = $_GET['reportstart'];
     $reportend = $_GET['reportend'];
-    $time_frame = lang('common.reporting_period') . ': ' . date('d.m.Y', strtotime($reportstart)) . ' - ' . date('d.m.Y', strtotime($reportend));
+    $time_frame = t('common.reporting_period') . ': ' . date('d.m.Y', strtotime($reportstart)) . ' - ' . date('d.m.Y', strtotime($reportend));
     $reportyear = date('Y', strtotime($reportstart));
-    $phrase = lang('common.in_the_reporting_period');
+    $phrase = t('common.in_the_reporting_period');
 } else {
     $reportyear = CURRENTYEAR;
-    $time_frame = lang('common.reporting_year') . ': ' . $reportyear;
+    $time_frame = t('common.reporting_year') . ': ' . $reportyear;
     $reportstart = $reportyear . '-01-01';
     $reportend = $reportyear . '-12-31';
 }
@@ -75,48 +75,48 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('common.statistics') ?>
+    <?= t('common.statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/activities">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('activities.back_to_activities') ?>
+        <?= t('activities.back_to_activities') ?>
     </a>
 </div>
 
 
 <div class="alert signal">
     <i class="ph ph-warning text-signal"></i>
-    <?= lang('activities.all_of_the_following_statistics_are_based_on_the_reporting_period') ?>
+    <?= t('activities.all_of_the_following_statistics_are_based_on_the_reporting_period') ?>
 
 
     <div class="row position-relative mt-10">
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('common.change_reporting_year') ?>:</h6>
+                <h6 class="m-0"><?= t('common.change_reporting_year') ?>:</h6>
                 <input type="number" name="reportyear" value="<?= $reportyear ?>" class="form-control w-auto d-inline-block" step="1" min="1900" max="<?= CURRENTYEAR + 2 ?>" />
-                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
+                <button class="btn signal filled" type="submit"><?= t('action.update') ?></button>
             </form>
         </div>
 
-        <div class="text-divider"><?= lang('common.or') ?></div>
+        <div class="text-divider"><?= t('common.or') ?></div>
 
         <div class="col-sm p-10">
 
             <form action="<?= ROOTPATH ?>/activities/statistics" method="get" class="d-flex align-items-baseline ml-20" style="grid-gap: 1rem;">
-                <h6 class="m-0"><?= lang('common.change_reporting_period') ?>:</h6>
+                <h6 class="m-0"><?= t('common.change_reporting_period') ?>:</h6>
                 <input type="date" name="reportstart" value="<?= $reportstart ?>" class="form-control w-auto d-inline-block" required />
                 <input type="date" name="reportend" value="<?= $reportend ?>" class="form-control w-auto d-inline-block" required />
-                <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
+                <button class="btn signal filled" type="submit"><?= t('action.update') ?></button>
             </form>
         </div>
     </div>
 </div>
 
 <p class="text-muted">
-    <?= lang('activities.only_affiliated_activities_are_counted_at_least_one_author_is_affiliated_wi') ?>
+    <?= t('activities.only_affiliated_activities_are_counted_at_least_one_author_is_affiliated_wi') ?>
 </p>
 
 <div class="row row-eq-spacing">
@@ -128,17 +128,17 @@ $all = $osiris->activities->count(['affiliated' => true]);
         </h2>
 
         <p class="lead">
-            <?= lang('activities.number_of_activities') ?> <?= $phrase ?>:
+            <?= t('activities.number_of_activities') ?> <?= $phrase ?>:
             <b class="badge signal"><?= count($activities) ?></b>
-            <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
+            <span class="text-muted">(<?= $all ?> <?= t('common.total') ?>)</span>
         </p>
 
 
         <h2 id="activities-by-type">
-            <?= lang('common.activities') ?> <?= $phrase ?>:
+            <?= t('common.activities') ?> <?= $phrase ?>:
         </h2>
         <p class="text-muted">
-            <?= lang('activities.only_activities_with_a_start_and_end_date_in_the_reporting_period_and_at_le') ?>
+            <?= t('activities.only_activities_with_a_start_and_end_date_in_the_reporting_period_and_at_le') ?>
         </p>
 
         <?php
@@ -164,9 +164,9 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-by-type-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.category') ?></th>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.count') ?></th>
+                    <th><?= t('common.category') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -180,7 +180,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('common.total') ?></th>
+                    <th colspan="2"><?= t('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -188,10 +188,10 @@ $all = $osiris->activities->count(['affiliated' => true]);
 
 
         <h3 id="activities-started-before">
-            <?= lang('activities.activities_that_have_started_before_the_time_frame') ?>
+            <?= t('activities.activities_that_have_started_before_the_time_frame') ?>
         </h3>
         <p class="text-muted">
-            <?= lang('activities.only_activities_that_have_started_before_the_reporting_period_but_were_stil') ?>
+            <?= t('activities.only_activities_that_have_started_before_the_reporting_period_but_were_stil') ?>
         </p>
         <?php
         $filter = [
@@ -222,9 +222,9 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="activities-started-before-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('activities.subtype_statistics') ?></th>
-                    <th><?= lang('common.count') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('activities.subtype_statistics') ?></th>
+                    <th><?= t('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -238,7 +238,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2"><?= lang('common.total') ?></th>
+                    <th colspan="2"><?= t('common.total') ?></th>
                     <th><?= count($activities) ?></th>
                 </tr>
             </tfoot>
@@ -250,11 +250,11 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <hr>
 
         <h2 id="statistics-on-publications">
-            <?= lang('activities.statistics_on_publications') ?>
+            <?= t('activities.statistics_on_publications') ?>
         </h2>
 
         <p class="text-muted">
-            <?= lang('activities.only_publications_with_a_start_and_end_date_in_the_reporting_period_and_at') ?>
+            <?= t('activities.only_publications_with_a_start_and_end_date_in_the_reporting_period_and_at') ?>
         </p>
 
         <?php
@@ -296,12 +296,12 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="publications-by-type-table">
             <thead>
                 <tr>
-                    <th><?= lang('activities.type_of_publication') ?></th>
-                    <th><?= lang('activities.count') ?></th>
-                    <th><?= lang('activities.count_of_affiliated') ?></th>
-                    <th><?= lang('activities.count_of_online') ?><sup>1</sup></th>
-                    <th><?= lang('activities.without_external') ?><sup>2</sup></th>
-                    <th><?= lang('activities.peer_reviewed_label') ?><sup>3</sup></th>
+                    <th><?= t('activities.type_of_publication') ?></th>
+                    <th><?= t('activities.count') ?></th>
+                    <th><?= t('activities.count_of_affiliated') ?></th>
+                    <th><?= t('activities.count_of_online') ?><sup>1</sup></th>
+                    <th><?= t('activities.without_external') ?><sup>2</sup></th>
+                    <th><?= t('activities.peer_reviewed_label') ?><sup>3</sup></th>
                 </tr>
             </thead>
             <tbody>
@@ -340,7 +340,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="1"><?= lang('common.total') ?></th>
+                    <th colspan="1"><?= t('common.total') ?></th>
                     <th><?= $counts['all'] ?></th>
                     <th><?= $counts['affiliated'] ?></th>
                     <th><?= $counts['epub'] ?></th>
@@ -352,13 +352,13 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <p class="text-muted mt-0">
             <sup>1</sup>Online = Online ahead of print
             <br>
-            <sup>2</sup><?= lang('activities.external_co_creators_are_persons_who_are_not_affiliated_with_the_reporting') ?>
+            <sup>2</sup><?= t('activities.external_co_creators_are_persons_who_are_not_affiliated_with_the_reporting') ?>
             <br>
-            <sup>3</sup><?= lang('activities.peer_reviewed_only_if_the_peer_reviewed_module_is_used') ?>
+            <sup>3</sup><?= t('activities.peer_reviewed_only_if_the_peer_reviewed_module_is_used') ?>
         </p>
 
         <h3 id="oa-publications">
-            <?= lang('activities.number_of_open_access_publications') ?>
+            <?= t('activities.number_of_open_access_publications') ?>
         </h3>
 
         <?php
@@ -387,8 +387,8 @@ $all = $osiris->activities->count(['affiliated' => true]);
         <table class="table w-auto" id="oa-publications-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.status') ?></th>
-                    <th><?= lang('common.count') ?></th>
+                    <th><?= t('common.status') ?></th>
+                    <th><?= t('common.count') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -434,7 +434,7 @@ $all = $osiris->activities->count(['affiliated' => true]);
             </tbody>
             <tfoot>
                 <tr>
-                    <th><?= lang('common.total') ?></th>
+                    <th><?= t('common.total') ?></th>
                     <th><?= $count_all ?></th>
                 </tr>
             </tfoot>
@@ -446,19 +446,19 @@ $all = $osiris->activities->count(['affiliated' => true]);
     <div class="col-lg-3 d-none d-lg-block">
         <nav class="on-this-page-nav">
             <div class="content">
-                <div href="#statistics" class="title"><?= lang('common.statistics') ?></div>
+                <div href="#statistics" class="title"><?= t('common.statistics') ?></div>
 
                 <a href="#activities-by-type">
-                    <?= lang('activities.activities_by_type') ?>
+                    <?= t('activities.activities_by_type') ?>
                 </a>
                 <a href="#activities-started-before">
-                    <?= lang('activities.activities_started_before') ?>
+                    <?= t('activities.activities_started_before') ?>
                 </a>
                 <a href="#statistics-on-publications">
-                    <?= lang('activities.statistics_on_publications') ?>
+                    <?= t('activities.statistics_on_publications') ?>
                 </a>
                 <a href="#oa-publications">
-                    <?= lang('activities.open_access_publications') ?>
+                    <?= t('activities.open_access_publications') ?>
                 </a>
             </div>
 
@@ -488,10 +488,10 @@ $all = $osiris->activities->count(['affiliated' => true]);
     }
 
     let tables = {
-        '#activities-by-type-table': <?= json_encode(lang('activities.activities_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
-        '#publications-by-type-table': <?= json_encode(lang('activities.publications_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
-        '#oa-publications-table': <?= json_encode(lang('activities.oa_publications'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
-        '#activities-started-before-table': <?= json_encode(lang('activities.activities_started_before'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>'
+        '#activities-by-type-table': <?= json_encode(t('activities.activities_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#publications-by-type-table': <?= json_encode(t('activities.publications_by_type'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#oa-publications-table': <?= json_encode(t('activities.oa_publications'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>',
+        '#activities-started-before-table': <?= json_encode(t('activities.activities_started_before'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ', <?= $time_frame ?>'
     };
 
     for (const [selector, name] of Object.entries(tables)) {

@@ -37,16 +37,16 @@ if (empty($fields)) {
     <?php if ($Settings->hasPermission('journals.edit')) { ?>
         <a href="<?= ROOTPATH ?>/journal/add" class="btn primary">
             <i class="ph ph-stack-plus"></i>
-            <?= lang('common.add_label', replace: ['label' => $label]) ?>
+            <?= t('common.add_label', replace: ['label' => $label]) ?>
         </a>
         <a href="<?= ROOTPATH ?>/journals/statistics" class="btn">
             <i class="ph ph-chart-line-up"></i>
-            <?= lang('common.statistics') ?>
+            <?= t('common.statistics') ?>
         </a>
         <?php if (!$Settings->featureEnabled('no-journal-metrics')) { ?>
             <a href="<?= ROOTPATH ?>/journal/metrics">
                 <i class="ph ph-ranking"></i>
-                <?= lang('common.check_metrics') ?>
+                <?= t('common.check_metrics') ?>
             </a>
         <?php } ?>
     <?php } ?>
@@ -60,7 +60,7 @@ if (empty($fields)) {
         <th>ISSN</th>
         <th>OA</th>
         <th><span data-toggle="tooltip" data-title="Latest <?= $Settings->impactLabel() ?> if available"><?= $Settings->impactLabel() ?></span></th>
-        <th><span data-toggle="tooltip" data-title="Publications, Reviews and Editorials"><?= lang('common.activities') ?></span></th>
+        <th><span data-toggle="tooltip" data-title="Publications, Reviews and Editorials"><?= t('common.activities') ?></span></th>
         <?php foreach ($fields as $f) {
             echo "<th>$f</th>";
         } ?>

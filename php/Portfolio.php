@@ -34,7 +34,7 @@ class Portfolio extends Settings
         // basepath for links depends on portfolio settings
         if ($this->preview) {
             $this->basepath = ROOTPATH . '/preview';
-            $this->lang = lang('common.this_language');
+            $this->lang = t('common.this_language');
         } else {
             $this->basepath = $this->get('portfolio_url', ROOTPATH . '/');
             if (substr($this->basepath, -1) === '/') {
@@ -316,73 +316,73 @@ class Portfolio extends Settings
         // Home
         if ($usecase === 'portfolio') {
             $items[] = [
-                'name' => lang('common.research'),
+                'name' => t('common.research'),
                 'path' => $base . '/',
             ];
         } else if ($usecase === 'portal') {
             $items[] = [
-                'name' => lang('portal.portal'),
+                'name' => t('portal.portal'),
                 'path' => $base . '/info',
             ];
         } else {
             switch ($type) {
                 case 'activity':
                     $breadcrumb = [
-                        ['name' => lang('common.activities'), 'path' => "/activities"],
+                        ['name' => t('common.activities'), 'path' => "/activities"],
                         ['name' => $name, 'path' => "/activities/view/$id"],
                     ];
                     break;
 
                 case 'person':
                     $breadcrumb = [
-                        ['name' => lang('portal.user'), 'path' => "/user/browse"],
+                        ['name' => t('portal.user'), 'path' => "/user/browse"],
                         ['name' => $name, 'path' => "/profile/$id"],
                     ];
                     break;
 
                 case 'project':
                     $breadcrumb = [
-                        ['name' => lang('common.projects'), 'path' => "/projects"],
+                        ['name' => t('common.projects'), 'path' => "/projects"],
                         ['name' => $name, 'path' => "/projects/view/$id"],
                     ];
                     break;
 
                 case 'unit':
                     $breadcrumb = [
-                        ['name' => lang('common.units'), 'path' => "/groups"],
+                        ['name' => t('common.units'), 'path' => "/groups"],
                         ['name' => $name, 'path' => "/groups/view/$id"],
                     ];
                     break;
                 case 'infrastructure':
                     $breadcrumb = [
-                        ['name' => lang('common.infrastructures'), 'path' => "/infrastructures"],
+                        ['name' => t('common.infrastructures'), 'path' => "/infrastructures"],
                         ['name' => $name, 'path' => "/infrastructures/view/$id"],
                     ];
                     break;
                 default:
                     break;
             }
-            $breadcrumb[] = ['name' => lang('common.preview')];
+            $breadcrumb[] = ['name' => t('common.preview')];
             return $breadcrumb;
         }
         // Type-specific
         switch ($type) {
             case 'activity':
                 if ($data['type'] == 'publication') {
-                    $items[] = ['name' => lang('portal.all_publications'), 'path' => $base . "/publications"];
+                    $items[] = ['name' => t('portal.all_publications'), 'path' => $base . "/publications"];
                 } else {
-                    $items[] = ['name' => lang('common.all_activities'), 'path' => $base . "/activities"];
+                    $items[] = ['name' => t('common.all_activities'), 'path' => $base . "/activities"];
                 }
                 $items[] = ['name' => $name, 'path' => $base . "/activities/view/$id"];
                 break;
 
             case 'person':
-                $items[] = ['name' => lang('portal.all_staff'), 'path' => $base . "/persons"];
+                $items[] = ['name' => t('portal.all_staff'), 'path' => $base . "/persons"];
                 $items[] = ['name' => $data['displayname'] ?? $name, 'path' => $base . "/person/$id"];
                 break;
 
             case 'project':
-                $items[] = ['name' => lang('portal.all_projects'), 'path' => $base . "/projects"];
+                $items[] = ['name' => t('portal.all_projects'), 'path' => $base . "/projects"];
                 $items[] = ['name' => $name, 'path' => $base . "/projects/view/$id"];
                 break;
 
@@ -392,7 +392,7 @@ class Portfolio extends Settings
                 break;
 
             case 'infrastructure':
-                $items[] = ['name' => lang('portal.all_infrastructures'), 'path' => $base . "/infrastructures"];
+                $items[] = ['name' => t('portal.all_infrastructures'), 'path' => $base . "/infrastructures"];
                 $items[] = ['name' => $name, 'path' => $base . "/infrastructure/$id"];
                 break;
 

@@ -14,7 +14,7 @@ class EventFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('common.id'),
+                'label' => t('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -24,7 +24,7 @@ class EventFields extends Fields
             [
                 "id" => "title",
                 "module_of" => ['general'],
-                "label" => lang('common.title'),
+                "label" => t('common.title'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -35,7 +35,7 @@ class EventFields extends Fields
             [
                 "id" => "title_full",
                 "module_of" => ['general'],
-                "label" => lang('events.full_title'),
+                "label" => t('events.full_title'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -46,7 +46,7 @@ class EventFields extends Fields
             [
                 "id" => "type",
                 "module_of" => ['general'],
-                "label" => lang('common.type'),
+                "label" => t('common.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -59,7 +59,7 @@ class EventFields extends Fields
             [
                 "id" => "description",
                 "module_of" => ['general'],
-                "label" => lang('common.description'),
+                "label" => t('common.description'),
                 'type' => 'string',
                 'usage' => [
                     'columns'
@@ -68,7 +68,7 @@ class EventFields extends Fields
             [
                 "id" => "start",
                 "module_of" => ['general'],
-                "label" => lang('common.start_date'),
+                "label" => t('common.start_date'),
                 'type' => 'date',
                 'usage' => [
                     'aggregate',
@@ -79,7 +79,7 @@ class EventFields extends Fields
             [
                 "id" => "end",
                 "module_of" => ['general'],
-                "label" => lang('common.end_date'),
+                "label" => t('common.end_date'),
                 'type' => 'date',
                 'usage' => [
                     'aggregate',
@@ -90,7 +90,7 @@ class EventFields extends Fields
             [
                 "id" => "location",
                 "module_of" => ['general'],
-                "label" => lang('common.location'),
+                "label" => t('common.location'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -101,7 +101,7 @@ class EventFields extends Fields
             [
                 "id" => "country",
                 "module_of" => ['general'],
-                "label" => lang('events.country_iso_code'),
+                "label" => t('events.country_iso_code'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -112,7 +112,7 @@ class EventFields extends Fields
             [
                 "id" => "url",
                 "module_of" => ['general'],
-                "label" => lang('common.url'),
+                "label" => t('common.url'),
                 'type' => 'string',
                 'usage' => [
                     'columns'
@@ -139,7 +139,7 @@ class EventFields extends Fields
                     'id' => $id,
                     'module_of' => ['general'],
                     'usage' => ['filter', 'columns', 'aggregate'],
-                    'label' => translate($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
+                    'label' => t($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
                     'type' => 'list',
                     'input' => 'select',
                     'operators' => ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null', 'exists', 'not_exists'],

@@ -22,9 +22,9 @@
     <table class="table simple">
         <thead>
             <tr>
-                <th><?= lang('common.entity') ?></th>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.link') ?></th>
+                <th><?= t('common.entity') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.link') ?></th>
                 <th></th>
             </tr>
         </thead>
@@ -55,7 +55,7 @@
             <tr id="last-row">
                 <td></td>
                 <td colspan="6">
-                    <button class="btn" type="button" onclick="addConnectRow()"><i class="ph ph-plus"></i> <?= lang('infrastructures.add_row') ?></button>
+                    <button class="btn" type="button" onclick="addConnectRow()"><i class="ph ph-plus"></i> <?= t('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>
@@ -70,7 +70,7 @@
     </datalist>
     <button class="btn secondary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('action.submit') ?>
+        <?= t('action.submit') ?>
     </button>
 </form>
 

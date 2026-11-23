@@ -87,13 +87,13 @@ $all = $osiris->activities->count(
 
 <h1>
     <i class="ph-duotone ph-chart-line-up"></i>
-    <?= lang('teaching.teaching_statistics') ?>
+    <?= t('teaching.teaching_statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/teaching">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('teaching.back_to_teaching_modules') ?>
+        <?= t('teaching.back_to_teaching_modules') ?>
     </a>
 </div>
 
@@ -101,17 +101,17 @@ $all = $osiris->activities->count(
 <!-- UI-Änderung -->
 <div class="alert signal">
     <i class="ph ph-warning text-signal"></i>
-    <?= lang('teaching.all_of_the_following_statistics_are_based_on_the_selected_semester') ?>
+    <?= t('teaching.all_of_the_following_statistics_are_based_on_the_selected_semester') ?>
 
 
     <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-        <h6 class="mb-0 mt-5"><?= lang('teaching.select_semester') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= t('teaching.select_semester') ?>:</h6>
         <select name="semester" class="form-control w-auto">
             <?php foreach ($semesters as $s): ?>
                 <option value="<?= $s ?>" <?= $s === $selectedSemester ? 'selected' : '' ?>><?= $s ?></option>
             <?php endforeach ?>
         </select>
-        <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
+        <button class="btn signal filled" type="submit"><?= t('action.update') ?></button>
     </form>
 </div>
 
@@ -121,28 +121,28 @@ $all = $osiris->activities->count(
 
 <div id="statistics">
     <p class="lead">
-        <?= lang('teaching.number_of_courses_in_the_selected_semester') ?>:
+        <?= t('teaching.number_of_courses_in_the_selected_semester') ?>:
         <b class="badge signal"><?= count($teaching) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= t('common.total') ?>)</span>
     </p>
 
 
     <h2>
         <i class="ph ph-table"></i>
-        <?= lang('common.teaching_modules') ?>
+        <?= t('common.teaching_modules') ?>
     </h2>
 
     <table class="table" id="teaching-modules-table">
         <thead>
             <tr>
                 <th>Modul</th>
-                <th><?= lang('common.affiliation') ?></th>
-                <th><?= lang('common.type_statistics') ?></th>
-                <th><?= lang('common.start_date') ?></th>
-                <th><?= lang('common.end_date') ?></th>
-                <th><?= lang('common.affiliated') ?></th>
-                <th><?= lang('teaching.sws_total') ?></th>
-                <th><?= lang('teaching.sws') ?> (<?= $Settings->get('affiliation') ?>)</th>
+                <th><?= t('common.affiliation') ?></th>
+                <th><?= t('common.type_statistics') ?></th>
+                <th><?= t('common.start_date') ?></th>
+                <th><?= t('common.end_date') ?></th>
+                <th><?= t('common.affiliated') ?></th>
+                <th><?= t('teaching.sws_total') ?></th>
+                <th><?= t('teaching.sws') ?> (<?= $Settings->get('affiliation') ?>)</th>
             </tr>
         </thead>
         <tbody>
@@ -212,7 +212,7 @@ $all = $osiris->activities->count(
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-end"><?= lang('common.total') ?>:</th>
+                <th colspan="6" class="text-end"><?= t('common.total') ?>:</th>
                 <th><?= $counts['total'] ?></th>
                 <th><?= $counts['affiliation'] ?></th>
             </tr>

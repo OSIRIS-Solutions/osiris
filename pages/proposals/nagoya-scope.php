@@ -100,7 +100,7 @@ $utilizationOptions = [
     }
 </style>
 
-<h1 class="mb-3"><?= lang('projects.nagoya_compliance_scope_analysis') ?></h1>
+<h1 class="mb-3"><?= t('projects.nagoya_compliance_scope_analysis') ?></h1>
 <h2 class="subtitle">
     <a href="<?= ROOTPATH ?>/proposals/view/<?= $id ?>">
         <i class="ph ph-arrow-left"></i>
@@ -109,7 +109,7 @@ $utilizationOptions = [
 </h2>
 
 <div class="mb-20">
-    <b><?= lang('common.current_status') ?>:</b><br>
+    <b><?= t('common.current_status') ?>:</b><br>
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
 </div>
 
@@ -117,10 +117,10 @@ $utilizationOptions = [
     <!-- thank you -->
     <div class="alert success">
         <div class="title">
-            <?= lang('projects.thank_you') ?>
+            <?= t('projects.thank_you') ?>
         </div>
         <strong>
-            <?= lang('projects.the_scope_information_has_been_submitted_for_abs_review_you_will_be_notifie') ?>
+            <?= t('projects.the_scope_information_has_been_submitted_for_abs_review_you_will_be_notifie') ?>
         </strong>
     </div>
 <?php } ?>
@@ -149,7 +149,7 @@ $utilizationOptions = [
             <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                 <h2>
                     <i class="ph-duotone ph-globe-stand"></i>
-                    <?= $DB->getCountry($country['code'], lang('common.field_name_language')) ?>
+                    <?= $DB->getCountry($country['code'], t('common.field_name_language')) ?>
                 </h2>
                 <small class="code badge primary"><?= e($cid) ?></small>
             </div>
@@ -158,7 +158,7 @@ $utilizationOptions = [
                     <p class="text-primary">
                         <i class="ph ph-chat-circle-text"></i>
                         <b>
-                            <?= lang('projects.abs_review_comment') ?>:
+                            <?= t('projects.abs_review_comment') ?>:
                         </b>
                         <q><?= nl2br(e($country['review']['comment'])) ?></q>
                     </p>
@@ -184,14 +184,14 @@ $utilizationOptions = [
                         <div class="scope-group" data-index="<?= $gi ?>">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="title" onclick="$(this).toggleClass('open').parent().next('.scope-group-fields').toggleClass('hidden');">
-                                    <?= lang('common.sample_collection') ?> <?= $gi + 1 ?>
+                                    <?= t('common.sample_collection') ?> <?= $gi + 1 ?>
                                 </h3>
                                 <?php if ($gi > 0): ?>
                                     <button type="button"
                                         class="btn small text-danger remove-scope-group"
                                         data-country="<?= e($cid) ?>">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('projects.remove_sample_collection') ?>
+                                        <?= t('projects.remove_sample_collection') ?>
                                     </button>
                                 <?php endif; ?>
                             </div>
@@ -199,14 +199,14 @@ $utilizationOptions = [
                                 <!-- Geographical scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('common.geographical_scope') ?>
+                                        <?= t('common.geographical_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'geo');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('projects.copy_from_above') ?>
+                                            <?= t('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang('projects.please_describe_regions_provinces_or_specific_locations_where_samples_were') ?>
+                                        <?= t('projects.please_describe_regions_provinces_or_specific_locations_where_samples_were') ?>
                                     </small>
                                     <textarea
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][geo]"
@@ -217,14 +217,14 @@ $utilizationOptions = [
                                 <!-- Temporal scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('common.temporal_scope') ?>
+                                        <?= t('common.temporal_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'temporal');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('projects.copy_from_above') ?>
+                                            <?= t('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang('projects.for_example_2018_2020_march_2023_multiple_field_trips_between_2019_and_2022') ?>
+                                        <?= t('projects.for_example_2018_2020_march_2023_multiple_field_trips_between_2019_and_2022') ?>
                                     </small>
                                     <div class="d-flex flex-wrap gap-10 align-items-end">
                                         <div class="mr-10">
@@ -243,7 +243,7 @@ $utilizationOptions = [
                                                     value="1" class="temporal_ongoing"
                                                     <?= !empty($g['temporal_ongoing']) ? 'checked' : '' ?>>
                                                 <span class="ml-5">
-                                                    <?= lang('projects.ongoing_still_collecting_samples') ?>
+                                                    <?= t('projects.ongoing_still_collecting_samples') ?>
                                                 </span>
                                             </label>
                                         </div>
@@ -253,14 +253,14 @@ $utilizationOptions = [
                                 <!-- Material scope -->
                                 <div class="form-group">
                                     <label class="font-weight-bold required">
-                                        <?= lang('common.material_scope') ?>
+                                        <?= t('common.material_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'material');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('projects.copy_from_above') ?>
+                                            <?= t('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang('projects.which_types_of_samples_are_concerned_please_select_one_or_more_options_if_s') ?>
+                                        <?= t('projects.which_types_of_samples_are_concerned_please_select_one_or_more_options_if_s') ?>
                                     </small>
                                     <select
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][material][]"
@@ -290,14 +290,14 @@ $utilizationOptions = [
                                 <!-- Utilization scope -->
                                 <div class="form-group mb-0">
                                     <label class="font-weight-bold required">
-                                        <?= lang('projects.utilization_scope') ?>
+                                        <?= t('projects.utilization_scope') ?>
                                         <div class="btn small hidden link float-right" onclick="copyFromAbove(this, '<?= e($cid) ?>', <?= $gi ?>, 'utilization');">
                                             <i class="ph ph-copy"></i>
-                                            <?= lang('projects.copy_from_above') ?>
+                                            <?= t('projects.copy_from_above') ?>
                                         </div>
                                     </label>
                                     <small class="d-block text-muted mb-5">
-                                        <?= lang('projects.how_will_the_genetic_resources_be_used_please_select_one_or_more_options_fo') ?>
+                                        <?= t('projects.how_will_the_genetic_resources_be_used_please_select_one_or_more_options_fo') ?>
                                     </small>
                                     <select
                                         name="scope[<?= e($cid) ?>][groups][<?= $gi ?>][utilization][]"
@@ -333,7 +333,7 @@ $utilizationOptions = [
                     class="btn primary add-scope-group"
                     data-country="<?= e($cid) ?>">
                     <i class="ph ph-plus"></i>
-                    <?= lang('projects.add_sample_collection') ?>
+                    <?= t('projects.add_sample_collection') ?>
                 </button>
 
                 <hr class="my-15">
@@ -341,10 +341,10 @@ $utilizationOptions = [
                 <!-- aTK (country-level) -->
                 <div class="form-group">
                     <label class="font-weight-bold">
-                        <?= lang('common.associated_traditional_knowledge_atk') ?>
+                        <?= t('common.associated_traditional_knowledge_atk') ?>
                     </label>
                     <small class="d-block text-muted mb-5">
-                        <?= lang('projects.associated_traditional_knowledge_atk_refers_to_knowledge_innovation_practic') ?>
+                        <?= t('projects.associated_traditional_knowledge_atk_refers_to_knowledge_innovation_practic') ?>
                     </small>
                     <div class="mb-5">
                         <label class="inline-flex align-items-center">
@@ -355,7 +355,7 @@ $utilizationOptions = [
                                 onchange="$('#atk_details_<?= e($cid) ?>').toggleClass('hidden', !this.checked);"
                                 <?= !empty($scope['atk_used']) ? 'checked' : '' ?>>
                             <span class="ml-5">
-                                <?= lang('projects.traditional_knowledge_is_involved_for_this_country') ?>
+                                <?= t('projects.traditional_knowledge_is_involved_for_this_country') ?>
                             </span>
                         </label>
                     </div>
@@ -364,14 +364,14 @@ $utilizationOptions = [
                         name="scope[<?= e($cid) ?>][atk_details]"
                         rows="2"
                         class="form-control <?= empty($scope['atk_used']) ? 'hidden' : '' ?>"
-                        placeholder="<?= lang('projects.please_describe_source_communities_or_agreements_if_applicable') ?>"><?= e($scope['atk_details'] ?? '') ?></textarea>
+                        placeholder="<?= t('projects.please_describe_source_communities_or_agreements_if_applicable') ?>"><?= e($scope['atk_details'] ?? '') ?></textarea>
                 </div>
 
                 <!-- Optional notes (country-level) -->
                 <div class="form-group">
-                    <label class="font-weight-bold"><?= lang('projects.additional_notes_optional') ?></label>
+                    <label class="font-weight-bold"><?= t('projects.additional_notes_optional') ?></label>
                     <small class="d-block text-muted mb-5">
-                        <?= lang('projects.please_indicate_any_other_relevant_information_on_abs_including_explanation') ?>
+                        <?= t('projects.please_indicate_any_other_relevant_information_on_abs_including_explanation') ?>
                     </small>
                     <textarea
                         name="scope[<?= e($cid) ?>][notes]"
@@ -386,12 +386,12 @@ $utilizationOptions = [
     <div class="mt-20">
         <button type="submit" name="action" value="save" class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
 
         <button type="submit" name="action" value="submit" class="btn success">
             <i class="ph ph-paper-plane-tilt"></i>
-            <?= lang('common.submit_scope_for_abs_review') ?>
+            <?= t('common.submit_scope_for_abs_review') ?>
         </button>
     </div>
 </form>
@@ -400,16 +400,16 @@ $utilizationOptions = [
 
     <hr class="my-20">
 
-    <h5><?= lang('projects.countries_without_abs') ?>:</h5>
+    <h5><?= t('projects.countries_without_abs') ?>:</h5>
     <?php foreach ($out_of_scope as $country): ?>
         <span class="badge bg-white border mr-5 mb-5">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= $DB->getCountry($country['code'], lang('common.field_name_language')) ?>
+            <?= $DB->getCountry($country['code'], t('common.field_name_language')) ?>
         </span>
     <?php endforeach; ?>
 
     <p class="text-muted font-size-12">
-        <?= lang('projects.countries_listed_here_have_been_marked_as_out_of_scope_for_abs_compliance_n') ?>
+        <?= t('projects.countries_listed_here_have_been_marked_as_out_of_scope_for_abs_compliance_n') ?>
     </p>
 
 <?php } ?>
@@ -489,7 +489,7 @@ $utilizationOptions = [
             $clone.find('.btn.small.hidden').removeClass('hidden');
             // Index hochzählen
             $clone.attr('data-index', next);
-            $clone.find('strong').first().text('<?= lang('projects.scope_block') ?> ' + (next + 1));
+            $clone.find('strong').first().text('<?= t('projects.scope_block') ?> ' + (next + 1));
 
             // alte Selectize-Controls entfernen
             $clone.find('.selectize-control').remove();
@@ -542,7 +542,7 @@ $utilizationOptions = [
             // Optional: neu durchnummerieren
             $wrap.find('.scope-group').each(function(idx) {
                 $(this).attr('data-index', idx);
-                $(this).find('strong').first().text('<?= lang('projects.scope_block') ?> ' + (idx + 1));
+                $(this).find('strong').first().text('<?= t('projects.scope_block') ?> ' + (idx + 1));
                 $(this).find('[name]').each(function() {
                     this.name = this.name.replace(/\[groups]\[\d+]/, '[groups][' + idx + ']');
                 });

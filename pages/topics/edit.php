@@ -52,9 +52,9 @@ $topicLabel = $Settings->topicLabel();
 <h3 class="title">
     <?php
     if (empty($form) || !isset($form['_id'])) {
-        echo lang('topics.new_topiclabel', replace: ['topicLabel' => $topicLabel]);
+        echo t('topics.new_topiclabel', replace: ['topicLabel' => $topicLabel]);
     } else {
-        echo lang('topics.edit_topiclabel', replace: ['topicLabel' => $topicLabel]);
+        echo t('topics.edit_topiclabel', replace: ['topicLabel' => $topicLabel]);
     }
     ?>
 </h3>
@@ -68,14 +68,14 @@ $topicLabel = $Settings->topicLabel();
                 <input type="text" id="id" class="form-control" name="values[id]" required value="<?= uniqid() ?>" placeholder="ID is a required field">
                 <label for="id" class="required">ID</label>
                 <small class="text-muted">
-                    <?= lang('common.it_it_recommended_to_choose_something_short_you_can_recognize') ?>
+                    <?= t('common.it_it_recommended_to_choose_something_short_you_can_recognize') ?>
                 </small>
             <?php } else { ?>
                 <p class="mt-0">
                     ID: <code class="code"><?= $form['id'] ?></code>
                 </p>
                 <small class="text-muted d-block">
-                    <?= lang('topics.id_cannot_be_changed') ?>
+                    <?= t('topics.id_cannot_be_changed') ?>
                 </small>
             <?php } ?>
         </div>
@@ -88,29 +88,29 @@ $topicLabel = $Settings->topicLabel();
         </div> -->
         <div class="col-md-6 floating-form">
             <input type="color" id="color" class="form-control" name="values[color]" value="<?= $form['color'] ?? '' ?>" placeholder="color">
-            <label for="color"><?= lang('common.color') ?></label>
+            <label for="color"><?= t('common.color') ?></label>
         </div>
     </div>
     <div class="row row-eq-spacing mb-0">
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
+                <legend class="d-flex"><?= t('common.english') ?> <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></legend>
                 <div class="form-group">
                     <label for="name" class="required">
-                        <?= lang('common.title') ?> (EN)
+                        <?= t('common.title') ?> (EN)
                     </label>
                     <input type="text" class="form-control large" name="values[name]" id="name" required value="<?= $form['name'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="subtitle">
-                        <?= lang('common.subtitle') ?> (EN)
+                        <?= t('common.subtitle') ?> (EN)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle]" id="subtitle" value="<?= $form['subtitle'] ?? ''  ?>">
                 </div>
 
                 <label for="description">
-                    <?= lang('common.description') ?>
+                    <?= t('common.description') ?>
                 </label>
                 <div class="form-group">
                     <div id="description-quill"><?= $form['description'] ?? '' ?></div>
@@ -123,24 +123,24 @@ $topicLabel = $Settings->topicLabel();
         </div>
         <div class="col-md-6">
             <fieldset>
-                <legend class="d-flex"><?= lang('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
+                <legend class="d-flex"><?= t('common.german') ?> <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></legend>
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('common.title') ?> (DE)
+                        <?= t('common.title') ?> (DE)
                     </label>
                     <input type="text" class="form-control large" name="values[name_de]" id="name_de" value="<?= $form['name_de'] ?? '' ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="name_de">
-                        <?= lang('common.subtitle') ?> (DE)
+                        <?= t('common.subtitle') ?> (DE)
                     </label>
                     <input type="text" class="form-control" name="values[subtitle_de]" id="subtitle_de" value="<?= $form['subtitle_de'] ?? '' ?>">
                 </div>
 
 
                 <label for="description_de">
-                    <?= lang('common.description') ?>
+                    <?= t('common.description') ?>
                 </label>
                 <div class="form-group">
                     <div id="description_de-quill"><?= $form['description_de'] ?? '' ?></div>
@@ -160,12 +160,12 @@ $topicLabel = $Settings->topicLabel();
         <div class="custom-switch">
             <input type="checkbox" id="inactive-check" <?= val('inactive') ? 'checked' : '' ?> name="values[inactive]" value="true">
             <label for="inactive-check">
-                <?= lang('topics.mark_as_inactive') ?>
+                <?= t('topics.mark_as_inactive') ?>
             </label>
         </div>
     </div>
 
-    <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
+    <button type="submit" class="btn secondary"><?= t('action.save') ?></button>
 </form>
 
 
@@ -174,16 +174,16 @@ $topicLabel = $Settings->topicLabel();
     <br>
     <div class="alert danger mt-20">
         <a onclick="$('#delete').slideToggle()">
-            <?= lang('action.delete') ?>
+            <?= t('action.delete') ?>
             <i class="ph ph-caret-down"></i>
         </a>
 
         <div id="delete" style="display: none;">
             <form action="<?= ROOTPATH ?>/crud/topics/delete/<?= $topic['_id'] ?>" method="post">
                 <p>
-                    <?= lang('topics.do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov', replace: ['topicLabel' => $topicLabel]) ?>
+                    <?= t('topics.do_you_really_want_to_delete_this_topiclabel_if_you_delete_it_will_be_remov', replace: ['topicLabel' => $topicLabel]) ?>
                 </p>
-                <button type="submit" class="btn danger"><?= lang('action.delete') ?></button>
+                <button type="submit" class="btn danger"><?= t('action.delete') ?></button>
             </form>
         </div>
     </div>

@@ -573,27 +573,27 @@ Route::get('/api/dashboard/author-role', function () {
     foreach ($data as $el) {
         switch ($el['x']) {
             case 'first':
-                $label = lang('common.first_author');
+                $label = t('common.first_author');
                 $color = '#006EB799';
                 break;
             case 'last':
-                $label = lang('common.last_author');
+                $label = t('common.last_author');
                 $color = '#004d8099';
                 break;
             case 'middle':
-                $label = lang('common.middle_author');
+                $label = t('common.middle_author');
                 $color = '#cce2f099';
                 break;
             case 'editor':
-                $label = lang('dashboard.editorship');
+                $label = t('dashboard.editorship');
                 $color = '#002c4999';
                 break;
             case 'corresponding':
-                $label = lang('dashboard.corresponding');
+                $label = t('dashboard.corresponding');
                 $color = '#4c99cc99';
                 break;
             case 'supervisor':
-                $label = lang('dashboard.supervisorship');
+                $label = t('dashboard.supervisorship');
                 $color = '#99336699';
                 break;
             default:
@@ -1333,10 +1333,10 @@ Route::get('/api/dashboard/activity-(contributors|authors|editors|supervisors|pe
     $colors = [];
     foreach ($depts as $key => $value) {
         if ($key == 'external' && $value > 0) {
-            $labels[] = lang('dashboard.external_partners');
+            $labels[] = t('dashboard.external_partners');
             $colors[] = '#ececec95';
         } elseif ($key == 'unknown' && $value > 0) {
-            $labels[] = lang('dashboard.unknown_unit');
+            $labels[] = t('dashboard.unknown_unit');
             $colors[] = '#cccccc95';
         } else {
             $group = $Groups->getGroup($key);
@@ -1869,12 +1869,12 @@ Route::get('/api/command-palette/search', function () {
                 if ($objective && !empty($record['code'])) $label = $record['code'] . ': ' . $label;
                 $items[] = [
                     'id' => ($objective ? 'objective:' : 'initiative:') . $id,
-                    'type' => lang('common.entity'), 'entity' => $objective ? 'objective' : 'initiative',
+                    'type' => t('common.entity'), 'entity' => $objective ? 'objective' : 'initiative',
                     'label' => $label, 'url' => '/initiatives/' . ($objective ? 'objectives/' : '') . 'view/' . $id,
                     'icon' => $objective ? 'target' : 'compass', 'priority' => (int) $record['_cp_score'],
                 ];
             }
-            if ($items) $groups[] = ['id' => $collection, 'label' => translate($objective ? 'initiatives.objectives' : 'common.initiatives'), 'items' => $items];
+            if ($items) $groups[] = ['id' => $collection, 'label' => t($objective ? 'initiatives.objectives' : 'common.initiatives'), 'items' => $items];
         }
     }
 
@@ -1918,9 +1918,9 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'central-document:' . $id,
-                'type' => lang('common.central_document'),
+                'type' => t('common.central_document'),
                 'entity' => 'central-document',
-                'label' => $label ?: lang('common.untitled_document'),
+                'label' => $label ?: t('common.untitled_document'),
                 'description' => implode(' · ', $meta),
                 'url' => '/documents/central?document=' . rawurlencode($id),
                 'icon' => getFileIcon($extension),
@@ -1931,7 +1931,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'central-documents',
-                'label' => lang('common.central_documents'),
+                'label' => t('common.central_documents'),
                 'items' => $items,
             ];
         }
@@ -2007,7 +2007,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'project:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'project',
                 'label' => $label,
                 'url' => '/projects/view/' . $id,
@@ -2019,7 +2019,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'projects',
-                'label' => lang('common.projects'),
+                'label' => t('common.projects'),
                 'items' => $items
             ];
         }
@@ -2095,7 +2095,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'proposal:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'proposal',
                 'label' => $label,
                 'url' => '/proposals/view/' . $id,
@@ -2107,7 +2107,7 @@ Route::get('/api/command-palette/search', function () {
         if (!empty($items)) {
             $groups[] = [
                 'id' => 'proposals',
-                'label' => lang('common.project_proposals'),
+                'label' => t('common.project_proposals'),
                 'items' => $items
             ];
         }
@@ -2160,7 +2160,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'person:' . $id,
-            'type' => lang('common.entity'),
+            'type' => t('common.entity'),
             'entity' => 'person',
             'label' => (string)($doc->displayname ?? $id),
             'url' => '/profile/' . $id,
@@ -2172,7 +2172,7 @@ Route::get('/api/command-palette/search', function () {
     if (!empty($items)) {
         $groups[] = [
             'id' => 'persons',
-            'label' => lang('common.people'),
+            'label' => t('common.people'),
             'items' => $items
         ];
     }
@@ -2229,7 +2229,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'infrastructure:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'infrastructure',
                 'label' => localized($doc->name ?? $id),
                 'url' => '/infrastructures/view/' . $id,
@@ -2241,7 +2241,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'infrastructures',
-                'label' => lang('common.infrastructures'),
+                'label' => t('common.infrastructures'),
                 'items' => $items
             ];
         }
@@ -2292,7 +2292,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'event:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'event',
                 'label' => $doc->title ?? $id,
                 'url' => '/conferences/view/' . $id,
@@ -2304,7 +2304,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'events',
-                'label' => lang('common.events'),
+                'label' => t('common.events'),
                 'items' => $items
             ];
         }
@@ -2352,7 +2352,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'deadline:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'deadline',
                 'label' => $doc->title ?? $id,
                 'url' => '/deadlines/view/' . $id,
@@ -2364,7 +2364,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'deadlines',
-                'label' => lang('dashboard.deadlines'),
+                'label' => t('dashboard.deadlines'),
                 'items' => $items
             ];
         }
@@ -2423,7 +2423,7 @@ Route::get('/api/command-palette/search', function () {
 
         $items[] = [
             'id' => 'unit:' . $mongoId,
-            'type' => lang('common.entity'),
+            'type' => t('common.entity'),
             'entity' => 'unit',
             'label' => $label,
             'url' => '/groups/view/' . $mongoId,
@@ -2435,7 +2435,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'units',
-            'label' => lang('common.units'),
+            'label' => t('common.units'),
             'items' => $items
         ];
     }
@@ -2482,7 +2482,7 @@ Route::get('/api/command-palette/search', function () {
         $id = (string)$doc->_id;
         $items[] = [
             'id' => 'org:' . $id,
-            'type' => lang('common.entity'),
+            'type' => t('common.entity'),
             'entity' => 'organization',
             'label' => (string)($doc->name ?? $id),
             'url' => '/organizations/view/' . $id,
@@ -2494,7 +2494,7 @@ Route::get('/api/command-palette/search', function () {
     if ($items) {
         $groups[] = [
             'id' => 'organizations',
-            'label' => lang('common.organizations'),
+            'label' => t('common.organizations'),
             'items' => $items
         ];
     }
@@ -2549,7 +2549,7 @@ Route::get('/api/command-palette/search', function () {
 
             $items[] = [
                 'id' => 'journal:' . $id,
-                'type' => lang('common.entity'),
+                'type' => t('common.entity'),
                 'entity' => 'journal',
                 'label' => $doc->journal ?? $id,
                 'url' => '/journal/view/' . $id,
@@ -2561,7 +2561,7 @@ Route::get('/api/command-palette/search', function () {
         if ($items) {
             $groups[] = [
                 'id' => 'journals',
-                'label' => lang('dashboard.journals'),
+                'label' => t('dashboard.journals'),
                 'items' => $items
             ];
         }

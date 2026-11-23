@@ -20,11 +20,11 @@ if (!$Settings->featureEnabled('projects')) {
 ?>
     <div class="alert danger">
         <h3 class="title">
-            <?= lang('search.the_collaborator_map_is_not_available') ?>
+            <?= t('search.the_collaborator_map_is_not_available') ?>
         </h3>
 
         <p>
-            <?= lang('search.the_collaborator_map_is_based_on_project_collaborations_and_thus_requires_t') ?>
+            <?= t('search.the_collaborator_map_is_based_on_project_collaborations_and_thus_requires_t') ?>
         </p>
     </div>
 <?php
@@ -83,7 +83,7 @@ if (empty($lat) || empty($lng)) {
 
     <h1>
         <i class="ph-duotone ph-map-pin"></i>
-        <?= lang('search.project_map') ?>
+        <?= t('search.project_map') ?>
     </h1>
 
     <div class="row row-eq-spacing">
@@ -96,7 +96,7 @@ if (empty($lat) || empty($lng)) {
             <?= $Project->widgetSmall() ?>
 
             <h2>
-                <?= lang('common.collaborators') ?>
+                <?= t('common.collaborators') ?>
             </h2>
 
             <table class="table">
@@ -106,7 +106,7 @@ if (empty($lat) || empty($lng)) {
                     ?>
                         <tr>
                             <td>
-                                <?= lang('common.no_collaborators_connected') ?>
+                                <?= t('common.no_collaborators_connected') ?>
                             </td>
                         </tr>
                     <?php
@@ -189,12 +189,12 @@ if (empty($lat) || empty($lng)) {
     <div class="btn-toolbar float-right">
         <a href="<?= ROOTPATH ?>/projects" class="btn secondary">
             <i class="ph ph-tree-structure"></i>
-            <?= lang('search.go_to_all_projects') ?>
+            <?= t('search.go_to_all_projects') ?>
         </a>
     </div>
     <h1>
         <i class="ph-duotone ph-map-pin"></i>
-        <?= lang('search.collaboration_map') ?>
+        <?= t('search.collaboration_map') ?>
     </h1>
 
     <div id="map" class=""></div>
@@ -224,7 +224,7 @@ if (empty($lat) || empty($lng)) {
                     data.marker.color.push(item.color ?? 'rgba(0, 128, 131, 0.7)')
                     data.lon.push(item.data.lng)
                     data.lat.push(item.data.lat)
-                    data.text.push(`<b>${item.data.name}</b><br>${item.data.location}<br>${item.count} <?= lang('common.projects') ?>`)
+                    data.text.push(`<b>${item.data.name}</b><br>${item.data.location}<br>${item.count} <?= t('common.projects') ?>`)
 
                 });
                 console.log(data);

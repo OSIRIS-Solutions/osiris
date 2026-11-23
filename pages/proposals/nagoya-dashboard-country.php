@@ -11,34 +11,34 @@ $projectCount = count($projectsForCountry);
 
 <h1 class="mb-3">
     <i class="ph-duotone ph-globe-stand"></i>
-    <?= lang('projects.abs_overview_for') ?>
+    <?= t('projects.abs_overview_for') ?>
     <?= e($countryName) ?>
     <span class="text-muted font-size-14">(<?= e($code) ?>)</span>
 </h1>
 
-<a href="<?= ROOTPATH ?>/nagoya"><i class="ph ph-arrow-left"></i> <?= lang('projects.back_to_dashboard') ?></a>
+<a href="<?= ROOTPATH ?>/nagoya"><i class="ph ph-arrow-left"></i> <?= t('projects.back_to_dashboard') ?></a>
 
 <p class="text-muted mb-0">
-    <?= lang('projects.this_page_lists_all_nagoya_abs_relevant_projects_for_this_country_including') ?>
+    <?= t('projects.this_page_lists_all_nagoya_abs_relevant_projects_for_this_country_including') ?>
 </p>
 <div class="row row-eq-spacing dashboard mt-0">
     <div class="col-md-4">
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-clipboard-text"></i>
-                <?= lang('common.projects') ?>
+                <?= t('common.projects') ?>
             </h3>
             <p class="mb-5">
                 <span class="badge"><?= $projectCount ?></span>
                 <span class="text-muted font-size-12">
-                    <?= lang('projects.projects_with_this_country_in_nagoya_scope') ?>
+                    <?= t('projects.projects_with_this_country_in_nagoya_scope') ?>
                 </span>
             </p>
             <p class="font-size-12 text-muted mb-0">
                 <?php if ($projectCount === 0): ?>
-                    <?= lang('projects.no_projects_found_for_this_country') ?>
+                    <?= t('projects.no_projects_found_for_this_country') ?>
                 <?php else: ?>
-                    <?= lang('projects.click_on_a_project_name_to_open_the_nagoya_details') ?>
+                    <?= t('projects.click_on_a_project_name_to_open_the_nagoya_details') ?>
                 <?php endif; ?>
             </p>
         </div>
@@ -48,10 +48,10 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-squares-four"></i>
-                <?= lang('projects.a_b_c_labels') ?>
+                <?= t('projects.a_b_c_labels') ?>
             </h3>
             <p class="font-size-12 text-muted mb-10">
-                <?= lang('projects.current_abs_classification_for_projects_in_this_country') ?>
+                <?= t('projects.current_abs_classification_for_projects_in_this_country') ?>
             </p>
             <div class="d-flex flex-wrap gap-10 flex-column text-center font-size-16">
                 <span class="badge danger"><b>A:</b> <?= (int)$labelCounts['A'] ?></span>
@@ -65,33 +65,33 @@ $projectCount = count($projectsForCountry);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-file-text"></i>
-                <?= lang('projects.permits_summary') ?>
+                <?= t('projects.permits_summary') ?>
             </h3>
             <p class="font-size-12 text-muted mb-10">
-                <?= lang('projects.overview_of_all_permits_linked_to_projects_in_this_country') ?>
+                <?= t('projects.overview_of_all_permits_linked_to_projects_in_this_country') ?>
             </p>
             <ul class="list-unstyled font-size-12 mb-5">
                 <li>
                     <span class="badge"><?= (int)$permitStats['total'] ?></span>
-                    <?= lang('projects.permits_in_total') ?>
+                    <?= t('projects.permits_in_total') ?>
                 </li>
                 <li>
                     <span class="badge warning"><?= (int)$permitStats['needed'] + (int)$permitStats['requested'] ?></span>
-                    <?= lang('projects.permits_needed_requested') ?>
+                    <?= t('projects.permits_needed_requested') ?>
                 </li>
                 <li>
                     <span class="badge success"><?= (int)$permitStats['granted'] ?></span>
-                    <?= lang('projects.granted_permits') ?>
+                    <?= t('projects.granted_permits') ?>
                 </li>
                 <li>
                     <span class="badge muted"><?= (int)$permitStats['notApplicable'] ?></span>
-                    <?= lang('projects.marked_as_not_applicable') ?>
+                    <?= t('projects.marked_as_not_applicable') ?>
                 </li>
             </ul>
             <p class="font-size-12 text-muted mb-0">
                 <i class="ph ph-paperclip"></i>
                 <?= (int)$permitStats['docs'] ?>
-                <?= lang('projects.documents_uploaded_for_permits') ?>
+                <?= t('projects.documents_uploaded_for_permits') ?>
             </p>
         </div>
     </div>
@@ -104,20 +104,20 @@ $projectCount = count($projectsForCountry);
     <div class="col-md-7">
         <h2 class="title mb-10">
             <i class="ph-duotone ph-clipboard-text"></i>
-            <?= lang('projects.projects_with_abs_relevance_in_this_country') ?>
+            <?= t('projects.projects_with_abs_relevance_in_this_country') ?>
         </h2>
         <?php if (!$projectCount): ?>
             <div class="box padded text-muted">
-                <?= lang('projects.no_projects_found') ?>
+                <?= t('projects.no_projects_found') ?>
             </div>
         <?php else: ?>
                 <table class="table" id="nagoya-projects-overview-table">
                     <thead>
                         <tr>
-                            <th><?= lang('common.project') ?></th>
-                            <th><?= lang('common.label_nagoya_dashboard_country') ?></th>
-                            <th><?= lang('common.nagoya_status') ?></th>
-                            <th><?= lang('common.permits') ?></th>
+                            <th><?= t('common.project') ?></th>
+                            <th><?= t('common.label_nagoya_dashboard_country') ?></th>
+                            <th><?= t('common.nagoya_status') ?></th>
+                            <th><?= t('common.permits') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -168,12 +168,12 @@ $projectCount = count($projectsForCountry);
                                         <span class="badge <?= $permOpen ? 'signal' : 'success' ?>">
                                             <?= $permTotal ?>
                                             <?php if ($permOpen): ?>
-                                                (<?= $permOpen ?> <?= lang('common.open') ?>)
+                                                (<?= $permOpen ?> <?= t('common.open') ?>)
                                             <?php endif; ?>
                                         </span>
                                         <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $idStr ?>/<?= urlencode($c['id'] ?? '') ?>" class="small">
                                             <i class="ph ph-arrow-up-right"></i>
-                                            <?= lang('common.details') ?>
+                                            <?= t('common.details') ?>
                                         </a>
                                     <?php else: ?>
                                         <span class="text-muted">–</span>
@@ -190,21 +190,21 @@ $projectCount = count($projectsForCountry);
     <div class="col-md-5">
         <h2 class="title mb-10">
             <i class="ph-duotone ph-file-text"></i>
-            <?= lang('projects.all_permits_for_this_country') ?>
+            <?= t('projects.all_permits_for_this_country') ?>
         </h2>
         <?php if (empty($projectsForCountry) || $permitStats['total'] === 0): ?>
             <div class="box padded text-muted">
-                <?= lang('projects.no_permits_recorded_for_this_country_yet_nagoya_dashboard_country') ?>
+                <?= t('projects.no_permits_recorded_for_this_country_yet_nagoya_dashboard_country') ?>
             </div>
         <?php else: ?>
             <table class="table table-sm font-size-12" id="nagoya-permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('common.project') ?></th>
-                        <th><?= lang('common.permit') ?></th>
-                        <th><?= lang('common.status') ?></th>
-                        <th><?= lang('common.docs') ?></th>
-                        <th><?= lang('common.abs_check') ?></th>
+                        <th><?= t('common.project') ?></th>
+                        <th><?= t('common.permit') ?></th>
+                        <th><?= t('common.status') ?></th>
+                        <th><?= t('common.docs') ?></th>
+                        <th><?= t('common.abs_check') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -223,19 +223,19 @@ $projectCount = count($projectsForCountry);
 
                             // small status badge
                             if ($status === 'needed') {
-                                $statusLabel = lang('common.needed');
+                                $statusLabel = t('common.needed');
                                 $statusClass = 'badge tiny warning';
                             } elseif ($status === 'requested') {
-                                $statusLabel = lang('common.requested');
+                                $statusLabel = t('common.requested');
                                 $statusClass = 'badge tiny signal';
                             } elseif ($status === 'granted') {
-                                $statusLabel = lang('common.granted');
+                                $statusLabel = t('common.granted');
                                 $statusClass = 'badge tiny success';
                             } elseif ($status === 'not-applicable') {
-                                $statusLabel = lang('common.not_applicable');
+                                $statusLabel = t('common.not_applicable');
                                 $statusClass = 'badge tiny muted';
                             } else {
-                                $statusLabel = lang('common.unknown');
+                                $statusLabel = t('common.unknown');
                                 $statusClass = 'badge tiny muted';
                             }
                     ?>
@@ -245,7 +245,7 @@ $projectCount = count($projectsForCountry);
                                         <?= e(localized($p['name'] ?? '')) ?>
                                     </a>
                                 </td>
-                                <td><?= e($name ?: lang('projects.unnamed')) ?></td>
+                                <td><?= e($name ?: t('projects.unnamed')) ?></td>
                                 <td><span class="<?= $statusClass ?>"><?= $statusLabel ?></span></td>
                                 <td>
                                     <?php if ($docCount > 0): ?>
@@ -261,12 +261,12 @@ $projectCount = count($projectsForCountry);
                                         <?php if ($checked): ?>
                                             <span class="badge tiny success">
                                                 <i class="ph ph-check"></i>
-                                                <?= lang('common.validated') ?>
+                                                <?= t('common.validated') ?>
                                             </span>
                                         <?php else: ?>
                                             <span class="badge tiny warning">
                                                 <i class="ph ph-warning"></i>
-                                                <?= lang('common.needs_check') ?>
+                                                <?= t('common.needs_check') ?>
                                             </span>
                                         <?php endif; ?>
                                     <?php else: ?>

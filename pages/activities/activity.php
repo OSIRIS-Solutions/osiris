@@ -75,13 +75,13 @@ if ($edit_perm) {
         <?php if ($Settings->featureEnabled('projects') && !empty($projects)) { ?>
             <div class="alert success mb-20">
                 <h3 class="title">
-                    <?= lang('activities.projects_connected') ?>
+                    <?= t('activities.projects_connected') ?>
                 </h3>
-                <?= lang('activities.this_activity_was_automatically_connected_to_projects_based_on_funding_numb') ?>
+                <?= t('activities.this_activity_was_automatically_connected_to_projects_based_on_funding_numb') ?>
                 <br>
                 <a href="#projects" class="btn success">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang('common.projects') ?>
+                    <?= t('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -103,9 +103,9 @@ if ($edit_perm) {
 
     <div class="btn-toolbar">
         <?php if ($doc['locked'] ?? false) { ?>
-            <span class="badge danger cursor-default mr-10 border-danger" data-toggle="tooltip" data-title="<?= lang('common.this_activity_has_been_locked') ?>">
+            <span class="badge danger cursor-default mr-10 border-danger" data-toggle="tooltip" data-title="<?= t('common.this_activity_has_been_locked') ?>">
                 <i class="ph ph-lock text-danger"></i>
-                <?= lang('common.locked') ?>
+                <?= t('common.locked') ?>
             </span>
         <?php } ?>
 
@@ -114,12 +114,12 @@ if ($edit_perm) {
                 <?php if ($doc['locked'] ?? false) { ?>
                     <button class="btn text-success border-success mr-10" type="submit">
                         <i class="ph ph-lock-open"></i>
-                        <?= lang('common.unlock') ?>
+                        <?= t('common.unlock') ?>
                     </button>
                 <?php } else { ?>
                     <button class="btn text-danger border-danger mr-10" type="submit">
                         <i class="ph ph-lock"></i>
-                        <?= lang('common.lock') ?>
+                        <?= t('common.lock') ?>
                     </button>
                 <?php } ?>
             </form>
@@ -129,13 +129,13 @@ if ($edit_perm) {
             <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                 <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-pencil-simple-line"></i>
-                    <?= lang('action.edit') ?>
+                    <?= t('action.edit') ?>
                 </a>
             <?php } ?>
             <?php if (!in_array($doc['type'], ['publication'])) { ?>
                 <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn primary outline">
                     <i class="ph ph-copy"></i>
-                    <?= lang('common.copy') ?>
+                    <?= t('common.copy') ?>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('tags')) { ?>
@@ -158,7 +158,7 @@ if ($edit_perm) {
                     <div class="content">
                         <button class="btn primary outline" onclick="addToCart(this, '<?= $id ?>')">
                             <i class="<?= (in_array($id, $cart)) ? 'ph ph-duotone ph-basket ph-basket-plus text-success' : 'ph ph-basket ph-basket-plus' ?>"></i>
-                            <?= lang('common.collect') ?>
+                            <?= t('common.collect') ?>
                         </button>
                         <hr>
                         <form action="<?= ROOTPATH ?>/download" method="post">
@@ -167,21 +167,21 @@ if ($edit_perm) {
 
                             <div class="form-group">
 
-                                <?= lang('common.highlight') ?>
+                                <?= t('common.highlight') ?>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-user" value="user" checked="checked">
-                                    <label for="highlight-user"><?= lang('common.me') ?></label>
+                                    <label for="highlight-user"><?= t('common.me') ?></label>
                                 </div>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-aoi" value="aoi">
-                                    <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang('common.authors') ?></label>
+                                    <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= t('common.authors') ?></label>
                                 </div>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="highlight" id="highlight-none" value="">
-                                    <label for="highlight-none"><?= lang('common.none_download') ?></label>
+                                    <label for="highlight-none"><?= t('common.none_download') ?></label>
                                 </div>
 
                             </div>
@@ -189,7 +189,7 @@ if ($edit_perm) {
 
                             <div class="form-group">
 
-                                <?= lang('common.file_format') ?>
+                                <?= t('common.file_format') ?>
 
                                 <div class="custom-radio ml-10">
                                     <input type="radio" name="format" id="format-word" value="word" checked="checked">
@@ -211,19 +211,19 @@ if ($edit_perm) {
 
         <div class="dropdown">
             <button class="btn" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
-                <?= lang('common.more_actions') ?> <i class="ph ph-dots-three-outline ml-5" aria-hidden="true"></i>
+                <?= t('common.more_actions') ?> <i class="ph ph-dots-three-outline ml-5" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <!-- <h6 class="header">Header</h6> -->
                 <div class="content">
                     <a href="?view=new" class="btn block">
                         <i class="ph ph-lightning m-0"></i>
-                        <?= lang('activities.modern_view') ?>
+                        <?= t('activities.modern_view') ?>
                     </a>
                     <?php if (!in_array($doc['type'], ['publication'])) { ?>
                         <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn block">
                             <i class="ph ph-copy"></i>
-                            <?= lang('common.copy') ?>
+                            <?= t('common.copy') ?>
                         </a>
                     <?php } ?>
                 </div>
@@ -234,7 +234,7 @@ if ($edit_perm) {
         <?php if ($Settings->featureEnabled('portal')) { ?>
             <a class="btn primary outline ml-auto" href="<?= ROOTPATH ?>/preview/activity/<?= $id ?>">
                 <i class="ph ph-eye ph-fw"></i>
-                <?= lang('common.preview') ?>
+                <?= t('common.preview') ?>
             </a>
         <?php } ?>
     </div>
@@ -291,10 +291,10 @@ if ($edit_perm) {
     ?>
             <div class="alert danger mb-20">
                 <h3 class="title">
-                    <?= lang('common.no_authors_or_editors') ?>
+                    <?= t('common.no_authors_or_editors') ?>
                 </h3>
                 <p>
-                    <?= lang('common.this_activity_has_no_authors_or_editors_assigned_please_add_at_least_one_au') ?>
+                    <?= t('common.this_activity_has_no_authors_or_editors_assigned_please_add_at_least_one_au') ?>
                 </p>
             </div>
     <?php
@@ -312,10 +312,10 @@ if ($edit_perm) {
     ?>
         <div class="alert danger mb-20">
             <h3 class="title">
-                <?= lang('common.no_time_specified') ?>
+                <?= t('common.no_time_specified') ?>
             </h3>
             <p>
-                <?= lang('common.this_activity_has_no_time_specified_please_add_at_least_month_and_year_to_t') ?>
+                <?= t('common.this_activity_has_no_time_specified_please_add_at_least_month_and_year_to_t') ?>
             </p>
         </div>
     <?php
@@ -333,7 +333,7 @@ if ($edit_perm) {
     <div class="d-flex">
 
         <div class="mr-10 badge bg-white">
-            <small><?= lang('common.date') ?>: </small>
+            <small><?= t('common.date') ?>: </small>
             <br />
             <span class="badge"><?= $Format->format_date($doc) ?></span>
         </div>
@@ -344,57 +344,57 @@ if ($edit_perm) {
             <?php
 
             if ($doc['affiliated'] ?? true) { ?>
-                <div class="badge success" data-toggle="tooltip" data-title="<?= lang('common.at_least_on_author_of_this_activity_has_an_affiliation_with_the_institute') ?>">
+                <div class="badge success" data-toggle="tooltip" data-title="<?= t('common.at_least_on_author_of_this_activity_has_an_affiliation_with_the_institute') ?>">
                     <!-- <i class="ph ph-handshake m-0"></i> -->
-                    <?= lang('common.affiliated') ?>
+                    <?= t('common.affiliated') ?>
                 </div>
             <?php } else { ?>
-                <div class="badge danger" data-toggle="tooltip" data-title="<?= lang('common.none_of_the_authors_has_an_affiliation_to_the_institute') ?>">
+                <div class="badge danger" data-toggle="tooltip" data-title="<?= t('common.none_of_the_authors_has_an_affiliation_to_the_institute') ?>">
                     <!-- <i class="ph ph-hand-x m-0"></i> -->
-                    <?= lang('common.not_affiliated') ?>
+                    <?= t('common.not_affiliated') ?>
                 </div>
             <?php } ?>
         </div>
 
         <!-- cooperative -->
         <div class="mr-10 badge bg-white">
-            <small><?= lang('activities.cooperation') ?>: </small>
+            <small><?= t('activities.cooperation') ?>: </small>
             <br />
             <?php
             switch ($doc['cooperative'] ?? '-') {
                 case 'individual': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('common.only_one_author') ?>">
-                        <?= lang('common.individual') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= t('common.only_one_author') ?>">
+                        <?= t('common.individual') ?>
                     </span>
                 <?php
                     break;
                 case 'departmental': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_the_same_department_of_this_institute') ?>">
-                        <?= lang('activities.departmental_activity') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= t('activities.authors_from_the_same_department_of_this_institute') ?>">
+                        <?= t('activities.departmental_activity') ?>
                     </span>
                 <?php
                     break;
                 case 'institutional': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_departments_but_all_from_this_institute') ?>">
-                        <?= lang('common.institutional') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= t('activities.authors_from_different_departments_but_all_from_this_institute') ?>">
+                        <?= t('common.institutional') ?>
                     </span>
                 <?php
                     break;
                 case 'contributing': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_institutes_with_us_being_middle_authors') ?>">
-                        <?= lang('common.cooperative_contributing') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= t('activities.authors_from_different_institutes_with_us_being_middle_authors') ?>">
+                        <?= t('common.cooperative_contributing') ?>
                     </span>
                 <?php
                     break;
                 case 'leading': ?>
-                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= lang('activities.authors_from_different_institutes_with_us_being_leading_authors') ?>">
-                        <?= lang('common.cooperative_leading') ?>
+                    <span class="badge block primary" data-toggle="tooltip" data-title="<?= t('activities.authors_from_different_institutes_with_us_being_leading_authors') ?>">
+                        <?= t('common.cooperative_leading') ?>
                     </span>
                 <?php
                     break;
                 default: ?>
-                    <span class="badge block" data-toggle="tooltip" data-title="<?= lang('common.no_author_affiliated') ?>">
-                        <?= lang('common.none') ?>
+                    <span class="badge block" data-toggle="tooltip" data-title="<?= t('common.no_author_affiliated') ?>">
+                        <?= t('common.none') ?>
                     </span>
             <?php
                     break;
@@ -412,7 +412,7 @@ if ($edit_perm) {
         <?php } ?>
         <?php if ($doc['quartile'] ?? false) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('common.quartile') ?>: </small>
+                <small><?= t('common.quartile') ?>: </small>
                 <br />
                 <span class="quartile <?= $doc['quartile'] ?>"><?= $doc['quartile'] ?></span>
             </div>
@@ -422,21 +422,21 @@ if ($edit_perm) {
             $fetched_at = isset($openalex['fetched_at']) ? date('d.m.Y', strtotime($openalex['fetched_at'])) : '-';
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('common.citations') ?>: </small>
+                <small><?= t('common.citations') ?>: </small>
                 <br />
-                <span class="badge" data-toggle="tooltip" data-title="<?= lang('common.last_updated') ?>: <?= $fetched_at ?>"><?= $openalex['cited_by_count'] ?></span>
+                <span class="badge" data-toggle="tooltip" data-title="<?= t('common.last_updated') ?>: <?= $fetched_at ?>"><?= $openalex['cited_by_count'] ?></span>
             </div>
         <?php } ?>
 
 
         <?php if (!empty($projects)) { ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('common.projects') ?>: </small>
+                <small><?= t('common.projects') ?>: </small>
                 <br />
                 <a href="#projects" class="badge primary outline">
                     <i class="ph ph-tree-structure"></i>
                     <?= count($projects) ?>
-                    <?= lang('common.projects') ?>
+                    <?= t('common.projects') ?>
                 </a>
             </div>
         <?php } ?>
@@ -445,12 +445,12 @@ if ($edit_perm) {
             $doc['hide'] = $doc['hide'] ?? false;
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('common.online_visibility') ?>: </small>
+                <small><?= t('common.online_visibility') ?>: </small>
                 <br />
                 <?php if (!in_array($doc['subtype'], $visible_subtypes)) { ?>
-                    <span class="badge warning" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_subtype_is_not_visible_on_the_portal_due_to_general_settings') ?>">
+                    <span class="badge warning" data-toggle="tooltip" data-title="<?= t('activities.this_activity_subtype_is_not_visible_on_the_portal_due_to_general_settings') ?>">
                         <i class="ph ph-eye-slash m-0"></i>
-                        <?= lang('common.activity_type_not_visible') ?>
+                        <?= t('common.activity_type_not_visible') ?>
                     </span>
                 <?php } else if ($edit_perm) {
                     $highlighted_by = $osiris->persons->count(['highlighted' => strval($id), 'username' => ['$ne' => $_SESSION['username']]]);
@@ -458,12 +458,12 @@ if ($edit_perm) {
                     <div class="custom-switch d-inline-block">
                         <input type="checkbox" id="hide" <?= $doc['hide'] ? 'checked' : '' ?> name="values[hide]" onchange="hide()">
                         <label for="hide" id="hide-label">
-                            <?= $doc['hide'] ? lang('common.hidden') :  lang('common.visible')  ?>
+                            <?= $doc['hide'] ? t('common.hidden') :  t('common.visible')  ?>
                         </label>
                     </div>
 
                     <?php if ($highlighted_by > 0) { ?>
-                        <span data-toggle="tooltip" data-title="<?= lang('common.this_activity_is_highlighted_by_highlighted_by_other_person_s', replace: ['highlighted_by' => $highlighted_by]) ?>"><i class="ph ph-star text-signal"></i></span>
+                        <span data-toggle="tooltip" data-title="<?= t('common.this_activity_is_highlighted_by_highlighted_by_other_person_s', replace: ['highlighted_by' => $highlighted_by]) ?>"><i class="ph ph-star text-signal"></i></span>
                     <?php } ?>
 
                     <script>
@@ -477,13 +477,13 @@ if ($edit_perm) {
                                 success: function(response) {
                                     var hide = $('#hide').prop('checked');
 
-                                    $('#hide-label').text(hide ? '<?= lang('common.hidden') ?>' : '<?= lang('common.visible') ?>');
+                                    $('#hide-label').text(hide ? '<?= t('common.hidden') ?>' : '<?= t('common.visible') ?>');
                                     $('#highlight').prop('disabled', hide);
                                     if (hide) {
                                         $('#highlight').prop('checked', false);
-                                        $('#highlight-label').text('<?= lang('common.normal') ?>');
+                                        $('#highlight-label').text('<?= t('common.normal') ?>');
                                     }
-                                    toastSuccess(<?= json_encode(lang('activities.visibility_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
+                                    toastSuccess(<?= json_encode(t('activities.visibility_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                                 },
                                 error: function(response) {
                                     console.log(response);
@@ -495,14 +495,14 @@ if ($edit_perm) {
 
                 <?php } else { ?>
                     <?php if ($doc['hide']) { ?>
-                        <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_is_hidden_on_the_portal') ?>">
+                        <span class="badge danger" data-toggle="tooltip" data-title="<?= t('activities.this_activity_is_hidden_on_the_portal') ?>">
                             <i class="ph ph-eye-slash"></i>
-                            <?= lang('common.hidden') ?>
+                            <?= t('common.hidden') ?>
                         </span>
                     <?php } else { ?>
-                        <span class="badge success" data-toggle="tooltip" data-title="<?= lang('activities.this_activity_is_visible_on_the_portal') ?>">
+                        <span class="badge success" data-toggle="tooltip" data-title="<?= t('activities.this_activity_is_visible_on_the_portal') ?>">
                             <i class="ph ph-eye"></i>
-                            <?= lang('common.visible') ?>
+                            <?= t('common.visible') ?>
                         </span>
                     <?php } ?>
                 <?php } ?>
@@ -519,12 +519,12 @@ if ($edit_perm) {
             }
         ?>
             <div class="mr-10 badge bg-white">
-                <small><?= lang('activities.displayed_in_your_profile') ?>: </small>
+                <small><?= t('activities.displayed_in_your_profile') ?>: </small>
                 <br />
                 <div class="custom-switch">
                     <input type="checkbox" id="highlight" <?= ($highlighted) ? 'checked' : '' ?> name="values[highlight]" onchange="fav()" <?= $disabled ? 'disabled' : '' ?>>
                     <label for="highlight" id="highlight-label">
-                        <?= $highlighted ? lang('common.highlighted') : lang('common.normal') ?>
+                        <?= $highlighted ? t('common.highlighted') : t('common.normal') ?>
                     </label>
                 </div>
             </div>
@@ -539,8 +539,8 @@ if ($edit_perm) {
                         dataType: "json",
                         success: function(response) {
                             var highlight = $('#highlight').prop('checked');
-                            $('#highlight-label').text(highlight ? '<?= lang('common.highlighted') ?>' : '<?= lang('common.normal') ?>');
-                            toastSuccess(<?= json_encode(lang('activities.highlight_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
+                            $('#highlight-label').text(highlight ? '<?= t('common.highlighted') ?>' : '<?= t('common.normal') ?>');
+                            toastSuccess(<?= json_encode(t('activities.highlight_status_changed'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                         },
                         error: function(response) {
                             console.log(response);
@@ -557,13 +557,13 @@ if ($edit_perm) {
     <nav class="pills mt-20 mb-0" id="navigation">
         <a onclick="navigate('general')" id="btn-general" class="btn active">
             <i class="ph ph-info" aria-hidden="true"></i>
-            <?= lang('common.general') ?>
+            <?= t('common.general') ?>
         </a>
 
         <?php if ($guests_involved) { ?>
             <a onclick="navigate('guests')" id="btn-guests" class="btn">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('common.guests') ?>
+                <?= t('common.guests') ?>
                 <span class="index"><?= count($guests) ?></span>
             </a>
         <?php } ?>
@@ -572,14 +572,14 @@ if ($edit_perm) {
         <?php if (count($doc['authors']) > 1) { ?>
             <a onclick="navigate('coauthors')" id="btn-coauthors" class="btn">
                 <i class="ph ph-users" aria-hidden="true"></i>
-                <?= lang('common.coauthors') ?>
+                <?= t('common.coauthors') ?>
                 <span class="index"><?= count($doc['authors']) ?></span>
             </a>
         <?php } ?>
 
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-plugs" aria-hidden="true"></i>
-            <?= lang('common.activities') ?>
+            <?= t('common.activities') ?>
             <span class="index"><?= count($connected_activities) ?></span>
         </a>
 
@@ -590,14 +590,14 @@ if ($edit_perm) {
             ?>
                 <a onclick="navigate('projects')" id="btn-projects" class="btn">
                     <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                    <?= lang('common.projects') ?>
+                    <?= t('common.projects') ?>
                     <span class="index"><?= $count_projects ?></span>
                 </a>
 
             <?php else : ?>
                 <a href="#projects" class="btn">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('activities.add_projects') ?>
+                    <?= t('activities.add_projects') ?>
                 </a>
             <?php endif; ?>
         <?php } ?>
@@ -616,7 +616,7 @@ if ($edit_perm) {
             <?php else : ?>
                 <a href="#infrastructures" class="btn">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('activities.add_infrastructures') ?>
+                    <?= t('activities.add_infrastructures') ?>
                 </a>
             <?php endif; ?>
         <?php } ?>
@@ -627,7 +627,7 @@ if ($edit_perm) {
         ?>
             <a onclick="navigate('files')" id="btn-files" class="btn">
                 <i class="ph ph-files" aria-hidden="true"></i>
-                <?= lang('common.files') ?>
+                <?= t('common.files') ?>
                 <span class="index"><?= $count_files ?></span>
             </a>
         <?php endif; ?>
@@ -638,7 +638,7 @@ if ($edit_perm) {
             ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('common.research_spectrum') ?>
+                <?= t('common.research_spectrum') ?>
                 <span class="index"><?= $count_spectrum ?></span>
             </a>
         <?php } ?>
@@ -650,7 +650,7 @@ if ($edit_perm) {
         ?>
             <a onclick="navigate('history')" id="btn-history" class="btn">
                 <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-                <?= lang('common.history') ?>
+                <?= t('common.history') ?>
                 <span class="index"><?= $count_history ?></span>
             </a>
         <?php endif; ?>
@@ -658,7 +658,7 @@ if ($edit_perm) {
         <?php if ($Settings->hasPermission('raw-data') || isset($_GET['verbose'])) { ?>
             <a onclick="navigate('raw')" id="btn-raw" class="btn">
                 <i class="ph ph-code" aria-hidden="true"></i>
-                <?= lang('common.raw_data')  ?>
+                <?= t('common.raw_data')  ?>
             </a>
         <?php } ?>
 
@@ -669,10 +669,10 @@ if ($edit_perm) {
     <section id="raw" style="display:none">
 
         <h2 class="title">
-            <?= lang('common.raw_data') ?>
+            <?= t('common.raw_data') ?>
         </h2>
 
-        <?= lang('common.raw_data_as_they_are_stored_in_the_database') ?>
+        <?= t('common.raw_data_as_they_are_stored_in_the_database') ?>
 
         <div class="box padded overflow-x-scroll">
             <pre><?= e(json_encode($doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
@@ -688,7 +688,7 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && (!$locked || $Settings->hasPermission('activities.edit-locked'))) { ?>
                         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-pencil-simple-line"></i>
-                            <?= lang('action.edit') ?>
+                            <?= t('action.edit') ?>
                         </a>
                     <?php } ?>
 
@@ -696,7 +696,7 @@ if ($edit_perm) {
                     <?php if (!in_array($doc['type'], ['publication'])) { ?>
                         <a href="<?= ROOTPATH ?>/activities/copy/<?= $id ?>" class="btn secondary">
                             <i class="ph ph-copy"></i>
-                            <?= lang('activities.add_a_copy') ?>
+                            <?= t('activities.add_a_copy') ?>
                         </a>
                     <?php } ?>
 
@@ -706,16 +706,16 @@ if ($edit_perm) {
                         <div class="dropdown">
                             <button class="btn secondary" data-toggle="dropdown" type="button" id="update-end-date" aria-haspopup="true" aria-expanded="false">
                                 <i class="ph ph-calendar-check"></i>
-                                <?= lang('common.end_activity') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                                <?= t('common.end_activity') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="update-end-date">
                                 <form action="<?= ROOTPATH . "/crud/activities/update/" . $id ?>" method="POST" class="content">
                                     <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>">
                                     <div class="form-group">
-                                        <label for="date_end"><?= lang('common.activity_ended_at') ?></label>
+                                        <label for="date_end"><?= t('common.activity_ended_at') ?></label>
                                         <input type="date" class="form-control" name="values[end]" id="date_end" value="<?= valueFromDateArray($doc['end'] ?? null) ?>" required>
                                     </div>
-                                    <button class="btn btn-block" type="submit"><?= lang('action.save') ?></button>
+                                    <button class="btn btn-block" type="submit"><?= t('action.save') ?></button>
                                 </form>
                             </div>
                         </div>
@@ -736,11 +736,11 @@ if ($edit_perm) {
 
                     <tr>
                         <td>
-                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
+                            <button class="btn small float-right" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= t('common.copy_to_clipboard') ?>">
                                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                             </button>
 
-                            <span class="key"><?= lang('activities.formatted_entry') ?></span>
+                            <span class="key"><?= t('activities.formatted_entry') ?></span>
                             <div id="formatted"><?= $doc['rendered']['print'] ?></div>
                         </td>
                     </tr>
@@ -750,21 +750,21 @@ if ($edit_perm) {
                     ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.include_in_reports') ?>: </span>
+                                <span class="key"><?= t('common.include_in_reports') ?>: </span>
                                 <div id="exclude-toggle" class="btn-group" role="group" aria-label="Exclude toggle">
                                     <button type="button" class="btn small <?= $exclude ? '' : 'active' ?>"
                                         id="btn-include" onclick="toggleExclude(false)"
-                                        data-toggle="tooltip" data-title="<?= lang('common.will_be_included_in_all_reports_and_analytics') ?>"
+                                        data-toggle="tooltip" data-title="<?= t('common.will_be_included_in_all_reports_and_analytics') ?>"
                                         style="--blue-color: var(--success-color); --blue-color-20: var(--success-color-20);">
                                         <i class="ph ph-check-circle"></i>
-                                        <?= lang('common.include') ?>
+                                        <?= t('common.include') ?>
                                     </button>
                                     <button type="button" class="btn small <?= $exclude ? 'active' : '' ?>"
                                         id="btn-exclude" onclick="toggleExclude(true)"
-                                        data-toggle="tooltip" data-title="<?= lang('common.will_be_excluded_from_all_reports_and_analytics') ?>"
+                                        data-toggle="tooltip" data-title="<?= t('common.will_be_excluded_from_all_reports_and_analytics') ?>"
                                         style="--blue-color: var(--danger-color); --blue-color-20: var(--danger-color-20);">
                                         <i class="ph ph-prohibit"></i>
-                                        <?= lang('common.exclude') ?>
+                                        <?= t('common.exclude') ?>
                                     </button>
                                 </div>
 
@@ -782,13 +782,13 @@ if ($edit_perm) {
                                             dataType: "json",
                                             success: function(response) {
                                                 if (!response.success) {
-                                                    toastError(<?= json_encode(lang('common.failed_to_update_the_activity_please_try_again'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                                    toastError(<?= json_encode(t('common.failed_to_update_the_activity_please_try_again'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                     return;
                                                 }
                                                 if (exclude) {
-                                                    toastSuccess(<?= json_encode(lang('common.this_activity_is_now_excluded_from_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                                    toastSuccess(<?= json_encode(t('common.this_activity_is_now_excluded_from_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                 } else {
-                                                    toastSuccess(<?= json_encode(lang('common.this_activity_is_now_included_in_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                                    toastSuccess(<?= json_encode(t('common.this_activity_is_now_included_in_reports_and_analytics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                                 }
                                             },
                                             error: function(response) {
@@ -819,7 +819,7 @@ if ($edit_perm) {
                         ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.teaching_module') ?></span>
+                                    <span class="key"><?= t('common.teaching_module') ?></span>
 
                                     <a class="module " href="<?= ROOTPATH ?>/teaching#<?= $doc['module_id'] ?>">
                                         <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
@@ -862,7 +862,7 @@ if ($edit_perm) {
                                     <?php if (empty($conference)) { ?>
                                         <div><?= $doc['conference'] ?? '' ?></div>
                                         <span class="text-danger">
-                                            <?= lang('common.this_event_has_been_deleted') ?>
+                                            <?= t('common.this_event_has_been_deleted') ?>
                                         </span>
                                     <?php } else { ?>
 
@@ -875,15 +875,15 @@ if ($edit_perm) {
                                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                                             <ul class="horizontal mb-0">
                                                 <li>
-                                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
+                                                    <b><?= t('common.location') ?></b>: <?= $conference['location'] ?>
                                                 </li>
                                                 <li>
-                                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                                    <b><?= t('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                                 </li>
                                                 <li>
                                                     <a href="<?= $conference['url'] ?>" target="_blank">
                                                         <i class="ph ph-link"></i>
-                                                        <?= lang('common.website') ?>
+                                                        <?= t('common.website') ?>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -917,7 +917,7 @@ if ($edit_perm) {
                                 <?php if ($edit_perm && $Settings->hasPermission('activities.tags')) { ?>
                                     <a href="#add-tags" class="btn small float-right">
                                         <i class="ph ph-edit"></i>
-                                        <?= lang('action.edit') ?>
+                                        <?= t('action.edit') ?>
                                     </a>
                                 <?php } ?>
                                 <span class="key"><?= $tagLabel ?></span>
@@ -933,7 +933,7 @@ if ($edit_perm) {
                                             </a>
                                     <?php }
                                     } else {
-                                        echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
+                                        echo t('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
                                     }
                                     ?>
                                 </p>
@@ -948,7 +948,7 @@ if ($edit_perm) {
                     ?>
                         <tr>
                             <td>
-                                <span class="key text-danger"><?= lang('common.the_following_fields_are_not_filled_in') ?>:</span>
+                                <span class="key text-danger"><?= t('common.the_following_fields_are_not_filled_in') ?>:</span>
                                 <?php foreach ($emptyModules as $key) { ?>
                                     <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
                                 <?php } ?>
@@ -962,8 +962,8 @@ if ($edit_perm) {
                     <?php if (($edit_perm) && isset($doc['comment'])) : ?>
                         <tr class="text-muted">
                             <td>
-                                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('common.only_visible_for_authors_and_editors') ?>">
-                                    <?= lang('common.comment') ?>:
+                                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= t('common.only_visible_for_authors_and_editors') ?>">
+                                    <?= t('common.comment') ?>:
                                 </span>
 
                                 <?= $doc['comment'] ?>
@@ -977,48 +977,48 @@ if ($edit_perm) {
 
                 <div class="alert danger mt-20 py-20">
                     <h2 class="title">
-                        <?= lang('action.delete') ?>
+                        <?= t('action.delete') ?>
                     </h2>
                     <?php
 
                     // $in_quarter = inCurrentQuarter($doc['year'], $doc['month']);
                     if ($locked && !$Settings->hasPermission('activities.delete-locked')) : ?>
                         <p class="mt-0">
-                            <?= lang('activities.this_activity_has_been_locked_because_it_was_already_used_by_reporters_in_a') ?>
+                            <?= t('activities.this_activity_has_been_locked_because_it_was_already_used_by_reporters_in_a') ?>
                         </p>
                     <?php
                     elseif ($Settings->hasPermission('activities.delete')) :
                     ?>
                         <p class="mt-0">
-                            <?= lang('activities.you_have_permission_to_delete_this_activity') ?>
+                            <?= t('activities.you_have_permission_to_delete_this_activity') ?>
                         </p>
                         <form action="<?= ROOTPATH ?>/crud/activities/delete/<?= $id ?>" method="post" class="d-inline-block ml-auto">
                             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities" ?>">
                             <button type="submit" class="btn danger">
                                 <i class="ph ph-trash"></i>
-                                <?= lang('common.delete_activity') ?>
+                                <?= t('common.delete_activity') ?>
                             </button>
                         </form>
                     <?php elseif (!$user_activity) : ?>
 
                         <p class="mt-0">
-                            <?= lang('activities.this_is_not_your_own_activity_if_for_any_reason_you_want_it_changed_or_dele') ?>
+                            <?= t('activities.this_is_not_your_own_activity_if_for_any_reason_you_want_it_changed_or_dele') ?>
                         </p>
 
                     <?php elseif ($user_activity && $Settings->hasPermission('activities.delete-own')) : ?>
                         <p class="mt-0">
                             <b>Info:</b>
-                            <?= lang('activities.this_is_your_own_activity_and_it_has_not_been_locked_yet_you_can_delete_it') ?>
+                            <?= t('activities.this_is_your_own_activity_and_it_has_not_been_locked_yet_you_can_delete_it') ?>
                         </p>
                         <form action="<?= ROOTPATH ?>/crud/activities/delete/<?= $id ?>" method="post" class="d-inline-block ml-auto">
                             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH . "/activities" ?>">
                             <button type="submit" class="btn danger">
                                 <i class="ph ph-trash"></i>
-                                <?= lang('common.delete_activity') ?>
+                                <?= t('common.delete_activity') ?>
                             </button>
                             <br>
                             <small class="text-danger">
-                                <?= lang('activities.cannot_be_made_undone') ?>
+                                <?= t('activities.cannot_be_made_undone') ?>
                             </small>
                         </form>
                     <?php endif; ?>
@@ -1123,7 +1123,7 @@ if ($edit_perm) {
                     // --- Configure optional third column (avoid duplicated if/elseif in thead + tbody) ---
                     $thirdCol = null;
                     if ($field_id === 'persons-role') {
-                        $thirdCol = ['label' => lang('common.role'), 'value' => fn($a) => e($Vocabulary->getValue('persons-role', $a['role'] ?? 'member', $a['role'] ?? 'member'))];
+                        $thirdCol = ['label' => t('common.role'), 'value' => fn($a) => e($Vocabulary->getValue('persons-role', $a['role'] ?? 'member', $a['role'] ?? 'member'))];
                     } elseif ($sws && $role !== 'persons') {
                         $thirdCol = [
                             'label' => 'SWS',
@@ -1131,12 +1131,12 @@ if ($edit_perm) {
                         ];
                     } elseif ($supervisorThesis && $role !== 'persons') {
                         $thirdCol = [
-                            'label' => lang('common.role'),
+                            'label' => t('common.role'),
                             'value' => fn($a) => $Format->getSupervisorRole($a['role'] ?? 'other'),
                         ];
                     } elseif ($role === 'authors') {
                         $thirdCol = [
-                            'label' => lang('common.position'),
+                            'label' => t('common.position'),
                             'value' => fn($a) => $Format->getPosition($a['position'] ?? ''),
                         ];
                     }
@@ -1148,7 +1148,7 @@ if ($edit_perm) {
                         <?php if ($canEdit): ?>
                             <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/<?= $role ?>" class="btn secondary">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                <?= lang('action.edit') ?>
+                                <?= t('action.edit') ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -1156,8 +1156,8 @@ if ($edit_perm) {
                     <table class="table mb-20">
                         <thead>
                             <tr>
-                                <th><?= lang('common.person') ?></th>
-                                <!-- <th><?= lang('common.details') ?></th> -->
+                                <th><?= t('common.person') ?></th>
+                                <!-- <th><?= t('common.details') ?></th> -->
                                 <?php if (!empty($thirdCol)): ?>
                                     <th><?= $thirdCol['label'] ?></th>
                                 <?php endif; ?>
@@ -1204,9 +1204,9 @@ if ($edit_perm) {
                                             <?php if ($isAffiliated): ?>
                                                 <span class="author-chip success"
                                                     data-toggle="tooltip"
-                                                    data-title="<?= lang('common.author_of_the_institution') ?>">
+                                                    data-title="<?= t('common.author_of_the_institution') ?>">
                                                     <i class="ph ph-handshake"></i>
-                                                    <?= lang('common.affiliated') ?>
+                                                    <?= t('common.affiliated') ?>
                                                 </span>
                                             <?php endif; ?>
 
@@ -1214,16 +1214,16 @@ if ($edit_perm) {
                                                 <?php if ($author['approved']) { ?>
                                                     <span class="author-chip neutral"
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('common.author_approved_this_activity') ?>">
+                                                        data-title="<?= t('common.author_approved_this_activity') ?>">
                                                         <?= bool_icon(true) ?>
-                                                        <?= lang('common.approved') ?>
+                                                        <?= t('common.approved') ?>
                                                     </span>
                                                 <?php } else { ?>
                                                     <span class="author-chip neutral"
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('common.author_has_not_yet_approved_this_activity') ?>">
+                                                        data-title="<?= t('common.author_has_not_yet_approved_this_activity') ?>">
                                                         <?= bool_icon(false) ?>
-                                                        <?= lang('common.pending') ?>
+                                                        <?= t('common.pending') ?>
                                                     </span>
                                                 <?php } ?>
 
@@ -1233,19 +1233,19 @@ if ($edit_perm) {
                                                     <div class="dropdown d-inline-block">
                                                         <button class="btn small" data-toggle="dropdown" type="button"
                                                             id="<?= $dropdownId ?>" aria-haspopup="true" aria-expanded="false">
-                                                            <?= lang('action.claim') ?>
+                                                            <?= t('action.claim') ?>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right w-300" aria-labelledby="<?= $dropdownId ?>">
                                                             <div class="content font-size-12">
                                                                 <div class="d-block text-danger mb-10">
-                                                                    <?= lang('common.you_claim_that_you_are_this_author_this_activity_will_be_added_to_your_list') ?>
+                                                                    <?= t('common.you_claim_that_you_are_this_author_this_activity_will_be_added_to_your_list') ?>
                                                                 </div>
                                                                 <form action="<?= ROOTPATH ?>/crud/activities/claim/<?= $id ?>" method="post">
                                                                     <input type="hidden" name="role" value="<?= e($role) ?>">
                                                                     <input type="hidden" name="index" value="<?= (int)$i ?>">
                                                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/$id" ?>">
                                                                     <button class="btn block small" type="submit">
-                                                                        <?= lang('action.claim') ?>
+                                                                        <?= t('action.claim') ?>
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -1258,7 +1258,7 @@ if ($edit_perm) {
                                                 <div class="author-chip author-units">
                                                     <span class=""
                                                         data-toggle="tooltip"
-                                                        data-title="<?= lang('common.participating_units') ?>">
+                                                        data-title="<?= t('common.participating_units') ?>">
                                                         <i class="ph ph-users-three"></i>
                                                     </span>
                                                     <?php foreach ($author['units'] as $unit):
@@ -1285,27 +1285,27 @@ if ($edit_perm) {
                 <?php } ?>
 
                 <h3>
-                    <?= lang('common.affiliated_positions') ?>
+                    <?= t('common.affiliated_positions') ?>
                 </h3>
 
                 <?php
                 $positions = [
-                    'first' => lang('common.first_author'),
-                    'last' => lang('common.last_author'),
-                    'first_and_last' => lang('common.first_and_last_author'),
-                    'first_or_last' => lang('common.first_or_last_author'),
-                    'middle' => lang('common.middle_author'),
-                    'single' => lang('common.one_single_affiliated_author'),
-                    'none' => lang('common.no_author_affiliated_view'),
-                    'all' => lang('common.all_authors_affiliated'),
-                    'corresponding' => lang('common.corresponding_author'),
-                    'not_first' => lang('common.not_first_author'),
-                    'not_last' => lang('common.not_last_author'),
-                    'not_middle' => lang('common.not_middle_author'),
-                    'not_corresponding' => lang('common.not_corresponding_author'),
-                    'not_first_or_last' => lang('common.not_first_or_last_author'),
-                    'not_first_and_last' => lang('common.not_first_and_last_author'),
-                    'unspecified' => lang('common.unspecified_no_position_specified'),
+                    'first' => t('common.first_author'),
+                    'last' => t('common.last_author'),
+                    'first_and_last' => t('common.first_and_last_author'),
+                    'first_or_last' => t('common.first_or_last_author'),
+                    'middle' => t('common.middle_author'),
+                    'single' => t('common.one_single_affiliated_author'),
+                    'none' => t('common.no_author_affiliated_view'),
+                    'all' => t('common.all_authors_affiliated'),
+                    'corresponding' => t('common.corresponding_author'),
+                    'not_first' => t('common.not_first_author'),
+                    'not_last' => t('common.not_last_author'),
+                    'not_middle' => t('common.not_middle_author'),
+                    'not_corresponding' => t('common.not_corresponding_author'),
+                    'not_first_or_last' => t('common.not_first_or_last_author'),
+                    'not_first_and_last' => t('common.not_first_and_last_author'),
+                    'unspecified' => t('common.unspecified_no_position_specified'),
                 ];
                 ?>
 
@@ -1315,11 +1315,11 @@ if ($edit_perm) {
                 <?php } ?>
                 <br>
                 <small class="text-muted">
-                    <?= lang('common.automatically_calculated') ?>
+                    <?= t('common.automatically_calculated') ?>
                 </small>
 
                 <h3>
-                    <?= lang('common.participating_units') ?>
+                    <?= t('common.participating_units') ?>
                 </h3>
                 <table class="table unit-table w-full">
                     <tbody>
@@ -1344,7 +1344,7 @@ if ($edit_perm) {
                         } else { ?>
                             <tr>
                                 <td>
-                                    <?= lang('common.no_organisational_unit_connected') ?>
+                                    <?= t('common.no_organisational_unit_connected') ?>
                                 </td>
                             </tr>
                         <?php }
@@ -1365,7 +1365,7 @@ if ($edit_perm) {
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <h5 class="title">
-                        <?= lang('activities.connect_projects') ?>
+                        <?= t('activities.connect_projects') ?>
                     </h5>
                     <div>
                         <?php
@@ -1379,7 +1379,7 @@ if ($edit_perm) {
 
     <section id="activities" style="display: none;">
         <h2 class="title">
-            <?= lang('common.connected_activities') ?>
+            <?= t('common.connected_activities') ?>
         </h2>
 
 
@@ -1405,7 +1405,7 @@ if ($edit_perm) {
                                 <form action="<?= ROOTPATH ?>/crud/activities/disconnect" method="post" class="d-inline-block ml-auto">
                                     <input type="hidden" name="connection_id" value="<?= $con['_id'] ?>">
                                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
-                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>">
+                                    <button type="submit" class="btn small danger" data-toggle="tooltip" data-title="<?= t('common.disconnect_activity') ?>">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </form>
@@ -1416,14 +1416,14 @@ if ($edit_perm) {
                 <?php } ?>
             </table>
         <?php } else { ?>
-            <?= lang('activities.no_connected_activities') ?>
+            <?= t('activities.no_connected_activities') ?>
         <?php } ?>
 
         <?php if ($edit_perm) { ?>
 
             <div class="box padded">
                 <h3 class="title">
-                    <?= lang('common.connect_activities') ?>
+                    <?= t('common.connect_activities') ?>
                 </h3>
 
                 <form action="<?= ROOTPATH ?>/crud/activities/connect" method="post">
@@ -1431,7 +1431,7 @@ if ($edit_perm) {
                     <input type="hidden" name="redirect" value="<?= ROOTPATH . "/activities/view/" . $id ?>#section-activities">
                     <!-- relationship type -->
                     <div class="form-group">
-                        <label for="relationship-type"><?= lang('common.relationship_type') ?></label>
+                        <label for="relationship-type"><?= t('common.relationship_type') ?></label>
                         <div class="form-group">
                             <div class="input-group">
                                 <select name="relationship" id="relationship-type" class="form-control" required>
@@ -1450,7 +1450,7 @@ if ($edit_perm) {
                                         <div class="custom-switch">
                                             <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
                                             <label for="swap-relationship-dir">
-                                                <?= lang('common.swap_direction') ?>
+                                                <?= t('common.swap_direction') ?>
                                             </label>
                                         </div>
                                     </div>
@@ -1461,21 +1461,21 @@ if ($edit_perm) {
                     </div>
                     <!-- input field with suggesting activities -->
                     <div class="form-group" id="activity-suggest">
-                        <label for="activity-suggested"><?= lang('common.select_an_activity_to_connect') ?></label>
-                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= lang('common.start_typing_to_search_for_activities') ?>">
+                        <label for="activity-suggested"><?= t('common.select_an_activity_to_connect') ?></label>
+                        <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" required placeholder="<?= t('common.start_typing_to_search_for_activities') ?>">
 
                         <div class="form-group font-size-12">
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
-                                <label for="activity-suggest-author"><?= lang('common.only_show_my_activities') ?></label>
+                                <label for="activity-suggest-author"><?= t('common.only_show_my_activities') ?></label>
                             </div>
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
-                                <label for="activity-suggest-unit"><?= lang('common.show_activities_from_my_unit_s') ?></label>
+                                <label for="activity-suggest-unit"><?= t('common.show_activities_from_my_unit_s') ?></label>
                             </div>
                             <div class="custom-radio d-inline-block mr-20">
                                 <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
-                                <label for="activity-suggest-all"><?= lang('common.show_all_activities') ?></label>
+                                <label for="activity-suggest-all"><?= t('common.show_all_activities') ?></label>
                             </div>
                         </div>
 
@@ -1487,7 +1487,7 @@ if ($edit_perm) {
                     <input type="hidden" name="target_id" id="activity-selected" required value="">
 
                     <button type="submit" class="btn primary">
-                        <?= lang('common.connect') ?>
+                        <?= t('common.connect') ?>
                     </button>
                 </form>
             </div>
@@ -1585,12 +1585,12 @@ if ($edit_perm) {
             <div class="btn-toolbar float-sm-right">
                 <a href="#projects" class="btn secondary mr-5">
                     <i class="ph ph-tree-structure"></i>
-                    <?= lang('common.connect') ?>
+                    <?= t('common.connect') ?>
                 </a>
             </div>
 
             <h2 class="title">
-                <?= lang('common.projects') ?>
+                <?= t('common.projects') ?>
             </h2>
 
             <?php if (!empty($projects)) {
@@ -1605,7 +1605,7 @@ if ($edit_perm) {
                 <?php } ?>
 
             <?php } else { ?>
-                <?= lang('activities.no_projects_connected') ?>
+                <?= t('activities.no_projects_connected') ?>
             <?php } ?>
 
         </section>
@@ -1622,7 +1622,7 @@ if ($edit_perm) {
                         <span aria-hidden="true">&times;</span>
                     </a>
                     <h5 class="title">
-                        <?= lang('activities.connect_settings', replace: ['Settings' => $Settings->infrastructureLabel()]) ?>
+                        <?= t('activities.connect_settings', replace: ['Settings' => $Settings->infrastructureLabel()]) ?>
                     </h5>
                     <div>
                         <?php
@@ -1637,7 +1637,7 @@ if ($edit_perm) {
             <div class="btn-toolbar float-sm-right">
                 <a href="#infrastructures" class="btn secondary mr-5">
                     <i class="ph ph-cube-transparent"></i>
-                    <?= lang('common.connect') ?>
+                    <?= t('common.connect') ?>
                 </a>
             </div>
 
@@ -1677,7 +1677,7 @@ if ($edit_perm) {
                 </table>
 
             <?php } else { ?>
-                <?= lang('common.no_infrastructures_connected') ?>
+                <?= t('common.no_infrastructures_connected') ?>
             <?php } ?>
 
         </section>
@@ -1688,7 +1688,7 @@ if ($edit_perm) {
     if ($upload_possible):
     ?>
         <section id="files" style="display: none; max-width: 60rem;">
-            <h2 class="title"><?= lang('common.files') ?></h2>
+            <h2 class="title"><?= t('common.files') ?></h2>
             <?php
             // check for legacy files
             $legacy_files = $doc['files'] ?? array();
@@ -1715,7 +1715,7 @@ if ($edit_perm) {
                     <!-- hint to migrate -->
                     <div class="alert signal mt-20">
                         <b>Info:</b>
-                        <?= lang('activities.these_are_legacy_files_please_re_upload_them_using_the_new_document_upload') ?>
+                        <?= t('activities.these_are_legacy_files_please_re_upload_them_using_the_new_document_upload') ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -1734,7 +1734,7 @@ if ($edit_perm) {
                 <tbody>
                     <?php
                     if (empty($files)) {
-                        echo '<tr><td>' . lang('common.no_documents_available') . '</td></tr>';
+                        echo '<tr><td>' . t('common.no_documents_available') . '</td></tr>';
                     } else {
                         foreach ($files as $file) {
                             $file_url = ROOTPATH . '/uploads/' . $file['_id'] . '.' . $file['extension'];
@@ -1761,14 +1761,14 @@ if ($edit_perm) {
                                                                         <option value="<?= $v['id'] ?>" <?= ($file['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                                                                     <?php } ?>
                                                                 </select>
-                                                                <label for="name" class="required"><?= lang('common.doc_type') ?></label>
+                                                                <label for="name" class="required"><?= t('common.doc_type') ?></label>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="description"><?= lang('common.description') ?></label>
-                                                                <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
+                                                                <label for="description"><?= t('common.description') ?></label>
+                                                                <textarea class="form-control" name="description" placeholder="<?= t('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                                                             </div>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block primary" type="submit"><?= lang('common.save_changes') ?></button>
+                                                            <button class="btn btn-block primary" type="submit"><?= t('common.save_changes') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1780,9 +1780,9 @@ if ($edit_perm) {
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $file['_id'] ?>">
                                                     <div class="content">
                                                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                                                            <span class="text-danger"><?= lang('common.do_you_want_to_delete_this_document') ?></span>
+                                                            <span class="text-danger"><?= t('common.do_you_want_to_delete_this_document') ?></span>
                                                             <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                                                            <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
+                                                            <button class="btn btn-block danger" type="submit"><?= t('action.delete') ?></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1791,7 +1791,7 @@ if ($edit_perm) {
                                     <?php endif; ?>
                                     <h6 class="m-0">
                                         <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
+                                            <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', t('common.other')); ?>
                                             <i class="ph ph-download"></i>
                                         </a>
                                     </h6>
@@ -1801,8 +1801,8 @@ if ($edit_perm) {
                                         <div>
                                             <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                                             <br>
-                                            <?= lang('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                                            <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                                            <?= t('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
+                                            <?= t('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                                         </div>
                                     </div>
                                 </td>
@@ -1817,12 +1817,12 @@ if ($edit_perm) {
             <?php if ($edit_perm) { ?>
                 <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
                     <h5 class="title font-size-16">
-                        <?= lang('common.upload_document') ?>
+                        <?= t('common.upload_document') ?>
                     </h5>
                     <div class="form-group">
                         <div class="custom-file">
                             <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="16777216" required>
-                            <label for="upload-file" class="custom-file-label"><?= lang('common.choose_a_file') ?></label>
+                            <label for="upload-file" class="custom-file-label"><?= t('common.choose_a_file') ?></label>
                             <br><small class="text-danger">Max. 16 MB.</small>
                         </div>
                     </div>
@@ -1836,13 +1836,13 @@ if ($edit_perm) {
                                 <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                             <?php } ?>
                         </select>
-                        <label for="name" class="required"><?= lang('common.doc_type') ?></label>
+                        <label for="name" class="required"><?= t('common.doc_type') ?></label>
                     </div>
                     <div class="form-group floating-form">
-                        <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
-                        <label for="description"><?= lang('common.description') ?></label>
+                        <input type="text" class="form-control" name="values[description]" placeholder="<?= t('common.description') ?>" value="">
+                        <label for="description"><?= t('common.description') ?></label>
                     </div>
-                    <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
+                    <button class="btn primary" type="submit"><?= t('action.upload') ?></button>
                 </form>
 
                 <script>
@@ -1850,7 +1850,7 @@ if ($edit_perm) {
 
                     uploadField.onchange = function() {
                         if (this.files[0].size > 16777216) {
-                            toastError(<?= json_encode(lang('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                            toastError(<?= json_encode(t('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                             this.value = "";
                         };
                     };
@@ -1869,16 +1869,16 @@ if ($edit_perm) {
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
+                    <?= t('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
                 </h5>
                 <p>
-                    <?= lang('common.currently_connected') . $tagLabel ?>:
+                    <?= t('common.currently_connected') . $tagLabel ?>:
                     <?php
                     $tags = $doc['tags'] ?? [];
                     if (count($tags)) {
                         echo $Settings->printTags($tags, 'all-activities');
                     } else {
-                        echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
+                        echo t('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
                     }
                     ?>
                 </p>
@@ -1891,7 +1891,7 @@ if ($edit_perm) {
 
                         <button type="submit" class="btn success">
                             <i class="ph ph-floppy-disk"></i>
-                            <?= lang('action.save') ?>
+                            <?= t('action.save') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -1904,7 +1904,7 @@ if ($edit_perm) {
             <?php if ($edit_perm) { ?>
                 <a href="#spectrum-editor" class="btn mt-20">
                     <i class="ph ph-edit"></i>
-                    <?= lang('common.edit_spectrum') ?>
+                    <?= t('common.edit_spectrum') ?>
                 </a>
             <?php } ?>
             <?php
@@ -1916,23 +1916,23 @@ if ($edit_perm) {
                 $fetched = $openalex['fetched_at'] ?? null;
             ?>
                 <p>
-                    <?= lang('common.no_topics_are_assigned_to_this_activity') ?>
+                    <?= t('common.no_topics_are_assigned_to_this_activity') ?>
                 </p>
                 <?php if ($manually) : ?>
                     <small class="d-block mt-5 text-muted">
-                        <?= lang('common.topic_data_was_last_updated_manually_on') ?> <?= date('d.m.Y', strtotime($manually)) ?>
+                        <?= t('common.topic_data_was_last_updated_manually_on') ?> <?= date('d.m.Y', strtotime($manually)) ?>
                     </small>
                 <?php
                 elseif ($fetched) : ?>
                     <small class="d-block mt-5 text-muted">
-                        <?= lang('common.topic_data_was_last_updated_on') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
+                        <?= t('common.topic_data_was_last_updated_on') ?> <?= date('d.m.Y', strtotime($fetched)) ?>
                     </small>
                 <?php endif; ?>
                 <!-- if fetched is longer ago, show a button to fetch new data -->
                 <?php if (!$fetched || strtotime($fetched) < strtotime('-30 days')) : ?>
                     <button class="btn primary small mt-5" id="openalex-refresh-button" onclick="fetchOpenAlex('<?= $doc['doi'] ?>')">
                         <i class="ph ph-arrows-clockwise"></i>
-                        <?= lang('common.fetch_latest_topics') ?>
+                        <?= t('common.fetch_latest_topics') ?>
                     </button>
                 <?php endif; ?>
             <?php endif; ?>
@@ -1944,11 +1944,11 @@ if ($edit_perm) {
     <section id="coauthors" style="display:none">
         <h2>
             <i class="ph ph-graph" aria-hidden="true"></i>
-            <?= lang('common.coauthors') ?>
+            <?= t('common.coauthors') ?>
         </h2>
         <a href="<?= ROOTPATH ?>/activities/edit/<?= $id ?>/authors" class="btn secondary">
             <i class="ph ph-pencil-simple-line"></i>
-            <?= lang('action.edit') ?>
+            <?= t('action.edit') ?>
         </a>
         <div class="row row-eq-spacing">
             <div class="col-md-6 flex-grow-0" style="max-width: 40rem">
@@ -1967,15 +1967,15 @@ if ($edit_perm) {
     <!-- new section with history -->
     <section id="history" style="display: none;">
         <h2 class="title">
-            <?= lang('common.history') ?>
+            <?= t('common.history') ?>
         </h2>
         <p>
-            <?= lang('common.history_of_changes_to_this_activity') ?>
+            <?= t('common.history_of_changes_to_this_activity') ?>
         </p>
 
         <?php
         if (empty($doc['history'] ?? [])) {
-            echo lang('common.no_history_available');
+            echo t('common.no_history_available');
         } else {
             // require BASEPATH . "/php/TextDiff/TextDiff.php";
             // $latest = '';
@@ -2000,7 +2000,7 @@ if ($edit_perm) {
 
                         <?php
                         if (isset($h['source']) && !empty($h['source'])) {
-                            echo '<div><b>' . lang('common.source') . '</b>';
+                            echo '<div><b>' . t('common.source') . '</b>';
                             echo ' <code>' . $h['source'] . '</code></div>';
                         }
                         if (isset($h['comment']) && !empty($h['comment'])) { ?>
@@ -2009,7 +2009,7 @@ if ($edit_perm) {
                         }
                         if (isset($h['changes']) && !empty($h['changes'])) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('common.changes_to_the_activity') .
+                                t('common.changes_to_the_activity') .
                                 '</div>';
                             echo '<table class="table w-auto small">';
                             foreach ($h['changes'] as $key => $change) {
@@ -2030,7 +2030,7 @@ if ($edit_perm) {
                             echo '</table>';
                         } else  if (isset($h['data']) && !empty($h['data'])) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('common.status_at_this_time_point') .
+                                t('common.status_at_this_time_point') .
                                 '</div>';
 
                             echo '<table class="table w-auto small">';
@@ -2044,7 +2044,7 @@ if ($edit_perm) {
                             }
                             echo '</table>';
                         } else if ($h['type'] == 'edited') {
-                            echo lang('common.no_changes_tracked');
+                            echo t('common.no_changes_tracked');
                         }
                         ?>
                     </div>
@@ -2070,14 +2070,14 @@ if ($edit_perm) {
                             <span aria-hidden="true">&times;</span>
                         </a>
                         <h5 class="title">
-                            <?= lang('activities.add_guests') ?>
+                            <?= t('activities.add_guests') ?>
                         </h5>
                         <div>
                             <h3>
-                                <?= lang('activities.add_guests_to_this_activity') ?>
+                                <?= t('activities.add_guests_to_this_activity') ?>
                             </h3>
                             <p>
-                                <?= lang('activities.you_can_add_guests_to_this_activity_by_entering_their_names_and_affiliation') ?>
+                                <?= t('activities.you_can_add_guests_to_this_activity_by_entering_their_names_and_affiliation') ?>
                             </p>
 
                             <form action="<?= ROOTPATH ?>/crud/activities/guests" method="post">
@@ -2086,9 +2086,9 @@ if ($edit_perm) {
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th><?= lang('activities.last') ?></th>
-                                            <th><?= lang('activities.first') ?></th>
-                                            <th><?= lang('common.email') ?></th>
+                                            <th><?= t('activities.last') ?></th>
+                                            <th><?= t('activities.first') ?></th>
+                                            <th><?= t('common.email') ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -2120,7 +2120,7 @@ if ($edit_perm) {
                                             <td colspan="5">
                                                 <button type="button" class="btn small" id="add-guest" onclick="addGuestRow()">
                                                     <i class="ph ph-plus"></i>
-                                                    <?= lang('activities.add_guest') ?>
+                                                    <?= t('activities.add_guest') ?>
                                                 </button>
                                             </td>
                                         </tr>
@@ -2129,7 +2129,7 @@ if ($edit_perm) {
 
                                 <button type="submit" class="btn primary">
                                     <i class="ph ph-save"></i>
-                                    <?= lang('activities.save_guests') ?>
+                                    <?= t('activities.save_guests') ?>
                                 </button>
 
                             </form>
@@ -2137,17 +2137,17 @@ if ($edit_perm) {
                             <div class="box">
                                 <div class="content">
                                     <h3>
-                                        <?= lang('activities.import_guests_from_csv') ?>
+                                        <?= t('activities.import_guests_from_csv') ?>
                                     </h3>
                                     <p>
-                                        <?= lang('activities.you_can_import_a_list_of_guests_from_a_csv_file') ?>
+                                        <?= t('activities.you_can_import_a_list_of_guests_from_a_csv_file') ?>
                                     </p>
                                     <div class="custom-file">
                                         <input type="file" id="guest-file">
-                                        <label for="guest-file"><?= lang('common.select_file') ?></label>
+                                        <label for="guest-file"><?= t('common.select_file') ?></label>
                                     </div>
                                     <small>
-                                        <?= lang('activities.the_file_should_contain_columns_for_last_name_first_name_and_email_address') ?>
+                                        <?= t('activities.the_file_should_contain_columns_for_last_name_first_name_and_email_address') ?>
                                     </small>
                                 </div>
 
@@ -2249,7 +2249,7 @@ if ($edit_perm) {
         <section id="guests" style="display:none">
 
             <h2 class="title">
-                <?= lang('common.guests') ?>
+                <?= t('common.guests') ?>
             </h2>
 
             <?php if ($Settings->featureEnabled('guest-forms')) {
@@ -2257,13 +2257,13 @@ if ($edit_perm) {
             ?>
                 <a href="#add-guests" class="btn primary">
                     <i class="ph ph-plus" aria-hidden="true"></i>
-                    <?= lang('activities.add_guests') ?>
+                    <?= t('activities.add_guests') ?>
                 </a>
 
             <?php } ?>
 
             <p>
-                <?= lang('activities.there_are_currently_guests_guests_involved_in_this_activity', replace: ['guests' => count($guests)]) ?>
+                <?= t('activities.there_are_currently_guests_guests_involved_in_this_activity', replace: ['guests' => count($guests)]) ?>
             </p>
 
             <?php if ($user_activity || $Settings->hasPermission('guests.view')) {
@@ -2273,10 +2273,10 @@ if ($edit_perm) {
                 <table class="table mb-20">
                     <thead>
                         <tr>
-                            <th><?= lang('activities.last') ?></th>
-                            <th><?= lang('activities.first') ?></th>
-                            <th><?= lang('common.email') ?></th>
-                            <th><?= lang('common.status') ?></th>
+                            <th><?= t('activities.last') ?></th>
+                            <th><?= t('activities.first') ?></th>
+                            <th><?= t('common.email') ?></th>
+                            <th><?= t('common.status') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2289,17 +2289,17 @@ if ($edit_perm) {
                                     <?php
                                     switch ($guest['status'] ?? 'new') {
                                         case 'pending':
-                                            echo '<span class="badge primary">' . lang('common.pending') . '</span>';
+                                            echo '<span class="badge primary">' . t('common.pending') . '</span>';
                                             break;
                                         case 'approved':
-                                            echo '<span class="badge success">' . lang('common.approved') . '</span>';
+                                            echo '<span class="badge success">' . t('common.approved') . '</span>';
                                             break;
                                         case 'new':
-                                            echo '<span class="badge signal">' . lang('common.new') . '</span>';
+                                            echo '<span class="badge signal">' . t('common.new') . '</span>';
                                             $new_guests = true;
                                             break;
                                         default:
-                                            echo '<span class="badge danger">' . lang('common.unknown') . '</span>';
+                                            echo '<span class="badge danger">' . t('common.unknown') . '</span>';
                                             break;
                                     }
                                     ?>
@@ -2311,7 +2311,7 @@ if ($edit_perm) {
                                             <input type="hidden" name="guest" value="<?= $guest['id'] ?>">
                                             <button type="submit" class="btn small">
                                                 <i class="ph ph-envelope" aria-hidden="true"></i>
-                                                <?= lang('activities.send_email') ?>
+                                                <?= t('activities.send_email') ?>
                                             </button>
                                         </form>
                                     <?php } ?>
@@ -2319,7 +2319,7 @@ if ($edit_perm) {
                                     <!-- show qr code -->
                                     <button type="button" class="btn small" data-toggle="modal" data-target="qr-<?= $guest['id'] ?>">
                                         <i class="ph ph-qr-code" aria-hidden="true"></i>
-                                        <?= lang('activities.qr_code') ?>
+                                        <?= t('activities.qr_code') ?>
                                     </button>
 
                                 </td>
@@ -2348,7 +2348,7 @@ if ($edit_perm) {
                                     <span aria-hidden="true">&times;</span>
                                 </a>
                                 <h5 class="title">
-                                    <?= lang('activities.qr_code_for') . $guest['first'] . ' ' . $guest['last'] ?>
+                                    <?= t('activities.qr_code_for') . $guest['first'] . ' ' . $guest['last'] ?>
                                 </h5>
                                 <div>
                                     <div style="background-color: white; display: inline-block;">
@@ -2368,7 +2368,7 @@ if ($edit_perm) {
                     <form action="<?= ROOTPATH ?>/crud/activities/guest-mail/<?= $id ?>" method="post">
                         <button type="submit" class="btn primary">
                             <i class="ph ph-envelope" aria-hidden="true"></i>
-                            <?= lang('activities.send_email_to_new_guests') ?>
+                            <?= t('activities.send_email_to_new_guests') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -2376,7 +2376,7 @@ if ($edit_perm) {
 
             <?php } else { ?>
                 <p>
-                    <?= lang('activities.you_do_not_have_permission_to_view_the_list_of_guests_only_authors_of_the_a') ?>
+                    <?= t('activities.you_do_not_have_permission_to_view_the_list_of_guests_only_authors_of_the_a') ?>
                 </p>
             <?php } ?>
 

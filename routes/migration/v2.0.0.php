@@ -190,8 +190,8 @@ function ensureIndex($collection, array $keys, array $options = [])
 }
 
 echo '<div class="migration-card">';
-echo '<h3>' . lang('admin.command_palette_search_indexes') . '</h3>';
-echo '<p class="migration-muted">' . lang('admin.osiris_is_creating_or_confirming_the_indexes_required_for_fast_command_pale') . '</p>';
+echo '<h3>' . t('admin.command_palette_search_indexes') . '</h3>';
+echo '<p class="migration-muted">' . t('admin.osiris_is_creating_or_confirming_the_indexes_required_for_fast_command_pale') . '</p>';
 echo '<ul class="migration-index-list">';
 
 /* persons */
@@ -265,7 +265,7 @@ if ($news->countDocuments() === 0) {
 }
 
 echo '<div class="migration-card success">';
-echo '<h3 class="migration-ok">✓ ' . lang('admin.migration_completed') . '</h3>';
-echo '<p>' . lang('admin.all_required_migration_steps_have_finished_osiris_is_ready_to_use_with_the') . '</p>';
+echo '<h3 class="migration-ok">✓ ' . t('admin.migration_completed') . '</h3>';
+echo '<p>' . t('admin.all_required_migration_steps_have_finished_osiris_is_ready_to_use_with_the') . '</p>';
 echo '</div>';
 echo '</div>';

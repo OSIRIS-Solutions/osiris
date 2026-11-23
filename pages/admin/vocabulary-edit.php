@@ -37,7 +37,7 @@
 
     <p>
         <i class="ph ph-warning text-signal"></i>
-        <?= lang('admin.please_be_careful_when_editing_vocabularies_as_deleting_values_can_have_uni') ?>
+        <?= t('admin.please_be_careful_when_editing_vocabularies_as_deleting_values_can_have_uni') ?>
     </p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/vocabularies/<?= $vocab['id'] ?>" method="POST" id="vocabulary-<?= $vocab['id'] ?>">
@@ -50,16 +50,16 @@
                 <tr>
                     <th></th>
                     <th>
-                        <?= lang('common.id') ?>
+                        <?= t('common.id') ?>
                     </th>
                     <th>
-                        <?= lang('common.value') ?> (EN)
+                        <?= t('common.value') ?> (EN)
                     </th>
                     <th>
-                        <?= lang('common.value') ?> (DE)
+                        <?= t('common.value') ?> (DE)
                     </th>
                     <th>
-                        <?= lang('common.inactive') ?>
+                        <?= t('common.inactive') ?>
                     </th>
                 </tr>
             </thead>
@@ -102,7 +102,7 @@
                     <td colspan="4">
                         <button type="button" class="btn small" onclick="addRow(this)">
                             <i class="ph ph-plus"></i>
-                            <?= lang('admin.add_value') ?>
+                            <?= t('admin.add_value') ?>
                         </button>
                     </td>
                 </tr>
@@ -111,7 +111,7 @@
 
         <button type="submit" class="btn success mt-20">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
     </form>
 </div>
@@ -146,7 +146,7 @@
         </td>
         <td>
             <button type="button" class="btn small outline" onclick="this.closest('tr').remove()">
-                <i class="ph ph-trash" title="<?= lang('action.remove') ?>"></i>
+                <i class="ph ph-trash" title="<?= t('action.remove') ?>"></i>
             </button>
         </td>
     `;

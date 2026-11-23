@@ -40,35 +40,35 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
 
 <h1>
     <i class="ph-duotone ph-hand"></i>
-    <?= lang('common.claim_activities') ?>
+    <?= t('common.claim_activities') ?>
 </h1>
 
-<?= lang('activities.the_following_names_are_used_to_search_in_activities_where_your_user_accoun') ?>
+<?= t('activities.the_following_names_are_used_to_search_in_activities_where_your_user_accoun') ?>
 
 <p>
-    <b><?= lang('activities.last_names') ?>:</b>
+    <b><?= t('activities.last_names') ?>:</b>
     <?php foreach ($last as $l) { ?>
         <span class="badge primary"><?= $l ?></span>
     <?php } ?>
 
 </p>
 <p>
-    <b><?= lang('activities.first_names') ?>:</b>
+    <b><?= t('activities.first_names') ?>:</b>
     <?php foreach ($first as $f) { ?>
         <span class="badge primary"><?= $f ?></span>
     <?php } ?>
 </p>
 <p>
-    <?= lang('activities.update_your_names') ?>
-    <a href="<?= ROOTPATH ?>/user/edit/<?= $scientist['username'] ?>" class="link"><?= lang('activities.here') ?></a>
+    <?= t('activities.update_your_names') ?>
+    <a href="<?= ROOTPATH ?>/user/edit/<?= $scientist['username'] ?>" class="link"><?= t('activities.here') ?></a>
 </p>
 
 <?php if (empty($activities)) { ?>
     <div class="alert danger mb-10 ">
-        <?= lang('activities.no_activities_found') ?>
+        <?= t('activities.no_activities_found') ?>
     </div>
     <a href="<?= ROOTPATH ?>/profile/<?= $scientist['username'] ?>" class="btn primary">
-        <?= lang('activities.back_to_profile') ?>
+        <?= t('activities.back_to_profile') ?>
     </a>
     <?php return; ?>
 
@@ -81,13 +81,13 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
     <table class="table mb-10">
         <thead>
             <th>
-                <?= lang('common.activities') ?>
+                <?= t('common.activities') ?>
             </th>
             <th>
-                <?= lang('activities.matched_author') ?>
+                <?= t('activities.matched_author') ?>
             </th>
             <th>
-                <?= lang('action.claim') ?>
+                <?= t('action.claim') ?>
                 <div class="custom-checkbox">
                     <input type="checkbox" id="claim-all" onclick="$('.claim-checkbox').attr('checked', $(this).is(':checked'))">
                     <label for="claim-all" class="empty"></label>
@@ -113,7 +113,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                         if ($author) {
                             echo $author['last'] . ', ' . $author['first'];
                         } else {
-                            echo lang('activities.no_matching_author_found');
+                            echo t('activities.no_matching_author_found');
                         }
                         ?>
                     </td>
@@ -121,7 +121,7 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
                         <!-- checkbox -->
                         <div class="custom-checkbox">
                             <input type="checkbox" name="activity[]" value="<?= $activity['_id'] ?>" id="claim-<?= $activity['_id'] ?>" class="claim-checkbox">
-                            <label for="claim-<?= $activity['_id'] ?>"><?= lang('action.claim') ?></label>
+                            <label for="claim-<?= $activity['_id'] ?>"><?= t('action.claim') ?></label>
                         </div>
                     </td>
                 </tr>
@@ -130,6 +130,6 @@ $activities = $osiris->activities->find($filter, $options)->toArray();
     </table>
 
     <button type="submit" class="btn primary">
-        <?= lang('activities.claim_selected_activities') ?>
+        <?= t('activities.claim_selected_activities') ?>
     </button>
 </form>

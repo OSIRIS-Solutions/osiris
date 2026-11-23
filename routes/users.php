@@ -17,7 +17,7 @@
 Route::get('/user/browse', function () {
     // if ($page == 'users') 
     $breadcrumb = [
-        ['name' => lang('common.users')]
+        ['name' => t('common.users')]
     ];
     include_once BASEPATH . "/php/init.php";
     include BASEPATH . "/header.php";
@@ -48,7 +48,7 @@ Route::get('/user/edit/(.*)', function ($user) {
     }
 
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_edit_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_edit_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -59,9 +59,9 @@ Route::get('/user/edit/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('action.edit')]
+        ['name' => t('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -73,7 +73,7 @@ Route::get('/user/edit/(.*)', function ($user) {
 Route::get('/user/units/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_edit_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_edit_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -84,9 +84,9 @@ Route::get('/user/units/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('people.edit_units')]
+        ['name' => t('people.edit_units')]
     ];
 
     include BASEPATH . "/header.php";
@@ -99,7 +99,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
     // include_once BASEPATH . "/php/Document.php";
 
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_edit_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_edit_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -111,9 +111,9 @@ Route::get('/user/visibility/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('people.configure_web_view')]
+        ['name' => t('people.configure_web_view')]
     ];
 
     include BASEPATH . "/header.php";
@@ -126,7 +126,7 @@ Route::get('/user/visibility/(.*)', function ($user) {
 Route::get('/user/inactivate/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.inactive')) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_inactivate_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_inactivate_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -138,9 +138,9 @@ Route::get('/user/inactivate/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('people.inactivate_inactivate')]
+        ['name' => t('people.inactivate_inactivate')]
     ];
 
     include BASEPATH . "/header.php";
@@ -153,7 +153,7 @@ Route::get('/user/inactivate/(.*)', function ($user) {
 Route::get('/user/delete/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.delete')) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_delete_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_delete_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -166,9 +166,9 @@ Route::get('/user/delete/(.*)', function ($user) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $data['name'], 'path' => "/profile/$user"],
-        ['name' => lang('action.delete')]
+        ['name' => t('action.delete')]
     ];
 
     include BASEPATH . "/header.php";
@@ -189,8 +189,8 @@ Route::get('/user/ldap-example', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
-        ['name' => lang('people.ldap_example')]
+        ['name' => t('common.users'), 'path' => "/user/browse"],
+        ['name' => t('people.ldap_example')]
     ];
 
     include BASEPATH . "/header.php";
@@ -217,7 +217,7 @@ Route::get('/profile/?(.*)', function ($user) {
     $Format = new Document($user);
 
     if (empty($scientist)) {
-        $_SESSION['msg'] = lang('error.user_not_found');
+        $_SESSION['msg'] = t('error.user_not_found');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/user/browse");
         die;
@@ -225,7 +225,7 @@ Route::get('/profile/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $name]
     ];
 
@@ -246,9 +246,9 @@ Route::get('/my-year/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $name, 'path' => "/profile/$user"],
-        ['name' => lang('people.the_year')]
+        ['name' => t('people.the_year')]
     ];
 
     include BASEPATH . "/header.php";
@@ -262,7 +262,7 @@ Route::get('/issues', function () {
     $user = $_SESSION['username'];
 
     $breadcrumb = [
-        ['name' => lang('people.issues')]
+        ['name' => t('people.issues')]
     ];
 
     include BASEPATH . "/header.php";
@@ -275,7 +275,7 @@ Route::get('/messages', function () {
     $user = $_SESSION['username'];
 
     $breadcrumb = [
-        ['name' => lang('people.messages')]
+        ['name' => t('people.messages')]
     ];
 
     include BASEPATH . "/header.php";
@@ -286,12 +286,12 @@ Route::get('/messages', function () {
 Route::get('/(expertise|keywords)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"]
+        ['name' => t('common.users'), 'path' => "/user/browse"]
     ];
     if ($collection == 'keywords') {
-        $breadcrumb[] = ['name' => lang('admin.keywords_persons')];
+        $breadcrumb[] = ['name' => t('admin.keywords_persons')];
     } else if ($collection == 'expertise') {
-        $breadcrumb[] = ['name' => lang('people.expertise_search')];
+        $breadcrumb[] = ['name' => t('people.expertise_search')];
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/expertise.php";
@@ -309,9 +309,9 @@ Route::get('/achievements/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $name, 'path' => "/profile/$user"],
-        ['name' => lang('common.achievements')]
+        ['name' => t('common.achievements')]
 
     ];
 
@@ -362,7 +362,7 @@ Route::get('/(synchronize-users)', function () {
 Route::post('/(synchronize-users|admin/ldap-users)', function ($both) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('people.you_do_not_have_permission_to_synchronize_users'), '/admin', lang('people.go_back_to_settings'));
+        abortwith(403, t('people.you_do_not_have_permission_to_synchronize_users'), '/admin', t('people.go_back_to_settings'));
     }
     include_once BASEPATH . "/php/_login.php";
     include BASEPATH . "/header.php";
@@ -521,7 +521,7 @@ Route::post('/switch-user', function () {
         $allowed = $osiris->persons->count(['username' => $username, 'maintenance' => $realusername]);
         // change username if user is allowed
         if ($allowed == 1 || $realusername == $username) {
-            $_SESSION['msg'] = lang('people.you_are_now_logged_in_as') . " " . $DB->getNameFromId($username);
+            $_SESSION['msg'] = t('people.you_are_now_logged_in_as') . " " . $DB->getNameFromId($username);
             $_SESSION['msg_type'] = "info";
             $_SESSION['realuser'] = $realusername;
             $_SESSION['username'] = $username;
@@ -532,7 +532,7 @@ Route::post('/switch-user', function () {
         }
 
         // do nothing if user is not allowed
-        $_SESSION['msg'] = lang('people.you_are_not_allowed_to_switch_to_this_user');
+        $_SESSION['msg'] = t('people.you_are_not_allowed_to_switch_to_this_user');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/" . $_SESSION['username']);
     }
@@ -544,9 +544,9 @@ Route::post('/switch-user', function () {
 
 Route::post('/crud/users/update/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_edit_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_edit_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die;
@@ -617,7 +617,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     foreach (['slack', 'teams', 'matrix'] as $type) {
         $value = $person['socials'][$type] ?? null;
         if (!empty($value) && !isset($validLinks[$type])) {
-            abortwith(400, lang('people.please_enter_a_valid_contact_url'));
+            abortwith(400, t('people.please_enter_a_valid_contact_url'));
         }
     }
     if (array_key_exists('contact-button', $person)) {
@@ -688,12 +688,12 @@ Route::post('/crud/users/update/(.*)', function ($user) {
         // check if old password matches
         $account = $osiris->accounts->findOne(['username' => $user]);
         if (!empty($account['password'] ?? null) && !password_verify(is_string($_POST['old_password'] ?? null) ? $_POST['old_password'] : '', $account['password'])) {
-            $_SESSION['msg'] = lang('people.old_password_is_incorrect');
+            $_SESSION['msg'] = t('people.old_password_is_incorrect');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
         } else if ($_POST['password'] !== ($_POST['password2'] ?? null)) {
-            $_SESSION['msg'] = lang('common.passwords_do_not_match');
+            $_SESSION['msg'] = t('common.passwords_do_not_match');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/profile/$user");
             die;
@@ -767,7 +767,7 @@ Route::post('/crud/users/update/(.*)', function ($user) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('people.user_updated_successfully');
+        $_SESSION['msg'] = t('people.user_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -782,7 +782,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Render.php";
     if (!$Settings->hasPermission('user.edit') && $user != $_SESSION['username']) {
-        abortwith(403, lang('people.you_don_t_have_permission_to_edit_users'));
+        abortwith(403, t('people.you_don_t_have_permission_to_edit_users'));
     }
 
     if (!isset($_POST['values']) && isset($_POST['id'])) {
@@ -792,7 +792,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             ['projection' => ['units.$' => 1]]
         );
         if (empty($unit)) {
-            abortwith(404, lang('common.unit'), "/user/units/$user");
+            abortwith(404, t('common.unit'), "/user/units/$user");
         }
         $unit = $unit['units'][0];
 
@@ -817,7 +817,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
             renderAuthorUnitsMany($filter);
         }
 
-        $_SESSION['msg'] = lang('common.unit_deleted_successfully');
+        $_SESSION['msg'] = t('common.unit_deleted_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . ROOTPATH . "/user/units/$user");
         die();
@@ -852,7 +852,7 @@ Route::post('/crud/users/units/(.*)', function ($user) {
     renderAuthorUnitsMany($filter);
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('common.unit_updated_successfully');
+        $_SESSION['msg'] = t('common.unit_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -978,7 +978,7 @@ Route::post('/crud/users/inactivate/(.*)', function ($user) {
         unlink(BASEPATH . "/img/users/$user.jpg");
     }
 
-    $_SESSION['msg'] = lang('people.user_inactivated_successfully');
+    $_SESSION['msg'] = t('people.user_inactivated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/profile/" . $user);
     die();
@@ -990,7 +990,7 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
 
     // check permissions
     if (!$Settings->hasPermission('user.delete')) {
-        $_SESSION['msg'] = lang('people.you_don_t_have_permission_to_delete_users');
+        $_SESSION['msg'] = t('people.you_don_t_have_permission_to_delete_users');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/profile/$user");
         die();
@@ -998,7 +998,7 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
 
     $data = $DB->getPerson($user);
     if (empty($data)) {
-        $_SESSION['msg'] = lang('error.user_not_found');
+        $_SESSION['msg'] = t('error.user_not_found');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/user/browse");
         die();
@@ -1046,7 +1046,7 @@ Route::post('/crud/users/delete/(.*)', function ($user) {
         unlink(BASEPATH . "/img/users/$user.jpg");
     }
 
-    $_SESSION['msg'] = lang('people.user_deleted');
+    $_SESSION['msg'] = t('people.user_deleted');
     // redirect to user browse page
     header("Location: " . ROOTPATH . "/user/browse");
     die();
@@ -1060,7 +1060,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('user.image') && $user != $_SESSION['username']) {
-        abortwith(403, lang('people.you_don_t_have_permission_to_change_profile_picture'));
+        abortwith(403, t('people.you_don_t_have_permission_to_change_profile_picture'));
     }
 
     if (isset($_FILES["file"])) {
@@ -1068,19 +1068,19 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = 'error';
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
+            $_SESSION['msg'] = t('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = 'error';
         } else {
             // check image settings
@@ -1106,7 +1106,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
                 $filename = "$user.jpg";
                 // upload to file system
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
-                    $_SESSION['msg'] = lang('people.profile_picture_updated');
+                    $_SESSION['msg'] = t('people.profile_picture_updated');
                     $_SESSION['msg_type'] = 'success';
                     header("Location: " . ROOTPATH . "/profile/$user");
                     die;
@@ -1120,7 +1120,7 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
         $filename = "$user.jpg";
         if ($Settings->featureEnabled('db_pictures')) {
             $osiris->userImages->deleteOne(['user' => $user]);
-            $_SESSION['msg'] = lang('people.profile_picture_deleted');
+            $_SESSION['msg'] = t('people.profile_picture_deleted');
         } else {
             $target_dir = BASEPATH . "/img/users/";
             if (!is_writable($target_dir)) {
@@ -1128,10 +1128,10 @@ Route::post('/crud/users/profile-picture/(.*)', function ($user) {
             } else if (!unlink($target_dir . $filename)) {
                 // get error message
                 $error = error_get_last();
-                $_SESSION['msg'] = lang('people.error_deleting_file') . " " . $error['message'];
+                $_SESSION['msg'] = t('people.error_deleting_file') . " " . $error['message'];
                 $_SESSION['msg_type'] = 'error';
             } else {
-                $_SESSION['msg'] = lang('people.profile_picture_deleted');
+                $_SESSION['msg'] = t('people.profile_picture_deleted');
                 $_SESSION['msg_type'] = 'success';
             }
         }
@@ -1158,7 +1158,7 @@ Route::post('/crud/users/approve', function () {
     $_SESSION['last_notification_check'] = 0;
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('people.you_approved_the_activities_for_quarter_q', replace: ['q' => $q]);
+        $_SESSION['msg'] = t('people.you_approved_the_activities_for_quarter_q', replace: ['q' => $q]);
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -1226,9 +1226,9 @@ Route::get('/claim/?(.*)', function ($user) {
     $name = $scientist['displayname'];
 
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $name, 'path' => "/profile/$user"],
-        ['name' => lang('action.claim')]
+        ['name' => t('action.claim')]
     ];
 
     include BASEPATH . "/header.php";
@@ -1243,14 +1243,14 @@ Route::post('/claim/?(.*)', function ($user) {
     if (empty($user)) $user = $_SESSION['username'];
 
     if (empty($_POST['activity'])) {
-        $_SESSION['msg'] = lang('people.no_activity_selected');
+        $_SESSION['msg'] = t('people.no_activity_selected');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/claim/$user");
         die;
     }
 
     if (empty($_POST['last']) || empty($_POST['first'])) {
-        $_SESSION['msg'] = lang('people.no_valid_submission');
+        $_SESSION['msg'] = t('people.no_valid_submission');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/claim/$user");
         die;
@@ -1273,7 +1273,7 @@ Route::post('/claim/?(.*)', function ($user) {
         $N += $updateResult->getModifiedCount();
     }
 
-    $_SESSION['msg'] = lang('people.claim_successful_you_claimed_n_activities', replace: ['N' => $N]);
+    $_SESSION['msg'] = t('people.claim_successful_you_claimed_n_activities', replace: ['N' => $N]);
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/profile/$user");
 }, 'login');
@@ -1362,7 +1362,7 @@ Route::post('/crud/users/set-preference', function () {
     $key = $_POST['key'] ?? null;
     $value = $_POST['value'] ?? null;
     if (empty($key)) {
-        abortwith(400, lang('people.no_preference_key_provided'));
+        abortwith(400, t('people.no_preference_key_provided'));
     }
     $allowedPreferences = [
         'activity_view' => ['new', 'legacy'],
@@ -1370,14 +1370,14 @@ Route::post('/crud/users/set-preference', function () {
         'home_screen' => ['home', 'resource-hub'],
     ];
     if (!isset($allowedPreferences[$key]) || !in_array($value, $allowedPreferences[$key], true)) {
-        abortwith(400, lang('people.invalid_preference'));
+        abortwith(400, t('people.invalid_preference'));
     }
     $updateResult = $osiris->persons->updateOne(
         ['username' => $user],
         ['$set' => [$key => $value]]
     );
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('people.preference_updated');
+        $_SESSION['msg'] = t('people.preference_updated');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die;

@@ -35,10 +35,10 @@ require_once BASEPATH . '/php/Orcid.php';
 <?php if (!$googlescholar && !$openalex && !$orcid) { ?>
     <div class="alert danger">
         <h2 class="title">
-            <?= lang('import.import_not_available') ?>
+            <?= t('import.import_not_available') ?>
         </h2>
         <p>
-            <?= lang('import.the_import_feature_is_not_available_for_your_institute') ?>
+            <?= t('import.the_import_feature_is_not_available_for_your_institute') ?>
         </p>
     </div>
 <?php } ?>
@@ -57,23 +57,23 @@ if ($openalex) {
                 </b>
                 <h2 class="title mt-10">OpenAlex Import</h2>
                 <p>
-                    <?= lang('import.you_can_import_data_from_openalex_this_method_is_very_reliable_so_we_recomm') ?>
+                    <?= t('import.you_can_import_data_from_openalex_this_method_is_very_reliable_so_we_recomm') ?>
                 </p>
                 <p>
                     <b>
-                        <?= lang('import.how_you_can_find_your_openalex_id') ?>
+                        <?= t('import.how_you_can_find_your_openalex_id') ?>
                     </b>
                 </p>
 
                 <ol class="list success">
                     <li>
-                        <?= lang('import.go_to_openalex_and_search_for_your_name_or_for_one_of_your_publications') ?>
+                        <?= t('import.go_to_openalex_and_search_for_your_name_or_for_one_of_your_publications') ?>
                     </li>
                     <li>
-                        <?= lang('import.click_on_one_of_your_publications_a_side_window_will_open_showing_the_detai') ?>
+                        <?= t('import.click_on_one_of_your_publications_a_side_window_will_open_showing_the_detai') ?>
                     </li>
                     <li>
-                        <?= lang('import.you_are_now_on_your_openalex_profile_page_to_import_all_the_publications_sh') ?>
+                        <?= t('import.you_are_now_on_your_openalex_profile_page_to_import_all_the_publications_sh') ?>
                     </li>
 
                     <form action="<?= ROOTPATH ?>/import/openalex" method="get">
@@ -93,7 +93,7 @@ if ($openalex) {
             <div class="content">
                 <h2 class="title">OpenAlex Import</h2>
                 <p>
-                    <?= lang('import.your_institute_must_add_the_institutional_openalex_id_in_their_general_sett') ?>
+                    <?= t('import.your_institute_must_add_the_institutional_openalex_id_in_their_general_sett') ?>
                 </p>
             </div>
         </div>
@@ -108,14 +108,14 @@ if ($googlescholar) {
             <div class="content">
                 <h2 class="title">Google Scholar Import</h2>
                 <p>
-                    <?= lang('import.you_can_import_data_from_your_google_scholar_account') ?>:
+                    <?= t('import.you_can_import_data_from_your_google_scholar_account') ?>:
                 </p>
                 <p class="mt-0 font-size-16 font-weight-bold">
                     Account-ID: <a href="https://scholar.google.com/citations?user=<?= $USER['google_scholar'] ?>"><?= $USER['google_scholar'] ?></a>
                 </p>
 
                 <p class="font-size-12 text-muted">
-                    <?= lang('import.please_note_that_only_the_100_latest_entries_can_be_imported') ?>
+                    <?= t('import.please_note_that_only_the_100_latest_entries_can_be_imported') ?>
                 </p>
 
                 <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $USER['google_scholar'] ?>" method="get">
@@ -129,10 +129,10 @@ if ($googlescholar) {
             <div class="content">
                 <h2 class="title">Google Scholar Import</h2>
                 <p>
-                    <?= lang('import.you_must_connect_a_google_scholar_account_to_your_profile_to_use_this_featu') ?>
+                    <?= t('import.you_must_connect_a_google_scholar_account_to_your_profile_to_use_this_featu') ?>
                 </p>
 
-                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" class="btn"><?= lang('import.update_profile') ?></a>
+                <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>" class="btn"><?= t('import.update_profile') ?></a>
 
             </div>
         </div>
@@ -151,7 +151,7 @@ if($orcid) {
                 <div class="content">
                     <h2 class="title">ORCID Import</h2>
                     <p>
-                        <?= lang('import.you_can_import_data_from_your_orcid_account') ?>:
+                        <?= t('import.you_can_import_data_from_your_orcid_account') ?>:
                     </p>
                     <p class="mt-0">
                         Account-ID: <a href="<?= $orcid->api_base_url . $USER['orcid'] ?>"><?= $USER['orcid'] ?></a>
@@ -168,10 +168,10 @@ if($orcid) {
                 <div class="content">
                     <h2 class="title">ORCID Import</h2>
                     <p>
-                        <?= lang('import.you_must_connect_an_orcid_account_to_your_profile_to_use_this_feature') ?>
+                        <?= t('import.you_must_connect_an_orcid_account_to_your_profile_to_use_this_feature') ?>
                     </p>
 
-                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= lang('import.update_profile') ?></a>
+                    <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>#section-contact" class="btn"><?= t('import.update_profile') ?></a>
 
                 </div>
             </div>
@@ -189,13 +189,13 @@ if($orcid) {
 <div class="box box-signal">
     <div class="content">
         <h2 class="title">
-            <?= lang('common.import_activities_from_file') ?>
+            <?= t('common.import_activities_from_file') ?>
         </h2>
         <form action="<?= ROOTPATH ?>/crud/import/file" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
             <div class="custom-file mb-20" id="file-input-div" >
-                <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                <label for="file-input"><?= lang('common.upload_a_bibtex_file') ?></label>
+                <input type="file" id="file-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>">
+                <label for="file-input"><?= t('common.upload_a_bibtex_file') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>
             </div>
 

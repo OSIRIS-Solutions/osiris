@@ -34,12 +34,12 @@
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-10">
     <h1>
         <i class="ph-duotone ph-files"></i>
-        <?= lang('common.documents') ?>
+        <?= t('common.documents') ?>
     </h1>
     <?php if ($managePerm ?? false) { ?>
         <a href="<?= ROOTPATH ?>/documents/manage" class="btn primary">
             <i class="ph ph-file-plus"></i>
-            <?= lang('common.manage_central_documents') ?>
+            <?= t('common.manage_central_documents') ?>
         </a>
     <?php } ?>
 </div>
@@ -48,10 +48,10 @@
 <?php if ((($centralPerm ?? false) || ($managePerm ?? false)) && ($connectPerm ?? false)) { ?>
 <div class="pills mb-10">
     <a href="<?= ROOTPATH ?>/documents/central" class="btn">
-        <?= lang('common.central_documents') ?>
+        <?= t('common.central_documents') ?>
     </a>
     <a href="<?= ROOTPATH ?>/documents/connected" class="btn active">
-        <?= lang('common.connected_documents') ?>
+        <?= t('common.connected_documents') ?>
     </a>
 </div>
 <?php } ?>
@@ -61,12 +61,12 @@
             <table id="uploadsTable" class="table table-hover align-middle">
                 <thead>
                     <tr>
-                        <th><?= lang('common.file') ?></th>
-                        <th><?= lang('documents.linked_to') ?></th>
-                        <th class="text-end"><?= lang('common.actions') ?></th>
-                        <th><?= lang('documents.document_type') ?></th>
-                        <th><?= lang('common.file_type') ?></th>
-                        <th><?= lang('documents.linked_entity') ?></th>
+                        <th><?= t('common.file') ?></th>
+                        <th><?= t('documents.linked_to') ?></th>
+                        <th class="text-end"><?= t('common.actions') ?></th>
+                        <th><?= t('documents.document_type') ?></th>
+                        <th><?= t('common.file_type') ?></th>
+                        <th><?= t('documents.linked_entity') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,7 +101,7 @@
                             continue;
                         }
 
-                        $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', lang('common.other'));
+                        $label = $Vocabulary->getValue($vocabs[$doc['type']], $doc['name'] ?? '', t('common.other'));
 
                         $uploader = $DB->getNameFromId($doc['uploaded_by']);
                         $date = !empty($doc['uploaded']) ? date('d.m.Y', strtotime($doc['uploaded'])) : '';
@@ -109,7 +109,7 @@
                         $filename = $doc['filename'] ?? '';
                         $desc = trim($doc['description'] ?? '');
                         $entityType = ucfirst($con['type'] ?? $doc['type']);
-                        $entityName = localized($con['name'] ?? '') ?: lang('common.unknown');
+                        $entityName = localized($con['name'] ?? '') ?: t('common.unknown');
                     ?>
                         <tr>
                             <!-- FILE -->
@@ -131,10 +131,10 @@
                                         <?php endif; ?>
 
                                         <div class="text-muted font-size-12 mt-5">
-                                            <?= lang('documents.file_name') ?>: <?= e($filename) ?> <br>
-                                            <?= lang('common.uploaded_by') ?> <?= e($uploader) ?>
-                                            <?= lang('common.on') ?> <?= e($date) ?>
-                                            · <?= e($size) ?> <?= lang('documents.bytes') ?>
+                                            <?= t('documents.file_name') ?>: <?= e($filename) ?> <br>
+                                            <?= t('common.uploaded_by') ?> <?= e($uploader) ?>
+                                            <?= t('common.on') ?> <?= e($date) ?>
+                                            · <?= e($size) ?> <?= t('documents.bytes') ?>
                                         </div>
                                     </div>
                                 </div>
@@ -184,28 +184,28 @@
                 <div id="active-filters"></div>
 
                 <h6>
-                    <?= lang('documents.by_linked_entity') ?>
+                    <?= t('documents.by_linked_entity') ?>
                 </h6>
                 <div class="filter">
                     <table id="filter-entity" class="table small simple">
                         <tr>
                             <td>
                                 <a onclick="filterDataTable(this, 'activities', 5)">
-                                    <?= lang('common.activities') ?>
+                                    <?= t('common.activities') ?>
                                 </a>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <a onclick="filterDataTable(this, 'proposals', 5)">
-                                    <?= lang('common.proposals') ?>
+                                    <?= t('common.proposals') ?>
                                 </a>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <a onclick="filterDataTable(this, 'nagoya-permit', 5)">
-                                    <?= lang('documents.nagoya_permits') ?>
+                                    <?= t('documents.nagoya_permits') ?>
                                 </a>
                             </td>
                         </tr>
@@ -213,7 +213,7 @@
                 </div>
 
                 <h6>
-                    <?= lang('documents.by_document_type') ?>
+                    <?= t('documents.by_document_type') ?>
                     <a class="float-right" onclick="filterDataTable('#filter-category .active', null, 3)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
@@ -221,7 +221,7 @@
                 </div>
 
                 <h6>
-                    <?= lang('common.by_file_type') ?>
+                    <?= t('common.by_file_type') ?>
                     <a class="float-right" onclick="filterDataTable('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
                 </h6>
                 <div class="filter">
@@ -235,27 +235,27 @@
 <script>
     const headers = [{
             key: 'file',
-            title: '<?= lang('common.file') ?>'
+            title: '<?= t('common.file') ?>'
         },
         {
             key: 'linked_to',
-            title: '<?= lang('documents.linked_to') ?>'
+            title: '<?= t('documents.linked_to') ?>'
         },
         {
             key: 'actions',
-            title: '<?= lang('common.actions') ?>'
+            title: '<?= t('common.actions') ?>'
         },
         {
             key: 'document_type',
-            title: '<?= lang('documents.document_type') ?>'
+            title: '<?= t('documents.document_type') ?>'
         },
         {
             key: 'file_type',
-            title: '<?= lang('common.file_type') ?>'
+            title: '<?= t('common.file_type') ?>'
         },
         {
             key: 'linked_entity',
-            title: '<?= lang('documents.linked_entity') ?>'
+            title: '<?= t('documents.linked_entity') ?>'
         },
     ];
     let dataTable = $('#uploadsTable').DataTable({

@@ -19,7 +19,7 @@ $reports = $osiris->adminReports->find();
 
 <h1>
     <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('admin.report_templates') ?>
+    <?= t('admin.report_templates') ?>
 </h1>
 
 <?php foreach ($reports as $report) { ?>
@@ -29,21 +29,21 @@ $reports = $osiris->adminReports->find();
             <p class="text-primary"><?= $report['description'] ?? '' ?></p>
 
             <span class="badge primary">
-                <b><?= lang('common.start_month') ?></b>: <?= format_month($report['start'] ?? null) ?>
+                <b><?= t('common.start_month') ?></b>: <?= format_month($report['start'] ?? null) ?>
             </span>
             <span class="badge primary">
-                <b><?= lang('common.duration') ?></b>: <?= $report['duration'] ?? '-' ?> <?= lang('reports.months') ?>
+                <b><?= t('common.duration') ?></b>: <?= $report['duration'] ?? '-' ?> <?= t('reports.months') ?>
             </span>
         </div>
         <div class="footer">
 
             <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report['_id'] ?>" class="btn mr-10">
                 <i class="ph ph-eye"></i>
-                <?= lang('common.preview') ?>
+                <?= t('common.preview') ?>
             </a>
             <a href="<?= ROOTPATH ?>/admin/reports/builder/<?= $report['_id'] ?>" class="btn">
                 <i class="ph ph-edit"></i>
-                <?= lang('action.edit') ?>
+                <?= t('action.edit') ?>
             </a>
 
             <!-- dropdown for deleting -->
@@ -56,7 +56,7 @@ $reports = $osiris->adminReports->find();
                         <input type="hidden" name="id" value="<?= $report['_id'] ?>">
                         <button type="submit" class="text-danger btn block link">
                             <i class="ph ph-trash"></i>
-                            <?= lang('action.delete') ?>
+                            <?= t('action.delete') ?>
                         </button>
                     </form>
 
@@ -73,17 +73,17 @@ $reports = $osiris->adminReports->find();
 
             <h3>
                 <i class="ph ph-plus-circle text-success"></i>
-                <?= lang('reports.new_report_template') ?>
+                <?= t('reports.new_report_template') ?>
             </h3>
             <div class="form-group">
-                <label for="title"><?= lang('common.title') ?></label>
+                <label for="title"><?= t('common.title') ?></label>
                 <input type="text" class="form-control" name="title" required>
             </div>
     </div>
     <div class="footer">
         <button type="submit" class="btn success">
             <i class="ph ph-plus"></i>
-            <?= lang('reports.create') ?>
+            <?= t('reports.create') ?>
         </button>
     </div>
     </form>

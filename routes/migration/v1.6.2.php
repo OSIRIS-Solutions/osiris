@@ -6,7 +6,7 @@
  * Migrates infrastructure statistics to a new collection format.
  */
 
-echo lang('admin.i_will_now_migrate_the_infrastructure_statistics_to_a_new_more_flexible_for') . "<br>";
+echo t('admin.i_will_now_migrate_the_infrastructure_statistics_to_a_new_more_flexible_for') . "<br>";
 
 $osiris->infrastructureStats->deleteMany([]);
 $infrastructures = $osiris->infrastructures->find([], ['statistics' => 1])->toArray();
@@ -37,8 +37,8 @@ if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
             ['key' => 'roles'],
             ['$set' => ['value' => $roles]]
         );
-        echo lang('admin.i_have_added_guest_role_to_your_settings_this_role_will_be_automatically_as') . "<br>";
+        echo t('admin.i_have_added_guest_role_to_your_settings_this_role_will_be_automatically_as') . "<br>";
     } else {
-        echo lang('admin.a_guest_role_already_exists_in_your_settings_it_will_be_automatically_assig') . "<br>";
+        echo t('admin.a_guest_role_already_exists_in_your_settings_it_will_be_automatically_assig') . "<br>";
     }
 }

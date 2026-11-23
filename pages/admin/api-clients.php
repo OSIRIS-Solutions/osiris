@@ -19,23 +19,23 @@
 include_once BASEPATH . '/php/ApiClient.php';
 
 $surfaceLabels = [
-    'api' => lang('admin.standard_rest_api'),
-    'mcp' => lang('admin.mcp_api'),
+    'api' => t('admin.standard_rest_api'),
+    'mcp' => t('admin.mcp_api'),
 ];
 $scopeLabels = [
-    'activities.read' => lang('admin.read_activities'),
+    'activities.read' => t('admin.read_activities'),
     // 'activities.write' => lang('Modify activities', 'Aktivitäten verändern'), // only to enrich openalex data, so for now not for general use
-    'catalogs.read' => lang('admin.read_catalogs_e_g_organizational_groups'),
-    'dashboards.read' => lang('admin.read_dashboard_data'),
-    'events.read' => lang('admin.read_events_and_calendar_data'),
-    'initiatives.read' => translate('initiatives.api_read'),
-    'infrastructures.read' => lang('admin.read_infrastructures'),
-    'journals.read' => lang('admin.read_journals'),
-    'organizations.read' => lang('admin.read_organizations'),
-    'persons.read' => lang('admin.read_persons'),
-    'projects.read' => lang('admin.read_projects_and_proposals'),
+    'catalogs.read' => t('admin.read_catalogs_e_g_organizational_groups'),
+    'dashboards.read' => t('admin.read_dashboard_data'),
+    'events.read' => t('admin.read_events_and_calendar_data'),
+    'initiatives.read' => t('initiatives.api_read'),
+    'infrastructures.read' => t('admin.read_infrastructures'),
+    'journals.read' => t('admin.read_journals'),
+    'organizations.read' => t('admin.read_organizations'),
+    'persons.read' => t('admin.read_persons'),
+    'projects.read' => t('admin.read_projects_and_proposals'),
     // 'reviews.read' => lang('Read workflows', 'Workflows lesen'), // only for the interface so currently not for general use
-    'teaching.read' => lang('admin.read_teaching_data'),
+    'teaching.read' => t('admin.read_teaching_data'),
 ];
 $clients = $osiris->apiClients->find(
     [],
@@ -52,22 +52,22 @@ unset($_SESSION['api_client_credentials']);
 
     <h1>
         <i class="ph-duotone ph-key"></i>
-        <?= lang('common.api_clients') ?>
+        <?= t('common.api_clients') ?>
     </h1>
 
     <p class="text-muted">
-        <?= lang('admin.create_separate_credentials_for_applications_that_access_osiris_permissions') ?>
+        <?= t('admin.create_separate_credentials_for_applications_that_access_osiris_permissions') ?>
     </p>
 
     <?php if (!empty($credentials)) { ?>
         <div class="alert success mb-20">
             <h5 class="title">
                 <i class="ph ph-warning"></i>
-                <?= lang('admin.copy_these_credentials_now') ?>
+                <?= t('admin.copy_these_credentials_now') ?>
             </h5>
-            <p><?= lang('admin.the_secret_will_not_be_displayed_again') ?></p>
+            <p><?= t('admin.the_secret_will_not_be_displayed_again') ?></p>
             <div class="form-group">
-                <label><?= lang('admin.client_id') ?></label>
+                <label><?= t('admin.client_id') ?></label>
                 <div class="input-group">
                     <code class="form-control" id="new-api-client-id"><?= e($credentials['client_id']) ?></code>
                     <div class="input-group-append">
@@ -78,7 +78,7 @@ unset($_SESSION['api_client_credentials']);
                 </div>
             </div>
             <div class="form-group">
-                <label><?= lang('admin.api_secret') ?></label>
+                <label><?= t('admin.api_secret') ?></label>
                 <div class="input-group">
                     <code class="form-control" id="new-api-client-secret"><?= e($credentials['secret']) ?></code>
                     <div class="input-group-append">
@@ -93,7 +93,7 @@ unset($_SESSION['api_client_credentials']);
 
     <a href="#add-api-client-modal" class="btn">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('admin.add_api_client') ?>
+        <?= t('admin.add_api_client') ?>
     </a>
 
     <style>
@@ -110,20 +110,20 @@ unset($_SESSION['api_client_credentials']);
                 </a>
                 <h5 class="title">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('admin.add_api_client') ?>
+                    <?= t('admin.add_api_client') ?>
                 </h5>
 
                 <form action="<?= ROOTPATH ?>/crud/admin/api-clients/create" method="post">
                     <div class="form-group">
-                        <label class="required" for="api-client-name"><?= lang('common.name') ?></label>
+                        <label class="required" for="api-client-name"><?= t('common.name') ?></label>
                         <input class="form-control" id="api-client-name" name="name" maxlength="200" required>
                     </div>
                     <div class="form-group">
-                        <label for="api-client-description"><?= lang('common.description') ?></label>
+                        <label for="api-client-description"><?= t('common.description') ?></label>
                         <textarea class="form-control" id="api-client-description" name="description" maxlength="1000" rows="2"></textarea>
                     </div>
                     <div class="form-group">
-                        <label><?= lang('admin.allowed_api_areas') ?></label>
+                        <label><?= t('admin.allowed_api_areas') ?></label>
                         <?php foreach ($surfaceLabels as $surface => $label) { ?>
                             <div class="custom-checkbox mb-5">
                                 <input type="checkbox" id="surface-new-<?= e($surface) ?>" name="surfaces[]" value="<?= e($surface) ?>" <?= $surface === 'mcp' ? 'checked' : '' ?>>
@@ -132,12 +132,12 @@ unset($_SESSION['api_client_credentials']);
                         <?php } ?>
                     </div>
                     <div class="form-group">
-                        <label><?= lang('admin.permissions') ?></label>
+                        <label><?= t('admin.permissions') ?></label>
                         <button class="btn small link" type="button" onclick="document.querySelectorAll('#add-api-client-modal input[name=\'scopes[]\']').forEach(el => el.checked = true)">
-                            <?= lang('admin.select_all') ?>
+                            <?= t('admin.select_all') ?>
                         </button>
                         <button class="btn small link" type="button" onclick="document.querySelectorAll('#add-api-client-modal input[name=\'scopes[]\']').forEach(el => el.checked = false)">
-                            <?= lang('admin.deselect_all') ?>
+                            <?= t('admin.deselect_all') ?>
                         </button>
                         <?php foreach ($scopeLabels as $scope => $label) { ?>
                             <div class="custom-checkbox mb-5">
@@ -147,22 +147,22 @@ unset($_SESSION['api_client_credentials']);
                         <?php } ?>
                     </div>
                     <div class="form-group">
-                        <label for="api-client-expires"><?= lang('common.valid_until') ?></label>
+                        <label for="api-client-expires"><?= t('common.valid_until') ?></label>
                         <input class="form-control" type="date" id="api-client-expires" name="expires_at">
-                        <small class="text-muted"><?= lang('admin.leave_empty_for_no_expiration_date') ?></small>
+                        <small class="text-muted"><?= t('admin.leave_empty_for_no_expiration_date') ?></small>
                     </div>
                     <button class="btn success" type="submit">
                         <i class="ph ph-key"></i>
-                        <?= lang('admin.create_client') ?>
+                        <?= t('admin.create_client') ?>
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <h3><?= lang('admin.configured_clients') ?></h3>
+    <h3><?= t('admin.configured_clients') ?></h3>
     <?php if (empty($clients)) { ?>
-        <p><?= lang('admin.no_api_clients_have_been_configured_yet') ?></p>
+        <p><?= t('admin.no_api_clients_have_been_configured_yet') ?></p>
     <?php } ?>
 
     <?php foreach ($clients as $client) {
@@ -176,11 +176,11 @@ unset($_SESSION['api_client_credentials']);
             <summary class="collapse-header">
                 <div class="float-right">
                     <?php if (!$enabled) { ?>
-                        <span class="badge danger"><?= lang('common.disabled') ?></span>
+                        <span class="badge danger"><?= t('common.disabled') ?></span>
                     <?php } elseif ($expired) { ?>
-                        <span class="badge warning"><?= lang('projects.expired') ?></span>
+                        <span class="badge warning"><?= t('projects.expired') ?></span>
                     <?php } else { ?>
-                        <span class="badge success"><?= lang('common.active') ?></span>
+                        <span class="badge success"><?= t('common.active') ?></span>
                     <?php } ?>
                 </div>
                 <h5 class="m-0"><?= e($client['name'] ?? $clientId) ?></h5>
@@ -190,22 +190,22 @@ unset($_SESSION['api_client_credentials']);
             </summary>
             <div class="collapse-content">
                 <p class="mt-0">
-                    <b><?= lang('admin.client_id') ?>:</b>
+                    <b><?= t('admin.client_id') ?>:</b>
                     <code id="client-id-<?= e($clientId) ?>"><?= e($clientId) ?></code>
                     <button class="btn small" type="button" onclick="copyApiClientValue('client-id-<?= e($clientId) ?>')">
                         <i class="ph ph-clipboard"></i>
                     </button>
                     <br>
-                    <b><?= lang('admin.secret') ?>:</b> <code>••••<?= e($client['key_hint'] ?? '') ?></code>
+                    <b><?= t('admin.secret') ?>:</b> <code>••••<?= e($client['key_hint'] ?? '') ?></code>
                     <br>
-                    <b><?= lang('admin.api_areas') ?>:</b>
+                    <b><?= t('admin.api_areas') ?>:</b>
                     <?= e(implode(', ', array_map(fn($surface) => $surfaceLabels[$surface] ?? $surface, $surfaces))) ?>
                     <br>
-                    <b><?= lang('common.valid_until') ?>:</b>
-                    <?= empty($client['expires_at']) ? lang('common.unlimited') : e($client['expires_at']) ?>
+                    <b><?= t('common.valid_until') ?>:</b>
+                    <?= empty($client['expires_at']) ? t('common.unlimited') : e($client['expires_at']) ?>
                     <br>
-                    <b><?= lang('admin.last_used') ?>:</b>
-                    <?= empty($client['last_used_at']) ? lang('common.never') : e($client['last_used_at']) ?>
+                    <b><?= t('admin.last_used') ?>:</b>
+                    <?= empty($client['last_used_at']) ? t('common.never') : e($client['last_used_at']) ?>
                 </p>
                 <div class="mb-10">
                     <?php foreach ($scopes as $scope) { ?>
@@ -217,39 +217,39 @@ unset($_SESSION['api_client_credentials']);
                     <input type="hidden" name="enabled" value="<?= $enabled ? '0' : '1' ?>">
                     <button class="btn <?= $enabled ? 'warning' : 'success' ?>" type="submit">
                         <i class="ph ph-<?= $enabled ? 'pause' : 'play' ?>"></i>
-                        <?= $enabled ? lang('admin.disable') : lang('admin.enable') ?>
+                        <?= $enabled ? t('admin.disable') : t('admin.enable') ?>
                     </button>
                 </form>
-                <form action="<?= ROOTPATH ?>/crud/admin/api-clients/rotate/<?= e($clientId) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= lang('admin.the_previous_secret_will_stop_working_immediately_continue') ?>')">
+                <form action="<?= ROOTPATH ?>/crud/admin/api-clients/rotate/<?= e($clientId) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= t('admin.the_previous_secret_will_stop_working_immediately_continue') ?>')">
                     <button class="btn" type="submit">
                         <i class="ph ph-arrows-clockwise"></i>
-                        <?= lang('admin.rotate_secret') ?>
+                        <?= t('admin.rotate_secret') ?>
                     </button>
                 </form>
-                <form action="<?= ROOTPATH ?>/crud/admin/api-clients/delete/<?= e($clientId) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= lang('admin.delete_this_api_client_permanently') ?>')">
+                <form action="<?= ROOTPATH ?>/crud/admin/api-clients/delete/<?= e($clientId) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= t('admin.delete_this_api_client_permanently') ?>')">
                     <button class="btn danger" type="submit">
                         <i class="ph ph-trash"></i>
-                        <?= lang('action.delete') ?>
+                        <?= t('action.delete') ?>
                     </button>
                 </form>
 
                 <details class="collapse-panel mt-20">
                     <summary class="collapse-header">
                         <i class="ph ph-pencil"></i>
-                        <?= lang('admin.edit_client') ?>
+                        <?= t('admin.edit_client') ?>
                     </summary>
                     <div class="collapse-content">
                         <form action="<?= ROOTPATH ?>/crud/admin/api-clients/update/<?= e($clientId) ?>" method="post">
                             <div class="form-group">
-                                <label class="required" for="name-<?= e($clientId) ?>"><?= lang('common.name') ?></label>
+                                <label class="required" for="name-<?= e($clientId) ?>"><?= t('common.name') ?></label>
                                 <input class="form-control" id="name-<?= e($clientId) ?>" name="name" maxlength="200" value="<?= e($client['name'] ?? '') ?>" required>
                             </div>
                             <div class="form-group">
-                                <label for="description-<?= e($clientId) ?>"><?= lang('common.description') ?></label>
+                                <label for="description-<?= e($clientId) ?>"><?= t('common.description') ?></label>
                                 <textarea class="form-control" id="description-<?= e($clientId) ?>" name="description" maxlength="1000" rows="2"><?= e($client['description'] ?? '') ?></textarea>
                             </div>
                             <div class="form-group">
-                                <label><?= lang('admin.allowed_api_areas') ?></label>
+                                <label><?= t('admin.allowed_api_areas') ?></label>
                                 <?php foreach ($surfaceLabels as $surface => $label) { ?>
                                     <div class="custom-checkbox mb-5">
                                         <input type="checkbox" id="surface-<?= e($clientId) ?>-<?= e($surface) ?>" name="surfaces[]" value="<?= e($surface) ?>" <?= in_array($surface, $surfaces, true) ? 'checked' : '' ?>>
@@ -258,7 +258,7 @@ unset($_SESSION['api_client_credentials']);
                                 <?php } ?>
                             </div>
                             <div class="form-group">
-                                <label><?= lang('admin.permissions') ?></label>
+                                <label><?= t('admin.permissions') ?></label>
                                 <?php foreach ($scopeLabels as $scope => $label) { ?>
                                     <div class="custom-checkbox mb-5">
                                         <input type="checkbox" id="scope-<?= e($clientId) ?>-<?= e($scope) ?>" name="scopes[]" value="<?= e($scope) ?>" <?= in_array($scope, $scopes, true) ? 'checked' : '' ?>>
@@ -267,12 +267,12 @@ unset($_SESSION['api_client_credentials']);
                                 <?php } ?>
                             </div>
                             <div class="form-group">
-                                <label for="expires-<?= e($clientId) ?>"><?= lang('common.valid_until') ?></label>
+                                <label for="expires-<?= e($clientId) ?>"><?= t('common.valid_until') ?></label>
                                 <input class="form-control" type="date" id="expires-<?= e($clientId) ?>" name="expires_at" value="<?= e($client['expires_at'] ?? '') ?>">
                             </div>
                             <button class="btn success" type="submit">
                                 <i class="ph ph-floppy-disk"></i>
-                                <?= lang('action.save') ?>
+                                <?= t('action.save') ?>
                             </button>
                         </form>
                     </div>
@@ -287,6 +287,6 @@ unset($_SESSION['api_client_credentials']);
     function copyApiClientValue(id) {
         const value = document.getElementById(id).textContent;
         navigator.clipboard.writeText(value);
-        toastSuccess('<?= lang('admin.copied_to_clipboard') ?>');
+        toastSuccess('<?= t('admin.copied_to_clipboard') ?>');
     }
 </script>

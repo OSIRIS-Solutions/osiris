@@ -24,14 +24,14 @@ $canLocalize = $existingField && !$localizedLocked && in_array($form['format'] ?
 $formaction = ROOTPATH;
 if (!empty($form) && isset($form['id'])) {
     $formaction .= "/crud/fields/update/" . $form['id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
+    $btntext = '<i class="ph ph-check"></i> ' . t('action.update');
     $url = ROOTPATH . "/admin/fields/" . $form['id'];
     $title = $name;
 } else {
     $formaction .= "/crud/fields/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
+    $btntext = '<i class="ph ph-check"></i> ' . t('action.save');
     $url = ROOTPATH . "/admin/fields";
-    $title = lang('admin.new_field');
+    $title = t('admin.new_field');
 }
 $affiliation = (strtolower($Settings->get('affiliation')));
 // keep only letters and numbers
@@ -50,16 +50,16 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
+            <h5 class="title"><?= t('common.id_must_be_unique') ?></h5>
 
             <p>
-                <?= lang('admin.the_id_is_used_internally_to_save_data_for_this_data_field_in_the_database') ?>
+                <?= t('admin.the_id_is_used_internally_to_save_data_for_this_data_field_in_the_database') ?>
             </p>
             <p>
-                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
+                <?= t('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="used-ids">
-                <li class="font-weight-bold">--- <?= lang('admin.osiris_fields') ?> ---</li>
+                <li class="font-weight-bold">--- <?= t('admin.osiris_fields') ?> ---</li>
                 <?php
                 require_once BASEPATH . '/php/activity_fields.php';
                 $Fields = new ActivityFields();
@@ -74,12 +74,12 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <?php foreach ($osiris->adminFields->distinct('id') as $k) { ?>
                     <li><?= $k ?></li>
                 <?php } ?>
-                <li class="font-weight-bold">--- <?= lang('admin.keywords') ?> ---</li>
+                <li class="font-weight-bold">--- <?= t('admin.keywords') ?> ---</li>
                 <li>language</li>
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= t('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -102,7 +102,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
                 <small>
                     <a href="#unique"><i class="ph ph-info"></i>
-                        <?= lang('common.important_must_be_unique') ?>
+                        <?= t('common.important_must_be_unique') ?>
                     </a>
                 </small>
             </div>
@@ -123,17 +123,17 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                 <div class="col-sm-6">
                     <label for="format">Format</label>
                     <select class="form-control" name="values[format]" id="format" onchange="updateFields(this.value)" <?= $localizedLocked ? 'disabled' : '' ?>>
-                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= lang('admin.normal_text') ?></option>
-                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= lang('admin.long_text') ?></option>
-                        <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= lang('admin.text_with_formatting') ?></option>
-                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= lang('admin.integer') ?></option>
-                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= lang('admin.float') ?></option>
-                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= lang('admin.dropdown_select_from_list') ?></option>
-                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= lang('common.date') ?></option>
-                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= lang('admin.boolean_yes_no') ?></option>
-                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= lang('admin.boolean_as_checkbox') ?></option>
+                        <option value="string" <?= ($form['format'] ?? '') == 'string' ? 'selected' : '' ?>><?= t('admin.normal_text') ?></option>
+                        <option value="text" <?= ($form['format'] ?? '') == 'text' ? 'selected' : '' ?>><?= t('admin.long_text') ?></option>
+                        <option value="text-format" <?= ($form['format'] ?? '') == 'text-format' ? 'selected' : '' ?>><?= t('admin.text_with_formatting') ?></option>
+                        <option value="int" <?= ($form['format'] ?? '') == 'int' ? 'selected' : '' ?>><?= t('admin.integer') ?></option>
+                        <option value="float" <?= ($form['format'] ?? '') == 'float' ? 'selected' : '' ?>><?= t('admin.float') ?></option>
+                        <option value="list" <?= ($form['format'] ?? '') == 'list' ? 'selected' : '' ?>><?= t('admin.dropdown_select_from_list') ?></option>
+                        <option value="date" <?= ($form['format'] ?? '') == 'date' ? 'selected' : '' ?>><?= t('common.date') ?></option>
+                        <option value="bool" <?= ($form['format'] ?? '') == 'bool' ? 'selected' : '' ?>><?= t('admin.boolean_yes_no') ?></option>
+                        <option value="bool-check" <?= ($form['format'] ?? '') == 'bool-check' ? 'selected' : '' ?>><?= t('admin.boolean_as_checkbox') ?></option>
                         <option value="url" <?= ($form['format'] ?? '') == 'url' ? 'selected' : '' ?>>URL</option>
-                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= lang('admin.free_text_list_without_predefined_values') ?></option>
+                        <option value="str-list" <?= ($form['format'] ?? '') == 'str-list' ? 'selected' : '' ?>><?= t('admin.free_text_list_without_predefined_values') ?></option>
                         <!-- <option value="user">User</option> -->
                     </select>
                     <?php if ($localizedLocked): ?><input type="hidden" name="values[format]" value="<?= e($form['format']) ?>"><?php endif; ?>
@@ -149,19 +149,19 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
             <div class="form-group" id="localized-option" <?= in_array($form['format'] ?? 'string', ['string', 'text', 'text-format'], true) ? '' : 'style="display:none"' ?>>
                 <?php if (!$existingField): ?>
                     <input type="hidden" name="values[localized]" value="false">
-                    <label><input type="checkbox" id="localized" name="values[localized]" value="true"> <?= translate('admin.localized_custom_field') ?></label>
-                    <small class="d-block text-muted"><?= translate('admin.localized_custom_field_help') ?></small>
+                    <label><input type="checkbox" id="localized" name="values[localized]" value="true"> <?= t('admin.localized_custom_field') ?></label>
+                    <small class="d-block text-muted"><?= t('admin.localized_custom_field_help') ?></small>
                 <?php elseif ($localizedLocked): ?>
-                    <span><i class="ph ph-lock-simple"></i> <?= translate('admin.localized_custom_field') ?></span>
-                    <small class="d-block text-muted"><?= translate('admin.localized_field_locked') ?></small>
+                    <span><i class="ph ph-lock-simple"></i> <?= t('admin.localized_custom_field') ?></span>
+                    <small class="d-block text-muted"><?= t('admin.localized_field_locked') ?></small>
                 <?php elseif ($canLocalize): ?>
-                    <a href="#localize-field" class="btn secondary"><i class="ph ph-translate"></i> <?= translate('admin.convert_to_localized_field') ?></a>
-                    <small class="d-block text-muted"><?= translate('admin.localized_conversion_warning') ?></small>
+                    <a href="#localize-field" class="btn secondary"><i class="ph ph-translate"></i> <?= t('admin.convert_to_localized_field') ?></a>
+                    <small class="d-block text-muted"><?= t('admin.localized_conversion_warning') ?></small>
                 <?php endif; ?>
             </div>
 
             <fieldset id="values-field" <?= ($form['format'] ?? null) != 'list' ? 'style="display: none;"' : '' ?>>
-                <legend><?= lang('admin.possible_values') ?></legend>
+                <legend><?= t('admin.possible_values') ?></legend>
                 <table class="table simple small">
                     <thead>
                         <tr>
@@ -216,7 +216,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                     <div class="custom-checkbox">
                         <input type="hidden" name="values[multiple]" value="0">
                         <input type="checkbox" name="values[multiple]" id="multiple" value="1" <?= ($form['multiple'] ?? 0) == 1 ? 'checked' : '' ?>>
-                        <label for="multiple"><?= lang('admin.multiple_select') ?></label>
+                        <label for="multiple"><?= t('admin.multiple_select') ?></label>
                     </div>
                 </div>
 
@@ -224,10 +224,10 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                     <div class="custom-checkbox">
                         <input type="hidden" name="values[others]" value="0">
                         <input type="checkbox" name="values[others]" id="others" value="1" <?= ($form['others'] ?? 0) == 1 ? 'checked' : '' ?>>
-                        <label for="others"><?= lang('admin.allow_text_input_as_others') ?></label>
+                        <label for="others"><?= t('admin.allow_text_input_as_others') ?></label>
                     </div>
                     <small class="text-muted">
-                        <?= lang('admin.currently_not_supported_in_combination_with_multiple_select') ?>
+                        <?= t('admin.currently_not_supported_in_combination_with_multiple_select') ?>
                     </small>
                 </div>
             </fieldset>
@@ -244,13 +244,13 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
     <div class="modal" id="localize-field" tabindex="-1" role="dialog" aria-labelledby="localize-field-title">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <a href="#close-modal" class="close" role="button" aria-label="<?= e(translate('action.cancel')) ?>"><span aria-hidden="true">&times;</span></a>
-                <h3 class="title" id="localize-field-title"><?= translate('admin.convert_to_localized_field') ?></h3>
-                <p><strong><?= translate('admin.localized_conversion_warning') ?></strong></p>
-                <p><?= translate('admin.localized_conversion_details') ?></p>
+                <a href="#close-modal" class="close" role="button" aria-label="<?= e(t('action.cancel')) ?>"><span aria-hidden="true">&times;</span></a>
+                <h3 class="title" id="localize-field-title"><?= t('admin.convert_to_localized_field') ?></h3>
+                <p><strong><?= t('admin.localized_conversion_warning') ?></strong></p>
+                <p><?= t('admin.localized_conversion_details') ?></p>
                 <form action="<?= ROOTPATH ?>/crud/fields/localize/<?= e(rawurlencode($form['id'])) ?>" method="post">
-                    <button type="submit" class="btn secondary" name="confirm_localize" value="yes"><?= translate('admin.localized_conversion_confirm') ?></button>
-                    <a href="#close-modal" class="btn"><?= translate('action.cancel') ?></a>
+                    <button type="submit" class="btn secondary" name="confirm_localize" value="yes"><?= t('admin.localized_conversion_confirm') ?></button>
+                    <a href="#close-modal" class="btn"><?= t('action.cancel') ?></a>
                 </form>
             </div>
         </div>
@@ -259,7 +259,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
 
 <?php if (!empty($form['id'] ?? null)) { ?>
     <h3>
-        <?= lang('admin.entities_that_use_this_field') ?>
+        <?= t('admin.entities_that_use_this_field') ?>
     </h3>
 
     <?php
@@ -295,7 +295,7 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
         <tbody>
             <tr>
                 <th class="w-200">
-                    <?= lang('common.activities') ?>
+                    <?= t('common.activities') ?>
                 </th>
                 <td>
                     <?php if (!empty($activities)) { ?>
@@ -306,13 +306,13 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('admin.no_activity_type_uses_this_field') ?></em>
+                        <em class="text-muted"><?= t('admin.no_activity_type_uses_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('common.projects') ?>
+                    <?= t('common.projects') ?>
                 </th>
                 <td>
                     <?php if (!empty($projects)) { ?>
@@ -323,33 +323,33 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
                             </a>
                         <?php } ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('admin.no_project_type_uses_this_field') ?></em>
+                        <em class="text-muted"><?= t('admin.no_project_type_uses_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('common.persons') ?>
+                    <?= t('common.persons') ?>
                 </th>
                 <td>
                     <?php if ($persons) { ?>
                         <i class="ph ph-check-circle text-success"></i>
-                        <?= lang('admin.persons_use_this_field') ?>
+                        <?= t('admin.persons_use_this_field') ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('admin.persons_do_not_use_this_field') ?></em>
+                        <em class="text-muted"><?= t('admin.persons_do_not_use_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
             <tr>
                 <th class="w-200">
-                    <?= lang('common.infrastructure') ?>
+                    <?= t('common.infrastructure') ?>
                 </th>
                 <td>
                     <?php if ($infrastructure) { ?>
                         <i class="ph ph-check-circle text-success"></i>
-                        <?= lang('admin.infrastructures_use_this_field') ?>
+                        <?= t('admin.infrastructures_use_this_field') ?>
                     <?php } else { ?>
-                        <em class="text-muted"><?= lang('admin.infrastructures_do_not_use_this_field') ?></em>
+                        <em class="text-muted"><?= t('admin.infrastructures_do_not_use_this_field') ?></em>
                     <?php } ?>
                 </td>
             </tr>
@@ -363,17 +363,17 @@ $affiliation = preg_replace('/[^a-zA-Z0-9]/', '', $affiliation);
     <div class="alert danger mt-20">
         <form action="<?= ROOTPATH ?>/crud/fields/delete/<?= $form['_id'] ?>" method="post">
             <h5 class="title">
-                <?= lang('admin.delete_this_field') ?>
+                <?= t('admin.delete_this_field') ?>
             </h5>
             <p>
-                <?= lang('admin.are_you_sure_you_want_to_delete_this_field_this_action_cannot_be_undone') ?>
+                <?= t('admin.are_you_sure_you_want_to_delete_this_field_this_action_cannot_be_undone') ?>
                 <br>
-                <?= lang('admin.hint_this_won_t_automatically_remove_the_field_from_all_associated_forms_pl') ?>
+                <?= t('admin.hint_this_won_t_automatically_remove_the_field_from_all_associated_forms_pl') ?>
                 <br>
-                <?= lang('admin.hint_we_won_t_remove_any_data_from_activities') ?>
+                <?= t('admin.hint_we_won_t_remove_any_data_from_activities') ?>
             </p>
 
-            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= lang('action.delete') ?></button>
+            <button type="submit" class="btn danger mt-10"><i class="ph-duotone ph-trash text-danger"></i> <?= t('action.delete') ?></button>
 
         </form>
     </div>

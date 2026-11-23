@@ -33,7 +33,7 @@ $project_list = $osiris->projects->find($filter, [
     <table class="table">
         <thead>
             <tr>
-                <th><?= lang('common.connected_projects') ?>:</th>
+                <th><?= t('common.connected_projects') ?>:</th>
                 <th></th>
             </tr>
         </thead>
@@ -61,34 +61,34 @@ $project_list = $osiris->projects->find($filter, [
         </tbody>
     </table>
 
-    <p class="font-weight-bold"><?= lang('projects.connect_other_project') ?>:</p>
+    <p class="font-weight-bold"><?= t('projects.connect_other_project') ?>:</p>
     <div class="input-group">
-        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
-            <option value=""><?= lang('forms.project_select') ?></option>
+        <select id="project-select" class="form-control" placeholder="<?= t('forms.project_select') ?>">
+            <option value=""><?= t('forms.project_select') ?></option>
             <?php
             foreach ($project_list as $s) { ?>
                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
             <?php } ?>
         </select>
         <div class="input-group-append">
-            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= lang('projects.add_project') ?></button>
+            <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-plus text-success"></i> <?= t('projects.add_project') ?></button>
         </div>
     </div>
 
     <?php if ($full_permission) { ?>
         <p class="text-muted">
             <i class="ph ph-info"></i>
-            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
+            <?= t('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
         </p>
     <?php } else { ?>
         <p class="text-muted">
             <i class="ph ph-info"></i>
-            <?= lang('projects.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
+            <?= t('projects.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
         </p>
     <?php } ?>
     <button class="btn secondary">
         <i class="ph ph-check"></i>
-        <?= lang('action.submit') ?>
+        <?= t('action.submit') ?>
     </button>
 </form>
 
@@ -99,12 +99,12 @@ $project_list = $osiris->projects->find($filter, [
         const projectId = $('#project-select').val();
         const projectName = $('#project-select option:selected').text();
         if (!projectId) {
-            alert('<?= lang('forms.project_select') ?>');
+            alert('<?= t('forms.project_select') ?>');
             return;
         }
         // check if project already exists
         if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-            toastError('<?= lang('common.this_project_is_already_connected') ?>');
+            toastError('<?= t('common.this_project_is_already_connected') ?>');
             return;
         }
         row.append(`<td class="w-full">

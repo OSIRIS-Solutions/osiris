@@ -134,14 +134,14 @@ if ($edit_perm) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('infrastructures.change_infrastructure_logo') ?>
+                    <?= t('infrastructures.change_infrastructure_logo') ?>
                 </h2>
 
                 <form action="<?= ROOTPATH ?>/crud/infrastructures/upload-picture/<?= $infrastructure['id'] ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
-                        <label for="profile-input"><?= lang('common.select_new_logo') ?></label>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>" accept="image/*" required>
+                        <label for="profile-input"><?= t('common.select_new_logo') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
@@ -150,14 +150,14 @@ if ($edit_perm) { ?>
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                toastError(<?= json_encode(t('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('action.upload') ?>
+                        <?= t('action.upload') ?>
                     </button>
                 </form>
 
@@ -166,7 +166,7 @@ if ($edit_perm) { ?>
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('common.delete_current_picture') ?>
+                        <?= t('common.delete_current_picture') ?>
                     </button>
                 </form>
             </div>
@@ -180,14 +180,14 @@ if ($edit_perm) { ?>
 
     <a href="<?= ROOTPATH ?>/preview/infrastructure/<?= $infrastructure['id'] ?>" class="btn float-right">
         <i class="ph ph-eye"></i>
-        <?= lang('common.preview') ?>
+        <?= t('common.preview') ?>
     </a>
 
     <div class="row align-items-center my-0">
         <div class="col flex-grow-0">
             <div class="position-relative">
                 <?php
-                $Infra->printLogo($infrastructure, 'infrastructure-logo', lang('common.logo_of') . ' ' . localized($infrastructure['name']));
+                $Infra->printLogo($infrastructure, 'infrastructure-logo', t('common.logo_of') . ' ' . localized($infrastructure['name']));
                 ?>
 
                 <?php if ($edit_perm) { ?>
@@ -218,7 +218,7 @@ if ($edit_perm) { ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/edit/<?= $infrastructure['_id'] ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <span><?= lang('action.edit') ?></span>
+                <span><?= t('action.edit') ?></span>
             </a>
         <?php } ?>
     </div>
@@ -251,7 +251,7 @@ if ($edit_perm) { ?>
                     </td></tr>
                 <?php endforeach; ?>
                 <?php if ($Settings->featureEnabled('portal') && $edit_perm): ?>
-                    <tr><td><span class="key"><?= translate('common.public') ?></span><span class="badge"><?= translate(!empty($infrastructure['public']) ? 'common.shown' : 'common.not_shown') ?></span></td></tr>
+                    <tr><td><span class="key"><?= t('common.public') ?></span><span class="badge"><?= t(!empty($infrastructure['public']) ? 'common.shown' : 'common.not_shown') ?></span></td></tr>
                 <?php endif; ?>
             </table>
         </div>
@@ -259,7 +259,7 @@ if ($edit_perm) { ?>
         <div class="col-md-6">
             <div class="box padded mt-0" id="description" style="height: 100%;max-height: 400px;overflow-y: auto;">
                 <h3 class="title">
-                    <?= lang('infrastructures.about') ?>
+                    <?= t('infrastructures.about') ?>
                 </h3>
                 <?= localized($infrastructure['description'] ?? '-') ?>
             </div>
@@ -284,11 +284,11 @@ if ($edit_perm) { ?>
 
     <h2>
         <i class="ph ph-users text-primary"></i>
-        <?= lang('common.operating_personnel') ?>
+        <?= t('common.operating_personnel') ?>
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/infrastructures/persons/<?= $id ?>" class="font-size-16">
                 <i class="ph ph-edit"></i>
-                <span class="sr-only"><?= lang('action.edit') ?></span>
+                <span class="sr-only"><?= t('action.edit') ?></span>
             </a>
         <?php } ?>
     </h2>
@@ -301,7 +301,7 @@ if ($edit_perm) { ?>
         ?>
             <div class="col-md-6">
                 <div class="alert primary mb-20">
-                    <?= lang('common.no_persons_connected') ?>
+                    <?= t('common.no_persons_connected') ?>
                 </div>
             </div>
         <?php
@@ -327,7 +327,7 @@ if ($edit_perm) { ?>
                         </h5>
                         <?= $Infra->getRole($person['role'] ?? '') ?>
                         <?php if ($person['reporter'] ?? false) { ?>
-                            <span class="primary ml-5" data-toggle="tooltip" data-title="<?= lang('infrastructures.reporter') ?>">
+                            <span class="primary ml-5" data-toggle="tooltip" data-title="<?= t('infrastructures.reporter') ?>">
                                 <i class="ph ph-clipboard-text"></i>
                             </span>
                         <?php } ?>
@@ -346,19 +346,19 @@ if ($edit_perm) { ?>
 
     <h2>
         <i class="ph ph-book-bookmark text-primary"></i>
-        <?= lang('common.connected_activities') ?>
+        <?= t('common.connected_activities') ?>
     </h2>
 
     <small>
-        <?= lang('infrastructures.you_can_connect_an_activity_to_an_infrastructure_on_the_activity_page_itsel') ?>
+        <?= t('infrastructures.you_can_connect_an_activity_to_an_infrastructure_on_the_activity_page_itsel') ?>
     </small>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -418,7 +418,7 @@ if ($edit_perm) { ?>
 
     <h2 id="statistics">
         <i class="ph ph-chart-line-up text-primary"></i>
-        <?= lang('common.statistics') ?>
+        <?= t('common.statistics') ?>
     </h2>
 
     <?php if ($reporter || $Settings->hasPermission('infrastructures.statistics') || $edit_perm) {
@@ -427,7 +427,7 @@ if ($edit_perm) { ?>
 
         <button type="button" class="btn" id="add-stat-btn" onclick="$('#infra-stat-edit-box').toggleClass('hidden');">
             <i class="ph ph-plus"></i>
-            <?= ucfirst(lang('infrastructures.add_statistics', replace: ['frequency' => $stat_frequency])) ?>
+            <?= ucfirst(t('infrastructures.add_statistics', replace: ['frequency' => $stat_frequency])) ?>
         </button>
 
         <div class="box padded small hidden" id="infra-stat-edit-box">
@@ -437,18 +437,18 @@ if ($edit_perm) { ?>
                     <?php
                     switch ($stat_frequency) {
                         case 'annual': ?>
-                            <label for="year" class="w-300 font-weight-bold"><?= lang('common.year') ?>:</label>
+                            <label for="year" class="w-300 font-weight-bold"><?= t('common.year') ?>:</label>
                             <input type="number" name="year" id="add-stat-year" class="form-control w-200" value="<?= CURRENTYEAR - 1 ?>" min="1900" max="<?= CURRENTYEAR + 1 ?>" />
                         <?php
                             break;
                         case 'monthly': ?>
-                            <label for="month" class="w-300 font-weight-bold"><?= lang('common.month') ?>:</label>
+                            <label for="month" class="w-300 font-weight-bold"><?= t('common.month') ?>:</label>
                             <input type="month" name="month" id="add-stat-month" class="form-control w-200" value="<?= date('Y-m', strtotime('-1 month')) ?>" />
                         <?php
                             break;
                         case 'quarterly':
                         ?>
-                            <label for="quarter" class="w-300 font-weight-bold"><?= lang('common.quarter') ?>:</label>
+                            <label for="quarter" class="w-300 font-weight-bold"><?= t('common.quarter') ?>:</label>
                             <select name="quarter" id="add-stat-quarter" class="form-control w-200">
                                 <?php
                                 $current_year = date('Y');
@@ -463,7 +463,7 @@ if ($edit_perm) { ?>
                         <?php
                             break;
                         case 'irregularly': ?>
-                            <label for="date" class="w-300 font-weight-bold"><?= lang('common.date') ?>:</label>
+                            <label for="date" class="w-300 font-weight-bold"><?= t('common.date') ?>:</label>
                             <input type="date" name="date" id="add-stat-date" class="form-control w-200" value="<?= date('Y-m-d') ?>" />
                     <?php
                             break;
@@ -483,18 +483,18 @@ if ($edit_perm) { ?>
                 <?php } ?>
                 <!-- comment -->
                 <div class="form-group d-flex align-items-center mr-20 mb-10">
-                    <label for="comment" class="w-300 font-weight-bold"><?= lang('common.comment') ?>:</label>
+                    <label for="comment" class="w-300 font-weight-bold"><?= t('common.comment') ?>:</label>
                     <input type="text" name="comment" id="comment" class="form-control w-400" />
                 </div>
 
                 <small class="text-muted">
-                    <?= lang('infrastructures.if_you_fill_in_statistics_for_a_period_that_already_exists_the_existing_ent') ?>
+                    <?= t('infrastructures.if_you_fill_in_statistics_for_a_period_that_already_exists_the_existing_ent') ?>
                 </small>
                 <br>
 
                 <button class="btn btn-primary">
                     <i class="ph ph-save"></i>
-                    <?= lang('action.save') ?>
+                    <?= t('action.save') ?>
                 </button>
             </form>
         </div>
@@ -503,13 +503,13 @@ if ($edit_perm) { ?>
 
     <?php if (empty($statistics)) { ?>
         <div class="alert primary my-20 w-md-half">
-            <?= lang('infrastructures.no_statistics_found') ?>
+            <?= t('infrastructures.no_statistics_found') ?>
         </div>
     <?php } else {
     ?>
         <a href="#detailed-example-modal" class="btn primary" role="button">
             <i class="ph ph-eye"></i>
-            <?= lang('infrastructures.show_detailed_statistics') ?>
+            <?= t('infrastructures.show_detailed_statistics') ?>
         </a>
 
         <div class="modal" id="detailed-example-modal" tabindex="-1" role="dialog">
@@ -518,23 +518,23 @@ if ($edit_perm) { ?>
                     <a href="#close-modal" class="close" role="button" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h5 class="title"><?= lang('infrastructures.detailed_statistics') ?></h5>
+                    <h5 class="title"><?= t('infrastructures.detailed_statistics') ?></h5>
 
                     <table class="table" id="detailed-statistics">
                         <thead>
                             <tr>
-                                <th><?= lang('common.year') ?></th>
+                                <th><?= t('common.year') ?></th>
                                 <?php if ($stat_frequency == 'monthly') { ?>
-                                    <th><?= lang('common.month') ?></th>
+                                    <th><?= t('common.month') ?></th>
                                 <?php } elseif ($stat_frequency == 'quarterly') { ?>
-                                    <th><?= lang('common.quarter') ?></th>
+                                    <th><?= t('common.quarter') ?></th>
                                 <?php } elseif ($stat_frequency == 'irregularly') { ?>
-                                    <th><?= lang('common.date') ?></th>
+                                    <th><?= t('common.date') ?></th>
                                 <?php } ?>
-                                <th><?= lang('common.field') ?></th>
-                                <th class="text-right"><?= lang('common.value') ?></th>
-                                <th><?= lang('infrastructures.entered_by') ?></th>
-                                <th><?= lang('common.comment') ?></th>
+                                <th><?= t('common.field') ?></th>
+                                <th class="text-right"><?= t('common.value') ?></th>
+                                <th><?= t('infrastructures.entered_by') ?></th>
+                                <th><?= t('common.comment') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -628,7 +628,7 @@ if ($edit_perm) { ?>
             <table class="table small my-20 w-auto" id="yearly-statistics">
                 <thead>
                     <tr>
-                        <th><?= lang('common.year') ?></th>
+                        <th><?= t('common.year') ?></th>
                         <?php foreach ($fields as $field) { ?>
                             <th class="text-right"><?= lang($field['en'], $field['de'] ?? null) ?></th>
                         <?php } ?>
@@ -651,7 +651,7 @@ if ($edit_perm) { ?>
         <div class="box">
             <div class="chart content text-center">
                 <h5 class="title mb-0">
-                    <?= lang('infrastructures.infrastructure_statistics_over_time') ?>
+                    <?= t('infrastructures.infrastructure_statistics_over_time') ?>
                 </h5>
 
                 <div id="chart-infrastructure-stats"></div>
@@ -719,11 +719,11 @@ if ($edit_perm) { ?>
         <div id="collaborative">
             <h2>
                 <i class="ph ph-handshake text-primary"></i>
-                <?= lang('common.collaborative_research_infrastructure') ?>
+                <?= t('common.collaborative_research_infrastructure') ?>
             </h2>
 
             <h5>
-                <?= lang('infrastructures.coordinator') ?>
+                <?= t('infrastructures.coordinator') ?>
             </h5>
             <table class="table">
 
@@ -745,7 +745,7 @@ if ($edit_perm) { ?>
                                             <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
                                         <?php } ?>
                                         <br>
-                                        <small class="text-success"><?= lang('infrastructures.this_is_your_own_organization') ?></small>
+                                        <small class="text-success"><?= t('infrastructures.this_is_your_own_organization') ?></small>
                                     </div>
                                 </div>
 
@@ -775,7 +775,7 @@ if ($edit_perm) { ?>
             </table>
 
             <h5>
-                <?= lang('infrastructures.partners_view') ?>
+                <?= t('infrastructures.partners_view') ?>
             </h5>
             <table class="table">
 
@@ -797,7 +797,7 @@ if ($edit_perm) { ?>
                                             <a href="<?= $org['ror'] ?>" class="ml-10" target="_blank" rel="noopener noreferrer">ROR <i class="ph ph-arrow-square-out"></i></a>
                                         <?php } ?>
                                         <br>
-                                        <small class="text-success"><?= lang('infrastructures.this_is_your_own_organization') ?></small>
+                                        <small class="text-success"><?= t('infrastructures.this_is_your_own_organization') ?></small>
                                     </div>
                                 </div>
                             </td>
@@ -808,7 +808,7 @@ if ($edit_perm) { ?>
                     <?php if (empty($infrastructure['collaborative'])) { ?>
                         <tr>
                             <td colspan="2">
-                                <?= lang('infrastructures.no_partners_connected') ?>
+                                <?= t('infrastructures.no_partners_connected') ?>
                             </td>
                         </tr>
                         <?php } else foreach ($infrastructure['collaborators'] as $org) {
@@ -847,17 +847,17 @@ if ($edit_perm) { ?>
 
         <button class="btn danger" type="button" id="delete-infrastructure" aria-haspopup="true" aria-expanded="false" onclick="$(this).next().slideToggle()">
             <i class="ph ph-trash"></i>
-            <?= lang('action.delete') ?>
+            <?= t('action.delete') ?>
             <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
         </button>
         <div aria-labelledby="delete-infrastructure" style="display: none;">
             <div class="my-20">
-                <b class="text-danger"><?= lang('common.attention') ?>!</b><br>
+                <b class="text-danger"><?= t('common.attention') ?>!</b><br>
                 <small>
-                    <?= lang('infrastructures.the_infrastructure_is_permanently_deleted_and_the_connection_to_all_associa') ?>
+                    <?= t('infrastructures.the_infrastructure_is_permanently_deleted_and_the_connection_to_all_associa') ?>
                 </small>
                 <form action="<?= ROOTPATH ?>/crud/infrastructures/delete/<?= $infrastructure['_id'] ?>" method="post">
-                    <button class="btn btn-block danger" type="submit"><?= lang('common.delete_permanently') ?></button>
+                    <button class="btn btn-block danger" type="submit"><?= t('common.delete_permanently') ?></button>
                 </form>
             </div>
         </div>

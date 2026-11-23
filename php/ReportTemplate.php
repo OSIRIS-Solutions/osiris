@@ -189,7 +189,7 @@ class ReportTemplate extends Settings
 
         if ($showPageNumbers) {
             $footer->addPreserveText(
-                lang('reports.page_page_of_numpages'),
+                t('reports.page_page_of_numpages'),
                 ['size' => 9, 'color' => '666666'],
                 ['align' => 'right']
             );

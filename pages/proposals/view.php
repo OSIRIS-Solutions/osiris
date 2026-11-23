@@ -78,7 +78,7 @@ if ($nagoyaRelevant) {
 
     <div class="d-flex align-items-center justify-content-between">
         <div class="title">
-            <b class="badge text-uppercase primary"><?= lang('common.proposal') ?></b>
+            <b class="badge text-uppercase primary"><?= t('common.proposal') ?></b>
             <h1 class="mt-0">
                 <?php if (isset($project['acronym'])) { ?>
                     <?= e($project['acronym']) ?> –
@@ -92,9 +92,9 @@ if ($nagoyaRelevant) {
 
             <?php if ($status == 'withdrawn') { ?>
                 <p class="text-danger">
-                    <?= lang('projects.this_proposal_has_been_withdrawn_with_the_following_reason') ?>
+                    <?= t('projects.this_proposal_has_been_withdrawn_with_the_following_reason') ?>
                     <br>
-                    <b><?= $project['withdrawn_reason'] ?? lang('projects.no_reason_given') ?></b>
+                    <b><?= $project['withdrawn_reason'] ?? t('projects.no_reason_given') ?></b>
                 </p>
             <?php } ?>
 
@@ -105,28 +105,28 @@ if ($nagoyaRelevant) {
                     <div class="dropdown">
                         <button class="badge status signal text-uppercase cursor-pointer" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-edit" aria-hidden="true"></i>
-                            <?= lang('projects.proposed') ?>
+                            <?= t('projects.proposed') ?>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right w-250" aria-labelledby="dropdown-1">
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= lang('projects.approved') ?></a>
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= lang('projects.rejected') ?></a>
-                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= lang('projects.withdrawn') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=approved" class="item badge status success mb-5"><?= t('projects.approved') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=rejected" class="item badge status danger mb-5"><?= t('projects.rejected') ?></a>
+                            <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>?phase=withdrawn" class="item badge status muted"><?= t('projects.withdrawn') ?></a>
                         </div>
                     </div>
                 <?php } else if ($status == 'approved') { ?>
                     <span class="badge status success">
                         <i class="ph ph-check-circle" aria-hidden="true"></i>
-                        <?= lang('projects.approved') ?>
+                        <?= t('projects.approved') ?>
                     </span>
                 <?php } else if ($status == 'rejected') { ?>
                     <span class="badge status danger">
                         <i class="ph ph-x-circle" aria-hidden="true"></i>
-                        <?= lang('projects.rejected') ?>
+                        <?= t('projects.rejected') ?>
                     </span>
                 <?php } else if ($status == 'withdrawn') { ?>
                     <span class="badge status muted">
                         <i class="ph ph-x-circle" aria-hidden="true"></i>
-                        <?= lang('projects.withdrawn') ?>
+                        <?= t('projects.withdrawn') ?>
                     </span>
                 <?php } ?>
 
@@ -137,20 +137,20 @@ if ($nagoyaRelevant) {
                     <?php
                     switch ($status) {
                         case 'proposed':
-                            echo "<span class='badge status signal'>" . lang('projects.proposed') . "</span>";
+                            echo "<span class='badge status signal'>" . t('projects.proposed') . "</span>";
                             break;
                         case 'approved':
-                            echo "<span class='badge status success'>" . lang('projects.approved') . "</span>";
+                            echo "<span class='badge status success'>" . t('projects.approved') . "</span>";
                             break;
                         case 'rejected':
-                            echo "<span class='badge status danger'>" . lang('projects.rejected') . "</span>";
+                            echo "<span class='badge status danger'>" . t('projects.rejected') . "</span>";
                             break;
                         default:
                             break;
                     } ?>
                     <br>
                     <small class="text-muted">
-                        <?= lang('projects.you_don_t_have_permissionto_change_the_status') ?>
+                        <?= t('projects.you_don_t_have_permissionto_change_the_status') ?>
                     </small>
                 </div>
             <?php  } ?>
@@ -161,10 +161,10 @@ if ($nagoyaRelevant) {
         // if project is not connected yet
     ?>
         <div class="box signal padded mt-0" style="background-color: var(--signal-color-10);">
-            <?= lang('projects.this_proposal_has_been_approved_but_is_not_yet_converted_to_a_project_pleas') ?>
+            <?= t('projects.this_proposal_has_been_approved_but_is_not_yet_converted_to_a_project_pleas') ?>
             <br>
             <a href="<?= ROOTPATH ?>/projects/create-from-proposal/<?= $id ?>" class="btn signal">
-                <?= lang('projects.convert_into_project') ?>
+                <?= t('projects.convert_into_project') ?>
             </a>
         </div>
     <?php } ?>
@@ -173,18 +173,18 @@ if ($nagoyaRelevant) {
         <?php if ($edit_perm) { ?>
             <a href="<?= ROOTPATH ?>/proposals/edit/<?= $id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('projects.edit_current_state') ?>
+                <?= t('projects.edit_current_state') ?>
             </a>
             <?php
             $pastPhases = array_filter(ProjectForms::pastPhases($project), fn($phase) => ProjectForms::canEditPhase($project, $phase, $Settings, $_SESSION['username'], true));
             if ($pastPhases): ?>
                 <div class="dropdown">
                     <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ph ph-clock-counter-clockwise"></i> <?= translate('projects.edit_past_phase') ?> <i class="ph ph-caret-down"></i>
+                        <i class="ph ph-clock-counter-clockwise"></i> <?= t('projects.edit_past_phase') ?> <i class="ph ph-caret-down"></i>
                     </button>
                     <div class="dropdown-menu">
                         <?php foreach ($pastPhases as $phase): ?>
-                            <a class="item" href="<?= ROOTPATH ?>/proposals/edit/<?= e($id) ?>?edit_phase=<?= e($phase) ?>"><?= translate('projects.' . $phase) ?></a>
+                            <a class="item" href="<?= ROOTPATH ?>/proposals/edit/<?= e($id) ?>?edit_phase=<?= e($phase) ?>"><?= t('projects.' . $phase) ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -193,7 +193,7 @@ if ($nagoyaRelevant) {
             <div class="dropdown">
                 <button class="btn primary" data-toggle="dropdown" type="button" id="dropdown-download" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-download"></i>
-                    <?= lang('common.download') ?>
+                    <?= t('common.download') ?>
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu p-10" aria-labelledby="dropdown-download">
@@ -205,7 +205,7 @@ if ($nagoyaRelevant) {
                         </select>
                         <button class="btn primary" type="submit">
                             <i class="ph ph-download"></i>
-                            <?= lang('common.download') ?>
+                            <?= t('common.download') ?>
                         </button>
                     </form>
                 </div>
@@ -220,22 +220,22 @@ if ($nagoyaRelevant) {
             <div class="dropdown">
                 <button class="btn danger" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-trash"></i>
-                    <?= lang('action.delete') ?>
+                    <?= t('action.delete') ?>
                     <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdown-1">
                     <div class="content">
                         <?php if (!empty($connected_project)) { ?>
                             <b>
-                                <?= lang('projects.deleting_this_proposal_is_not_possible_while_it_is_connected_to_a_project_d') ?>
+                                <?= t('projects.deleting_this_proposal_is_not_possible_while_it_is_connected_to_a_project_d') ?>
                             </b>
                         <?php } else { ?>
-                            <b class="text-danger"><?= lang('common.attention') ?>!</b><br>
+                            <b class="text-danger"><?= t('common.attention') ?>!</b><br>
                             <small>
-                                <?= lang('projects.the_proposal_is_permanently_deleted_and_the_connection_to_all_associated_pe') ?>
+                                <?= t('projects.the_proposal_is_permanently_deleted_and_the_connection_to_all_associated_pe') ?>
                             </small>
                             <form action="<?= ROOTPATH ?>/crud/proposals/delete/<?= $project['_id'] ?>" method="post">
-                                <button class="btn btn-block danger" type="submit"><?= lang('common.delete_permanently') ?></button>
+                                <button class="btn btn-block danger" type="submit"><?= t('common.delete_permanently') ?></button>
                             </form>
                         <?php } ?>
                     </div>
@@ -249,12 +249,12 @@ if ($nagoyaRelevant) {
     <nav class="pills mt-20" id="nav-tabs">
         <button class="btn font-weight-bold active" id="general-btn" onclick="navigate('general')">
             <i class="ph ph-file-text"></i>
-            <?= lang('projects.proposal') ?>
+            <?= t('projects.proposal') ?>
         </button>
         <?php if (!empty($connected_project)) { ?>
             <a href="<?= ROOTPATH ?>/projects/view/<?= $connected_project['_id'] ?>" class="btn font-weight-bold">
                 <i class="ph ph-link m-0"></i>
-                <?= lang('common.project') ?>
+                <?= t('common.project') ?>
             </a>
         <?php } ?>
 
@@ -264,14 +264,14 @@ if ($nagoyaRelevant) {
         ?>
             <button onclick="navigate('history')" id="btn-history" class="btn">
                 <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-                <?= lang('common.history') ?>
+                <?= t('common.history') ?>
                 <span class="index"><?= $count_history ?></span>
             </button>
         <?php endif; ?>
         <?php if ($Settings->hasPermission('raw-data')) { ?>
             <button class="btn" style="--primary-color: var(--muted-color);--primary-color-20: var(--muted-color-20);" onclick="navigate('raw-data')" id="raw-data-btn">
                 <i class="ph ph-code"></i>
-                <?= lang('common.raw_data') ?>
+                <?= t('common.raw_data') ?>
             </button>
         <?php } ?>
     </nav>
@@ -283,12 +283,12 @@ if ($nagoyaRelevant) {
             $whoIsNext = Nagoya::whoIsNext($project);
             if ($whoIsNext === 'researcher-required' && $user_project) { ?>
                 <div class="alert danger mt-20">
-                    <h5 class="title"><?= lang('common.nagoya_protocol_review') ?></h5>
-                    <?= lang('common.you_are_required_to_provide_additional_nagoya_protocol_information') ?>
+                    <h5 class="title"><?= t('common.nagoya_protocol_review') ?></h5>
+                    <?= t('common.you_are_required_to_provide_additional_nagoya_protocol_information') ?>
                     <br>
                     <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $id ?>" class="btn danger">
                         <i class="ph ph-clipboard-text"></i>
-                        <?= lang('common.provide_information') ?>
+                        <?= t('common.provide_information') ?>
                     </a>
                 </div>
             <?php } ?>
@@ -303,29 +303,29 @@ if ($nagoyaRelevant) {
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-8">
                 <h2>
-                    <?= lang('projects.proposal_details') ?>
+                    <?= t('projects.proposal_details') ?>
                 </h2>
 
                 <div class="tabs" id="status-tabs">
                     <button class="btn font-weight-bold active" style="--primary-color: var(--signal-color);--primary-color-20: var(--signal-color-20);" onclick="selectTab('proposal')" id="proposal-btn">
                         <i class="ph ph-file-text"></i>
-                        <?= lang('common.proposal') ?>
+                        <?= t('common.proposal') ?>
                     </button>
                     <?php if ($status == 'approved') { ?>
                         <button class="btn font-weight-bold" style="--primary-color: var(--success-color);--primary-color-20: var(--success-color-20);" onclick="selectTab('approval')" id="approval-btn">
                             <i class="ph ph-check-circle"></i>
-                            <?= lang('common.approval') ?>
+                            <?= t('common.approval') ?>
                         </button>
                         <!-- finance -->
                         <button class="btn font-weight-bold" onclick="selectTab('finance')" id="finance-btn">
                             <i class="ph ph-money"></i>
-                            <?= lang('common.finance') ?>
+                            <?= t('common.finance') ?>
                         </button>
                     <?php } ?>
                     <?php if ($status == 'rejected') { ?>
                         <button class="btn font-weight-bold" style="--primary-color: var(--danger-color);--primary-color-20: var(--danger-color-20);" onclick="selectTab('rejection')" id="rejection-btn">
                             <i class="ph ph-x-circle"></i>
-                            <?= lang('common.rejection') ?>
+                            <?= t('common.rejection') ?>
                         </button>
                     <?php } ?>
 
@@ -333,7 +333,7 @@ if ($nagoyaRelevant) {
                     <?php if ($Settings->hasPermission('proposals.view-documents') || $user_project) { ?>
                         <button class="btn font-weight-bold" onclick="selectTab('documents')" id="documents-btn">
                             <i class="ph ph-file-text"></i>
-                            <?= lang('common.documents') ?>
+                            <?= t('common.documents') ?>
                             <span class="index"><?= count($documents) ?></span>
                         </button>
                     <?php } ?>
@@ -341,7 +341,7 @@ if ($nagoyaRelevant) {
                     <?php if ($nagoyaRelevant) { ?>
                         <button class="btn font-weight-bold" onclick="selectTab('nagoya')" id="nagoya-btn" style="--primary-color: var(--<?= $nagoya_status_color ?>-color);--primary-color-20: var(--<?= $nagoya_status_color ?>-color-20);">
                             <span><?= Nagoya::icon($project) ?></span>
-                            <?= lang('common.nagoya_protocol') ?>
+                            <?= t('common.nagoya_protocol') ?>
                         </button>
                     <?php } ?>
 
@@ -354,7 +354,7 @@ if ($nagoyaRelevant) {
                         ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.created_by_view') ?></span>
+                                <span class="key"><?= t('common.created_by_view') ?></span>
                                 <?php if (!isset($project['created_by']) || $project['created_by'] == 'system') {
                                     echo 'System';
                                 } else {
@@ -379,7 +379,7 @@ if ($nagoyaRelevant) {
                             ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('projects.updated_by') ?></span>
+                                    <span class="key"><?= t('projects.updated_by') ?></span>
                                     <?php if (!isset($project['updated_by']) || $project['updated_by'] == 'system') {
                                         echo 'System';
                                     } else {
@@ -420,7 +420,7 @@ if ($nagoyaRelevant) {
                         </table>
 
                         <h5 class="mb-0">
-                            <?= lang('common.third_party_funding_per_year') ?>
+                            <?= t('common.third_party_funding_per_year') ?>
 
                             <a href="<?= ROOTPATH ?>/proposals/finance/<?= $id ?>">
                                 <i class="ph ph-edit"></i>
@@ -429,17 +429,17 @@ if ($nagoyaRelevant) {
 
                         <table class="table">
                             <thead>
-                                <th style="width:90px;"><?= lang('common.year') ?></th>
-                                <th class="text-right"><?= lang('common.planned') ?> in EUR</th>
-                                <th class="text-right"><?= lang('common.actual') ?> in EUR</th>
-                                <th class="text-right"><?= lang('common.delta') ?> in EUR</th>
-                                <th class="text-right"><?= lang('common.fulfillment') ?></th>
+                                <th style="width:90px;"><?= t('common.year') ?></th>
+                                <th class="text-right"><?= t('common.planned') ?> in EUR</th>
+                                <th class="text-right"><?= t('common.actual') ?> in EUR</th>
+                                <th class="text-right"><?= t('common.delta') ?> in EUR</th>
+                                <th class="text-right"><?= t('common.fulfillment') ?></th>
                             </thead>
                             <tbody>
                                 <?php
                                 $finance = $project['grant_years'] ?? [];
                                 if (empty($finance)) {
-                                    echo '<tr><td>' . lang('common.no_funding_information_available') . '</td></tr>';
+                                    echo '<tr><td>' . t('common.no_funding_information_available') . '</td></tr>';
                                 } else foreach ($finance as $grant) {
                                     $year = $grant['year'] ?? '';
                                     $planned = $grant['planned'] ?? 0;
@@ -494,12 +494,12 @@ if ($nagoyaRelevant) {
                                         data: {
                                             labels: years,
                                             datasets: [{
-                                                    label: '<?= lang('common.planned') ?>',
+                                                    label: '<?= t('common.planned') ?>',
                                                     data: plannedData,
                                                     backgroundColor: OSIRIS_PRIMARY,
                                                 },
                                                 {
-                                                    label: '<?= lang('common.actual') ?>',
+                                                    label: '<?= t('common.actual') ?>',
                                                     data: spentData,
                                                     backgroundColor: OSIRIS_ACCENT,
                                                 }
@@ -513,7 +513,7 @@ if ($nagoyaRelevant) {
                                                 },
                                                 title: {
                                                     display: true,
-                                                    text: '<?= lang('common.third_party_funding_per_year') ?>'
+                                                    text: '<?= t('common.third_party_funding_per_year') ?>'
                                                 },
                                                 datalabels: {
                                                     anchor: 'end',
@@ -564,7 +564,7 @@ if ($nagoyaRelevant) {
                             <tbody>
                                 <?php
                                 if (empty($documents)) {
-                                    echo '<tr><td>' . lang('common.no_documents_available') . '</td></tr>';
+                                    echo '<tr><td>' . t('common.no_documents_available') . '</td></tr>';
                                 } else {
                                     foreach ($documents as $doc) {
                                         $file_url = ROOTPATH . '/uploads/' . $doc['_id'] . '.' . $doc['extension'];
@@ -578,9 +578,9 @@ if ($nagoyaRelevant) {
                                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $doc['_id'] ?>">
                                                         <div class="content">
                                                             <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                                                                <span class="text-danger"><?= lang('common.do_you_want_to_delete_this_document') ?></span>
+                                                                <span class="text-danger"><?= t('common.do_you_want_to_delete_this_document') ?></span>
                                                                 <input type="hidden" name="id" value="<?= $doc['_id'] ?>">
-                                                                <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
+                                                                <button class="btn btn-block danger" type="submit"><?= t('action.delete') ?></button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -588,9 +588,9 @@ if ($nagoyaRelevant) {
                                                 <a href="<?= $file_url ?>" class="">
                                                     <h6 class="m-0">
                                                         <?php if (isset($doc['permit_id'])) {
-                                                            echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', lang('common.other'));
+                                                            echo $Vocabulary->getValue('nagoya-document-types', $doc['name'] ?? '-', t('common.other'));
                                                         } else {
-                                                            echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', lang('common.other'));
+                                                            echo $Vocabulary->getValue('proposal-document-types', $doc['name'] ?? '', t('common.other'));
                                                         } ?>
                                                         <i class="ph ph-download"></i>
                                                     </h6>
@@ -601,14 +601,14 @@ if ($nagoyaRelevant) {
                                                     <div>
                                                         <?= $doc['filename'] ?> (<?= $doc['size'] ?> Bytes)
                                                         <br>
-                                                        <?= lang('common.uploaded_by') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
-                                                        <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
+                                                        <?= t('common.uploaded_by') ?> <?= $DB->getNameFromId($doc['uploaded_by']) ?>
+                                                        <?= t('common.on') ?> <?= date('d.m.Y', strtotime($doc['uploaded'])) ?>
                                                     </div>
                                                     <?php if (isset($doc['country_code'])) { ?>
 
                                                         <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $id ?>/<?= $doc['country_code'] ?>">
                                                             <i class="ph ph-certificate"></i>
-                                                            <?= lang('projects.nagoya_permit_for') ?> <?= $DB->getCountry($doc['country_code'], lang('common.field_name_language')) ?>
+                                                            <?= t('projects.nagoya_permit_for') ?> <?= $DB->getCountry($doc['country_code'], t('common.field_name_language')) ?>
                                                         </a>
                                                     <?php } ?>
                                                 </div>
@@ -623,12 +623,12 @@ if ($nagoyaRelevant) {
                         <?php if ($Settings->hasPermission('proposals.upload-documents')) { ?>
                             <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
                                 <h5 class="title font-size-16">
-                                    <?= lang('common.upload_document') ?>
+                                    <?= t('common.upload_document') ?>
                                 </h5>
                                 <div class="form-group">
                                     <div class="custom-file">
                                         <input type="file" id="upload-file" name="file" class="custom-file-input" required>
-                                        <label for="upload-file" class="custom-file-label"><?= lang('common.choose_a_file') ?></label>
+                                        <label for="upload-file" class="custom-file-label"><?= t('common.choose_a_file') ?></label>
                                     </div>
                                 </div>
                                 <input type="hidden" name="values[type]" value="proposals">
@@ -641,13 +641,13 @@ if ($nagoyaRelevant) {
                                             <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
                                         <?php } ?>
                                     </select>
-                                    <label for="name" class="required"><?= lang('common.doc_type') ?></label>
+                                    <label for="name" class="required"><?= t('common.doc_type') ?></label>
                                 </div>
                                 <div class="form-group floating-form">
-                                    <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
-                                    <label for="description"><?= lang('common.description') ?></label>
+                                    <input type="text" class="form-control" name="values[description]" placeholder="<?= t('common.description') ?>" value="">
+                                    <label for="description"><?= t('common.description') ?></label>
                                 </div>
-                                <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
+                                <button class="btn primary" type="submit"><?= t('action.upload') ?></button>
                             </form>
                         <?php } ?>
                     </div>
@@ -681,14 +681,14 @@ if ($nagoyaRelevant) {
 
             <div class="col-md-4">
                 <h2>
-                    <?= lang('projects.proposal_members') ?>
+                    <?= t('projects.proposal_members') ?>
                 </h2>
 
                 <?php if ($edit_perm) { ?>
                     <div class="btn-toolbar mb-10">
                         <a href="<?= ROOTPATH ?>/proposals/persons/<?= $id ?>" class="btn primary">
                             <i class="ph ph-edit"></i>
-                            <?= lang('action.edit') ?>
+                            <?= t('action.edit') ?>
                         </a>
                     </div>
                 <?php } ?>
@@ -700,7 +700,7 @@ if ($nagoyaRelevant) {
                         ?>
                             <tr>
                                 <td>
-                                    <?= lang('common.no_persons_connected') ?>
+                                    <?= t('common.no_persons_connected') ?>
                                 </td>
                             </tr>
                         <?php
@@ -731,7 +731,7 @@ if ($nagoyaRelevant) {
                 </table>
 
                 <h2>
-                    <?= lang('common.units') ?>
+                    <?= t('common.units') ?>
                 </h2>
                 <table class="table unit-table w-full">
                     <tbody>
@@ -754,7 +754,7 @@ if ($nagoyaRelevant) {
                         } else { ?>
                             <tr>
                                 <td>
-                                    <?= lang('common.no_units_connected') ?>
+                                    <?= t('common.no_units_connected') ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -768,10 +768,10 @@ if ($nagoyaRelevant) {
     <!-- raw data -->
     <section id="raw-data" style="display: none;">
         <h2 class="title">
-            <?= lang('common.raw_data') ?>
+            <?= t('common.raw_data') ?>
         </h2>
         <p>
-            <?= lang('common.raw_data_of_this_activity') ?>
+            <?= t('common.raw_data_of_this_activity') ?>
         </p>
         <div class="box padded overflow-x-scroll">
             <pre><?= e(json_encode($project, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?></pre>
@@ -783,15 +783,15 @@ if ($nagoyaRelevant) {
     <!-- new section with history -->
     <section id="history" style="display: none;">
         <h2 class="title">
-            <?= lang('common.history') ?>
+            <?= t('common.history') ?>
         </h2>
         <p>
-            <?= lang('common.history_of_changes_to_this_activity') ?>
+            <?= t('common.history_of_changes_to_this_activity') ?>
         </p>
 
         <?php
         if (empty($project['history'] ?? [])) {
-            echo lang('common.no_history_available');
+            echo t('common.no_history_available');
         } else {
         ?>
             <div class="history-list">
@@ -802,15 +802,15 @@ if ($nagoyaRelevant) {
                         <span class="badge primary float-md-right"><?= date('d.m.Y', strtotime($h['date'])) ?></span>
                         <h5 class="m-0">
                             <?php if ($h['type'] == 'created') {
-                                echo lang('common.created_by');
+                                echo t('common.created_by');
                             } else if ($h['type'] == 'edited') {
-                                echo lang('common.edited_by');
+                                echo t('common.edited_by');
                             } else if ($h['type'] == 'imported') {
-                                echo lang('common.imported_by');
+                                echo t('common.imported_by');
                             } else if ($h['type'] == 'nagoya') {
-                                echo lang('projects.nagoya_protocol_update_by');
+                                echo t('projects.nagoya_protocol_update_by');
                             } else {
-                                echo $h['type'] . lang('common.by');
+                                echo $h['type'] . t('common.by');
                             }
                             if (isset($h['user']) && !empty($h['user'])) {
                                 echo '<a href="' . ROOTPATH . '/profile/' . $h['user'] . '">' . $DB->getNameFromId($h['user']) . '</a>';
@@ -822,11 +822,11 @@ if ($nagoyaRelevant) {
 
                         <?php
                         if (!empty($h['past_phase']) && isset($h['phase'])) {
-                            echo '<p class="text-muted small">' . e(translate('projects.past_phase_correction')) . ': ' . e(translate('projects.' . $h['phase'])) . '</p>';
+                            echo '<p class="text-muted small">' . e(t('projects.past_phase_correction')) . ': ' . e(t('projects.' . $h['phase'])) . '</p>';
                         }
                         if (isset($h['changes']) && count($h['changes']) > 0) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('common.changes_to_the_project') .
+                                t('common.changes_to_the_project') .
                                 '</div>';
                             echo '<table class="table w-auto small border px-10">';
                             foreach ($h['changes'] as $key => $change) {
@@ -847,7 +847,7 @@ if ($nagoyaRelevant) {
                             echo '</table>';
                         } else  if (isset($h['data']) && !empty($h['data'])) {
                             echo '<div class="font-weight-bold mt-10">' .
-                                lang('common.status_at_this_time_point') .
+                                t('common.status_at_this_time_point') .
                                 '</div>';
 
                             echo '<table class="table w-auto small border px-10">';
@@ -863,7 +863,7 @@ if ($nagoyaRelevant) {
                         } else if (isset($h['details']) && !empty($h['details'])) {
                             echo '<div class="mt-10">' . $h['details'] . '</div>';
                         } else if ($h['type'] == 'edited') {
-                            echo lang('common.no_changes_tracked');
+                            echo t('common.no_changes_tracked');
                         }
                         ?>
                     </div>

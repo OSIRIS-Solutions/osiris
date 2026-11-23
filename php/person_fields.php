@@ -31,7 +31,7 @@ class PersonFields extends Fields
         $FIELDS = [
             [
                 'id' => "username",
-                'label' => lang('people.username'),
+                'label' => t('people.username'),
                 'module_of' => $typeModules['username'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -43,7 +43,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "first",
-                'label' => lang('common.name_first'),
+                'label' => t('common.name_first'),
                 'module_of' => $typeModules['first'] ?? [],
                 'usage' => [
                     'filter',
@@ -54,7 +54,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "last",
-                'label' => lang('common.name_last'),
+                'label' => t('common.name_last'),
                 'module_of' => $typeModules['last'] ?? [],
                 'usage' => [
                     'filter',
@@ -65,7 +65,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "academic_title",
-                'label' => lang('people.acad_title'),
+                'label' => t('people.acad_title'),
                 'module_of' => $typeModules['academic_title'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -75,7 +75,7 @@ class PersonFields extends Fields
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    '' => lang('people.none'),
+                    '' => t('people.none'),
                     'Dr.' => 'Dr.',
                     'Prof.' => 'Prof.',
                     'Prof. Dr.' => 'Prof. Dr.'
@@ -83,7 +83,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "mail",
-                'label' => lang('people.mail'),
+                'label' => t('people.mail'),
                 'module_of' => $typeModules['mail'] ?? [],
                 'usage' => [
                     'filter',
@@ -94,7 +94,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => "orcid",
-                'label' => lang('common.orcid'),
+                'label' => t('common.orcid'),
                 'module_of' => $typeModules['orcid'] ?? [],
                 'usage' => [
                     'filter',
@@ -105,7 +105,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'is_active',
-                'label' => lang('people.is_active'),
+                'label' => t('people.is_active'),
                 'module_of' => $typeModules['is_active'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -114,15 +114,15 @@ class PersonFields extends Fields
                 ],
                 'type' => 'boolean',
                 'values' => [
-                    'true' => lang('common.yes'),
-                    'false' => lang('common.no')
+                    'true' => t('common.yes'),
+                    'false' => t('common.no')
                 ],
                 'input' => 'radio',
                 'default_value' => true
             ],
             [
                 'id' => 'created',
-                'label' => lang('people.created_at'),
+                'label' => t('people.created_at'),
                 'module_of' => $typeModules['created'] ?? [],
                 'usage' => [
                     'filter',
@@ -133,7 +133,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'updated',
-                'label' => lang('people.updated_at'),
+                'label' => t('people.updated_at'),
                 'module_of' => $typeModules['updated'] ?? [],
                 'usage' => [
                     'filter',
@@ -144,7 +144,7 @@ class PersonFields extends Fields
             ],
             [
                 'id' => 'roles',
-                'label' => lang('common.roles'),
+                'label' => t('common.roles'),
                 'module_of' => $typeModules['roles'] ?? [],
                 'usage' => [
                     'aggregate',
@@ -160,7 +160,7 @@ class PersonFields extends Fields
                 'usage' => [
                     'aggregate',
                 ],
-                "label" => lang('common.gender'),
+                "label" => t('common.gender'),
                 "type" => "string",
                 "input" => "select",
                 "values" => [
@@ -179,7 +179,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('people.phone')
+                "label" => t('people.phone')
             ],
             [
                 "id" => "mobile",
@@ -190,7 +190,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('people.mobile')
+                "label" => t('people.mobile')
             ],
             [
                 "id" => "internal_id",
@@ -201,7 +201,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('common.internal_id')
+                "label" => t('common.internal_id')
             ],
             [
                 "id" => "position.$contentLanguage",
@@ -212,7 +212,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('common.position'),
+                "label" => t('common.position'),
             ],
             [
                 "id" => "room",
@@ -223,7 +223,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('common.room')
+                "label" => t('common.room')
             ],
             [
                 "id" => "hide",
@@ -234,7 +234,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "boolean",
-                "label" => lang('people.hide_in_portfolio_person_fields'),
+                "label" => t('people.hide_in_portfolio_person_fields'),
             ],
             [
                 "id" => "research.$contentLanguage",
@@ -245,7 +245,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('groups.research_interests'),
+                "label" => t('groups.research_interests'),
             ],
             [
                 "id" => "research_profile.$contentLanguage",
@@ -256,7 +256,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('people.research_profile'),
+                "label" => t('people.research_profile'),
             ],
             [
                 "id" => "cv",
@@ -267,7 +267,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('people.cv'),
+                "label" => t('people.cv'),
             ],
             [
                 "id" => "biography.$contentLanguage",
@@ -278,7 +278,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('common.biography'),
+                "label" => t('common.biography'),
             ],
             [
                 "id" => "education.$contentLanguage",
@@ -289,7 +289,7 @@ class PersonFields extends Fields
                     'columns'
                 ],
                 "type" => "string",
-                "label" => lang('common.education_profile'),
+                "label" => t('common.education_profile'),
             ]
         ];
 
@@ -302,7 +302,7 @@ class PersonFields extends Fields
                     "type" => "string",
                     'input' => 'select',
                     "values" => DB::doc2Arr($expertise),
-                    "label" => lang('common.expertise'),
+                    "label" => t('common.expertise'),
                     'usage' => [
                         'aggregate',
                         'filter',
@@ -341,7 +341,7 @@ class PersonFields extends Fields
                 'filter',
                 'columns'
             ],
-            'label' => lang('common.organizational_unit'),
+            'label' => t('common.organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units
@@ -352,7 +352,7 @@ class PersonFields extends Fields
             'usage' => [
                 'filter'
             ],
-            'label' => lang('people.current_organizational_unit'),
+            'label' => t('people.current_organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units

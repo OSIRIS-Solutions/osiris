@@ -75,11 +75,11 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 <i class="ph ph-caret-left" aria-hidden="true"></i>
                 <span>
                     <?php if ($topics_and_groups) { ?>
-                        <?= lang('common.explore_by_topic_unit') ?>
+                        <?= t('common.explore_by_topic_unit') ?>
                     <?php } else if (!empty($topics)) { ?>
-                        <?= lang('common.explore_by_topic') ?>
+                        <?= t('common.explore_by_topic') ?>
                     <?php } else if (!empty($hierarchy)) { ?>
-                        <?= lang('common.explore_by_unit') ?>
+                        <?= t('common.explore_by_unit') ?>
                     <?php } ?>
                 </span>
             </div>
@@ -170,12 +170,12 @@ $preselect = $open ?? $_GET['open'] ?? null;
             <nav id="group-pills">
                 <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'info' ? 'active' : '' ?>">
                     <i class="ph ph-info" aria-hidden="true"></i>
-                    <?= lang('common.info') ?>
+                    <?= t('common.info') ?>
                 </a>
 
                 <a onclick="navigate('persons')" id="btn-persons" class="<?= $preselect === 'persons' ? 'active' : '' ?>">
                     <i class="ph ph-users" aria-hidden="true"></i>
-                    <?= lang('common.team') ?>
+                    <?= t('common.team') ?>
                     <span class="index"><?= $numbers['persons'] ?></span>
                 </a>
 
@@ -183,7 +183,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['units'] > 0) { ?>
                     <a onclick="navigate('units')" id="btn-units" class="<?= $preselect === 'units' ? 'active' : '' ?>">
                         <i class="ph ph-users-three" aria-hidden="true"></i>
-                        <?= lang('common.units')  ?>
+                        <?= t('common.units')  ?>
                         <span class="index"><?= $numbers['units'] ?></span>
                     </a>
                 <?php } ?>
@@ -192,7 +192,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['publications'] > 0) { ?>
                     <a onclick="navigate('publications')" id="btn-publications" class="<?= $preselect === 'publications' ? 'active' : '' ?>">
                         <i class="ph ph-books" aria-hidden="true"></i>
-                        <?= lang('common.publications')  ?>
+                        <?= t('common.publications')  ?>
                         <span class="index"><?= $numbers['publications'] ?></span>
                     </a>
                 <?php } ?>
@@ -201,7 +201,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['activities'] > 0) { ?>
                     <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
                         <i class="ph ph-briefcase" aria-hidden="true"></i>
-                        <?= lang('common.activities')  ?>
+                        <?= t('common.activities')  ?>
                         <span class="index"><?= $numbers['activities'] ?></span>
                     </a>
                 <?php } ?>
@@ -210,7 +210,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 if ($numbers['projects'] > 0) { ?>
                     <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
                         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('common.projects')  ?>
+                        <?= t('common.projects')  ?>
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
@@ -218,7 +218,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </nav>
 
 
-            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= lang('projects.general_information') ?>">
+            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= t('projects.general_information') ?>">
                 <!-- head -->
                 <?php
                 $head = $data['heads'] ?? [];
@@ -258,7 +258,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.employees') ?>">
+            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= t('common.employees') ?>">
 
                 <table class="table cards w-full datatable" id="users-table" data-page-length="18">
                     <thead>
@@ -293,7 +293,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
 
 
 
-            <section id="units" <?= $preselect === 'units' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.units') ?>">
+            <section id="units" <?= $preselect === 'units' ? '' : 'style="display:none"' ?> data-title="<?= t('common.units') ?>">
 
                 <table class="table cards w-full datatable" id="units-table" data-page-length="18">
                     <thead>
@@ -323,18 +323,18 @@ $preselect = $open ?? $_GET['open'] ?? null;
                 </table>
             </section>
 
-            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.publications') ?>">
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= t('common.publications') ?>">
 
                 <table class="table datatable" id="publication-table"
                     data-table="publications"
                     data-tab="publications"
                     data-source="./publications.json"
                     data-page-length="20"
-                    data-lang="<?= lang('common.this_language') ?>">
+                    data-lang="<?= t('common.this_language') ?>">
                     <thead>
                         <tr>
-                            <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                            <th data-col="html" data-search-col="search"><?= lang('common.publication') ?></th>
+                            <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                            <th data-col="html" data-search-col="search"><?= t('common.publication') ?></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -342,10 +342,10 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.other_activities') ?>">
+            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= t('common.other_activities') ?>">
 
 
-                <!-- <h2><?= lang('common.other_activities') ?></h2> -->
+                <!-- <h2><?= t('common.other_activities') ?></h2> -->
 
                 <div class="w-full">
 
@@ -354,11 +354,11 @@ $preselect = $open ?? $_GET['open'] ?? null;
                         data-tab="activities"
                         data-source="./activities.json"
                         data-page-length="20"
-                        data-lang="<?= lang('common.this_language') ?>">
+                        data-lang="<?= t('common.this_language') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                                <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                                <th data-col="html" data-search-col="search"><?=t('common.activity')?></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -369,7 +369,7 @@ $preselect = $open ?? $_GET['open'] ?? null;
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.projects') ?>">
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= t('common.projects') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>
@@ -380,10 +380,10 @@ $preselect = $open ?? $_GET['open'] ?? null;
                             data-tab="projects"
                             data-source="./projects.json"
                             data-page-length="8"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data><?= lang('common.project') ?></th>
+                                    <th data><?= t('common.project') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -400,12 +400,12 @@ $preselect = $open ?? $_GET['open'] ?? null;
                                 data-source="./collaborators-map.json"
                                 data-tab="projects"
                                 data-context="unit"
-                                data-lang="<?= lang('common.this_language') ?>">
+                                data-lang="<?= t('common.this_language') ?>">
                             </div>
                         </div>
                         <p>
-                            <span style="color:var(--secondary-color)">&#9673;</span> <?= lang('common.this_institution') ?><br>
-                            <span style="color:var(--primary-color)">&#9673;</span> <?= lang('common.cooperation_partner') ?>
+                            <span style="color:var(--secondary-color)">&#9673;</span> <?= t('common.this_institution') ?><br>
+                            <span style="color:var(--primary-color)">&#9673;</span> <?= t('common.cooperation_partner') ?>
                         </p>
                     </div>
 

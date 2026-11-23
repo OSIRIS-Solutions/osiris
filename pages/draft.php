@@ -18,29 +18,29 @@
 
 <h1>
     <i class="ph-duotone ph-file-text"></i>
-    <?= $draft['title'] ?? lang('activities.draft') ?>
+    <?= $draft['title'] ?? t('activities.draft') ?>
 </h1>
 
 
 <p class="text-muted">
-    <?= lang('activities.a_draft_from') ?> <?= $DB->getNameFromId($draft['created_by'] ?? '') ?> <?= lang('activities.created_at') ?> <?= format_date($draft['created'] ?? '', 'd.m.Y') ?>
+    <?= t('activities.a_draft_from') ?> <?= $DB->getNameFromId($draft['created_by'] ?? '') ?> <?= t('activities.created_at') ?> <?= format_date($draft['created'] ?? '', 'd.m.Y') ?>
     <?php if ($draft['created_by'] !== $_SESSION['username']) { ?>
-        (<?= lang('activities.shared_with_you') ?>)
+        (<?= t('activities.shared_with_you') ?>)
     <?php } ?>
 </p>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/add-activity?draft=<?= $draft['_id'] ?>" class="btn primary">
         <i class="ph ph-pencil"></i>
-        <?= lang('action.edit') ?>
+        <?= t('action.edit') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="invite-editor" aria-haspopup="true" aria-expanded="false">
-            <i class="ph ph-user-plus"></i> <?= lang('activities.share_this_draft') ?>
+            <i class="ph ph-user-plus"></i> <?= t('activities.share_this_draft') ?>
         </button>
         <div class="dropdown-menu w-300" aria-labelledby="invite-editor">
             <form action="<?= ROOTPATH ?>/crud/activities/invite-draft/<?= $draft['_id'] ?>" method="post" class="content">
-                <?= lang('activities.you_shared_this_draft_with') ?>
+                <?= t('activities.you_shared_this_draft_with') ?>
                 <ul class="list">
                     <?php
                     $shared_with = $draft['draft_shared_with'] ?? [];
@@ -52,14 +52,14 @@
                         </li>
                     <?php
                     } else {
-                        echo '<li>' . lang('activities.no_one') . '</li>';
+                        echo '<li>' . t('activities.no_one') . '</li>';
                     }
                     ?>
                 </ul>
                 <div class="form-group">
-                    <label for="invitee"><?= lang('activities.select_a_user_to_invite') ?></label>
+                    <label for="invitee"><?= t('activities.select_a_user_to_invite') ?></label>
                     <select class="form-control" name="invitee" id="invitee" required>
-                        <option value=""><?= lang('activities.select_editor') ?></option>
+                        <option value=""><?= t('activities.select_editor') ?></option>
                         <?php
                         $users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['projection' => ['username' => 1, 'formalname' => 1], 'sort' => ['formalname' => 1]]);
                         foreach ($users as $user) { ?>
@@ -67,14 +67,14 @@
                         <?php } ?>
                     </select>
                 </div>
-                <button class="btn btn-block" type="submit"><?= lang('common.share') ?></button>
+                <button class="btn btn-block" type="submit"><?= t('common.share') ?></button>
             </form>
         </div>
     </div>
     <form action="<?= ROOTPATH ?>/crud/activities/delete-draft/<?= $draft['_id'] ?>" method="post" style="display:inline;">
-        <button type="submit" class="btn danger" onclick="return confirm('<?= lang('activities.are_you_sure_you_want_to_delete_this_draft') ?>');">
+        <button type="submit" class="btn danger" onclick="return confirm('<?= t('activities.are_you_sure_you_want_to_delete_this_draft') ?>');">
             <i class="ph ph-trash"></i>
-            <?= lang('action.delete') ?>
+            <?= t('action.delete') ?>
         </button>
     </form>
 </div>
@@ -122,7 +122,7 @@ include_once BASEPATH . "/php/Modules.php";
         ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('common.projects') ?></span>
+                    <span class="key"><?= t('common.projects') ?></span>
                     <?php foreach ($projects as $project) { ?>
                         <a class="module " href="<?= ROOTPATH ?>/projects/view/<?= $project['_id'] ?>">
                             <h5 class="m-0"><?= localized($project['name'] ?? '') ?></h5>
@@ -141,7 +141,7 @@ include_once BASEPATH . "/php/Modules.php";
         ?>
             <tr>
                 <td>
-                    <span class="key"><?= lang('common.teaching_module') ?></span>
+                    <span class="key"><?= t('common.teaching_module') ?></span>
 
                     <a class="module " href="<?= ROOTPATH ?>/teaching#<?= $draft['module_id'] ?>">
                         <h5 class="m-0"><span class="highlight-text"><?= $module['module'] ?></span> <?= $module['title'] ?></h5>
@@ -184,7 +184,7 @@ include_once BASEPATH . "/php/Modules.php";
                     <?php if (empty($conference)) { ?>
                         <div><?= $draft['conference'] ?? '' ?></div>
                         <span class="text-danger">
-                            <?= lang('common.this_event_has_been_deleted') ?>
+                            <?= t('common.this_event_has_been_deleted') ?>
                         </span>
                     <?php } else { ?>
 
@@ -197,15 +197,15 @@ include_once BASEPATH . "/php/Modules.php";
                             <div class="text-muted mb-10"><?= $conference['title_full'] ?></div>
                             <ul class="horizontal mb-0">
                                 <li>
-                                    <b><?= lang('common.location') ?></b>: <?= $conference['location'] ?>
+                                    <b><?= t('common.location') ?></b>: <?= $conference['location'] ?>
                                 </li>
                                 <li>
-                                    <b><?= lang('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
+                                    <b><?= t('common.date') ?></b>: <?= fromToDate($conference['start'], $conference['end']) ?>
                                 </li>
                                 <li>
                                     <a href="<?= $conference['url'] ?>" target="_blank">
                                         <i class="ph ph-link"></i>
-                                        <?= lang('common.website') ?>
+                                        <?= t('common.website') ?>
                                     </a>
                                 </li>
                             </ul>
@@ -239,7 +239,7 @@ include_once BASEPATH . "/php/Modules.php";
     ?>
         <tr>
             <td>
-                <span class="key text-danger"><?= lang('common.the_following_fields_are_not_filled_in') ?>:</span>
+                <span class="key text-danger"><?= t('common.the_following_fields_are_not_filled_in') ?>:</span>
                 <?php foreach ($emptyModules as $key) { ?>
                     <span class="badge mr-5 mb-5"><?= $Modules->get_name($key) ?></span>
                 <?php } ?>
@@ -252,8 +252,8 @@ include_once BASEPATH . "/php/Modules.php";
     <?php if (isset($draft['comment'])) : ?>
         <tr class="text-muted">
             <td>
-                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= lang('common.only_visible_for_authors_and_editors') ?>">
-                    <?= lang('common.comment') ?>:
+                <span class="key" style="text-decoration: 1px dotted underline;" data-toggle="tooltip" data-title="<?= t('common.only_visible_for_authors_and_editors') ?>">
+                    <?= t('common.comment') ?>:
                 </span>
 
                 <?= $draft['comment'] ?>

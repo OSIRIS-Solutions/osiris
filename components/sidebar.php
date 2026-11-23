@@ -9,20 +9,20 @@ $cart = readCart();
         <div class="spacer h-50"></div>
         <a href="<?= ROOTPATH ?>/user/login" class="cta with-icon <?= $pageactive('add-activity') ?>">
             <i class="ph ph-sign-in mr-10" aria-hidden="true"></i>
-            <?= lang('header.login') ?>
+            <?= t('header.login') ?>
         </a>
 
         <?php if (strtoupper(USER_MANAGEMENT) === 'AUTH' && $Settings->get('auth-self-registration', true)) { ?>
             <a href="<?= ROOTPATH ?>/auth/new-user" class="with-icon <?= $pageactive('auth/new-user') ?>">
                 <i class="ph ph-user-plus" aria-hidden="true"></i>
-                <?= lang('common.register') ?>
+                <?= t('common.register') ?>
             </a>
         <?php } ?>
 
         <?php if ($Settings->featureEnabled('portal-public')) { ?>
             <a href="<?= ROOTPATH ?>/portal/info" class="with-icon <?= $pageactive('portal') ?>">
                 <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
-                <?= lang('navigation.go_to_portal') ?>
+                <?= t('navigation.go_to_portal') ?>
             </a>
         <?php } ?>
 
@@ -41,7 +41,7 @@ $cart = readCart();
                         </small>
                     </div>
                 </a>
-                <a href="#" onclick="$('.my-profile-links').slideToggle();" title="<?= lang('navigation.profile_options') ?>">
+                <a href="#" onclick="$('.my-profile-links').slideToggle();" title="<?= t('navigation.profile_options') ?>">
                     <i class="ph ph-dots-three ph-2x"></i>
                 </a>
             </div>
@@ -53,10 +53,10 @@ $cart = readCart();
                     <div class="dropdown modal-sm">
                         <a href="#" class="" data-toggle="dropdown" id="switch-user" aria-haspopup="true" aria-expanded="false">
                             <i class="ph ph-user-switch"></i>
-                            <span><?= lang('navigation.switch_users') ?></span>
+                            <span><?= t('navigation.switch_users') ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-center w-250" aria-labelledby="switch-user">
-                            <!-- <h6 class="header text-primary"><?= lang('navigation.switch_users') ?></h6> -->
+                            <!-- <h6 class="header text-primary"><?= t('navigation.switch_users') ?></h6> -->
 
                             <form action="<?= ROOTPATH ?>/switch-user" method="post" class="p-10" id="switch-user-form">
                                 <div class="input-group">
@@ -66,7 +66,7 @@ $cart = readCart();
 
                                     <select name="OSIRIS-SELECT-MAINTENANCE-USER" id="osiris-select-maintenance-user" class="form-control border-primary bg-white" onchange="$(this).closest('form').submit()">
                                         <option value="" disabled>
-                                            <?= lang('navigation.switch_user') ?>
+                                            <?= t('navigation.switch_user') ?>
                                         </option>
                                         <option value="<?= $realusername ?>"><?= $DB->getNameFromId($realusername) ?></option>
                                         <?php
@@ -83,23 +83,23 @@ $cart = readCart();
                 <?php if ($Settings->hasPermission('scientist')) { ?>
                     <a href="<?= ROOTPATH ?>/my-year" class="<?= $pageactive('my-year') ?>">
                         <i class="ph ph-calendar" aria-hidden="true"></i>
-                        <?= lang('common.my_year_docs') ?>
+                        <?= t('common.my_year_docs') ?>
                     </a>
 
                     <a href="<?= ROOTPATH ?>/my-activities" class="<?= $pageactive('my-activities') ?>">
                         <i class="ph ph-folder-user" aria-hidden="true"></i>
-                        <?= lang('activities.my_activities') ?>
+                        <?= t('activities.my_activities') ?>
                     </a>
                 <?php } ?>
 
                 <a href="<?= ROOTPATH ?>/user/edit/<?= $_SESSION['username'] ?>">
                     <i class="ph ph-gear" aria-hidden="true"></i>
-                    <?= lang('navigation.user_settings') ?>
+                    <?= t('navigation.user_settings') ?>
                 </a>
 
                 <a href="<?= ROOTPATH ?>/user/logout" class="mt-10" style="--primary-color:var(--danger-color);">
                     <i class="ph ph-sign-out" aria-hidden="true"></i>
-                    <?= lang('navigation.logout') ?>
+                    <?= t('navigation.logout') ?>
                 </a>
 
             </div>
@@ -110,7 +110,7 @@ $cart = readCart();
         <nav id="sidebar-add">
             <a href="<?= ROOTPATH ?>/add-activity" class="cta with-icon <?= $pageactive('add-activity') ?>">
                 <i class="ph ph-plus-circle mr-10" aria-hidden="true"></i>
-                <?= lang('dashboard.add_activity') ?>
+                <?= t('dashboard.add_activity') ?>
             </a>
 
             <div id="sidebar-add-navigation">
@@ -119,19 +119,19 @@ $cart = readCart();
                     <?php if ($Settings->canProposalsBeCreated()) { ?>
                         <a href="<?= ROOTPATH ?>/proposals/new" class="">
                             <i class="ph ph-tree-structure"></i>
-                            <?= lang('dashboard.add_project_proposal') ?>
+                            <?= t('dashboard.add_project_proposal') ?>
                         </a>
                     <?php } else if ($Settings->canProjectsBeCreated()) { ?>
                         <a href="<?= ROOTPATH ?>/projects/new" class="">
                             <i class="ph ph-tree-structure"></i>
-                            <?= lang('dashboard.add_project') ?>
+                            <?= t('dashboard.add_project') ?>
                         </a>
                     <?php } ?>
                 <?php } ?>
                 <?php if ($Settings->hasPermission('conferences.edit') && $Settings->featureEnabled('events', true)) { ?>
                     <a href="<?= ROOTPATH ?>/conferences/new">
                         <i class="ph ph-calendar-plus"></i>
-                        <?= lang('action.add_event') ?>
+                        <?= t('action.add_event') ?>
                     </a>
                 <?php } ?>
             </div>
@@ -154,7 +154,7 @@ $cart = readCart();
         <div class="my-tasks tasks-<?= $has_notifications ? '1' : '0' ?>">
 
             <div class="title collapse open" onclick="toggleSidebar(this);" id="sidebar-tasks">
-                <?= lang('dashboard.my_tasks') ?>
+                <?= t('dashboard.my_tasks') ?>
             </div>
 
             <nav>
@@ -165,7 +165,7 @@ $cart = readCart();
                 ?>
                         <a href="<?= ROOTPATH ?>/issues" class="with-icon <?= $pageactive('issues') ?>">
                             <i class="ph ph-bell" aria-hidden="true"></i>
-                            <?= lang('dashboard.issues') ?>
+                            <?= t('dashboard.issues') ?>
                             <span class="sidebar-index danger" id="issue-counter"><?= $n_issues ?></span>
                         </a>
                     <?php } ?>
@@ -175,7 +175,7 @@ $cart = readCart();
                     ?>
                         <a href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>" class="with-icon <?= $pageactive('my-year') ?>">
                             <i class="ph ph-calendar-check" aria-hidden="true"></i>
-                            <?= lang('dashboard.quarterly_approval') ?>
+                            <?= t('dashboard.quarterly_approval') ?>
                             <span class="sidebar-index danger" id="approval-counter">!</span>
                         </a>
                     <?php } ?>
@@ -185,7 +185,7 @@ $cart = readCart();
                     ?>
                         <a href="<?= ROOTPATH ?>/queue/user" class="with-icon <?= $pageactive('queue/user') ?>">
                             <i class="ph ph-queue" aria-hidden="true"></i>
-                            <?= lang('dashboard.to_review') ?>
+                            <?= t('dashboard.to_review') ?>
                             <span class="sidebar-index" id="queue-counter"><?= $queue ?></span>
                         </a>
                     <?php } ?>
@@ -194,7 +194,7 @@ $cart = readCart();
                     <?php if ($notifications['reviews'] > 0) { ?>
                         <a href="<?= ROOTPATH ?>/workflow-reviews" class="with-icon <?= $pageactive('workflow-reviews') ?>" id="workflow-reviews-link">
                             <i class="ph ph-highlighter" aria-hidden="true"></i>
-                            <?= lang('dashboard.reviews') ?>
+                            <?= t('dashboard.reviews') ?>
                             <span class="sidebar-index review-counter">0</span>
                         </a>
 
@@ -215,7 +215,7 @@ $cart = readCart();
                     ?>
                         <a href="<?= ROOTPATH ?>/messages" class="with-icon <?= $pageactive('messages') ?>">
                             <i class="ph ph-envelope" aria-hidden="true"></i>
-                            <?= lang('common.messages') ?>
+                            <?= t('common.messages') ?>
                             <span class="sidebar-index info" id="message-counter"><?= $n_messages ?></span>
                         </a>
                     <?php } ?>
@@ -231,7 +231,7 @@ $cart = readCart();
                 <?php } else { ?>
                     <div class="no-tasks">
                         <i class="ph ph-coffee" aria-hidden="true"></i>
-                        <span><?= lang('navigation.you_have_no_pending_tasks_great_job') ?></span>
+                        <span><?= t('navigation.you_have_no_pending_tasks_great_job') ?></span>
                     </div>
                 <?php } ?>
 

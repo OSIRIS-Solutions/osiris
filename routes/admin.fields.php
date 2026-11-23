@@ -19,8 +19,8 @@ Route::get('/admin/fields', function () {
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
     $breadcrumb = [
-        ['name' => lang('admin.manage_content'), 'path' => '/admin'],
-        ['name' => lang('common.custom_fields')]
+        ['name' => t('admin.manage_content'), 'path' => '/admin'],
+        ['name' => t('common.custom_fields')]
     ];
 
     include BASEPATH . "/header.php";
@@ -35,8 +35,8 @@ Route::get('/admin/fields/new', function () {
     $user = $_SESSION['username'];
     $form = [];
     $breadcrumb = [
-        ['name' => lang('admin.fields'), 'path' => "/admin/fields"],
-        ['name' => lang('common.new')]
+        ['name' => t('admin.fields'), 'path' => "/admin/fields"],
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/field.php";
@@ -52,12 +52,12 @@ Route::get('/admin/fields/(.*)', function ($id) {
 
     $category = $osiris->adminFields->findOne(['id' => $id]);
     if (empty($category)) {
-        abortwith(404, lang('admin.custom_field'), '/admin/fields');
+        abortwith(404, t('admin.custom_field'), '/admin/fields');
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
-        ['name' => lang('admin.manage_content'), 'path' => '/admin'],
-        ['name' => lang('common.custom_fields'), 'path' => "/admin/fields"],
+        ['name' => t('admin.manage_content'), 'path' => '/admin'],
+        ['name' => t('common.custom_fields'), 'path' => "/admin/fields"],
         ['name' => $name]
     ];
 
@@ -79,7 +79,7 @@ Route::post('/crud/fields/create', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -99,7 +99,7 @@ Route::post('/crud/fields/create', function () {
     // check if category ID already exists:
     $category_exist = $osiris->adminFields->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang('admin.field_name_does_already_exist');
+        $_SESSION['msg'] = t('admin.field_name_does_already_exist');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/admin/fields/new");
         die();
@@ -117,7 +117,7 @@ Route::post('/crud/fields/create', function () {
 
     $osiris->adminFields->insertOne($values);
 
-    $_SESSION['msg'] = lang('admin.custom_field_created_successfully');
+    $_SESSION['msg'] = t('admin.custom_field_created_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields");
 });
@@ -126,7 +126,7 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) die('You have no permission to be here.');
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
     $values['id'] = $id;
@@ -160,7 +160,7 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('admin.custom_field_updated_successfully');
+    $_SESSION['msg'] = t('admin.custom_field_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields/$id");
 });
@@ -172,11 +172,11 @@ Route::post('/crud/fields/localize/(.*)', function ($id) {
     if (!$Settings->hasPermission('admin.see')) abortwith(403);
     $field = $osiris->adminFields->findOne(['id' => $id]);
     if (empty($field)) abortwith(404);
-    if (($_POST['confirm_localize'] ?? '') !== 'yes') abortwith(400, translate('admin.localized_conversion_warning'));
+    if (($_POST['confirm_localize'] ?? '') !== 'yes') abortwith(400, t('admin.localized_conversion_warning'));
 
     try {
         CustomFields::convertToLocalized($field, $osiris);
-        $_SESSION['msg'] = translate('admin.localized_conversion_done');
+        $_SESSION['msg'] = t('admin.localized_conversion_done');
         $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $error) {
         $_SESSION['msg'] = $error->getMessage();
@@ -194,13 +194,13 @@ Route::post('/crud/fields/delete/(.*)', function ($id) {
         ['_id' => $mongo_id]
     );
     if ($updateResult->getDeletedCount() === 0) {
-        $_SESSION['msg'] = lang('admin.custom_field_not_found');
+        $_SESSION['msg'] = t('admin.custom_field_not_found');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/admin/fields");
         die();
     }
 
-    $_SESSION['msg'] = lang('admin.custom_field_deleted_successfully');
+    $_SESSION['msg'] = t('admin.custom_field_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/fields");
 });

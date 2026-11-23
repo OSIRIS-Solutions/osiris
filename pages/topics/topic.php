@@ -177,13 +177,13 @@ if ($Settings->featureEnabled('spectrum')) {
 <div id="upload-image" class="modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <h3 class="title"><?= lang('topics.upload_image') ?></h3>
+            <h3 class="title"><?= t('topics.upload_image') ?></h3>
             <form action="<?= ROOTPATH ?>/crud/topics/upload/<?= $topic['_id'] ?>" method="post" enctype="multipart/form-data">
                 <div class="custom-file">
-                    <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= lang('common.no_image_uploaded') ?>">
-                    <label for="image"><?= lang('common.select_image') ?></label>
+                    <input type="file" id="image" name="file" accept=".jpg,.png,.gif" data-default-value="<?= t('common.no_image_uploaded') ?>">
+                    <label for="image"><?= t('common.select_image') ?></label>
                 </div>
-                <button type="submit" class="btn"><?= lang('action.upload') ?></button>
+                <button type="submit" class="btn"><?= t('action.upload') ?></button>
             </form>
         </div>
     </div>
@@ -205,7 +205,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <a class="btn float-md-right mb-10" href="<?= ROOTPATH ?>/preview/topic/<?= $topic['id'] ?>">
             <i class="ph ph-eye"></i>
-            <?= lang('common.preview') ?>
+            <?= t('common.preview') ?>
         </a>
     <?php } ?>
 
@@ -218,7 +218,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <h2 class="subtitle">
         <?= lang($topic['subtitle'] ?? '', $topic['subtitle_de'] ?? null) ?>
         <?php if ($topic['inactive'] ?? false) { ?>
-            <small class="badge danger"><?= lang('common.inactive') ?></small>
+            <small class="badge danger"><?= t('common.inactive') ?></small>
         <?php } ?>
     </h2>
 
@@ -227,7 +227,7 @@ if ($Settings->featureEnabled('spectrum')) {
     <?php if ($Settings->hasPermission('topics.edit')) { ?>
         <a href="<?= ROOTPATH ?>/topics/edit/<?= $topic['_id'] ?>">
             <i class="ph ph-edit"></i>
-            <?= lang('action.edit') ?>
+            <?= t('action.edit') ?>
         </a>
     <?php } ?>
 </div>
@@ -235,14 +235,14 @@ if ($Settings->featureEnabled('spectrum')) {
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('general')" id="btn-general" class="btn  <?= $active_page == 'general' ? 'active' : '' ?>">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('common.general') ?>
+        <?= t('common.general') ?>
     </a>
 
     <?php
     if ($count_groups > 0) { ?>
         <a onclick="navigate('groups')" id="btn-groups" class="btn <?= $active_page == 'groups' ? 'active' : '' ?>">
             <i class="ph ph-users-three" aria-hidden="true"></i>
-            <?= lang('topics.groups') ?>
+            <?= t('topics.groups') ?>
             <span class="index"><?= $count_groups ?></span>
         </a>
     <?php } ?>
@@ -252,7 +252,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_persons > 0) { ?>
         <a onclick="navigate('persons')" id="btn-persons" class="btn  <?= $active_page == 'persons' ? 'active' : '' ?>">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('common.persons') ?>
+            <?= t('common.persons') ?>
             <span class="index"><?= $count_persons ?></span>
         </a>
     <?php } ?>
@@ -262,7 +262,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn <?= $active_page == 'publications' ? 'active' : '' ?>">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('common.publications')  ?>
+            <?= t('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -272,7 +272,7 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn  <?= $active_page == 'activities' ? 'active' : '' ?>">
             <i class="ph ph-folders" aria-hidden="true"></i>
-            <?= lang('common.activities')  ?>
+            <?= t('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -282,18 +282,18 @@ if ($Settings->featureEnabled('spectrum')) {
     if ($count_projects > 0) { ?>
         <a onclick="navigate('projects')" id="btn-projects" class="btn <?= $active_page == 'projects' ? 'active' : '' ?>">
             <i class="ph ph-tree-structure" aria-hidden="true"></i>
-            <?= lang('common.projects')  ?>
+            <?= t('common.projects')  ?>
             <span class="index"><?= $count_projects ?></span>
         </a>
     <?php } ?>
     <?php if ($count_publications > 0) { ?>
         <a onclick="navigate('graph')" id="btn-graph" class="btn">
             <i class="ph ph-graph" aria-hidden="true"></i>
-            <?= lang('common.graph')  ?>
+            <?= t('common.graph')  ?>
         </a>
         <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
             <i class="ph ph-cloud" aria-hidden="true"></i>
-            <?= lang('common.word_cloud')  ?>
+            <?= t('common.word_cloud')  ?>
         </a>
     <?php } ?>
 
@@ -345,7 +345,7 @@ if ($Settings->featureEnabled('spectrum')) {
     ?>
         <div class="col-md">
             <h3>
-                <?= lang('common.research_spectrum') ?>
+                <?= t('common.research_spectrum') ?>
             </h3>
             <?php
             if (!empty($spectrum)) :
@@ -353,7 +353,7 @@ if ($Settings->featureEnabled('spectrum')) {
                 Spectrum::render($spectrum, $count_spectrum, '', '{"topics":"' . $topic['id'] . '"}');
             else : ?>
                 <p>
-                    <?= lang('topics.no_research_spectrum_is_assigned_to_this_topiclabel', replace: ['topicLabel' => $topicLabel]) ?>
+                    <?= t('topics.no_research_spectrum_is_assigned_to_this_topiclabel', replace: ['topicLabel' => $topicLabel]) ?>
                 </p>
             <?php endif; ?>
         <?php } ?>
@@ -362,7 +362,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="persons" style="display: none;">
 
-    <h3><?= lang('common.employees') ?></h3>
+    <h3><?= t('common.employees') ?></h3>
 
     <table class="table cards w-full" id="user-table">
         <thead>
@@ -377,7 +377,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="groups" style="display: none;">
 
-    <h3><?= lang('common.organisational_units') ?></h3>
+    <h3><?= t('common.organisational_units') ?></h3>
 
     <table class="table cards w-full" id="group-table">
         <thead>
@@ -408,7 +408,7 @@ if ($Settings->featureEnabled('spectrum')) {
                             <div class="text-muted font-size-12">
                                 <?php
                                 ?>
-                                <?= $osiris->persons->count(['current_units' => $group['id'],  'is_active' => ['$ne' => false]]) ?> <?= lang('common.coworkers') ?>
+                                <?= $osiris->persons->count(['current_units' => $group['id'],  'is_active' => ['$ne' => false]]) ?> <?= t('common.coworkers') ?>
                             </div>
                             <?php if (isset($group['head'])) {
                             ?>
@@ -435,14 +435,14 @@ if ($Settings->featureEnabled('spectrum')) {
 
 <section id="publications" style="display: none;">
 
-    <h2><?= lang('common.publications') ?></h2>
+    <h2><?= t('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -455,7 +455,7 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="activities" style="display: none;">
-    <h2><?= lang('common.activities') ?></h2>
+    <h2><?= t('common.activities') ?></h2>
 
     <div class="btn-toolbar justify-content-between">
         <div id="event-selector"></div>
@@ -463,7 +463,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <div class="input-group-prepend">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
             </div>
-            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
+            <input type="number" class="form-control w-50" id="activity-year" placeholder="<?= t('common.year') ?>" value="<?= date('Y') ?>" onchange="timelineChart({'topics': TOPIC})">
             <div class="input-group-append">
                 <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
             </div>
@@ -475,8 +475,8 @@ if ($Settings->featureEnabled('spectrum')) {
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -510,7 +510,7 @@ if ($Settings->featureEnabled('spectrum')) {
             }
         ?>
             <?php if (!empty($ongoing)) { ?>
-                <h3><?= lang('common.ongoing_projects') ?></h3>
+                <h3><?= t('common.ongoing_projects') ?></h3>
                 <div class="row row-eq-spacing my-0">
 
                     <?php foreach ($ongoing as $html) { ?>
@@ -522,7 +522,7 @@ if ($Settings->featureEnabled('spectrum')) {
             <?php } ?>
 
             <?php if (!empty($past)) { ?>
-                <h3><?= lang('common.past_projects') ?></h3>
+                <h3><?= t('common.past_projects') ?></h3>
                 <div class="row row-eq-spacing my-0">
 
                     <?php foreach ($past as $html) { ?>
@@ -539,10 +539,10 @@ if ($Settings->featureEnabled('spectrum')) {
 <?php } ?>
 
 <section id="wordcloud" style="display:none">
-    <h3 class=""><?= lang('common.word_cloud') ?></h3>
+    <h3 class=""><?= t('common.word_cloud') ?></h3>
 
     <p class="text-muted">
-        <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
+        <?= t('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
     </p>
     <div id="wordcloud-chart" style="max-width: 80rem" ;></div>
 </section>
@@ -551,9 +551,9 @@ if ($Settings->featureEnabled('spectrum')) {
 
     <?php if ($level !== 0) { ?>
 
-        <h3><?= lang('common.collaboration_with_other_groups') ?></h3>
+        <h3><?= t('common.collaboration_with_other_groups') ?></h3>
         <p class="text-muted">
-            <?= lang('common.based_on_publications_within_the_past_5_years') ?>
+            <?= t('common.based_on_publications_within_the_past_5_years') ?>
         </p>
         <div id="collab-chart" style="max-width: 60rem"></div>
 
@@ -565,10 +565,10 @@ if ($Settings->featureEnabled('spectrum')) {
 
 
 <section id="graph" style="display:none">
-    <h3><?= lang('common.graph') ?></h3>
+    <h3><?= t('common.graph') ?></h3>
 
     <p class="text-muted m-0">
-        <?= lang('common.based_on_publications_with_associated_affiliations') ?>
+        <?= t('common.based_on_publications_with_associated_affiliations') ?>
     </p>
     <div id="collabGraph" class="mw-full w-800"></div>
 

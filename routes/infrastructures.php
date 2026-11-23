@@ -32,7 +32,7 @@ Route::get('/infrastructures/statistics', function () {
     $user = $_SESSION['username'];
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => lang('common.statistics')]
+        ['name' => t('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/statistics.php";
@@ -43,12 +43,12 @@ Route::get('/infrastructures/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     if (!$Settings->hasPermission('infrastructures.edit')) {
-        abortwith(403, lang('infrastructures.you_do_not_have_permission_to_create_a_new_infrastructure'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+        abortwith(403, t('infrastructures.you_do_not_have_permission_to_create_a_new_infrastructure'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
     }
 
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
-        ['name' => lang('common.new')]
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/infrastructures/edit.php";
@@ -77,7 +77,7 @@ Route::get('/infrastructures/view/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('infrastructures.you_do_not_have_permission_to_view_this_infrastructure'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+            abortwith(403, t('infrastructures.you_do_not_have_permission_to_view_this_infrastructure'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
         }
     }
     if (empty($infrastructure)) {
@@ -101,7 +101,7 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('infrastructures.go_back_to_infrastructure'));
+        abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, t('infrastructures.go_back_to_infrastructure'));
     }
     global $form;
 
@@ -125,13 +125,13 @@ Route::get('/infrastructures/edit/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('infrastructures.go_back_to_infrastructure'));
+            abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, t('infrastructures.go_back_to_infrastructure'));
         }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => localized($form['name']), 'path' => "/infrastructures/view/$id"],
-        ['name' => lang('action.edit')]
+        ['name' => t('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -145,7 +145,7 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('infrastructures.edit') && !$Settings->hasPermission('infrastructures.edit-own')) {
-        abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('infrastructures.go_back_to_infrastructure'));
+        abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, t('infrastructures.go_back_to_infrastructure'));
     }
 
     global $form;
@@ -168,13 +168,13 @@ Route::get('/infrastructures/persons/(.*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+            abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
         }
     }
     $breadcrumb = [
         ['name' => $Settings->infrastructureLabel(), 'path' => "/infrastructures"],
         ['name' => localized($form['name']), 'path' => "/infrastructures/view/$id"],
-        ['name' => lang('common.persons')]
+        ['name' => t('common.persons')]
     ];
 
     include_once BASEPATH . "/php/Infrastructure.php";
@@ -195,27 +195,27 @@ Route::post('/crud/infrastructures/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('infrastructures.edit')) {
-        abortwith(403, lang('infrastructures.you_do_not_have_permission_to_create_a_new_infrastructure'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+        abortwith(403, t('infrastructures.you_do_not_have_permission_to_create_a_new_infrastructure'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->infrastructures;
 
     require_once BASEPATH . '/php/InfrastructureForms.php';
     $previous = [];
     try {
-        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(t('error.no_values'));
         $values = InfrastructureForms::values($_POST['values'], $osiris, $Settings, $previous);
     } catch (InvalidArgumentException $error) {
         global $form;
         $form = InfrastructureForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : [], $previous);
         include BASEPATH . '/header.php';
-        printMsg($error->getMessage(), 'error', translate('common.error'));
+        printMsg($error->getMessage(), 'error', t('common.error'));
         include BASEPATH . '/pages/infrastructures/edit.php';
         include BASEPATH . '/footer.php';
         return;
     }
-    if ($collection->findOne(['id' => $values['id']])) return abortwith(400, lang('infrastructures.infrastructure_id_already_exists_please_choose_a_different_one'));
+    if ($collection->findOne(['id' => $values['id']])) return abortwith(400, t('infrastructures.infrastructure_id_already_exists_please_choose_a_different_one'));
     // add information on creating process
     $values['created'] = date('Y-m-d');
     $values['created_by'] = $_SESSION['username'];
@@ -225,7 +225,7 @@ Route::post('/crud/infrastructures/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('infrastructures.infrastructure_created_successfully');
+        $_SESSION['msg'] = t('infrastructures.infrastructure_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -254,23 +254,23 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
             }
         }
         if (!$permission) {
-            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+            abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
         }
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->infrastructures;
 
     require_once BASEPATH . '/php/InfrastructureForms.php';
     $previous = DB::doc2Arr($collection->findOne(['_id' => DB::to_ObjectID($id)]) ?? []);
     if (!$previous) return abortwith(404, $Settings->infrastructureLabel(), '/infrastructures');
     try {
-        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(t('error.no_values'));
         $values = InfrastructureForms::values($_POST['values'], $osiris, $Settings, $previous);
     } catch (InvalidArgumentException $error) {
         global $form;
         $form = InfrastructureForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : [], $previous);
         include BASEPATH . '/header.php';
-        printMsg($error->getMessage(), 'error', translate('common.error'));
+        printMsg($error->getMessage(), 'error', t('common.error'));
         include BASEPATH . '/pages/infrastructures/edit.php';
         include BASEPATH . '/footer.php';
         return;
@@ -285,7 +285,7 @@ Route::post('/crud/infrastructures/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('infrastructures.infrastructure_updated_successfully');
+        $_SESSION['msg'] = t('infrastructures.infrastructure_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -304,9 +304,9 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     // get infrastructure
     $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($infrastructure)) {
-        abortwith(404, lang('infrastructures.infrastructure_not_found'), '/infrastructures', lang('infrastructures.go_back_to_infrastructures'));
+        abortwith(404, t('infrastructures.infrastructure_not_found'), '/infrastructures', t('infrastructures.go_back_to_infrastructures'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $year = intval($_POST['year'] ?? 0);
     $base = [
@@ -355,7 +355,7 @@ Route::post('/crud/infrastructures/stats/([A-Za-z0-9]*)', function ($id) {
     }
     // redirect
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('infrastructures.statistics_updated_successfully');
+        $_SESSION['msg'] = t('infrastructures.statistics_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect'] . "#statistics");
         die();
@@ -443,7 +443,7 @@ Route::get('/api/infrastructure/stats', function () {
 
     echo json_encode([
         'data' => array_values($data),
-        'labels' => array_column($fields, lang('common.this_language'), 'id'),
+        'labels' => array_column($fields, t('common.this_language'), 'id'),
     ]);
 });
 
@@ -467,7 +467,7 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
             }
         }
         if (!$permission) {
-            abortwith(403, lang('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, lang('infrastructures.go_back_to_infrastructure'));
+            abortwith(403, t('error.infrastructure_no_edit_permission'), '/infrastructures/view/' . $id, t('infrastructures.go_back_to_infrastructure'));
         }
     }
 
@@ -507,7 +507,7 @@ Route::post('/crud/infrastructures/update-persons/([A-Za-z0-9]*)', function ($id
         ['_id' => $DB::to_ObjectID($id)],
         ['$set' => ["persons" => $values]]
     );
-    $_SESSION['msg'] = lang('infrastructures.persons_updated_successfully');
+    $_SESSION['msg'] = t('infrastructures.persons_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/infrastructures/view/$id");
 });
@@ -517,7 +517,7 @@ Route::post('/crud/infrastructures/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('infrastructures.delete')) {
-        abortwith(403, lang('infrastructures.you_do_not_have_permission_to_delete_this_infrastructure'), '/infrastructures/view/' . $id, lang('infrastructures.go_back_to_infrastructure'));
+        abortwith(403, t('infrastructures.you_do_not_have_permission_to_delete_this_infrastructure'), '/infrastructures/view/' . $id, t('infrastructures.go_back_to_infrastructure'));
     }
 
     $infrastructure = $osiris->infrastructures->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -543,7 +543,7 @@ Route::post('/crud/infrastructures/delete/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang('infrastructures.infrastructure_has_been_deleted_successfully');
+    $_SESSION['msg'] = t('infrastructures.infrastructure_has_been_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/infrastructures");
 });
@@ -562,19 +562,19 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_too_big_max_2MB'),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_too_big_max_2MB'),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
+            $_SESSION['msg'] = t('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else {
             // check image settings
@@ -594,7 +594,7 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
                     'uploaded' => date('Y-m-d')
                 ]]]
             );
-            $_SESSION['msg'] = lang('infrastructures.infrastructure_logo_uploaded_successfully');
+            $_SESSION['msg'] = t('infrastructures.infrastructure_logo_uploaded_successfully');
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
             die;
@@ -605,7 +605,7 @@ Route::post('/crud/infrastructures/upload-picture/(.*)', function ($infrastructu
             ['id' => $infrastructure_id],
             ['$unset' => ['image' => ""]]
         );
-        $_SESSION['msg'] = lang('infrastructures.infrastructure_logo_deleted');
+        $_SESSION['msg'] = t('infrastructures.infrastructure_logo_deleted');
         $_SESSION['msg_type'] = "success";
         header("Location: " . ROOTPATH . "/infrastructures/view/$infrastructure_id");
         die;

@@ -159,13 +159,13 @@ $fields = [
 
 <h1>
     <i class="ph-duotone ph-link-simple" aria-hidden="true"></i>
-    <?= lang('admin.doi_mappings') ?>
+    <?= t('admin.doi_mappings') ?>
 </h1>
 
 <!-- apply default mapping to all none -->
 <div class="input-group mb-20 w-auto">
     <select id="default-mapping-select" class="form-control w-200 flex-reset">
-        <option value=""><?= lang('admin.select_type') ?></option>
+        <option value=""><?= t('admin.select_type') ?></option>
         <?php
         foreach ($type_options as $type_id => $type_name) {
         ?>
@@ -175,7 +175,7 @@ $fields = [
     <div class="input-group-append">
         <button type="button" class="btn" id="apply-default-mapping">
             <i class="ph ph-magic-wand"></i>
-            <?= lang('admin.apply_default_mapping_to_all_none') ?>
+            <?= t('admin.apply_default_mapping_to_all_none') ?>
         </button>
     </div>
 </div>
@@ -187,8 +187,8 @@ $fields = [
     <table class="table w-auto">
         <thead>
             <tr>
-                <th><?= lang('common.field') ?></th>
-                <th><?= lang('admin.mapping') ?></th>
+                <th><?= t('common.field') ?></th>
+                <th><?= t('admin.mapping') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -211,7 +211,7 @@ $fields = [
                         </td>
                         <td>
                             <select name="general[doi_mappings][<?= $key ?>]" class="form-control">
-                                <option value=""><?= lang('common.none') ?></option>
+                                <option value=""><?= t('common.none') ?></option>
                                 <?php
                                 foreach ($type_options as $type_id => $type_name) {
                                     $selected = (isset($mappings[$key]) && $mappings[$key] === $type_id) ? 'selected' : '';
@@ -231,7 +231,7 @@ $fields = [
 
     <button type="submit" class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('action.save') ?>
+        <?= t('action.save') ?>
     </button>
 </form>
 
@@ -240,7 +240,7 @@ $fields = [
         $('#apply-default-mapping').on('click', function() {
             var selectedType = $('#default-mapping-select').val();
             if (selectedType === '') {
-                toastError('<?= lang('admin.please_select_a_type_to_apply') ?>');
+                toastError('<?= t('admin.please_select_a_type_to_apply') ?>');
                 return;
             }
 

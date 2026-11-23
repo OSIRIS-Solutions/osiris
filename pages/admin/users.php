@@ -28,14 +28,14 @@ $um = strtoupper(USER_MANAGEMENT);
 
     <h1>
         <i class="ph-duotone ph-users" aria-hidden="true"></i>
-        <?= lang('common.create_new_user') ?>
+        <?= t('common.create_new_user') ?>
     </h1>
 
     <div class="mb-20">
         <span class="badge primary">
-            <?= lang('admin.you_are_using') ?>
+            <?= t('admin.you_are_using') ?>
             <strong><?= $um ?></strong>
-            <?= lang('admin.for_authentication') ?>
+            <?= t('admin.for_authentication') ?>
         </span>
     </div>
 
@@ -45,18 +45,18 @@ $um = strtoupper(USER_MANAGEMENT);
         <div class="form-row row-eq-spacing">
             <div class="col floating-form">
                 <input class="form-control" type="text" id="username" name="username" required placeholder="username">
-                <label class="required" for="username"><?= lang('common.username_guest_account_add') ?></label>
+                <label class="required" for="username"><?= t('common.username_guest_account_add') ?></label>
                 <?php if ($um == 'AUTH') { ?>
                     <small class="text-muted">
-                        <?= lang('common.please_choose_a_username_without_spaces_or_special_characters') ?>
+                        <?= t('common.please_choose_a_username_without_spaces_or_special_characters') ?>
                     </small>
                 <?php } elseif ($um == 'LDAP') { ?>
                     <small class="text-muted">
-                        <?= lang('admin.please_make_sure_that_the_username_equals_the_username_in_ldap_case_sensiti') ?>
+                        <?= t('admin.please_make_sure_that_the_username_equals_the_username_in_ldap_case_sensiti') ?>
                     </small>
                 <?php } elseif ($um == 'OAUTH') { ?>
                     <small class="text-muted">
-                        <?= lang('admin.please_use_the_exact_user_name_from_the_email_address_of_the_user_everythin') ?>
+                        <?= t('admin.please_use_the_exact_user_name_from_the_email_address_of_the_user_everythin') ?>
                     </small>
                 <?php } ?>
             </div>
@@ -76,7 +76,7 @@ $um = strtoupper(USER_MANAGEMENT);
                 $title = $data['academic_title'] ?? '';
                 ?>
                 <select name="values[academic_title]" id="academic_title" class="form-control">
-                    <option value="" <?= $title == '' ? 'selected' : '' ?>><?= lang('common.none_guest_account_add') ?></option>
+                    <option value="" <?= $title == '' ? 'selected' : '' ?>><?= t('common.none_guest_account_add') ?></option>
                     <option value="Dr." <?= $title == 'Dr.' ? 'selected' : '' ?>>Dr.</option>
                     <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option>
                     <option value="PD Dr." <?= $title == 'PD Dr.' ? 'selected' : '' ?>>PD Dr.</option>
@@ -87,16 +87,16 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
-                <label class="required" for="first"><?= lang('common.name_first') ?></label>
+                <label class="required" for="first"><?= t('common.name_first') ?></label>
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required placeholder="last name">
-                <label class="required" for="last"><?= lang('common.name_last') ?></label>
+                <label class="required" for="last"><?= t('common.name_last') ?></label>
             </div>
         </div>
 
 
-        <h5><?= lang('common.contact') ?></h5>
+        <h5><?= t('common.contact') ?></h5>
         <div class="form-row row-eq-spacing">
 
             <div class="col-sm floating-form">
@@ -105,14 +105,14 @@ $um = strtoupper(USER_MANAGEMENT);
             </div>
             <div class="col-sm floating-form">
                 <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
-                <label for="telephone"><?= lang('common.telephone') ?></label>
+                <label for="telephone"><?= t('common.telephone') ?></label>
             </div>
 
         </div>
 
 
         <div class="form-group">
-            <h5><?= lang('common.department') ?></h5>
+            <h5><?= t('common.department') ?></h5>
 
             <?php
             $tree = $Groups->getHierarchyTree();
@@ -138,33 +138,33 @@ $um = strtoupper(USER_MANAGEMENT);
 
 
         <div class="form-group">
-            <span><?= lang('common.gender') ?>:</span>
+            <span><?= t('common.gender') ?>:</span>
             <?php
             $gender = $data['gender'] ?? 'n';
             ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                <label for="gender-m"><?= lang('common.gender_male') ?></label>
+                <label for="gender-m"><?= t('common.gender_male') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                <label for="gender-f"><?= lang('common.gender_female') ?></label>
+                <label for="gender-f"><?= t('common.gender_female') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
+                <label for="gender-d"><?= t('common.gender_non_binary') ?></label>
             </div>
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
+                <label for="gender-n"><?= t('common.gender_not_specified') ?></label>
             </div>
 
         </div>
 
 
         <div>
-            <h5><?= lang('common.roles') ?></h5>
+            <h5><?= t('common.roles') ?></h5>
             <?php
             $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
             $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
@@ -186,7 +186,7 @@ $um = strtoupper(USER_MANAGEMENT);
 
         <button type="submit" class="btn success">
             <i class="ph ph-user-plus"></i>
-            <?= lang('admin.create_user') ?>
+            <?= t('admin.create_user') ?>
         </button>
     </form>
 
@@ -198,27 +198,27 @@ $um = strtoupper(USER_MANAGEMENT);
         if (!$Settings->get('auth-self-registration', true)) { ?>
             <div class="alert mb-20">
                 <h5 class="title">
-                    <?= lang('admin.self_registration_is_disabled') ?>
+                    <?= t('admin.self_registration_is_disabled') ?>
                 </h5>
                 <p>
-                    <?= lang('admin.currently_self_registration_is_completely_disabled_this_means_that_only_an') ?>
+                    <?= t('admin.currently_self_registration_is_completely_disabled_this_means_that_only_an') ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/admin/authentication" class="btn">
-                    <?= lang('admin.go_to_auth_settings') ?>
+                    <?= t('admin.go_to_auth_settings') ?>
                 </a>
             </div>
         <?php } elseif (!empty($token)) { ?>
             <div class="box padded">
-                <?= lang('admin.to_allow_users_to_register_share_the_following_token_with_them') ?>
+                <?= t('admin.to_allow_users_to_register_share_the_following_token_with_them') ?>
                 <code id="auth-token" class="code"><?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= $token ?>')" data-toggle="tooltip" data-title="<?= t('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
                 <br>
                 <!-- or share the link -->
-                <?= lang('admin.or_share_the_link') ?>
+                <?= t('admin.or_share_the_link') ?>
                 <code id="auth-token" class="code"><?= BASE_URL ?>/auth/new-user?token=<?= $token ?></code>
-                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= BASE_URL ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
+                <button class="btn small ml-5" type="button" onclick="copyToClipboard('<?= BASE_URL ?>/auth/new-user?token=<?= $token ?>')" data-toggle="tooltip" data-title="<?= t('common.copy_to_clipboard') ?>">
                     <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
                 </button>
             </div>
@@ -232,13 +232,13 @@ $um = strtoupper(USER_MANAGEMENT);
         <?php } else { ?>
             <div class="alert mb-20">
                 <div class="title">
-                    <?= lang('admin.no_auth_token_set') ?>
+                    <?= t('admin.no_auth_token_set') ?>
                 </div>
                 <p>
-                    <?= lang('admin.currently_no_auth_token_is_set_this_means_that_users_can_register_without_a') ?>
+                    <?= t('admin.currently_no_auth_token_is_set_this_means_that_users_can_register_without_a') ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/admin/authentication" class="btn">
-                    <?= lang('admin.go_to_auth_settings') ?>
+                    <?= t('admin.go_to_auth_settings') ?>
                 </a>
             </div>
         <?php } ?>

@@ -49,26 +49,26 @@ include_once BASEPATH . "/header-editor.php";
 
         <h1 class="title">
             <i class="ph-duotone ph-chalkboard" aria-hidden="true"></i>
-            <?= lang('teaching.new_teaching_module') ?>
+            <?= t('teaching.new_teaching_module') ?>
         </h1>
 
     <?php } else { ?>
         <h1 class="title">
             <i class="ph-duotone ph-chalkboard" aria-hidden="true"></i>
-            <?= lang('common.edit_teaching_module') ?>
+            <?= t('common.edit_teaching_module') ?>
         </h1>
     <?php } ?>
     <form action="<?= $formaction ?>" method="post" class="form">
         <input type="hidden" name="redirect" value="<?= $url ?>">
 
         <div class="form-group">
-            <label for="module" class="required element-other"><?= lang('teaching.module_number') ?></label>
+            <label for="module" class="required element-other"><?= t('teaching.module_number') ?></label>
             <input type="text" class="form-control" name="values[module]" id="module" required value="<?= val('module') ?>" placeholder="MB05">
         </div>
 
-        <div class="form-group lang-<?= lang('common.this_language') ?>">
+        <div class="form-group lang-<?= t('common.this_language') ?>">
             <label for="title" class="required element-title">
-                <?= lang('teaching.name_of_the_module') ?>
+                <?= t('teaching.name_of_the_module') ?>
             </label>
 
             <div class="form-group title-editor" id="title-editor"><?= $form['title'] ?? '' ?></div>
@@ -85,19 +85,19 @@ include_once BASEPATH . "/header-editor.php";
         ?>
         <div class="form-group">
             <label for="organization" class="required">
-                <?= lang('common.teaching_venue_university') ?>
+                <?= t('common.teaching_venue_university') ?>
             </label>
             <a id="organization" class="module" href="#organization-modal-organization">
                 <i class="ph ph-edit float-right"></i>
                 <input hidden readonly name="values[organization]" value="<?= $org_id ?>" id="org-organization-organization" required />
-                <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= lang('teaching.remove_connected_organization') ?>">
-                    <i class="ph ph-trash" onclick="$('#org-organization-organization').val(''); $('#org-organization-value').html('<?= lang('teaching.no_organization_connected') ?>'); return false;"></i>
+                <span class="text-danger mr-10 float-right" data-toggle="tooltip" data-title="<?= t('teaching.remove_connected_organization') ?>">
+                    <i class="ph ph-trash" onclick="$('#org-organization-organization').val(''); $('#org-organization-value').html('<?= t('teaching.no_organization_connected') ?>'); return false;"></i>
                 </span>
 
                 <div id="org-organization-value">
                     <?php if (empty($org_id) || !DB::is_ObjectID($org_id)) { ?>
 
-                        <?= lang('error.organization_select_missing') ?>
+                        <?= t('error.organization_select_missing') ?>
                         <?php if (!empty($org_id)) { ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                         <?php } ?>
@@ -108,7 +108,7 @@ include_once BASEPATH . "/header-editor.php";
                             <b><?= $collab['name'] ?></b>
                             <br><small class="text-muted"><?= $collab['location'] ?></small>
                         <?php } else { ?>
-                            <?= lang('error.organization_select_missing') ?>
+                            <?= t('error.organization_select_missing') ?>
                             <br><small class="text-muted"><?= $org_id ?></small>
                     <?php }
                     } ?>
@@ -126,7 +126,7 @@ include_once BASEPATH . "/header-editor.php";
             ])->toArray();
             if (!empty($orgs)) { ?>
                 <div class="suggestions">
-                    <?= lang('teaching.suggestions') ?>
+                    <?= t('teaching.suggestions') ?>
                     <?php
                     // suggest oftenly used organisations
                     foreach ($orgs as $o) {
@@ -147,7 +147,7 @@ include_once BASEPATH . "/header-editor.php";
         </div>
 
 
-        <button type="submit" class="btn secondary" id="submit"><?= lang('action.save') ?></button>
+        <button type="submit" class="btn secondary" id="submit"><?= t('action.save') ?></button>
     </form>
 
 
@@ -157,9 +157,9 @@ include_once BASEPATH . "/header-editor.php";
                 <a href="#close-modal" class="close" role="button" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
-                <label for="org-organization-search"><?= lang('teaching.search_organization') ?></label>
+                <label for="org-organization-search"><?= t('teaching.search_organization') ?></label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
+                    <input type="text" class="form-control" id="org-organization-search" onkeydown="selectOrgEvent(event, 'organization')" placeholder="<?= t('forms.search_for_organization') ?>" autocomplete="off">
                     <div class="input-group-append">
                         <button class="btn" type="button" onclick="selectOrgEvent(null, 'organization')"><i class="ph ph-magnifying-glass"></i></button>
                     </div>
@@ -174,12 +174,12 @@ include_once BASEPATH . "/header-editor.php";
                 <p>
                     <?php 
                     if ($Settings->hasPermission('organizations.edit')) {
-                        lang('forms.organization_not_found_add_new', replace:[
-                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                        t('forms.organization_not_found_add_new', replace:[
+                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . t('forms.organization_not_found_add_new_link') . '</a>')
                         ]);
                     } else { 
-                        lang('forms.organization_not_found_contact', replace:[
-                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                        t('forms.organization_not_found_contact', replace:[
+                            'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . t('forms.organization_not_found_contact_link') . '</a>')
                         ]);
                     } 
                     ?>

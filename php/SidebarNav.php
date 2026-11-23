@@ -25,11 +25,11 @@ class SidebarNav
         $this->definition = [
             [
                 'id' => 'sidebar-home',
-                'label' => lang('navigation.home_SidebarNav'),
+                'label' => t('navigation.home_SidebarNav'),
                 'items' => [
                     [
                         'id' => 'home',
-                        'label' => lang('navigation.home'),
+                        'label' => t('navigation.home'),
                         'icon' => 'house',
                         'url' => '/home',
                         'active' => ['^/home($|/)'],
@@ -55,11 +55,11 @@ class SidebarNav
             ],
             [
                 'id' => 'sidebar-activities',
-                'label' => lang('navigation.content'),
+                'label' => t('navigation.content'),
                 'items' => [
                     [
                         'id' => 'activities',
-                        'label' => lang('common.activities'),
+                        'label' => t('common.activities'),
                         'icon' => 'folders',
                         'url' => '/activities',
                         'active' => ['^/activities($|/)'],
@@ -71,7 +71,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'proposals',
-                        'label' => lang('common.proposals'),
+                        'label' => t('common.proposals'),
                         'icon' => 'tree-structure',
                         'url' => '/proposals',
                         'active' => ['^/proposals($|/)'],
@@ -84,7 +84,7 @@ class SidebarNav
 
                     [
                         'id' => 'projects',
-                        'label' => lang('common.projects'),
+                        'label' => t('common.projects'),
                         'icon' => 'tree-structure',
                         'url' => '/projects',
                         'active' => ['^/projects($|/)'],
@@ -96,7 +96,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'nagoya',
-                        'label' => lang('navigation.nagoya_dashboard'),
+                        'label' => t('navigation.nagoya_dashboard'),
                         'icon' => 'scales',
                         'url' => '/nagoya',
                         'active' => ['^/nagoya($|/)'],
@@ -132,7 +132,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'documents',
-                        'label' => lang('common.documents'),
+                        'label' => t('common.documents'),
                         'icon' => 'files',
                         'url' => '/documents',
                         'active' => ['^/documents($|/)'],
@@ -146,11 +146,11 @@ class SidebarNav
             ],
             [
                 'id' => 'sidebar-users',
-                'label' => lang('navigation.groups'),
+                'label' => t('navigation.groups'),
                 'items' => [
                     [
                         'id' => 'users',
-                        'label' => lang('common.users'),
+                        'label' => t('common.users'),
                         'icon' => 'users',
                         'url' => '/user/browse',
                         'active' => ['^/(user|profile)($|/)'],
@@ -162,7 +162,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'groups',
-                        'label' => lang('navigation.organisational_units'),
+                        'label' => t('navigation.organisational_units'),
                         'icon' => 'users-three',
                         'url' => '/groups',
                         'active' => ['^/groups($|/)'],
@@ -186,7 +186,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'initiatives',
-                        'label' => translate('common.initiatives'),
+                        'label' => t('common.initiatives'),
                         'icon' => 'compass',
                         'url' => '/initiatives',
                         'active' => ['^/initiatives($|/)'],
@@ -198,7 +198,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'organizations',
-                        'label' => lang('common.organizations'),
+                        'label' => t('common.organizations'),
                         'icon' => 'building',
                         'url' => '/organizations',
                         'active' => ['^/organizations($|/)'],
@@ -212,11 +212,11 @@ class SidebarNav
             ],
             [
                 'id' => 'news-events',
-                'label' => lang('common.news_events'),
+                'label' => t('common.news_events'),
                 'items' => [
                     [
                         'id' => 'news',
-                        'label' => lang('common.news'),
+                        'label' => t('common.news'),
                         'icon' => 'newspaper',
                         'url' => '/news',
                         'active' => ['^/news($|/)'],
@@ -228,7 +228,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'events',
-                        'label' => lang('common.events_home'),
+                        'label' => t('common.events_home'),
                         'icon' => 'calendar-dots',
                         'url' => '/conferences', // legacy
                         'active' => ['^/conferences($|/)'],
@@ -240,7 +240,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'calendar',
-                        'label' => lang('dashboard.calendar'),
+                        'label' => t('dashboard.calendar'),
                         'icon' => 'calendar',
                         'url' => '/calendar',
                         'active' => ['^/calendar($|/)'],
@@ -252,7 +252,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'teaching-modules',
-                        'label' => lang('common.teaching_modules'),
+                        'label' => t('common.teaching_modules'),
                         'icon' => 'chalkboard-simple',
                         'url' => '/teaching',
                         'active' => ['^/teaching($|/)'],
@@ -266,11 +266,11 @@ class SidebarNav
             ],
             [
                 'id' => 'sidebar-tools',
-                'label' => lang('navigation.analysis'),
+                'label' => t('navigation.analysis'),
                 'items' => [
                     [
                         'id' => 'dashboard',
-                        'label' => lang('common.dashboard'),
+                        'label' => t('common.dashboard'),
                         'icon' => 'chart-line',
                         'url' => '/dashboard',
                         'active' => ['^/dashboard($|/)'],
@@ -282,7 +282,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'spectrum',
-                        'label' => lang('navigation.spectrum'),
+                        'label' => t('navigation.spectrum'),
                         'icon' => 'lightbulb',
                         'url' => '/spectrum',
                         'active' => ['^/spectrum($|/)'],
@@ -294,7 +294,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'visualize',
-                        'label' => lang('navigation.visualisations'),
+                        'label' => t('navigation.visualisations'),
                         'icon' => 'graph',
                         'url' => '/visualize',
                         'active' => ['^/visualize($|/)'],
@@ -306,7 +306,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'pivot',
-                        'label' => lang('navigation.pivot_tables'),
+                        'label' => t('navigation.pivot_tables'),
                         'icon' => 'table',
                         'url' => '/pivot',
                         'active' => ['^/pivot($|/)'],
@@ -330,7 +330,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'portal-public',
-                        'label' => lang('navigation.go_to_portal'),
+                        'label' => t('navigation.go_to_portal'),
                         'icon' => 'globe-hemisphere-west',
                         'url' => ROOTPATH . '/portal/info',
                         'active' => ['^/portal($|/)'],
@@ -342,7 +342,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'aggregate',
-                        'label' => lang('search.aggregate'),
+                        'label' => t('search.aggregate'),
                         'icon' => 'chart-bar',
                         'url' => '/aggregate',
                         'active' => ['^/aggregate($|/)'],
@@ -357,11 +357,11 @@ class SidebarNav
 
             [
                 'id' => 'sidebar-export',
-                'label' => lang('navigation.export_amp_import'),
+                'label' => t('navigation.export_amp_import'),
                 'items' => [
                     [
                         'id' => 'download',
-                        'label' => lang('navigation.export'),
+                        'label' => t('navigation.export'),
                         'icon' => 'download',
                         'url' => '/download',
                         'active' => ['^/download($|/)'],
@@ -373,7 +373,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'cart',
-                        'label' => lang('reports.collection'),
+                        'label' => t('reports.collection'),
                         'icon' => 'basket',
                         'url' => '/cart',
                         'active' => ['^/cart($|/)'],
@@ -385,7 +385,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'import',
-                        'label' => lang('navigation.import'),
+                        'label' => t('navigation.import'),
                         'icon' => 'upload',
                         'url' => '/import',
                         'active' => ['^/import($|/)'],
@@ -397,7 +397,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'queue',
-                        'label' => lang('import.queue'),
+                        'label' => t('import.queue'),
                         'icon' => 'queue',
                         'url' => '/queue/editor',
                         'active' => ['^/queue($|/)'],
@@ -409,7 +409,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'reports',
-                        'label' => lang('common.reports'),
+                        'label' => t('common.reports'),
                         'icon' => 'printer',
                         'url' => '/reports',
                         'active' => ['^/reports($|/)'],
@@ -421,7 +421,7 @@ class SidebarNav
                     ],
                     [
                         'id' => 'ida',
-                        'label' => lang('common.ida_integration'),
+                        'label' => t('common.ida_integration'),
                         'icon' => 'clipboard-text',
                         'url' => '/ida/dashboard',
                         'active' => ['^/ida($|/)'],
@@ -435,11 +435,11 @@ class SidebarNav
             ],
             [
                 'id' => 'sidebar-admin',
-                'label' => lang('navigation.admin'),
+                'label' => t('navigation.admin'),
                 'items' => [
                     [
                         'id' => 'settings',
-                        'label' => lang('common.settings'),
+                        'label' => t('common.settings'),
                         'icon' => 'faders',
                         'url' => '/admin',
                         'active' => ['^/admin($|/)'],
@@ -470,7 +470,7 @@ class SidebarNav
         if (!empty($favorites)) {
             $output[] = [
                 'id' => 'favorites',
-                'label' => '<span><i class="ph ph-star"></i> ' . lang('navigation.favorites') . '</span>',
+                'label' => '<span><i class="ph ph-star"></i> ' . t('navigation.favorites') . '</span>',
                 'items' => $favorites
             ];
         }
@@ -616,7 +616,7 @@ class SidebarNav
             if ($item['id'] === 'users') {
                 $searchUrl = ROOTPATH . '/persons/search';
             }
-            $html .= '<a href="' . $searchUrl . '" class="inline-btn ' . $activeClass . '" title="' . lang('navigation.advanced_search') . '">';
+            $html .= '<a href="' . $searchUrl . '" class="inline-btn ' . $activeClass . '" title="' . t('navigation.advanced_search') . '">';
             $html .= '<i class="ph-duotone ph-magnifying-glass-plus"></i>';
             $html .= '</a>';
         }

@@ -16,17 +16,17 @@
 ?>
 
 <h1>
-    <?= lang('admin.data_field_overview') ?>
+    <?= t('admin.data_field_overview') ?>
 </h1>
 
 <p>
-    <?= lang('admin.this_page_shows_an_overview_of_all_data_fields_that_are_available_in_the_sy') ?>
+    <?= t('admin.this_page_shows_an_overview_of_all_data_fields_that_are_available_in_the_sy') ?>
 </p>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <!-- search bar -->
-<input type="search" id="search" class="form-control" placeholder="<?= lang('common.search') ?>">
+<input type="search" id="search" class="form-control" placeholder="<?= t('common.search') ?>">
 <br>
 
 <table class="table" id="modules">
@@ -70,7 +70,7 @@
                             <?= lang($vals['description'] ?? '', $vals['description_de'] ?? null) ?>
                         </p>
                         <p>
-                            <?= lang('admin.saved_fields') ?>:
+                            <?= t('admin.saved_fields') ?>:
                             <?php foreach ($vals['fields'] as $f => $_) { ?>
                                 <code class="badge primary"><?= $f ?></code>
                             <?php } ?>
@@ -83,7 +83,7 @@
                     </div>
 
                     <?php if (count($activities) > 0) { ?>
-                        <?= lang('admin.this_field_is_used_in_the_following_activity_types') ?>
+                        <?= t('admin.this_field_is_used_in_the_following_activity_types') ?>
                         <?php foreach ($activities as $a) { ?>
                             <a href="<?= ROOTPATH ?>/admin/types/<?= $a['id'] ?>" class="badge badge-<?= $a['parent'] ?> mb-5">
                                 <i class="ph ph-<?= $a['icon'] ?? 'folder-open' ?>"></i>
@@ -92,7 +92,7 @@
                         <?php } ?>
                     <?php } else { ?>
                         <em class="text-muted">
-                            <?= lang('admin.this_field_is_currently_not_used_in_any_activity_types') ?>
+                            <?= t('admin.this_field_is_currently_not_used_in_any_activity_types') ?>
                         </em>
                     <?php } ?>
 

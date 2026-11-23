@@ -64,11 +64,11 @@ Route::get('/news', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('common.news')]
+        ['path' => '/news', 'name' => t('common.news')]
     ];
 
     include BASEPATH . "/header.php";
@@ -80,16 +80,16 @@ Route::get('/news/add', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     if (!NewsEditorial::canCreate($Settings)) {
-        abortwith(403, lang('news.you_do_not_have_permission_to_create_news_items'));
+        abortwith(403, t('news.you_do_not_have_permission_to_create_news_items'));
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('common.news')],
-        ['path' => '/news/add', 'name' => lang('common.create_news_item')]
+        ['path' => '/news', 'name' => t('common.news')],
+        ['path' => '/news/add', 'name' => t('common.create_news_item')]
     ];
 
     include BASEPATH . "/header.php";
@@ -101,24 +101,24 @@ Route::get('/news/view/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        return abortwith(500, lang('error.news_not_enabled'));
+        return abortwith(500, t('error.news_not_enabled'));
     }
 
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
 
     if (!$news) {
-        return abortwith(404, lang('news.news_item_not_found'));
+        return abortwith(404, t('news.news_item_not_found'));
     }
     if (!$Settings->hasPermission('news.see-future')) {
         $created_by = $news['created_by'] ?? null;
         $persons = DB::doc2Arr($news['persons'] ?? []);
         if ($created_by !== $_SESSION['username'] && !in_array(strval($USER['_id']), $persons) && $news['date'] > date('Y-m-d')) {
-            return abortwith(403, lang('news.you_do_not_have_permission_to_view_future_news_items_please_ask_an_admin_to_grant_you'));
+            return abortwith(403, t('news.you_do_not_have_permission_to_view_future_news_items_please_ask_an_admin_to_grant_you'));
         }
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('common.news')],
+        ['path' => '/news', 'name' => t('common.news')],
         ['path' => '/news/view/' . e($id), 'name' => lang($news['title'] ?? '', $news['title_de'] ?? null)]
     ];
 
@@ -131,24 +131,24 @@ Route::get('/news/edit/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
 
     if (!$news) {
-        abortwith(404, lang('news.news_item_not_found'));
+        abortwith(404, t('news.news_item_not_found'));
     }
 
     $news = DB::doc2Arr($news);
     if (!NewsEditorial::canEdit($news, $Settings)) {
-        abortwith(403, lang('news.you_do_not_have_permission_to_edit_this_news_item'));
+        abortwith(403, t('news.you_do_not_have_permission_to_edit_this_news_item'));
     }
 
     $breadcrumb = [
-        ['path' => '/news', 'name' => lang('common.news')],
+        ['path' => '/news', 'name' => t('common.news')],
         ['path' => '/news/view/' . e($id), 'name' => lang($news['title'] ?? '', $news['title_de'] ?? null)],
-        ['path' => '/news/edit/' . e($id), 'name' => lang('action.edit')]
+        ['path' => '/news/edit/' . e($id), 'name' => t('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -161,23 +161,23 @@ Route::post('/crud/news/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     if (!NewsEditorial::canCreate($Settings)) {
-        abortwith(403, lang('news.you_do_not_have_permission_to_create_news_items'));
+        abortwith(403, t('news.you_do_not_have_permission_to_create_news_items'));
     }
 
     if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
-        abortwith(403, lang('news.the_form_has_expired_reload_the_news_form'));
+        abortwith(403, t('news.the_form_has_expired_reload_the_news_form'));
     }
     $data = $_POST['news'] ?? [];
-    if (!is_array($data)) abortwith(400, lang('news.invalid_news_data'));
+    if (!is_array($data)) abortwith(400, t('news.invalid_news_data'));
     $connections = normalize_news_connections($data);
 
     // basic validation
     if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
-        abortwith(400, lang('news.please_fill_in_all_required_fields'));
+        abortwith(400, t('news.please_fill_in_all_required_fields'));
     }
 
     $configuration = $Settings->getNewsOutlets();
@@ -230,7 +230,7 @@ Route::post('/crud/news/create', function () {
         header('Location: ' . ROOTPATH . '/news/view/' . e($result->getInsertedId()));
         exit;
     } else {
-        abortwith(500, lang('news.failed_to_create_news_item'));
+        abortwith(500, t('news.failed_to_create_news_item'));
     }
 });
 
@@ -239,31 +239,31 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     for ($attempt = 0; $attempt < 3; $attempt++) {
         $news = $osiris->news->findOne(['_id' => DB::to_ObjectID($id)]);
-        if (!$news) abortwith(404, lang('news.news_item_not_found'));
+        if (!$news) abortwith(404, t('news.news_item_not_found'));
         $news = DB::doc2Arr($news);
         if (!NewsEditorial::canEdit($news, $Settings)) {
-            abortwith(403, lang('news.you_do_not_have_permission_to_edit_this_news_item'));
+            abortwith(403, t('news.you_do_not_have_permission_to_edit_this_news_item'));
         }
 
         if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
-            abortwith(403, lang('news.the_form_has_expired_reload_the_news_form'));
+            abortwith(403, t('news.the_form_has_expired_reload_the_news_form'));
         }
         $data = $_POST['news'] ?? [];
-        if (!is_array($data)) abortwith(400, lang('news.invalid_news_data'));
+        if (!is_array($data)) abortwith(400, t('news.invalid_news_data'));
         $connections = normalize_news_connections($data);
 
         // basic validation
         if (empty($data['title']) || empty($data['content']) || empty($data['date'])) {
-            abortwith(400, lang('news.please_fill_in_all_required_fields'));
+            abortwith(400, t('news.please_fill_in_all_required_fields'));
         }
 
         if (!NewsEditorial::isAuthor($news) && (isset($data['internal_only']) || isset($data['publication_choice_changed']))) {
-            abortwith(403, lang('news.only_the_author_can_change_the_outlet_selection_here'));
+            abortwith(403, t('news.only_the_author_can_change_the_outlet_selection_here'));
         }
         $configuration = $Settings->getNewsOutlets();
         try {
@@ -300,7 +300,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
         }
 
         if (!is_string($data['edit_token'] ?? null) || !hash_equals(NewsEditorial::editToken($news, 'original'), $data['edit_token'])) {
-            abortwith(409, lang('news.the_original_has_changed_keep_your_draft_and_reload_before_saving_again'));
+            abortwith(409, t('news.the_original_has_changed_keep_your_draft_and_reload_before_saving_again'));
         }
         $originalChanged = false;
         foreach ($newsItem as $key => $value) {
@@ -319,7 +319,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
             }
             $newsItem['outlet_requests'] = $changes['requests'];
         } elseif (isset($data['outlets']) || isset($data['outlet_selection'])) {
-            abortwith(403, lang('news.only_the_author_can_change_outlet_requests_here'));
+            abortwith(403, t('news.only_the_author_can_change_outlet_requests_here'));
         }
         // The database revision protects the read/write window, not unrelated form scopes.
         $filter = ['_id' => DB::to_ObjectID($id), 'revision' => array_key_exists('revision', $news) ? $news['revision'] : ['$exists' => false]];
@@ -329,7 +329,7 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
         if ($result->getMatchedCount() === 1) break;
     }
     if ($result->getMatchedCount() !== 1) {
-        abortwith(409, lang('news.the_news_is_being_edited_simultaneously_keep_your_draft_and_try_again'));
+        abortwith(409, t('news.the_news_is_being_edited_simultaneously_keep_your_draft_and_try_again'));
     }
     NewsEditorial::notifyRequests($DB, array_merge($news, $newsItem), $id, $changes, $configuration);
     header('Location: ' . ROOTPATH . '/news/view/' . e($id));
@@ -338,37 +338,37 @@ Route::post('/crud/news/update/([a-f0-9]{24})', function ($id) {
 
 Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!$Settings->featureEnabled('news', true)) abortwith(500, lang('error.news_not_enabled'));
+    if (!$Settings->featureEnabled('news', true)) abortwith(500, t('error.news_not_enabled'));
     $mongo_id = $DB->to_ObjectID($id);
     // get news id    
     $news = $osiris->news->findOne(['_id' => $mongo_id]);
     if (empty($news)) {
-        abortwith(404, lang('news.news_item'), '/news');
+        abortwith(404, t('news.news_item'), '/news');
     }
     if (!NewsEditorial::canEdit(DB::doc2Arr($news), $Settings)) {
-        abortwith(403, lang('news.you_do_not_have_permission_to_edit_this_news_item'));
+        abortwith(403, t('news.you_do_not_have_permission_to_edit_this_news_item'));
     }
     if (!valid_csrf_token($_POST['csrf_token'] ?? null, 'news')) {
-        abortwith(403, lang('news.the_form_has_expired_reload_the_news_item'));
+        abortwith(403, t('news.the_form_has_expired_reload_the_news_item'));
     }
     if (isset($_FILES["file"])) {
         // if ($_FILES['file']['type'] != 'image/jpeg') die('Wrong extension, only JPEG is allowed.');
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_too_big_max_2MB'),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_too_big_max_2MB'),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($_FILES["file"]["size"] > 2000000) {
-            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
+            $_SESSION['msg'] = t('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else {
             // check image settings
@@ -388,7 +388,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
                     'uploaded' => date('Y-m-d')
                 ]]]
             );
-            $_SESSION['msg'] = lang('news.news_image_uploaded_successfully');
+            $_SESSION['msg'] = t('news.news_image_uploaded_successfully');
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/news/view/$id");
             die;
@@ -399,7 +399,7 @@ Route::post('/crud/news/upload-picture/([a-f0-9]{24})', function ($id) {
             ['_id' => $mongo_id],
             ['$unset' => ['image' => ""], '$inc' => ['revision' => 1, 'original_revision' => 1], '$set' => ['original_updated_at' => date('c')]]
         );
-        $_SESSION['msg'] = lang('news.news_image_deleted');
+        $_SESSION['msg'] = t('news.news_image_deleted');
         $_SESSION['msg_type'] = "success";
         header("Location: " . ROOTPATH . "/news/view/$id");
         die;
@@ -414,17 +414,17 @@ Route::post('/crud/news/delete', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('news', true)) {
-        abortwith(500, lang('error.news_not_enabled'));
+        abortwith(500, t('error.news_not_enabled'));
     }
 
     if (!$Settings->hasPermission('news.delete')) {
-        abortwith(403, lang('news.you_do_not_have_permission_to_delete_news_items'));
+        abortwith(403, t('news.you_do_not_have_permission_to_delete_news_items'));
     }
 
     $id = $_POST['id'] ?? '';
 
     if (empty($id)) {
-        abortwith(400, lang('news.invalid_news_item_id'));
+        abortwith(400, t('news.invalid_news_item_id'));
     }
 
     $result = $osiris->news->deleteOne(['_id' => DB::to_ObjectID($id)]);
@@ -433,7 +433,7 @@ Route::post('/crud/news/delete', function () {
         header('Location: ' . ROOTPATH . '/news');
         exit;
     } else {
-        abortwith(500, lang('news.failed_to_delete_news_item'));
+        abortwith(500, t('news.failed_to_delete_news_item'));
     }
 });
 

@@ -107,7 +107,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
 
 <!-- Header: Status + Summary -->
 <div class="text-center font-size-18 my-10">
-    <b class="mr-10"><?= lang('projects.abs_status') ?>:</b>
+    <b class="mr-10"><?= t('projects.abs_status') ?>:</b>
     <?= Nagoya::badge($proposal, true) ?>
 </div>
 
@@ -129,11 +129,11 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
     <div class="wf-bar" id="wf-bar">
         <?php foreach (
             [
-                lang('projects.country_review'),
-                lang('projects.scope_analysis'),
-                lang('projects.abs_evaluation'),
-                lang('projects.permits_pending'),
-                lang('projects.finalised'),
+                t('projects.country_review'),
+                t('projects.scope_analysis'),
+                t('projects.abs_evaluation'),
+                t('projects.permits_pending'),
+                t('projects.finalised'),
             ] as $index => $key
         ) { ?>
             <div class="wf-step <?= ($index + 1) < $stepsDone ? 'done' : (($index + 1) == $stepsDone ? 'current' : 'future') ?>">
@@ -159,28 +159,28 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         <?php if ($totalCountries > 0): ?>
             <li>
                 <?= $totalCountries ?>
-                <?= lang('common.countries') ?>
-                (<?= lang('projects.thereof') ?> <?= $totalAbs ?> <?= lang('projects.abs_relevant') ?>)
+                <?= t('common.countries') ?>
+                (<?= t('projects.thereof') ?> <?= $totalAbs ?> <?= t('projects.abs_relevant') ?>)
             </li>
         <?php endif; ?>
         <?php if ($totalAbs > 0): ?>
             <li>
                 <?= $scopeBlocks ?>
-                <?= lang('common.sample_collection_s') ?>
+                <?= t('common.sample_collection_s') ?>
                 <?php if ($scopeBlocks > 0 && $absWithScope < $totalAbs): ?>
-                    · <?= lang('projects.some_abs_countries_without_scope') ?>
+                    · <?= t('projects.some_abs_countries_without_scope') ?>
                 <?php endif; ?>
             </li>
         <?php endif; ?>
         <?php if ($totalPermits > 0): ?>
             <li>
                 <?= $totalPermits ?>
-                <?= lang('common.permit_s') ?>
+                <?= t('common.permit_s') ?>
                 <?php if ($openPermits > 0): ?>
-                    · <?= $openPermits ?> <?= lang('common.open') ?>
+                    · <?= $openPermits ?> <?= t('common.open') ?>
                 <?php endif; ?>
                 <?php if ($totalPermitDocs > 0): ?>
-                    · <?= $totalPermitDocs ?> <?= lang('common.document_s') ?>
+                    · <?= $totalPermitDocs ?> <?= t('common.document_s') ?>
                 <?php endif; ?>
             </li>
         <?php endif; ?>
@@ -192,31 +192,31 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
 <?php if ($user_project): ?>
     <?php if ($nagoyaStatus === 'researcher-input' && !$scopeComplete): ?>
         <div class="alert signal mt-20">
-            <?= lang('projects.please_complete_the_nagoya_scope_information_so_that_the_abs_compliance_tea') ?>
+            <?= t('projects.please_complete_the_nagoya_scope_information_so_that_the_abs_compliance_tea') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>" class="btn signal mt-5">
-                <i class="ph ph-crosshair"></i> <?= lang('projects.edit_scope_information') ?>
+                <i class="ph ph-crosshair"></i> <?= t('projects.edit_scope_information') ?>
             </a>
         </div>
     <?php elseif ($nagoyaStatus === 'researcher-input' && $scopeComplete && !$scopeSubmitted): ?>
         <div class="alert info mt-20">
-            <?= lang('projects.the_scope_information_is_complete_but_has_not_been_submitted_for_abs_review') ?>
+            <?= t('projects.the_scope_information_is_complete_but_has_not_been_submitted_for_abs_review') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>" class="btn primary mt-5">
                 <i class="ph ph-paper-plane-tilt"></i>
-                <?= lang('common.submit_scope_for_abs_review') ?>
+                <?= t('common.submit_scope_for_abs_review') ?>
             </a>
         </div>
     <?php elseif ($nagoyaStatus === 'awaiting-abs-evaluation'): ?>
         <div class="alert info mt-20" style="--icon: '\e2b8';">
-            <?= lang('projects.you_have_submitted_the_scope_information_the_abs_compliance_team_is_now_eva') ?>
+            <?= t('projects.you_have_submitted_the_scope_information_the_abs_compliance_team_is_now_eva') ?>
         </div>
     <?php elseif ($nagoyaStatus === 'permits-pending'): ?>
         <div class="alert warning mt-20" style="--icon: '\e198';">
-            <?= lang('projects.there_are_pending_permits_related_to_the_nagoya_protocol') ?>
+            <?= t('projects.there_are_pending_permits_related_to_the_nagoya_protocol') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $proposal['_id'] ?>" class="btn warning mt-5">
-                <i class="ph ph-pencil"></i> <?= lang('projects.update_permit_information') ?>
+                <i class="ph ph-pencil"></i> <?= t('projects.update_permit_information') ?>
             </a>
         </div>
     <?php endif; ?>
@@ -225,26 +225,26 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
 <?php if ($nagoya_perm): ?>
     <?php if ($nagoyaStatus === 'abs-review' && $openCountryReviews > 0): ?>
         <div class="alert signal mt-20" style="--icon: '\e40c';">
-            <?= lang('projects.there_are_countries_with_pending_abs_review_please_complete_the_country_rev') ?>
+            <?= t('projects.there_are_countries_with_pending_abs_review_please_complete_the_country_rev') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $proposal['_id'] ?>" class="btn signal mt-5">
-                <i class="ph ph-pencil"></i> <?= lang('projects.review_countries') ?>
+                <i class="ph ph-pencil"></i> <?= t('projects.review_countries') ?>
             </a>
         </div>
     <?php elseif ($nagoyaStatus === 'awaiting-abs-evaluation'): ?>
         <div class="alert signal mt-20" style="--icon: '\e198';">
-            <?= lang('projects.the_scope_information_has_been_submitted_and_is_complete_please_perform_the') ?>
+            <?= t('projects.the_scope_information_has_been_submitted_and_is_complete_please_perform_the') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $proposal['_id'] ?>" class="btn signal mt-5">
-                <i class="ph ph-checks"></i> <?= lang('projects.open_abs_evaluation') ?>
+                <i class="ph ph-checks"></i> <?= t('projects.open_abs_evaluation') ?>
             </a>
         </div>
     <?php elseif ($nagoyaStatus === 'permits-pending'): ?>
         <div class="alert warning mt-20" style="--icon: '\e198';">
-            <?= lang('projects.there_are_pending_permits_related_to_the_nagoya_protocol_please_review_and') ?>
+            <?= t('projects.there_are_pending_permits_related_to_the_nagoya_protocol_please_review_and') ?>
             <br>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $proposal['_id'] ?>" class="btn warning mt-5">
-                <i class="ph ph-pencil"></i> <?= lang('projects.review_permit_information') ?>
+                <i class="ph ph-pencil"></i> <?= t('projects.review_permit_information') ?>
             </a>
         </div>
     <?php endif; ?>
@@ -257,13 +257,13 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
     if (!empty($openCountries)): ?>
         <h4 class="mt-20">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= lang('projects.open_abs_evaluations') ?>
+            <?= t('projects.open_abs_evaluations') ?>
         </h4>
         <ul class="list-group">
             <?php foreach ($openCountries as $c): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], t('common.field_name_language')) ?></strong>
                     </div>
                     <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                 </li>
@@ -274,7 +274,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
     <?php if ($totalAbs > 0): ?>
         <h4 class="mt-20">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= lang('projects.abs_relevant_countries') ?>
+            <?= t('projects.abs_relevant_countries') ?>
         </h4>
         <ul class="list-group mb-15">
             <?php foreach ($absCountries as $c):
@@ -297,27 +297,27 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
             ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], t('common.field_name_language')) ?></strong>
                         <div class="small text-muted">
                             <?= $numGroups ?>
-                            <?= lang('common.sample_collection_s') ?>
+                            <?= t('common.sample_collection_s') ?>
                             <?php if ($nagoya_perm && !empty($review['comment'])): ?>
                                 · <?= e($review['comment']) ?>
                             <?php endif; ?>
                             <?php if ($permTotal > 0): ?>
-                                <?= $permTotal ?> <?= lang('common.permit_s') ?>
+                                <?= $permTotal ?> <?= t('common.permit_s') ?>
                                 <?php if ($permOpen > 0): ?>
-                                    (<?= $permOpen ?> <?= lang('common.open') ?>)
+                                    (<?= $permOpen ?> <?= t('common.open') ?>)
                                 <?php endif; ?>
                                 <?php if ($permDocs > 0): ?>
-                                    · <?= $permDocs ?> <?= lang('common.document_s') ?>
+                                    · <?= $permDocs ?> <?= t('common.document_s') ?>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </div>
                         <?php if ($labelABC): ?>
                             <div class="small mt-3">
                                 <span class="text-muted ml-5">
-                                    <?= lang('common.abs_classification_for_this_country') ?>: <?= Nagoya::ABCbadge($labelABC) ?>
+                                    <?= t('common.abs_classification_for_this_country') ?>: <?= Nagoya::ABCbadge($labelABC) ?>
                                 </span>
                             </div>
                         <?php endif; ?>
@@ -326,7 +326,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
                             <div class="small mt-3">
                                 <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $proposal['_id'] ?>/<?= urlencode($countryId) ?>">
                                     <i class="ph ph-arrow-up-right"></i>
-                                    <?= lang('projects.open_permits_documents') ?>
+                                    <?= t('projects.open_permits_documents') ?>
                                 </a>
                             </div>
                         <?php endif; ?>
@@ -340,13 +340,13 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
     <?php if ($totalNonAbs > 0): ?>
         <h4 class="mt-10">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= lang('projects.countries_without_abs_obligations') ?>
+            <?= t('projects.countries_without_abs_obligations') ?>
         </h4>
         <ul class="list-group">
             <?php foreach ($nonAbsCountries as $c): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><?= $DB->getCountry($c['code'], lang('common.field_name_language')) ?></strong>
+                        <strong><?= $DB->getCountry($c['code'], t('common.field_name_language')) ?></strong>
                     </div>
                     <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                 </li>
@@ -354,13 +354,13 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         </ul>
     <?php endif; ?>
 <?php else: ?>
-    <p class="text-muted"><?= lang('projects.no_countries_specified_yet') ?></p>
+    <p class="text-muted"><?= t('projects.no_countries_specified_yet') ?></p>
 <?php endif; ?>
 
 <!-- Overall rationale -->
 <?php if (!empty($proposal['nagoya']['absRationale'])): ?>
     <div class="mt-20">
-        <h6><?= lang('common.overall_rationale_comments') ?></h6>
+        <h6><?= t('common.overall_rationale_comments') ?></h6>
         <div class="p-10 bg-light border rounded">
             <?= nl2br(e($proposal['nagoya']['absRationale'])) ?>
         </div>
@@ -369,14 +369,14 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
 
 <!-- Process history / quick links -->
 <hr class="my-15">
-<h5 class="mb-5"><?= lang('projects.abs_process_history_quick_links') ?></h5>
+<h5 class="mb-5"><?= t('projects.abs_process_history_quick_links') ?></h5>
 <ul class="horizontal small mb-0">
     <!-- edit countries button -->
     <?php if ($user_project || $nagoya_perm): ?>
         <li>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-countries-edit/<?= $proposal['_id'] ?>">
                 <i class="ph ph-globe-stand"></i>
-                <?= lang('projects.edit_countries') ?>
+                <?= t('projects.edit_countries') ?>
             </a>
         </li>
     <?php endif; ?>
@@ -384,7 +384,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         <li>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-countries/<?= $proposal['_id'] ?>">
                 <i class="ph ph-map-trifold"></i>
-                <?= lang('projects.country_review_nagoya_proposal_dashboard') ?>
+                <?= t('projects.country_review_nagoya_proposal_dashboard') ?>
             </a>
         </li>
     <?php endif; ?>
@@ -392,7 +392,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         <li>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-scope/<?= $proposal['_id'] ?>">
                 <i class="ph ph-crosshair"></i>
-                <?= lang('projects.scope_details') ?>
+                <?= t('projects.scope_details') ?>
             </a>
         </li>
     <?php endif; ?>
@@ -400,7 +400,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         <li>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-evaluation/<?= $proposal['_id'] ?>">
                 <i class="ph ph-checks"></i>
-                <?= lang('projects.abs_evaluation_a_b_c') ?>
+                <?= t('projects.abs_evaluation_a_b_c') ?>
             </a>
         </li>
     <?php endif; ?>
@@ -408,7 +408,7 @@ $progressPercent = max(0, min(100, round($stepsDone / $stepsTotal * 100)));
         <li>
             <a href="<?= ROOTPATH ?>/proposals/nagoya-permits/<?= $proposal['_id'] ?>">
                 <i class="ph ph-file-text"></i>
-                <?= lang('projects.permits_documents') ?>
+                <?= t('projects.permits_documents') ?>
             </a>
         </li>
     <?php endif; ?>

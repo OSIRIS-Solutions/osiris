@@ -9,7 +9,7 @@
         ?>
         <div class="form-group">
             <label for="collaborative">
-                <?= lang('infrastructures.is_this_a_collaborative_research_infrastructure') ?>
+                <?= t('infrastructures.is_this_a_collaborative_research_infrastructure') ?>
 
             </label>
             <div>
@@ -30,14 +30,14 @@
                 ?>
                 <div class="form-group my-10">
                     <label for="collaborators">
-                        <?= lang('infrastructures.cooperation_partners') ?>
+                        <?= t('infrastructures.cooperation_partners') ?>
 
                     </label>
                     <table class="table simple">
                         <thead>
                             <tr>
-                                <th><?= lang('common.name') ?></th>
-                                <th><?= lang('common.coordinator') ?></th>
+                                <th><?= t('common.name') ?></th>
+                                <th><?= t('common.coordinator') ?></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -45,7 +45,7 @@
                             <tr>
                                 <td>
                                     <b><?= $institute_name ?></b><br>
-                                    <small class="text-muted"><?= lang('infrastructures.this_is_your_institute') ?></small>
+                                    <small class="text-muted"><?= t('infrastructures.this_is_your_institute') ?></small>
                                 </td>
                                 <td>
                                     <div class="custom-radio">
@@ -84,9 +84,9 @@
                     </table>
 
                     <div class="form-group mt-20 box padded bg-light">
-                        <label for="organization-search"><?= lang('infrastructures.add_cooperation_partner') ?></label>
+                        <label for="organization-search"><?= t('infrastructures.add_cooperation_partner') ?></label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= lang('forms.search_for_organization') ?>" autocomplete="off">
+                            <input type="text" class="form-control" id="organization-search" onkeydown="handleKeyDown(event)" placeholder="<?= t('forms.search_for_organization') ?>" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn" type="button" onclick="getOrganization($('#organization-search').val())"><i class="ph ph-magnifying-glass"></i></button>
                             </div>
@@ -100,12 +100,12 @@
                         <p>
                             <?php
                             if ($Settings->hasPermission('organizations.edit')) {
-                                echo lang('forms.organization_not_found_add_new', replace:[
-                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . lang('forms.organization_not_found_add_new_link') . '</a>')
+                                echo t('forms.organization_not_found_add_new', replace:[
+                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/organizations/new">' . t('forms.organization_not_found_add_new_link') . '</a>')
                                 ]);
                             } else {
-                                echo lang('forms.organization_not_found_contact', replace:[
-                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . lang('forms.organization_not_found_contact_link') . '</a>')
+                                echo t('forms.organization_not_found_contact', replace:[
+                                    'link' => new Html('<a target="_blank" href="' . ROOTPATH . '/user/browse?permission=organizations.edit">' . t('forms.organization_not_found_contact_link') . '</a>')
                                 ]);
                             } ?>
                         </p>

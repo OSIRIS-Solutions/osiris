@@ -18,7 +18,7 @@
 Route::get('/spectrum', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"]
+        ['name' => t('common.research_spectrum'), 'path' => "/spectrum"]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/spectrum/list.php";
@@ -28,8 +28,8 @@ Route::get('/spectrum', function () {
 Route::get('/spectrum/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
-        ['name' => lang('spectrum.visualize')]
+        ['name' => t('common.research_spectrum'), 'path' => "/spectrum"],
+        ['name' => t('spectrum.visualize')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/spectrum/visualize.php";
@@ -40,8 +40,8 @@ Route::get('/spectrum/visualize', function () {
 Route::get('/spectrum/evolution', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
-        ['name' => lang('spectrum.evolution')]
+        ['name' => t('common.research_spectrum'), 'path' => "/spectrum"],
+        ['name' => t('spectrum.evolution')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/spectrum/evolution.php";
@@ -51,8 +51,8 @@ Route::get('/spectrum/evolution', function () {
 Route::get('/spectrum/visualize', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
-        ['name' => lang('spectrum.visualize')]
+        ['name' => t('common.research_spectrum'), 'path' => "/spectrum"],
+        ['name' => t('spectrum.visualize')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/spectrum/visualize.php";
@@ -90,7 +90,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
         'projection' => ['openalex.topics' => 1]
     ]);
     if (!$topicMeta || !isset($topicMeta['openalex']['topics']) || count($topicMeta['openalex']['topics']) == 0) {
-        abortwith(404, lang('common.research_spectrum'), "/spectrum", lang('spectrum.back_to_spectrum_overview'));
+        abortwith(404, t('common.research_spectrum'), "/spectrum", t('spectrum.back_to_spectrum_overview'));
     }
     $spectrum = null;
     $name = '';
@@ -103,7 +103,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
     }
 
     if (!$spectrum) {
-        abortwith(404, lang('common.research_spectrum'), "/spectrum", lang('spectrum.back_to_spectrum_overview'));
+        abortwith(404, t('common.research_spectrum'), "/spectrum", t('spectrum.back_to_spectrum_overview'));
     }
 
     $totalPublications = $osiris->activities->count($match);
@@ -116,7 +116,7 @@ Route::get('/spectrum/(domain|field|subfield|topic)/(.*)', function ($level, $id
     $share = $instituteTotal > 0 ? $totalPublications / $instituteTotal : 0;
 
     $breadcrumb = [
-        ['name' => lang('common.research_spectrum'), 'path' => "/spectrum"],
+        ['name' => t('common.research_spectrum'), 'path' => "/spectrum"],
         ['name' => $name]
     ];
     include BASEPATH . "/header.php";
@@ -132,14 +132,14 @@ Route::post('/crud/activities/update-spectrum/([a-zA-Z0-9]*)', function ($id) {
     $mongo_id = DB::to_ObjectID($id);
     $doc = $osiris->activities->findOne(['_id' => $mongo_id]);
     if (!$doc) {
-        abortwith(404, lang('spectrum.activity_not_found'), "/activities", lang('spectrum.back_to_activities'));
+        abortwith(404, t('spectrum.activity_not_found'), "/activities", t('spectrum.back_to_activities'));
     }
 
     // check if user has permission to update spectrum
     $user_activity = $DB->isUserActivity($doc, $_SESSION['username']);
     $edit_perm = ($user_activity || $Settings->hasPermission('activities.edit'));
     if (!$edit_perm) {
-        abortwith(403, lang('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, t('common.you_do_not_have_permission_to_edit_this_activity'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
 
     $openalex = DB::doc2Arr($doc['openalex'] ?? []);

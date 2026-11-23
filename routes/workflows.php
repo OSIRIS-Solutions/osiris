@@ -21,7 +21,7 @@ Route::get('/workflow-reviews', function () {
     include_once BASEPATH . "/php/init.php";
 
     $breadcrumb = [
-        ['name' => lang('workflows.workflow_reviews')]
+        ['name' => t('workflows.workflow_reviews')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/workflows/reviews.php";
@@ -33,12 +33,12 @@ Route::get('/workflow-reviews', function () {
 Route::get('/admin/workflows', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_see_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_see_workflows'), '/');
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('workflows.workflows')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('workflows.workflows')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/workflows.php";
@@ -49,14 +49,14 @@ Route::get('/admin/workflows', function () {
 Route::get('/admin/workflows/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_create_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_create_workflows'), '/');
     }
 
     $form = [];
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('workflows.workflows'), 'path' => '/admin/workflows'],
-        ['name' => lang('admin.new_workflow')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('workflows.workflows'), 'path' => '/admin/workflows'],
+        ['name' => t('admin.new_workflow')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/workflow-new.php";
@@ -66,18 +66,18 @@ Route::get('/admin/workflows/new', function () {
 Route::get('/admin/workflows/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_see_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_see_workflows'), '/');
     }
 
     $form = $osiris->adminWorkflows->findOne(['id' => $id]);
     if (empty($form)) {
-        abortwith(404, lang('workflows.workflow'), '/');
+        abortwith(404, t('workflows.workflow'), '/');
     }
     $name = $form['name'] ?? $id;
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('workflows.workflows'), 'path' => '/admin/workflows'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('workflows.workflows'), 'path' => '/admin/workflows'],
         ['name' => $name]
     ];
     include BASEPATH . "/header.php";
@@ -89,17 +89,17 @@ Route::get('/admin/workflows/(.*)', function ($id) {
 Route::post('/crud/workflows/create', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_create_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_create_workflows'), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
     // check if category ID already exists:
     $workflow_exist = $osiris->adminWorkflows->findOne(['id' => $values['id']]);
     if (!empty($workflow_exist)) {
-        $_SESSION['msg'] = lang('workflows.workflow_id_does_already_exist');
+        $_SESSION['msg'] = t('workflows.workflow_id_does_already_exist');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/admin/workflows/new");
         die();
@@ -107,7 +107,7 @@ Route::post('/crud/workflows/create', function () {
 
     $osiris->adminWorkflows->insertOne($values);
     
-    $_SESSION['msg'] = lang('workflows.workflow_created_successfully');
+    $_SESSION['msg'] = t('workflows.workflow_created_successfully');
     $_SESSION['msg_type'] = 'success';
 
     header("Location: " . ROOTPATH . "/admin/workflows/" . $values['id']);
@@ -116,10 +116,10 @@ Route::post('/crud/workflows/create', function () {
 Route::post('/crud/workflows/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_update_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_update_workflows'), '/');
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $values = validateValues($_POST['values'], $DB);
 
     /**
@@ -234,7 +234,7 @@ Route::post('/crud/workflows/update/(.*)', function ($id) {
         ['upsert' => false]
     );
 
-    $_SESSION['msg'] = lang('workflows.workflow_updated_successfully');
+    $_SESSION['msg'] = t('workflows.workflow_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/workflows");
 });
@@ -242,7 +242,7 @@ Route::post('/crud/workflows/update/(.*)', function ($id) {
 Route::post('/crud/workflows/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_delete_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_delete_workflows'), '/');
     }
 
     $mongo_id = DB::to_ObjectID($id);
@@ -250,7 +250,7 @@ Route::post('/crud/workflows/delete/(.*)', function ($id) {
         ['_id' => $mongo_id]
     );
 
-    $_SESSION['msg'] = lang('workflows.workflow_deleted_successfully');
+    $_SESSION['msg'] = t('workflows.workflow_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/workflows");
 });
@@ -259,7 +259,7 @@ Route::post('/crud/workflows/apply/(.*)', function ($wfId) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_apply_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_apply_workflows'), '/');
     }
 
     $template = $osiris->adminWorkflows->findOne(['id' => $wfId]);
@@ -322,7 +322,7 @@ Route::post('/crud/workflows/reset-action', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Workflows.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_reset_workflows'), '/');
+        abortwith(403, t('workflows.you_don_t_have_permission_to_reset_workflows'), '/');
     }
 
     $action = $_POST['action'] ?? null;
@@ -343,7 +343,7 @@ Route::post('/crud/workflows/reset-action', function () {
     $totalWithWorkflow = $osiris->activities->countDocuments($base);
     if ($totalWithWorkflow === 0) {
         if (isset($_POST['redirect'])) {
-            $_SESSION['msg'] = lang('workflows.no_activities_with_workflows_found');
+            $_SESSION['msg'] = t('workflows.no_activities_with_workflows_found');
             $_SESSION['msg_type'] = 'info';
             header("Location: " . $_POST['redirect']);
             die;
@@ -391,7 +391,7 @@ Route::post('/crud/workflows/reset-action', function () {
     }
 
     if (isset($_POST['redirect'])) {
-        $_SESSION['msg'] = lang('workflows.action_applied_to_modified_activities', replace: ['modified' => $modified]);
+        $_SESSION['msg'] = t('workflows.action_applied_to_modified_activities', replace: ['modified' => $modified]);
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die;
@@ -550,7 +550,7 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('workflows.activity_or_workflow'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(404, t('workflows.activity_or_workflow'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
 
@@ -583,13 +583,13 @@ Route::post('/crud/activities/workflow/reject-resolve/(.*)', function ($id) {
     }
 
     if (!$canResolve) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_resolve_this_rejection'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, t('workflows.you_don_t_have_permission_to_resolve_this_rejection'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
     // Reset workflow to before rejection
     unset($wf['rejectedDetails']);
     $wf['status'] = 'in_progress';
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $wf]]);
-    $_SESSION['msg'] = lang('workflows.rejection_marked_as_resolved');
+    $_SESSION['msg'] = t('workflows.rejection_marked_as_resolved');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/activities/view/$id");
 });
@@ -600,17 +600,17 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     include_once BASEPATH . "/php/Workflows.php";
 
     if (!$Settings->hasPermission('workflows.reset')) {
-        abortwith(403, lang('workflows.you_don_t_have_permission_to_reset_this_workflow'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(403, t('workflows.you_don_t_have_permission_to_reset_this_workflow'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
 
     $act = $osiris->activities->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (!$act || empty($act['workflow'])) {
-        abortwith(404, lang('workflows.activity_or_workflow'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(404, t('workflows.activity_or_workflow'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
     $wf = DB::doc2Arr($act['workflow']);
     $tpl = $osiris->adminWorkflows->findOne(['id' => $wf['workflow_id']]);
     if (!$tpl) {
-        abortwith(404, lang('workflows.workflow_template_not_found'), '/activities/view/' . $id, lang('navigation.go_back_to_activity'));
+        abortwith(404, t('workflows.workflow_template_not_found'), '/activities/view/' . $id, t('navigation.go_back_to_activity'));
     }
     $tpl = DB::doc2Arr($tpl);
 
@@ -624,7 +624,7 @@ Route::post('/crud/activities/workflow/reset/(.*)', function ($id) {
     ];
     $history[] = $hist;
     $osiris->activities->updateOne(['_id' => $act['_id']], ['$set' => ['workflow' => $initial, 'locked' => false, 'history' => $history]]);
-    $_SESSION['msg'] = lang('workflows.workflow_reset_successfully');
+    $_SESSION['msg'] = t('workflows.workflow_reset_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/activities/view/$id");
 });

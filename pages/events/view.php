@@ -18,15 +18,15 @@ $in_past = $end < $today;
 
 $days = false;
 if ($is_today) {
-    $days = lang('common.today');
+    $days = t('common.today');
 } elseif (!$in_past) {
     $days = ceil((strtotime($start) - time()) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('events.currently_ongoing') : 'in ' . $days . ' ' . lang('common.days_view');
+    $days = $days == 0 ? t('events.currently_ongoing') : 'in ' . $days . ' ' . t('common.days_view');
 } elseif ($in_past) {
     $days = ceil((time() - strtotime($end)) / 86400);
     $days = $days > 0 ? $days : 0;
-    $days = $days == 0 ? lang('events.until_today') : lang('events.ended') . ' ' . $days . ' ' . lang('events.days_ago');
+    $days = $days == 0 ? t('events.until_today') : t('events.ended') . ' ' . $days . ' ' . t('events.days_ago');
 }
 
 $conference['participants'] = DB::doc2Arr($conference['participants'] ?? []);
@@ -68,7 +68,7 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
     <div class="btn-toolbar">
         <a href="<?= ROOTPATH ?>/conferences/edit/<?= $conference['_id'] ?>" class="btn text-primary">
             <i class="ph ph-edit"></i>
-            <?= lang('events.edit_event') ?>
+            <?= t('events.edit_event') ?>
         </a>
 
         <div class="dropdown">
@@ -77,9 +77,9 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdown-1">
                 <form action="<?= ROOTPATH ?>/crud/conferences/delete/<?= $conference['_id'] ?>" method="post" class="content">
-                    <?= lang('events.do_you_want_to_delete_this_event') ?>
-                    <?= lang('common.please_note_this_cannot_be_undone') ?>
-                    <button class="btn danger" type="submit"><?= lang('action.delete') ?></button>
+                    <?= t('events.do_you_want_to_delete_this_event') ?>
+                    <?= t('common.please_note_this_cannot_be_undone') ?>
+                    <button class="btn danger" type="submit"><?= t('action.delete') ?></button>
                 </form>
             </div>
         </div>
@@ -111,11 +111,11 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
                 </td></tr>
             <?php endforeach; ?>
             <?php if (isset($conference['internal_id']) && !in_array('internal_id', array_column(EventForms::fields($osiris), 'id'), true)): ?>
-                <tr><td><span class="key"><?= translate('common.internal_id') ?></span><?= e($conference['internal_id']) ?></td></tr>
+                <tr><td><span class="key"><?= t('common.internal_id') ?></span><?= e($conference['internal_id']) ?></td></tr>
             <?php endif; ?>
             <tr><td><b class="badge <?= $in_past ? 'danger' : 'success' ?>"><?= e($days) ?></b></td></tr>
             <?php if (!$in_past): ?>
-                <tr><td><a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= e($conference['_id']) ?>"><i class="ph ph-calendar-plus"></i> <?= translate('common.add_to_calendar') ?></a></td></tr>
+                <tr><td><a class="btn small" href="<?= ROOTPATH ?>/conference/ics/<?= e($conference['_id']) ?>"><i class="ph ph-calendar-plus"></i> <?= t('common.add_to_calendar') ?></a></td></tr>
             <?php endif; ?>
         </table>
     </div>
@@ -125,21 +125,21 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 <div class="row row-eq-spacing">
     <div class="col">
         <div class="header d-flex align-items-center justify-content-between">
-            <h5 class="mt-0"><?= lang('events.participating_persons') ?>:</h5>
+            <h5 class="mt-0"><?= t('events.participating_persons') ?>:</h5>
             <?php if ($participate) { ?>
                 <a class="btn small active primary" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'participants')">
-                    <i class="ph ph-user-circle-minus"></i> <?= lang('events.withdraw_participation') ?>
+                    <i class="ph ph-user-circle-minus"></i> <?= t('events.withdraw_participation') ?>
                 </a>
             <?php } else { ?>
                 <a class="btn small" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'participants')">
-                    <i class="ph ph-user-circle-plus"></i> <?= lang('events.participate') ?>
+                    <i class="ph ph-user-circle-plus"></i> <?= t('events.participate') ?>
                 </a>
             <?php } ?>
         </div>
 
         <?php if (empty($conference['participants'])) : ?>
             <div class="box padded">
-                <?= lang('events.no_one_will_participate_or_has_participated') ?>
+                <?= t('events.no_one_will_participate_or_has_participated') ?>
             </div>
         <?php else : ?>
             <?php foreach ($conference['participants'] as $username) : ?>
@@ -158,21 +158,21 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 
 
         <div class="header d-flex align-items-center justify-content-between">
-            <h5><?= lang('events.interested_persons') ?>:</h5>
+            <h5><?= t('events.interested_persons') ?>:</h5>
             <?php if ($interest) { ?>
                 <a class="btn small active primary" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'interests')">
-                    <i class="ph ph-user-circle-minus"></i> <?= lang('events.withdraw_interest') ?>
+                    <i class="ph ph-user-circle-minus"></i> <?= t('events.withdraw_interest') ?>
                 </a>
             <?php } else { ?>
                 <a class="btn small" onclick="conferenceToggle(this, '<?= $conference['_id'] ?>', 'interests')">
-                    <i class="ph ph-user-circle-plus"></i> <?= lang('events.show_interest') ?>
+                    <i class="ph ph-user-circle-plus"></i> <?= t('events.show_interest') ?>
                 </a>
             <?php } ?>
         </div>
 
         <?php if (empty($conference['interests'])) : ?>
             <div class="box padded">
-                <?= lang('events.no_one_is_currently_interested') ?>
+                <?= t('events.no_one_is_currently_interested') ?>
             </div>
         <?php else : ?>
             <?php foreach ($conference['interests'] as $username) : ?>
@@ -192,25 +192,25 @@ $participate = in_array($_SESSION['username'], $conference['participants']);
 </div>
 
 
-<h2><?= lang('common.activities') ?></h2>
+<h2><?= t('common.activities') ?></h2>
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/add-activity?type=lecture&conference=<?= $id ?>">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('common.add_contribution') ?>
+        <?= t('common.add_contribution') ?>
     </a>
 </div>
 
 <?php if (empty($activities)) : ?>
     <div class="alert muted">
-        <?= lang('events.no_activities_connected') ?>
+        <?= t('events.no_activities_connected') ?>
     </div>
 <?php else : ?>
 
     <table class="table" id="result-table">
         <thead>
             <tr>
-                <th><?= lang('common.type') ?></th>
-                <th><?= lang('common.activity') ?></th>
+                <th><?= t('common.type') ?></th>
+                <th><?= t('common.activity') ?></th>
                 <th></th>
             </tr>
         </thead>

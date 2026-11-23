@@ -6,7 +6,7 @@ require_once BASEPATH . '/php/Initiatives.php';
 Route::get('/initiatives', function () {
     include_once BASEPATH . '/php/init.php';
     Initiatives::requireAccess();
-    $breadcrumb = [['name' => translate('common.initiatives')]];
+    $breadcrumb = [['name' => t('common.initiatives')]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/list.php';
     include BASEPATH . '/footer.php';
@@ -19,14 +19,14 @@ Route::get('/initiatives/statistics', function () {
     /** Prepare the same visible linked contents used on initiative/objective detail pages. */
     $statisticsHasObjectives = $osiris->objectives->countDocuments() > 0;
     $statisticsView = $_GET['view'] ?? 'initiatives';
-    if (!is_string($statisticsView) || !in_array($statisticsView, ['initiatives', 'objectives'], true)) return abortwith(400, translate('error.no_values'));
+    if (!is_string($statisticsView) || !in_array($statisticsView, ['initiatives', 'objectives'], true)) return abortwith(400, t('error.no_values'));
     if (!$statisticsHasObjectives) $statisticsView = 'initiatives';
     $statisticsSelected = $_GET['id'] ?? '';
-    if (!is_string($statisticsSelected) || ($statisticsSelected !== '' && !DB::is_ObjectID($statisticsSelected))) return abortwith(400, translate('error.no_values'));
+    if (!is_string($statisticsSelected) || ($statisticsSelected !== '' && !DB::is_ObjectID($statisticsSelected))) return abortwith(400, t('error.no_values'));
     $statisticsSelected = strtolower($statisticsSelected);
     $statisticsIncludeArchived = ($_GET['include_archived'] ?? '1') !== '0';
     $reportyear = filter_var($_GET['reportyear'] ?? CURRENTYEAR, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1900, 'max_range' => 2155]]);
-    if ($reportyear === false) return abortwith(400, translate('initiatives.invalid_date'));
+    if ($reportyear === false) return abortwith(400, t('initiatives.invalid_date'));
     try {
         if (!empty($_GET['reportdate'])) {
             $reportstart = $reportend = Initiatives::dateInput($_GET['reportdate']);
@@ -42,19 +42,19 @@ Route::get('/initiatives/statistics', function () {
         }
         if ($reportstart === null || $reportend === null || $reportstart > $reportend) throw new InvalidArgumentException();
     } catch (InvalidArgumentException $error) {
-        return abortwith(400, translate('initiatives.invalid_date_range'));
+        return abortwith(400, t('initiatives.invalid_date_range'));
     }
     $statisticsTimeFrame = $reportstart === $reportend
-        ? translate('projects.reporting_date') . ': ' . format_date($reportstart)
-        : translate('common.reporting_period') . ': ' . format_date($reportstart) . ' – ' . format_date($reportend);
-    $statisticsLabel = translate($statisticsView === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives');
+        ? t('projects.reporting_date') . ': ' . format_date($reportstart)
+        : t('common.reporting_period') . ': ' . format_date($reportstart) . ' – ' . format_date($reportend);
+    $statisticsLabel = t($statisticsView === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives');
     $statisticsQuery = $statisticsDateQuery + ['view' => $statisticsView, 'id' => $statisticsSelected, 'include_archived' => $statisticsIncludeArchived ? '1' : '0'];
     $statisticsTypes = [
-        'publications' => ['label' => translate('common.publications'), 'route' => 'activities'],
-        'activities' => ['label' => translate('common.activities'), 'route' => 'activities'],
+        'publications' => ['label' => t('common.publications'), 'route' => 'activities'],
+        'activities' => ['label' => t('common.activities'), 'route' => 'activities'],
     ];
     foreach (['projects' => ['projects', 'common.projects'], 'proposals' => ['projects', 'common.project_proposals'], 'events' => ['events', 'common.events'], 'infrastructures' => ['infrastructures', 'common.infrastructures'], 'deadlines' => ['deadlines', 'dashboard.deadlines']] as $type => [$feature, $label]) {
-        if ($Settings->featureEnabled($feature)) $statisticsTypes[$type] = ['label' => translate($label), 'route' => $type === 'events' ? 'conferences' : $type];
+        if ($Settings->featureEnabled($feature)) $statisticsTypes[$type] = ['label' => t($label), 'route' => $type === 'events' ? 'conferences' : $type];
     }
     $statisticsParents = [];
     if ($statisticsView === 'objectives') foreach ($osiris->initiatives->find() as $parent) $statisticsParents[(string) $parent['_id']] = Initiatives::text($parent['name'] ?? '');
@@ -82,7 +82,7 @@ Route::get('/initiatives/statistics', function () {
             'counts' => array_fill_keys(array_keys($statisticsTypes), 0),
         ];
     }
-    if ($statisticsSelected !== '' && !isset($statisticsChoices[$statisticsSelected])) return abortwith(404, translate('initiatives.no_entries'));
+    if ($statisticsSelected !== '' && !isset($statisticsChoices[$statisticsSelected])) return abortwith(404, t('initiatives.no_entries'));
     $statisticsDetails = [];
     $statisticsUndated = 0;
     $statisticsContents = $statisticsRows ? Initiatives::linkedContents($osiris, $Settings, [$statisticsView => ['$in' => array_keys($statisticsRows)]]) : [];
@@ -109,7 +109,7 @@ Route::get('/initiatives/statistics', function () {
                 continue;
             }
             if (($period[0] ?? '0000-01-01') > $reportend || ($period[1] ?? '9999-12-31') < $reportstart) continue;
-            $dateLabel = $period[0] === $period[1] ? format_date($period[0]) : ($period[0] ? format_date($period[0]) : translate('common.unknown')) . ' – ' . ($period[1] ? format_date($period[1]) : translate('common.open_end'));
+            $dateLabel = $period[0] === $period[1] ? format_date($period[0]) : ($period[0] ? format_date($period[0]) : t('common.unknown')) . ' – ' . ($period[1] ? format_date($period[1]) : t('common.open_end'));
             foreach (Initiatives::normalizeLinks($document[$statisticsView] ?? []) as $id) {
                 if (!isset($statisticsRows[$id])) continue;
                 $statisticsRows[$id]['counts'][$type]++;
@@ -144,8 +144,8 @@ Route::get('/initiatives/statistics', function () {
         return;
     }
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
-        ['name' => translate('common.statistics')],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.statistics')],
     ];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/statistics.php';
@@ -162,8 +162,8 @@ Route::get('/initiatives/new', function () {
         unset($_SESSION['initiative_form']['new']);
     }
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
-        ['name' => translate('common.new')],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.new')],
     ];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/edit.php';
@@ -176,9 +176,9 @@ Route::get('/initiatives/(.*)/objectives/new', function ($id) {
     $initiative = Initiatives::find($osiris, $id);
     $objective = [];
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
         ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $id],
-        ['name' => translate('initiatives.add_objective')],
+        ['name' => t('initiatives.add_objective')],
     ];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/objective-edit.php';
@@ -191,10 +191,10 @@ Route::get('/initiatives/objectives/edit/(.*)', function ($id) {
     $objective = Initiatives::findObjective($osiris, $id);
     $initiative = Initiatives::find($osiris, (string) $objective['initiative']);
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
         ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $initiative['_id']],
         ['name' => Initiatives::text($objective['name'] ?? ''), 'path' => '/initiatives/objectives/view/' . $id],
-        ['name' => translate('action.edit')],
+        ['name' => t('action.edit')],
     ];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/objective-edit.php';
@@ -207,7 +207,7 @@ Route::get('/initiatives/objectives/view/(.*)', function ($id) {
     $objective = Initiatives::findObjective($osiris, $id);
     $initiative = Initiatives::find($osiris, (string) $objective['initiative']);
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
         ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $initiative['_id']],
         ['name' => Initiatives::text($objective['name'] ?? '')],
     ];
@@ -221,7 +221,7 @@ Route::get('/initiatives/view/(.*)', function ($id) {
     Initiatives::requireAccess();
     $initiative = Initiatives::find($osiris, $id);
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
         ['name' => Initiatives::text($initiative['name'] ?? '')],
     ];
     include BASEPATH . '/header.php';
@@ -239,9 +239,9 @@ Route::get('/initiatives/edit/(.*)', function ($id) {
         unset($_SESSION['initiative_form'][$id]);
     }
     $breadcrumb = [
-        ['name' => translate('common.initiatives'), 'path' => '/initiatives'],
+        ['name' => t('common.initiatives'), 'path' => '/initiatives'],
         ['name' => Initiatives::text($initiative['name'] ?? ''), 'path' => '/initiatives/view/' . $id],
-        ['name' => translate('action.edit')],
+        ['name' => t('action.edit')],
     ];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/initiatives/edit.php';
@@ -254,7 +254,7 @@ $saveInitiative = function ($id = null) {
     $initiative = $id === null ? [] : DB::doc2Arr(Initiatives::find($osiris, $id));
     $input = $_POST['values'] ?? [];
     $config = new FormBuilder(
-        entityLabel: translate('common.initiatives'),
+        entityLabel: t('common.initiatives'),
         redirectUrl: '',
         entity: 'initiatives',
         systemFields: FormBuilder::INITIATIVE_SYSTEM_FIELDS
@@ -263,7 +263,7 @@ $saveInitiative = function ($id = null) {
     $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
     $fields = Initiatives::visibleFields($fields, DB::doc2Arr($user['roles'] ?? []));
     try {
-        if (!is_array($input)) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($input)) throw new InvalidArgumentException(t('error.no_values'));
         $raw = Initiatives::formValues($input, $fields, $config->modules);
         // Activity normalization derives publication years from dates; keep initiative dates separate.
         $values = validateValues(array_diff_key($raw, ['start' => true, 'end' => true]), $DB, 'initiatives');
@@ -300,7 +300,7 @@ $saveInitiative = function ($id = null) {
         $values['updated_by'] = $_SESSION['username'];
         $osiris->initiatives->updateOne(['_id' => $initiative['_id']], ['$set' => $values]);
     }
-    $_SESSION['msg'] = translate('initiatives.saved');
+    $_SESSION['msg'] = t('initiatives.saved');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/initiatives/view/' . $id);
 };
@@ -325,7 +325,7 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
     $initiative = Initiatives::find($osiris, $id);
     $target = ROOTPATH . '/initiatives/' . $id . '/objectives/new';
     try {
-        if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(t('error.no_values'));
         $values = Initiatives::objectiveValues($_POST['values']);
         if ($Settings->featureEnabled('portal') && isset($_POST['values']['public'])) $values['public'] = filter_var($_POST['values']['public'], FILTER_VALIDATE_BOOLEAN);
         $values += [
@@ -337,7 +337,7 @@ Route::post('/crud/initiatives/(.*)/objectives/create', function ($id) {
         ];
         $osiris->objectives->insertOne($values);
         $target = ROOTPATH . '/initiatives/objectives/view/' . $values['_id'];
-        $_SESSION['msg'] = translate('initiatives.saved');
+        $_SESSION['msg'] = t('initiatives.saved');
         $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $e) {
         $_SESSION['objective_form'][$id]['new'] = Initiatives::objectiveDraft(is_array($_POST['values'] ?? null) ? $_POST['values'] : []);
@@ -354,26 +354,26 @@ Route::post('/crud/initiatives/(.*)/objectives/(update|archive)/(.*)', function 
     $filter = ['initiative' => (string) $initiative['_id']];
     if (!DB::is_ObjectID($objectiveId)) {
         http_response_code(404);
-        abortwith(404, translate('initiatives.objective'), '/initiatives/view/' . $id);
+        abortwith(404, t('initiatives.objective'), '/initiatives/view/' . $id);
     }
     $filter['_id'] = DB::to_ObjectID($objectiveId);
     if (!$osiris->objectives->findOne($filter)) {
         http_response_code(404);
-        abortwith(404, translate('initiatives.objective'), '/initiatives/view/' . $id);
+        abortwith(404, t('initiatives.objective'), '/initiatives/view/' . $id);
     }
     $target = ROOTPATH . '/initiatives/objectives/view/' . $objectiveId;
     try {
         if ($action === 'archive') {
             $values = ['inactive' => ($_POST['inactive'] ?? '') === '1'];
         } else {
-            if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(t('error.no_values'));
             $values = Initiatives::objectiveValues($_POST['values']);
             if ($Settings->featureEnabled('portal') && isset($_POST['values']['public'])) $values['public'] = filter_var($_POST['values']['public'], FILTER_VALIDATE_BOOLEAN);
         }
         $values['updated'] = date('Y-m-d');
         $values['updated_by'] = $_SESSION['username'];
         $osiris->objectives->updateOne($filter, ['$set' => $values]);
-        $_SESSION['msg'] = translate('initiatives.saved');
+        $_SESSION['msg'] = t('initiatives.saved');
         $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $e) {
         $target = ROOTPATH . '/initiatives/objectives/edit/' . $objectiveId;

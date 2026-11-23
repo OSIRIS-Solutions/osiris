@@ -1,6 +1,6 @@
 
 <h3>
-    <?=lang('admin.migrating_to_version_1_8_0')?>
+    <?=t('admin.migrating_to_version_1_8_0')?>
 </h3>
 
 <p>
@@ -33,9 +33,9 @@ foreach ($projects as $project) {
     $updated++;
 }
 if ($N_ == 0) {
-    echo "<p>" . lang('admin.no_proposals_found_with_grant_years_field_no_changes_made') . "</p>";
+    echo "<p>" . t('admin.no_proposals_found_with_grant_years_field_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang('admin.transformed_grant_years_field_for_updated_out_of_n_proposals', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
+    echo "<p>" . t('admin.transformed_grant_years_field_for_updated_out_of_n_proposals', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 ?>
@@ -59,7 +59,7 @@ $osiris->adminRights->insertOne([
 
 <p>
     <a href="<?=ROOTPATH?>/migrate/files" class="btn primary">
-        <?=lang('admin.start_file_migration')?>
+        <?=t('admin.start_file_migration')?>
     </a>
 </p>
 

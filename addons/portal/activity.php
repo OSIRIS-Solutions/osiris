@@ -24,13 +24,13 @@
                     </ul>
                     <?php if (count($data['authors']) > 10): ?>
                         <a href="#" onclick="$(this).prev().find('li').show(); $(this).remove();">
-                            <?= lang('portal.show_all_data_authors', replace: ['data' => count($data['authors'])]); ?>
+                            <?= t('portal.show_all_data_authors', replace: ['data' => count($data['authors'])]); ?>
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if (!empty($data['depts'])): ?>
-                    <h3 class="title"><?= lang('search.departments') ?></h3>
+                    <h3 class="title"><?= t('search.departments') ?></h3>
                     <p>
                         <?php foreach ($data['depts'] as $deptId => $d): ?>
                             <a href="<?= $base ?>/group/<?= $deptId; ?>" class="badge primary mr-5 mb-5">
@@ -41,19 +41,19 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['abstract'])): ?>
-                    <h3 class="title"><?= lang('activities.abstract'); ?></h3>
+                    <h3 class="title"><?= t('activities.abstract'); ?></h3>
                     <p><?= $data['abstract']; ?></p>
                 <?php endif; ?>
 
                 <?php if (!empty($data['connected_activities'])) { ?>
-                    <h3 class="title"><?= lang('portal.related_activities_activity'); ?></h3>
+                    <h3 class="title"><?= t('portal.related_activities_activity'); ?></h3>
                     <table class="table">
                         <tbody>
                             <?php foreach ($data['connected_activities'] as $conn) { ?>
                                 <tr>
                                     <td>
                                        <div class="font-size-16 mb-10">
-                                        <b><?=lang('portal.this')?> <?= lang($conn['relationship']['en'], $conn['relationship']['de'] ?? null); ?></b><br />
+                                        <b><?=t('portal.this')?> <?= lang($conn['relationship']['en'], $conn['relationship']['de'] ?? null); ?></b><br />
                                        </div>
                                         <div class="d-flex align-items-center">
                                             <div class="w-50">
@@ -76,14 +76,14 @@
                     <?php if (!empty($data['doi'])): ?>
                         <li>
                             <a href="https://doi.org/<?= $data['doi']; ?>" target="_blank">
-                                <?= lang('activities.doi'); ?>: <?= $data['doi']; ?>
+                                <?= t('activities.doi'); ?>: <?= $data['doi']; ?>
                             </a>
                         </li>
                     <?php endif; ?>
                     <?php if (!empty($data['pubmed'])): ?>
                         <li>
                             <a href="https://pubmed.ncbi.nlm.nih.gov/<?= $data['pubmed']; ?>" target="_blank">
-                                <?= lang('activities.pubmed'); ?>: <?= $data['pubmed']; ?>
+                                <?= t('activities.pubmed'); ?>: <?= $data['pubmed']; ?>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -93,7 +93,7 @@
 
                 <?php if (!empty($data['infrastructures'])): ?>
                     <h3 class="title">
-                        <?= lang('portal.associated_infrastructures'); ?>
+                        <?= t('portal.associated_infrastructures'); ?>
                     </h3>
                     <div class="cards">
                         <?php foreach ($data['infrastructures'] as $infrastructure): ?>
@@ -110,7 +110,7 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['projects'])): ?>
-                    <h3 class="title"><?= lang('portal.associated_projects'); ?></h3>
+                    <h3 class="title"><?= t('portal.associated_projects'); ?></h3>
                     <div class="cards">
                         <?php foreach ($data['projects'] as $project): ?>
                             <div class="card">
@@ -129,7 +129,7 @@
                 <?php endif; ?>
 
 
-                <h3><?= lang('portal.cite_this_activity'); ?></h3>
+                <h3><?= t('portal.cite_this_activity'); ?></h3>
                 <nav class="pills">
                     <a class="btn active" onclick="nav('citation')">Citation</a>
                     <?php if (!empty($data['bibtex'])): ?>
@@ -155,7 +155,7 @@
             </div>
 
             <div class="col-md-4">
-                <h3 class="title"><?= lang('common.details'); ?></h3>
+                <h3 class="title"><?= t('common.details'); ?></h3>
                 <table class="table" id="detail-table">
                     <tbody>
                         <!-- topics -->
@@ -191,7 +191,7 @@
         </div>
 
         <p id="disclaimer" class="text-muted">
-            <?= lang('portal.the_content_on_this_page_is_maintained_by_the_authors'); ?>
+            <?= t('portal.the_content_on_this_page_is_maintained_by_the_authors'); ?>
         </p>
         <script>
             function nav(id) {

@@ -21,10 +21,10 @@ Route::get('/admin', function () {
     $reportPerm = $Settings->hasPermission('report.templates');
     $newsOutletsPerm = ($adminPerm || $Settings->hasPermission('news.outlets')) && $Settings->featureEnabled('news-editorial');
     if (!$adminPerm && !$userSyncPerm && !$reportPerm && !$newsOutletsPerm) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang('common.settings')],
+        ['name' => t('common.settings')],
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/admin.php";
@@ -39,12 +39,12 @@ include_once BASEPATH . "/routes/admin.news.php";
 Route::get('/admin/users', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('admin.users')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('admin.users')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
@@ -60,18 +60,18 @@ Route::get('/admin/users', function () {
 Route::get('/admin/guest-account', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('admin.users'), 'path' => '/admin/users'],
-        ['name' => lang('people.guest_account'), 'path' => '/admin/guest-account']
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('admin.users'), 'path' => '/admin/users'],
+        ['name' => t('people.guest_account'), 'path' => '/admin/guest-account']
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
     if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
-        echo "<div class='alert warning mb-10'>" . lang('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
+        echo "<div class='alert warning mb-10'>" . t('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
     } else {
         include BASEPATH . "/pages/admin/guest-account.php";
     }
@@ -82,19 +82,19 @@ Route::get('/admin/guest-account', function () {
 Route::get('/admin/guest-account/add', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('admin.users'), 'path' => '/admin/users'],
-        ['name' => lang('people.guest_account'), 'path' => '/admin/guest-account'],
-        ['name' => lang('action.add')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('admin.users'), 'path' => '/admin/users'],
+        ['name' => t('people.guest_account'), 'path' => '/admin/guest-account'],
+        ['name' => t('action.add')]
     ];
     $page = 'users';
     include BASEPATH . "/header.php";
     if (!strtoupper(USER_MANAGEMENT) == 'LDAP') {
-        echo "<div class='alert warning mb-10'>" . lang('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
+        echo "<div class='alert warning mb-10'>" . t('admin.guest_accounts_can_only_be_added_when_ldap_user_management_is_enabled') . "</div>";
     } else {
         include BASEPATH . "/pages/admin/guest-account-add.php";
     }
@@ -107,13 +107,13 @@ Route::get('/admin/roles/distribute', function () {
     include_once BASEPATH . "/php/init.php";
     $page = 'admin/roles';
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.roles'), 'path' => '/admin/roles'],
-        ['name' => lang('common.distribute_roles')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.roles'), 'path' => '/admin/roles'],
+        ['name' => t('common.distribute_roles')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/distribute-roles.php";
@@ -124,7 +124,7 @@ Route::get('/admin/roles/distribute', function () {
 Route::get('/admin/templates', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('admin.activities'), 'path' => "/admin/categories"],
+        ['name' => t('admin.activities'), 'path' => "/admin/categories"],
     ];
 
     $type = null;
@@ -139,7 +139,7 @@ Route::get('/admin/templates', function () {
             $template = $templates['print'];
         }
     }
-    $breadcrumb[] = ['name' => lang('common.templates')];
+    $breadcrumb[] = ['name' => t('common.templates')];
 
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/template-builder.php";
@@ -150,9 +150,9 @@ Route::get('/admin/module-helper', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Modules.php";
     $breadcrumb = [
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang('common.new')],
-        ['name' => lang('common.data_fields')]
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('common.new')],
+        ['name' => t('common.data_fields')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/module-helper.php";
@@ -163,13 +163,13 @@ Route::get('/admin/module-helper', function () {
 Route::get('/admin/types/(.*)/fields', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/FormBuilder.php";
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
-        abortwith(404, lang('common.type'), "/admin/categories");
+        abortwith(404, t('common.type'), "/admin/categories");
     }
     $name = lang($type['name'], $type['name_de']);
 
@@ -225,10 +225,10 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
 
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name, 'path' => "/admin/types/" . $id],
-        ['name' => lang('common.data_fields')]
+        ['name' => t('common.data_fields')]
     ];
 
     global $form;
@@ -243,15 +243,15 @@ Route::get('/admin/types/(.*)/fields', function ($id) {
 
 Route::get('/admin/infrastructures/fields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/InfrastructureForms.php';
     $config = InfrastructureForms::builder();
     $fields = InfrastructureForms::fields($osiris);
-    $name = translate('common.infrastructures');
+    $name = t('common.infrastructures');
     $type = ['id' => 'infrastructure-fields', 'name' => $name];
     $color = '#000000';
     $copy = false;
-    $breadcrumb = [['name' => translate('common.settings'), 'path' => '/admin'], ['name' => translate('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
+    $breadcrumb = [['name' => t('common.settings'), 'path' => '/admin'], ['name' => t('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/admin/form-builder.php';
     include BASEPATH . '/footer.php';
@@ -259,21 +259,21 @@ Route::get('/admin/infrastructures/fields', function () {
 
 Route::post('/crud/admin/infrastructuresFields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/InfrastructureForms.php';
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     $fields = $schema['items'] ?? null;
-    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, translate('error.no_values'));
+    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, t('error.no_values'));
     $config = InfrastructureForms::builder();
     try {
         foreach ($fields as $field) {
             if (!is_array($field) || !in_array($field['type'] ?? '', ['field', 'custom', 'heading', 'paragraph', 'hr'], true)
-                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(translate('error.no_values'));
+                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(t('error.no_values'));
         }
         FormBuilder::validateFields($fields, InfrastructureForms::SYSTEM_FIELDS);
         foreach ($fields as $field) {
             if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
-            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(t('error.no_values'));
         }
     } catch (InvalidArgumentException $error) {
         return abortwith(400, $error->getMessage());
@@ -284,15 +284,15 @@ Route::post('/crud/admin/infrastructuresFields', function () {
 
 Route::get('/admin/events/fields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/EventForms.php';
     $config = EventForms::builder();
     $fields = EventForms::fields($osiris);
-    $name = translate('common.events');
+    $name = t('common.events');
     $type = ['id' => 'event-fields', 'name' => $name];
     $color = '#000000';
     $copy = false;
-    $breadcrumb = [['name' => translate('common.settings'), 'path' => '/admin'], ['name' => translate('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
+    $breadcrumb = [['name' => t('common.settings'), 'path' => '/admin'], ['name' => t('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/admin/form-builder.php';
     include BASEPATH . '/footer.php';
@@ -300,21 +300,21 @@ Route::get('/admin/events/fields', function () {
 
 Route::post('/crud/admin/eventsFields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/EventForms.php';
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     $fields = $schema['items'] ?? null;
-    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, translate('error.no_values'));
+    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, t('error.no_values'));
     $config = EventForms::builder();
     try {
         foreach ($fields as $field) {
             if (!is_array($field) || !in_array($field['type'] ?? '', ['field', 'custom', 'heading', 'paragraph', 'hr'], true)
-                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(translate('error.no_values'));
+                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(t('error.no_values'));
         }
         FormBuilder::validateFields($fields, EventForms::SYSTEM_FIELDS);
         foreach ($fields as $field) {
             if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
-            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(t('error.no_values'));
         }
     } catch (InvalidArgumentException $error) {
         return abortwith(400, $error->getMessage());
@@ -325,15 +325,15 @@ Route::post('/crud/admin/eventsFields', function () {
 
 Route::get('/admin/deadlines/fields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/DeadlineForms.php';
     $config = DeadlineForms::builder();
     $fields = DeadlineForms::fields($osiris);
-    $name = translate('common.deadlines');
+    $name = t('common.deadlines');
     $type = ['id' => 'deadline-fields', 'name' => $name];
     $color = '#000000';
     $copy = false;
-    $breadcrumb = [['name' => translate('common.settings'), 'path' => '/admin'], ['name' => translate('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
+    $breadcrumb = [['name' => t('common.settings'), 'path' => '/admin'], ['name' => t('common.data_model'), 'path' => '/admin/data-model'], ['name' => $name]];
     include BASEPATH . '/header.php';
     include BASEPATH . '/pages/admin/form-builder.php';
     include BASEPATH . '/footer.php';
@@ -341,21 +341,21 @@ Route::get('/admin/deadlines/fields', function () {
 
 Route::post('/crud/admin/deadlinesFields', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     require_once BASEPATH . '/php/DeadlineForms.php';
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     $fields = $schema['items'] ?? null;
-    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, translate('error.no_values'));
+    if (!is_array($fields) || !array_is_list($fields)) return abortwith(400, t('error.no_values'));
     $config = DeadlineForms::builder();
     try {
         foreach ($fields as $field) {
             if (!is_array($field) || !in_array($field['type'] ?? '', ['field', 'custom', 'heading', 'paragraph', 'hr'], true)
-                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(translate('error.no_values'));
+                || (isset($field['props']) && !is_array($field['props']))) throw new InvalidArgumentException(t('error.no_values'));
         }
         FormBuilder::validateFields($fields, DeadlineForms::SYSTEM_FIELDS);
         foreach ($fields as $field) {
             if (!in_array($field['type'] ?? 'field', ['field', 'custom'], true)) continue;
-            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!isset($config->modules[$field['id'] ?? '']) || $config->modules[$field['id']]['type'] !== ($field['type'] ?? 'field')) throw new InvalidArgumentException(t('error.no_values'));
         }
     } catch (InvalidArgumentException $error) {
         return abortwith(400, $error->getMessage());
@@ -367,7 +367,7 @@ Route::post('/crud/admin/deadlinesFields', function () {
 Route::get('/admin/initiatives/fields', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     require_once BASEPATH . '/php/Initiatives.php';
@@ -382,7 +382,7 @@ Route::get('/admin/initiatives/fields', function () {
     }
     $fields = Initiatives::fields($osiris);
     
-    $name = translate('common.initiatives');
+    $name = t('common.initiatives');
 
     $color = '#000000';
     $copy = false;
@@ -397,9 +397,9 @@ Route::get('/admin/initiatives/fields', function () {
     );
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
         ['name' => $name, 'path' => "/admin/data-model"],
-        ['name' => lang('common.data_fields')]
+        ['name' => t('common.data_fields')]
     ];
 
     global $form;
@@ -414,14 +414,14 @@ Route::get('/admin/initiatives/fields', function () {
 Route::get('/admin/doi-mappings', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang('admin.doi_mappings')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('admin.doi_mappings')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/doi-mappings.php";
@@ -431,13 +431,13 @@ Route::get('/admin/doi-mappings', function () {
 Route::get('/admin/categories', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/categories.php";
@@ -447,14 +447,14 @@ Route::get('/admin/categories', function () {
 Route::get('/admin/categories/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang('common.new')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/category.php";
@@ -465,7 +465,7 @@ Route::get('/admin/categories/new', function () {
 Route::get('/admin/categories/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
@@ -476,12 +476,12 @@ Route::get('/admin/categories/(.*)', function ($id) {
         $category = $osiris->adminCategories->findOne(['id' => intval($id)]);
     }
     if (empty($category)) {
-        abortwith(404, lang('common.category'), "/admin/categories");
+        abortwith(404, t('common.category'), "/admin/categories");
     }
     $name = lang($category['name'], $category['name_de']);
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
         ['name' => $name]
     ];
 
@@ -498,15 +498,15 @@ Route::get('/admin/categories/(.*)', function ($id) {
 Route::get('/admin/types/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
-        ['name' => lang('admin.new_type')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('admin.new_type')]
     ];
     $t = $_GET['parent'] ?? '';
     $st = $t;
@@ -542,14 +542,14 @@ Route::get('/admin/types/(.*)/copy', function ($id) {
 
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
-        abortwith(404, lang('common.type'), "/admin/categories");
+        abortwith(404, t('common.type'), "/admin/categories");
     }
     $name = lang($type['name'], $type['name_de']);
 
@@ -560,8 +560,8 @@ Route::get('/admin/types/(.*)/copy', function ($id) {
     $submember = [];
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang('Copy of '.$parent['name'], 'Kopie von '. $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
@@ -583,14 +583,14 @@ Route::get('/admin/types/(.*)/copy', function ($id) {
 Route::get('/admin/types/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $user = $_SESSION['username'];
 
     $type = $osiris->adminTypes->findOne(['id' => $id]);
     if (empty($type)) {
-        abortwith(404, lang('common.type'), "/admin/categories");
+        abortwith(404, t('common.type'), "/admin/categories");
     }
     $name = lang($type['name'], $type['name_de']);
 
@@ -601,8 +601,8 @@ Route::get('/admin/types/(.*)', function ($id) {
     $submember = $osiris->activities->count(['type' => $t, 'subtype' => $st]);
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.activities'), 'path' => "/admin/categories"],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.activities'), 'path' => "/admin/categories"],
         ['name' => lang($parent['name'], $parent['name_de']), 'path' => "/admin/categories/" . $t],
         ['name' => $name]
     ];
@@ -626,7 +626,7 @@ Route::get('/settings/activities', function () {
         $type = $osiris->adminTypes->findOne(['parent' => $t]);
     }
     if (empty($type)) {
-        echo return_rest(['error' => lang('admin.type_not_found_please_select_the_correct_type_manually')]);
+        echo return_rest(['error' => t('admin.type_not_found_please_select_the_correct_type_manually')]);
         die();
     }
     $parent = $osiris->adminCategories->findone(['id' => $type['parent']]);
@@ -640,15 +640,15 @@ Route::get('/settings/activities', function () {
 Route::get('/admin/vocabulary', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/Vocabulary.php";
     $Vocabulary = new Vocabulary();
     $vocabularies = $Vocabulary->getVocabularies();
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.vocabulary')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.vocabulary')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/vocabulary.php";
@@ -658,18 +658,18 @@ Route::get('/admin/vocabulary', function () {
 Route::get('/admin/vocabulary/([a-z\-_]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/Vocabulary.php";
     $Vocabulary = new Vocabulary();
     $vocab = $Vocabulary->getVocabulary($id);
     if (empty($vocab)) {
-        abortwith(404, lang('common.vocabulary'), "/admin/vocabulary");
+        abortwith(404, t('common.vocabulary'), "/admin/vocabulary");
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.vocabulary'), 'path' => '/admin/vocabulary'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.vocabulary'), 'path' => '/admin/vocabulary'],
         ['name' => lang($vocab['name'], $vocab['name_de'] ?? null)]
     ];
     include BASEPATH . "/header.php";
@@ -706,12 +706,12 @@ Route::get('/settings/modules', function () {
 Route::get('/admin/persons', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.persons')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.persons')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/persons.php";
@@ -724,12 +724,12 @@ Route::get('/admin/projects', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.projects')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.projects')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/projects.php";
@@ -740,18 +740,18 @@ Route::get('/admin/projects', function () {
 Route::get('/admin/projects/([^/]+)/fields/(draft|proposed|approved|rejected|project)', function ($id, $phase) {
     include_once BASEPATH . '/php/init.php';
     if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403, lang('error.admin_no_permission'), '/');
+        return abortwith(403, t('error.admin_no_permission'), '/');
     }
     include_once BASEPATH . '/php/Project.php';
     include_once BASEPATH . '/php/ProjectForms.php';
     $project = $osiris->adminProjects->findOne(['id' => $id]);
-    if (empty($project)) return abortwith(404, lang('admin.project_type'), '/admin/projects');
+    if (empty($project)) return abortwith(404, t('admin.project_type'), '/admin/projects');
     try {
         $phaseDefinition = ProjectForms::phase($project, $phase);
         $config = ProjectForms::builder($project, $phase);
         $fields = ProjectForms::fields($project, $phase, (new Project())->FIELDS);
     } catch (InvalidArgumentException $error) {
-        return abortwith(404, lang('admin.unknown_project_phase'), '/admin/projects/2/' . rawurlencode($id));
+        return abortwith(404, t('admin.unknown_project_phase'), '/admin/projects/2/' . rawurlencode($id));
     }
     $unavailable = ProjectForms::unavailable($fields, $config);
     $builderUrl = ROOTPATH . '/admin/projects/' . rawurlencode($id) . '/fields/' . $phase;
@@ -771,26 +771,26 @@ Route::get('/admin/projects/([^/]+)/fields/(draft|proposed|approved|rejected|pro
 Route::post('/crud/admin/projects/fields/([^/]+)/(draft|proposed|approved|rejected|project)', function ($id, $phase) {
     include_once BASEPATH . '/php/init.php';
     if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403, lang('error.admin_no_permission'), '/');
+        return abortwith(403, t('error.admin_no_permission'), '/');
     }
     include_once BASEPATH . '/php/ProjectForms.php';
     $project = $osiris->adminProjects->findOne(['id' => $id]);
-    if (empty($project)) return abortwith(404, lang('admin.project_type'), '/admin/projects');
+    if (empty($project)) return abortwith(404, t('admin.project_type'), '/admin/projects');
     try {
         ProjectForms::phase($project, $phase);
     } catch (InvalidArgumentException $error) {
-        return abortwith(404, lang('admin.unknown_project_phase'));
+        return abortwith(404, t('admin.unknown_project_phase'));
     }
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     if (!is_array($schema) || !is_array($schema['items'] ?? null)) {
-        return abortwith(400, lang('admin.invalid_form_schema'));
+        return abortwith(400, t('admin.invalid_form_schema'));
     }
     try {
         ProjectForms::save($osiris->adminProjects, $project, $phase, $schema['items']);
     } catch (InvalidArgumentException $error) {
-        return abortwith(400, lang('admin.check_the_phase_specific_fields_and_system_fields'));
+        return abortwith(400, t('admin.check_the_phase_specific_fields_and_system_fields'));
     }
-    $_SESSION['msg'] = lang('admin.form_updated');
+    $_SESSION['msg'] = t('admin.form_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/projects/2/' . rawurlencode($id));
 }, 'login');
@@ -799,7 +799,7 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     if (DB::is_ObjectID($id)) {
@@ -815,8 +815,8 @@ Route::get('/admin/projects/([123])/(.*)', function ($stage, $id) {
     $type = $project['id'];
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.projects'), 'path' => '/admin/projects'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.projects'), 'path' => '/admin/projects'],
         ['name' => $type . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
@@ -829,7 +829,7 @@ Route::get('/admin/projects/new', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $stage = 1;
@@ -837,9 +837,9 @@ Route::get('/admin/projects/new', function () {
     $type = null;
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.projects'), 'path' => '/admin/projects'],
-        ['name' => lang('admin.new_project_type') . ' - ' . $stage . '/2']
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.projects'), 'path' => '/admin/projects'],
+        ['name' => t('admin.new_project_type') . ' - ' . $stage . '/2']
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/project.php";
@@ -852,13 +852,13 @@ Route::get('/admin/projects/new', function () {
 Route::get('/admin/resource-hub-image-map', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.resource_hub'), 'path' => '/admin/resource-hub'],
-        ['name' => lang('admin.arrange_image_map')],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.resource_hub'), 'path' => '/admin/resource-hub'],
+        ['name' => t('admin.arrange_image_map')],
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/resource-hub-image-map.php";
@@ -869,7 +869,7 @@ Route::get('/admin/resource-hub-image-map', function () {
 Route::get('/admin/phpinfo', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     function getPhpinfo()
     {
@@ -885,8 +885,8 @@ Route::get('/admin/phpinfo', function () {
     }
 
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('admin.php_info')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('admin.php_info')]
     ];
     $phpinfo = getPhpinfo();
     include BASEPATH . "/header.php";
@@ -899,11 +899,11 @@ Route::get('/admin/phpinfo', function () {
 Route::get('/admin/osirisinfo', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('common.osiris_info')]
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.osiris_info')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/admin/osiris-info.php";
@@ -914,11 +914,11 @@ Route::get('/admin/osirisinfo', function () {
 Route::get('/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
-        ['name' => lang('admin.languages'), 'path' => '/admin/languages'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
+        ['name' => t('admin.languages'), 'path' => '/admin/languages'],
         ['name' => lang('common.lang_' . $lang)]
     ];
 
@@ -931,7 +931,7 @@ Route::get('/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang
 Route::post('/crud/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function ($lang) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     require_once BASEPATH . '/php/LanguageOverrides.php';
@@ -950,7 +950,7 @@ Route::post('/crud/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function 
                 throw new InvalidArgumentException('language_override_unknown_key');
             }
             $overrides->delete($lang, $key);
-            $_SESSION['msg'] = translate('admin.language_override_removed');
+            $_SESSION['msg'] = t('admin.language_override_removed');
         } else {
             $values = $_POST['overrides'] ?? [];
             if (!is_array($values)) {
@@ -962,15 +962,15 @@ Route::post('/crud/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function 
                 }
                 $overrides->save($lang, $key, $value, (string) ($_SESSION['username'] ?? ''));
             }
-            $_SESSION['msg'] = translate('admin.language_overrides_saved');
+            $_SESSION['msg'] = t('admin.language_overrides_saved');
         }
         $_SESSION['msg_type'] = 'success';
     } catch (InvalidArgumentException $exception) {
-        $_SESSION['msg'] = translate('admin.' . $exception->getMessage());
+        $_SESSION['msg'] = t('admin.' . $exception->getMessage());
         $_SESSION['msg_type'] = 'error';
     } catch (Throwable $exception) {
         error_log($exception->getMessage());
-        $_SESSION['msg'] = translate('admin.language_overrides_could_not_be_saved');
+        $_SESSION['msg'] = t('admin.language_overrides_could_not_be_saved');
         $_SESSION['msg_type'] = 'error';
     }
 
@@ -981,14 +981,14 @@ Route::post('/crud/admin/language-override/(de|en|it|ja|es|fr|pl|nl)', function 
 Route::get('/admin/(.*)', function ($path) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $breadcrumb = [
-        ['name' => lang('common.settings'), 'path' => '/admin'],
+        ['name' => t('common.settings'), 'path' => '/admin'],
         ['name' => ucfirst($path)]
     ];
     if (!file_exists(BASEPATH . "/pages/admin/$path.php")) {
-        abortwith(404, lang('common.settings'), "/admin");
+        abortwith(404, t('common.settings'), "/admin");
     }
     if ($path === 'api-clients') {
         header('Cache-Control: no-store');
@@ -1011,7 +1011,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
@@ -1020,7 +1020,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
     $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
     if ($name === '' || mb_strlen($name) > 200 || empty($surfaces) || empty($scopes)) {
-        $_SESSION['msg'] = lang('admin.please_provide_a_name_and_select_at_least_one_api_area_and_permission');
+        $_SESSION['msg'] = t('admin.please_provide_a_name_and_select_at_least_one_api_area_and_permission');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/api-clients');
         die();
@@ -1028,7 +1028,7 @@ Route::post('/crud/admin/api-clients/create', function () {
     if ($expiresAt !== null) {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
         if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
-            $_SESSION['msg'] = lang('admin.the_expiration_date_is_invalid');
+            $_SESSION['msg'] = t('admin.the_expiration_date_is_invalid');
             $_SESSION['msg_type'] = 'error';
             header('Location: ' . ROOTPATH . '/admin/api-clients');
             die();
@@ -1045,7 +1045,7 @@ Route::post('/crud/admin/api-clients/create', function () {
         $_SESSION['username'] ?? ''
     );
     $_SESSION['api_client_credentials'] = $credentials;
-    $_SESSION['msg'] = lang('admin.api_client_created_copy_the_secret_now_it_will_not_be_shown_again');
+    $_SESSION['msg'] = t('admin.api_client_created_copy_the_secret_now_it_will_not_be_shown_again');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -1055,14 +1055,14 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $name = trim(strip_tags((string) ($_POST['name'] ?? '')));
     $surfaces = ApiClient::filterSurfaces($_POST['surfaces'] ?? []);
     $scopes = ApiClient::filterScopes($_POST['scopes'] ?? []);
     $expiresAt = trim((string) ($_POST['expires_at'] ?? '')) ?: null;
     if ($name === '' || empty($surfaces) || empty($scopes)) {
-        $_SESSION['msg'] = lang('admin.name_api_area_and_permissions_are_required');
+        $_SESSION['msg'] = t('admin.name_api_area_and_permissions_are_required');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/api-clients');
         die();
@@ -1070,7 +1070,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
     if ($expiresAt !== null) {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $expiresAt);
         if ($date === false || $date->format('Y-m-d') !== $expiresAt) {
-            $_SESSION['msg'] = lang('admin.the_expiration_date_is_invalid');
+            $_SESSION['msg'] = t('admin.the_expiration_date_is_invalid');
             $_SESSION['msg_type'] = 'error';
             header('Location: ' . ROOTPATH . '/admin/api-clients');
             die();
@@ -1088,7 +1088,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
             'updated_by' => $_SESSION['username'] ?? null,
         ]]
     );
-    $_SESSION['msg'] = lang('admin.api_client_updated');
+    $_SESSION['msg'] = t('admin.api_client_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -1097,7 +1097,7 @@ Route::post('/crud/admin/api-clients/update/([a-z0-9_]+)', function ($clientId) 
 Route::post('/crud/admin/api-clients/toggle/([a-z0-9_]+)', function ($clientId) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $enabled = filter_var($_POST['enabled'] ?? false, FILTER_VALIDATE_BOOLEAN);
     $osiris->apiClients->updateOne(
@@ -1109,8 +1109,8 @@ Route::post('/crud/admin/api-clients/toggle/([a-z0-9_]+)', function ($clientId) 
         ]]
     );
     $_SESSION['msg'] = $enabled
-        ? lang('admin.api_client_enabled')
-        : lang('admin.api_client_disabled');
+        ? t('admin.api_client_enabled')
+        : t('admin.api_client_disabled');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -1120,15 +1120,15 @@ Route::post('/crud/admin/api-clients/rotate/([a-z0-9_]+)', function ($clientId) 
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/ApiClient.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $clients = new ApiClient($osiris);
     $secret = $clients->rotate($clientId);
     if ($secret === null) {
-        abortwith(404, lang('admin.api_client'), '/admin/api-clients');
+        abortwith(404, t('admin.api_client'), '/admin/api-clients');
     }
     $_SESSION['api_client_credentials'] = ['client_id' => $clientId, 'secret' => $secret];
-    $_SESSION['msg'] = lang('admin.the_api_secret_was_rotated_the_previous_secret_is_no_longer_valid');
+    $_SESSION['msg'] = t('admin.the_api_secret_was_rotated_the_previous_secret_is_no_longer_valid');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -1137,10 +1137,10 @@ Route::post('/crud/admin/api-clients/rotate/([a-z0-9_]+)', function ($clientId) 
 Route::post('/crud/admin/api-clients/delete/([a-z0-9_]+)', function ($clientId) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     $osiris->apiClients->deleteOne(['client_id' => $clientId]);
-    $_SESSION['msg'] = lang('admin.api_client_deleted');
+    $_SESSION['msg'] = t('admin.api_client_deleted');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/api-clients');
     die();
@@ -1157,25 +1157,25 @@ function redirectFromResourceHubImage(string $message, string $type = 'error'): 
 Route::post('/crud/admin/resource-hub/image', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
+        abortwith(403, t('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', t('navigation.go_back_home'));
     }
 
     $file = $_FILES['image'] ?? null;
     if ($file === null || $file['error'] !== UPLOAD_ERR_OK) {
         $error = $file['error'] ?? UPLOAD_ERR_NO_FILE;
         $message = match ($error) {
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'),
-            UPLOAD_ERR_PARTIAL => lang('common.the_image_was_only_partially_uploaded'),
-            UPLOAD_ERR_NO_TMP_DIR => lang('common.the_temporary_upload_directory_is_missing'),
-            UPLOAD_ERR_CANT_WRITE => lang('common.the_image_could_not_be_written_to_disk'),
-            UPLOAD_ERR_EXTENSION => lang('common.a_php_extension_stopped_the_upload'),
-            default => lang('admin.please_select_an_image_to_upload'),
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => t('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'),
+            UPLOAD_ERR_PARTIAL => t('common.the_image_was_only_partially_uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => t('common.the_temporary_upload_directory_is_missing'),
+            UPLOAD_ERR_CANT_WRITE => t('common.the_image_could_not_be_written_to_disk'),
+            UPLOAD_ERR_EXTENSION => t('common.a_php_extension_stopped_the_upload'),
+            default => t('admin.please_select_an_image_to_upload'),
         };
         redirectFromResourceHubImage($message);
     }
 
     if ((int) $file['size'] > 10 * 1024 * 1024) {
-        redirectFromResourceHubImage(lang('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'));
+        redirectFromResourceHubImage(t('admin.the_image_is_too_large_a_maximum_of_10_mb_is_allowed'));
     }
 
     $allowedMimeTypes = [
@@ -1186,30 +1186,30 @@ Route::post('/crud/admin/resource-hub/image', function () {
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
     $dimensions = @getimagesize($file['tmp_name']);
     if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
-        redirectFromResourceHubImage(lang('common.only_jpeg_png_and_webp_images_are_allowed'));
+        redirectFromResourceHubImage(t('common.only_jpeg_png_and_webp_images_are_allowed'));
     }
 
     [$width, $height] = $dimensions;
     if ($width < 1200 || $height < 600) {
-        redirectFromResourceHubImage(lang('admin.the_image_is_too_small_it_must_be_at_least_1200_x_600_pixels'));
+        redirectFromResourceHubImage(t('admin.the_image_is_too_small_it_must_be_at_least_1200_x_600_pixels'));
     }
     if ($width > 5000 || $height > 3000 || $width * $height > 15000000) {
-        redirectFromResourceHubImage(lang('admin.the_image_is_too_large_it_may_be_no_larger_than_5000_x_3000_pixels_or_15_me'));
+        redirectFromResourceHubImage(t('admin.the_image_is_too_large_it_may_be_no_larger_than_5000_x_3000_pixels_or_15_me'));
     }
     if ($width <= $height) {
-        redirectFromResourceHubImage(lang('admin.please_use_a_landscape_image'));
+        redirectFromResourceHubImage(t('admin.please_use_a_landscape_image'));
     }
 
     $targetDirectory = BASEPATH . '/uploads/resource-hub';
     if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
-        redirectFromResourceHubImage(lang('common.the_upload_directory_could_not_be_created'));
+        redirectFromResourceHubImage(t('common.the_upload_directory_could_not_be_created'));
     }
 
     $extension = $allowedMimeTypes[$mime];
     $filename = bin2hex(random_bytes(12)) . '.' . $extension;
     $targetPath = $targetDirectory . '/' . $filename;
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        redirectFromResourceHubImage(lang('common.the_image_could_not_be_saved'));
+        redirectFromResourceHubImage(t('common.the_image_could_not_be_saved'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -1235,7 +1235,7 @@ Route::post('/crud/admin/resource-hub/image', function () {
         );
     } catch (Throwable $exception) {
         @unlink($targetPath);
-        redirectFromResourceHubImage(lang('admin.the_image_configuration_could_not_be_saved'));
+        redirectFromResourceHubImage(t('admin.the_image_configuration_could_not_be_saved'));
     }
 
     $oldFile = (string) ($oldImage['file'] ?? '');
@@ -1244,13 +1244,13 @@ Route::post('/crud/admin/resource-hub/image', function () {
         if ($oldPath !== $targetPath && is_file($oldPath)) @unlink($oldPath);
     }
 
-    redirectFromResourceHubImage(lang('admin.the_background_image_was_uploaded_successfully'), 'success');
+    redirectFromResourceHubImage(t('admin.the_background_image_was_uploaded_successfully'), 'success');
 }, 'login');
 
 Route::post('/crud/admin/resource-hub/image/delete', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
+        abortwith(403, t('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', t('navigation.go_back_home'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -1264,7 +1264,7 @@ Route::post('/crud/admin/resource-hub/image/delete', function () {
             ['$unset' => ['value.image-map.image' => true]]
         );
     } catch (Throwable $exception) {
-        redirectFromResourceHubImage(lang('admin.the_image_configuration_could_not_be_removed'));
+        redirectFromResourceHubImage(t('admin.the_image_configuration_could_not_be_removed'));
     }
 
     $file = (string) ($image['file'] ?? '');
@@ -1273,13 +1273,13 @@ Route::post('/crud/admin/resource-hub/image/delete', function () {
         if (is_file($path)) @unlink($path);
     }
 
-    redirectFromResourceHubImage(lang('admin.the_background_image_was_removed'), 'success');
+    redirectFromResourceHubImage(t('admin.the_background_image_was_removed'), 'success');
 }, 'login');
 
 Route::post('/crud/admin/resource-hub/image-map', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', lang('navigation.go_back_home'));
+        abortwith(403, t('admin.you_do_not_have_permission_to_manage_the_resource_hub'), '/', t('navigation.go_back_home'));
     }
 
     $settingsDocument = $osiris->adminGeneral->findOne(['key' => 'resource-hub']);
@@ -1289,7 +1289,7 @@ Route::post('/crud/admin/resource-hub/image-map', function () {
     $image = DB::doc2Arr($imageMap['image'] ?? []);
 
     if (empty($cards) || empty($image['file'])) {
-        $_SESSION['msg'] = lang('admin.upload_a_background_image_and_create_at_least_one_card_first');
+        $_SESSION['msg'] = t('admin.upload_a_background_image_and_create_at_least_one_card_first');
         $_SESSION['msg_type'] = 'warning';
         header('Location: ' . ROOTPATH . '/admin/resource-hub#image-map-configuration');
         die;
@@ -1322,13 +1322,13 @@ Route::post('/crud/admin/resource-hub/image-map', function () {
             ['upsert' => true]
         );
     } catch (Throwable $exception) {
-        $_SESSION['msg'] = lang('admin.the_card_positions_could_not_be_saved');
+        $_SESSION['msg'] = t('admin.the_card_positions_could_not_be_saved');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
         die;
     }
 
-    $_SESSION['msg'] = lang('admin.the_card_positions_were_saved');
+    $_SESSION['msg'] = t('admin.the_card_positions_were_saved');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/resource-hub-image-map');
     die;
@@ -1337,7 +1337,7 @@ Route::post('/crud/admin/resource-hub/image-map', function () {
 Route::post('/crud/admin/general', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $msg = 'settings-saved';
@@ -1480,17 +1480,17 @@ Route::post('/crud/admin/general', function () {
 
         if ($_FILES['logo']['error'] != UPLOAD_ERR_OK) {
             $msg = match ($_FILES['logo']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_upload_too_large', replace: ['max' => '16 MB']),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_upload_too_large', replace: ['max' => '16 MB']),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
         } else if ($filesize > 2000000) {
-            $msg = lang('error.file_too_big_max_2MB');
+            $msg = t('error.file_too_big_max_2MB');
         } else {
             $val = new MongoDB\BSON\Binary(file_get_contents($_FILES["logo"]["tmp_name"]), MongoDB\BSON\Binary::TYPE_GENERIC);
             // first: delete logo, then: insert new one
@@ -1506,7 +1506,7 @@ Route::post('/crud/admin/general', function () {
         $_SESSION['msg'] = $msg;
         $_SESSION['msg_type'] = 'error';
     } else {
-        $_SESSION['msg'] = lang('admin.settings_saved_successfully');
+        $_SESSION['msg'] = t('admin.settings_saved_successfully');
         $_SESSION['msg_type'] = 'success';
     }
 
@@ -1522,7 +1522,7 @@ Route::post('/crud/admin/general', function () {
 Route::post('/crud/admin/roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     if (isset($_POST['values'])) {
@@ -1557,7 +1557,7 @@ Route::post('/crud/admin/roles', function () {
         ]);
     }
 
-    $_SESSION['msg'] = lang('admin.settings_saved_successfully');
+    $_SESSION['msg'] = t('admin.settings_saved_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/roles");
 }, 'login');
@@ -1566,12 +1566,12 @@ Route::post('/crud/admin/roles', function () {
 Route::post('/crud/admin/update-user-roles', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $roles = $_POST['roles'] ?? [];
     if (empty($roles) || !is_array($roles)) {
-        $_SESSION['msg'] = lang('admin.no_roles_provided');
+        $_SESSION['msg'] = t('admin.no_roles_provided');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/admin/roles/distribute");
         die;
@@ -1590,7 +1590,7 @@ Route::post('/crud/admin/update-user-roles', function () {
             ['$set' => ['roles' => array_map('strtolower', $r)]]
         );
     }
-    $_SESSION['msg'] = lang('admin.roles_updated_successfully');
+    $_SESSION['msg'] = t('admin.roles_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/roles/distribute");
     die;
@@ -1638,10 +1638,10 @@ Route::post('/crud/admin/update-user-roles', function () {
 Route::post('/crud/(categories|types)/create', function ($col) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -1652,7 +1652,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     } else {
         $collection = $osiris->adminTypes;
         if (!isset($values['parent'])) {
-            $_SESSION['msg'] = lang('admin.type_must_have_a_parent_category');
+            $_SESSION['msg'] = t('admin.type_must_have_a_parent_category');
             $_SESSION['msg_type'] = 'error';
             header("Location: " . ROOTPATH . "/types/new");
             die();
@@ -1662,7 +1662,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
     // check if category ID already exists:
     $category_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang('admin.category_id_does_already_exist');
+        $_SESSION['msg'] = t('admin.category_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/$col/new");
         die();
@@ -1690,7 +1690,7 @@ Route::post('/crud/(categories|types)/create', function ($col) {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('admin.category_created_successfully');
+        $_SESSION['msg'] = t('admin.category_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -1705,10 +1705,10 @@ Route::post('/crud/(categories|types)/create', function ($col) {
 Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $values = validateValues($_POST['values'], $DB);
 
     // if (isset($values['upload'])) $values
@@ -1769,7 +1769,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('admin.category_updated_successfully');
+        $_SESSION['msg'] = t('admin.category_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -1784,7 +1784,7 @@ Route::post('/crud/(categories|types)/update/([A-Za-z0-9]*)', function ($col, $i
 Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     // select the right collection
@@ -1812,7 +1812,7 @@ Route::post('/crud/(categories|types)/delete/(.*)', function ($col, $id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('admin.category_deleted_successfully');
+        $_SESSION['msg'] = t('admin.category_deleted_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -1839,7 +1839,7 @@ Route::post('/crud/(categories|types)/update-order', function ($col) {
         );
     }
 
-    $_SESSION['msg'] = lang('common.order_updated');
+    $_SESSION['msg'] = t('common.order_updated');
     $_SESSION['msg_type'] = 'success';
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect']);
@@ -1850,26 +1850,26 @@ Route::post('/crud/(categories|types)/update-order', function ($col) {
 Route::post('/crud/admin/initiativesFields', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     include_once BASEPATH . "/php/FormBuilder.php";
 
     $schema = is_string($_POST['schema'] ?? null) ? json_decode($_POST['schema'], true) : null;
     if (!is_array($schema) || !isset($schema['items']) || !is_array($schema['items'])
         || !array_is_list($schema['items'])) {
-        abortwith(400, lang('admin.invalid_form_schema'));
+        abortwith(400, t('admin.invalid_form_schema'));
     }
     $fields = $schema['items'];
     foreach ($fields as $field) {
         if (!is_array($field) || !is_string($field['type'] ?? null)
             || (isset($field['props']) && !is_array($field['props']))) {
-            abortwith(400, lang('admin.invalid_form_schema'));
+            abortwith(400, t('admin.invalid_form_schema'));
         }
     }
     try {
         FormBuilder::validateFields($fields, FormBuilder::INITIATIVE_SYSTEM_FIELDS);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('admin.check_the_system_fields_and_use_only_one_version_of_each_data_field'));
+        abortwith(400, t('admin.check_the_system_fields_and_use_only_one_version_of_each_data_field'));
     }
     $osiris->adminGeneral->updateOne(
         ['id' => 'initiative-fields'],
@@ -1878,7 +1878,7 @@ Route::post('/crud/admin/initiativesFields', function () {
         ]],
         ['upsert' => true]
     );
-    $_SESSION['msg'] = lang('admin.form_updated');
+    $_SESSION['msg'] = t('admin.form_updated');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/admin/initiatives/fields');
     die();
@@ -1905,7 +1905,7 @@ Route::post('/crud/admin/activity-fields', function () {
     try {
         FormBuilder::validateFields($fields);
     } catch (InvalidArgumentException $e) {
-        abortwith(400, lang('admin.use_only_one_module_for_each_data_field'));
+        abortwith(400, t('admin.use_only_one_module_for_each_data_field'));
     }
     $modules = [];
     foreach ($fields as $field) {
@@ -1928,7 +1928,7 @@ Route::post('/crud/admin/activity-fields', function () {
         ]]
     );
     // redirect back
-    $_SESSION['msg'] = lang('admin.activity_form_has_been_updated');
+    $_SESSION['msg'] = t('admin.activity_form_has_been_updated');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/admin/types/$type/fields");
     die();
@@ -1943,14 +1943,14 @@ Route::post('/crud/admin/mail-test', function () {
 
     // include_once BASEPATH . "/php/mail.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $to = $_POST['email'];
 
     $msg = sendMail($to, 'OSIRIS Test Mail', 'This is a test mail from the OSIRIS system. If you received this mail, everything is set up correctly.');
     if ($msg === null) {
-        $msg = lang('admin.test_mail_sent_successfully');
+        $msg = t('admin.test_mail_sent_successfully');
     }
     $_SESSION['msg'] = $msg;
     header("Location: " . ROOTPATH . "/admin/mail");
@@ -1962,11 +1962,11 @@ Route::post('/crud/admin/mail-test', function () {
 Route::post('/crud/admin/add-user', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     if ($osiris->persons->count(['username' => $_POST['username']]) > 0) {
-        $_SESSION['msg'] = lang('error.username_already_taken');
+        $_SESSION['msg'] = t('error.username_already_taken');
         $_SESSION['msg_type'] = 'error';
         include BASEPATH . "/header.php";
         $form = $_POST;
@@ -2055,7 +2055,7 @@ Route::post('/crud/admin/add-user', function () {
     renderCurrentUnits(['username' => $username]);
 
     if (isset($_POST['guestaccount'])) {
-        $_SESSION['msg'] = lang('admin.guest_account_created_successfully', replace: [
+        $_SESSION['msg'] = t('admin.guest_account_created_successfully', replace: [
             'rootpath' => ROOTPATH,
             'username' => rawurlencode($username),
             'displayname' => e($person['displayname']),
@@ -2063,7 +2063,7 @@ Route::post('/crud/admin/add-user', function () {
         $_SESSION['msg_type'] = 'success';
         header("Location: " . ROOTPATH . "/admin/guest-account");
     } else {
-        $_SESSION['msg'] = lang('admin.user_created_successfully', replace: [
+        $_SESSION['msg'] = t('admin.user_created_successfully', replace: [
             'rootpath' => ROOTPATH,
             'username' => rawurlencode($username),
             'displayname' => e($person['displayname']),
@@ -2077,10 +2077,10 @@ Route::post('/crud/admin/add-user', function () {
 Route::post('/crud/admin/projects/create', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $values = validateValues($_POST['values'], $DB);
 
@@ -2089,7 +2089,7 @@ Route::post('/crud/admin/projects/create', function () {
     // check if category ID already exists:
     $category_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($category_exist)) {
-        $_SESSION['msg'] = lang('admin.project_id_does_already_exist');
+        $_SESSION['msg'] = t('admin.project_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
@@ -2099,7 +2099,7 @@ Route::post('/crud/admin/projects/create', function () {
     // $id = $insertOneResult->getInsertedId();
     $id = $values['id'];
 
-    $_SESSION['msg'] = lang('admin.project_id_successfully_created', replace: ['id' => $id]);
+    $_SESSION['msg'] = t('admin.project_id_successfully_created', replace: ['id' => $id]);
     header("Location: " . ROOTPATH . "/admin/projects/2/$id");
     die();
 });
@@ -2108,7 +2108,7 @@ Route::post('/crud/admin/projects/create', function () {
 Route::post('/crud/admin/guest-account/update', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $valid_until = $_POST['valid_until'] ?? null;
@@ -2119,7 +2119,7 @@ Route::post('/crud/admin/guest-account/update', function () {
         ]]
     );
 
-    $_SESSION['msg'] = lang('admin.guest_account_updated_successfully', replace: [
+    $_SESSION['msg'] = t('admin.guest_account_updated_successfully', replace: [
         'rootpath' => ROOTPATH,
         'username' => rawurlencode($_POST['username']),
         'displayname' => e($_POST['username']),
@@ -2132,7 +2132,7 @@ Route::post('/crud/admin/guest-account/update', function () {
 Route::post('/crud/admin/guest-account/delete', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $osiris->guestAccounts->deleteOne(
@@ -2144,7 +2144,7 @@ Route::post('/crud/admin/guest-account/delete', function () {
         ['$unset' => ['is_guest' => "", 'valid_until' => ""]],
         ['$pull' => ['roles' => 'guest']]
     );
-    $_SESSION['msg'] = lang('admin.guest_account_deleted_successfully', replace: [
+    $_SESSION['msg'] = t('admin.guest_account_deleted_successfully', replace: [
         'rootpath' => ROOTPATH,
         'username' => rawurlencode($_POST['username']),
         'displayname' => e($_POST['username']),
@@ -2162,7 +2162,7 @@ Route::post('/crud/admin/guest-account/delete', function () {
 Route::post('/crud/admin/guest-account/generate-link', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.synchronize')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
     if (!isset($_POST['username'])) die("no username given");
     $token = bin2hex(random_bytes(16));
@@ -2171,7 +2171,7 @@ Route::post('/crud/admin/guest-account/generate-link', function () {
         ['$set' => ['reset_token' => $token, 'reset_token_valid_until' => date('Y-m-d H:i:s', time() + 24 * 60 * 60)]]
     );
     $link = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . "://" . ($_SERVER['SERVER_NAME'] ?? 'localhost') . ROOTPATH . "/reset-guest-password?token=$token";
-    $_SESSION['msg'] = lang('admin.password_reset_link_for_user', replace: [
+    $_SESSION['msg'] = t('admin.password_reset_link_for_user', replace: [
         'rootpath' => ROOTPATH,
         'username' => rawurlencode($_POST['username']),
         'displayname' => e($_POST['username']),
@@ -2185,7 +2185,7 @@ Route::post('/crud/admin/guest-account/generate-link', function () {
 Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     include_once BASEPATH . "/php/Project.php";
@@ -2196,7 +2196,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
 
     $original = $collection->findOne(['_id' => $mongo_id]);
     if (empty($original)) {
-        abortwith(404, lang('admin.project_type'), "/admin/projects");
+        abortwith(404, t('admin.project_type'), "/admin/projects");
     }
     $name = lang($original['name'] ?? $original['id'], $original['name_de'] ?? null);
 
@@ -2227,7 +2227,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
         );
 
         if (isset($values['disabled']) && $values['disabled']) {
-            $_SESSION['msg'] = lang('admin.deactivated_project_name_successfully_saved', replace: ['name' => $name]);
+            $_SESSION['msg'] = t('admin.deactivated_project_name_successfully_saved', replace: ['name' => $name]);
             header("Location: " . ROOTPATH . "/admin/projects");
             die;
         }
@@ -2249,7 +2249,7 @@ Route::post('/crud/admin/projects/update/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     $collection = $osiris->adminProjects;
@@ -2258,26 +2258,26 @@ Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
     // check if ID is in use
     $project = $collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        $_SESSION['msg'] = lang('admin.project_id_could_not_be_deleted_as_it_does_not_exist', replace: ['id' => $id]);
+        $_SESSION['msg'] = t('admin.project_id_could_not_be_deleted_as_it_does_not_exist', replace: ['id' => $id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
     $project_id = $project['id'];
 
     if ($osiris->projects->count(['type' => $project_id]) > 0) {
-        $_SESSION['msg'] = lang('admin.project_project_id_could_not_be_deleted_projects_are_still_associated_to_th', replace: ['project_id' => $project_id]);
+        $_SESSION['msg'] = t('admin.project_project_id_could_not_be_deleted_projects_are_still_associated_to_th', replace: ['project_id' => $project_id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
 
     $deleted = $collection->deleteOne(['_id' => $mongo_id]);
     if ($deleted->getDeletedCount() == 0) {
-        $_SESSION['msg'] = lang('admin.project_project_id_could_not_be_deleted', replace: ['project_id' => $project_id]);
+        $_SESSION['msg'] = t('admin.project_project_id_could_not_be_deleted', replace: ['project_id' => $project_id]);
         header("Location: " . ROOTPATH . "/admin/projects");
         die();
     }
 
-    $_SESSION['msg'] = lang('admin.project_project_id_successfully_deleted', replace: ['project_id' => $project_id]);
+    $_SESSION['msg'] = t('admin.project_project_id_successfully_deleted', replace: ['project_id' => $project_id]);
     header("Location: " . ROOTPATH . "/admin/projects");
     die();
 });
@@ -2285,10 +2285,10 @@ Route::post('/crud/admin/projects/delete/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/admin/vocabularies/([a-z\-_]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('admin.see')) {
-        abortwith(403, lang('error.admin_no_permission'), "/", lang('navigation.go_back_home'));
+        abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $doc = [
         'id' => $id,
         'values' => $_POST['values']
@@ -2299,7 +2299,7 @@ Route::post('/crud/admin/vocabularies/([a-z\-_]*)', function ($id) {
     // insert new vocabulary
     $osiris->adminVocabularies->insertOne($doc);
 
-    $_SESSION['msg'] = lang('admin.vocabulary_id_successfully_saved', replace: ['id' => $id]);
+    $_SESSION['msg'] = t('admin.vocabulary_id_successfully_saved', replace: ['id' => $id]);
 
     $red = ROOTPATH . "/admin/vocabulary/$id";
     header("Location: " . $red);

@@ -5,7 +5,7 @@ $proposed = $module === 'project-date-proposed';
 $startKey = $proposed ? 'start_proposed' : 'start';
 $endKey = $proposed ? 'end_proposed' : 'end';
 $shortcut = $proposed ? 'timeframeProposed' : 'timeframe';
-$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== translate($m['label']);
+$customLabel = (!empty($props['label']) || !empty($props['label_de'])) && $label !== t($m['label']);
 $reqField = fn($field) => $required ? 'required' : '';
 ?>
 <div class="data-module col-sm-<?= $width ?>" data-module="<?= e($module) ?>">
@@ -24,12 +24,12 @@ $end = valueFromDateArray($form[$endKey] ?? $form[$endKey . '_date'] ?? null);
                         </div>
                         <div class="col-sm-4">
                             <span class="floating-title">
-                                <?= lang('projects.shortcut_length') ?>
+                                <?= t('projects.shortcut_length') ?>
                             </span>
                             <div class="btn-group w-full">
-                                <div class="btn small" onclick="<?= $shortcut ?>(36)"><?= lang('projects.3_yr') ?></div>
-                                <div class="btn small" onclick="<?= $shortcut ?>(12)"><?= lang('projects.1_yr') ?></div>
-                                <div class="btn small" onclick="<?= $shortcut ?>(6)"><?= lang('projects.6_mo') ?></div>
+                                <div class="btn small" onclick="<?= $shortcut ?>(36)"><?= t('projects.3_yr') ?></div>
+                                <div class="btn small" onclick="<?= $shortcut ?>(12)"><?= t('projects.1_yr') ?></div>
+                                <div class="btn small" onclick="<?= $shortcut ?>(6)"><?= t('projects.6_mo') ?></div>
                             </div>
                         </div>
                         <div class="col-sm-4 floating-form">
@@ -46,7 +46,7 @@ $end = valueFromDateArray($form[$endKey] ?? $form[$endKey . '_date'] ?? null);
                             let startField = document.querySelector('#<?= e($startKey) ?>');
                             let start = startField.valueAsDate;
                             if (start == '' || start === null) {
-                                toastError(<?= json_encode(lang('projects.please_select_a_start_date_first'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
+                                toastError(<?= json_encode(t('projects.please_select_a_start_date_first'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                                 return;
                             }
 

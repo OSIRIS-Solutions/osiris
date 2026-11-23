@@ -44,7 +44,7 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
   if (empty($orcid_data) || !isset($orcid_data['orcid'])) {
     // Handle error, e.g. log it and show an error message to the user
     error_log('ORCID authentication failed: ' . $response);
-    echo "<div class='alert alert-danger'>" . lang('orcid.orcid_authentication_failed_please_try_again') . "</div>";
+    echo "<div class='alert alert-danger'>" . t('orcid.orcid_authentication_failed_please_try_again') . "</div>";
     exit;
   }
 
@@ -75,39 +75,39 @@ if (isset($_GET['code']) && $_GET['code'] !== $last_code) {
 ?>
 
 <div class="container">
-  <h1><?= lang('orcid.orcid_authentication') ?></h1>
+  <h1><?= t('orcid.orcid_authentication') ?></h1>
 
   <?php if ((isset($user['orcid']) && isset($user['orcid_validated'])) || isset($_GET['code'])) { ?>
     <div class="alert success">
       <h5 class="title">
-        <?= lang('orcid.successfully_authenticated') ?>
+        <?= t('orcid.successfully_authenticated') ?>
       </h5>
-      <p class="py-10"><?= lang('orcid.you_have_successfully_authenticated_with_orcid') ?></p>
+      <p class="py-10"><?= t('orcid.you_have_successfully_authenticated_with_orcid') ?></p>
 
       <a href="<?= ROOTPATH ?>/orcid/import" class="btn success">
-        <?= lang('orcid.import_activities_from_orcid') ?>
+        <?= t('orcid.import_activities_from_orcid') ?>
       </a>
       <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>#section-general" class="btn">
-        <?= lang('orcid.back_to_profile') ?>
+        <?= t('orcid.back_to_profile') ?>
       </a>
     </div>
 
   <?php } else { ?>
     <div class="alert">
       <h5 class="title mb-10">
-        <?= lang('orcid.orcid_not_authenticated') ?></h1>
+        <?= t('orcid.orcid_not_authenticated') ?></h1>
       </h5>
       <?php
       if (!empty($orcid->client_id) && !empty($orcid->client_secret)) {
       ?>
         <a href="<?= $orcid->api_auth_url ?>oauth/authorize?client_id=<?= $orcid->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= BASE_URL ?>/orcid/validate" id="orcid-validation" class="btn primary">
           <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-          <?= lang('common.connect_orcid') ?>
+          <?= t('common.connect_orcid') ?>
         </a>
       <?php } ?>
 
       <a href="<?= ROOTPATH ?>/profile/<?= $_SESSION['username'] ?>#section-general" class="btn">
-        <?= lang('orcid.back_to_profile') ?>
+        <?= t('orcid.back_to_profile') ?>
       </a>
     </div>
   <?php } ?>

@@ -21,7 +21,7 @@ require_once BASEPATH . '/routes/oauth-register.php';
 Route::get('/user/login', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('auth.user_login')]
+        ['name' => t('auth.user_login')]
     ];
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true  && isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         header("Location: " . ROOTPATH . "/");
@@ -36,7 +36,7 @@ Route::get('/user/login', function () {
     $authMessages = [];
     if (isset($_GET['redirect']) && !isset($_SESSION['msg'])) {
         $authMessages[] = [
-            'text' => lang('auth.please_log_in_to_access_the_requested_page'),
+            'text' => t('auth.please_log_in_to_access_the_requested_page'),
             'type' => 'error',
         ];
     }
@@ -76,14 +76,14 @@ Route::post('/user/login', function () {
                 $blacklist = array_filter(array_map('trim', $blacklist));
                 if (in_array($_POST['username'], $blacklist)) {
                     $_SESSION['loggedin'] = false;
-                    abortwith(500, lang('auth.your_account_is_blocked_please_contact_the_administrator'), "/user/login");
+                    abortwith(500, t('auth.your_account_is_blocked_please_contact_the_administrator'), "/user/login");
                 }
             }
         }
         // check if user is allowed to login
         $auth = login($_POST['username'], $_POST['password']);
         if (isset($auth["success"]) && $auth["success"] == false) {
-            $_SESSION['msg'] = lang('auth.login_failed_please_check_your_username_and_password');
+            $_SESSION['msg'] = t('auth.login_failed_please_check_your_username_and_password');
             $_SESSION['msg_type'] = 'error';
         } else if (isset($auth["success"]) && $auth["success"] == true) {
             // check if user exists in our database
@@ -107,7 +107,7 @@ Route::post('/user/login', function () {
                 // create user from LDAP
                 $new_user = newUser($username);
                 if (empty($new_user)) {
-                    $_SESSION['msg'] = lang('auth.sorry_the_user_does_not_exist_please_contact_system_administrator');
+                    $_SESSION['msg'] = t('auth.sorry_the_user_does_not_exist_please_contact_system_administrator');
                     $_SESSION['loggedin'] = false;
                     die('Sorry, the user does not exist. Please contact system administrator!');
                 }
@@ -167,10 +167,10 @@ Route::post('/user/login', function () {
     $redirectTarget = $_POST['redirect'] ?? $_SERVER['REQUEST_URI'];
     $authMessages = [];
     if (empty($_POST['username'])) {
-        $authMessages[] = ['text' => lang('auth.username_is_required'), 'type' => 'error'];
+        $authMessages[] = ['text' => t('auth.username_is_required'), 'type' => 'error'];
     }
     if (empty($_POST['password'])) {
-        $authMessages[] = ['text' => lang('auth.password_is_required'), 'type' => 'error'];
+        $authMessages[] = ['text' => t('auth.password_is_required'), 'type' => 'error'];
     }
     include BASEPATH . "/pages/user/auth-page.php";
 });
@@ -230,29 +230,29 @@ Route::get('/reset-guest-password', function () {
     $token = $_GET['token'];
     $guest = $osiris->guestAccounts->findOne(['reset_token' => $token, 'reset_token_valid_until' => ['$gt' => date('Y-m-d H:i:s')]]);
     if (empty($guest)) {
-        $_SESSION['msg'] = lang('auth.invalid_or_expired_token');
+        $_SESSION['msg'] = t('auth.invalid_or_expired_token');
         header("Location: " . ROOTPATH . "/");
         die();
     }
     include BASEPATH . "/header.php";
 ?>
     <div class="container">
-        <h1><?= lang('auth.reset_password_for_guest_account') ?></h1>
+        <h1><?= t('auth.reset_password_for_guest_account') ?></h1>
         <form action="<?= ROOTPATH ?>/reset-guest-password" method="post">
             <input type="hidden" name="token" value="<?= e($token) ?>">
             <div class="form-group">
-                <label for="password"><?= lang('auth.password_new') ?></label>
+                <label for="password"><?= t('auth.password_new') ?></label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
 
             <div class="form-group">
-                <label for="password_confirm"><?= lang('auth.confirm_new_password') ?></label>
+                <label for="password_confirm"><?= t('auth.confirm_new_password') ?></label>
                 <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
             </div>
 
             <div id="feedback" class="mb-20"></div>
 
-            <button type="submit" class="btn btn-primary"><?= lang('auth.password_reset') ?></button>
+            <button type="submit" class="btn btn-primary"><?= t('auth.password_reset') ?></button>
         </form>
 
         <script>
@@ -267,10 +267,10 @@ Route::get('/reset-guest-password', function () {
                     return;
                 }
                 if (password.value === password_confirm.value) {
-                    feedback.textContent = "<?= lang('auth.passwords_match') ?>";
+                    feedback.textContent = "<?= t('auth.passwords_match') ?>";
                     feedback.className = "text-success";
                 } else {
-                    feedback.textContent = "<?= lang('auth.passwords_do_not_match') ?>";
+                    feedback.textContent = "<?= t('auth.passwords_do_not_match') ?>";
                     feedback.className = "text-danger";
                 }
             }
@@ -289,18 +289,18 @@ Route::post('/reset-guest-password', function () {
     $token = $_POST['token'];
     $guest = $osiris->guestAccounts->findOne(['reset_token' => $token, 'reset_token_valid_until' => ['$gt' => date('Y-m-d H:i:s')]]);
     if (empty($guest)) {
-        $_SESSION['msg'] = lang('auth.invalid_or_expired_token');
+        $_SESSION['msg'] = t('auth.invalid_or_expired_token');
         header("Location: " . ROOTPATH . "/");
         die();
     }
     if (!isset($_POST['password']) || empty($_POST['password'])) {
-        $_SESSION['msg'] = lang('auth.password_cannot_be_empty');
+        $_SESSION['msg'] = t('auth.password_cannot_be_empty');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/reset-guest-password?token=$token");
         die();
     }
     if (!isset($_POST['password_confirm']) || $_POST['password'] != $_POST['password_confirm']) {
-        $_SESSION['msg'] = lang('common.passwords_do_not_match');
+        $_SESSION['msg'] = t('common.passwords_do_not_match');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/reset-guest-password?token=$token");
         die();
@@ -311,7 +311,7 @@ Route::post('/reset-guest-password', function () {
         ['$set' => ['password' => $password]],
         ['$unset' => ['reset_token' => "", 'reset_token_valid_until' => ""]]
     );
-    $_SESSION['msg'] = lang('auth.password_successfully_reset_you_can_now_log_in_with_your_new_password');
+    $_SESSION['msg'] = t('auth.password_successfully_reset_you_can_now_log_in_with_your_new_password');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/");
     die();

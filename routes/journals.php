@@ -29,7 +29,7 @@ Route::get('/journals?/statistics', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journals"],
-        ['name' => lang('common.statistics')]
+        ['name' => t('common.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/statistics.php";
@@ -40,12 +40,12 @@ Route::get('/journals?/statistics', function () {
 Route::get('/journal/metrics', function () {
     include_once BASEPATH . "/php/init.php";
     if ($Settings->featureEnabled('no-journal-metrics')) {
-        echo "<p class='alert alert-danger'>" . lang('journals.feature_not_available') . "</p>";
+        echo "<p class='alert alert-danger'>" . t('journals.feature_not_available') . "</p>";
         die;
     }
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
-        ['name' => lang('journals.metrics')]
+        ['name' => t('journals.metrics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/journals/metrics.php";
@@ -80,7 +80,7 @@ Route::get('/journal/add', function () {
     $data = [];
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
-        ['name' => lang('action.add')]
+        ['name' => t('action.add')]
     ];
 
     include BASEPATH . "/header.php";
@@ -101,7 +101,7 @@ Route::get('/journal/edit/([a-zA-Z0-9]*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->journalLabel(), 'path' => "/journal"],
         ['name' => $data['abbr'] ?? $data['journal'] ?? '', 'path' => "/journal/view/$id"],
-        ['name' => lang('action.edit')]
+        ['name' => t('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -220,7 +220,7 @@ Route::post('/journal/metrics/update/(\d{4})', function ($year) {
     if (empty($result)) {
         echo json_encode([
             'done' => true,
-            'message' => lang('journals.no_metrics_found_for_this_year'),
+            'message' => t('journals.no_metrics_found_for_this_year'),
             'value' => $count
         ]);
         die;
@@ -321,14 +321,14 @@ Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
     if (empty($count)) {
         echo json_encode([
             'done' => true,
-            'message' => lang('journals.all_journals_have_been_updated'),
+            'message' => t('journals.all_journals_have_been_updated'),
             'value' => $count
         ]);
         die;
     }
     echo json_encode([
         'done' => false,
-        'message' => lang('journals.still_updating_journals'),
+        'message' => t('journals.still_updating_journals'),
         'value' => $count
     ]);
 });
@@ -341,7 +341,7 @@ Route::get('/journal/metrics/progress/(\d{4})', function ($year) {
 
 Route::post('/crud/journal/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->journals;
 
     $values = validateValues($_POST['values'], $DB);
@@ -418,7 +418,7 @@ Route::post('/crud/journal/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('journals.journal_created_successfully');
+        $_SESSION['msg'] = t('journals.journal_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -447,7 +447,7 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
 
     $journal = $collection->findOne(['_id' => $mongoid]);
     if (empty($journal['issn'] ?? null)) {
-        $_SESSION['msg'] = lang('journals.journal_has_no_issn_please_add_an_issn_to_update_metrics');
+        $_SESSION['msg'] = t('journals.journal_has_no_issn_please_add_an_issn_to_update_metrics');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
@@ -479,7 +479,7 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
     }
 
     if (empty($metrics)) {
-        $_SESSION['msg'] = lang('journals.no_metrics_found_for_this_journal');
+        $_SESSION['msg'] = t('journals.no_metrics_found_for_this_journal');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
@@ -511,7 +511,7 @@ Route::post('/crud/journal/update-metrics/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('journals.journal_metrics_updated_successfully');
+    $_SESSION['msg'] = t('journals.journal_metrics_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/journal/view/$id");
 });
@@ -610,7 +610,7 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('journals.journal_updated_successfully');
+        $_SESSION['msg'] = t('journals.journal_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -625,14 +625,14 @@ Route::post('/crud/journal/update/([A-Za-z0-9]*)', function ($id) {
 Route::post('/crud/journal/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('journals.delete')) {
-        $_SESSION['msg'] = lang('journals.you_do_not_have_permission_to_delete_journals');
+        $_SESSION['msg'] = t('journals.you_do_not_have_permission_to_delete_journals');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
     }
     $N_activities = $osiris->activities->count(['journal_id' => strval($id)]);
     if ($N_activities > 0) {
-        $_SESSION['msg'] = lang('journals.cannot_delete_journal_because_there_are_activities_linked_to_it');
+        $_SESSION['msg'] = t('journals.cannot_delete_journal_because_there_are_activities_linked_to_it');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/journal/view/$id");
         die;
@@ -651,7 +651,7 @@ Route::post('/crud/journal/delete/([A-Za-z0-9]*)', function ($id) {
         die;
     }
 
-    $_SESSION['msg'] = lang('journals.journal_deleted_successfully');
+    $_SESSION['msg'] = t('journals.journal_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/journal");
     die();

@@ -4,22 +4,22 @@
 </h2>
 
 <h5>
-    <?= lang('activities.what_are_coins') ?>
+    <?= t('activities.what_are_coins') ?>
 </h5>
 <p class="">
-    <?=lang('activities.you_receive_coins_for_research_activities_that_you_enter_in_osiris_your_ins')?>
+    <?=t('activities.you_receive_coins_for_research_activities_that_you_enter_in_osiris_your_ins')?>
 </p>
 
 <h5>
-    <?= lang('activities.how_do_i_get_them') ?>
+    <?= t('activities.how_do_i_get_them') ?>
 </h5>
 
 <p>
-    <?= lang('activities.very_simple_you_add_scientific_activities_to_osiris_whenever_you_publish_pr', replace: ['affiliation' => $Settings->get('affiliation')]) ?>
+    <?= t('activities.very_simple_you_add_scientific_activities_to_osiris_whenever_you_publish_pr', replace: ['affiliation' => $Settings->get('affiliation')]) ?>
 </p>
 
 <p>
-    <?=lang('activities.in_the_following_table_you_can_see_an_overview_of_the_coins')?>
+    <?=t('activities.in_the_following_table_you_can_see_an_overview_of_the_coins')?>
 </p>
 
 <table class="table simple small">

@@ -26,7 +26,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1>
     <i class="ph-duotone ph-calendar-dots"></i>
-    <?= lang('teaching.teaching_modules') ?>
+    <?= t('teaching.teaching_modules') ?>
 </h1>
 
 
@@ -34,13 +34,13 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     <!-- Statistics -->
     <a href="<?= ROOTPATH ?>/teaching/statistics" class="mr-20">
         <i class="ph ph-chart-bar"></i>
-        <?= lang('common.statistics') ?>
+        <?= t('common.statistics') ?>
     </a>
 
     <?php if ($Settings->hasPermission('teaching.edit')) { ?>
         <a href="<?= ROOTPATH ?>/teaching/new" class="">
             <i class="ph ph-plus"></i>
-            <?= lang('teaching.add_teaching_module') ?>
+            <?= t('teaching.add_teaching_module') ?>
         </a>
     <?php } ?>
 
@@ -71,10 +71,10 @@ $teaching = $osiris->teaching->aggregate([
     <table class="table" id="teaching-table">
         <thead>
             <tr>
-                <th><?= lang('common.module_no') ?></th>
-                <th><?= lang('common.title') ?></th>
-                <th><?= lang('common.teaching_venue_university') ?></th>
-                <th><?= lang('common.number_of_activities') ?></th>
+                <th><?= t('common.module_no') ?></th>
+                <th><?= t('common.title') ?></th>
+                <th><?= t('common.teaching_venue_university') ?></th>
+                <th><?= t('common.number_of_activities') ?></th>
             </tr>
         </thead>
         <tbody>

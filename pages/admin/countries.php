@@ -20,7 +20,7 @@
 <div class="container w-800 mw-full">
 
     <a href="<?= ROOTPATH ?>/migrate/countries" class="btn primary">
-        <?= lang('admin.update_countries_list') ?>
+        <?= t('admin.update_countries_list') ?>
     </a>
     <br>
     <br>
@@ -28,10 +28,10 @@
     <!-- Show countries list -->
     <h1>
         <i class="ph-duotone ph-globe-hemisphere-west"></i>
-        <?= lang('common.countries') ?>
+        <?= t('common.countries') ?>
     </h1>
     <p>
-        <?= lang('admin.here_you_can_see_the_list_of_countries_that_are_used_in_osiris') ?>
+        <?= t('admin.here_you_can_see_the_list_of_countries_that_are_used_in_osiris') ?>
     </p>
 
     <ul class="list">
@@ -42,9 +42,9 @@
 
     <p class="text-signal">
         <i class="ph ph-info"></i>
-        <?= lang('admin.the_list_of_world_countries_is_provided_by') ?>
+        <?= t('admin.the_list_of_world_countries_is_provided_by') ?>
         <a href="https://stefangabos.github.io/world_countries/" target="_blank" rel="noopener noreferrer" class="colorless">Stefan Gabos' World Country List</a>.
-        <?= lang('admin.please_click_on_the_button_above_to_update_automatically') ?>
+        <?= t('admin.please_click_on_the_button_above_to_update_automatically') ?>
     </p>
 
 </div>

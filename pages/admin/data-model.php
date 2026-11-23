@@ -19,7 +19,7 @@ require_once BASEPATH . '/php/Initiatives.php';
 require_once BASEPATH . '/php/EventForms.php';
 require_once BASEPATH . '/php/DeadlineForms.php';
 $config = new FormBuilder(
-    entityLabel: translate('common.initiatives'),
+    entityLabel: t('common.initiatives'),
     redirectUrl: ROOTPATH . '/crud/admin/initiativesFields',
     entity: 'initiatives',
     systemFields: FormBuilder::INITIATIVE_SYSTEM_FIELDS
@@ -32,7 +32,7 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
 
     <h1>
         <i class="ph-duotone ph-gear-six"></i>
-        <?= translate('common.data_model') ?>
+        <?= t('common.data_model') ?>
     </h1>
 
 
@@ -41,20 +41,20 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
 
             <h2 class="title">
                 <i class="ph-duotone ph-compass"></i>
-                <?= translate('common.initiatives') ?>
+                <?= t('common.initiatives') ?>
             </h2>
 
 
             <?php if (!$Settings->featureEnabled('initiatives')) { ?>
                 <div class="alert signal">
-                    <?= translate('initiatives.feature_disabled', [
-                        'entity' => translate('common.initiatives'),
-                        'link' => new Html('<a href="' . ROOTPATH . '/admin/features#initiatives">' . e(translate('admin.features')) . '</a>'),
+                    <?= t('initiatives.feature_disabled', [
+                        'entity' => t('common.initiatives'),
+                        'link' => new Html('<a href="' . ROOTPATH . '/admin/features#initiatives">' . e(t('admin.features')) . '</a>'),
                     ]) ?>
                 </div>
             <?php } ?>
 
-            <h2 class="font-size-18"><?= lang('common.data_fields') ?>:</h2>
+            <h2 class="font-size-18"><?= t('common.data_fields') ?>:</h2>
             <div class="my-10">
                 <?php foreach ($fields as $field):
                     $props = $field['props'] ?? [];
@@ -80,7 +80,7 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                     }
                 ?>
                     <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
-                        <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(lang('admin.required_fields')) ?>"></i><?php endif; ?>
+                        <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
                         <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
                     </span>
                 <?php endforeach; ?>
@@ -99,8 +99,8 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
     ?>
         <div class="box" id="<?= e($entity) ?>">
             <div class="content">
-                <h2 class="title"><i class="ph-duotone <?= e($entityIcon) ?>"></i> <?= translate('common.' . $entity) ?></h2>
-                <h2 class="font-size-18"><?= translate('common.data_fields') ?>:</h2>
+                <h2 class="title"><i class="ph-duotone <?= e($entityIcon) ?>"></i> <?= t('common.' . $entity) ?></h2>
+                <h2 class="font-size-18"><?= t('common.data_fields') ?>:</h2>
                 <div class="my-10">
                     <?php foreach ($fields as $field):
                         $props = $field['props'] ?? [];
@@ -126,7 +126,7 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                         }
                     ?>
                         <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
-                            <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(lang('admin.required_fields')) ?>"></i><?php endif; ?>
+                            <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
                             <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
                         </span>
                     <?php endforeach; ?>
@@ -147,8 +147,8 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
     ?>
     <div class="box" id="infrastructures">
         <div class="content">
-            <h2 class="title"><i class="ph-duotone ph-hard-drives"></i> <?= translate('common.infrastructures') ?></h2>
-            <h2 class="font-size-18"><?= translate('common.data_fields') ?>:</h2>
+            <h2 class="title"><i class="ph-duotone ph-hard-drives"></i> <?= t('common.infrastructures') ?></h2>
+            <h2 class="font-size-18"><?= t('common.data_fields') ?>:</h2>
             <div class="my-10">
                 <?php foreach ($fields as $field):
                     $props = $field['props'] ?? [];
@@ -174,7 +174,7 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
                     }
                 ?>
                     <span class="badge mb-5" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
-                        <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(lang('admin.required_fields')) ?>"></i><?php endif; ?>
+                        <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
                         <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
                     </span>
                 <?php endforeach; ?>
@@ -186,9 +186,9 @@ $systemFields = FormBuilder::systemFieldsFor($fields, $config->systemFields);
             <hr>
 
             <p class="text-muted">
-                <?= lang('admin.to_add_more_fields_to_the_annual_statistics_you_can_update') ?>
-                <a href="<?= ROOTPATH ?>/admin/vocabulary/infrastructure-stats"><?= lang('admin.the_vocabulary_for_infrastructure_statistics') ?></a>
-                <?= lang('admin.and_add_the_fields_you_want_to_use_there') ?>
+                <?= t('admin.to_add_more_fields_to_the_annual_statistics_you_can_update') ?>
+                <a href="<?= ROOTPATH ?>/admin/vocabulary/infrastructure-stats"><?= t('admin.the_vocabulary_for_infrastructure_statistics') ?></a>
+                <?= t('admin.and_add_the_fields_you_want_to_use_there') ?>
             </p>
         </div>
 

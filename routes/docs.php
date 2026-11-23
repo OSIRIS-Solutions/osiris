@@ -17,7 +17,7 @@
 Route::get('/docs', function () {
 
     $breadcrumb = [
-        ['name' => lang('common.documentation')]
+        ['name' => t('common.documentation')]
     ];
 
     include_once BASEPATH . "/php/init.php";
@@ -40,10 +40,10 @@ Route::get('/docs/([\w-]+)', function ($doc) {
     include BASEPATH . "/php/init.php";
     // SassCompiler::run("scss/", "css/");
 
-    $language = lang('common.this_language');
+    $language = t('common.this_language');
 
     $breadcrumb = [
-        ['name' => lang('common.documentation'), 'path' => '/docs'],
+        ['name' => t('common.documentation'), 'path' => '/docs'],
         ['name' => lang($doc)]
     ];
     include BASEPATH . "/header.php";

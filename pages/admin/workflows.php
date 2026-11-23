@@ -26,7 +26,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
 <div class="btn-toolbar">
     <a class="" href="<?= ROOTPATH ?>/admin/workflows/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('admin.add_workflow') ?>
+        <?= t('admin.add_workflow') ?>
     </a>
 </div>
 
@@ -35,9 +35,9 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th><?=lang('common.steps')?></th>
-            <th># <?=lang('common.activities')?></th>
-            <th><?=lang('common.action')?></th>
+            <th><?=t('common.steps')?></th>
+            <th># <?=t('common.activities')?></th>
+            <th><?=t('common.action')?></th>
         </tr>
     </thead>
     <tbody>
@@ -71,25 +71,25 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
 
 <article class="box padded">
     <h5 class="title">
-        <?= lang('admin.modify_applied_workflows') ?>
+        <?= t('admin.modify_applied_workflows') ?>
     </h5>
 
     <p>
-        <?= lang('admin.if_you_change_a_workflow_this_will_not_affect_activities_that_have_already') ?>
+        <?= t('admin.if_you_change_a_workflow_this_will_not_affect_activities_that_have_already') ?>
     </p>
 
-    <form action="<?= ROOTPATH ?>/crud/workflows/reset-action" method="post" onsubmit="return confirm('<?= lang('admin.are_you_sure_you_want_to_apply_this_action_to_all_selected_activities_this') ?>');">
+    <form action="<?= ROOTPATH ?>/crud/workflows/reset-action" method="post" onsubmit="return confirm('<?= t('admin.are_you_sure_you_want_to_apply_this_action_to_all_selected_activities_this') ?>');">
         <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
         <div class="form-group floating-form">
             <select name="action" class="form-control" required>
-                <option value="remove"><?= lang('admin.remove_all_workflows') ?></option>
-                <option value="reset"><?= lang('admin.reset_all_workflows_to_the_first_step') ?></option>
+                <option value="remove"><?= t('admin.remove_all_workflows') ?></option>
+                <option value="reset"><?= t('admin.reset_all_workflows_to_the_first_step') ?></option>
             </select>
-            <label><?= lang('common.action') ?></label>
+            <label><?= t('common.action') ?></label>
         </div>
         <div class="form-group floating-form">
             <select name="activity" id="activity-type" class="form-control" required>
-                <option value="all"><?= lang('common.all_activities') ?></option>
+                <option value="all"><?= t('common.all_activities') ?></option>
                 <?php
                 $activity_types = $osiris->adminCategories->find(['workflow' => ['$exists' => true]]);
                 foreach ($activity_types as $atype) {
@@ -97,11 +97,11 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                     <option value="<?= $atype['id'] ?>"><?= lang($atype['name'], $atype['name_de']?? null) ?></option>
                 <?php } ?>
             </select>
-            <label><?= lang('admin.activity_category') ?></label>
+            <label><?= t('admin.activity_category') ?></label>
         </div>
         <button class="btn warning" type="submit">
             <i class="ph ph-arrows-counter-clockwise"></i>
-            <?= lang('admin.execute_action') ?>
+            <?= t('admin.execute_action') ?>
         </button>
     </form>
 </article>
@@ -114,7 +114,7 @@ $workflows = $osiris->adminWorkflows->find()->toArray();
                 [0, "asc"]
             ],
             "language": {
-                "emptyTable": "<?= lang('admin.no_workflows_defined_yet') ?>"
+                "emptyTable": "<?= t('admin.no_workflows_defined_yet') ?>"
             }
         });
     });

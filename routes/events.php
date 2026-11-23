@@ -21,7 +21,7 @@ Route::get('/(conferences|deadlines)', function ($page) {
         $name = 'Deadlines';
 
         if (!$Settings->featureEnabled('deadlines', false)) {
-            abortwith(500, lang('events.deadlines_are_not_enabled'));
+            abortwith(500, t('events.deadlines_are_not_enabled'));
         }
     } else {
         $name = 'Events';
@@ -45,16 +45,16 @@ Route::get('/(conferences|deadlines)/new', function ($page) {
 
     if ($page == 'deadlines') {
         if (!$Settings->featureEnabled('deadlines', false)) {
-            abortwith(500, lang('events.deadlines_are_not_enabled'));
+            abortwith(500, t('events.deadlines_are_not_enabled'));
         }
         $breadcrumb = [
-            ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
-            ['name' => lang('deadlines.new_deadline')]
+            ['name' => t('common.deadlines'), 'path' => '/deadlines'],
+            ['name' => t('deadlines.new_deadline')]
         ];
     } else {
         $breadcrumb = [
-            ['name' => lang('common.events'), 'path' => '/conferences'],
-            ['name' => lang('events.new_event')]
+            ['name' => t('common.events'), 'path' => '/conferences'],
+            ['name' => t('events.new_event')]
         ];
     }
 
@@ -85,11 +85,11 @@ Route::get('/conferences/view/(.*)', function ($id) {
     // get conference
     $conference = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$conference) {
-        abortwith(404, lang('common.event'), '/conferences');
+        abortwith(404, t('common.event'), '/conferences');
     }
 
     $breadcrumb = [
-        ['name' => lang('common.events'), 'path' => '/conferences'],
+        ['name' => t('common.events'), 'path' => '/conferences'],
         ['name' => $conference['title']]
     ];
 
@@ -109,15 +109,15 @@ Route::get('/conferences/edit/(.*)', function ($id) {
     $new = false;
     $form = $osiris->conferences->findOne(['_id' => $conf_id]);
     if (!$form) {
-        abortwith(404, lang('common.event'), '/conferences');
+        abortwith(404, t('common.event'), '/conferences');
     }
 
     if (($form['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('conferences.edit')) {
-        return abortwith(403, translate('common.event'), '/conferences');
+        return abortwith(403, t('common.event'), '/conferences');
     }
 
     $breadcrumb = [
-        ['name' => lang('common.events'), 'path' => '/conferences'],
+        ['name' => t('common.events'), 'path' => '/conferences'],
         ['name' => $form['title']]
     ];
 
@@ -159,17 +159,17 @@ Route::get('/deadlines/view/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('events.deadlines_are_not_enabled'));
+        abortwith(500, t('events.deadlines_are_not_enabled'));
     }
 
     $mongo_id = DB::to_ObjectID($id);
     // get deadline
     $deadline = $osiris->deadlines->findOne(['_id' => $mongo_id]);
     if (!$deadline) {
-        abortwith(404, lang('events.deadline'), '/deadlines');
+        abortwith(404, t('events.deadline'), '/deadlines');
     }
     $breadcrumb = [
-        ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
+        ['name' => t('common.deadlines'), 'path' => '/deadlines'],
         ['name' => $deadline['title']]
     ];
 
@@ -182,22 +182,22 @@ Route::get('/deadlines/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('events.deadlines_are_not_enabled'));
+        abortwith(500, t('events.deadlines_are_not_enabled'));
     }
     $conf_id = DB::to_ObjectID($id);
     // get deadline
     $new = false;
     $form = $osiris->deadlines->findOne(['_id' => $conf_id]);
     if (!$form) {
-        abortwith(404, lang('events.deadline'), '/deadlines');
+        abortwith(404, t('events.deadline'), '/deadlines');
     }
 
     if (($form['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('deadlines.edit')) {
-        return abortwith(403, translate('common.deadlines'), '/deadlines');
+        return abortwith(403, t('common.deadlines'), '/deadlines');
     }
 
     $breadcrumb = [
-        ['name' => lang('common.deadlines'), 'path' => '/deadlines'],
+        ['name' => t('common.deadlines'), 'path' => '/deadlines'],
         ['name' => $form['title']]
     ];
 
@@ -219,14 +219,14 @@ Route::post('/crud/conferences/add', function () {
     if (!isset($_POST['values'])) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'msg' => lang('error.no_values')]);
+            echo json_encode(['status' => 'error', 'msg' => t('error.no_values')]);
             exit;
         }
-        abortwith(500, lang('error.no_values'));
+        abortwith(500, t('error.no_values'));
     }
     require_once BASEPATH . '/php/EventForms.php';
     try {
-        if (!is_array($_POST['values'])) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($_POST['values'])) throw new InvalidArgumentException(t('error.no_values'));
         $values = EventForms::values($_POST['values'], $osiris, $Settings);
     } catch (InvalidArgumentException $error) {
         if ($accept_json) {
@@ -237,7 +237,7 @@ Route::post('/crud/conferences/add', function () {
         $form = EventForms::redisplay(is_array($_POST['values']) ? $_POST['values'] : []);
         $form['participants'] = ($_POST['attending'] ?? '0') === '1' ? [$_SESSION['username']] : [];
         include BASEPATH . '/header.php';
-        printMsg(e($error->getMessage()), 'error', translate('common.error'));
+        printMsg(e($error->getMessage()), 'error', t('common.error'));
         include BASEPATH . '/pages/events/edit.php';
         include BASEPATH . '/footer.php';
         return;
@@ -250,10 +250,10 @@ Route::post('/crud/conferences/add', function () {
     if ($existing) {
         if ($accept_json) {
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'warning', 'msg' => lang('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id'], 'event' => array_intersect_key(DB::doc2Arr($existing), array_flip(['title', 'start', 'end', 'location', 'country']))]);
+            echo json_encode(['status' => 'warning', 'msg' => t('events.an_event_with_the_same_title_and_date_already_exists'), 'id' => (string)$existing['_id'], 'event' => array_intersect_key(DB::doc2Arr($existing), array_flip(['title', 'start', 'end', 'location', 'country']))]);
             exit;
         }
-        $_SESSION['msg'] = lang('events.an_event_with_the_same_title_and_date_already_exists');
+        $_SESSION['msg'] = t('events.an_event_with_the_same_title_and_date_already_exists');
         header("Location: " . ROOTPATH . "/conferences/view/" . $existing['_id']);
         exit;
     }
@@ -276,7 +276,7 @@ Route::post('/crud/conferences/add', function () {
         echo json_encode(['status' => 'success', 'id' => (string)$id, 'event' => array_intersect_key($values, array_flip(['title', 'start', 'end', 'location', 'country']))]);
         exit;
     }
-    $_SESSION['msg'] = lang('events.event_added_successfully');
+    $_SESSION['msg'] = t('events.event_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
@@ -287,17 +287,17 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
 
     require_once BASEPATH . '/php/EventForms.php';
     $previous = $osiris->conferences->findOne(['_id' => $DB::to_ObjectID($id)]);
-    if (!$previous) return abortwith(404, translate('common.events'));
+    if (!$previous) return abortwith(404, t('common.events'));
     if (($previous['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('conferences.edit')) {
-        return abortwith(403, translate('common.event'), '/conferences');
+        return abortwith(403, t('common.event'), '/conferences');
     }
     try {
-        if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($_POST['values'] ?? null)) throw new InvalidArgumentException(t('error.no_values'));
         $values = EventForms::values($_POST['values'], $osiris, $Settings, DB::doc2Arr($previous));
     } catch (InvalidArgumentException $error) {
         $form = EventForms::redisplay(is_array($_POST['values'] ?? null) ? $_POST['values'] : [], DB::doc2Arr($previous));
         include BASEPATH . '/header.php';
-        printMsg(e($error->getMessage()), 'error', translate('common.error'));
+        printMsg(e($error->getMessage()), 'error', t('common.error'));
         include BASEPATH . '/pages/events/edit.php';
         include BASEPATH . '/footer.php';
         return;
@@ -311,7 +311,7 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('events.event_updated_successfully');
+    $_SESSION['msg'] = t('events.event_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/conferences/view/$id");
 }, 'login');
@@ -320,17 +320,17 @@ Route::post('/crud/conferences/update/(.*)', function ($id) {
 Route::post('/crud/conferences/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('conferences', true)) {
-        abortwith(500, lang('events.events_are_not_enabled'));
+        abortwith(500, t('events.events_are_not_enabled'));
     }
     $data = $osiris->conferences->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
-        abortwith(404, lang('common.event'), '/conferences');
+        abortwith(404, t('common.event'), '/conferences');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('conferences.delete')) {
-        abortwith(403, lang('events.you_do_not_have_permission_to_delete_this_event'));
+        abortwith(403, t('events.you_do_not_have_permission_to_delete_this_event'));
     }
     $osiris->conferences->deleteOne(['_id' => DB::to_ObjectID($id)]);
-    $_SESSION['msg'] = lang('events.event_deleted_successfully');
+    $_SESSION['msg'] = t('events.event_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . '/conferences');
 }, 'login');
@@ -369,10 +369,10 @@ Route::post('/ajax/conferences/toggle-interest', function () {
 Route::post('/crud/deadlines/add', function () {
     include_once BASEPATH . "/php/init.php";
     require_once BASEPATH . '/php/DeadlineForms.php';
-    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, lang('events.deadlines_are_not_enabled'));
+    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, t('events.deadlines_are_not_enabled'));
     $accept_json = strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false;
     $input = $_POST['values'] ?? null;
-    if (!is_array($input)) return abortwith(400, translate('error.no_values'));
+    if (!is_array($input)) return abortwith(400, t('error.no_values'));
     try {
         $values = DeadlineForms::values($input, $osiris, $Settings);
     } catch (InvalidArgumentException $error) {
@@ -383,7 +383,7 @@ Route::post('/crud/deadlines/add', function () {
         }
         $form = DeadlineForms::redisplay($input);
         include BASEPATH . '/header.php';
-        printMsg($error->getMessage(), 'error', translate('common.error'));
+        printMsg($error->getMessage(), 'error', t('common.error'));
         include BASEPATH . '/pages/deadlines/edit.php';
         include BASEPATH . '/footer.php';
         return;
@@ -417,20 +417,20 @@ Route::post('/crud/deadlines/add', function () {
 Route::post('/crud/deadlines/update/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     require_once BASEPATH . '/php/DeadlineForms.php';
-    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, lang('events.deadlines_are_not_enabled'));
+    if (!$Settings->featureEnabled('deadlines', false)) return abortwith(403, t('events.deadlines_are_not_enabled'));
     $previous = $osiris->deadlines->findOne(['_id' => DB::to_ObjectID($id)]);
-    if (!$previous) return abortwith(404, translate('common.deadlines'), '/deadlines');
+    if (!$previous) return abortwith(404, t('common.deadlines'), '/deadlines');
     if (($previous['created_by'] ?? null) !== $_SESSION['username'] && !$Settings->hasPermission('deadlines.edit')) {
-        return abortwith(403, translate('common.deadlines'), '/deadlines');
+        return abortwith(403, t('common.deadlines'), '/deadlines');
     }
     $input = $_POST['values'] ?? null;
-    if (!is_array($input)) return abortwith(400, translate('error.no_values'));
+    if (!is_array($input)) return abortwith(400, t('error.no_values'));
     try {
         $values = DeadlineForms::values($input, $osiris, $Settings, DB::doc2Arr($previous));
     } catch (InvalidArgumentException $error) {
         $form = DeadlineForms::redisplay($input, DB::doc2Arr($previous));
         include BASEPATH . '/header.php';
-        printMsg($error->getMessage(), 'error', translate('common.error'));
+        printMsg($error->getMessage(), 'error', t('common.error'));
         include BASEPATH . '/pages/deadlines/edit.php';
         include BASEPATH . '/footer.php';
         return;
@@ -438,7 +438,7 @@ Route::post('/crud/deadlines/update/(.*)', function ($id) {
     $values['updated'] = date('Y-m-d');
     $values['updated_by'] = $_SESSION['username'];
     $osiris->deadlines->updateOne(['_id' => DB::to_ObjectID($id)], ['$set' => $values]);
-    $_SESSION['msg'] = lang('events.deadline_updated_successfully');
+    $_SESSION['msg'] = t('events.deadline_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header('Location: ' . ROOTPATH . '/deadlines/view/' . $id);
 }, 'login');
@@ -447,17 +447,17 @@ Route::post('/crud/deadlines/update/(.*)', function ($id) {
 Route::post('/crud/deadlines/delete/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('deadlines', false)) {
-        abortwith(500, lang('events.deadlines_are_not_enabled'));
+        abortwith(500, t('events.deadlines_are_not_enabled'));
     }
     $data = $osiris->deadlines->findOne(['_id' => DB::to_ObjectID($id)]);
     if (!$data) {
-        abortwith(404, lang('common.event'), '/deadlines');
+        abortwith(404, t('common.event'), '/deadlines');
     }
     if ($data['created_by'] != $_SESSION['username'] && !$Settings->hasPermission('deadlines.delete')) {
-        abortwith(403, lang('events.you_do_not_have_permission_to_delete_this_event'));
+        abortwith(403, t('events.you_do_not_have_permission_to_delete_this_event'));
     }
     $osiris->deadlines->deleteOne(['_id' => DB::to_ObjectID($id)]);
-    $_SESSION['msg'] = lang('events.deadline_deleted_successfully');
+    $_SESSION['msg'] = t('events.deadline_deleted_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . '/deadlines');
 }, 'login');

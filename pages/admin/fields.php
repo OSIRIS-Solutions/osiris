@@ -23,13 +23,13 @@ $fields = $osiris->adminFields->find()->toArray();
 
     <h1>
         <i class="ph-duotone ph-textbox"></i>
-        <?= lang('common.custom_fields') ?>
+        <?= t('common.custom_fields') ?>
     </h1>
 
     <div class="btn-toolbar">
         <a class="btn" href="<?= ROOTPATH ?>/admin/fields/new">
             <i class="ph ph-plus-circle"></i>
-            <?= lang('admin.add_field') ?>
+            <?= t('admin.add_field') ?>
         </a>
     </div>
 
@@ -56,7 +56,7 @@ $fields = $osiris->adminFields->find()->toArray();
                     </td>
                     <td>
                         <a href="<?= ROOTPATH ?>/admin/fields/<?= $field['id'] ?>" class="">
-                            <i class="ph ph-pencil" aria-label="<?= lang('action.edit') ?>"></i>   
+                            <i class="ph ph-pencil" aria-label="<?= t('action.edit') ?>"></i>
                         </a>
                     </td>
                 </tr>
@@ -73,7 +73,7 @@ $fields = $osiris->adminFields->find()->toArray();
                 [0, "asc"]
             ],
             "language": {
-                "emptyTable": "<?= lang('admin.no_custom_fields_defined_yet') ?>"
+                "emptyTable": "<?= t('admin.no_custom_fields_defined_yet') ?>"
             }
         });
     });

@@ -1314,7 +1314,7 @@ class Document extends Settings
         }
         if ($module === 'infrastructure-id') return e($infrastructure['id'] ?? '');
         if ($module === 'infrastructure-date') return fromToDate($infrastructure['start_date'] ?? null, $infrastructure['end_date'] ?? null, true);
-        if ($module === 'infrastructure-collaborative') return '<span class="badge">' . e(translate(!empty($infrastructure['collaborative']) ? 'common.yes' : 'common.no')) . '</span>';
+        if ($module === 'infrastructure-collaborative') return '<span class="badge">' . e(t(!empty($infrastructure['collaborative']) ? 'common.yes' : 'common.no')) . '</span>';
         if ($module === 'infrastructure-link') {
             $url = $infrastructure['link'] ?? '';
             return preg_match('~^https?://~i', $url) ? '<a href="' . e($url) . '" target="_blank" rel="noopener noreferrer">' . e($url) . '</a>' : e($url);
@@ -1439,7 +1439,7 @@ class Document extends Settings
             case 'event-description':
                 return $this->getVal('description');
             case 'event-public':
-                return '<span class="badge ' . (!empty($this->doc['public']) ? 'success' : 'signal') . '">' . e(translate(!empty($this->doc['public']) ? 'common.shown' : 'common.not_shown')) . '</span>';
+                return '<span class="badge ' . (!empty($this->doc['public']) ? 'success' : 'signal') . '">' . e(t(!empty($this->doc['public']) ? 'common.shown' : 'common.not_shown')) . '</span>';
             case 'deadline-date':
                 return empty($this->doc['date']) ? '' : self::format_date($this->doc['date']);
             case 'deadline-type':

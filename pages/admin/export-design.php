@@ -35,24 +35,24 @@ $footer = $export['footer'] ?? [];
 
         <h1>
             <i class="ph-duotone ph-file-doc"></i>
-            <?= lang('admin.export_design') ?>
+            <?= t('admin.export_design') ?>
         </h1>
 
         <p class="text-muted">
-            <?= lang('admin.configure_the_visual_appearance_of_generated_word_reports_cvs_and_exports') ?>
+            <?= t('admin.configure_the_visual_appearance_of_generated_word_reports_cvs_and_exports') ?>
         </p>
 
         <table class="table" id="design-table">
 
             <tr>
                 <th colspan="2">
-                    <?= lang('admin.general_typography') ?>
+                    <?= t('admin.general_typography') ?>
                 </th>
             </tr>
 
             <tr>
                 <td class="w-200">
-                    <label for="export-font-family"><?= lang('admin.font_family') ?></label>
+                    <label for="export-font-family"><?= t('admin.font_family') ?></label>
                 </td>
                 <td>
                     <input type="text"
@@ -62,14 +62,14 @@ $footer = $export['footer'] ?? [];
                            id="export-font-family">
 
                     <small class="text-muted">
-                        <?= lang('admin.the_font_must_be_available_on_the_computer_opening_the_word_document') ?>
+                        <?= t('admin.the_font_must_be_available_on_the_computer_opening_the_word_document') ?>
                     </small>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <label for="export-font-size"><?= lang('admin.base_font_size') ?></label>
+                    <label for="export-font-size"><?= t('admin.base_font_size') ?></label>
                 </td>
                 <td>
                     <input type="number"
@@ -85,7 +85,7 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <th colspan="2">
-                    <?= lang('admin.headings') ?>
+                    <?= t('admin.headings') ?>
                 </th>
             </tr>
 
@@ -94,7 +94,7 @@ $footer = $export['footer'] ?? [];
             ?>
                 <tr>
                     <td>
-                        <label><?= lang('common.heading') ?> <?= $i ?></label>
+                        <label><?= t('common.heading') ?> <?= $i ?></label>
                     </td>
                     <td>
                         <div class="d-flex align-items-center flex-wrap gap-10">
@@ -112,14 +112,14 @@ $footer = $export['footer'] ?? [];
                                    max="32"
                                    step="1"
                                    data-toggle="tooltip"
-                                   data-title="<?= lang('admin.font_size') ?>">
+                                   data-title="<?= t('admin.font_size') ?>">
 
                             <input type="color"
                                    class="form-control w-100"
                                    name="general[export-design][headings][h<?= $i ?>][color]"
                                    value="<?= e($h['color'] ?? '#000000') ?>"
                                    data-toggle="tooltip"
-                                   data-title="<?= lang('common.color') ?>">
+                                   data-title="<?= t('common.color') ?>">
 
                             <label class="">
                                 <input type="checkbox"
@@ -127,7 +127,7 @@ $footer = $export['footer'] ?? [];
                                        value="1"
                                        <?= !empty($h['bold']) || !isset($h['bold']) ? 'checked' : '' ?>>
                                 <span></span>
-                                <?= lang('admin.bold') ?>
+                                <?= t('admin.bold') ?>
                             </label>
 
                             <label class="">
@@ -136,7 +136,7 @@ $footer = $export['footer'] ?? [];
                                        value="1"
                                        <?= !empty($h['numbered']) ? 'checked' : '' ?>>
                                 <span></span>
-                                <?= lang('admin.numbered') ?>
+                                <?= t('admin.numbered') ?>
                             </label>
 
                         </div>
@@ -146,13 +146,13 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <th colspan="2">
-                    <?= lang('admin.tables') ?>
+                    <?= t('admin.tables') ?>
                 </th>
             </tr>
 
             <tr>
                 <td>
-                    <label for="table-border-color"><?= lang('common.border_color') ?></label>
+                    <label for="table-border-color"><?= t('common.border_color') ?></label>
                 </td>
                 <td>
                     <input type="color"
@@ -165,22 +165,22 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <td>
-                    <label for="table-border-size"><?= lang('admin.border_size') ?></label>
+                    <label for="table-border-size"><?= t('admin.border_size') ?></label>
                 </td>
                 <td>
                     <select name="general[export-design][table][borderSize]" id="table-border-size" class="form-control w-200">
-                        <option value="0" <?= (isset($table['borderSize']) && $table['borderSize'] == 0) ? 'selected' : '' ?>><?= lang('admin.no_borders') ?></option>
-                        <option value="10" <?= (isset($table['borderSize']) && $table['borderSize'] == 10) ? 'selected' : '' ?>><?= lang('admin.thin') ?> (0.5pt)</option>
-                        <option value="20" <?= (isset($table['borderSize']) && $table['borderSize'] == 20) ? 'selected' : '' ?>><?= lang('common.normal') ?> (1pt)</option>
-                        <option value="30" <?= (isset($table['borderSize']) && $table['borderSize'] == 30) ? 'selected' : '' ?>><?= lang('admin.medium') ?> (1.5pt)</option>
-                        <option value="40" <?= (isset($table['borderSize']) && $table['borderSize'] == 40) ? 'selected' : '' ?>><?= lang('common.thick') ?> (2pt)</option>
+                        <option value="0" <?= (isset($table['borderSize']) && $table['borderSize'] == 0) ? 'selected' : '' ?>><?= t('admin.no_borders') ?></option>
+                        <option value="10" <?= (isset($table['borderSize']) && $table['borderSize'] == 10) ? 'selected' : '' ?>><?= t('admin.thin') ?> (0.5pt)</option>
+                        <option value="20" <?= (isset($table['borderSize']) && $table['borderSize'] == 20) ? 'selected' : '' ?>><?= t('common.normal') ?> (1pt)</option>
+                        <option value="30" <?= (isset($table['borderSize']) && $table['borderSize'] == 30) ? 'selected' : '' ?>><?= t('admin.medium') ?> (1.5pt)</option>
+                        <option value="40" <?= (isset($table['borderSize']) && $table['borderSize'] == 40) ? 'selected' : '' ?>><?= t('common.thick') ?> (2pt)</option>
                     </select>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <label for="table-cell-margin"><?= lang('admin.cell_padding') ?></label>
+                    <label for="table-cell-margin"><?= t('admin.cell_padding') ?></label>
                 </td>
                 <td>
                     <input type="number"
@@ -196,16 +196,16 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <th colspan="2">
-                    <?= lang('admin.page_layout') ?>
+                    <?= t('admin.page_layout') ?>
                 </th>
             </tr>
 
             <?php
             $margins = [
-                'marginTop' => lang('admin.top_margin'),
-                'marginRight' => lang('admin.right_margin'),
-                'marginBottom' => lang('admin.bottom_margin'),
-                'marginLeft' => lang('admin.left_margin'),
+                'marginTop' => t('admin.top_margin'),
+                'marginRight' => t('admin.right_margin'),
+                'marginBottom' => t('admin.bottom_margin'),
+                'marginLeft' => t('admin.left_margin'),
             ];
             ?>
 
@@ -224,7 +224,7 @@ $footer = $export['footer'] ?? [];
                                max="3000"
                                step="100">
                         <small class="text-muted">
-                            <?= lang('admin.value_in_twips') ?>*
+                            <?= t('admin.value_in_twips') ?>*
                         </small>
                     </td>
                 </tr>
@@ -232,13 +232,13 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <th colspan="2">
-                    <?= lang('admin.footer_export_design') ?>
+                    <?= t('admin.footer_export_design') ?>
                 </th>
             </tr>
 
             <tr>
                 <td>
-                    <label for="footer-text"><?= lang('admin.footer_text') ?></label>
+                    <label for="footer-text"><?= t('admin.footer_text') ?></label>
                 </td>
                 <td>
                     <input type="text"
@@ -251,7 +251,7 @@ $footer = $export['footer'] ?? [];
 
             <tr>
                 <td>
-                    <?= lang('admin.page_numbers') ?>
+                    <?= t('admin.page_numbers') ?>
                 </td>
                 <td>
                     <label class="">
@@ -260,7 +260,7 @@ $footer = $export['footer'] ?? [];
                                value="1"
                                <?= !empty($footer['pageNumbers']) || !isset($footer['pageNumbers']) ? 'checked' : '' ?>>
                         <span></span>
-                        <?= lang('admin.show_page_numbers_in_footer') ?>
+                        <?= t('admin.show_page_numbers_in_footer') ?>
                     </label>
                 </td>
             </tr>
@@ -270,12 +270,12 @@ $footer = $export['footer'] ?? [];
         <div class="text-right mt-20">
             <button type="submit" class="btn secondary">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('admin.save_settings') ?>
+                <?= t('admin.save_settings') ?>
             </button>
         </div>
 
         <p class="text-muted">
-            * <?= lang('admin.values_for_page_margins_are_in_twips_20_twips_correspond_to_1_pt_and_1440_t') ?>
+            * <?= t('admin.values_for_page_margins_are_in_twips_20_twips_correspond_to_1_pt_and_1440_t') ?>
         </p>
 
     </div>

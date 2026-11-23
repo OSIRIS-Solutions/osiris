@@ -242,7 +242,7 @@ class Report
     public function formatTOC()
     {
         $toc = $this->getTOC();
-        $html = "<div class='report-toc'><h2>" . lang('reports.table_of_contents') . "</h2><ul>";
+        $html = "<div class='report-toc'><h2>" . t('reports.table_of_contents') . "</h2><ul>";
         $previousLevel = 1;
         foreach ($toc as $item) {
             if ($item['level'] > $previousLevel) {
@@ -389,7 +389,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
+                'locale' => t('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];
@@ -506,7 +506,7 @@ class Report
             }
 
             $options['collation'] = [
-                'locale' => lang('common.this_language'),     // je nach gewünschter Sprache
+                'locale' => t('common.this_language'),     // je nach gewünschter Sprache
                 'strength' => 1,
                 'numericOrdering' => true  // optional: "10" > "2"
             ];
@@ -564,7 +564,7 @@ class Report
                 $formats[$n] = $fieldsInfo[$field]['type'] ?? 'text';
                 $transforms[$n] = $fieldsInfo[$field]['values'] ?? null;
                 if ($field == 'country' || $field == 'countries') {
-                    $transforms[$n] = $this->DB->getCountries(lang('common.field_name_language'));
+                    $transforms[$n] = $this->DB->getCountries(t('common.field_name_language'));
                 }
             }
         }
@@ -583,7 +583,7 @@ class Report
                     if ($f == 'datetime' && !empty($cell)) {
                         $cell = date('d.m.Y', strtotime($cell));
                     } elseif ($f == 'boolean') {
-                        $cell = $cell ? lang('common.yes') : lang('common.no');
+                        $cell = $cell ? t('common.yes') : t('common.no');
                     } elseif ($f == 'list' && (is_array($cell) || $cell instanceof MongoDB\Model\BSONArray)) {
                         $cell = DB::doc2Arr($cell);
                         if ($t) {
@@ -611,7 +611,7 @@ class Report
         $html = "";
         $list = $this->prepareList($item);
         if (count($list) == 0) {
-            return "<p><em>" . lang('reports.no_data_available_for_the_selected_criteria') . "</em></p>";
+            return "<p><em>" . t('reports.no_data_available_for_the_selected_criteria') . "</em></p>";
         }
         if (count($list[0]) > 1) {
             $html .= "<table class='table my-20'><thead><tr>";
@@ -706,7 +706,7 @@ class Report
             if (isset($f['values']) && is_array($f['values']) && array_keys($f['values']) !== range(0, count($f['values']) - 1)) {
                 $transform = $f['values'];
             } elseif ($f['id'] == 'country' || $f['id'] == 'countries') {
-                $transform = $this->DB->getCountries(lang('common.field_name_language'));
+                $transform = $this->DB->getCountries(t('common.field_name_language'));
             }
             if ($f['type'] == 'list') {
                 $unwind = true;
@@ -783,7 +783,7 @@ class Report
                     $activity = implode(', ', $activity);
                 }
                 if (empty($activity)) {
-                    $activity = '<em>' . lang('reports.empty') . '</em>';
+                    $activity = '<em>' . t('reports.empty') . '</em>';
                 } elseif ($transform && isset($transform[$activity])) {
                     $activity = $transform[$activity];
                 }
@@ -805,7 +805,7 @@ class Report
                 if (!array_key_exists($g2, $header)) {
                     $name = $g2;
                     if (empty($g2)) {
-                        $name = '<em>' . lang('reports.empty') . '</em>';
+                        $name = '<em>' . t('reports.empty') . '</em>';
                     } elseif ($transform2 && isset($transform2[$g2])) {
                         $name = $transform2[$g2];
                     }
@@ -819,7 +819,7 @@ class Report
             $table[] = array_merge([$label], array_values($header));
             foreach ($activities as $activity => $counts) {
                 if (empty($activity)) {
-                    $activity = '<em>' . lang('reports.empty') . '</em>';
+                    $activity = '<em>' . t('reports.empty') . '</em>';
                 } elseif ($transform && isset($transform[$activity])) {
                     $activity = $transform[$activity];
                 }

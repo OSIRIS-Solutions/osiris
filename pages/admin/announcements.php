@@ -34,11 +34,11 @@
 
         <h1>
             <i class="ph-duotone ph-megaphone"></i>
-            <?= lang('common.announcement') ?>
+            <?= t('common.announcement') ?>
         </h1>
 
         <p class="text-muted">
-            <?= lang('admin.announcement_description') ?>
+            <?= t('admin.announcement_description') ?>
         </p>
 
         <input type="hidden" name="general[announcement][updated_at]" value="<?= date('Y-m-d H:i:s') ?>">
@@ -67,23 +67,23 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="announcement_expires"><?= lang('admin.announcement_expires_at') ?></label>
+            <label for="announcement_expires"><?= t('admin.announcement_expires_at') ?></label>
             <input type="datetime-local" class="form-control" name="general[announcement][expires]" id="announcement_expires" value="<?= !empty($announcement['expires']) ? date('Y-m-d\TH:i', strtotime($announcement['expires'])) : '' ?>">
             <small class="text-muted">
-                <?= lang('admin.announcement_expires_description') ?>
+                <?= t('admin.announcement_expires_description') ?>
             </small>
         </div>
         <div class="form-group">
             <input type="hidden" name="general[announcement][active]" value="0">
             <label for="announcement_active"><input type="checkbox" class="form-check-input" name="general[announcement][active]" id="announcement_active" <?= !empty($announcement['active']) ? 'checked' : '' ?>>
-                <?= lang('common.active') ?></label>
+                <?= t('common.active') ?></label>
             <small class="text-muted">
-                <?= lang('admin.announcement_active_description') ?>
+                <?= t('admin.announcement_active_description') ?>
             </small>
         </div>
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
     </div>
 </form>

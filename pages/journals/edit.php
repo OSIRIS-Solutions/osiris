@@ -29,7 +29,7 @@ $oa = $data['oa'] ?? false;
         <?php
         $label = $Settings->journalLabel();
         if ($id === null || empty($data)) {
-            echo lang('common.add_label', replace: ['label' => $label]);
+            echo t('common.add_label', replace: ['label' => $label]);
         } else {
             echo $data['journal'];
         }
@@ -51,11 +51,11 @@ $oa = $data['oa'] ?? false;
 
         <div class="form-group floating-form">
             <input type="text" name="values[journal]" id="journal" class="form-control" value="<?= $data['journal'] ?? '' ?>" required placeholder="Journal name">
-            <label for="journal" class="required"><?= lang('common.name') ?></label>
+            <label for="journal" class="required"><?= t('common.name') ?></label>
         </div>
         <div class="form-group floating-form">
             <input type="text" name="values[abbr]" id="abbr" class="form-control" value="<?= $data['abbr'] ?? '' ?>" placeholder="Abbreviation">
-            <label for="abbr"><?= lang('journals.abbreviation') ?></label>
+            <label for="abbr"><?= t('journals.abbreviation') ?></label>
         </div>
 
         <div class="form-group floating-form">
@@ -97,14 +97,14 @@ $oa = $data['oa'] ?? false;
         <!-- country -->
         <div class="form-group floating-form">
             <select name="values[country]" class="form-control">
-                <option value=""><?= lang('common.select_country') ?></option>
+                <option value=""><?= t('common.select_country') ?></option>
                 <?php
                 $c = $form['country'] ?? '';
-                foreach ($DB->getCountries(lang('common.field_name_language')) as $key => $value) { ?>
+                foreach ($DB->getCountries(t('common.field_name_language')) as $key => $value) { ?>
                     <option value="<?= $key ?>" <?= $c == $key ? 'selected' : '' ?>><?= $value ?></option>
                 <?php } ?>
             </select>
-            <label for="country"><?= lang('common.country') ?></label>
+            <label for="country"><?= t('common.country') ?></label>
         </div>
 
         <div class="form-group">
@@ -151,7 +151,7 @@ $oa = $data['oa'] ?? false;
 
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
     </form>
 </div>

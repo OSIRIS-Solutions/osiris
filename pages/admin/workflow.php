@@ -48,25 +48,25 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
         <div class="content">
             <p><b>ID:</b> <code class="code"><?= $form['id'] ?></code></p>
             <div class="form-group">
-                <label for="name" class="required"><?= lang('common.name_of_the_workflow') ?></label>
+                <label for="name" class="required"><?= t('common.name_of_the_workflow') ?></label>
                 <input type="text" class="form-control" name="values[name]" required value="<?= e($form['name'] ?? '') ?>" maxlength="30">
-                <small class="form-text text-muted"><?= lang('common.max_30_characters') ?></small>
+                <small class="form-text text-muted"><?= t('common.max_30_characters') ?></small>
             </div>
         </div>
         <hr>
         <div class="content">
-            <h5><?= lang('common.steps') ?></h5>
+            <h5><?= t('common.steps') ?></h5>
 
             <table id="steps-table" class="table mb-20">
                 <thead>
                     <tr>
                         <th style="width:28px"></th>
-                        <th><?= lang('admin.step_title') ?></th>
-                        <th style="width:90px"><?= lang('admin.phase') ?>*</th>
-                        <th style="width:200px"><?= lang('common.role') ?></th>
-                        <th style="width:130px"><?= lang('admin.ou_scope') ?></th>
-                        <th style="width:100px"><?= lang('admin.required') ?></th>
-                        <th style="width:120px"><?= lang('admin.lock_after') ?></th>
+                        <th><?= t('admin.step_title') ?></th>
+                        <th style="width:90px"><?= t('admin.phase') ?>*</th>
+                        <th style="width:200px"><?= t('common.role') ?></th>
+                        <th style="width:130px"><?= t('admin.ou_scope') ?></th>
+                        <th style="width:100px"><?= t('admin.required') ?></th>
+                        <th style="width:120px"><?= t('admin.lock_after') ?></th>
                         <th style="width:80px"></th>
                     </tr>
                 </thead>
@@ -80,7 +80,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             <td>
                                 <div class="form-group floating-form mb-0">
                                     <input type="text" class="form-control" name="values[steps][<?= $i ?>][label]" value="<?= e($s['label'] ?? '') ?>" placeholder="e.g. Department review" required>
-                                    <label><?= lang('admin.step_title_workflow') ?></label>
+                                    <label><?= t('admin.step_title_workflow') ?></label>
                                 </div>
                             </td>
                             <td>
@@ -96,8 +96,8 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             <td>
                                 <select name="values[steps][<?= $i ?>][orgScope]" class="form-control">
                                     <?php $scope = $s['orgScope'] ?? 'any'; ?>
-                                    <option value="any" <?= $scope === 'any' ? 'selected' : '' ?>><?= lang('admin.any') ?></option>
-                                    <option value="same_org_only" <?= $scope === 'same_org_only' ? 'selected' : '' ?>><?= lang('admin.same_unit_only') ?></option>
+                                    <option value="any" <?= $scope === 'any' ? 'selected' : '' ?>><?= t('admin.any') ?></option>
+                                    <option value="same_org_only" <?= $scope === 'same_org_only' ? 'selected' : '' ?>><?= t('admin.same_unit_only') ?></option>
                                 </select>
                             </td>
                             <td class="text-center">
@@ -108,7 +108,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                                 <input type="checkbox" name="values[steps][<?= $i ?>][locksAfterApproval]" value="1" <?= !empty($s['locksAfterApproval']) ? 'checked' : '' ?>>
                             </td>
                             <td class="step-actions">
-                                <button type="button" class="btn danger icon-only btn-delete" title="<?= lang('admin.remove') ?>"><i class="ph ph-trash"></i></button>
+                                <button type="button" class="btn danger icon-only btn-delete" title="<?= t('admin.remove') ?>"><i class="ph ph-trash"></i></button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -117,7 +117,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     <tr>
                         <td colspan="8">
                             <button class="btn" type="button" id="btn-add-step">
-                                <i class="ph ph-plus-circle"></i> <?= lang('admin.add_step') ?>
+                                <i class="ph ph-plus-circle"></i> <?= t('admin.add_step') ?>
                             </button>
                         </td>
                     </tr>
@@ -125,11 +125,11 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </table>
 
             <p class="text-sm text-muted">
-                * <?= lang('admin.workshop_step_explanation') ?><br>
+                * <?= t('admin.workshop_step_explanation') ?><br>
             </p>
 
             <button type="submit" class="btn success" id="submitBtn">
-                <i class="ph ph-check"></i> <?= lang('action.update') ?>
+                <i class="ph ph-check"></i> <?= t('action.update') ?>
             </button>
         </div>
     </div>
@@ -143,7 +143,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <td>
                 <div class="form-group floating-form mb-0">
                     <input type="text" class="form-control" name="__name__[label]" placeholder="e.g. Department review" required>
-                    <label><?= lang('admin.step_title_workflow') ?></label>
+                    <label><?= t('admin.step_title_workflow') ?></label>
                 </div>
             </td>
             <td>
@@ -158,8 +158,8 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             </td>
             <td>
                 <select name="__name__[orgScope]" class="form-control">
-                    <option value="any"><?= lang('admin.any') ?></option>
-                    <option value="same_org_only"><?= lang('admin.same_unit_only') ?></option>
+                    <option value="any"><?= t('admin.any') ?></option>
+                    <option value="same_org_only"><?= t('admin.same_unit_only') ?></option>
                 </select>
             </td>
             <td class="text-center">
@@ -169,7 +169,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                 <input type="checkbox" name="__name__[locksAfterApproval]" value="1">
             </td>
             <td class="step-actions">
-                <button type="button" class="btn danger icon-only btn-delete" title="<?= lang('admin.remove') ?>"><i class="ph ph-trash"></i></button>
+                <button type="button" class="btn danger icon-only btn-delete" title="<?= t('admin.remove') ?>"><i class="ph ph-trash"></i></button>
             </td>
         </tr>
     </tbody>
@@ -180,21 +180,21 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
 <article class="box padded">
 
     <h4 class="title">
-        <?= lang('admin.associated_to_activities') ?>
+        <?= t('admin.associated_to_activities') ?>
     </h4>
 
     <?php
     $activities = $osiris->adminCategories->find(['workflow' => $form['id'] ?? null])->toArray();
     if (empty($activities)) {
-        echo '<p>' . lang('admin.no_activities_are_associated_with_this_workflow') . '</p>';
+        echo '<p>' . t('admin.no_activities_are_associated_with_this_workflow') . '</p>';
     } else {
     ?>
         <table class="table simple">
             <thead>
                 <tr>
-                    <th><?= lang('common.category') ?></th>
-                    <th><?= lang('common.number_of_activities') ?></th>
-                    <th><?= lang('admin.thereof_with_workflow') ?></th>
+                    <th><?= t('common.category') ?></th>
+                    <th><?= t('common.number_of_activities') ?></th>
+                    <th><?= t('admin.thereof_with_workflow') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -208,7 +208,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                             <a href="#" class="btn-migrate"
                                 data-category-id="<?= e($act['id']) ?>"
                                 data-category-name="<?= e($act['name'] ?? $act['id']) ?>"
-                                title="<?= lang('admin.migrate_existing_activities') ?>">
+                                title="<?= t('admin.migrate_existing_activities') ?>">
                                 <i class="ph ph-arrow-right"></i>
                             </a>
                         </td>
@@ -226,33 +226,33 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             <a href="#close-modal" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('admin.migrate_existing_activities') ?></h5>
+            <h5 class="title"><?= t('admin.migrate_existing_activities') ?></h5>
 
             <div class="mb-10">
-                <div><b><?= lang('common.category') ?>:</b> <span id="mig-cat-name"></span></div>
+                <div><b><?= t('common.category') ?>:</b> <span id="mig-cat-name"></span></div>
                 <div class="text-sm" id="mig-counts"></div>
             </div>
 
             <div class="form-group">
-                <label class="required"><?= lang('common.mode') ?></label>
+                <label class="required"><?= t('common.mode') ?></label>
                 <div>
                     <label class="radio">
                         <input type="radio" name="mig-mode" value="attach-missing" checked>
-                        <span><?= lang('admin.attach_missing_only_recommended') ?></span>
+                        <span><?= t('admin.attach_missing_only_recommended') ?></span>
                     </label>
                     <label class="radio text-muted">
                         <input type="radio" disabled>
-                        <span><?= lang('admin.upgrade_compatible_coming_soon') ?></span>
+                        <span><?= t('admin.upgrade_compatible_coming_soon') ?></span>
                     </label>
                     <label class="radio text-muted">
                         <input type="radio" disabled>
-                        <span><?= lang('admin.hard_replace_coming_soon') ?></span>
+                        <span><?= t('admin.hard_replace_coming_soon') ?></span>
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label><?= lang('admin.filters_optional') ?></label>
+                <label><?= t('admin.filters_optional') ?></label>
                 <div class="grid" style="grid-template-columns: 1fr 1fr; gap:8px">
                     <input type="date" class="form-control" id="mig-from" placeholder="from">
                     <input type="date" class="form-control" id="mig-to" placeholder="to">
@@ -263,13 +263,13 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                 <div>
                     <label class="checkbox">
                         <input type="checkbox" id="mig-dryrun" checked>
-                        <span><?= lang('admin.dry_run_first_show_counts') ?></span>
+                        <span><?= t('admin.dry_run_first_show_counts') ?></span>
                     </label>
                 </div>
                 <div>
-                    <button class="btn" id="btn-mig-cancel"><?= lang('action.close') ?></button>
+                    <button class="btn" id="btn-mig-cancel"><?= t('action.close') ?></button>
                     <button class="btn primary" id="btn-mig-apply">
-                        <i class="ph ph-play"></i> <?= lang('admin.run') ?>
+                        <i class="ph ph-play"></i> <?= t('admin.run') ?>
                     </button>
                 </div>
             </div>
@@ -285,22 +285,22 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
     <div class="dropdown">
         <button class="btn danger" data-toggle="dropdown" type="button" id="delete-workflow" aria-haspopup="true" aria-expanded="false">
             <i class="ph ph-trash"></i>
-            <?= lang('admin.delete_workflow') ?>
+            <?= t('admin.delete_workflow') ?>
         </button>
         <div class="dropdown-menu" aria-labelledby="delete-workflow">
             <form action="<?= ROOTPATH ?>/crud/workflows/delete/<?= ($form['_id']) ?>" method="post" class="content">
-                <?= lang('admin.delete_workflow_question') ?>
+                <?= t('admin.delete_workflow_question') ?>
                 <button type="submit" class="btn danger block">
                     <i class="ph ph-trash"></i>
-                    <?= lang('admin.yes_delete_workflow') ?>
+                    <?= t('admin.yes_delete_workflow') ?>
                 </button>
             </form>
         </div>
     </div>
 <?php } else { ?>
-    <button class="btn danger" disabled title="<?= lang('admin.cannot_delete_workflow_while_associated_to_activities') ?>">
+    <button class="btn danger" disabled title="<?= t('admin.cannot_delete_workflow_while_associated_to_activities') ?>">
         <i class="ph ph-trash"></i>
-        <?= lang('admin.delete_workflow') ?>
+        <?= t('admin.delete_workflow') ?>
     </button>
 <?php } ?>
 
@@ -319,7 +319,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
             $('#mig-dryrun').prop('checked', true);
             $('#mig-from').val('');
             $('#mig-to').val('');
-            $('#mig-counts').text('<?= lang('admin.loading_counts') ?>');
+            $('#mig-counts').text('<?= t('admin.loading_counts') ?>');
             $modal.addClass('show');
 
             // Dry-run count
@@ -348,16 +348,16 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                     // res: { total, withWorkflow, withoutWorkflow, willUpdate, updatedCount, skippedCount }
                     if (dryrun) {
                         $('#mig-counts').html(
-                            '<?= lang('common.total') ?>: <b>' + res.total +
-                            '</b> — <?= lang('admin.with_workflow') ?>: <b>' + res.withWorkflow +
-                            '</b> — <?= lang('admin.without') ?>: <b>' + res.withoutWorkflow + '</b><br>' +
-                            '<?= lang('admin.will_attach_to') ?>: <b>' + res.willUpdate + '</b>'
+                            '<?= t('common.total') ?>: <b>' + res.total +
+                            '</b> — <?= t('admin.with_workflow') ?>: <b>' + res.withWorkflow +
+                            '</b> — <?= t('admin.without') ?>: <b>' + res.withoutWorkflow + '</b><br>' +
+                            '<?= t('admin.will_attach_to') ?>: <b>' + res.willUpdate + '</b>'
                         );
                     } else {
                         $('#mig-result').show().html(
-                            '<div class="alert success"><?= lang('common.done') ?>: ' +
-                            '<?= lang('admin.updated') ?> <b>' + res.updatedCount + '</b>, ' +
-                            '<?= lang('admin.skipped') ?> <b>' + res.skippedCount + '</b>.</div>'
+                            '<div class="alert success"><?= t('common.done') ?>: ' +
+                            '<?= t('admin.updated') ?> <b>' + res.updatedCount + '</b>, ' +
+                            '<?= t('admin.skipped') ?> <b>' + res.skippedCount + '</b>.</div>'
                         );
                         // Tabelle nachziehen: ersetze die Zelle "davon mit Workflow"
                         $('a.btn-migrate[data-category-id="' + currentCatId + '"]').closest('tr').find('td').eq(2).text(res.withWorkflow + res.updatedCount);
@@ -390,7 +390,7 @@ $steps = $form['steps'] ?? []; // erwartet Array von Arrays
                 $('#mig-dryrun').prop('checked', false); // nächster Klick führt aus
                 return;
             }
-            if (!confirm('<?= lang('admin.apply_to_existing_activities_now') ?>')) return;
+            if (!confirm('<?= t('admin.apply_to_existing_activities_now') ?>')) return;
             fetchApply(false);
         });
     })();

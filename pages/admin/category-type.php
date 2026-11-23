@@ -25,7 +25,7 @@ $formaction = ROOTPATH;
 if (!empty($form) && isset($form['_id'])) {
     $id = $form['id'];
     $formaction .= "/crud/types/update/" . $form['_id'];
-    $btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
+    $btntext = '<i class="ph ph-check"></i> ' . t('action.update');
     $url = ROOTPATH . "/admin/types/" . $form['id'];
     $title = $name;
     $new = false;
@@ -34,9 +34,9 @@ if (!empty($form) && isset($form['_id'])) {
 } else {
     $new = true;
     $formaction .= "/crud/types/create";
-    $btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
+    $btntext = '<i class="ph ph-check"></i> ' . t('action.save');
     $url = ROOTPATH . "/admin/types/*";
-    $title = lang('common.new_category');
+    $title = t('common.new_category');
     $member = 0;
 
     // check if type is the first in the category
@@ -89,12 +89,12 @@ foreach ($templates as $template => $template_fields) {
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
+            <h5 class="title"><?= t('common.id_must_be_unique') ?></h5>
             <p>
-                <?= lang('common.each_category_and_each_activity_type_must_have_a_unique_id_with_which_it_is') ?>
+                <?= t('common.each_category_and_each_activity_type_must_have_a_unique_id_with_which_it_is') ?>
             </p>
             <p>
-                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
+                <?= t('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="IDLIST">
                 <?php foreach ($osiris->adminTypes->distinct('id') as $k) { ?>
@@ -103,7 +103,7 @@ foreach ($templates as $template => $template_fields) {
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= t('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -114,7 +114,7 @@ foreach ($templates as $template => $template_fields) {
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <input type="hidden" class="hidden" name="id" value="<?= $id ?>">
-    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= lang('common.download') ?></button>
+    <button class="btn secondary float-right"><i class="ph ph-download"></i> <?= t('common.download') ?></button>
  </form> -->
 
 <form action="<?= $formaction ?>" method="post" id="group-form">
@@ -130,7 +130,7 @@ foreach ($templates as $template => $template_fields) {
                 <?php } ?>
 
             <?php } else { ?>
-                <?= lang('admin.new_type_of_activity') ?>
+                <?= t('admin.new_type_of_activity') ?>
             <?php } ?>
 
             <?php if (isset($copy) && $copy) { ?>
@@ -147,7 +147,7 @@ foreach ($templates as $template => $template_fields) {
                 <input type="hidden" name="original_parent" value="<?= $type['parent'] ?>">
             <?php } ?>
 
-            <label for="parent" class="required"><?= lang('admin.category') ?></label>
+            <label for="parent" class="required"><?= t('admin.category') ?></label>
             <select name="values[parent]" id="parent" class="form-control" required>
                 <?php foreach ($osiris->adminCategories->find() as $cat) { ?>
                     <option value="<?= $cat['id'] ?>" <?= $type['parent'] == $cat['id'] ? 'selected' : '' ?>><?= lang($cat['name'], $cat['name_de']) ?></option>
@@ -166,7 +166,7 @@ foreach ($templates as $template => $template_fields) {
                 <div class="col-sm-2">
                     <label for="id" class="required">ID</label>
                     <input type="text" class="form-control" name="values[id]" required value="<?= e($type['id']) ?>" data-value="<?= e($type['id']) ?>" oninput="sanitizeID(this)">
-                    <small><a href="#unique"><i class="ph ph-info"></i> <?= lang('common.must_be_unqiue') ?></a></small>
+                    <small><a href="#unique"><i class="ph ph-info"></i> <?= t('common.must_be_unqiue') ?></a></small>
                 </div>
                 <div class="col-sm-2">
                     <label for="icon" class="required element-time"><a href="https://phosphoricons.com/" class="link" target="_blank" rel="noopener noreferrer">Icon</a> </label>
@@ -192,11 +192,11 @@ foreach ($templates as $template => $template_fields) {
 
             <div class="row row-eq-spacing">
                 <div class="col-sm">
-                    <label for="description"><?= lang('common.description') ?> (en)</label>
+                    <label for="description"><?= t('common.description') ?> (en)</label>
                     <textarea class="form-control" name="values[description]"><?= e($type['description'] ?? '') ?></textarea>
                 </div>
                 <div class="col-sm">
-                    <label for="description_de" class=""><?= lang('common.description') ?> (de)</label>
+                    <label for="description_de" class=""><?= t('common.description') ?> (de)</label>
                     <textarea class="form-control" name="values[description_de]"><?= e($type['description_de'] ?? '') ?></textarea>
                 </div>
             </div>
@@ -206,7 +206,7 @@ foreach ($templates as $template => $template_fields) {
                 <div class="custom-checkbox">
                     <input type="checkbox" id="guest-question" value="1" name="values[guests]" <?= ($type['guests'] ?? false) ? 'checked' : '' ?>>
                     <label for="guest-question">
-                        <?= lang('admin.guests_should_be_registered_for_this_activity') ?>
+                        <?= t('admin.guests_should_be_registered_for_this_activity') ?>
                     </label>
                 </div>
             </div> -->
@@ -221,7 +221,7 @@ foreach ($templates as $template => $template_fields) {
                     <div class="custom-checkbox">
                         <input type="checkbox" id="portfolio-question" value="true" name="values[portfolio]" <?= $portfolio ? 'checked' : '' ?>>
                         <label for="portfolio-question">
-                            <?= lang('admin.this_type_of_activity_should_be_visible_in_osiris_portfolio') ?>
+                            <?= t('admin.this_type_of_activity_should_be_visible_in_osiris_portfolio') ?>
                         </label>
                     </div>
                 </div>
@@ -232,7 +232,7 @@ foreach ($templates as $template => $template_fields) {
                     <div class="custom-checkbox">
                         <input type="checkbox" id="topics-question" value="1" name="values[topics-required]" <?= ($type['topics-required'] ?? false) ? 'checked' : '' ?>>
                         <label for="topics-question">
-                            <?= lang('admin.research_topics_are_a_required_field_for_this_activity') ?>
+                            <?= t('admin.research_topics_are_a_required_field_for_this_activity') ?>
                         </label>
                     </div>
                 </div>
@@ -242,20 +242,20 @@ foreach ($templates as $template => $template_fields) {
         <hr>
 
         <div class="content">
-            <label for="module" class="font-weight-bold"><?= lang('common.data_fields') ?>:</label>
+            <label for="module" class="font-weight-bold"><?= t('common.data_fields') ?>:</label>
 
             <?php if ($new) { ?>
                 <div class="text-signal">
-                    <?= lang('admin.data_fields_can_only_be_edited_after_saving_the_type') ?>
+                    <?= t('admin.data_fields_can_only_be_edited_after_saving_the_type') ?>
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/admin/types/<?= $st ?>/fields">
                     <i class="ph ph-edit"></i>
-                    <?= lang('action.edit') ?>
+                    <?= t('action.edit') ?>
                 </a>
 
                 <a href="<?= ROOTPATH ?>/admin/module-helper?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 float-right">
-                    <?= lang('admin.field_overview') ?> <i class="ph ph-arrow-square-out ml-5"></i>
+                    <?= t('admin.field_overview') ?> <i class="ph ph-arrow-square-out ml-5"></i>
                 </a>
 
                 <div id="data-fields">
@@ -288,7 +288,7 @@ foreach ($templates as $template => $template_fields) {
                                     $icon = 'ph-paragraph';
                                     break;
                                 case 'hr':
-                                    $tooltip = lang('admin.divider');
+                                    $tooltip = t('admin.divider');
                                     $icon = 'ph-minus';
                                     break;
                                 case 'heading':
@@ -358,14 +358,14 @@ foreach ($templates as $template => $template_fields) {
                 <input type="text" class="form-control" name="values[template][subtitle]" value="<?= e($type['template']['subtitle'] ?? '{authors}') ?>">
             </div>
 
-            <?= lang('admin.how_to_use_templates') ?>
+            <?= t('admin.how_to_use_templates') ?>
 
             <a href="<?= ROOTPATH ?>/admin/templates?type=<?= $st ?>" target="_blank" rel="noopener noreferrer" class="ml-10 link">
-                <?= lang('admin.template_builder') ?>
+                <?= t('admin.template_builder') ?>
             </a>
 
             <a href="https://wiki.osiris-app.de/admins/content/templates/" target="_blank" rel="noopener noreferrer" class="ml-10 link">
-                <?= lang('common.documentation') ?>
+                <?= t('common.documentation') ?>
             </a>
             <style>
                 .cheat-sheet {
@@ -377,9 +377,9 @@ foreach ($templates as $template => $template_fields) {
                 }
             </style>
 
-            <a onclick="$(this).next().slideToggle();" class="ml-10"><?= lang('admin.show_cheat_sheet') ?></a>
+            <a onclick="$(this).next().slideToggle();" class="ml-10"><?= t('admin.show_cheat_sheet') ?></a>
             <div class="cheat-sheet">
-                <strong><?= lang('admin.available_fields') ?></strong>
+                <strong><?= t('admin.available_fields') ?></strong>
                 <ul class="list">
                     <?php
                     $available = array_unique($available);
@@ -389,12 +389,12 @@ foreach ($templates as $template => $template_fields) {
                     <?php } ?>
                 </ul>
                 <p>
-                    <?= lang('admin.please_note_that_this_list_is_not_exhaustive_as_some_fields_e_g_authors_can') ?>
+                    <?= t('admin.please_note_that_this_list_is_not_exhaustive_as_some_fields_e_g_authors_can') ?>
                 </p>
             </div>
             <br>
             <small class="text-muted">
-                * <?= lang('admin.osiris_will_display_a_max_of_12_people_e_g_authors_in_the_subtitle_if_you_d') ?>
+                * <?= t('admin.osiris_will_display_a_max_of_12_people_e_g_authors_in_the_subtitle_if_you_d') ?>
             </small>
         </div>
 
@@ -406,7 +406,7 @@ foreach ($templates as $template => $template_fields) {
             <label for="coins" class="font-weight-bold">Coins:</label>
             <input type="text" class="form-control" name="values[coins]" value="<?= $type['coins'] ?? '0' ?>">
             <span class="text-muted">
-                <?= lang('admin.please_note_that_middle_authors_will_receive_half_the_amount') ?>
+                <?= t('admin.please_note_that_middle_authors_will_receive_half_the_amount') ?>
             </span>
         </div>
 
@@ -416,10 +416,10 @@ foreach ($templates as $template => $template_fields) {
         <div class="content">
             <div class="custom-checkbox mb-10 danger">
                 <input type="checkbox" id="disable-<?= $t ?>-<?= $st ?>" value="true" name="values[disabled]" <?= ($type['disabled'] ?? false) ? 'checked' : '' ?>>
-                <label for="disable-<?= $t ?>-<?= $st ?>"><?= lang('common.deactivate') ?></label>
+                <label for="disable-<?= $t ?>-<?= $st ?>"><?= t('common.deactivate') ?></label>
             </div>
             <span class="text-muted">
-                <?= lang('admin.deactivated_types_are_retained_for_past_activities_but_no_new_ones_can_be_a') ?>
+                <?= t('admin.deactivated_types_are_retained_for_past_activities_but_no_new_ones_can_be_a') ?>
             </span>
         </div>
 
@@ -433,7 +433,7 @@ foreach ($templates as $template => $template_fields) {
     <!-- Copy this type as id -->
     <div class="mt-20">
         <form action="<?= ROOTPATH ?>/admin/types/<?= $id ?>/copy" method="get">
-            <button class="btn primary"><i class="ph ph-copy"></i> <?= lang('admin.copy_this_type') ?></button>
+            <button class="btn primary"><i class="ph ph-copy"></i> <?= t('admin.copy_this_type') ?></button>
         </form>
     </div>
 
@@ -442,17 +442,17 @@ foreach ($templates as $template => $template_fields) {
         <div class="alert danger mt-20">
             <form action="<?= ROOTPATH ?>/crud/types/delete/<?= $id ?>" method="post">
                 <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/categories/<?= $type['parent'] ?>">
-                <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-                <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
+                <button class="btn danger"><i class="ph ph-trash"></i> <?= t('action.delete') ?></button>
+                <span class="ml-20"><?= t('common.warning_cannot_be_undone') ?></span>
             </form>
         </div>
     <?php } else { ?>
 
         <div class="alert danger mt-20">
-            <?= lang('admin.can_t_delete_type_member_activities_associated', replace: ['member' => $member]) ?><br>
+            <?= t('admin.can_t_delete_type_member_activities_associated', replace: ['member' => $member]) ?><br>
             <a href='<?= ROOTPATH ?>/activities/search#{"$and":[{"subtype":"<?= $id ?>"}]}' target="_blank" class="text-danger">
                 <i class="ph ph-search"></i>
-                <?= lang('common.view_activities') ?>
+                <?= t('common.view_activities') ?>
             </a>
 
         </div>
@@ -465,7 +465,7 @@ foreach ($templates as $template => $template_fields) {
 <!-- rerender only this type -->
 <a href='<?= ROOTPATH ?>/rerender?subtype=<?= $id ?>' target="_blank" class="text-primary">
     <i class="ph ph-arrow-clockwise"></i>
-    <?= lang('admin.rerender_all_activities_of_this_type') ?>
+    <?= t('admin.rerender_all_activities_of_this_type') ?>
 </a>
 
 <?php include_once BASEPATH . '/header-editor.php'; ?>

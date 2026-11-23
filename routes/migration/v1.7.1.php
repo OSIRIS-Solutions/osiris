@@ -22,9 +22,9 @@ foreach ($teaching as $module) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang('admin.no_teaching_modules_found_no_changes_made') . "</p>";
+    echo "<p>" . t('admin.no_teaching_modules_found_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang('admin.transformed_module_numbers_into_strings_for_updated_out_of_n_teaching_modul', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
+    echo "<p>" . t('admin.transformed_module_numbers_into_strings_for_updated_out_of_n_teaching_modul', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 
@@ -46,9 +46,9 @@ foreach ($persons as $person) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang('admin.no_persons_found_with_created_date_in_d_m_y_format_no_changes_made') . "</p>";
+    echo "<p>" . t('admin.no_persons_found_with_created_date_in_d_m_y_format_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang('admin.transformed_created_dates_from_d_m_y_to_y_m_d_for_updated_out_of_n_persons', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
+    echo "<p>" . t('admin.transformed_created_dates_from_d_m_y_to_y_m_d_for_updated_out_of_n_persons', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 
@@ -76,9 +76,9 @@ foreach ($activities as $activity) {
 }
 
 if ($N_ == 0) {
-    echo "<p>" . lang('admin.no_activities_found_with_authors_field_to_migrate_no_changes_made') . "</p>";
+    echo "<p>" . t('admin.no_activities_found_with_authors_field_to_migrate_no_changes_made') . "</p>";
 } else {
-    echo "<p>" . lang('admin.migrated_authors_field_to_supervisors_field_for_updated_out_of_n_activities', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
+    echo "<p>" . t('admin.migrated_authors_field_to_supervisors_field_for_updated_out_of_n_activities', replace: ['N' => $N_, 'updated' => $updated]) . "</p>";
 }
 
 // append public_email, public_other_activities, public_teaching to person-data settings if not present
@@ -99,7 +99,7 @@ if (empty($data_fields)) {
     }
     if ($updated > 0) {
         $Settings->set('person-data', $data_fields);
-        echo "<p>" . lang('admin.added_updated_fields_to_person_data_settings', replace: ['updated' => $updated]) . "</p>";
+        echo "<p>" . t('admin.added_updated_fields_to_person_data_settings', replace: ['updated' => $updated]) . "</p>";
     }
 }
 

@@ -3,13 +3,13 @@
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-404.png" alt="404 - Page not found" style="width: 100%; max-width: 70rem; margin: 0 auto 3rem; display: block;">
             <div class="">
                 <h1 style="margin-top: -3rem;">
-                    <?= lang('error.page_not_found') ?>
+                    <?= t('error.page_not_found') ?>
                 </h1>
                 <p>
-                    <?= lang('error.page_not_found_message') ?>
+                    <?= t('error.page_not_found_message') ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/" class="btn cta">
-                    <?= lang('navigation.go_home') ?>
+                    <?= t('navigation.go_home') ?>
                 </a>
             </div>
         </div>
@@ -18,13 +18,13 @@
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-405.png" alt="405 - Method not allowed" style="width: 100%; max-width: 70rem; margin: 0 auto 3rem; display: block;">
             <div class="">
                 <h1 style="margin-top: -1rem;">
-                    <?= lang('error.method_not_allowed') ?>
+                    <?= t('error.method_not_allowed') ?>
                 </h1>
                 <p>
-                    <?= lang('error.method_not_allowed_message', replace: ['method' => $_SERVER['REQUEST_METHOD']]) ?>
+                    <?= t('error.method_not_allowed_message', replace: ['method' => $_SERVER['REQUEST_METHOD']]) ?>
                 </p>
                 <a href="<?= ROOTPATH ?>/" class="btn cta">
-                    <?= lang('navigation.go_home') ?>
+                    <?= t('navigation.go_home') ?>
                 </a>
             </div>
         </div>

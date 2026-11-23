@@ -22,9 +22,9 @@ if (!$Settings->hasPermission('units.add')) {
 }
 
 $formaction = ROOTPATH . "/crud/groups/create";
-$btntext = '<i class="ph ph-check"></i> ' . lang('action.save');
+$btntext = '<i class="ph ph-check"></i> ' . t('action.save');
 $url = ROOTPATH . "/groups/edit/*";
-$title = lang('groups.new_group');
+$title = t('groups.new_group');
 
 ?>
 
@@ -38,11 +38,11 @@ $title = lang('groups.new_group');
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?>">
 
     <fieldset>
-        <legend><?= lang('common.general') ?></legend>
+        <legend><?= t('common.general') ?></legend>
         <div class="row row-eq-spacing mt-0">
             <div class="col-md-2">
                 <label for="id" class="required">
-                    <?= lang('common.acronym') ?>
+                    <?= t('common.acronym') ?>
                 </label>
                 <input type="text" class="form-control" name="values[id]" id="id" required maxlength="9">
             </div>
@@ -50,10 +50,10 @@ $title = lang('groups.new_group');
 
             <div class="col-sm-5">
                 <label for="parent">
-                    <?= lang('common.parent_group') ?>
+                    <?= t('common.parent_group') ?>
                 </label>
                 <select class="form-control" name="values[parent]" id="parent" onchange="deptSelect(this.value)">
-                    <option value="" data-level="99"><?= lang('common.attention_no_parent_group_chosen') ?></option>
+                    <option value="" data-level="99"><?= t('common.attention_no_parent_group_chosen') ?></option>
                     <?php foreach ($Groups->groups as $d => $dept) {
                         $selected = false;
                         $l = $dept['level'] ?? $Groups->getLevel($d);
@@ -76,33 +76,33 @@ $title = lang('groups.new_group');
 
             <div class="col-sm-5">
                 <label for="unit" class="required">
-                    <?= lang('common.type_of_group') ?>
+                    <?= t('common.type_of_group') ?>
                 </label>
-                <input type="text" class="form-control" name="values[unit]" id="unit" required placeholder="<?= lang('common.double_click_to_see_suggestions') ?>" list="unit-list">
+                <input type="text" class="form-control" name="values[unit]" id="unit" required placeholder="<?= t('common.double_click_to_see_suggestions') ?>" list="unit-list">
             </div>
 
         </div>
         <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
-            <label for="color" class=""><?= lang('common.color') ?></label>
+            <label for="color" class=""><?= t('common.color') ?></label>
             <input type="color" class="form-control w-50" name="values[color]" required>
-            <span><?= lang('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
+            <span><?= t('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
         </div>
     </fieldset>
 
 
 
     <fieldset>
-        <?php localizedField([], 'name', lang('forms.full_name'), ['required' => true, 'class' => 'large']); ?>
+        <?php localizedField([], 'name', t('forms.full_name'), ['required' => true, 'class' => 'large']); ?>
     </fieldset>
 
 
     <fieldset>
         <legend>
-            <?= lang('common.staff') ?>
+            <?= t('common.staff') ?>
         </legend>
         <div class="form-group">
             <label for="head">
-                <?= lang('common.head_s') ?>
+                <?= t('common.head_s') ?>
             </label>
             <div class="author-widget">
                 <div class="author-list p-10">
@@ -111,7 +111,7 @@ $title = lang('groups.new_group');
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="head-input form-control">
-                            <option value="" disabled selected><?= lang('common.add_head') ?></option>
+                            <option value="" disabled selected><?= t('common.add_head') ?></option>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null], 'is_active' => ['$ne' => false]], ['sort' => ["last" => 1]]);
                             foreach ($userlist as $j) {
@@ -143,7 +143,7 @@ $title = lang('groups.new_group');
 
 
     <button class="btn secondary" type="submit" id="submit-btn">
-        <i class="ph ph-check"></i> <?= lang('action.save') ?>
+        <i class="ph ph-check"></i> <?= t('action.save') ?>
     </button>
 
     <datalist id="unit-list">

@@ -21,13 +21,16 @@ $abortEnd = strpos($configSource, 'function formatBytes(', $abortStart);
 eval('?>' . str_replace('__DIR__', var_export(BASEPATH . '/php', true), substr($configSource, 0, $abortStart) . substr($configSource, $abortEnd)));
 require BASEPATH . '/php/Language.php';
 $language = new Language(BASEPATH . '/lang');
-function translate($key, array $replace = []) {
+function t($key, array $replace = []) {
     global $language, $testInterfaceLanguage;
     $text = $language->resolve($key, $testInterfaceLanguage ?? 'en', 'en');
-    foreach ($replace as $name => $value) $text = str_replace('{{' . $name . '}}', (string) $value, $text);
+    foreach ($replace as $name => $value) {
+        $replacement = $value instanceof Html ? $value->value : (string) $value;
+        $text = str_replace('{{' . $name . '}}', $replacement, $text);
+    }
     return $text;
 }
-function lang($en, $de = null, array $replace = []) { return $de === null ? translate($en) : $en; }
+function lang($en, $de = null, array $replace = []) { return $de === null ? t($en, $replace) : $en; }
 function localized($value, ?string $language = null) {
     if ($value instanceof Traversable) $value = iterator_to_array($value);
     if (!is_array($value)) return (string) $value;
@@ -318,7 +321,7 @@ check(!in_array('Empty', $labels, true), 'Empty metadata is omitted.');
 $detailValues = array_column($details['metadata'], 'value', 'label');
 $formatter = new Document(false, 'list');
 $formatter->doc = $detailData;
-check($detailValues[translate('projects.time_frame')] === $formatter->get_field('date-range-ongoing'), 'Dates use the shared formatter.');
+check($detailValues[t('projects.time_frame')] === $formatter->get_field('date-range-ongoing'), 'Dates use the shared formatter.');
 check($detailValues['Organisations'] === $formatter->get_field('organizations'), 'Organization links use the shared formatter.');
 check(str_contains($detailValues['Organisations'], '/organizations/view/' . $organizationId), 'Formatted links remain clickable.');
 check($detailValues['Choice'] === 'First choice', 'Custom choices use the shared value labels.');

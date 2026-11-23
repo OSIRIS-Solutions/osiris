@@ -29,7 +29,7 @@ class Achievement
         foreach ($achievements as $ac) {
             $this->achievements[$ac['id']] = $ac;
         }
-        $this->lang = lang('common.this_language');
+        $this->lang = t('common.this_language');
         $this->lang_g = $this->lang;
     }
 
@@ -375,12 +375,12 @@ class Achievement
                         echo $lvl;
                         ?>
                     </h5>
-                    <small class="text-muted"><?= lang('activities.achieved_at') ?> <?= $uac['achieved'] ?? '-' ?></small>
+                    <small class="text-muted"><?= t('activities.achieved_at') ?> <?= $uac['achieved'] ?? '-' ?></small>
                     <p class="m-0">
                         <?php
                         $descr = $ac['levels'][$uac['level'] - 1][$this->lang];
                         if ($this->self) {
-                            $descr = str_replace(lang('activities.have'), lang('activities.has'), $descr);
+                            $descr = str_replace(t('activities.have'), t('activities.has'), $descr);
                             echo str_replace('*', 'Du', $descr);
                         } else {
                             echo str_replace('*', $this->userdata['first'], $descr);

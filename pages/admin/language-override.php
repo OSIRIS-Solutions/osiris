@@ -44,23 +44,23 @@ natcasesort($rows);
 
     <h1>
         <i class="ph-duotone ph-translate"></i>
-        <?= translate('common.lang_' . $lang) ?>
+        <?= t('common.lang_' . $lang) ?>
     </h1>
     <h2 class="subtitle">
-        <?= translate('admin.language_override') ?>
+        <?= t('admin.language_override') ?>
     </h2>
 
     <p class="text-muted">
-        <?= translate('admin.language_override_description') ?>
+        <?= t('admin.language_override_description') ?>
     </p>
 
     <?php if (!empty($available)) { ?>
         <form action="<?= ROOTPATH ?>/admin/language-override/<?= e($lang) ?>" method="get" class="box padded mb-20">
-            <label for="language-override-key"><?= translate('admin.add_language_override') ?></label>
+            <label for="language-override-key"><?= t('admin.add_language_override') ?></label>
             <div class="d-flex align-items-end">
                 <div class="flex-grow-1 mr-10">
                     <select name="key" id="language-override-key" class="form-control" required>
-                        <option value=""><?= translate('admin.select_language_key') ?></option>
+                        <option value=""><?= t('admin.select_language_key') ?></option>
                         <?php foreach ($available as $key => $entry) { ?>
                             <option value="<?= e($key) ?>" <?= $selectedKey === $key ? 'selected' : '' ?>>
                                 <?= e($key . ' — ' . $entry['source']) ?>
@@ -70,7 +70,7 @@ natcasesort($rows);
                 </div>
                 <button class="btn primary flex-shrink-0" type="submit">
                     <i class="ph ph-plus"></i>
-                    <?= translate('action.add') ?>
+                    <?= t('action.add') ?>
                 </button>
             </div>
         </form>
@@ -78,7 +78,7 @@ natcasesort($rows);
 
     <?php if (empty($rows)) { ?>
         <div class="alert signal">
-            <?= translate('admin.no_language_overrides') ?>
+            <?= t('admin.no_language_overrides') ?>
         </div>
     <?php } else { ?>
         <form action="<?= ROOTPATH ?>/crud/admin/language-override/<?= e($lang) ?>" method="post">
@@ -87,9 +87,9 @@ natcasesort($rows);
                 <table class="table simple small">
                     <thead>
                         <tr>
-                            <th><?= translate('admin.language_key') ?></th>
-                            <th><?= translate('admin.standard_translation') ?></th>
-                            <th><?= translate('admin.language_override_value') ?></th>
+                            <th><?= t('admin.language_key') ?></th>
+                            <th><?= t('admin.standard_translation') ?></th>
+                            <th><?= t('admin.language_override_value') ?></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -117,12 +117,12 @@ natcasesort($rows);
                                         ><?= e($override) ?></textarea>
                                         <?php if (!empty($entry['placeholders'])) { ?>
                                             <small class="text-muted">
-                                                <?= translate('admin.required_placeholders') ?>:
+                                                <?= t('admin.required_placeholders') ?>:
                                                 <?= e(implode(', ', $entry['placeholders'])) ?>
                                             </small>
                                         <?php } ?>
                                     <?php } else { ?>
-                                        <span class="text-muted"><?= translate('admin.language_key_no_longer_available') ?></span>
+                                        <span class="text-muted"><?= t('admin.language_key_no_longer_available') ?></span>
                                     <?php } ?>
                                 </td>
                                 <td class="text-right">
@@ -133,14 +133,14 @@ natcasesort($rows);
                                             name="delete"
                                             value="<?= e($key) ?>"
                                             formnovalidate
-                                            title="<?= translate('admin.reset_to_default') ?>"
+                                            title="<?= t('admin.reset_to_default') ?>"
                                         >
                                             <i class="ph ph-arrow-counter-clockwise"></i>
-                                            <?= translate('admin.reset_to_default') ?>
+                                            <?= t('admin.reset_to_default') ?>
                                         </button>
                                     <?php } else { ?>
                                         <a class="btn link small" href="<?= ROOTPATH ?>/admin/language-override/<?= e($lang) ?>">
-                                            <?= translate('action.cancel') ?>
+                                            <?= t('action.cancel') ?>
                                         </a>
                                     <?php } ?>
                                 </td>
@@ -152,7 +152,7 @@ natcasesort($rows);
 
             <button class="btn success mt-20" type="submit">
                 <i class="ph ph-floppy-disk"></i>
-                <?= translate('common.save_changes') ?>
+                <?= t('common.save_changes') ?>
             </button>
         </form>
     <?php } ?>

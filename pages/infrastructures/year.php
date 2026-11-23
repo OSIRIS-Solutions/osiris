@@ -77,7 +77,7 @@ if (empty($yearstats)) {
 ?>
 
 <h1>
-    <?= lang('common.statistics') ?>
+    <?= t('common.statistics') ?>
     <?= $year ?>
 </h1>
 
@@ -97,6 +97,6 @@ if (empty($yearstats)) {
 
     <button class="btn btn-primary">
         <i class="ph ph-save"></i>
-        <?= lang('action.save') ?>
+        <?= t('action.save') ?>
     </button>
 </form>

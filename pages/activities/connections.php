@@ -90,12 +90,12 @@
 <div class="container" style="margin-bottom: 6rem;max-width: 80rem;">
     <a href="<?= ROOTPATH ?>/activities/view/<?= $id ?>" class="">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('activities.back_to_activity') ?>
+        <?= t('activities.back_to_activity') ?>
     </a>
 
     <h1>
         <i class="ph-duotone ph-link" aria-hidden="true"></i>
-        <?= lang('activities.edit_connections') ?>
+        <?= t('activities.edit_connections') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/activities/connections/<?= $id ?>" method="post">
@@ -104,7 +104,7 @@
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <details class="collapse-panel project-panel" open>
                 <summary class="collapse-header">
-                    <?= lang('common.projects') ?>
+                    <?= t('common.projects') ?>
                 </summary>
                 <div class="collapse-content">
                     <?php
@@ -120,21 +120,21 @@
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="project-select" class="form-control" placeholder="<?= lang('forms.project_select') ?>">
-                            <option value=""><?= lang('forms.project_select') ?></option>
+                        <select id="project-select" class="form-control" placeholder="<?= t('forms.project_select') ?>">
+                            <option value=""><?= t('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
                                 <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= e(localized($s['name'])) ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
+                        <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                     </div>
                     <!-- make sure that empty projects are also submitted -->
                     <input type="hidden" name="projects[]" value="">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('common.connected_projects') ?>:</th>
+                                <th><?= t('common.connected_projects') ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -162,12 +162,12 @@
                     <?php if ($full_permission) { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
+                            <?= t('common.note_only_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } else { ?>
                         <p class="text-muted font-size-12 mb-0">
                             <i class="ph ph-info"></i>
-                            <?= lang('common.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
+                            <?= t('common.note_only_your_own_projects_are_shown_here_you_cannot_connect_proposals') ?>
                         </p>
                     <?php } ?>
 
@@ -179,12 +179,12 @@
                             const projectId = $('#project-select').val();
                             const projectName = $('#project-select option:selected').text();
                             if (!projectId) {
-                                alert('<?= lang('forms.project_select') ?>');
+                                alert('<?= t('forms.project_select') ?>');
                                 return;
                             }
                             // check if project already exists
                             if ($('#project-list').find(`#project-${projectId}`).length > 0) {
-                                toastError('<?= lang('common.this_project_is_already_connected') ?>');
+                                toastError('<?= t('common.this_project_is_already_connected') ?>');
                                 return;
                             }
                             row.append(`<td class="w-full">
@@ -221,14 +221,14 @@
                     )->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
-                        <select id="infrastructure-select" class="form-control" placeholder="<?= lang('forms.select_infrastructure') ?>">
-                            <option value=""><?= lang('forms.select_infrastructure') ?></option>
+                        <select id="infrastructure-select" class="form-control" placeholder="<?= t('forms.select_infrastructure') ?>">
+                            <option value=""><?= t('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option value="<?= $s['id'] ?>"><?= e(localized($s['name'])) ?></option>
                             <?php } ?>
                         </select>
-                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= lang('action.add') ?></button>
+                        <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
                     </div>
 
                     <!-- make sure that empty infrastructures are also submitted -->
@@ -237,7 +237,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('common.connected') ?> <?= $Settings->infrastructureLabel() ?>:</th>
+                                <th><?= t('common.connected') ?> <?= $Settings->infrastructureLabel() ?>:</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -270,12 +270,12 @@
                         const infraId = $('#infrastructure-select').val();
                         const infraName = $('#infrastructure-select option:selected').text();
                         if (!infraId) {
-                            alert('<?= lang('forms.select_infrastructure') ?>');
+                            alert('<?= t('forms.select_infrastructure') ?>');
                             return;
                         }
                         // check if infrastructure already exists
                         if ($('#infrastructure-list').find(`input[value="${infraId}"]`).length > 0) {
-                            toastError('<?= lang('common.this_infrastructure_is_already_connected') ?>');
+                            toastError('<?= t('common.this_infrastructure_is_already_connected') ?>');
                             return;
                         }
                         row.append(`<td class="w-full">
@@ -299,19 +299,19 @@
 
         <details class="collapse-panel activity-panel" open>
             <summary class="collapse-header">
-                <?= lang('common.activities') ?>
+                <?= t('common.activities') ?>
             </summary>
             <div class="collapse-content">
 
                 <a class="btn primary mb-20" href="#connect-activities">
                     <i class="ph ph-plus-circle"></i>
-                    <?= lang('activities.connect_activity') ?>
+                    <?= t('activities.connect_activity') ?>
                 </a>
 
                 <table class="table">
                     <thead>
                         <tr>
-                            <th><?= lang('common.connected_activities') ?>:</th>
+                            <th><?= t('common.connected_activities') ?>:</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -333,7 +333,7 @@
                                     <div><?= $activity['rendered']['web'] ?? '' ?></div>
                                 </td>
                                 <td class="w-50">
-                                    <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>" onclick="removeActivity('<?= $con['_id'] ?>')">
+                                    <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= t('common.disconnect_activity') ?>" onclick="removeActivity('<?= $con['_id'] ?>')">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </td>
@@ -350,7 +350,7 @@
         <?php if ($Settings->featureEnabled('news', true)) { ?>
             <p class="text-muted font-size-12">
                 <i class="ph ph-info"></i>
-                <?= lang('activities.note_news_cannot_be_connected_here_to_connect_news_please_go_to_the_news_se') ?>
+                <?= t('activities.note_news_cannot_be_connected_here_to_connect_news_please_go_to_the_news_se') ?>
             </p>
         <?php } ?>
         
@@ -358,11 +358,11 @@
         <div class="bottom-buttons">
             <button id="save-button" type="submit" class="btn large success">
                 <i class="ph ph-floppy-disk"></i>
-                <?= lang('action.save') ?>
+                <?= t('action.save') ?>
             </button>
             <a id="cancel-button" type="button" class="btn large light ml-5" href="<?= ROOTPATH ?>/activities/view/<?= $id ?>#edit-activities">
                 <i class="ph ph-x"></i>
-                <?= lang('action.cancel') ?>
+                <?= t('action.cancel') ?>
             </a>
         </div>
 
@@ -377,12 +377,12 @@
                     <span aria-hidden="true">&times;</span>
                 </a>
                 <h5 class="title">
-                    <?= lang('common.connect_activities') ?>
+                    <?= t('common.connect_activities') ?>
                 </h5>
                 <input type="hidden" name="source_id" value="<?= $id ?>">
                 <!-- relationship type -->
                 <div class="form-group">
-                    <label for="relationship-type"><?= lang('common.relationship_type') ?></label>
+                    <label for="relationship-type"><?= t('common.relationship_type') ?></label>
                     <div class="form-group">
                         <div class="input-group">
                             <select name="relationship" id="relationship-type" class="form-control">
@@ -401,7 +401,7 @@
                                     <div class="custom-switch">
                                         <input type="checkbox" id="swap-relationship-dir" name="reverse" value="1" onchange="swapRelationshipDirection()">
                                         <label for="swap-relationship-dir">
-                                            <?= lang('common.swap_direction') ?>
+                                            <?= t('common.swap_direction') ?>
                                         </label>
                                     </div>
                                 </div>
@@ -412,21 +412,21 @@
                 </div>
                 <!-- input field with suggesting activities -->
                 <div class="form-group" id="activity-suggest">
-                    <label for="activity-suggested"><?= lang('common.select_an_activity_to_connect') ?></label>
-                    <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" placeholder="<?= lang('common.start_typing_to_search_for_activities') ?>">
+                    <label for="activity-suggested"><?= t('common.select_an_activity_to_connect') ?></label>
+                    <input type="text" name="activity-suggested" id="activity-suggested" class="form-control" placeholder="<?= t('common.start_typing_to_search_for_activities') ?>">
 
                     <div class="form-group font-size-12">
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-author" value="user" checked="checked">
-                            <label for="activity-suggest-author"><?= lang('common.only_show_my_activities') ?></label>
+                            <label for="activity-suggest-author"><?= t('common.only_show_my_activities') ?></label>
                         </div>
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-unit" value="unit">
-                            <label for="activity-suggest-unit"><?= lang('common.show_activities_from_my_unit_s') ?></label>
+                            <label for="activity-suggest-unit"><?= t('common.show_activities_from_my_unit_s') ?></label>
                         </div>
                         <div class="custom-radio d-inline-block mr-20">
                             <input type="radio" name="activity-search-limit" id="activity-suggest-all" value="all">
-                            <label for="activity-suggest-all"><?= lang('common.show_all_activities') ?></label>
+                            <label for="activity-suggest-all"><?= t('common.show_all_activities') ?></label>
                         </div>
                     </div>
                     <div class="suggestions on-focus"></div>
@@ -434,7 +434,7 @@
                 <input type="hidden" name="target_id" id="activity-selected" value="">
 
                 <button type="button" class="btn primary" onclick="connectActivity()">
-                    <?= lang('common.connect') ?>
+                    <?= t('common.connect') ?>
                 </button>
 
             </div>
@@ -491,7 +491,7 @@
             const relationship = $('#relationship-type').val();
             const reverse = $('#swap-relationship-dir').is(':checked');
             if (!target_id) {
-                alert('<?= lang('activities.please_select_an_activity_to_connect') ?>');
+                alert('<?= t('activities.please_select_an_activity_to_connect') ?>');
                 return;
             }
             console.log({
@@ -513,7 +513,7 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data.inserted > 0) {
-                        toastSuccess('<?= lang('activities.activity_connected_successfully') ?>');
+                        toastSuccess('<?= t('activities.activity_connected_successfully') ?>');
                         // add the new connection to the list of connected activities
                         // add connection to the list of connected activities
                         const label = $('#relationship-type option:selected').text();
@@ -525,7 +525,7 @@
                         <div>${$('#activity-suggested').val()}</div>
                         </td>
                         <td class="w-50">
-                        <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= lang('common.disconnect_activity') ?>">
+                        <button type="button" class="btn link text-danger" data-toggle="tooltip" data-title="<?= t('common.disconnect_activity') ?>">
                         <i class="ph ph-trash"></i>
                         </button>
                         </td>
@@ -542,12 +542,12 @@
                             toastError(data.message);
                             return;
                         }
-                        toastError('<?= lang('activities.an_error_occurred_while_connecting_the_activity') ?>');
+                        toastError('<?= t('activities.an_error_occurred_while_connecting_the_activity') ?>');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr, status, error);
-                    toastError('<?= lang('activities.an_error_occurred_while_connecting_the_activity') ?>');
+                    toastError('<?= t('activities.an_error_occurred_while_connecting_the_activity') ?>');
                 }
             });
 
@@ -555,7 +555,7 @@
         }
 
         function removeActivity(connection_id) {
-            if (!confirm('<?= lang('activities.are_you_sure_you_want_to_disconnect_this_activity') ?>')) {
+            if (!confirm('<?= t('activities.are_you_sure_you_want_to_disconnect_this_activity') ?>')) {
                 return;
             }
             // submit the form via ajax
@@ -568,17 +568,17 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data.deleted > 0) {
-                        toastSuccess('<?= lang('activities.activity_disconnected_successfully') ?>');
+                        toastSuccess('<?= t('activities.activity_disconnected_successfully') ?>');
                         // remove the connection from the list of connected activities
                         $(`#activity-${connection_id}`).remove();
                     } else {
                         console.log(data);
-                        toastError('<?= lang('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
+                        toastError('<?= t('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr, status, error);
-                    toastError('<?= lang('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
+                    toastError('<?= t('activities.an_error_occurred_while_disconnecting_the_activity') ?>');
                 }
             });
         }

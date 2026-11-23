@@ -34,17 +34,17 @@ $summary = [
 
 <h2>
     <i class="ph ph-files"></i>
-    <?= lang('admin.migration_of_activity_files_to_uploads_collection') ?>
+    <?= t('admin.migration_of_activity_files_to_uploads_collection') ?>
 </h2>
 
 
 <div class="alert info">
     <h4 class="title">
-        <?= lang('admin.note') ?>
+        <?= t('admin.note') ?>
     </h4>
-    <?=lang('admin.it_is_unfortunately_not_possible_to_determine_who_originally_uploaded_the_m')?>
+    <?=t('admin.it_is_unfortunately_not_possible_to_determine_who_originally_uploaded_the_m')?>
     <br>
-    <?=lang('admin.it_is_also_not_possible_to_estimate_the_type_of_document_for_each_migrated')?>
+    <?=t('admin.it_is_also_not_possible_to_estimate_the_type_of_document_for_each_migrated')?>
 </div>
 
 
@@ -56,34 +56,34 @@ $summary = [
     <div class="box padded" style="max-width: 40rem;">
         <h4 class="title">
             <i class="ph ph-gear"></i>
-            <?= lang('admin.migration_settings') ?>
+            <?= t('admin.migration_settings') ?>
         </h4>
         <div class="form-group">
-            <label for="dry_run"><?= lang('admin.run_settings') ?></label>
+            <label for="dry_run"><?= t('admin.run_settings') ?></label>
             <select id="dry_run" name="dry_run" class="form-control">
-                <option value="1" <?= $DRY_RUN ? 'selected' : '' ?>><?= lang('admin.dry_run_no_changes') ?></option>
-                <option value="0" <?= !$DRY_RUN ? 'selected' : '' ?>><?= lang('admin.perform_migration') ?></option>
+                <option value="1" <?= $DRY_RUN ? 'selected' : '' ?>><?= t('admin.dry_run_no_changes') ?></option>
+                <option value="0" <?= !$DRY_RUN ? 'selected' : '' ?>><?= t('admin.perform_migration') ?></option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="delete_source"><?= lang('admin.handle_source_files') ?></label>
+            <label for="delete_source"><?= t('admin.handle_source_files') ?></label>
             <select id="delete_source" name="delete_source" class="form-control">
-                <option value="0" <?= !$DELETE_SOURCE ? 'selected' : '' ?>><?= lang('admin.keep_source_files') ?></option>
-                <option value="1" <?= $DELETE_SOURCE ? 'selected' : '' ?>><?= lang('admin.delete_source_files_after_migration') ?></option>
+                <option value="0" <?= !$DELETE_SOURCE ? 'selected' : '' ?>><?= t('admin.keep_source_files') ?></option>
+                <option value="1" <?= $DELETE_SOURCE ? 'selected' : '' ?>><?= t('admin.delete_source_files_after_migration') ?></option>
             </select>
         </div>
         <div class="form-group">
-            <label for="verify_hash"><?= lang('admin.verify_file_hash') ?></label>
+            <label for="verify_hash"><?= t('admin.verify_file_hash') ?></label>
             <select id="verify_hash" name="verify_hash" class="form-control">
-                <option value="0" <?= !$VERIFY_HASH ? 'selected' : '' ?>><?= lang('admin.disabled_faster') ?></option>
-                <option value="1" <?= $VERIFY_HASH ? 'selected' : '' ?>><?= lang('admin.enabled_safer_slower') ?></option>
+                <option value="0" <?= !$VERIFY_HASH ? 'selected' : '' ?>><?= t('admin.disabled_faster') ?></option>
+                <option value="1" <?= $VERIFY_HASH ? 'selected' : '' ?>><?= t('admin.enabled_safer_slower') ?></option>
             </select>
         </div>
 
         <div class="form-group">
             <button type="submit" class="btn primary">
-                <?= lang('admin.run_migration') ?>
+                <?= t('admin.run_migration') ?>
             </button>
         </div>
     </div>
@@ -95,7 +95,7 @@ $summary = [
     <div class="col order-last">
 
         <h2>
-            <?= lang('admin.migration_logs') ?>
+            <?= t('admin.migration_logs') ?>
         </h2>
         <div class="box" id="migration-logs" style="max-height: 40rem; overflow: auto; background: #f9f9f9; padding: 1rem; border: 1px solid #ccc;">
             <pre><?php
@@ -359,36 +359,36 @@ $summary = [
     <div class="col col-md-3 order-first">
 
         <h2>
-            <?= lang('admin.summary') ?>
+            <?= t('admin.summary') ?>
         </h2>
 
         <?php if ($DRY_RUN) { ?>
-            <p><?= lang('admin.dry_run_completed_no_changes_were_made_review_the_logs_above_to_perform_the') ?></p>
+            <p><?= t('admin.dry_run_completed_no_changes_were_made_review_the_logs_above_to_perform_the') ?></p>
         <?php } ?>
 
         <table class="table small">
             <tr>
-                <th><?= lang('admin.activities_processed') ?></th>
+                <th><?= t('admin.activities_processed') ?></th>
                 <td><?= $summary['activities_processed'] ?></td>
             </tr>
             <tr>
-                <th><?= lang('admin.files_found') ?></th>
+                <th><?= t('admin.files_found') ?></th>
                 <td><?= $summary['files_found'] ?></td>
             </tr>
             <tr>
-                <th><?= lang('admin.files_migrated') ?></th>
+                <th><?= t('admin.files_migrated') ?></th>
                 <td><?= $summary['files_migrated'] ?></td>
             </tr>
             <tr>
-                <th><?= lang('admin.files_skipped') ?></th>
+                <th><?= t('admin.files_skipped') ?></th>
                 <td><?= $summary['files_skipped'] ?></td>
             </tr>
             <tr>
-                <th><?= lang('admin.missing_source_files') ?></th>
+                <th><?= t('admin.missing_source_files') ?></th>
                 <td><?= $summary['missing_files'] ?></td>
             </tr>
             <tr>
-                <th><?= lang('admin.errors') ?></th>
+                <th><?= t('admin.errors') ?></th>
                 <td><?= $summary['errors'] ?></td>
             </tr>
         </table>

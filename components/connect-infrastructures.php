@@ -45,7 +45,7 @@ if (!$permission) {
                 <tr>
                     <td class="w-full">
                         <select name="infrastructures[<?= $i ?>]" id="infrastructures-<?= $i ?>" class="form-control" required>
-                            <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= lang('forms.select_infrastructure') ?> --</option>
+                            <option value="" disabled <?= empty($con) ? 'selected' : '' ?>>-- <?= t('forms.select_infrastructure') ?> --</option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
                                 <option <?= $con == $s['id'] ? 'selected' : '' ?> value="<?=$s['id']?>"><?= e(localized($s['name'])) ?></option>
@@ -62,7 +62,7 @@ if (!$permission) {
         <tfoot>
             <tr id="last-row">
                 <td colspan="2">
-                    <button class="btn small" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus text-success"></i> <?= lang('infrastructures.add_row') ?></button>
+                    <button class="btn small" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus text-success"></i> <?= t('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>
@@ -71,14 +71,14 @@ if (!$permission) {
 <?php if (!$permission) { ?>
     
     <p>
-        <?= lang('infrastructures.note_only_infrastructures_in_which_you_participate_are_shown_here') ?>
-        <a href="<?= ROOTPATH ?>/infrastructures" class="link"><?= lang('infrastructures.see_all') ?></a>
+        <?= t('infrastructures.note_only_infrastructures_in_which_you_participate_are_shown_here') ?>
+        <a href="<?= ROOTPATH ?>/infrastructures" class="link"><?= t('infrastructures.see_all') ?></a>
     </p>
 <?php } ?>
 
     <button class="btn secondary">
         <i class="ph ph-check"></i>
-        <?= lang('action.submit') ?>
+        <?= t('action.submit') ?>
     </button>
 </form>
 

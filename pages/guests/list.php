@@ -1,12 +1,12 @@
 <?php
 
-$pagetitle = lang('common.guests');
+$pagetitle = t('common.guests');
 $filter = [];
 if (!$Settings->hasPermission('guests.view')) {
     $filter = [
         'supervisor.user' => $_SESSION['username']
     ];
-    $pagetitle = lang('guests.my_guests');
+    $pagetitle = t('guests.my_guests');
 }
 
 ?>
@@ -21,7 +21,7 @@ if (!$Settings->hasPermission('guests.view')) {
 <?php if ($Settings->hasPermission('guests.add')) { ?>
     <a href="<?= ROOTPATH ?>/guests/new" class="btn link px-0 mb-10">
         <i class="ph ph-plus"></i>
-        <?= lang('guests.add_new_guest') ?>
+        <?= t('guests.add_new_guest') ?>
     </a>
 <?php } ?>
 
@@ -36,13 +36,13 @@ $guest_forms = $Settings->featureEnabled('guest-forms');
     <thead>
         <tr>
             <th>ID</th>
-            <th><?= lang('guests.name_of_guest') ?></th>
-            <th><?= lang('common.affiliation') ?></th>
+            <th><?= t('guests.name_of_guest') ?></th>
+            <th><?= t('common.affiliation') ?></th>
             <th>Status</th>
-            <th><?= lang('guests.time_of_stay') ?></th>
-            <th><?= lang('guests.supervisor') ?></th>
+            <th><?= t('guests.time_of_stay') ?></th>
+            <th><?= t('guests.supervisor') ?></th>
             <?php if ($guest_forms) { ?>
-                <th><?= lang('guests.complete') ?></th>
+                <th><?= t('guests.complete') ?></th>
             <?php } ?>
         </tr>
     </thead>
@@ -82,7 +82,7 @@ $guest_forms = $Settings->featureEnabled('guest-forms');
                     </span>
 
                     <!-- <?php if ($status == 'cancelled') { ?>
-                        <span class="badge danger"><?= lang('guests.cancelled') ?></span>
+                        <span class="badge danger"><?= t('guests.cancelled') ?></span>
                     <?php } else {
                                 // check if date is current
                                 if ($status == 'current') {
@@ -107,7 +107,7 @@ $guest_forms = $Settings->featureEnabled('guest-forms');
         <?php } ?>
         <?php if ($i == 0) { ?>
             <tr>
-                <td colspan="3"><?= lang('guests.no_data_found') ?></td>
+                <td colspan="3"><?= t('guests.no_data_found') ?></td>
             </tr>
         <?php } ?>
 
@@ -137,13 +137,13 @@ $guest_forms = $Settings->featureEnabled('guest-forms');
                 "render": function(data, type, full, meta) {
                     switch (data) {
                         case 'current':
-                            return "<span class='badge success'>" + <?= json_encode(lang('guests.current'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
+                            return "<span class='badge success'>" + <?= json_encode(t('guests.current'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
                         case 'future':
-                            return "<span class='badge signal'>" + <?= json_encode(lang('projects.future'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
+                            return "<span class='badge signal'>" + <?= json_encode(t('projects.future'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
                         case 'past':
-                            return "<span class='badge muted'>" + <?= json_encode(lang('guests.past'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
+                            return "<span class='badge muted'>" + <?= json_encode(t('guests.past'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
                         case 'cancelled':
-                            return "<span class='badge danger'>" + <?= json_encode(lang('guests.cancelled_list'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
+                            return "<span class='badge danger'>" + <?= json_encode(t('guests.cancelled_list'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + "</span>";
                         default:
                             return '';
                     }

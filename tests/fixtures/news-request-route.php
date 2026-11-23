@@ -13,6 +13,7 @@ if (!empty($fixture['capture_output'])) {
     ob_start();
 }
 function lang($en, $de = null) { return $en; }
+function t($key, array $replace = []) { return $key; }
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function abortwith($code, $message = '', ...$unused) { throw new RuntimeException($message, $code); }
 

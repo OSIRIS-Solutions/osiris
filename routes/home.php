@@ -33,7 +33,7 @@ Route::get('/home', function () {
         $Format = new Document($user);
 
         if (empty($scientist)) {
-            $_SESSION['msg'] = lang('error.user_not_found');
+            $_SESSION['msg'] = t('error.user_not_found');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/user/browse");
             die;
@@ -41,7 +41,7 @@ Route::get('/home', function () {
         $name = $scientist['displayname'];
 
         $breadcrumb = [
-            ['name' => lang('common.users'), 'path' => "/user/browse"],
+            ['name' => t('common.users'), 'path' => "/user/browse"],
             ['name' => $name]
         ];
 
@@ -49,7 +49,7 @@ Route::get('/home', function () {
         include BASEPATH . "/pages/profile.php";
     } else {
         $breadcrumb = [
-            ['name' => lang('common.home')]
+            ['name' => t('common.home')]
         ];
         include BASEPATH . "/header.php";
         include BASEPATH . "/pages/home.php";
@@ -62,7 +62,7 @@ Route::get('/home', function () {
 Route::get('/hub', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->featureEnabled('resource-hub')) {
-        return abortwith(404, lang('dashboard.resource_hub_is_not_enabled'));
+        return abortwith(404, t('dashboard.resource_hub_is_not_enabled'));
     }
     $breadcrumb = [
         ['name' => $Settings->resourceHubLabel()]

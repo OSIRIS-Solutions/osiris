@@ -34,36 +34,36 @@
         <div class="row">
             <div class="col">
                 <h3 class="title">
-                    <?= lang('common.news_and_help') ?>
+                    <?= t('common.news_and_help') ?>
                 </h3>
 
                 <a href="<?= ROOTPATH ?>/new-stuff" class="">
-                    <?= lang('common.news') ?>
+                    <?= t('common.news') ?>
                 </a>
 
                 <a href="<?= ROOTPATH ?>/docs" class="">
-                    <?= lang('common.documentation') ?>
+                    <?= t('common.documentation') ?>
                 </a>
 
                 <!-- accessibility -->
                 <a href="<?= ROOTPATH ?>/accessibility" class="">
-                    <?= lang('common.accessibility') ?>
+                    <?= t('common.accessibility') ?>
                 </a>
 
                 <a href="https://github.com/OSIRIS-Solutions/osiris/issues" target="_blank" class="">
-                    <?= lang('common.report_an_issue') ?>
+                    <?= t('common.report_an_issue') ?>
                     <i class="ph ph-arrow-square-out"></i>
                 </a>
             </div>
             <div class="col">
                 <h3>OSIRIS <small class="text-monospace">v<?= OSIRIS_VERSION ?>-<?= OSIRIS_BUILD ?> <?= defined('OSIRIS_BETA') && OSIRIS_BETA ? '<span class="badge signal">Beta</span>' : '' ?></small></h3>
                 <a href="https://osiris-app.de" target="_blank" class="">
-                    <?= lang('common.about_osiris') ?>
+                    <?= t('common.about_osiris') ?>
                     <i class="ph ph-arrow-square-out"></i>
                 </a>
-                <a href="<?= ROOTPATH ?>/license"><?= lang('common.license') ?></a>
+                <a href="<?= ROOTPATH ?>/license"><?= t('common.license') ?></a>
                 <p>
-                    <?= lang('common.footer_love', replace:[
+                    <?= t('common.footer_love', replace:[
                             'love' => new Html('<i class="ph ph-heart text-danger" title="Für Leonie"></i>'),
                             'author' => new Html('<a href="https://osiris-solutions.de" target="_blank" rel="noopener noreferrer" class="colorless">&copy; OSIRIS Solutions GmbH '. CURRENTYEAR . '</a>')
                     ]) ?>
@@ -71,8 +71,8 @@
             </div>
             <div class="col">
                 <h3>Links</h3>
-                <a href="<?= ROOTPATH ?>/impress"><?= lang('common.impress') ?></a>
-                <a href="<?= ROOTPATH ?>/privacy"><?= lang('common.privacy_policy') ?></a>
+                <a href="<?= ROOTPATH ?>/impress"><?= t('common.impress') ?></a>
+                <a href="<?= ROOTPATH ?>/privacy"><?= t('common.privacy_policy') ?></a>
                 <?php
                 $links = $Settings->get('footer_links');
                 if (!empty($links)) {

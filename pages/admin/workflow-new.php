@@ -19,13 +19,13 @@
             <a href="#/" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h5 class="title"><?= lang('common.id_must_be_unique') ?></h5>
+            <h5 class="title"><?= t('common.id_must_be_unique') ?></h5>
 
             <p>
-                <?= lang('admin.the_id_is_used_internally_to_save_this_workflow_and_associate_activities_to') ?>
+                <?= t('admin.the_id_is_used_internally_to_save_this_workflow_and_associate_activities_to') ?>
             </p>
             <p>
-                <?= lang('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
+                <?= t('common.as_the_id_must_be_unique_the_following_previously_used_ids_and_keywords_new') ?>
             </p>
             <ul class="list" id="used-ids">
                 <?php foreach ($osiris->adminWorkflows->distinct('id') as $k) { ?>
@@ -34,7 +34,7 @@
                 <li>new</li>
             </ul>
             <div class="text-right mt-20">
-                <a href="#/" class="btn secondary" role="button"><?= lang('common.understand') ?></a>
+                <a href="#/" class="btn secondary" role="button"><?= t('common.understand') ?></a>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
 
     <div class="box padded">
         <h4 class="title">
-            <?= lang('admin.new_workflow') ?>
+            <?= t('admin.new_workflow') ?>
         </h4>
 
         <div class="form-group">
@@ -54,25 +54,25 @@
 
             <small>
                 <a href="#unique"><i class="ph ph-info"></i>
-                    <?= lang('common.important_must_be_unique') ?>
+                    <?= t('common.important_must_be_unique') ?>
                 </a>
             </small>
         </div>
 
         <div class="form-group">
-            <label for="name" class="required "><?= lang('common.name_of_the_workflow') ?></label>
+            <label for="name" class="required "><?= t('common.name_of_the_workflow') ?></label>
             <input type="text" class="form-control" name="values[name]" required value="<?= $form['name'] ?? '' ?>" maxlength="30">
-            <small class="form-text text-muted"><?= lang('common.max_30_characters') ?></small>
+            <small class="form-text text-muted"><?= t('common.max_30_characters') ?></small>
         </div>
 
-        <h5><?= lang('common.steps') ?></h5>
+        <h5><?= t('common.steps') ?></h5>
 
         <p class="text-danger">
-            <?= lang('admin.steps_can_be_defined_after_you_have_saved_the_workflow_once') ?>
+            <?= t('admin.steps_can_be_defined_after_you_have_saved_the_workflow_once') ?>
         </p>
 
         <button type="submit" class="btn success" id="submitBtn">
-            <i class="ph ph-check"></i> <?= lang('action.save') ?>
+            <i class="ph ph-check"></i> <?= t('action.save') ?>
         </button>
 
     </div>

@@ -26,7 +26,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 
 <h1>
     <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-    <?= lang('common.word_cloud') ?>
+    <?= t('common.word_cloud') ?>
 </h1>
 
 
@@ -44,7 +44,7 @@ $selectedUser = $osiris->persons->findone(['username' => $scientist]);
 </form>
 
 <a class="link" href="<?= ROOTPATH ?>/profile/<?= $scientist ?>"><i class="ph ph-student"></i>
-    <?= lang('common.view_scientist_page_of') ?>
+    <?= t('common.view_scientist_page_of') ?>
     <?= $selectedUser['displayname'] ?>
 </a>
 

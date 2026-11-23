@@ -23,13 +23,13 @@ $example = 'default';
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     if (!DB::is_ObjectID($_GET['id'])) {
-        echo lang('admin.invalid_activity_id');
+        echo t('admin.invalid_activity_id');
     } else {
         $new = $osiris->activities->findOne(
             ['_id' => DB::to_ObjectID($_GET['id'])]
         );
         if (empty($new)) {
-            echo lang('admin.activity_not_found_using_default_example');
+            echo t('admin.activity_not_found_using_default_example');
         } else {
             $form = $new;
             $example = strval($new['_id']);
@@ -42,7 +42,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         ['sort' => ['_id' => -1]]
     );
     if (empty($new)) {
-        echo lang('admin.activity_not_found_using_default_example');
+        echo t('admin.activity_not_found_using_default_example');
     } else {
         $form = $new;
         $example = strval($new['_id']);
@@ -59,7 +59,7 @@ $Document->setDocument($form);
             <a href="#close-modal" class="close" role="button" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </a>
-            <h2 class="mt-0"><?= lang('admin.author_templates') ?></h2>
+            <h2 class="mt-0"><?= t('admin.author_templates') ?></h2>
 
             <p>
                 So ziemlich alle Felder für die Templates sind strikt definiert, bis auf die Autoren und Editoren, da es hier zu viele unterschiedliche Formatierung gibt, um alle auf klassische Weise abzubilden.
@@ -261,13 +261,13 @@ editors-{Namensformat}-{Optionen}
                 ?>
             </select>
             <label for="type-id">
-                <?= lang('admin.select_a_type_to_load_the_template') ?>
+                <?= t('admin.select_a_type_to_load_the_template') ?>
             </label>
         </div>
         <div class="col floating-form">
             <input type="text" name="id" placeholder="id" class="form-control" value="<?= $_GET['id'] ?? '' ?>">
             <label for="id">
-                <?= lang('admin.enter_activity_id_for_displaying_a_specific_example') ?>
+                <?= t('admin.enter_activity_id_for_displaying_a_specific_example') ?>
             </label>
         </div>
         <div class="col flex-grow-0">
@@ -279,16 +279,16 @@ editors-{Namensformat}-{Optionen}
 
     <a href="#modal-authors" class="btn primary" role="button">
         <i class="ph ph-student"></i>
-        <?= lang('admin.about_authors') ?>
+        <?= t('admin.about_authors') ?>
     </a>
     <p>
-        <?= lang('admin.in_the_following') ?>
+        <?= t('admin.in_the_following') ?>
         <?php if (DB::is_ObjectID($example)) { ?>
-            <a href="<?= ROOTPATH ?>/activities/view/<?= $example ?>"><?= lang('admin.a_real_example') ?></a>
+            <a href="<?= ROOTPATH ?>/activities/view/<?= $example ?>"><?= t('admin.a_real_example') ?></a>
         <?php } else { ?>
-            <?= lang('admin.a_dummy_dataset') ?>
+            <?= t('admin.a_dummy_dataset') ?>
         <?php } ?>
-        <?= lang('admin.is_used_to_show_the_template_builder') ?>
+        <?= t('admin.is_used_to_show_the_template_builder') ?>
 
     </p>
 
@@ -336,7 +336,7 @@ editors-{Namensformat}-{Optionen}
                 </div>
                 <textarea name="template" id="template" class="form-control" placeholder="Start creating your template here"><?= $template ?></textarea>
                 <div class="example-area">
-                    <b><?= lang('common.example') ?>:</b>
+                    <b><?= t('common.example') ?>:</b>
                     <div id="example" style="min-height: 3rem;"></div>
                 </div>
             </div>
@@ -370,7 +370,7 @@ editors-{Namensformat}-{Optionen}
 
                                     <br>
                                     <small>
-                                        <b><?= lang('common.example') ?>:</b>
+                                        <b><?= t('common.example') ?>:</b>
                                         <span class="example">
                                             <?php
                                             echo $Document->get_field($name, '-');

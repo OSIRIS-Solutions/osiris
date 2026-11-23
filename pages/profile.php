@@ -171,26 +171,26 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('people.change_profile_picture') ?>
+                    <?= t('people.change_profile_picture') ?>
                 </h2>
 
                 <form action="<?= ROOTPATH ?>/crud/users/profile-picture/<?= $user ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                        <label for="profile-input"><?= lang('people.upload_new_profile_image') ?></label>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>">
+                        <label for="profile-input"><?= t('people.upload_new_profile_image') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
                     <p>
-                        <?= lang('people.please_note_that_your_profile_picture_will_be_visible_to_all_users_of_osiri') ?>
+                        <?= t('people.please_note_that_your_profile_picture_will_be_visible_to_all_users_of_osiri') ?>
                     </p>
                     <script>
                         var uploadField = document.getElementById("profile-input");
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                toastError(<?= json_encode(t('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
@@ -207,7 +207,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                         <input type="hidden" name="delete" value="true">
                         <button class="btn danger">
                             <i class="ph ph-trash"></i>
-                            <?= lang('common.delete_current_picture') ?>
+                            <?= t('common.delete_current_picture') ?>
                         </button>
                     </form>
                 <?php } ?>
@@ -233,7 +233,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <h5 class="subtitle">
             <?= e(localized($scientist['position'] ?? '')) ?>
             <?php if ($scientist['hide'] ?? false) { ?>
-                <small class="badge danger" data-toggle="tooltip" data-title="<?= lang('people.this_person_does_not_wish_to_be_found_in_portfolio') ?>">
+                <small class="badge danger" data-toggle="tooltip" data-title="<?= t('people.this_person_does_not_wish_to_be_found_in_portfolio') ?>">
                     <i class="ph ph-globe-x m-0"></i>
                 </small>
             <?php } ?>
@@ -241,10 +241,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
         <?php if (!($scientist['is_active'] ?? true)) { ?>
             <span class="text-danger badge">
-                <?= lang('people.former_employee') ?>
+                <?= t('people.former_employee') ?>
                 <?php if (isset($scientist['inactivated'])) { ?>
                     <small>
-                        <?= lang('people.since') ?>
+                        <?= t('people.since') ?>
                         <?= date('d.m.Y', strtotime($scientist['inactivated'])) ?>
                     </small>
                 <?php } ?>
@@ -259,14 +259,14 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             $guestState = $osiris->guests->findOne(['username' => $user]);
             if (!empty($guestState)) { ?>
                 <span class="badge">
-                    <?= lang('people.guest') ?>
+                    <?= t('people.guest') ?>
                     <?= fromToDate($guestState['start'], $guestState['end'] ?? null) ?>
                 </span>
             <?php }
         }
         if ($scientist['is_guest'] ?? false) { ?>
             <span class="badge signal">
-                <?= lang('people.guest_account') ?>
+                <?= t('people.guest_account') ?>
             </span>
         <?php }
         ?>
@@ -280,7 +280,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <div id="units">
         <h5 class="mt-0">
-            <?= lang('people.organisational_unit_s') ?>
+            <?= t('people.organisational_unit_s') ?>
 
             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                 <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" class="font-size-14 ml-5">
@@ -309,7 +309,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                         <?= lang($row['name_en'], $row['name_de'] ?? null) ?>
                                     </a>
                                     <?php if ($head) { ?>
-                                        <span data-toggle="tooltip" data-title="<?= lang('people.the_person_is_leading_this_unit') ?>">
+                                        <span data-toggle="tooltip" data-title="<?= t('people.the_person_is_leading_this_unit') ?>">
                                             <i class="ph ph-flag-banner text-signal"></i>
                                         </span>
                                     <?php } ?>
@@ -326,7 +326,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                 } else { ?>
                     <tr>
                         <td>
-                            <?= lang('people.no_organisational_unit_selected') ?>
+                            <?= t('people.no_organisational_unit_selected') ?>
                         </td>
                     </tr>
                 <?php }
@@ -369,7 +369,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <!-- print message to change password -->
         <div class="alert danger mt-10">
             <a class="link text-danger" href='<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>#section-account'>
-                <?= lang('people.you_have_not_yet_set_a_password_please_change_your_password_now') ?>
+                <?= t('people.you_have_not_yet_set_a_password_please_change_your_password_now') ?>
             </a>
         </div>
     <?php  } ?>
@@ -381,13 +381,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <b>
-                        <?= lang('common.you_can_now_approve_the_past_quarter') ?>
+                        <?= t('common.you_can_now_approve_the_past_quarter') ?>
                     </b>
                     <p class="text-muted my-5 font-size-12">
-                        <?= lang('common.to_complete_the_quarterly_review_please_confirm_that_all_activities_from_th') ?>
+                        <?= t('common.to_complete_the_quarterly_review_please_confirm_that_all_activities_from_th') ?>
                     </p>
                     <a class="btn success filled" href="<?= ROOTPATH ?>/my-year/<?= $_SESSION['username'] ?>?quarter=<?= $quarter ?>">
-                        <?= lang('common.review_approve') ?>
+                        <?= t('common.review_approve') ?>
                     </a>
                 </div>
 
@@ -399,35 +399,35 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     <div class="btn-toolbar">
 
         <div class="btn-group btn-group-lg">
-            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('common.my_activities') ?>">
+            <a href="<?= ROOTPATH ?>/my-activities" class="btn primary outline" data-toggle="tooltip" data-title="<?= t('common.my_activities') ?>">
                 <i class="ph-duotone ph-folder-user ph-fw"></i>
             </a>
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.my_year') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('common.my_year') ?>">
                 <i class="ph-duotone ph-calendar ph-fw"></i>
             </a>
 
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= t('common.preview') ?>">
                     <i class="ph-duotone ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
         <div class="btn-group btn-group-lg">
             <?php if ($show_achievements) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= lang('people.my_achievements') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements" data-toggle="tooltip" data-title="<?= t('people.my_achievements') ?>">
                     <i class="ph-duotone ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('people.edit_user_profile') ?>">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= t('people.edit_user_profile') ?>">
                 <i class="ph-duotone ph-note-pencil ph-fw"></i>
-                <!-- <?= lang('people.edit_user_profile') ?> -->
+                <!-- <?= t('people.edit_user_profile') ?> -->
             </a>
-            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('common.claim_activities') ?>">
+            <a href="<?= ROOTPATH ?>/claim" class="btn primary outline" data-toggle="tooltip" data-title="<?= t('common.claim_activities') ?>">
                 <i class="ph-duotone ph-hand ph-fw"></i>
-                <!-- <?= lang('common.claim_activities') ?> -->
+                <!-- <?= t('common.claim_activities') ?> -->
             </a>
         </div>
 
@@ -437,7 +437,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             <input type="hidden" name="format" value="word">
             <input type="hidden" name="type" value="cv">
 
-            <button class="btn primary outline large mr-10" data-toggle="tooltip" data-title="<?= lang('people.export_cv') ?>">
+            <button class="btn primary outline large mr-10" data-toggle="tooltip" data-title="<?= t('people.export_cv') ?>">
                 <i class="ph-duotone ph-identification-card text-primary ph-fw"></i>
             </button>
         </form>
@@ -451,18 +451,18 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($googlescholar || $openalex || $orcid) { ?>
             <div class="btn-group btn-group-lg">
                 <?php if ($orcid) { ?>
-                    <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= lang('common.import_from_orcid') ?>">
+                    <a class="btn primary outline d-flex align-items-center" href="<?= ROOTPATH ?>/orcid/import" data-toggle="tooltip" data-title="<?= t('common.import_from_orcid') ?>">
                         <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
                     </a>
                 <?php } ?>
                 <?php if ($openalex) { ?>
-                    <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('common.import_from_openalex') ?>">
+                    <a class="btn primary outline" href="<?= ROOTPATH ?>/openalex/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('common.import_from_openalex') ?>">
                         <i class="ph-duotone ph-globe-hemisphere-west ph-fw"></i>
                     </a>
                 <?php } ?>
                 <?php if ($googlescholar) { ?>
                     <form action="<?= ROOTPATH ?>/import/googlescholar/<?= $scientist['google_scholar'] ?>" method="get">
-                        <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= lang('common.import_from_google_scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
+                        <button type="submit" class="btn primary outline d-flex align-items-center large" data-toggle="tooltip" data-title="<?= t('common.import_from_google_scholar') ?>" style="<?= (($openalex || $orcid) ? 'border-top-left-radius: 0;border-bottom-left-radius: 0;' : '') ?>height:4rem;">
                             <img src="<?= ROOTPATH ?>/img/google-scholar.svg" alt="Google Scholar" width="24" height="24">
                         </button>
                     </form>
@@ -479,7 +479,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if (!empty($new)) {
             $notification = true;
             echo '<div class="mt-20">';
-            echo '<h5 class="title font-size-16">' . lang('common.congratulation_you_achieved_something_new') . '</h5>';
+            echo '<h5 class="title font-size-16">' . t('common.congratulation_you_achieved_something_new') . '</h5>';
             foreach ($new as $i => $n) {
                 $Achievement->snack($n);
             }
@@ -502,12 +502,12 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
             $contactLabels = ['mail' => 'E-Mail', 'slack' => 'Slack', 'teams' => 'Teams', 'matrix' => 'Matrix'];
         ?>
             <div class="dropdown with-arrow btn-group btn-group-lg d-inline-flex">
-                <a class="btn secondary outline d-flex align-items-center gap-5" href="<?= e($contactMethods[$preferredContact]) ?>" target="_blank" rel="noopener noreferrer" data-toggle="tooltip" data-title="<?= e(lang('people.contact_via') . $contactLabels[$preferredContact]) ?>">
+                <a class="btn secondary outline d-flex align-items-center gap-5" href="<?= e($contactMethods[$preferredContact]) ?>" target="_blank" rel="noopener noreferrer" data-toggle="tooltip" data-title="<?= e(t('people.contact_via') . $contactLabels[$preferredContact]) ?>">
                     <i class="ph <?= socialLogo($preferredContact) ?>" aria-hidden="true"></i>
-                    <b class="font-size-14"><?= lang('people.contact') ?> <?= $scientist['first'] ?? lang('people.now') ?></b>
+                    <b class="font-size-14"><?= t('people.contact') ?> <?= $scientist['first'] ?? t('people.now') ?></b>
                 </a>
                 <?php if (count($contactMethods) > 1) { ?>
-                    <button class="btn secondary outline px-10" type="button" id="contact-methods" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="<?= lang('people.other_contact_methods') ?>">
+                    <button class="btn secondary outline px-10" type="button" id="contact-methods" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="<?= t('people.other_contact_methods') ?>">
                         <i class="ph ph-caret-down" aria-hidden="true"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="contact-methods">
@@ -524,26 +524,26 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         <?php } ?>
 
         <div class="btn-group btn-group-lg">
-            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('people.the_year_of') . $scientist['first'] ?> ">
+            <a class="btn primary outline" href="<?= ROOTPATH ?>/my-year/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('people.the_year_of') . $scientist['first'] ?> ">
                 <i class="ph ph-calendar ph-fw"></i>
             </a>
-            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= lang('people.all_activities_of') . $scientist['first'] ?>">
+            <a href="<?= ROOTPATH ?>/my-activities?user=<?= $user ?>" class="btn primary outline" data-toggle="tooltip" data-title="<?= t('people.all_activities_of') . $scientist['first'] ?>">
                 <i class="ph ph-folder-user ph-fw"></i>
             </a>
             <?php if ($show_achievements) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= lang('people.achievements_of') . $scientist['first'] ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/achievements/<?= $user ?>" data-toggle="tooltip" data-title="<?= t('people.achievements_of') . $scientist['first'] ?>">
                     <i class="ph ph-trophy ph-fw"></i>
                 </a>
             <?php } ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
-                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('common.preview') ?>">
+                <a class="btn primary outline" href="<?= ROOTPATH ?>/preview/person/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= t('common.preview') ?>">
                     <i class="ph ph-eye ph-fw"></i>
                 </a>
             <?php } ?>
         </div>
 
         <?php if ($Settings->hasPermission('user.edit')) { ?>
-            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= lang('people.edit_user_profile') ?>">
+            <a class="btn large text-primary border-primary" href="<?= ROOTPATH ?>/user/edit/<?= $scientist['_id'] ?>" data-toggle="tooltip" data-title="<?= t('people.edit_user_profile') ?>">
                 <i class="ph ph-edit ph-fw"></i>
             </a>
         <?php } ?>
@@ -553,39 +553,39 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($is_admin) {
         ?>
             <div class="dropdown with-arrow">
-                <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= lang('people.more_options') ?>">
+                <button class="btn large square text-primary border-primary" data-toggle="dropdown" type="button" id="user-options" aria-haspopup="true" aria-expanded="false" title="<?= t('people.more_options') ?>">
                     <i class="ph ph-dots-three-vertical ph-fw text-primary" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-center" aria-labelledby="user-options">
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                         <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" class="item">
                             <i class="ph ph-users-three ph-fw text-primary"></i>
-                            <?= lang('people.edit_org_units') ?>
+                            <?= t('people.edit_org_units') ?>
                         </a>
                     <?php } ?>
                     <?php if (strtoupper(USER_MANAGEMENT) == 'AUTH' && $Settings->hasPermission('user.password-reset')) { ?>
                         <a class="item" href="<?= ROOTPATH ?>/user/password-reset/<?= $scientist['_id'] ?>">
                             <i class="ph ph-key ph-fw text-primary"></i>
-                            <?= lang('auth.password_reset') ?>
+                            <?= t('auth.password_reset') ?>
                         </a>
                     <?php } ?>
                     <?php if ($Settings->hasPermission('user.inactive')) { ?>
                         <?php if (($scientist['is_active'] ?? true)) { ?>
                             <a class="item" href="<?= ROOTPATH ?>/user/inactivate/<?= $user ?>">
                                 <i class="ph ph-user-circle-dashed ph-fw text-danger"></i>
-                                <?= lang('people.inactivate_user') ?>
+                                <?= t('people.inactivate_user') ?>
                             </a>
                         <?php } elseif ($Settings->hasPermission('user.edit')) { ?>
                             <a class="item" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-account">
                                 <i class="ph ph-user-circle-plus ph-fw text-success"></i>
-                                <?= lang('people.re_activate_user') ?>
+                                <?= t('people.re_activate_user') ?>
                             </a>
                         <?php } ?>
                     <?php } ?>
                     <?php if ($Settings->hasPermission('user.delete')) { ?>
                         <a class="item" href="<?= ROOTPATH ?>/user/delete/<?= $user ?>">
                             <i class="ph ph-trash ph-fw text-danger"></i>
-                            <?= lang('people.delete_user') ?>
+                            <?= t('people.delete_user') ?>
                         </a>
                     <?php } ?>
 
@@ -604,13 +604,13 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
 
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-info" aria-hidden="true"></i>
-        <?= lang('common.general') ?>
+        <?= t('common.general') ?>
     </a>
 
     <?php if ($hasAffiliations): ?>
         <a onclick="navigate('affiliations')" href="#section-affiliations" id="btn-affiliations" class="btn">
             <i class="ph ph-handshake" aria-hidden="true"></i>
-            <?= translate('people.affiliations') ?>
+            <?= t('people.affiliations') ?>
         </a>
     <?php endif; ?>
 
@@ -624,7 +624,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_publications > 0) { ?>
         <a onclick="navigate('publications')" id="btn-publications" class="btn">
             <i class="ph ph-books" aria-hidden="true"></i>
-            <?= lang('common.publications')  ?>
+            <?= t('common.publications')  ?>
             <span class="index"><?= $count_publications ?></span>
         </a>
     <?php } ?>
@@ -645,7 +645,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_coauthors > 3) { ?>
         <a onclick="navigate('coauthors')" id="btn-coauthors" class="btn">
             <i class="ph ph-users" aria-hidden="true"></i>
-            <?= lang('common.coauthors')  ?>
+            <?= t('common.coauthors')  ?>
             <span class="index"><?= $count_coauthors ?></span>
         </a>
     <?php } ?>
@@ -660,7 +660,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_activities > 0) { ?>
         <a onclick="navigate('activities')" id="btn-activities" class="btn">
             <i class="ph ph-briefcase" aria-hidden="true"></i>
-            <?= lang('common.activities')  ?>
+            <?= t('common.activities')  ?>
             <span class="index"><?= $count_activities ?></span>
         </a>
     <?php } ?>
@@ -684,7 +684,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     ?>
         <a onclick="navigate('memberships')" id="btn-memberships" class="btn">
             <i class="ph ph-user-list" aria-hidden="true"></i>
-            <?= lang('people.ongoing_activities_profile')  ?>
+            <?= t('people.ongoing_activities_profile')  ?>
             <span class="index"><?= $count_memberships_ongoing ?></span>
         </a>
     <?php } ?>
@@ -706,7 +706,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_projects > 0) { ?>
             <a onclick="navigate('projects')" id="btn-projects" class="btn">
                 <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                <?= lang('common.projects')  ?>
+                <?= t('common.projects')  ?>
                 <span class="index"><?= $count_projects ?></span>
             </a>
         <?php } ?>
@@ -748,7 +748,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
     if ($count_teaching > 0) { ?>
         <a onclick="navigate('teaching')" id="btn-teaching" class="btn">
             <i class="ph ph-graduation-cap" aria-hidden="true"></i>
-            <?= lang('people.teaching')  ?>
+            <?= t('people.teaching')  ?>
             <span class="index"><?= $count_teaching ?></span>
         </a>
     <?php } ?>
@@ -766,7 +766,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_spectrum > 0) { ?>
             <a onclick="navigate('spectrum')" id="btn-spectrum" class="btn">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                <?= lang('common.research_spectrum')  ?>
+                <?= t('common.research_spectrum')  ?>
             </a>
     <?php }
     } ?>
@@ -778,7 +778,7 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
         if ($count_wordcloud > 0) { ?>
             <a onclick="navigate('wordcloud')" id="btn-wordcloud" class="btn">
                 <i class="ph ph-cloud" aria-hidden="true"></i>
-                <?= lang('common.word_cloud')  ?>
+                <?= t('common.word_cloud')  ?>
             </a>
         <?php } ?>
     <?php } ?>
@@ -798,7 +798,7 @@ if (isset($_GET['verbose'])) {
     <section id="affiliations" class="profile-affiliations" style="display:none">
         <link rel="stylesheet" href="<?= ROOTPATH ?>/css/profile-affiliations.css?v=<?= OSIRIS_BUILD ?>">
         <div class="affiliation-intro">
-            <h2><?= translate('people.affiliations') ?></h2>
+            <h2><?= t('people.affiliations') ?></h2>
         </div>
 
         <?php if ($affiliationTopics): ?>
@@ -806,7 +806,7 @@ if (isset($_GET['verbose'])) {
                 <div class="affiliation-heading">
                     <h3><i class="ph-duotone ph-puzzle-piece" aria-hidden="true"></i> <?= e($Settings->topicLabel()) ?></h3>
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
-                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/edit/<?= e($user) ?>#section-research" aria-label="<?= e(translate('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
+                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/edit/<?= e($user) ?>#section-research" aria-label="<?= e(t('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
                     <?php endif; ?>
                 </div>
                 <div class="mt-20"><?= $Settings->printTopics($affiliationTopics, '', false) ?></div>
@@ -818,15 +818,15 @@ if (isset($_GET['verbose'])) {
                 <div class="affiliation-heading">
                     <h3>
                         <i class="ph-duotone ph-users-three" aria-hidden="true"></i>
-                        <?= translate('people.organisational_unit_s') ?>
+                        <?= t('people.organisational_unit_s') ?>
                     </h3>
                     <?php if ($currentuser || $Settings->hasPermission('user.edit')): ?>
-                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/units/<?= e($user) ?>" aria-label="<?= e(translate('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
+                        <a class="btn small ml-auto" href="<?= ROOTPATH ?>/user/units/<?= e($user) ?>" aria-label="<?= e(t('action.edit')) ?>"><i class="ph ph-note-pencil" aria-hidden="true"></i></a>
                     <?php endif; ?>
                 </div>
                 <?php foreach ($affiliationUnits as $state => $entries): if (!$entries) continue; ?>
                     <?php if ($state === 'past'): ?><details class="collapse-panel affiliation-history">
-                            <summary class="collapse-header"><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                            <summary class="collapse-header"><?= t('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= t('people.affiliations_' . $state) ?></h4><?php endif; ?>
                         <div class="affiliation-grid">
                             <?php foreach ($entries as $entry): ?>
                                 <article class="box affiliation-card affiliation-unit-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>" style="--affiliation-accent: <?= e($entry['color']) ?>">
@@ -835,14 +835,14 @@ if (isset($_GET['verbose'])) {
                                         <h4><a href="<?= ROOTPATH ?>/groups/view/<?= e($entry['id']) ?>"><?= e($entry['name']) ?></a></h4>
                                         <div class="affiliation-period">
                                             <?php if ($entry['implicit']): ?>
-                                                <i class="ph ph-tree-structure" aria-hidden="true"></i> <?= translate('people.affiliation_implicit') ?>
+                                                <i class="ph ph-tree-structure" aria-hidden="true"></i> <?= t('people.affiliation_implicit') ?>
                                             <?php else: ?>
-                                                <i class="ph ph-calendar-blank" aria-hidden="true"></i> <?= $entry['start'] || $entry['end'] ? ($entry['start'] ? format_date($entry['start']) : translate('common.unknown')) . ' – ' . ($entry['end'] ? format_date($entry['end']) : translate('common.open_end')) : translate('people.affiliation_dates_unknown') ?>
+                                                <i class="ph ph-calendar-blank" aria-hidden="true"></i> <?= $entry['start'] || $entry['end'] ? ($entry['start'] ? format_date($entry['start']) : t('common.unknown')) . ' – ' . ($entry['end'] ? format_date($entry['end']) : t('common.open_end')) : t('people.affiliation_dates_unknown') ?>
                                             <?php endif; ?>
                                         </div>
                                         <div class="affiliation-badges">
-                                            <?php if ($entry['lead']): ?><span class="badge primary"><i class="ph ph-flag-banner" aria-hidden="true"></i> <?= translate('people.affiliation_unit_lead') ?></span><?php endif; ?>
-                                            <?php if ($entry['scientific']): ?><span class="badge"><?= translate('common.scientific') ?></span><?php endif; ?>
+                                            <?php if ($entry['lead']): ?><span class="badge primary"><i class="ph ph-flag-banner" aria-hidden="true"></i> <?= t('people.affiliation_unit_lead') ?></span><?php endif; ?>
+                                            <?php if ($entry['scientific']): ?><span class="badge"><?= t('common.scientific') ?></span><?php endif; ?>
                                         </div>
                                     </div>
                                 </article>
@@ -857,9 +857,9 @@ if (isset($_GET['verbose'])) {
                     $todayPosition = round(100 * (strtotime($affiliationToday) - $affiliationAxisStart) / $axisSpan, 3);
                 ?>
                     <details class="collapse-panel affiliation-history" open>
-                        <summary class="collapse-header"><?= translate('people.affiliation_timeline') ?></summary>
+                        <summary class="collapse-header"><?= t('people.affiliation_timeline') ?></summary>
                         <div class="collapse-content">
-                            <p class="text-muted font-size-12"><?= translate('people.affiliation_timeline_hint') ?> <span class="affiliation-today-legend"><?= translate('common.today') ?></span></p>
+                            <p class="text-muted font-size-12"><?= t('people.affiliation_timeline_hint') ?> <span class="affiliation-today-legend"><?= t('common.today') ?></span></p>
                             <div class="affiliation-timeline" style="--affiliation-today: <?= $todayPosition ?>%">
                                 <div class="affiliation-timeline-axis"><span></span>
                                     <div><span><?= date('Y', $affiliationAxisStart) ?></span><span><?= date('Y', $affiliationAxisEnd) ?></span></div>
@@ -873,7 +873,7 @@ if (isset($_GET['verbose'])) {
                                         ?>
                                             <div class="affiliation-track" aria-hidden="true"><span class="affiliation-bar affiliation-bar-<?= $entry['state'] ?><?= $entry['start'] === '' ? ' affiliation-bar-end' : '' ?>" style="left:<?= $left ?>%;width:<?= min(100 - $left, $width) ?>%"></span></div>
                                         <?php endif; ?>
-                                        <small class="text-muted"><?php if ($entry['implicit']): ?><?= translate('people.affiliation_implicit') ?><?php elseif ($entry['start'] || $entry['end']): ?><?= $entry['start'] ? format_date($entry['start']) : translate('common.unknown') ?> – <?= $entry['end'] ? format_date($entry['end']) : translate('common.open_end') ?><?php else: ?><?= translate('people.affiliation_dates_unknown') ?><?php endif; ?></small>
+                                        <small class="text-muted"><?php if ($entry['implicit']): ?><?= t('people.affiliation_implicit') ?><?php elseif ($entry['start'] || $entry['end']): ?><?= $entry['start'] ? format_date($entry['start']) : t('common.unknown') ?> – <?= $entry['end'] ? format_date($entry['end']) : t('common.open_end') ?><?php else: ?><?= t('people.affiliation_dates_unknown') ?><?php endif; ?></small>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -888,12 +888,12 @@ if (isset($_GET['verbose'])) {
                 <div class="affiliation-heading">
                     <h3>
                         <i class="ph-duotone ph-compass" aria-hidden="true"></i>
-                        <?= translate('common.initiatives') ?>
+                        <?= t('common.initiatives') ?>
                     </h3>
                 </div>
                 <?php foreach ($affiliationInitiatives as $state => $entries): if (!$entries) continue; ?>
                     <?php if ($state === 'past'): ?><details class="collapse-panel affiliation-history">
-                            <summary class="collapse-header"><?= translate('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= translate('people.affiliations_' . $state) ?></h4><?php endif; ?>
+                            <summary class="collapse-header"><?= t('people.affiliations_past') ?> <span class="badge"><?= count($entries) ?></span></summary><div class="collapse-content"><?php else: ?><h4 class="affiliation-subheading"><?= t('people.affiliations_' . $state) ?></h4><?php endif; ?>
                         <div class="affiliation-grid">
                             <?php foreach ($entries as $initiative): ?>
                                 <article class="box affiliation-card <?= $state === 'past' ? 'affiliation-card-past' : '' ?>">
@@ -901,7 +901,7 @@ if (isset($_GET['verbose'])) {
                                         <h4><a href="<?= ROOTPATH ?>/initiatives/view/<?= e($initiative['_id']) ?>"><?= e(Initiatives::text($initiative['name'] ?? '')) ?></a></h4>
                                         <?php if ($initiative['affiliation_title'] !== ''): ?><p class="affiliation-parent"><?= e($initiative['affiliation_title']) ?></p><?php endif; ?>
                                         <div class="affiliation-period"><i class="ph ph-calendar-blank" aria-hidden="true"></i> <?= e(Initiatives::period($initiative)) ?></div>
-                                        <div class="affiliation-badges"><?php foreach ($initiative['affiliation_roles'] as $role): ?><span class="badge primary"><?= e($role) ?></span><?php endforeach; ?><?php if (!empty($initiative['inactive'])): ?><span class="badge muted"><?= translate('initiatives.archived') ?></span><?php endif; ?></div>
+                                        <div class="affiliation-badges"><?php foreach ($initiative['affiliation_roles'] as $role): ?><span class="badge primary"><?= e($role) ?></span><?php endforeach; ?><?php if (!empty($initiative['inactive'])): ?><span class="badge muted"><?= t('initiatives.archived') ?></span><?php endif; ?></div>
                                     </div>
                                 </article>
                             <?php endforeach; ?>
@@ -921,7 +921,7 @@ if (isset($_GET['verbose'])) {
             <div class="box h-full">
                 <div class="content">
                     <h4 class="title">
-                        <?= lang('common.details') ?>
+                        <?= t('common.details') ?>
                         <?php if ($currentuser) { ?>
                             <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>">
                                 <i class="ph ph-note-pencil ph-lg"></i>
@@ -933,14 +933,14 @@ if (isset($_GET['verbose'])) {
                     <tbody>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.username') ?></span>
+                                <span class="key"><?= t('common.username') ?></span>
                                 <?= $user ?>
                             </td>
                         </tr>
                         <?php if ($Settings->hasPermission('raw-data')) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('people.osiris_id') ?></span>
+                                    <span class="key"><?= t('people.osiris_id') ?></span>
                                     <?= $scientist['_id'] ?>
                                 </td>
                             </tr>
@@ -948,27 +948,27 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('internal_id') && isset($scientist['internal_id'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.internal_id') ?></span>
+                                    <span class="key"><?= t('common.internal_id') ?></span>
                                     <?= $scientist['internal_id'] ?>
                                 </td>
                             </tr>
                         <?php } ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.name_last') ?></span>
+                                <span class="key"><?= t('common.name_last') ?></span>
                                 <?= $scientist['last'] ?? '' ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.name_first') ?></span>
+                                <span class="key"><?= t('common.name_first') ?></span>
                                 <?= $scientist['first'] ?? '' ?>
                             </td>
                         </tr>
                         <?php if (isset($scientist['academic_title'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('people.academic_title_profile') ?></span>
+                                    <span class="key"><?= t('people.academic_title_profile') ?></span>
                                     <?= $scientist['academic_title'] ?? '' ?>
                                 </td>
                             </tr>
@@ -976,7 +976,7 @@ if (isset($_GET['verbose'])) {
 
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.roles') ?></span>
+                                <span class="key"><?= t('common.roles') ?></span>
 
                                 <?php foreach (($scientist['roles'] ?? []) as $role) { ?>
                                     <span class="badge">
@@ -990,7 +990,7 @@ if (isset($_GET['verbose'])) {
                             $approvedQ = DB::doc2Arr($scientist['approved']);
                             sort($approvedQ);
                             echo "<tr><td>";
-                            echo "<span class='key'>" . lang('people.quarters_approved') . ":</span>";
+                            echo "<span class='key'>" . t('people.quarters_approved') . ":</span>";
                             foreach ($approvedQ as $appr) {
                                 $Q = explode('Q', $appr);
                                 echo "<a href='" . ROOTPATH . "/my-year/$user?year=$Q[0]&quarter=$Q[1]' class='badge success mr-5 mb-5'>$appr</a>";
@@ -1021,7 +1021,7 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('telephone') && isset($scientist['telephone'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.telephone') ?></span>
+                                    <span class="key"><?= t('common.telephone') ?></span>
                                     <a href="tel:<?= $scientist['telephone'] ?>"><?= $scientist['telephone'] ?></a>
                                 </td>
                             </tr>
@@ -1029,7 +1029,7 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('mobile') && isset($scientist['mobile'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.mobile') ?></span>
+                                    <span class="key"><?= t('common.mobile') ?></span>
                                     <a href="tel:<?= $scientist['mobile'] ?>"><?= $scientist['mobile'] ?></a>
                                 </td>
                             </tr>
@@ -1038,7 +1038,7 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('room') && isset($scientist['room'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.room') ?></span>
+                                    <span class="key"><?= t('common.room') ?></span>
                                     <?= $scientist['room'] ?>
                                 </td>
                             </tr>
@@ -1064,7 +1064,7 @@ if (isset($_GET['verbose'])) {
                                         <img src="/img/orcid_unauth.svg" alt="ORCID iD" width="16" height="16" />
                                         <?= $scientist['orcid'] ?>
                                         <?php if ($Settings->featureEnabled('orcid')) { ?>
-                                    </a><?= lang('people.unauthenticated') ?>
+                                    </a><?= t('people.unauthenticated') ?>
                                 <?php } ?>
                                 </td>
                             </tr>
@@ -1083,7 +1083,7 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('socials') && isset($scientist['socials'])) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('people.social_media') ?></span>
+                                    <span class="key"><?= t('people.social_media') ?></span>
                                     <?php
                                     foreach ($scientist['socials'] as $key => $val) { ?>
                                         <a class="btn primary" href="<?= $val ?>" target="_blank" rel="noopener noreferrer"> <i class="ph <?= socialLogo($key) ?>"></i></a>
@@ -1094,7 +1094,7 @@ if (isset($_GET['verbose'])) {
                         <?php if ($active('expertise') && ($currentuser || !empty($scientist['expertise'] ?? array()))) { ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.expertise') ?></span>
+                                    <span class="key"><?= t('common.expertise') ?></span>
                                     <?php foreach ($scientist['expertise'] ?? array() as $key) { ?><a href="<?= ROOTPATH ?>/expertise?search=<?= $key ?>" class="badge primary mr-5 mb-5"><?= $key ?></a><?php } ?>
                                     <?php if ($currentuser) { ?> <a href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research" class=""><i class="ph ph-edit"></i></a> <?php } ?>
                                 </td>
@@ -1126,7 +1126,7 @@ if (isset($_GET['verbose'])) {
                     <div class="content">
 
                         <h4 class="title">
-                            <?= lang('common.research_interests') ?>
+                            <?= t('common.research_interests') ?>
                             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                                 <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-research">
                                     <i class="ph ph-note-pencil ph-lg"></i>
@@ -1143,12 +1143,12 @@ if (isset($_GET['verbose'])) {
                                 <?php } ?>
                             </ul>
                         <?php } else { ?>
-                            <p><?= lang('people.no_research_interests_stated') ?></p>
+                            <p><?= t('people.no_research_interests_stated') ?></p>
                         <?php } ?>
 
                         <?php if (!empty(localized($scientist['research_profile'] ?? []))) { ?>
                             <h6 class="title">
-                                <?= lang('people.research_profile') ?>
+                                <?= t('people.research_profile') ?>
                             </h6>
                             <?= localized($scientist['research_profile']); ?>
                         <?php } ?>
@@ -1161,7 +1161,7 @@ if (isset($_GET['verbose'])) {
                 <?php if (isset($scientist['highlighted'])) { ?>
                     <div class="content">
                         <h4 class="title">
-                            <?= lang('people.highlighted_research') ?>
+                            <?= t('people.highlighted_research') ?>
                         </h4>
                         <table class="table simple">
                             <?php
@@ -1182,7 +1182,7 @@ if (isset($_GET['verbose'])) {
 
                         <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                             <p class="text-muted font-size-12">
-                                <i class="ph ph-edit"></i> <?= lang('people.you_can_highlight_unhighlight_publications_by_clicking_on_them_and_changing') ?>
+                                <i class="ph ph-edit"></i> <?= t('people.you_can_highlight_unhighlight_publications_by_clicking_on_them_and_changing') ?>
                             </p>
                         <?php } ?>
                     </div>
@@ -1193,7 +1193,7 @@ if (isset($_GET['verbose'])) {
 
                     <?php if ($active('cv')) { ?>
                         <h4 class="title">
-                            <?= lang('common.curriculum_vitae') ?>
+                            <?= t('common.curriculum_vitae') ?>
                             <?php if ($currentuser || $Settings->hasPermission('user.edit')) { ?>
                                 <a class="font-size-14 ml-10" href="<?= ROOTPATH ?>/user/edit/<?= $user ?>#section-biography">
                                     <i class="ph ph-note-pencil ph-lg"></i>
@@ -1214,7 +1214,7 @@ if (isset($_GET['verbose'])) {
                                 <?php } ?>
                             </div>
                         <?php } else { ?>
-                            <p><?= lang('people.no_cv_given') ?></p>
+                            <p><?= t('people.no_cv_given') ?></p>
                         <?php } ?>
                     <?php } ?>
 
@@ -1222,7 +1222,7 @@ if (isset($_GET['verbose'])) {
                     <?php if ($active('biography')) { ?>
                         <?php if (!empty(localized($scientist['biography'] ?? []))) { ?>
                             <h6 class="title">
-                                <?= lang('common.biography') ?>
+                                <?= t('common.biography') ?>
                             </h6>
                             <div class="biography"><?= localized($scientist['biography']); ?></div>
                         <?php } ?>
@@ -1231,7 +1231,7 @@ if (isset($_GET['verbose'])) {
                     <?php if ($active('education')) { ?>
                         <?php if (!empty(localized($scientist['education'] ?? []))) { ?>
                             <h6 class="title">
-                                <?= lang('common.education_profile') ?>
+                                <?= t('common.education_profile') ?>
                             </h6>
                             <div class="biography"><?= localized($scientist['education']); ?></div>
                         <?php } ?>
@@ -1247,14 +1247,14 @@ if (isset($_GET['verbose'])) {
 
 <section id="publications" style="display:none">
 
-    <h2><?= lang('common.publications') ?></h2>
+    <h2><?= t('common.publications') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="publication-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -1273,9 +1273,9 @@ if (isset($_GET['verbose'])) {
                     <div class="chart content">
                         <h4 class="title mb-0">
                             <?= $Settings->impactLabel() ?>
-                            <?= lang('people.histogram') ?>
+                            <?= t('people.histogram') ?>
                         </h4>
-                        <p class="text-muted mt-0"><?= lang('people.since') . " " . $Settings->get('startyear') ?></p>
+                        <p class="text-muted mt-0"><?= t('people.since') . " " . $Settings->get('startyear') ?></p>
                         <canvas id="chart-impact-canvas" style="max-height: 30rem;"></canvas>
                     </div>
                 </div>
@@ -1291,9 +1291,9 @@ if (isset($_GET['verbose'])) {
                 <div class="box h-full">
                     <div class="chart content">
                         <h4 class="title mb-0">
-                            <?= lang('people.role_in_publications') ?>
+                            <?= t('people.role_in_publications') ?>
                         </h4>
-                        <p class="text-muted mt-0"><?= lang('people.since') . " " . $Settings->get('startyear') ?></p>
+                        <p class="text-muted mt-0"><?= t('people.since') . " " . $Settings->get('startyear') ?></p>
 
                         <canvas id="chart-authors-canvas" style="max-height: 30rem;"></canvas>
 
@@ -1308,14 +1308,14 @@ if (isset($_GET['verbose'])) {
 <section id="activities" style="display:none">
 
 
-    <h2><?= lang('common.other_activities') ?></h2>
+    <h2><?= t('common.other_activities') ?></h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -1330,14 +1330,14 @@ if (isset($_GET['verbose'])) {
             <div class="box">
                 <div class="chart content">
                     <h4 class="title mb-0">
-                        <?= lang('common.all_activities') ?>
+                        <?= t('common.all_activities') ?>
                     </h4>
-                    <p class="text-muted mt-0"><?= lang('people.in_which_scientist_was_involved', replace: ['scientist' => $scientist['first']]) ?></p>
+                    <p class="text-muted mt-0"><?= t('people.in_which_scientist_was_involved', replace: ['scientist' => $scientist['first']]) ?></p>
 
                     <canvas id="chart-activities-canvas" style="max-height: 35rem;"></canvas>
 
                     <small class="text-muted">
-                        <?= lang('people.for_multi_year_activities_only_the_start_date_is_relevant') ?>
+                        <?= t('people.for_multi_year_activities_only_the_start_date_is_relevant') ?>
                     </small>
                 </div>
             </div>
@@ -1373,7 +1373,7 @@ if (isset($_GET['verbose'])) {
             <?php if (!empty($ongoing)) { ?>
                 <div class="box">
                     <div class="content">
-                        <h4 class="title"><?= lang('people.ongoing_activities_profile') ?></h4>
+                        <h4 class="title"><?= t('people.ongoing_activities_profile') ?></h4>
                     </div>
                     <table class="table simple">
                         <tbody>
@@ -1401,7 +1401,7 @@ if (isset($_GET['verbose'])) {
             <?php if (!empty($past)) { ?>
                 <details class="collapse-panel">
                     <summary class="collapse-header">
-                        <h4 class="m-0"><?= lang('people.past_activities') ?></h4>
+                        <h4 class="m-0"><?= t('people.past_activities') ?></h4>
                     </summary>
                     <div class="collapse-content p-0 pb-5">
                         <table class="table simple">
@@ -1446,7 +1446,7 @@ if (isset($_GET['verbose'])) {
 ?>
     <section id="projects" style="display:none">
         <h3 class="title">
-            <?= lang('common.timeline_of_all_approved_projects') ?>
+            <?= t('common.timeline_of_all_approved_projects') ?>
         </h3>
         <div class="box">
             <div class="content">
@@ -1473,7 +1473,7 @@ if (isset($_GET['verbose'])) {
             $i = 0;
         ?>
             <?php if (!empty($ongoing)) { ?>
-                <h2><?= lang('common.ongoing_projects') ?></h2>
+                <h2><?= t('common.ongoing_projects') ?></h2>
 
                 <div class="row row-eq-spacing my-0">
                     <?php foreach ($ongoing as $html) { ?>
@@ -1490,7 +1490,7 @@ if (isset($_GET['verbose'])) {
                 if (!empty($proposals)) {
             ?>
 
-                    <h2><?= lang('people.proposed_projects') ?></h2>
+                    <h2><?= t('people.proposed_projects') ?></h2>
 
                     <div class="row row-eq-spacing my-0">
                         <?php foreach ($proposals as $proposal) {
@@ -1503,15 +1503,15 @@ if (isset($_GET['verbose'])) {
                     </div>
 
                     <p class="text-muted font-size-12">
-                        <?= lang('people.others_can_not_see_your_proposals_on_your_profile_page') ?>
-                        <a href="<?= ROOTPATH ?>/proposals" class="link"><?= lang('people.see_all_proposals') ?></a>
+                        <?= t('people.others_can_not_see_your_proposals_on_your_profile_page') ?>
+                        <a href="<?= ROOTPATH ?>/proposals" class="link"><?= t('people.see_all_proposals') ?></a>
                     </p>
                 <?php } ?>
             <?php } ?>
 
 
             <?php if (!empty($past)) { ?>
-                <h2><?= lang('common.past_projects') ?></h2>
+                <h2><?= t('common.past_projects') ?></h2>
 
                 <div class="row row-eq-spacing my-0">
                     <?php foreach ($past as $html) { ?>
@@ -1565,9 +1565,9 @@ if (isset($_GET['verbose'])) {
                                     <?php } ?>
                                 </div>
                                 <div>
-                                    <?= lang('people.active_as') ?>
+                                    <?= t('people.active_as') ?>
                                     <b class="text-primary"><?= $Infra->getRole($person_role['role']) ?></b>
-                                    <?= lang('common.from') ?>
+                                    <?= t('common.from') ?>
                                     <?= fromToYear($person_role['start'], $person_role['end'] ?? null, true) ?>
                                 </div>
                             </td>
@@ -1576,7 +1576,7 @@ if (isset($_GET['verbose'])) {
             </table>
 
         <?php } else { ?>
-            <?= lang('common.no_infrastructures_connected') ?>
+            <?= t('common.no_infrastructures_connected') ?>
         <?php } ?>
 
 
@@ -1587,13 +1587,13 @@ if (isset($_GET['verbose'])) {
 <section id="coauthors" style="display:none">
     <h2>
         <i class="ph ph-graph" aria-hidden="true"></i>
-        <?= lang('people.coauthor_network_of') ?> <?= $scientist['displayname'] ?>
+        <?= t('people.coauthor_network_of') ?> <?= $scientist['displayname'] ?>
     </h2>
     <p class="text-muted" id="coauthor-network-info-5">
-        <?= lang('common.based_on_publications_within_the_past_5_years') ?>
+        <?= t('common.based_on_publications_within_the_past_5_years') ?>
     </p>
     <p class="text-muted" id="coauthor-network-info-all" style="display:none">
-        <?= lang('people.based_on_all_publications') ?>
+        <?= t('people.based_on_all_publications') ?>
     </p>
     <div class="box">
         <div class="row">
@@ -1603,10 +1603,10 @@ if (isset($_GET['verbose'])) {
             <div class="col-md-4">
                 <div class="btn-group mt-20">
                     <button class="btn small" id="toggle-show-5" disabled>
-                        <?= lang('people.last_5_years') ?>
+                        <?= t('people.last_5_years') ?>
                     </button>
                     <button class="btn small" id="toggle-show-all">
-                        <?= lang('people.all_years') ?>
+                        <?= t('people.all_years') ?>
                     </button>
                 </div>
                 <div id="legend"></div>
@@ -1619,7 +1619,7 @@ if (isset($_GET['verbose'])) {
 <?php if ($count_teaching > 0) { ?>
     <section id="teaching" style="display: none;">
 
-        <h2><?= lang('people.teaching_activities') ?></h2>
+        <h2><?= t('people.teaching_activities') ?></h2>
 
         <div class="collapse-group">
             <?php foreach ($teaching as $t) {
@@ -1662,7 +1662,7 @@ if (isset($_GET['verbose'])) {
 
                         <?php } else { ?>
 
-                            <?= lang('common.no_activities_connected') ?>
+                            <?= t('common.no_activities_connected') ?>
 
                         <?php } ?>
                     </div>
@@ -1676,7 +1676,7 @@ if (isset($_GET['verbose'])) {
 <?php if ($Settings->featureEnabled('spectrum')) { ?>
     <section id="spectrum" style="display:none">
         <h2>
-            <?= lang('people.research_spectrum_of') ?> <?= $scientist['displayname'] ?>
+            <?= t('people.research_spectrum_of') ?> <?= $scientist['displayname'] ?>
         </h2>
         <?php
         $show_link = true;
@@ -1739,11 +1739,11 @@ if (isset($_GET['verbose'])) {
             <?php if ($show_link) { ?>
                 <p class="text-muted mb-0">
                     <?php if (!$full_spectrum && $count_spectrum > 10) { ?>
-                        <?= lang('common.based_on_publications_within_the_past_5_years') ?>
-                        <a href="?fullspectrum=1#section-spectrum"><?= lang('people.view_full_spectrum') ?></a>
+                        <?= t('common.based_on_publications_within_the_past_5_years') ?>
+                        <a href="?fullspectrum=1#section-spectrum"><?= t('people.view_full_spectrum') ?></a>
                     <?php } elseif ($full_spectrum) { ?>
-                        <?= lang('people.based_on_all_publications_in_osiris') ?>
-                        <a href="?#section-spectrum"><?= lang('people.view_recent_spectrum') ?></a>
+                        <?= t('people.based_on_all_publications_in_osiris') ?>
+                        <a href="?#section-spectrum"><?= t('people.view_recent_spectrum') ?></a>
                     <?php } ?>
                 </p>
             <?php } ?>
@@ -1752,7 +1752,7 @@ if (isset($_GET['verbose'])) {
             Spectrum::render($spectrum, $count_spectrum, '', '{"rendered.users":"' . $user . '"}');
         else : ?>
             <p>
-                <?= lang('people.we_do_not_have_enough_data_to_display_a_research_spectrum_for_this_scientis') ?>
+                <?= t('people.we_do_not_have_enough_data_to_display_a_research_spectrum_for_this_scientis') ?>
             </p>
         <?php endif; ?>
     </section>
@@ -1761,17 +1761,17 @@ if (isset($_GET['verbose'])) {
 
 <?php if ($Settings->featureEnabled('wordcloud')) { ?>
     <section id="wordcloud" style="display:none">
-        <h3 class=""><?= lang('common.word_cloud') ?></h3>
+        <h3 class=""><?= t('common.word_cloud') ?></h3>
 
         <p class="text-muted">
-            <?= lang('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
+            <?= t('common.based_on_the_title_and_abstract_if_available_of_activities_in_osiris') ?>
         </p>
         <div class="btn-group mt-20">
             <button class="btn small" id="toggle-wordcloud-activities" disabled>
-                <?= lang('common.all_activities') ?>
+                <?= t('common.all_activities') ?>
             </button>
             <button class="btn small" id="toggle-wordcloud-publications">
-                <?= lang('people.only_publications') ?>
+                <?= t('people.only_publications') ?>
             </button>
         </div>
         <div id="wordcloud-chart" style="max-width: 80rem" ;></div>

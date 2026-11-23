@@ -30,7 +30,7 @@ $end = $form['end_date'] ?? '';
 
 
 <h2>
-    <?= lang('common.operating_personnel') ?>
+    <?= t('common.operating_personnel') ?>
 </h2>
 <form action="<?= ROOTPATH ?>/crud/infrastructures/update-persons/<?= $id ?>" method="post">
 
@@ -38,27 +38,27 @@ $end = $form['end_date'] ?? '';
         <thead>
             <tr>
                 <th>
-                    <?= lang('common.person') ?><br>
+                    <?= t('common.person') ?><br>
 
                 </th>
                 <th>
-                    <?= lang('common.role') ?>
+                    <?= t('common.role') ?>
 
                 </th>
                 <th>
-                    <?= lang('infrastructures.scope_fte') ?>
+                    <?= t('infrastructures.scope_fte') ?>
 
                 </th>
                 <th>
-                    <?= lang('common.start') ?>
+                    <?= t('common.start') ?>
 
                 </th>
                 <th>
-                    <?= lang('common.end') ?>
+                    <?= t('common.end') ?>
 
                 </th>
                 <th>
-                    <?= lang('infrastructures.reporter_required') ?>
+                    <?= t('infrastructures.reporter_required') ?>
                 </th>
                 <th></th>
             </tr>
@@ -99,8 +99,8 @@ $end = $form['end_date'] ?? '';
                         $reporter = $con['reporter'] ?? 0;
                         ?>
                         <select name="persons[<?= $i ?>][reporter]" id="persons-<?= $i ?>-reporter" class="form-control" required>
-                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= lang('common.no') ?></option>
-                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= lang('common.yes') ?></option>
+                            <option value="0" <?= ($reporter == 0 ? 'selected' : '') ?>><?= t('common.no') ?></option>
+                            <option value="1" <?= ($reporter == 1 ? 'selected' : '') ?>><?= t('common.yes') ?></option>
                         </select>
                     </td>
                     <td>
@@ -112,7 +112,7 @@ $end = $form['end_date'] ?? '';
         <tfoot>
             <tr id="last-row">
                 <td colspan="7">
-                    <button class="btn" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus"></i> <?= lang('infrastructures.add_row') ?></button>
+                    <button class="btn" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus"></i> <?= t('infrastructures.add_row') ?></button>
                 </td>
             </tr>
         </tfoot>
@@ -120,12 +120,12 @@ $end = $form['end_date'] ?? '';
     </table>
 
     <small>
-        * <?= lang('infrastructures.reporter_are_responsible_for_updating_the_statistics_and_will_be_asked_by_t') ?>
+        * <?= t('infrastructures.reporter_are_responsible_for_updating_the_statistics_and_will_be_asked_by_t') ?>
     </small>
     <br>
     <button class="btn primary mt-20">
         <i class="ph ph-check"></i>
-        <?= lang('action.submit') ?>
+        <?= t('action.submit') ?>
     </button>
 </form>
 

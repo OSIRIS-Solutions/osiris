@@ -12,7 +12,7 @@
 $user = $osiris->persons->findOne(['username' => $_SESSION['username']]);
 
 if (!($user['orcid_validated'] ?? false)) {
-    echo '<div class="alert error">' . lang('orcid.your_orcid_is_not_yet_validated_please_validate_your_orcid_before_importing') . '</div>';
+    echo '<div class="alert error">' . t('orcid.your_orcid_is_not_yet_validated_please_validate_your_orcid_before_importing') . '</div>';
     exit;
 }
 
@@ -56,14 +56,14 @@ try {
     }
 
 } catch (Exception $e) {
-    echo '<div class="alert error"><h3 class="title">' . lang('orcid.error_fetching_works_from_orcid') . '</h3><pre class="overflow-auto">' . $e . '</pre></div>';
+    echo '<div class="alert error"><h3 class="title">' . t('orcid.error_fetching_works_from_orcid') . '</h3><pre class="overflow-auto">' . $e . '</pre></div>';
     exit;
 }
 
 if (!empty($works_to_import)) { ?>
     <h1>
         <img src="<?= ROOTPATH ?>/img/orcid.svg" alt="ORCID iD" width="24" height="24">
-        <?= lang('orcid.ready_to_import') ?>:
+        <?= t('orcid.ready_to_import') ?>:
     </h1>
 
     <?php    
@@ -112,7 +112,7 @@ if (!empty($works_to_import)) { ?>
             </p>
             <form method="post">
                 <button type="submit" name="import" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn success small">
-                    <?= lang('orcid.import') ?>
+                    <?= t('orcid.import') ?>
                 </button>
                 <button type="submit" name="skip" value="<?= htmlspecialchars(json_encode($doc), ENT_QUOTES, 'UTF-8') ?>" class="btn secondary small">
                     <?= lang('Skip', 'Überspringen') ?>
@@ -122,7 +122,7 @@ if (!empty($works_to_import)) { ?>
     <?php } ?>
 <?php } else { ?>
     <div class="alert info">
-        <?= lang('orcid.no_further_works_to_import_found') ?>
+        <?= t('orcid.no_further_works_to_import_found') ?>
     </div>
 <?php } ?>
 

@@ -24,7 +24,7 @@ final class DeadlineForms
     public static function builder(): FormBuilder
     {
         return new FormBuilder(
-            entityLabel: translate('common.deadlines'),
+            entityLabel: t('common.deadlines'),
             redirectUrl: ROOTPATH . '/crud/admin/deadlinesFields',
             entity: 'deadlines',
             backUrl: ROOTPATH . '/admin/data-model#deadlines',
@@ -80,15 +80,15 @@ final class DeadlineForms
                 $value = $values[$key] ?? null;
                 if (!empty($module['localized']) && is_array($value)) $value = $value[OSIRIS_BASE_LANGUAGE] ?? '';
                 if ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === '')) {
-                    throw new InvalidArgumentException(translate('initiatives.required_field') . ': ' . $label);
+                    throw new InvalidArgumentException(t('initiatives.required_field') . ': ' . $label);
                 }
             }
         }
         foreach (self::TEXT_FIELDS as $key) {
-            if (isset($values[$key]) && !is_string($values[$key])) throw new InvalidArgumentException(translate('error.no_values'));
+            if (isset($values[$key]) && !is_string($values[$key])) throw new InvalidArgumentException(t('error.no_values'));
         }
         $date = Initiatives::dateInput($values['date'] ?? null);
-        if ($date === null) throw new InvalidArgumentException(translate('initiatives.invalid_date'));
+        if ($date === null) throw new InvalidArgumentException(t('initiatives.invalid_date'));
         $vocabulary = new Vocabulary();
         $knownType = in_array($values['type'] ?? '', array_column($vocabulary->getValues('deadline-type'), 'id'), true);
         if (!$knownType && ($values['type'] ?? '') !== ($previous['type'] ?? null)) {
@@ -98,7 +98,7 @@ final class DeadlineForms
         $plain = array_intersect_key($values, array_flip(self::TEXT_FIELDS));
         $values = validateValues(array_diff_key($values, $plain, ['date' => true]), new DB(), 'deadlines');
         $roles = $input['roles'] ?? [];
-        if (!is_array($roles)) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($roles)) throw new InvalidArgumentException(t('error.no_values'));
         $definition = $database->adminGeneral->findOne(['key' => 'roles']);
         $allowedRoles = array_merge(DB::doc2Arr($definition['value'] ?? ['user', 'scientist', 'admin']), DB::doc2Arr($previous['roles'] ?? []));
         $roles = array_values(array_intersect(array_keys($roles), $allowedRoles));

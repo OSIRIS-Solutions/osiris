@@ -113,7 +113,7 @@ $config = new FormBuilder('Test', '', entity: 'activities');
 check($config->modules['initiatives']['label'] === 'Missions' && $config->modules['objectives']['label'] === 'Goals', 'The Form Builder exposes the overridden standard labels.');
 $rights = json_decode(file_get_contents(BASEPATH . '/roles.json'), true, 512, JSON_THROW_ON_ERROR);
 $initiativeRights = array_values(array_filter($rights, fn($group) => ($group['label'] ?? '') === 'common.initiatives'))[0];
-check(translate($initiativeRights['label']) === 'Missions' && translate($initiativeRights['fields'][2]['label'], ['initiatives' => translate('common.initiatives'), 'objectives' => translate('initiatives.objectives')]) === 'Assign Missions and Goals outside their period', 'Permission labels reuse the renamed entities instead of hard-coded names.');
+check(t($initiativeRights['label']) === 'Missions' && t($initiativeRights['fields'][2]['label'], ['initiatives' => t('common.initiatives'), 'objectives' => t('initiatives.objectives')]) === 'Assign Missions and Goals outside their period', 'Permission labels reuse the renamed entities instead of hard-coded names.');
 $language = $originalLanguage;
 $Translations = $originalTranslations;
 ob_end_clean();

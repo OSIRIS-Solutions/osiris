@@ -17,19 +17,19 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('common.project_settings') ?>
+    <?= t('common.project_settings') ?>
 </h1>
 
 
 <div class="btn-toolbar">
     <a class="btn" href="<?= ROOTPATH ?>/admin/projects/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('common.add_category') ?>
+        <?= t('common.add_category') ?>
     </a>
 
     <a class="btn" href="<?= ROOTPATH ?>/admin/vocabulary">
         <i class="ph ph-list"></i>
-        <?= lang('common.vocabulary') ?>
+        <?= t('common.vocabulary') ?>
     </a>
 </div>
 
@@ -47,7 +47,7 @@
             <?php if (isset($type['disabled']) && $type['disabled']) { ?>
                 <small class="badge danger ml-20">
                     <i class="ph ph-x-circle" aria-hidden="true"></i>
-                    <?= lang('admin.deactivated') ?>
+                    <?= t('admin.deactivated') ?>
                 </small>
             <?php } ?>
         </a>

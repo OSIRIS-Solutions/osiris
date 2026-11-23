@@ -5,7 +5,7 @@
         $impress = file_get_contents(BASEPATH . '/pages/impressum.html');
     }
     if (empty($impress)) {
-        $impress = "<p>" . lang('common.no_legal_notice_available') . "</p>";
+        $impress = "<p>" . t('common.no_legal_notice_available') . "</p>";
     }
     echo $impress;
 ?>

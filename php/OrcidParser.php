@@ -294,7 +294,7 @@ class OrcidParser
 
         // Check if cache exists and is still valid (within 2 hours)
         if ($cached_works && (time() - $cached_works['timestamp'] < 7200)) {
-            echo "<p class='text-muted font-size-12'>" . lang('common.using_cached_orcid_works_cache_is_valid_for_2_hours') . "</p>";
+            echo "<p class='text-muted font-size-12'>" . t('common.using_cached_orcid_works_cache_is_valid_for_2_hours') . "</p>";
             $works = $cached_works['data'];
             // we still need to filter the works that are not in Osiris, 
             // because the cache might contain works that have been imported since the last cache

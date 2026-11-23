@@ -48,15 +48,15 @@ $filesize = Settings::getMaxFileSize('25M');
         <div>
             <h1 class="mb-5">
                 <i class="ph-duotone ph-files"></i>
-                <?= lang('common.manage_central_documents') ?>
+                <?= t('common.manage_central_documents') ?>
             </h1>
             <p class="text-muted mt-0 mb-0">
-                <?= lang('documents.upload_documents_once_and_make_them_available_throughout_osiris_via_a_stabl') ?>
+                <?= t('documents.upload_documents_once_and_make_them_available_throughout_osiris_via_a_stabl') ?>
             </p>
         </div>
         <button type="button" class="btn primary" data-toggle="modal" data-target="central-document-upload">
             <i class="ph ph-upload-simple"></i>
-            <?= lang('common.upload_document') ?>
+            <?= t('common.upload_document') ?>
         </button>
     </div>
 
@@ -64,28 +64,28 @@ $filesize = Settings::getMaxFileSize('25M');
         <?php if (empty($documents)) { ?>
             <div class="central-document-empty">
                 <i class="ph-duotone ph-file-plus"></i>
-                <h3 class="mt-0 mb-5"><?= lang('documents.no_central_documents_yet') ?></h3>
+                <h3 class="mt-0 mb-5"><?= t('documents.no_central_documents_yet') ?></h3>
                 <p class="text-muted mt-0">
-                    <?= lang('documents.upload_the_first_document_to_start_building_the_central_library') ?>
+                    <?= t('documents.upload_the_first_document_to_start_building_the_central_library') ?>
                 </p>
                 <button type="button" class="btn primary" data-toggle="modal" data-target="central-document-upload">
-                    <i class="ph ph-plus"></i> <?= lang('documents.upload_first_document') ?>
+                    <i class="ph ph-plus"></i> <?= t('documents.upload_first_document') ?>
                 </button>
             </div>
         <?php } else { ?>
             <table id="central-documents-table" class="table table-hover">
                 <thead>
                     <tr>
-                        <th><?= lang('documents.document') ?></th>
-                        <th><?= lang('common.category') ?></th>
-                        <th class="central-document-meta-column"><?= lang('documents.last_file_upload') ?></th>
-                        <th class="text-right"><?= lang('common.actions') ?></th>
+                        <th><?= t('documents.document') ?></th>
+                        <th><?= t('common.category') ?></th>
+                        <th class="central-document-meta-column"><?= t('documents.last_file_upload') ?></th>
+                        <th class="text-right"><?= t('common.actions') ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($documents as $document) {
                         $id = (string) $document['_id'];
-                        $title = trim((string) ($document['name'] ?? '')) ?: (string) ($document['filename'] ?? lang('common.untitled_document'));
+                        $title = trim((string) ($document['name'] ?? '')) ?: (string) ($document['filename'] ?? t('common.untitled_document'));
                         $description = trim((string) ($document['description'] ?? ''));
                         $category = trim((string) ($document['category'] ?? ''));
                         $tags = DB::doc2Arr($document['tags'] ?? []);
@@ -135,23 +135,23 @@ $filesize = Settings::getMaxFileSize('25M');
                                 <span class="d-none"><?= e($uploaded) ?></span>
                                 <?= e($uploadedDate) ?>
                                 <?php if ($uploader !== '') { ?>
-                                    <div class="text-muted font-size-12"><?= lang('common.by_documents_manage') ?> <?= e($uploader) ?></div>
+                                    <div class="text-muted font-size-12"><?= t('common.by_documents_manage') ?> <?= e($uploader) ?></div>
                                 <?php } ?>
                             </td>
                             <td class="text-right central-document-actions">
                                 <div class="btn-group">
-                                    <a href="<?= e($fileUrl) ?>?download=1" class="btn small" title="<?= lang('common.download') ?>">
+                                    <a href="<?= e($fileUrl) ?>?download=1" class="btn small" title="<?= t('common.download') ?>">
                                         <i class="ph ph-download-simple"></i>
                                     </a>
-                                    <button type="button" class="btn small edit-central-document" data-toggle="modal" data-target="central-document-edit" data-document="<?= e($editData) ?>" title="<?= lang('documents.edit_metadata') ?>">
+                                    <button type="button" class="btn small edit-central-document" data-toggle="modal" data-target="central-document-edit" data-document="<?= e($editData) ?>" title="<?= t('documents.edit_metadata') ?>">
                                         <i class="ph ph-pencil-simple"></i>
                                     </button>
-                                    <button type="button" class="btn small replace-central-document" data-toggle="modal" data-target="central-document-replace" data-document="<?= e($editData) ?>" title="<?= lang('documents.replace_file') ?>">
+                                    <button type="button" class="btn small replace-central-document" data-toggle="modal" data-target="central-document-replace" data-document="<?= e($editData) ?>" title="<?= t('documents.replace_file') ?>">
                                         <i class="ph ph-arrows-clockwise"></i>
                                     </button>
                                 </div>
-                                <form action="<?= ROOTPATH ?>/crud/documents/central/delete/<?= e($id) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= e(lang('documents.delete_this_central_document_permanently')) ?>')">
-                                    <button type="submit" class="btn small danger" title="<?= lang('action.delete') ?>">
+                                <form action="<?= ROOTPATH ?>/crud/documents/central/delete/<?= e($id) ?>" method="post" class="d-inline" onsubmit="return confirm('<?= e(t('documents.delete_this_central_document_permanently')) ?>')">
+                                    <button type="submit" class="btn small danger" title="<?= t('action.delete') ?>">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </form>
@@ -174,37 +174,37 @@ $filesize = Settings::getMaxFileSize('25M');
     <div class="modal-dialog" role="document">
         <div class="modal-content w-600 mw-full">
             <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close"><span aria-hidden="true">&times;</span></a>
-            <h4 class="title"><i class="ph ph-upload-simple"></i> <?= lang('documents.upload_central_document') ?></h4>
+            <h4 class="title"><i class="ph ph-upload-simple"></i> <?= t('documents.upload_central_document') ?></h4>
 
             <form action="<?= ROOTPATH ?>/crud/documents/central/upload" method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="required" for="central-document-upload-title"><?= lang('common.title') ?></label>
+                    <label class="required" for="central-document-upload-title"><?= t('common.title') ?></label>
                     <input type="text" class="form-control" id="central-document-upload-title" name="values[name]" maxlength="200" required>
                 </div>
                 <div class="form-group">
-                    <label for="central-document-upload-description"><?= lang('common.short_description') ?></label>
+                    <label for="central-document-upload-description"><?= t('common.short_description') ?></label>
                     <textarea class="form-control" id="central-document-upload-description" name="values[description]" maxlength="500" rows="3"></textarea>
-                    <small class="text-muted"><?= lang('documents.plain_text_maximum_500_characters') ?></small>
+                    <small class="text-muted"><?= t('documents.plain_text_maximum_500_characters') ?></small>
                 </div>
                 <div class="row row-eq-spacing">
                     <div class="col-md-6">
-                        <label for="central-document-upload-category"><?= lang('common.category') ?></label>
+                        <label for="central-document-upload-category"><?= t('common.category') ?></label>
                         <input type="text" class="form-control" id="central-document-upload-category" name="values[category]" maxlength="100" list="central-document-categories">
                     </div>
                     <div class="col-md-6">
-                        <label for="central-document-upload-tags"><?= lang('common.tags') ?></label>
-                        <input type="text" class="form-control" id="central-document-upload-tags" name="values[tags]" placeholder="<?= lang('documents.guideline_branding_template') ?>">
+                        <label for="central-document-upload-tags"><?= t('common.tags') ?></label>
+                        <input type="text" class="form-control" id="central-document-upload-tags" name="values[tags]" placeholder="<?= t('documents.guideline_branding_template') ?>">
                     </div>
                 </div>
                 <div class="form-group mt-10">
-                    <label class="required" for="central-document-upload-file"><?= lang('common.file') ?></label>
+                    <label class="required" for="central-document-upload-file"><?= t('common.file') ?></label>
                     <div class="custom-file">
                         <input type="file" id="central-document-upload-file" name="file" class="custom-file-input" accept="<?= e($acceptedFiles) ?>" maxsize="<?= $filesize['bytes'] ?>" required>
-                        <label for="central-document-upload-file" class="custom-file-label"><?= lang('documents.choose_a_file') ?></label>
+                        <label for="central-document-upload-file" class="custom-file-label"><?= t('documents.choose_a_file') ?></label>
                     </div>
-                    <small class="text-muted"><?= lang('documents.common_office_documents_pdfs_text_files_zip_archives_and_images_up_to_files', replace: ['filesize' => $filesize['human']]) ?></small>
+                    <small class="text-muted"><?= t('documents.common_office_documents_pdfs_text_files_zip_archives_and_images_up_to_files', replace: ['filesize' => $filesize['human']]) ?></small>
                 </div>
-                <button type="submit" class="btn primary mt-10"><i class="ph ph-upload-simple"></i> <?= lang('common.upload_document') ?></button>
+                <button type="submit" class="btn primary mt-10"><i class="ph ph-upload-simple"></i> <?= t('common.upload_document') ?></button>
             </form>
         </div>
     </div>
@@ -214,30 +214,30 @@ $filesize = Settings::getMaxFileSize('25M');
     <div class="modal-dialog" role="document">
         <div class="modal-content w-600 mw-full">
             <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close"><span aria-hidden="true">&times;</span></a>
-            <h4 class="title"><i class="ph ph-pencil-simple"></i> <?= lang('documents.edit_document') ?></h4>
+            <h4 class="title"><i class="ph ph-pencil-simple"></i> <?= t('documents.edit_document') ?></h4>
             <form action="" method="post" id="central-document-edit-form">
                 <div class="form-group">
-                    <label class="required" for="central-document-edit-title"><?= lang('common.title') ?></label>
+                    <label class="required" for="central-document-edit-title"><?= t('common.title') ?></label>
                     <input type="text" class="form-control" id="central-document-edit-title" name="values[name]" maxlength="200" required>
                 </div>
                 <div class="form-group">
-                    <label for="central-document-edit-description"><?= lang('common.short_description') ?></label>
+                    <label for="central-document-edit-description"><?= t('common.short_description') ?></label>
                     <textarea class="form-control" id="central-document-edit-description" name="values[description]" maxlength="500" rows="3"></textarea>
                 </div>
                 <div class="row row-eq-spacing">
                     <div class="col-md-6">
-                        <label for="central-document-edit-category"><?= lang('common.category') ?></label>
+                        <label for="central-document-edit-category"><?= t('common.category') ?></label>
                         <input type="text" class="form-control" id="central-document-edit-category" name="values[category]" maxlength="100" list="central-document-categories">
                     </div>
                     <div class="col-md-6">
-                        <label for="central-document-edit-tags"><?= lang('common.tags') ?></label>
+                        <label for="central-document-edit-tags"><?= t('common.tags') ?></label>
                         <input type="text" class="form-control" id="central-document-edit-tags" name="values[tags]">
                     </div>
                 </div>
                 <p class="text-muted font-size-12 central-document-form-note mt-20 mb-10">
-                    <?= lang('documents.editing_metadata_does_not_change_the_file_or_its_stable_link') ?>
+                    <?= t('documents.editing_metadata_does_not_change_the_file_or_its_stable_link') ?>
                 </p>
-                <button type="submit" class="btn primary"><i class="ph ph-floppy-disk"></i> <?= lang('common.save_changes') ?></button>
+                <button type="submit" class="btn primary"><i class="ph ph-floppy-disk"></i> <?= t('common.save_changes') ?></button>
             </form>
         </div>
     </div>
@@ -247,24 +247,24 @@ $filesize = Settings::getMaxFileSize('25M');
     <div class="modal-dialog" role="document">
         <div class="modal-content w-600 mw-full">
             <a data-dismiss="modal" class="btn float-right" role="button" aria-label="Close"><span aria-hidden="true">&times;</span></a>
-            <h4 class="title"><i class="ph ph-arrows-clockwise"></i> <?= lang('documents.replace_file') ?></h4>
+            <h4 class="title"><i class="ph ph-arrows-clockwise"></i> <?= t('documents.replace_file') ?></h4>
             <form action="" method="post" enctype="multipart/form-data" id="central-document-replace-form">
                 <p>
-                    <?= lang('documents.current_file') ?>
+                    <?= t('documents.current_file') ?>
                     <strong id="central-document-replace-filename"></strong>
                 </p>
                 <div class="alert signal">
-                    <?= lang('documents.the_title_and_metadata_are_retained_existing_links_continue_to_work_after_t') ?>
+                    <?= t('documents.the_title_and_metadata_are_retained_existing_links_continue_to_work_after_t') ?>
                 </div>
                 <div class="form-group">
-                    <label class="required" for="central-document-replace-file"><?= lang('documents.new_file') ?></label>
+                    <label class="required" for="central-document-replace-file"><?= t('documents.new_file') ?></label>
                     <div class="custom-file">
                         <input type="file" id="central-document-replace-file" name="file" class="custom-file-input" accept="<?= e($acceptedFiles) ?>" maxsize="<?= $filesize['bytes'] ?>" required>
-                        <label for="central-document-replace-file" class="custom-file-label"><?= lang('documents.choose_replacement_file') ?></label>
+                        <label for="central-document-replace-file" class="custom-file-label"><?= t('documents.choose_replacement_file') ?></label>
                     </div>
-                    <small class="text-muted"><?= lang('common.maximum_file_size_filesize', replace: ['filesize' => $filesize['human']]) ?></small>
+                    <small class="text-muted"><?= t('common.maximum_file_size_filesize', replace: ['filesize' => $filesize['human']]) ?></small>
                 </div>
-                <button type="submit" class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= lang('documents.replace_file') ?></button>
+                <button type="submit" class="btn primary"><i class="ph ph-arrows-clockwise"></i> <?= t('documents.replace_file') ?></button>
             </form>
         </div>
     </div>
@@ -299,8 +299,8 @@ $filesize = Settings::getMaxFileSize('25M');
             order: [[2, 'desc']],
             columnDefs: [{ orderable: false, searchable: false, targets: 3 }],
             language: {
-                emptyTable: '<?= e(lang('documents.no_central_documents_found')) ?>',
-                search: '<?= e(lang('documents.search')) ?>'
+                emptyTable: '<?= e(t('documents.no_central_documents_found')) ?>',
+                search: '<?= e(t('documents.search')) ?>'
             }
         });
     <?php } ?>

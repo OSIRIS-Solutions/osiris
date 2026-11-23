@@ -19,7 +19,7 @@ $Modules->setFields($fields);
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-compass"></i>
-        <?= e(translate($editing ? 'action.edit' : 'common.new')) ?>: <?= e(translate('common.initiative')) ?>
+        <?= e(t($editing ? 'action.edit' : 'common.new')) ?>: <?= e(t('common.initiative')) ?>
     </h1>
 
     <?php if ($editing): ?><h2 class="subtitle"><?= e(Initiatives::text($initiative['name'] ?? '')) ?></h2><?php endif; ?>
@@ -34,16 +34,16 @@ $Modules->setFields($fields);
                 <input type="hidden" name="values[public]" value="false">
                 <div class="custom-checkbox">
                     <input type="checkbox" name="values[public]" id="initiative-portfolio-public" value="true" <?= filter_var($publicValue ?? false, FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' ?>>
-                    <label for="initiative-portfolio-public"><?= translate('initiatives.portfolio_visibility') ?></label>
+                    <label for="initiative-portfolio-public"><?= t('initiatives.portfolio_visibility') ?></label>
                 </div>
-                <small class="text-muted"><?= translate('initiatives.portfolio_visibility_hint') ?></small>
+                <small class="text-muted"><?= t('initiatives.portfolio_visibility_hint') ?></small>
             </div>
         <?php endif; ?>
         <button class="btn success" type="submit">
-            <i class="ph ph-floppy-disk"></i> <?= translate('action.save') ?>
+            <i class="ph ph-floppy-disk"></i> <?= t('action.save') ?>
         </button>
         <a class="btn" href="<?= ROOTPATH ?>/initiatives<?= $editing ? '/view/' . e($form['_id']) : '' ?>">
-            <?= translate('action.cancel') ?>
+            <?= t('action.cancel') ?>
         </a>
     </form>
     <?php if ($editing):

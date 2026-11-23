@@ -21,19 +21,19 @@ $Project = new Project;
 
 ?>
 <h1>
-    <?= lang('admin.migrating_to_osiris_v1_5_0') ?>
+    <?= t('admin.migrating_to_osiris_v1_5_0') ?>
 </h1>
 <b class="text-danger">
     <i class="ph ph-warning"></i>
-    <?= lang('admin.please_read_the_following_information_carefully_it_is_important_for_the_mig') ?>
+    <?= t('admin.please_read_the_following_information_carefully_it_is_important_for_the_mig') ?>
 </b>
 
 <h2>
-    <?= lang('admin.project_data_fields') ?>
+    <?= t('admin.project_data_fields') ?>
 </h2>
 
 <p>
-    <?= lang('admin.in_the_new_version_of_osiris_we_have_changed_the_some_project_data_fields_a') ?>
+    <?= t('admin.in_the_new_version_of_osiris_we_have_changed_the_some_project_data_fields_a') ?>
 </p>
 
 <?php
@@ -41,11 +41,11 @@ $funding_organizations = $osiris->projects->distinct('funding_organization');
 
 if (!empty($funding_organizations)) { ?>
     <h4>
-        <?= lang('admin.funding_organizations') ?>
+        <?= t('admin.funding_organizations') ?>
     </h4>
     <details class="collapse-panel">
         <summary class="collapse-header">
-            <?= lang('admin.we_have_found_the_following_funding_organizations_in_the_projects_collectio') ?>
+            <?= t('admin.we_have_found_the_following_funding_organizations_in_the_projects_collectio') ?>
         </summary>
         <div class="collapse-content">
             <ul class="list">
@@ -60,10 +60,10 @@ if (!empty($funding_organizations)) { ?>
         </div>
     </details>
     <p>
-        <?= lang('admin.in_the_future_osiris_will_no_longer_support_free_text_fields_for_funding_or') ?>
+        <?= t('admin.in_the_future_osiris_will_no_longer_support_free_text_fields_for_funding_or') ?>
     </p>
     <p>
-        <?= lang('admin.note_if_you_still_want_to_enable_free_text_fields_please_activate_the_field') ?>
+        <?= t('admin.note_if_you_still_want_to_enable_free_text_fields_please_activate_the_field') ?>
     </p>
 <?php
     flush();
@@ -77,10 +77,10 @@ $count = count($projects);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('admin.contact_persons') ?>
+        <?= t('admin.contact_persons') ?>
     </h4>
     <p>
-        <?= lang('admin.we_have_found_count_projects_with_a_contact_person_the_contact_person_is_no', replace: ['count' => $count]) ?>
+        <?= t('admin.we_have_found_count_projects_with_a_contact_person_the_contact_person_is_no', replace: ['count' => $count]) ?>
     </p>
     <?php
     foreach ($projects as $project) {
@@ -104,7 +104,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('admin.migration_of_the_contact_person_to_the_new_field_applicants_was_successful') ?>
+        <?= t('admin.migration_of_the_contact_person_to_the_new_field_applicants_was_successful') ?>
     </p>
 <?php
     flush();
@@ -114,14 +114,14 @@ if ($count > 0) {
 ?>
 
 <h2>
-    <?= lang('admin.migration_of_project_types') ?>
+    <?= t('admin.migration_of_project_types') ?>
 </h2>
 
 <p>
-    <?= lang('admin.in_the_new_version_of_osiris_we_have_changed_the_project_types_fundamentall') ?>
+    <?= t('admin.in_the_new_version_of_osiris_we_have_changed_the_project_types_fundamentall') ?>
 </p>
 <p>
-    <?= lang('admin.in_the_next_step_we_will_migrate_the_old_project_types_to_the_new_ones_this') ?>
+    <?= t('admin.in_the_next_step_we_will_migrate_the_old_project_types_to_the_new_ones_this') ?>
 </p>
 <?php
 
@@ -131,10 +131,10 @@ $count = count($stipendiates);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('admin.stipendiates') ?>
+        <?= t('admin.stipendiates') ?>
     </h4>
     <p>
-        <?= lang('admin.we_have_found_count_projects_with_the_type_stipendium_they_will_be_migrated', replace: ['count' => $count]) ?>
+        <?= t('admin.we_have_found_count_projects_with_the_type_stipendium_they_will_be_migrated', replace: ['count' => $count]) ?>
     </p>
 
     <?php
@@ -340,10 +340,10 @@ if ($count > 0) {
     ?>
 
     <h4>
-        <?= lang('admin.third_party_funding') ?>
+        <?= t('admin.third_party_funding') ?>
     </h4>
     <p>
-        <?= lang('admin.we_have_found_count_projects_with_the_type_drittmittel_they_will_be_moved_t', replace: ['count' => $count]) ?>
+        <?= t('admin.we_have_found_count_projects_with_the_type_drittmittel_they_will_be_moved_t', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -437,10 +437,10 @@ $count = count($projects);
 if ($count > 0) {
     ?>
     <h4>
-        <?= lang('common.subprojects') ?>
+        <?= t('common.subprojects') ?>
     </h4>
     <p>
-        <?= lang('admin.we_have_found_count_projects_with_the_type_teilprojekt_in_the_future_they_w', replace: ['count' => $count]) ?>
+        <?= t('admin.we_have_found_count_projects_with_the_type_teilprojekt_in_the_future_they_w', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -512,7 +512,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('admin.successfully_migrated_all_subprojects') ?>
+        <?= t('admin.successfully_migrated_all_subprojects') ?>
     </p>
 
 <?php
@@ -544,10 +544,10 @@ $count = count($activities);
 if ($count > 0) {
 ?>
     <h4>
-        <?= lang('common.activities') ?>
+        <?= t('common.activities') ?>
     </h4>
     <p>
-        <?= lang('admin.we_have_found_count_activities_with_projects_we_will_now_migrate_the_projec', replace: ['count' => $count]) ?>
+        <?= t('admin.we_have_found_count_activities_with_projects_we_will_now_migrate_the_projec', replace: ['count' => $count]) ?>
     </p>
     <?php
     flush();
@@ -579,7 +579,7 @@ if ($count > 0) {
     }
     ?>
     <p>
-        <?= lang('admin.migration_of_the_activities_was_successful_you_can_now_use_the_new_project') ?>
+        <?= t('admin.migration_of_the_activities_was_successful_you_can_now_use_the_new_project') ?>
     </p>
 <?php
     flush();
@@ -592,11 +592,11 @@ if ($count > 0) {
 <div class="alert success">
     <h4 class="title">
         <i class="ph ph-check-circle"></i>
-        <?= lang('admin.migration_finished') ?>
+        <?= t('admin.migration_finished') ?>
     </h4>
-    <?= lang('admin.migration_of_project_types_was_successful_you_can_now_use_the_new_project_t') ?>
+    <?= t('admin.migration_of_project_types_was_successful_you_can_now_use_the_new_project_t') ?>
 </div>
 
 <b class="text-danger">
-    <?=lang('admin.start_rerendering_all_activities_please_have_patience')?>
+    <?=t('admin.start_rerendering_all_activities_please_have_patience')?>
 </b>

@@ -58,9 +58,9 @@ require_once BASEPATH . '/php/InfrastructureForms.php';
 <h1 class="title">
     <?php
     if (empty($form) || !isset($form['_id'])) {
-        echo lang('infrastructures.new_infrastructure');
+        echo t('infrastructures.new_infrastructure');
     } else {
-        echo lang('infrastructures.edit_infrastructure');
+        echo t('infrastructures.edit_infrastructure');
     }
     ?>
 </h1>
@@ -73,22 +73,22 @@ require_once BASEPATH . '/php/InfrastructureForms.php';
     </div>
 
     <h5>
-        <?= lang('infrastructures.configure_statistics') ?>
+        <?= t('infrastructures.configure_statistics') ?>
     </h5>
 
     <div class="form-group">
 
         <label for="statistic_frequency">
-            <?= lang('infrastructures.how_often_do_you_collect_statistics') ?>
+            <?= t('infrastructures.how_often_do_you_collect_statistics') ?>
         </label>
         <select name="values[statistic_frequency]" id="statistic_frequency" class="form-control">
-            <option value="annual" <?= sel('statistic_frequency', 'annual') ?>><?= lang('infrastructures.annual') ?></option>
-            <option value="quarterly" <?= sel('statistic_frequency', 'quarterly') ?>><?= lang('infrastructures.quarterly') ?></option>
-            <option value="monthly" <?= sel('statistic_frequency', 'monthly') ?>><?= lang('common.monthly') ?></option>
-            <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= lang('infrastructures.irregularly') ?></option>
+            <option value="annual" <?= sel('statistic_frequency', 'annual') ?>><?= t('infrastructures.annual') ?></option>
+            <option value="quarterly" <?= sel('statistic_frequency', 'quarterly') ?>><?= t('infrastructures.quarterly') ?></option>
+            <option value="monthly" <?= sel('statistic_frequency', 'monthly') ?>><?= t('common.monthly') ?></option>
+            <option value="irregularly" <?= sel('statistic_frequency', 'irregularly') ?>><?= t('infrastructures.irregularly') ?></option>
         </select>
         <small class="text-muted">
-            <?= lang('infrastructures.no_matter_how_often_you_collect_statistics_they_will_always_be_summed_up_to') ?>
+            <?= t('infrastructures.no_matter_how_often_you_collect_statistics_they_will_always_be_summed_up_to') ?>
         </small>
     </div>
 
@@ -143,7 +143,7 @@ require_once BASEPATH . '/php/InfrastructureForms.php';
 
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <h5>
-            <?= lang('common.portal_settings') ?>
+            <?= t('common.portal_settings') ?>
         </h5>
 
         <div class="form-group">
@@ -154,13 +154,13 @@ require_once BASEPATH . '/php/InfrastructureForms.php';
             <div class="custom-checkbox">
                 <input type="checkbox" id="public" name="values[public]" <?= ($public) ? 'checked' : '' ?> value="true">
                 <label for="public">
-                    <?= lang('infrastructures.show_this_infrastructure_in_the_public_portfolio') ?>
+                    <?= t('infrastructures.show_this_infrastructure_in_the_public_portfolio') ?>
                 </label>
             </div>
         </div>
     <?php } ?>
     
 
-    <button type="submit" class="btn secondary"><?= lang('action.save') ?></button>
+    <button type="submit" class="btn secondary"><?= t('action.save') ?></button>
 </form>
 </div>

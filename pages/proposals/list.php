@@ -76,7 +76,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 <h1 class="mt-0">
     <i class="ph-duotone ph-tree-structure"></i>
-    <?= lang('common.project_proposals') ?>
+    <?= t('common.project_proposals') ?>
 </h1>
 
 <button class="btn primary float-right" onclick="$('.filter-wrapper').slideToggle()">Filter <i class="ph ph-caret-down"></i></button>
@@ -85,31 +85,31 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/proposals/statistics" class="btn">
         <i class="ph ph-chart-line-up"></i>
-        <?= lang('common.statistics') ?>
+        <?= t('common.statistics') ?>
     </a>
     <?php if ($Settings->hasPermission('proposals.finance')) { ?>
     <a href="<?= ROOTPATH ?>/proposals/finances" class="btn">
         <i class="ph ph-chart-bar"></i>
-        <?= lang('projects.financial_overview') ?>
+        <?= t('projects.financial_overview') ?>
     </a>
     <?php } ?>
 
     
     <a href="<?= ROOTPATH ?>/proposals/search" class="btn">
         <i class="ph ph-magnifying-glass-plus"></i>
-        <?= lang('navigation.advanced_search') ?>
+        <?= t('navigation.advanced_search') ?>
     </a>
     
 
     <?php if ($Settings->canProposalsBeCreated()) { ?>
         <a href="<?= ROOTPATH ?>/proposals/new" class="">
             <i class="ph ph-plus"></i>
-            <?= lang('projects.add_new_proposal') ?>
+            <?= t('projects.add_new_proposal') ?>
         </a>
     <?php } else { ?>
-        <a href="#" class="btn link disabled p-0" onclick="toastError('<?= lang('projects.you_are_not_authorized_to_add_new_proposals') ?>')">
+        <a href="#" class="btn link disabled p-0" onclick="toastError('<?= t('projects.you_are_not_authorized_to_add_new_proposals') ?>')">
             <i class="ph ph-plus"></i>
-            <?= lang('projects.add_new_proposal') ?>
+            <?= t('projects.add_new_proposal') ?>
         </a>
     <?php } ?>
 </div>
@@ -121,7 +121,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         <div class="dropdown float-right">
             <button class="btn small" data-toggle="dropdown" type="button" id="dropdown-1" aria-haspopup="true" aria-expanded="false">
                 <i class="ph ph-sort-ascending"></i>
-                <?= lang('common.sort') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
+                <?= t('common.sort') ?> <i class="ph ph-caret-down ml-5" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-1">
                 <a class="item" onclick="sortTable(this, 3, 'asc')">Start date (ASC)</a>
@@ -141,14 +141,14 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                 <tr>
                     <td class="text-center">
                         <i class="ph ph-spinner-third text-muted"></i>
-                        <?= lang('projects.loading_proposals') ?>
+                        <?= t('projects.loading_proposals') ?>
                     </td>
                 </tr>
             </tbody>
         </table>
         <?php if (!$Settings->hasPermission('proposals.view')) { ?>
             <p class="text-muted">
-                <?= lang('projects.only_your_own_proposals_are_shown_since_you_are_not_authorized_to_view_all') ?>
+                <?= t('projects.only_your_own_proposals_are_shown_since_you_are_not_authorized_to_view_all') ?>
             </p>
         <?php } ?>
     </div>
@@ -164,7 +164,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             <div id="active-filters"></div>
 
             <h6>
-                <?= lang('common.by_type') ?>
+                <?= t('common.by_type') ?>
                 <a class="float-right" onclick="filterProjects('#filter-type .active', null, 1)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -190,29 +190,29 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 
             <h6>
-                <?= lang('projects.by_status') ?>
+                <?= t('projects.by_status') ?>
                 <a class="float-right" onclick="filterProjects('#filter-status .active', null, 7)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
                 <table id="filter-status" class="table small simple">
                     <tr style="--highlight-color: var(--success-color)">
                         <td>
-                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= lang('projects.approved') ?></a>
+                            <a data-type="approved" onclick="filterProjects(this, 'approved', 7)" class="item text-success"><?= t('projects.approved') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--signal-color)">
                         <td>
-                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= lang('projects.applied') ?></a>
+                            <a data-type="proposed" onclick="filterProjects(this, 'proposed', 7)" class="item text-signal"><?= t('projects.applied') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--danger-color)">
                         <td>
-                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= lang('projects.rejected') ?></a>
+                            <a data-type="rejected" onclick="filterProjects(this, 'rejected', 7)" class="item text-danger"><?= t('projects.rejected') ?></a>
                         </td>
                     </tr>
                     <tr style="--highlight-color: var(--muted-color)">
                         <td>
-                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= lang('projects.withdrawn') ?></a>
+                            <a data-type="withdrawn" onclick="filterProjects(this, 'withdrawn', 7)" class="item text-muted"><?= t('projects.withdrawn') ?></a>
                         </td>
                     </tr>
                 </table>
@@ -220,7 +220,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
 
 
             <h6>
-                <?= lang('common.by_funder') ?>
+                <?= t('common.by_funder') ?>
                 <a class="float-right" onclick="filterProjects('#filter-funder .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -265,7 +265,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             <?php } ?>
 
             <h6>
-                <?= lang('common.by_organisational_unit') ?>
+                <?= t('common.by_organisational_unit') ?>
                 <a class="float-right" onclick="filterProjects('#filter-units .active', null, 8)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -283,19 +283,19 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             </div>
 
             <!-- <h6>
-                <?= lang('common.by_time') ?>
+                <?= t('common.by_time') ?>
                 <a class="float-right" onclick="resetTime()"><i class="ph ph-x"></i></a>
             </h6>
 
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.from') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= t('common.from') ?></label>
                 </div>
                 <input type="date" name="from" id="filter-from" class="form-control">
             </div>
             <div class="input-group mt-10">
                 <div class="input-group-prepend">
-                    <label for="filter-from" class="input-group-text w-50"><?= lang('common.to_list') ?></label>
+                    <label for="filter-from" class="input-group-text w-50"><?= t('common.to_list') ?></label>
                 </div>
                 <input type="date" name="to" id="filter-to" class="form-control">
             </div> -->
@@ -348,7 +348,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'type'
         },
         {
-            title: <?= json_encode(lang('common.funder_list'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('common.funder_list'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'funder'
         },
         {
@@ -364,7 +364,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'role'
         },
         {
-            title: <?= json_encode(lang('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'applicant'
         },
         {
@@ -376,7 +376,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
             key: 'units'
         },
         {
-            title: <?= json_encode(lang('projects.topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('projects.topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             key: 'topics'
         },
         {
@@ -411,17 +411,17 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         // Legacy types
         if (data == 'Eigenfinanziert' || data == 'self-funded') {
             return `<span class="badge text-signal">
-                        <i class="ph ph-piggy-bank"></i>&nbsp;${<?= json_encode(lang('common.self_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
+                        <i class="ph ph-piggy-bank"></i>&nbsp;${<?= json_encode(t('common.self_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Stipendium' || data == 'stipendiate') {
             return `<span class="badge text-success no-wrap">
-                        <i class="ph ph-tip-jar"></i>&nbsp;${<?= json_encode(lang('common.stipendiate'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
+                        <i class="ph ph-tip-jar"></i>&nbsp;${<?= json_encode(t('common.stipendiate'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Drittmittel' || data == 'third-party') {
             return `<span class="badge text-danger">
-                        <i class="ph ph-hand-coins"></i>&nbsp;${<?= json_encode(lang('common.third_party_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
+                        <i class="ph ph-hand-coins"></i>&nbsp;${<?= json_encode(t('common.third_party_funded'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
                         </span>`
         }
         if (data == 'Teilprojekt' || data == 'subproject') {
@@ -441,13 +441,13 @@ $tagsEnabled = $Settings->featureEnabled('tags');
         if (data == 'coordinator') {
             return `<span class="badge text-signal">
         <i class="ph ph-crown-simple text-signal"></i>
-        ${<?= json_encode(lang('common.coordinator'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
+        ${<?= json_encode(t('common.coordinator'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
         </span>`
         }
         if (data == 'associated') {
             return `<span class="badge text-success">
         <i class="ph ph-address-book"></i>
-        ${<?= json_encode(lang('projects.associated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
+        ${<?= json_encode(t('projects.associated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}
         </span>`
         }
         return `<span class="badge text-muted">
@@ -467,18 +467,18 @@ $tagsEnabled = $Settings->featureEnabled('tags');
     function renderStatus(data) {
         switch (data) {
             case 'approved':
-                return `<span class='badge success'><?= lang('projects.approved') ?></span>`;
+                return `<span class='badge success'><?= t('projects.approved') ?></span>`;
             case 'finished':
-                return `<span class='badge success filled'><?= lang('projects.finished') ?></span>`;
+                return `<span class='badge success filled'><?= t('projects.finished') ?></span>`;
             case 'applied':
             case 'proposed':
-                return `<span class='badge signal'><?= lang('projects.proposed') ?></span>`;
+                return `<span class='badge signal'><?= t('projects.proposed') ?></span>`;
             case 'rejected':
-                return `<span class='badge danger'><?= lang('projects.rejected') ?></span>`;
+                return `<span class='badge danger'><?= t('projects.rejected') ?></span>`;
             case 'withdrawn':
-                return `<span class='badge muted'><?= lang('projects.withdrawn') ?></span>`;
+                return `<span class='badge muted'><?= t('projects.withdrawn') ?></span>`;
             case 'expired':
-                return `<span class='badge dark'><?= lang('projects.expired') ?></span>`;
+                return `<span class='badge dark'><?= t('projects.expired') ?></span>`;
         }
     }
 
@@ -597,7 +597,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: <?= json_encode(lang('common.funder_42a12979'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    header: <?= json_encode(t('common.funder_42a12979'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => renderFunder(row)
                 },
                 {
@@ -630,7 +630,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: <?= json_encode(lang('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                    header: <?= json_encode(t('common.applicant'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                 },
                 {
                     target: 7,
@@ -654,7 +654,7 @@ $tagsEnabled = $Settings->featureEnabled('tags');
                     searchable: true,
                     visible: false,
                     defaultContent: '',
-                    header: <?= json_encode(lang('common.topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    header: <?= json_encode(t('common.topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     render: (data, type, row) => {
                         if (Array.isArray(data)) {
                             return data.join(', ')

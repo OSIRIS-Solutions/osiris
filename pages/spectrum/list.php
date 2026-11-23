@@ -169,7 +169,7 @@ unset($s);
                 <span aria-hidden="true">&times;</span>
             </a>
 
-            <?php if (lang('common.this_language') == 'de') { ?>
+            <?php if (t('common.this_language') == 'de') { ?>
                 <h2>Forschungs-Spektrum – Methodik & Hintergrund</h2>
                 <hr>
                 <h3>Was zeigt das Forschungs-Spektrum?</h3>
@@ -318,34 +318,34 @@ unset($s);
 
 <h1>
     <i class="ph-duotone ph-lightbulb" aria-hidden="true"></i>
-    <?= lang('common.research_spectrum') ?>
+    <?= t('common.research_spectrum') ?>
 </h1>
 
 
 <p class="text-muted">
-    <?= lang('spectrum.data_driven_thematic_analysis_of_scholarly_publications_based_on_openalex') ?>
+    <?= t('spectrum.data_driven_thematic_analysis_of_scholarly_publications_based_on_openalex') ?>
     <a href="#what-is-spectrum" class="" role="button">
         <i class="ph ph-info"></i>
-        <?= lang('spectrum.what_is_the_research_spectrum') ?>
+        <?= t('spectrum.what_is_the_research_spectrum') ?>
     </a>
 </p>
 
 <div class="btn-toolbar">
 <a href="<?= ROOTPATH ?>/spectrum/visualize?<?= http_build_query($_GET) ?>" class="btn mb-4">
     <i class="ph ph-chart-donut"></i>
-    <?= lang('spectrum.visualize_spectrum') ?>
+    <?= t('spectrum.visualize_spectrum') ?>
 </a>
 
 <a href="<?= ROOTPATH ?>/spectrum/evolution?<?= http_build_query($_GET) ?>" class="btn mb-4">
     <i class="ph ph-chart-line"></i>
-    <?= lang('spectrum.visualize_evolution') ?>
+    <?= t('spectrum.visualize_evolution') ?>
 </a>
 </div>
 
 <form method="get" class="box padded">
 
     <div class="btn-toolbar level-buttons">
-        <b class="mr-20"><?= lang('spectrum.hierarchy_level') ?></b>
+        <b class="mr-20"><?= t('spectrum.hierarchy_level') ?></b>
         <input type="submit" name="level" class="btn level-domain <?= $level == 'domain' ? 'primary active' : '' ?>" value="domain">
         <input type="submit" name="level" class="btn level-field <?= $level == 'field' ? 'primary active' : '' ?>" value="field">
         <input type="submit" name="level" class="btn level-subfield <?= $level == 'subfield' ? 'primary active' : '' ?>" value="subfield">
@@ -356,9 +356,9 @@ unset($s);
 
         <!-- Domain Filter -->
         <div class="col-md-4">
-            <label class="form-label"><?= lang('spectrum.domain') ?></label>
+            <label class="form-label"><?= t('spectrum.domain') ?></label>
             <select name="domain" class="form-control">
-                <option value=""><?= lang('spectrum.all_domains') ?></option>
+                <option value=""><?= t('spectrum.all_domains') ?></option>
                 <option value="1" <?= ($_GET['domain'] ?? '') == '1' ? 'selected' : '' ?>>Life Sciences</option>
                 <option value="2" <?= ($_GET['domain'] ?? '') == '2' ? 'selected' : '' ?>>Social Sciences</option>
                 <option value="3" <?= ($_GET['domain'] ?? '') == '3' ? 'selected' : '' ?>>Physical Sciences</option>
@@ -368,21 +368,21 @@ unset($s);
 
         <!-- Year From -->
         <div class="col-md-3">
-            <label class="form-label"><?= lang('common.from_year') ?></label>
+            <label class="form-label"><?= t('common.from_year') ?></label>
             <input type="number" name="year_from" class="form-control"
                 value="<?= e($_GET['year_from'] ?? '') ?>">
         </div>
 
         <!-- Year To -->
         <div class="col-md-3">
-            <label class="form-label"><?= lang('common.to_year') ?></label>
+            <label class="form-label"><?= t('common.to_year') ?></label>
             <input type="number" name="year_to" class="form-control"
                 value="<?= e($_GET['year_to'] ?? '') ?>">
         </div>
 
         <div class="col-md-2">
             <button class="btn primary block">
-                <?= lang('common.apply_filter') ?>
+                <?= t('common.apply_filter') ?>
             </button>
         </div>
 
@@ -406,12 +406,12 @@ unset($s);
 <table class="table dataTable" id="spectrum-table">
     <thead>
         <tr>
-            <th><?= lang('spectrum.research_focus') ?></th>
-            <th><?= lang('common.publications') ?></th>
-            <th><?= lang('common.share_list') ?></th>
-            <th><?= lang('spectrum.avg_topic_score') ?></th>
-            <th><?= lang('spectrum.avg_citations') ?></th>
-            <th><?= lang('spectrum.total_citations') ?></th>
+            <th><?= t('spectrum.research_focus') ?></th>
+            <th><?= t('common.publications') ?></th>
+            <th><?= t('common.share_list') ?></th>
+            <th><?= t('spectrum.avg_topic_score') ?></th>
+            <th><?= t('spectrum.avg_citations') ?></th>
+            <th><?= t('spectrum.total_citations') ?></th>
         </tr>
     </thead>
     <tbody>

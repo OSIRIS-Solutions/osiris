@@ -20,21 +20,21 @@ include_once BASEPATH . '/header-editor.php';
 
     <input type="hidden" name="guestaccount" value="1">
     <h3 class="title">
-        <?= lang('common.create_new_user') ?>
+        <?= t('common.create_new_user') ?>
     </h3>
 
     <div class="form-row row-eq-spacing">
         <div class="col floating-form">
             <input class="form-control" type="text" id="username" name="username" required placeholder="username">
-            <label class="required" for="username"><?= lang('common.username_guest_account_add') ?></label>
+            <label class="required" for="username"><?= t('common.username_guest_account_add') ?></label>
             <small class="text-muted">
-                <?= lang('common.please_choose_a_username_without_spaces_or_special_characters') ?>
+                <?= t('common.please_choose_a_username_without_spaces_or_special_characters') ?>
             </small>
         </div>
 
         <div class="col floating-form">
             <input class="form-control" type="password" id="password" name="password" required placeholder="password">
-            <label class="required" for="password"><?= lang('common.password') ?></label>
+            <label class="required" for="password"><?= t('common.password') ?></label>
         </div>
     </div>
 
@@ -44,7 +44,7 @@ include_once BASEPATH . '/header-editor.php';
             $title = $data['academic_title'] ?? '';
             ?>
             <select name="values[academic_title]" id="academic_title" class="form-control">
-                <option value="" <?= $title == '' ? 'selected' : '' ?>><?= lang('common.none_guest_account_add') ?></option>
+                <option value="" <?= $title == '' ? 'selected' : '' ?>><?= t('common.none_guest_account_add') ?></option>
                 <option value="Dr." <?= $title == 'Dr.' ? 'selected' : '' ?>>Dr.</option>
                 <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option>
                 <option value="PD Dr." <?= $title == 'PD Dr.' ? 'selected' : '' ?>>PD Dr.</option>
@@ -52,36 +52,36 @@ include_once BASEPATH . '/header-editor.php';
                 <option value="PD" <?= $title == 'PD' ? 'selected' : '' ?>>PD</option>
                 <!-- <option value="Prof. Dr." <?= $title == 'Prof. Dr.' ? 'selected' : '' ?>>Prof. Dr.</option> -->
             </select>
-            <label for="academic_title"><?= lang('common.title') ?></label>
+            <label for="academic_title"><?= t('common.title') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" required placeholder="first name">
-            <label class="required" for="first"><?= lang('common.name_first') ?></label>
+            <label class="required" for="first"><?= t('common.name_first') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" required placeholder="last name">
-            <label class="required" for="last"><?= lang('common.name_last') ?></label>
+            <label class="required" for="last"><?= t('common.name_last') ?></label>
         </div>
     </div>
 
 
-    <h5><?= lang('common.contact') ?></h5>
+    <h5><?= t('common.contact') ?></h5>
     <div class="form-row row-eq-spacing">
 
         <div class="col-sm floating-form">
             <input type="text" name="values[mail]" id="mail" class="form-control" value="<?= $data['mail'] ?? '' ?>" required placeholder="mail">
-            <label for="mail" class="required"><?= lang('common.mail_guest_account_add') ?></label>
+            <label for="mail" class="required"><?= t('common.mail_guest_account_add') ?></label>
         </div>
         <div class="col-sm floating-form">
             <input type="text" name="values[telephone]" id="telephone" class="form-control" value="<?= $data['telephone'] ?? '' ?>" placeholder="phone">
-            <label for="telephone"><?= lang('common.telephone') ?></label>
+            <label for="telephone"><?= t('common.telephone') ?></label>
         </div>
 
     </div>
 
 
     <div class="form-group">
-        <h5><?= lang('common.department') ?></h5>
+        <h5><?= t('common.department') ?></h5>
 
         <?php
         $tree = $Groups->getHierarchyTree();
@@ -106,26 +106,26 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div class="form-group">
-        <span><?= lang('common.gender') ?>:</span>
+        <span><?= t('common.gender') ?>:</span>
         <?php
         $gender = $data['gender'] ?? 'n';
         ?>
 
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-            <label for="gender-m"><?= lang('common.gender_male') ?></label>
+            <label for="gender-m"><?= t('common.gender_male') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-            <label for="gender-f"><?= lang('common.gender_female') ?></label>
+            <label for="gender-f"><?= t('common.gender_female') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-            <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
+            <label for="gender-d"><?= t('common.gender_non_binary') ?></label>
         </div>
         <div class="custom-radio d-inline-block ml-10">
             <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-            <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
+            <label for="gender-n"><?= t('common.gender_not_specified') ?></label>
         </div>
 
     </div>
@@ -140,11 +140,11 @@ include_once BASEPATH . '/header-editor.php';
         $staffFree = $staff['free'] ?? true;
         ?>
         <?php if ($staffFree) { ?>
-            <?php localizedField($data, 'position', lang('common.current_position')); ?>
+            <?php localizedField($data, 'position', t('common.current_position')); ?>
         <?php } else { ?>
-            <label for="position"><h5><?= lang('common.current_position') ?></h5></label>
+            <label for="position"><h5><?= t('common.current_position') ?></h5></label>
             <select name="position_vocabulary" id="position" class="form-control">
-                <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
+                <option value=""> -- <?= t('common.no_position_selected') ?> --- </option>
                 <?php foreach ($staffPos as $index => $position) { ?>
                     <option value="<?= $index ?>"><?= e(localized($position)) ?></option>
                 <?php } ?>
@@ -155,7 +155,7 @@ include_once BASEPATH . '/header-editor.php';
 
 
     <div>
-        <h5><?= lang('common.roles') ?></h5>
+        <h5><?= t('common.roles') ?></h5>
         <?php
         $req = $osiris->adminGeneral->findOne(['key' => 'roles']);
         $roles =  DB::doc2Arr($req['value'] ?? array('user', 'scientist', 'admin'));
@@ -174,9 +174,9 @@ include_once BASEPATH . '/header-editor.php';
 
     <!-- valid until -->
     <div class="form-group">
-        <label for="valid-until"><?= lang('common.valid_until') ?></label>
+        <label for="valid-until"><?= t('common.valid_until') ?></label>
         <input type="date" id="valid-until" name="valid_until" class="form-control" value="<?= $data['valid_until'] ?? '' ?>">
-        <small class="form-text text-muted"><?= lang('admin.leave_empty_for_unlimited_validity') ?></small>
+        <small class="form-text text-muted"><?= t('admin.leave_empty_for_unlimited_validity') ?></small>
     </div>
 
     <button type="submit" class="btn">Submit</button>

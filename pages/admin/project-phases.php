@@ -17,8 +17,8 @@ foreach (ProjectForms::phases($project) as $phase):
         </h2>
         <p><?= e(lang($phase['description'], $phase['description_de'])) ?></p>
         <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <b><?= lang('common.data_fields') ?>:</b>
-            <a href="<?= e($builderUrl) ?>?overview=1" target="_blank" rel="noopener noreferrer"><?= lang('admin.field_overview') ?> <i class="ph ph-arrow-square-out"></i></a>
+            <b><?= t('common.data_fields') ?>:</b>
+            <a href="<?= e($builderUrl) ?>?overview=1" target="_blank" rel="noopener noreferrer"><?= t('admin.field_overview') ?> <i class="ph ph-arrow-square-out"></i></a>
         </div>
         <div class="project-phase-fields my-10">
             <?php foreach ($fields as $field):
@@ -39,7 +39,7 @@ foreach (ProjectForms::phases($project) as $phase):
                 }
             ?>
                 <span class="badge" title="<?= e($title) ?>"><i class="ph <?= $icon ?>"></i> <?= e($name) ?>
-                    <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(lang('admin.required_fields')) ?>"></i><?php endif; ?>
+                    <?php if (!empty($props['required'])): ?><i class="ph ph-asterisk text-danger" aria-label="<?= e(t('admin.required_fields')) ?>"></i><?php endif; ?>
                     <?php if (isset($systemFields[$id])): ?><i class="ph ph-lock-simple" aria-label="<?= e(lang('System field', 'Systemfeld')) ?>"></i><?php endif; ?>
                 </span>
             <?php endforeach; ?>
@@ -48,5 +48,5 @@ foreach (ProjectForms::phases($project) as $phase):
     </div>
 </div>
 <?php endforeach; ?>
-<a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= e(rawurlencode($project['id'])) ?>"><i class="ph ph-arrow-left"></i> <?= lang('common.general_settings') ?></a>
+<a class="btn" href="<?= ROOTPATH ?>/admin/projects/1/<?= e(rawurlencode($project['id'])) ?>"><i class="ph ph-arrow-left"></i> <?= t('common.general_settings') ?></a>
 <a class="btn success" href="<?= ROOTPATH ?>/admin/projects"><?= lang('Done', 'Fertig') ?></a>

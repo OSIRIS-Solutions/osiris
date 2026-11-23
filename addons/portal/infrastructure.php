@@ -37,7 +37,7 @@ $name = localized($data['name']);
 
 <div class="container-lg" id="infrastructure-page">
     <?php if (!$data): ?>
-        <p><?= lang('infrastructures.infrastructure_not_found'); ?></p>
+        <p><?= t('infrastructures.infrastructure_not_found'); ?></p>
     <?php else: ?>
 
         <div class="profile-header" style="display: flex; align-items: center">
@@ -62,7 +62,7 @@ $name = localized($data['name']);
         <div class="row row-eq-spacing">
             <div class="col-sm-8 order-sm-first order-last" id="about">
                 <?php if (!empty(localized($data['description'] ?? '')) || !empty($data['link'])) { ?>
-                    <h3 id="about"><?= lang('portal.about_name', replace: ['name' => $name]); ?></h3>
+                    <h3 id="about"><?= t('portal.about_name', replace: ['name' => $name]); ?></h3>
 
                     <div class="mt-20">
                         <?= localized($data['description'] ?? ''); ?>
@@ -70,7 +70,7 @@ $name = localized($data['name']);
                     <?php if (isset($data['link'])) { ?>
                         <a class="btn primary" href="<?= e($data['link']) ?>" target="_blank" rel="noopener noreferrer">
                             <i class="ph ph-globe"></i>
-                            <?= lang('portal.visit_website_infrastructure') ?>
+                            <?= t('portal.visit_website_infrastructure') ?>
                         </a>
                     <?php } ?>
                 <?php } ?>
@@ -80,7 +80,7 @@ $name = localized($data['name']);
                 if (count($persons) > 0): ?>
 
                     <h3 id="staff">
-                        <?= lang('portal.staff_managing_name', replace: ['name' => $name]) ?>
+                        <?= t('portal.staff_managing_name', replace: ['name' => $name]) ?>
                     </h3>
 
                     <div class="row row-eq-spacing">
@@ -97,7 +97,7 @@ $name = localized($data['name']);
                                                 <?= $person['displayname'] ?>
                                             </a>
                                         </h5>
-                                        <?= $person['role'][lang('common.this_language')] ?? '' ?>
+                                        <?= $person['role'][t('common.this_language')] ?? '' ?>
                                         <?php
                                         if (!empty($person['depts'])) {
                                             foreach ($person['depts'] as $d => $dept) {
@@ -120,17 +120,17 @@ $name = localized($data['name']);
                 <?php if (($data['n_activities'] ?? 0) > 0) { ?>
 
                     <h3 id="activities">
-                        <?= lang('portal.activities_involving_name', replace: ['name' => $name]) ?>
+                        <?= t('portal.activities_involving_name', replace: ['name' => $name]) ?>
                     </h3>
                     <div class="pb-10">
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                                    <th data-col="html" data-search-col="search"><?=t('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -176,11 +176,11 @@ $name = localized($data['name']);
                 <?php if ($data['collaborative'] ?? false) { ?>
                     <div id="collaborative">
                         <h3>
-                            <?= lang('portal.this_is_a_collaborative_infrastructure') ?>
+                            <?= t('portal.this_is_a_collaborative_infrastructure') ?>
                         </h3>
 
                         <h6>
-                            <?= lang('portal.coordinated_by') ?>
+                            <?= t('portal.coordinated_by') ?>
                         </h6>
                         <table class="table">
 
@@ -214,14 +214,14 @@ $name = localized($data['name']);
                         </table>
 
                         <h6>
-                            <?= lang('portal.together_with_the_following_partners') ?>
+                            <?= t('portal.together_with_the_following_partners') ?>
                         </h6>
                         <table class="table">
                             <tbody>
                                 <?php if (empty($data['collaborators'])) { ?>
                                     <tr>
                                         <td colspan="2">
-                                            <?= lang('infrastructures.no_partners_connected') ?>
+                                            <?= t('infrastructures.no_partners_connected') ?>
                                         </td>
                                     </tr>
                                     <?php } else foreach ($data['collaborators'] as $org) {
@@ -259,13 +259,13 @@ $name = localized($data['name']);
             </div>
 
             <div class="col-sm-4 position-relative">
-                <h3><?= lang('common.details'); ?></h3>
+                <h3><?= t('common.details'); ?></h3>
                 <table class="table small">
                     <tbody>
                         <?php if (!empty($data['contact_email'])): ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.contact_email') ?></span>
+                                    <span class="key"><?= t('common.contact_email') ?></span>
                                     <a href="mailto:<?= e($data['contact_email']) ?>"><?= e($data['contact_email']) ?></a>
                                 </td>
                             </tr>
@@ -273,7 +273,7 @@ $name = localized($data['name']);
 
                         <tr>
                             <td>
-                                <span class="key"><?= lang('portal.operating_period') ?></span>
+                                <span class="key"><?= t('portal.operating_period') ?></span>
                                 <?php
                                 echo fromToDate($data['start_date'], $data['end_date'] ?? null, true);
                                 ?>
@@ -283,7 +283,7 @@ $name = localized($data['name']);
                         <?php if (!empty($data['category'])): ?>
                             <tr>
                                 <td>
-                                    <span class="key"><?= lang('common.category'); ?></span>
+                                    <span class="key"><?= t('common.category'); ?></span>
                                     <?= e($data['category']) ?>
                                 </td>
                             </tr>
@@ -291,7 +291,7 @@ $name = localized($data['name']);
                             <?php if (!empty($data['type'])): ?>
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang('common.type'); ?></span>
+                                        <span class="key"><?= t('common.type'); ?></span>
                                         <?= e($data['type']) ?>
                                     </td>
                                 </tr>
@@ -299,7 +299,7 @@ $name = localized($data['name']);
                             <?php if (!empty($data['access'])): ?>
                                 <tr>
                                     <td>
-                                        <span class="key"><?= lang('infrastructures.access'); ?></span>
+                                        <span class="key"><?= t('infrastructures.access'); ?></span>
                                         <?= e($data['access']) ?>
                                     </td>
                                 </tr>
@@ -310,17 +310,17 @@ $name = localized($data['name']);
 
                 <nav class="on-this-page-nav">
                     <div class="content">
-                        <div class="title"><?= lang('common.on_this_page') ?></div>
-                        <a href="#about"><?= lang('portal.about_name', replace: ['name' => $name]) ?>
+                        <div class="title"><?= t('common.on_this_page') ?></div>
+                        <a href="#about"><?= t('portal.about_name', replace: ['name' => $name]) ?>
                         </a>
                         <?php if (count($persons) > 0): ?>
-                            <a href="#staff"> <?= lang('projects.staff') ?></a>
+                            <a href="#staff"> <?= t('projects.staff') ?></a>
                         <?php endif; ?>
                         <?php if (($data['n_activities'] ?? 0) > 0): ?>
-                            <a href="#activities"> <?= lang('common.activities') ?></a>
+                            <a href="#activities"> <?= t('common.activities') ?></a>
                         <?php endif; ?>
                         <?php if ($data['collaborative'] ?? false): ?>
-                            <a href="#collaborative"> <?= lang('portal.collaborative_infrastructure') ?></a>
+                            <a href="#collaborative"> <?= t('portal.collaborative_infrastructure') ?></a>
                         <?php endif; ?>
                         </ul>
                     </div>

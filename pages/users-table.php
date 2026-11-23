@@ -45,15 +45,15 @@ if ($active('keywords')) {
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <?php if ($Settings->featureEnabled('portal')) { ?>
-    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= lang('common.preview') ?></a>
+    <a href="<?= ROOTPATH ?>/preview/persons" class="btn float-right"><i class="ph ph-eye"></i> <?= t('common.preview') ?></a>
 <?php } ?>
 <?php if ($Settings->hasPermission('user.synchronize') && strtoupper(USER_MANAGEMENT) === 'LDAP') { ?>
-    <a href="<?= ROOTPATH ?>/synchronize-users" class="btn float-right"><i class="ph ph-sync"></i> <?= lang('people.synchronize_users') ?></a>
+    <a href="<?= ROOTPATH ?>/synchronize-users" class="btn float-right"><i class="ph ph-sync"></i> <?= t('people.synchronize_users') ?></a>
 <?php } ?>
 
 <h1>
     <i class="ph-duotone ph-student"></i>
-    <?= lang('common.users') ?>
+    <?= t('common.users') ?>
 </h1>
 
 <div class="row row-eq-spacing">
@@ -61,20 +61,20 @@ if ($active('keywords')) {
 
         <table class="table cards w-full" id="user-table">
             <thead>
-                <th><?= lang('common.image') ?></th>
+                <th><?= t('common.image') ?></th>
                 <th></th>
-                <th><?= lang('common.units') ?></th>
-                <th><?= lang('common.active') ?></th>
-                <th><?= lang('people.names') ?></th>
-                <th><?= lang('people.research_topics') ?></th>
-                <th><?= lang('common.name_first') ?></th>
-                <th><?= lang('common.name_last') ?></th>
-                <th><?= lang('people.academic_title') ?></th>
-                <th><?= lang('common.email') ?></th>
-                <th><?= lang('common.telephone') ?></th>
-                <th><?= lang('common.position') ?></th>
-                <th><?= lang('common.orcid') ?></th>
-                <th><?= lang('people.username') ?></th>
+                <th><?= t('common.units') ?></th>
+                <th><?= t('common.active') ?></th>
+                <th><?= t('people.names') ?></th>
+                <th><?= t('people.research_topics') ?></th>
+                <th><?= t('common.name_first') ?></th>
+                <th><?= t('common.name_last') ?></th>
+                <th><?= t('people.academic_title') ?></th>
+                <th><?= t('common.email') ?></th>
+                <th><?= t('common.telephone') ?></th>
+                <th><?= t('common.position') ?></th>
+                <th><?= t('common.orcid') ?></th>
+                <th><?= t('people.username') ?></th>
                 <th><?= $keyword_name ?></th>
             </thead>
             <tbody>
@@ -94,7 +94,7 @@ if ($active('keywords')) {
             <div id="active-filters"></div>
 
             <h6>
-                <?= lang('common.by_organisational_unit') ?>
+                <?= t('common.by_organisational_unit') ?>
                 <a class="float-right" onclick="filterUsers('#filter-unit .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -112,7 +112,7 @@ if ($active('keywords')) {
             </div>
 
             <h6>
-                <?= lang('people.by_role') ?>
+                <?= t('people.by_role') ?>
                 <a class="float-right" onclick="filterUsers('#filter-role .active', null, 15)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -179,10 +179,10 @@ if ($active('keywords')) {
             } ?>
 
 
-            <h6><?= lang('people.active_workers') ?></h6>
+            <h6><?= t('people.active_workers') ?></h6>
             <div class="custom-switch">
                 <input type="checkbox" id="active-switch" value="" onchange="filterActive(this)">
-                <label for="active-switch"><?= lang('people.include_inactive') ?></label>
+                <label for="active-switch"><?= t('people.include_inactive') ?></label>
             </div>
         </div>
     </div>
@@ -208,11 +208,11 @@ if ($active('keywords')) {
             'key': 'active'
         },
         {
-            title: <?= json_encode(lang('people.names'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('people.names'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'names'
         },
         {
-            title: <?= json_encode(lang('people.research_topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('people.research_topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'topics'
         },
         {
@@ -224,11 +224,11 @@ if ($active('keywords')) {
             'key': 'last'
         },
         {
-            title: <?= json_encode(lang('people.academic_title'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('people.academic_title'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'academic_title'
         },
         {
-            title: <?= json_encode(lang('people.email'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('people.email'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'mail'
         },
         {
@@ -244,11 +244,11 @@ if ($active('keywords')) {
             'key': 'orcid'
         },
         {
-            title: <?= json_encode(lang('people.username'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('people.username'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'username'
         },
         {
-            title: <?= json_encode(lang('admin.keywords_persons'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+            title: <?= json_encode(t('admin.keywords_persons'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
             'key': 'keywords'
         },
         {
@@ -277,7 +277,7 @@ if ($active('keywords')) {
             lengthMenu: [9, 18, 36, 72, 144],
             buttons: [
                 <?php if ($active('expertise')) { ?> {
-                        text: '<i class="ph ph-barbell"></i> <?= lang('common.expertise') ?>',
+                        text: '<i class="ph ph-barbell"></i> <?= t('common.expertise') ?>',
                         className: 'btn small text-primary',
                         action: function(e, dt, node, config) {
                             window.location.href = '<?= ROOTPATH ?>/expertise';
@@ -335,7 +335,7 @@ if ($active('keywords')) {
                 {
                     targets: 2,
                     data: 'dept',
-                    title: <?= json_encode(lang('people.dept'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('people.dept'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     searchable: true,
                     sortable: false,
                     visible: false
@@ -351,14 +351,14 @@ if ($active('keywords')) {
                 {
                     target: 4,
                     data: 'names',
-                    title: <?= json_encode(lang('people.names'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('people.names'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     searchable: true,
                     visible: false
                 },
                 {
                     target: 5,
                     data: 'topics',
-                    title: <?= json_encode(lang('people.research_topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('people.research_topics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     searchable: true,
                     visible: false
                 },
@@ -379,14 +379,14 @@ if ($active('keywords')) {
                 {
                     target: 8,
                     data: 'academic_title',
-                    title: <?= json_encode(lang('people.academic_title'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('people.academic_title'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     visible: false,
                     defaultContent: ''
                 },
                 {
                     target: 9,
                     data: 'mail',
-                    title: <?= json_encode(lang('common.email'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('common.email'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     visible: false,
                     defaultContent: ''
                 },
@@ -414,7 +414,7 @@ if ($active('keywords')) {
                 {
                     target: 13,
                     data: 'username',
-                    title: <?= json_encode(lang('people.username'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('people.username'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     visible: false,
                     defaultContent: ''
                 },
@@ -428,7 +428,7 @@ if ($active('keywords')) {
                 {
                     target: 15,
                     data: 'roles',
-                    title: '<?= lang('common.roles') ?>',
+                    title: '<?= t('common.roles') ?>',
                     visible: false,
                     defaultContent: ''
                 }

@@ -8,7 +8,7 @@ $vocabularies = ['infrastructure-category' => ['infrastructure-category', 'type'
 ?>
 <div class="data-module col-sm-<?= $width ?> <?= ($module === 'infrastructure-date') ? 'row' : '' ?>" data-module="<?= e($module) ?>">
 <?php if ($module === 'infrastructure-date'): ?>
-        <?php foreach (['start_date' => translate('common.start_date'), 'end_date' => translate('common.end_date')] as $key => $dateLabel): ?>
+        <?php foreach (['start_date' => t('common.start_date'), 'end_date' => t('common.end_date')] as $key => $dateLabel): ?>
             <div class="col-sm-6 floating-form">
                 <input type="date" class="form-control" id="<?= $key ?>" name="values[<?= $key ?>]" value="<?= $this->val($key) ?>" <?= $key === 'start_date' && $required ? 'required' : '' ?> placeholder=" ">
                 <label for="<?= $key ?>"><?= e($dateLabel) ?></label>

@@ -19,10 +19,10 @@ Route::get('/reports', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
         // ['name' => 'Export', 'path' => "/export"],
-        ['name' => lang('common.reports')]
+        ['name' => t('common.reports')]
     ];
     if (!$Settings->hasPermission('report.generate')) {
-        abortwith(403, lang('reports.you_do_not_have_permission_to_generate_reports'), "/", lang('navigation.go_back'));
+        abortwith(403, t('reports.you_do_not_have_permission_to_generate_reports'), "/", t('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports.php";
@@ -33,11 +33,11 @@ Route::get('/reports', function () {
 Route::get('/admin/reports', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('common.templates')],
+        ['name' => t('common.reports'), 'path' => "/reports"],
+        ['name' => t('common.templates')],
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/reports", lang('navigation.go_back'));
+        abortwith(403, t('reports.you_do_not_have_permission_to_manage_report_templates'), "/reports", t('navigation.go_back'));
     }
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/reports-templates.php";
@@ -47,12 +47,12 @@ Route::get('/admin/reports', function () {
 Route::get('/admin/reports/builder/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('common.templates'), 'path' => "/admin/reports"],
-        ['name' => lang('reports.builder')]
+        ['name' => t('common.reports'), 'path' => "/reports"],
+        ['name' => t('common.templates'), 'path' => "/admin/reports"],
+        ['name' => t('reports.builder')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/", lang('navigation.go_back'));
+        abortwith(403, t('reports.you_do_not_have_permission_to_manage_report_templates'), "/", t('navigation.go_back'));
     }
 
     $report = [];
@@ -74,17 +74,17 @@ Route::get('/admin/reports/builder/(.*)', function ($id) {
 Route::get('/admin/reports/preview/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.reports'), 'path' => "/reports"],
-        ['name' => lang('common.templates'), 'path' => "/admin/reports"],
-        ['name' => lang('reports.builder'), 'path' => "/admin/reports/builder/$id"],
-        ['name' => lang('common.preview')]
+        ['name' => t('common.reports'), 'path' => "/reports"],
+        ['name' => t('common.templates'), 'path' => "/admin/reports"],
+        ['name' => t('reports.builder'), 'path' => "/admin/reports/builder/$id"],
+        ['name' => t('common.preview')]
     ];
     if (!$Settings->hasPermission('report.templates')) {
-        abortwith(403, lang('reports.you_do_not_have_permission_to_manage_report_templates'), "/", lang('navigation.go_back'));
+        abortwith(403, t('reports.you_do_not_have_permission_to_manage_report_templates'), "/", t('navigation.go_back'));
     }
     $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
     if (empty($report)) {
-        abortwith(404, lang('reports.report'), "/admin/reports");
+        abortwith(404, t('reports.report'), "/admin/reports");
     }
 
     include BASEPATH . "/header.php";
@@ -109,7 +109,7 @@ Route::post('/crud/reports/create', function () {
         'steps' => []
     ]);
     $id = $insertOneResult->getInsertedId();
-    $_SESSION['msg'] = lang('reports.report_template_has_been_created_successfully');
+    $_SESSION['msg'] = t('reports.report_template_has_been_created_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
@@ -123,7 +123,7 @@ Route::post('/crud/reports/delete', function () {
     $id = $_POST['id'];
     $osiris->adminReports->deleteOne(['_id' => DB::to_ObjectID($id)]);
 
-    $_SESSION['msg'] = lang('reports.report_template_has_been_deleted_successfully');
+    $_SESSION['msg'] = t('reports.report_template_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports");
 }, 'login');
@@ -186,7 +186,7 @@ Route::post('/crud/reports/update', function () {
         ]
     );
 
-    $_SESSION['msg'] = lang('reports.report_template_has_been_updated_successfully');
+    $_SESSION['msg'] = t('reports.report_template_has_been_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/admin/reports/builder/$id");
 }, 'login');
@@ -203,7 +203,7 @@ Route::post('/crud/reports/update-order', function () {
         );
     }
 
-    $_SESSION['msg'] = lang('common.order_updated');
+    $_SESSION['msg'] = t('common.order_updated');
     $_SESSION['msg_type'] = 'success';
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         header("Location: " . $_POST['redirect']);
@@ -224,12 +224,12 @@ Route::post('/reports', function () {
     try {
         require_once BASEPATH . '/php/init.php';
         if (!isset($_POST['id'])) {
-            abortwith(500, lang('reports.no_report_id_provided'), "/reports");
+            abortwith(500, t('reports.no_report_id_provided'), "/reports");
         }
         $id = $_POST['id'];
         $report = $osiris->adminReports->findOne(['_id' => DB::to_ObjectID($id)]);
         if (empty($report)) {
-            abortwith(404, lang('reports.report_not_found'), "/reports", lang('reports.go_back_to_reports'));
+            abortwith(404, t('reports.report_not_found'), "/reports", t('reports.go_back_to_reports'));
         }
 
         require_once BASEPATH . '/php/ReportExport.php';
@@ -329,8 +329,8 @@ Route::post('/reports', function () {
                             // Only lists with additional columns contain a header row.
                             $hasHeader = !empty($list) && count($list[0]) > 1;
                             if (empty($list) || ($hasHeader && count($list) === 1)) {
-                                $name = $step['name'] ?? lang('reports.list');
-                                $section->addText(lang('reports.no_data_available_for_the_selected_criteria_of_name', replace: ['name' => $name]), ['italic' => true]);
+                                $name = $step['name'] ?? t('reports.list');
+                                $section->addText(t('reports.no_data_available_for_the_selected_criteria_of_name', replace: ['name' => $name]), ['italic' => true]);
                                 break;
                             }
                             if ($hasHeader) {
@@ -424,7 +424,7 @@ Route::post('/reports', function () {
                 });
             } catch (Throwable $error) {
                 $export->issue($section,
-                    lang('reports.this_block_could_not_be_fully_exported_please_check_its_results'),
+                    t('reports.this_block_could_not_be_fully_exported_please_check_its_results'),
                     $error->getMessage());
             }
         }
@@ -446,7 +446,7 @@ Route::post('/reports', function () {
         }
 
         if ($export->getIssues()) {
-            $_SESSION['msg'] = lang('reports.the_report_was_exported_with_warnings_please_check_the_marked_blocks_in_the_document');
+            $_SESSION['msg'] = t('reports.the_report_was_exported_with_warnings_please_check_the_marked_blocks_in_the_document');
             $_SESSION['msg_type'] = 'warning';
         }
 
@@ -466,7 +466,7 @@ Route::post('/reports', function () {
     } catch (Throwable $error) {
         error_log('Report export failed: ' . $error->getMessage());
         while (ob_get_level() > $bufferLevel) ob_end_clean();
-        $_SESSION['msg'] = lang('reports.the_report_could_not_be_exported_please_check_the_template_or_contact_support');
+        $_SESSION['msg'] = t('reports.the_report_could_not_be_exported_please_check_the_template_or_contact_support');
         $_SESSION['msg_type'] = 'error';
         header('Location: ' . ROOTPATH . '/reports', true, 303);
     } finally {

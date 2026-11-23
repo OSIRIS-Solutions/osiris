@@ -20,15 +20,15 @@
 
 <h1>
     <i class="ph-duotone ph-lock-open" aria-hidden="true"></i>
-    <?= lang('journals.open_access') ?>
+    <?= t('journals.open_access') ?>
 </h1>
 
 <div class="row row-eq-spacing mt-0">
     <div class="col-md-6">
         <div class="box">
             <div class="chart content text-center">
-                <h5 class="title mb-0">Open Access <?= lang('search.en') ?></h5>
-                <p class="mt-0 text-muted"><?= lang('search.status_according_to_unpaywall_since') . $Settings->get('startyear') ?></p>
+                <h5 class="title mb-0">Open Access <?= t('search.en') ?></h5>
+                <p class="mt-0 text-muted"><?= t('search.status_according_to_unpaywall_since') . $Settings->get('startyear') ?></p>
 
                 <div id="chart-oa-status-pie"></div>
             </div>
@@ -37,8 +37,8 @@
     <div class="col-md-6">
         <div class="box">
             <div class="chart content text-center">
-                <h5 class="title mb-0">Open Access <?= lang('search.development') ?></h5>
-                <p class="mt-0 text-muted"><?= lang('search.status_according_to_unpaywall') ?></p>
+                <h5 class="title mb-0">Open Access <?= t('search.development') ?></h5>
+                <p class="mt-0 text-muted"><?= t('search.status_according_to_unpaywall') ?></p>
 
                 <div id="chart-oa-status-line"></div>
             </div>

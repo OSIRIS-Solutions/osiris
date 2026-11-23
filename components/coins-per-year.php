@@ -3,7 +3,7 @@
         <div class="box h-full">
             <div class="chart content">
                 <h4 class="title">
-                    <?= lang('activities.coins_per_year') ?>
+                    <?= t('activities.coins_per_year') ?>
                 </h4>
                 <canvas id="chart-coins" style="max-height: 30rem;"></canvas>
             </div>
@@ -61,13 +61,13 @@
                             x: {
                                 title: {
                                     display: true,
-                                    text: <?= json_encode(lang('activities.years'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                                    text: <?= json_encode(t('activities.years'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: <?= json_encode(lang('activities.coins_accumulated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                                    text: <?= json_encode(t('activities.coins_accumulated'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
                                 }
                             }
                         }

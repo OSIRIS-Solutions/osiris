@@ -19,37 +19,37 @@
 <div class="container w-800 mw-full" id="custom-authentication">
     <h1>
         <i class="ph-duotone ph-lock" aria-hidden="true"></i>
-        <?= lang('admin.authentication') ?>
+        <?= t('admin.authentication') ?>
     </h1>
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/admin/authentication">
 
         <h5>
-            <?= lang('admin.self_registration') ?>
+            <?= t('admin.self_registration') ?>
         </h5>
         <p class="text-muted">
-            <?= lang('admin.self_registration_description_long') ?>
+            <?= t('admin.self_registration_description_long') ?>
         </p>
         <input type="hidden" name="general[auth-self-registration]" value="0">
         <div class="form-group">
             <div class="custom-checkbox">
                 <input type="checkbox" name="general[auth-self-registration]" id="auth-self-registration-1" value="1" <?= $Settings->get('auth-self-registration', true) ? 'checked' : '' ?>>
-                <label for="auth-self-registration-1"><?= lang('admin.self_registration_description') ?></label>
+                <label for="auth-self-registration-1"><?= t('admin.self_registration_description') ?></label>
             </div>
         </div>
 
         <hr>
 
         <h5>
-            <?= lang('admin.authentication_token') ?>
+            <?= t('admin.authentication_token') ?>
         </h5>
         <p class="text-muted">
-            <?= lang('admin.authentication_token_description') ?>
+            <?= t('admin.authentication_token_description') ?>
         </p>
 
         <div class="form-group">
-            <label for="auth-token"><?= lang('admin.auth_token') ?></label>
-            <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= lang('common.copy_to_clipboard') ?>">
+            <label for="auth-token"><?= t('admin.auth_token') ?></label>
+            <button class="btn small ml-5" type="button" onclick="copyToClipboard()" data-toggle="tooltip" data-title="<?= t('common.copy_to_clipboard') ?>">
                 <i class="ph ph-clipboard" aria-label="Copy to clipboard"></i>
             </button>
             <div class="input-group">
@@ -63,7 +63,7 @@
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
 
     </form>

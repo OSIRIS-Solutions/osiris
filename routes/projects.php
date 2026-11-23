@@ -19,7 +19,7 @@ Route::get('/(projects|proposals)', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals')]
+        ['name' => $collection == 'projects' ? t('common.projects') : t('common.project_proposals')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/$collection/list.php";
@@ -31,8 +31,8 @@ Route::get('/(projects|proposals)/new', function ($collection) {
     include_once BASEPATH . "/php/Modules.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
-        ['name' => lang('common.new')]
+        ['name' => $collection == 'projects' ? t('common.projects') : t('common.project_proposals'), 'path' => "/$collection"],
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/proposals/edit.php";
@@ -45,8 +45,8 @@ Route::get('/projects/create-from-proposal/(.*)', function ($id) {
     $user = $_SESSION['username'];
     $collection = 'projects';
     $breadcrumb = [
-        ['name' => lang('common.projects'), 'path' => "/projects"],
-        ['name' => lang('common.new')]
+        ['name' => t('common.projects'), 'path' => "/projects"],
+        ['name' => t('common.new')]
     ];
     if (DB::is_ObjectID($id)) {
         $mongo_id = $DB->to_ObjectID($id);
@@ -69,8 +69,8 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
-        ['name' => lang('projects.statistics')]
+        ['name' => $collection == 'projects' ? t('common.projects') : t('common.project_proposals'), 'path' => "/$collection"],
+        ['name' => t('projects.statistics')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/projects/statistics.php";
@@ -80,8 +80,8 @@ Route::get('/(projects|proposals)/statistics', function ($collection) {
 Route::get('/proposals/finances', function () {
     include_once BASEPATH . "/php/init.php";
     $breadcrumb = [
-        ['name' => lang('common.project_proposals'), 'path' => "/proposals"],
-        ['name' => lang('projects.finances_overview')]
+        ['name' => t('common.project_proposals'), 'path' => "/proposals"],
+        ['name' => t('projects.finances_overview')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/proposals/finance-statistics.php";
@@ -101,10 +101,10 @@ Route::get('/(projects|proposals)/view/(.*)', function ($collection, $id) {
         $id = strval($project['_id'] ?? '');
     }
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('projects.project_proposal'), "/$collection");
+        abortwith(404, $collection == 'projects' ? t('common.project') : t('projects.project_proposal'), "/$collection");
     }
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? t('common.projects') : t('common.project_proposals'), 'path' => "/$collection"],
         ['name' => $project['acronym'] ?? localized($project['name'] ?? '')]
     ];
 
@@ -124,7 +124,7 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->$collection->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('projects.project_proposal'), "/$collection");
+        abortwith(404, $collection == 'projects' ? t('common.project') : t('projects.project_proposal'), "/$collection");
     }
     $Project = new Project($project);
 
@@ -136,26 +136,26 @@ Route::get('/(projects|proposals)/(edit|collaborators|finance|persons)/([a-zA-Z0
         $edit_perm = is_string($requestedPhase) && ProjectForms::canEditPhase($project, $requestedPhase, $Settings, $user, isset($_GET['edit_phase']));
     }
     if (!$edit_perm) {
-        abortwith(403, lang('projects.you_do_not_have_permission_to_edit_this_project'), "/$collection/view/$id", lang('projects.go_back_to_project'));
+        abortwith(403, t('projects.you_do_not_have_permission_to_edit_this_project'), "/$collection/view/$id", t('projects.go_back_to_project'));
     }
 
     switch ($page) {
         case 'collaborators':
-            $name = lang('common.collaborators');
+            $name = t('common.collaborators');
             break;
         case 'finance':
-            $name = lang('common.finance');
+            $name = t('common.finance');
             break;
         case 'persons':
-            $name = lang('common.persons');
+            $name = t('common.persons');
             break;
         default:
-            $name = lang('action.edit');
+            $name = t('action.edit');
             break;
     }
 
     $breadcrumb = [
-        ['name' => $collection == 'projects' ? lang('common.projects') : lang('common.project_proposals'), 'path' => "/$collection"],
+        ['name' => $collection == 'projects' ? t('common.projects') : t('common.project_proposals'), 'path' => "/$collection"],
         ['name' =>  $project['acronym'] ?? localized($project['name'] ?? ''), 'path' => "/$collection/view/$id"],
         ['name' => $name]
     ];
@@ -187,7 +187,7 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     $user = $_SESSION['username'];
 
     if (!$Settings->hasPermission('projects.add-subprojects')) {
-        abortwith(403, lang('projects.you_do_not_have_permission_to_add_subprojects_projects'), "/projects/view/$id", lang('projects.go_back_to_project'));
+        abortwith(403, t('projects.you_do_not_have_permission_to_add_subprojects_projects'), "/projects/view/$id", t('projects.go_back_to_project'));
     }
     // get project
     if (DB::is_ObjectID($id)) {
@@ -199,14 +199,14 @@ Route::get('/projects/subproject/(.*)', function ($id) {
     }
     // check if project exists
     if (empty($project)) {
-        abortwith(404, lang('common.project'), "/projects");
+        abortwith(404, t('common.project'), "/projects");
     }
 
     // set breadcrumb
     $breadcrumb = [
-        ['name' => lang('common.projects'), 'path' => "/projects"],
+        ['name' => t('common.projects'), 'path' => "/projects"],
         ['name' => $project['acronym'] ?? localized($project['name'] ?? ''), 'path' => "/projects/view/$id"],
-        ['name' => lang('projects.add_subproject_projects')]
+        ['name' => t('projects.add_subproject_projects')]
     ];
 
     // create new form
@@ -288,7 +288,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
     $mongo_id = $DB->to_ObjectID($id);
     $project = $osiris->proposals->findOne(['_id' => $mongo_id]);
     if (empty($project)) {
-        abortwith(404, lang('projects.project_proposal'), "/proposals");
+        abortwith(404, t('projects.project_proposal'), "/proposals");
     }
     $project = DB::doc2Arr($project);
     $Project = new Project($project);
@@ -342,7 +342,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
         "funder" => $project['funder'],
         "funding_organization" => $funding_organization,
         "role" => $Project->getRoleRaw(),
-        "duration" => $Project->getDuration() . lang('projects.months'),
+        "duration" => $Project->getDuration() . t('projects.months'),
         "start" => $Project->getStartDate(),
         "end" => $Project->getEndDate(),
         "grant_sum_proposed" => $project['grant_sum_proposed'] ?? 0,
@@ -351,14 +351,14 @@ Route::post('/proposals/download/(.*)', function ($id) {
         "personnel" => $project['personnel'] ?? 'NA',
         "countries" => isset($project['countries']) ? implode(', ', $project['countries']) : 'NA',
         "in-kind" => $project['in-kind'] ?? 'NA',
-        "public" => $project['public'] ? lang('common.yes') : lang('common.no'),
-        "res:material" => ($res['material'] == 'yes' ? lang('common.yes') : lang('common.no')),
+        "public" => $project['public'] ? t('common.yes') : t('common.no'),
+        "res:material" => ($res['material'] == 'yes' ? t('common.yes') : t('common.no')),
         "res:material_details" => $res['material_details'] ?? 'NA',
-        "res:personnel" => ($res['personnel'] == 'yes' ? lang('common.yes') : lang('common.no')),
+        "res:personnel" => ($res['personnel'] == 'yes' ? t('common.yes') : t('common.no')),
         "res:personnel_details" => $res['personnel_details'] ?? 'NA',
-        "res:room" => ($res['room'] == 'yes' ? lang('common.yes') : lang('common.no')),
+        "res:room" => ($res['room'] == 'yes' ? t('common.yes') : t('common.no')),
         "res:room_details" => $res['room_details'] ?? 'NA',
-        "res:other" => ($res['other'] == 'yes' ? lang('common.yes') : lang('common.no')),
+        "res:other" => ($res['other'] == 'yes' ? t('common.yes') : t('common.no')),
         "res:other_details" => $res['other_details'] ?? 'NA',
         "coordinator" => $project['coordinator'] ?? 'NA',
         "purpose" => $project['purpose'] ?? 'NA',
@@ -393,7 +393,7 @@ Route::post('/proposals/download/(.*)', function ($id) {
 Route::post('/crud/(projects|proposals)/create', function ($collection) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
 
     $values = validateValues($_POST['values'], $DB, $collection);
@@ -402,7 +402,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
         if (!is_array($values[$field])) $values[$field] = ['en' => $values[$field]];
     }
     if (!isset($values['type']) || !isset($values['name'])) {
-        $_SESSION['msg'] = lang('projects.missing_required_parameters');
+        $_SESSION['msg'] = t('projects.missing_required_parameters');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/$collection/new");
         die();
@@ -606,7 +606,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
             if ($_SESSION['username'] == $applicant) continue; // do not send message to self
             $creator = ($USER['first'] ?? '') . " " . $USER['last'];
             $tag = $collection == 'projects' ? 'project' : 'proposal';
-            $typeOfP = $collection == 'projects' ? lang('projects.the_project') : lang('projects.the_proposal');
+            $typeOfP = $collection == 'projects' ? t('projects.the_project') : t('projects.the_proposal');
             $DB->addMessage(
                 $applicant,
                 $creator . ' has created ' . $typeOfP . ' <b>' . localized($values['name'] ?? '') . '</b> for which you are entered as applicant.',
@@ -640,14 +640,14 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 
         // check if project/proposal contains persons, else redirect to edit page and promt user to add persons
         if (empty($values['persons'] ?? [])) {
-            $_SESSION['msg'] = lang('projects.project_created_successfully_please_add_at_least_one_person_to_the_project');
+            $_SESSION['msg'] = t('projects.project_created_successfully_please_add_at_least_one_person_to_the_project');
             $_SESSION['msg_type'] = "success";
             header("Location: " . ROOTPATH . "/" . $collection . "/persons/" . $id . "?new");
             die();
         }
 
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('projects.project_created_successfully');
+        $_SESSION['msg'] = t('projects.project_created_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $red);
         die();
@@ -663,7 +663,7 @@ Route::post('/crud/(projects|proposals)/create', function ($collection) {
 Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     /**
      * Combine values[grant_years] && values[grant_amounts] to associative array
@@ -700,7 +700,7 @@ Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('projects.finances_updated_successfully');
+        $_SESSION['msg'] = t('projects.finances_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -715,11 +715,11 @@ Route::post('/crud/(proposals)/finance/([A-Za-z0-9]*)', function ($collection, $
 Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($collection, $id) {
     include_once BASEPATH . "/php/init.php";
     include_once BASEPATH . "/php/Project.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $project = $osiris->$collection->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, $collection == 'projects' ? lang('common.project') : lang('projects.project_proposal'), "/$collection");
+        abortwith(404, $collection == 'projects' ? t('common.project') : t('projects.project_proposal'), "/$collection");
     }
 
     require_once BASEPATH . '/php/ProjectForms.php';
@@ -731,7 +731,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
         $correction = isset($_POST['edit_phase']);
         $phase = $correction ? $_POST['edit_phase'] : ($input['status'] ?? $project['status'] ?? 'proposed');
         if (!is_string($phase) || !ProjectForms::canEditPhase($project, $phase, $Settings, $_SESSION['username'], $correction)) {
-            abortwith(403, translate('projects.phase_edit_denied'));
+            abortwith(403, t('projects.phase_edit_denied'));
         }
         if ($correction) {
             require_once BASEPATH . '/php/Modules.php';
@@ -947,7 +947,7 @@ Route::post('/crud/(projects|proposals)/update/([A-Za-z0-9]*)', function ($colle
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('projects.project_has_been_updated_successfully');
+        $_SESSION['msg'] = t('projects.project_has_been_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -979,7 +979,7 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
 
     // if user has no permission: redirect to project view
     if (!$edit_perm) {
-        abortwith(403, lang('projects.you_do_not_have_permission_to_delete_this_project'), "/$collection/view/$id", lang('projects.go_back_to_project'));
+        abortwith(403, t('projects.you_do_not_have_permission_to_delete_this_project'), "/$collection/view/$id", t('projects.go_back_to_project'));
     }
 
     if ($collection == 'projects') {
@@ -994,7 +994,7 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
         // check if a project with the same ID exists
         $existing_project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
         if (!empty($existing_project)) {
-            $_SESSION['msg'] = lang('projects.this_proposal_cannot_be_deleted_because_it_has_already_been_converted_to_a');
+            $_SESSION['msg'] = t('projects.this_proposal_cannot_be_deleted_because_it_has_already_been_converted_to_a');
             $_SESSION['msg_type'] = "error";
             header("Location: " . ROOTPATH . "/proposals/view/" . $id);
             die();
@@ -1019,7 +1019,7 @@ Route::post('/crud/(projects|proposals)/delete/([A-Za-z0-9]*)', function ($colle
         ['_id' => $DB->to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang('projects.element_has_been_deleted_successfully');
+    $_SESSION['msg'] = t('projects.element_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/$collection");
 });
@@ -1099,7 +1099,7 @@ Route::post('/crud/(projects|proposals)/update-persons/([A-Za-z0-9]*)', function
         ['$set' => $values]
     );
 
-    $_SESSION['msg'] = lang('projects.persons_for_this_project_have_been_updated_successfully');
+    $_SESSION['msg'] = t('projects.persons_for_this_project_have_been_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/$collection/view/$id");
 });
@@ -1113,7 +1113,7 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
     // get project
     $project = $osiris->projects->findOne(['_id' => $DB->to_ObjectID($id)]);
     if (empty($project)) {
-        abortwith(404, lang('common.project'), "/projects");
+        abortwith(404, t('common.project'), "/projects");
     }
     $Project = new Project();
 
@@ -1132,7 +1132,7 @@ Route::post('/crud/projects/update-collaborators/([A-Za-z0-9]*)', function ($id)
         ['$set' => ["collaborators" => $collaborators]]
     );
 
-    $_SESSION['msg'] = lang('projects.collaborators_for_this_project_have_been_updated_successfully');
+    $_SESSION['msg'] = t('projects.collaborators_for_this_project_have_been_updated_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/projects/view/$id");
 });
@@ -1158,22 +1158,22 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 16000000) {
-            $_SESSION['msg'] = lang('error.file_upload_too_large', replace:['max' => '16 MB']);
+            $_SESSION['msg'] = t('error.file_upload_too_large', replace:['max' => '16 MB']);
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename)) {
-            $_SESSION['msg'] = lang('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]);
+            $_SESSION['msg'] = t('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]);
             $_SESSION['msg_type'] = "success";
             // update project with new image
             $osiris->projects->updateOne(
@@ -1181,7 +1181,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
                 ['$set' => ["image" => "projects/" . $filename]]
             );
         } else {
-            $_SESSION['msg'] = lang('error.file_upload_generic');
+            $_SESSION['msg'] = t('error.file_upload_generic');
             $_SESSION['msg_type'] = "error";
         }
     } else if (isset($_POST['delete'])) {
@@ -1189,10 +1189,10 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
         if (file_exists($target_dir . '/' . $filename)) {
             // Use unlink() function to delete a file
             if (!unlink($target_dir . '/' . $filename)) {
-                $_SESSION['msg'] = lang('common.filename_cannot_be_deleted_due_to_an_error', replace: ['filename' => $filename]);
+                $_SESSION['msg'] = t('common.filename_cannot_be_deleted_due_to_an_error', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "error";
             } else {
-                $_SESSION['msg'] = lang('common.filename_has_been_deleted', replace: ['filename' => $filename]);
+                $_SESSION['msg'] = t('common.filename_has_been_deleted', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "success";
             }
         }
@@ -1202,7 +1202,7 @@ Route::post('/crud/projects/image/([A-Za-z0-9]*)', function ($id) {
             ['$set' => ["image" => null]]
         );
     } else {
-        $_SESSION['msg'] = lang('error.no_file_uploaded');
+        $_SESSION['msg'] = t('error.no_file_uploaded');
         $_SESSION['msg_type'] = "info";
     }
 
@@ -1215,13 +1215,13 @@ Route::post('/crud/projects/connect-activities', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!isset($_POST['project']) || empty($_POST['project'])) {
-        $_SESSION['msg'] = lang('projects.no_project_was_given');
+        $_SESSION['msg'] = t('projects.no_project_was_given');
         $_SESSION['msg_type'] = "error";
         header("Location: " . $_POST['redirect']);
         die;
     }
     if (!isset($_POST['activity']) || empty($_POST['activity'])) {
-        $_SESSION['msg'] = lang('projects.no_activity_was_given');
+        $_SESSION['msg'] = t('projects.no_activity_was_given');
         $_SESSION['msg_type'] = "error";
         header("Location: " . $_POST['redirect']);
         die;
@@ -1235,7 +1235,7 @@ Route::post('/crud/projects/connect-activities', function () {
             ['_id' => $activity],
             ['$pull' => ["projects" => $project]]
         );
-        $_SESSION['msg'] = lang('projects.the_activity_has_been_disconnected_from_the_project');
+        $_SESSION['msg'] = t('projects.the_activity_has_been_disconnected_from_the_project');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect'] . "#add-activity");
         die;
@@ -1245,7 +1245,7 @@ Route::post('/crud/projects/connect-activities', function () {
         ['_id' => $activity],
         ['$push' => ["projects" => $project]]
     );
-    $_SESSION['msg'] = lang('projects.the_activity_has_been_connected_to_the_project');
+    $_SESSION['msg'] = t('projects.the_activity_has_been_connected_to_the_project');
     $_SESSION['msg_type'] = "success";
 
     header("Location: " . $_POST['redirect'] . "#add-activity");

@@ -11,10 +11,10 @@ class ActivityFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $types = $osiris->adminCategories->find()->toArray();
-        $types = array_column($types, lang('common.field_name_language'), 'id');
+        $types = array_column($types, t('common.field_name_language'), 'id');
 
         $subtypes = $osiris->adminTypes->find()->toArray();
-        $subtypes = array_column($subtypes, lang('common.field_name_language'), 'id');
+        $subtypes = array_column($subtypes, t('common.field_name_language'), 'id');
 
 
         $adminCategories = $osiris->adminCategories->find()->toArray();
@@ -58,7 +58,7 @@ class ActivityFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('common.id'),
+                'label' => t('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -72,7 +72,7 @@ class ActivityFields extends Fields
                     'columns',
                     'filter'
                 ],
-                'label' => lang('activities.print_version'),
+                'label' => t('activities.print_version'),
                 'type' => 'string'
             ],
             [
@@ -81,7 +81,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('activities.web_version'),
+                'label' => t('activities.web_version'),
                 'type' => 'string'
             ],
             [
@@ -90,7 +90,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('admin.icon'),
+                'label' => t('admin.icon'),
                 'type' => 'string'
             ],
             [
@@ -101,7 +101,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.category'),
+                'label' => t('common.category'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $types
@@ -114,7 +114,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.type'),
+                'label' => t('common.type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $subtypes
@@ -126,7 +126,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.title'),
+                'label' => t('common.title'),
                 'type' => 'string'
             ],
             [
@@ -136,7 +136,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.start_date'),
+                'label' => t('common.start_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
@@ -147,7 +147,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.end_date'),
+                'label' => t('common.end_date'),
                 'type' => 'datetime',
                 'input' => 'date',
             ],
@@ -158,7 +158,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.abstract'),
+                'label' => t('activities.abstract'),
                 'type' => 'string'
             ],
             [
@@ -167,7 +167,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('common.authors_all_activities'),
+                'label' => t('common.authors_all_activities'),
                 'type' => 'list',
             ],
             [
@@ -177,7 +177,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.author_first_name'),
+                'label' => t('activities.author_first_name'),
                 'type' => 'string'
             ],
             [
@@ -187,7 +187,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.author_last_name'),
+                'label' => t('activities.author_last_name'),
                 'type' => 'string'
             ],
             [
@@ -197,7 +197,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.author_username'),
+                'label' => t('activities.author_username'),
                 'type' => 'string'
             ],
             [
@@ -207,7 +207,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.author_position'),
+                'label' => t('activities.author_position'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['first', 'middle', 'last', 'corresponding']
@@ -216,7 +216,7 @@ class ActivityFields extends Fields
                 'id' => 'authors.approved',
                 'module_of' => $typeModules['authors'] ?? [],
                 'usage' => [],
-                'label' => lang('activities.author_approved'),
+                'label' => t('activities.author_approved'),
                 'type' => 'boolean',
             ],
             [
@@ -226,7 +226,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.author_affiliated'),
+                'label' => t('activities.author_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -236,21 +236,21 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.author_unit'),
+                'label' => t('activities.author_unit'),
                 'type' => 'string'
             ],
             [
                 'id' => 'persons',
                 'module_of' => array_values(array_unique(array_merge($typeModules['persons'] ?? [], $typeModules['persons-role'] ?? []))),
                 'usage' => ['columns'],
-                'label' => lang('common.persons'),
+                'label' => t('common.persons'),
                 'type' => 'list',
             ],
             [
                 'id' => 'persons.role',
                 'module_of' => $typeModules['persons-role'] ?? [],
                 'usage' => ['filter', 'aggregate'],
-                'label' => lang('common.role'),
+                'label' => t('common.role'),
                 'type' => 'list',
             ],
             [
@@ -259,7 +259,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('teaching.supervisors'),
+                'label' => t('teaching.supervisors'),
                 'type' => 'list',
             ],
             [
@@ -269,7 +269,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.supervisor_first_name'),
+                'label' => t('activities.supervisor_first_name'),
                 'type' => 'string'
             ],
             [
@@ -279,7 +279,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.supervisor_last_name'),
+                'label' => t('activities.supervisor_last_name'),
                 'type' => 'string'
             ],
             [
@@ -289,14 +289,14 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.supervisor_username'),
+                'label' => t('activities.supervisor_username'),
                 'type' => 'string'
             ],
             [
                 'id' => 'supervisors.approved',
                 'module_of' => $typeModules['supervisor'] ?? $typeModules['supervisor-thesis'] ?? [],
                 'usage' => [],
-                'label' => lang('activities.supervisor_approved'),
+                'label' => t('activities.supervisor_approved'),
                 'type' => 'boolean',
             ],
             [
@@ -306,7 +306,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.supervisor_affiliated'),
+                'label' => t('activities.supervisor_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -315,7 +315,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'filter',
                 ],
-                'label' => lang('activities.supervisor_unit'),
+                'label' => t('activities.supervisor_unit'),
                 'type' => 'string'
             ],
             [
@@ -325,7 +325,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.supervisor_sws'),
+                'label' => t('activities.supervisor_sws'),
                 'type' => 'integer'
             ],
             [
@@ -334,7 +334,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'columns'
                 ],
-                'label' => lang('activities.editor'),
+                'label' => t('activities.editor'),
                 'type' => 'list',
             ],
             [
@@ -344,7 +344,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.editor_first_name'),
+                'label' => t('activities.editor_first_name'),
                 'type' => 'string'
             ],
             [
@@ -354,7 +354,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.editor_last_name'),
+                'label' => t('activities.editor_last_name'),
                 'type' => 'string'
             ],
             [
@@ -364,7 +364,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.editor_username'),
+                'label' => t('activities.editor_username'),
                 'type' => 'string'
             ],
             [
@@ -374,7 +374,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.editor_affiliated'),
+                'label' => t('activities.editor_affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -384,7 +384,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.editor_unit'),
+                'label' => t('activities.editor_unit'),
                 'type' => 'string'
             ],
             [
@@ -395,7 +395,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.affiliated'),
+                'label' => t('common.affiliated'),
                 'type' => 'boolean',
             ],
             [
@@ -406,24 +406,24 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.affiliated_positions'),
+                'label' => t('common.affiliated_positions'),
                 'type' => 'list',
                 'input' => 'select',
                 'values' => [
-                    'first' => lang('common.first_author'),
-                    'last' => lang('common.last_author'),
-                    'first_and_last' => lang('common.first_and_last_author'),
-                    'first_or_last' => lang('common.first_or_last_author'),
-                    'middle' => lang('common.middle_author'),
-                    'single' => lang('common.one_single_affiliated_author'),
-                    'none' => lang('common.no_author_affiliated_view'),
-                    'all' => lang('common.all_authors_affiliated'),
-                    'corresponding' => lang('common.corresponding_author'),
-                    'not_first' => lang('common.not_first_author'),
-                    'not_last' => lang('common.not_last_author'),
-                    'not_middle' => lang('common.not_middle_author'),
-                    'not_corresponding' => lang('common.not_corresponding_author'),
-                    'not_first_or_last' => lang('common.not_first_or_last_author')
+                    'first' => t('common.first_author'),
+                    'last' => t('common.last_author'),
+                    'first_and_last' => t('common.first_and_last_author'),
+                    'first_or_last' => t('common.first_or_last_author'),
+                    'middle' => t('common.middle_author'),
+                    'single' => t('common.one_single_affiliated_author'),
+                    'none' => t('common.no_author_affiliated_view'),
+                    'all' => t('common.all_authors_affiliated'),
+                    'corresponding' => t('common.corresponding_author'),
+                    'not_first' => t('common.not_first_author'),
+                    'not_last' => t('common.not_last_author'),
+                    'not_middle' => t('common.not_middle_author'),
+                    'not_corresponding' => t('common.not_corresponding_author'),
+                    'not_first_or_last' => t('common.not_first_or_last_author')
                 ]
             ],
             [
@@ -434,15 +434,15 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.cooperation_type'),
+                'label' => t('activities.cooperation_type'),
                 'type' => 'string',
                 'values' => [
-                    'individual' => lang('activities.individual_only_one_affiliated_author'),
-                    'departmental' => lang('activities.departmental_cooperation_within_one_department'),
-                    'institutional' => lang('activities.institutional_cooperation_between_departments_of_the_same_institute'),
-                    'contributing' => lang('activities.contributing_cooperation_with_other_institutes_with_middle_authorships'),
-                    'leading' => lang('activities.leading_cooperation_with_other_institutes_with_a_corresponding_role_first_o'),
-                    'none' => lang('activities.none_no_author_affiliated')
+                    'individual' => t('activities.individual_only_one_affiliated_author'),
+                    'departmental' => t('activities.departmental_cooperation_within_one_department'),
+                    'institutional' => t('activities.institutional_cooperation_between_departments_of_the_same_institute'),
+                    'contributing' => t('activities.contributing_cooperation_with_other_institutes_with_middle_authorships'),
+                    'leading' => t('activities.leading_cooperation_with_other_institutes_with_a_corresponding_role_first_o'),
+                    'none' => t('activities.none_no_author_affiliated')
                 ],
                 'input' => 'select'
             ],
@@ -465,7 +465,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('journals.issn'),
+                'label' => t('journals.issn'),
                 'type' => 'list'
             ],
             [
@@ -476,7 +476,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.magazine'),
+                'label' => t('activities.magazine'),
                 'type' => 'string'
             ],
             [
@@ -487,7 +487,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.year'),
+                'label' => t('common.year'),
                 'type' => 'integer',
                 'default_value' => CURRENTYEAR
             ],
@@ -495,21 +495,21 @@ class ActivityFields extends Fields
                 'id' => 'history',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('activities.history'),
+                'label' => t('activities.history'),
                 'type' => 'list'
             ],
             [
                 'id' => 'workflow',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('workflows.workflow'),
+                'label' => t('workflows.workflow'),
                 'type' => 'list'
             ],
             [
                 'id' => 'rendered',
                 'module_of' => [],
                 'usage' => [],
-                'label' => lang('activities.rendered'),
+                'label' => t('activities.rendered'),
                 'type' => 'list'
             ],
             [
@@ -520,7 +520,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'columns'
                 ],
-                'label' => lang('common.license'),
+                'label' => t('common.license'),
                 'type' => 'string'
             ],
             [
@@ -531,7 +531,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.month'),
+                'label' => t('common.month'),
                 'type' => 'integer'
             ],
             [
@@ -543,7 +543,7 @@ class ActivityFields extends Fields
                     'columns'
                 ],
                 'type' => 'string',
-                'label' => lang('activities.lecture_type'),
+                'label' => t('activities.lecture_type'),
                 'input' => 'select',
                 'values' => ['short', 'long', 'repetition']
             ],
@@ -555,7 +555,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.editor_type'),
+                'label' => t('activities.editor_type'),
                 'type' => 'string'
             ],
             [
@@ -565,7 +565,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.doi'),
+                'label' => t('activities.doi'),
                 'type' => 'string'
             ],
             [
@@ -575,7 +575,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.link'),
+                'label' => t('common.link'),
                 'type' => 'string'
             ],
             [
@@ -585,7 +585,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.pubmed_id'),
+                'label' => t('activities.pubmed_id'),
                 'type' => 'integer'
             ],
             [
@@ -596,7 +596,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.publication_type'),
+                'label' => t('activities.publication_type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['article', 'book', 'chapter', 'preprint', 'magazine', 'dissertation', 'others']
@@ -609,7 +609,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.gender'),
+                'label' => t('common.gender'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['f', 'm', 'd']
@@ -621,7 +621,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.issue'),
+                'label' => t('activities.issue'),
                 'type' => 'string'
             ],
             [
@@ -631,7 +631,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.volume'),
+                'label' => t('activities.volume'),
                 'type' => 'string'
             ],
             [
@@ -641,7 +641,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.pages'),
+                'label' => t('activities.pages'),
                 'type' => 'string'
             ],
             [
@@ -662,7 +662,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.quartile'),
+                'label' => t('common.quartile'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['Q1', 'Q2', 'Q3', 'Q4']
@@ -674,7 +674,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.book_title'),
+                'label' => t('activities.book_title'),
                 'type' => 'string'
             ],
             [
@@ -685,7 +685,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('journals.publisher'),
+                'label' => t('journals.publisher'),
                 'type' => 'string'
             ],
             [
@@ -696,7 +696,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.location_publisher'),
+                'label' => t('activities.location_publisher'),
                 'type' => 'string'
             ],
             [
@@ -706,7 +706,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.edition'),
+                'label' => t('activities.edition'),
                 'type' => 'string'
             ],
             [
@@ -716,7 +716,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.isbn'),
+                'label' => t('activities.isbn'),
                 'type' => 'string'
             ],
             [
@@ -727,7 +727,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('documents.document_type'),
+                'label' => t('documents.document_type'),
                 'type' => 'string'
             ],
             [
@@ -738,7 +738,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.iteration_misc'),
+                'label' => t('activities.iteration_misc'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => ['once', 'annual']
@@ -751,15 +751,15 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.type_of_software'),
+                'label' => t('activities.type_of_software'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'software' => lang('activities.software'),
-                    'database' => lang('admin.database'),
-                    'dataset' => lang('activities.dataset'),
-                    'webtool' => lang('activities.webtool'),
-                    'report' => lang('reports.report')
+                    'software' => t('activities.software'),
+                    'database' => t('admin.database'),
+                    'dataset' => t('activities.dataset'),
+                    'webtool' => t('activities.webtool'),
+                    'report' => t('reports.report')
                 ]
             ],
             [
@@ -770,7 +770,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.publication_venue_software'),
+                'label' => t('activities.publication_venue_software'),
                 'type' => 'string'
             ],
             [
@@ -780,7 +780,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.version'),
+                'label' => t('common.version'),
                 'type' => 'string'
             ],
             [
@@ -791,17 +791,17 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.category_students_guests'),
+                'label' => t('activities.category_students_guests'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'guest scientist' => lang('common.guest_scientist'),
-                    'lecture internship' => lang('common.lecture_internship'),
-                    'student internship' => lang('common.student_internship'),
-                    'other' => lang('common.other'),
-                    'doctoral thesis' => lang('activities.doctoral_thesis'),
-                    'master thesis' => lang('activities.master_thesis'),
-                    'bachelor thesis' => lang('activities.bachelor_thesis')
+                    'guest scientist' => t('common.guest_scientist'),
+                    'lecture internship' => t('common.lecture_internship'),
+                    'student internship' => t('common.student_internship'),
+                    'other' => t('common.other'),
+                    'doctoral thesis' => t('activities.doctoral_thesis'),
+                    'master thesis' => t('activities.master_thesis'),
+                    'bachelor thesis' => t('activities.bachelor_thesis')
                 ]
             ],
             [
@@ -812,7 +812,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.thesis_type'),
+                'label' => t('activities.thesis_type'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('thesis')
@@ -825,7 +825,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.publication_language'),
+                'label' => t('activities.publication_language'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('pub-language')
@@ -838,13 +838,13 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.thesis_status'),
+                'label' => t('activities.thesis_status'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'in progress' => lang('documents.in_progress'),
-                    'completed' => lang('common.completed'),
-                    'aborted' => lang('error.aborted')
+                    'in progress' => t('documents.in_progress'),
+                    'completed' => t('common.completed'),
+                    'aborted' => t('error.aborted')
                 ]
             ],
             [
@@ -854,7 +854,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('guests.name_of_guest'),
+                'label' => t('guests.name_of_guest'),
                 'type' => 'string'
             ],
             [
@@ -864,7 +864,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.academic_title_of_guest'),
+                'label' => t('activities.academic_title_of_guest'),
                 'type' => 'string'
             ],
             [
@@ -874,7 +874,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.details'),
+                'label' => t('common.details'),
                 'type' => 'string'
             ],
             [
@@ -885,7 +885,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.event'),
+                'label' => t('common.event'),
                 'type' => 'string'
             ],
             [
@@ -896,7 +896,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.location'),
+                'label' => t('common.location'),
                 'type' => 'string'
             ],
             [
@@ -907,7 +907,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('common.country'),
+                'label' => t('common.country'),
                 'type' => 'string'
             ],
             [
@@ -918,7 +918,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.peer_reviewed'),
+                'label' => t('activities.peer_reviewed'),
                 'type' => 'boolean',
             ],
             [
@@ -929,7 +929,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('journals.open_access'),
+                'label' => t('journals.open_access'),
                 'type' => 'boolean',
             ],
             [
@@ -940,7 +940,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.open_access_status'),
+                'label' => t('activities.open_access_status'),
                 'type' => 'string',
                 'values' => ['gold', 'diamond', 'green', 'bronze', 'hybrid', 'open', 'closed'],
                 'input' => 'select'
@@ -953,7 +953,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.online_ahead_of_print'),
+                'label' => t('activities.online_ahead_of_print'),
                 'type' => 'boolean',
             ],
             [
@@ -964,7 +964,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.correction'),
+                'label' => t('activities.correction'),
                 'type' => 'boolean',
             ],
             [
@@ -975,7 +975,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.contribution_to_political_and_social_consulting'),
+                'label' => t('activities.contribution_to_political_and_social_consulting'),
                 'type' => 'string',
                 'values' => ['Gutachten', 'Positionspapier', 'Studie', 'Sonstiges', ''],
                 'input' => 'select'
@@ -988,7 +988,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.invited_lecture'),
+                'label' => t('activities.invited_lecture'),
                 'type' => 'boolean',
             ],
             [
@@ -999,7 +999,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.created_by_abbreviation'),
+                'label' => t('activities.created_by_abbreviation'),
                 'type' => 'string'
             ],
             [
@@ -1009,7 +1009,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.created_at_activity_fields'),
+                'label' => t('activities.created_at_activity_fields'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1020,7 +1020,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.imported_at'),
+                'label' => t('activities.imported_at'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1031,7 +1031,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.updated_at'),
+                'label' => t('activities.updated_at'),
                 'type' => 'datetime',
                 'input' => 'date'
             ],
@@ -1043,7 +1043,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.updated_by_abbreviation'),
+                'label' => t('activities.updated_by_abbreviation'),
                 'type' => 'string'
             ],
             [
@@ -1054,7 +1054,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.reports_exclude'),
+                'label' => t('activities.reports_exclude'),
                 'type' => 'boolean',
             ],
             [
@@ -1065,7 +1065,7 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.user_names'),
+                'label' => t('activities.user_names'),
                 'type' => 'list'
             ],
             [
@@ -1075,7 +1075,7 @@ class ActivityFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('activities.research_spectrum_id'),
+                'label' => t('activities.research_spectrum_id'),
                 'type' => 'string'
             ],
             [
@@ -1084,7 +1084,7 @@ class ActivityFields extends Fields
                 'usage' => [
                     'filter',
                 ],
-                'label' => lang('activities.project_id'),
+                'label' => t('activities.project_id'),
                 'type' => 'string'
             ]
         ];
@@ -1106,7 +1106,7 @@ class ActivityFields extends Fields
                 'filter',
                 'columns'
             ],
-            'label' => lang('common.organizational_unit'),
+            'label' => t('common.organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units
@@ -1131,7 +1131,7 @@ class ActivityFields extends Fields
                     'id' => $id,
                     'module_of' => ['general'],
                     'usage' => ['filter', 'columns', 'aggregate'],
-                    'label' => translate($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
+                    'label' => t($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
                     'type' => 'list',
                     'input' => 'select',
                     'operators' => ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null', 'exists', 'not_exists'],
@@ -1185,13 +1185,13 @@ class ActivityFields extends Fields
                     'filter',
                     'columns'
                 ],
-                'label' => lang('activities.workflow_status_activity_fields'),
+                'label' => t('activities.workflow_status_activity_fields'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'verified' => lang('activities.verified'),
-                    'rejected' => lang('common.rejected'),
-                    'in_progress' => lang('activities.in_process'),
+                    'verified' => t('activities.verified'),
+                    'rejected' => t('common.rejected'),
+                    'in_progress' => t('activities.in_process'),
                 ]
             ];
         }

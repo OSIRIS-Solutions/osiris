@@ -15,7 +15,7 @@ foreach ($details as $detail):
                 <span class="key"><?= e($detail['label']) ?></span>
                 <?= $detail['value'] === '' || $detail['value'] === null ? '-' : $detail['value'] ?>
                 <?php if ($detail['id'] === 'image' && !$Project->isProposal && $edit_perm): ?>
-                    <br><a href="#edit-image" data-toggle="modal"><i class="ph ph-image"></i> <?= lang('action.edit') ?></a>
+                    <br><a href="#edit-image" data-toggle="modal"><i class="ph ph-image"></i> <?= t('action.edit') ?></a>
                 <?php endif; ?>
             <?php endif; ?>
         </td>

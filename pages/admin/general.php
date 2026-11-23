@@ -21,27 +21,27 @@
 
     <h1>
         <i class="ph-duotone ph-gear"></i>
-        <?= lang('admin.general_settings') ?>
+        <?= t('admin.general_settings') ?>
     </h1>
 
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
         <h5>
-            <?= lang('admin.general_charts') ?>
+            <?= t('admin.general_charts') ?>
         </h5>
 
 
         <div class="form-group">
-            <label for="name" class="required "><?= lang('admin.start_year') ?></label>
+            <label for="name" class="required "><?= t('admin.start_year') ?></label>
             <input type="year" class="form-control" name="general[startyear]" required value="<?= $Settings->get('startyear') ?? '2022' ?>">
             <span class="text-muted">
-                <?= lang('admin.start_year_description') ?>
+                <?= t('admin.start_year_description') ?>
             </span>
         </div>
 
         <hr>
         <h5>
-            <?= lang('admin.print_output_settings') ?>
+            <?= t('admin.print_output_settings') ?>
         </h5>
         <div class="row row-eq-spacing mt-0">
             <div class="col-sm-6">
@@ -50,15 +50,15 @@
                 $format = $Settings->get('affiliation_format', 'bold');
                 ?>
 
-                <label for="affiliation_format"><?= lang('admin.affiliated_authors_formatting') ?></label>
+                <label for="affiliation_format"><?= t('admin.affiliated_authors_formatting') ?></label>
                 <select class="form-control" name="general[affiliation_format]" id="affiliation_format">
-                    <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= lang('admin.bold_default') ?></option>
-                    <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= lang('admin.italic') ?></option>
-                    <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= lang('admin.underline') ?></option>
-                    <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= lang('admin.bold_and_italic') ?></option>
-                    <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= lang('admin.bold_and_underline') ?></option>
-                    <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= lang('admin.italic_and_underline') ?></option>
-                    <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= lang('common.none') ?></option>
+                    <option value="bold" <?= $format == 'bold' ? 'selected' : '' ?>><?= t('admin.bold_default') ?></option>
+                    <option value="italic" <?= $format == 'italic' ? 'selected' : '' ?>><?= t('admin.italic') ?></option>
+                    <option value="underline" <?= $format == 'underline' ? 'selected' : '' ?>><?= t('admin.underline') ?></option>
+                    <option value="bold-italic" <?= $format == 'bold-italic' ? 'selected' : '' ?>><?= t('admin.bold_and_italic') ?></option>
+                    <option value="bold-underline" <?= $format == 'bold-underline' ? 'selected' : '' ?>><?= t('admin.bold_and_underline') ?></option>
+                    <option value="italic-underline" <?= $format == 'italic-underline' ? 'selected' : '' ?>><?= t('admin.italic_and_underline') ?></option>
+                    <option value="none" <?= $format == 'none' ? 'selected' : '' ?>><?= t('common.none') ?></option>
                 </select>
             </div>
 
@@ -67,32 +67,32 @@
                 <?php
                 $renderLang = $Settings->get('render_language', 'en');
                 ?>
-                <label for="render_language"><?= lang('admin.render_language') ?></label>
+                <label for="render_language"><?= t('admin.render_language') ?></label>
                 <select class="form-control" name="general[render_language]" id="render_language">
-                    <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= lang('common.both_languages') ?></option> -->
-                    <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= lang('admin.english_only') ?></option>
-                    <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= lang('admin.german_only') ?></option>
+                    <!-- <option value="both" <?= $renderLang == 'both' ? 'selected' : '' ?>><?= t('common.both_languages') ?></option> -->
+                    <option value="en" <?= $renderLang == 'en' ? 'selected' : '' ?>><?= t('admin.english_only') ?></option>
+                    <option value="de" <?= $renderLang == 'de' ? 'selected' : '' ?>><?= t('admin.german_only') ?></option>
                 </select>
             </div>
         </div>
         <p class="mt-5">
             <b>
                 <i class="ph ph-warning"></i>
-                <?= lang('admin.hint') ?>
+                <?= t('admin.hint') ?>
             </b>
-            <?= lang('admin.chages_require_rerender') ?>
+            <?= t('admin.chages_require_rerender') ?>
             <a href="<?= ROOTPATH ?>/rerender" class="">
-                <?= lang('admin.render_all_activities') ?>.
+                <?= t('admin.render_all_activities') ?>.
             </a><br>
-            <?= lang('admin.please_be_patient') ?>
+            <?= t('admin.please_be_patient') ?>
         </p>
 
         <hr>
         <h5>
-            <?= lang('admin.general_api') ?>
+            <?= t('admin.general_api') ?>
         </h5>
         <div class="form-group">
-            <label for="apikey" class="d-flex justify-content-between"><?= lang('admin.api_key') ?> <?= badgeDeprecated() ?></label>
+            <label for="apikey" class="d-flex justify-content-between"><?= t('admin.api_key') ?> <?= badgeDeprecated() ?></label>
             <div class="input-group">
                 <input type="text" class="form-control" name="general[apikey]" id="apikey" value="<?= $Settings->get('apikey') ?>">
 
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <span class="text-muted">
-                <?= lang('admin.legacy_api_key_description', replace: ['rootpath' => ROOTPATH]) ?>
+                <?= t('admin.legacy_api_key_description', replace: ['rootpath' => ROOTPATH]) ?>
             </span>
         </div>
 
@@ -124,7 +124,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
 
     </form>

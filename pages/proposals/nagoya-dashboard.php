@@ -11,11 +11,11 @@
 
 <h1 class="mb-3">
     <i class="ph-duotone ph-globe-hemisphere-west"></i>
-    <?= lang('projects.nagoya_abs_compliance_dashboard') ?>
+    <?= t('projects.nagoya_abs_compliance_dashboard') ?>
 </h1>
 
 <p class="text-muted mb-20 font-size-14">
-    <?= lang('projects.overview_of_all_nagoya_relevant_projects_current_tasks_for_the_abs_complian') ?>
+    <?= t('projects.overview_of_all_nagoya_relevant_projects_current_tasks_for_the_abs_complian') ?>
 </p>
 
 <?php
@@ -29,7 +29,7 @@ $totalProjects     = count($projects ?? []);
 
 <h2 class="mb-0">
     <i class="ph-duotone ph-list-checks"></i>
-    <?= lang('projects.current_tasks') ?>
+    <?= t('projects.current_tasks') ?>
 </h2>
 
 <div class="row row-eq-spacing mt-0 dashboard">
@@ -38,17 +38,17 @@ $totalProjects     = count($projects ?? []);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-map-trifold"></i>
-                <?= lang('projects.country_review_open') ?>
+                <?= t('projects.country_review_open') ?>
             </h3>
             <p class="text-muted font-size-12 mb-10">
-                <?= lang('projects.countries_that_still_need_abs_nagoya_relevance_decisions') ?>
+                <?= t('projects.countries_that_still_need_abs_nagoya_relevance_decisions') ?>
             </p>
             <div class="mb-10">
                 <span class="badge <?= $cntCountryReview ? 'signal' : 'muted' ?>">
                     <?= $cntCountryReview ?>
                 </span>
                 <span class="font-size-12 text-muted">
-                    <?= lang('projects.open_country_checks_for_projects') ?>
+                    <?= t('projects.open_country_checks_for_projects') ?>
                 </span>
             </div>
             <?php if ($cntCountryReview): ?>
@@ -65,19 +65,19 @@ $totalProjects     = count($projects ?? []);
                             </a><br>
                             <span>
                                 <i class="ph ph-globe"></i>
-                                <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
+                                <?= $DB->getCountry($code, t('common.field_name_language')) ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
                     <?php if ($cntCountryReview > 5): ?>
                         <li class="text-muted">
-                            <?= lang('projects.and_more') ?>
+                            <?= t('projects.and_more') ?>
                         </li>
                     <?php endif; ?>
                 </ul>
             <?php else: ?>
                 <p class="text-muted font-size-12 mb-0">
-                    <?= lang('projects.no_open_country_reviews_at_the_moment') ?>
+                    <?= t('projects.no_open_country_reviews_at_the_moment') ?>
                 </p>
             <?php endif; ?>
         </div>
@@ -88,10 +88,10 @@ $totalProjects     = count($projects ?? []);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-crosshair"></i>
-                <?= lang('projects.scope_evaluation') ?>
+                <?= t('projects.scope_evaluation') ?>
             </h3>
             <p class="text-muted font-size-12 mb-10">
-                <?= lang('projects.projects_where_scope_information_is_missing_or_where_scope_needs_to_be_eval') ?>
+                <?= t('projects.projects_where_scope_information_is_missing_or_where_scope_needs_to_be_eval') ?>
             </p>
 
             <div class="mb-5">
@@ -99,7 +99,7 @@ $totalProjects     = count($projects ?? []);
                     <?= $cntScopeMissing ?>
                 </span>
                 <span class="font-size-12 text-muted">
-                    <?= lang('projects.projects_with_missing_scope_researchers') ?>
+                    <?= t('projects.projects_with_missing_scope_researchers') ?>
                 </span>
             </div>
             <div class="mb-10">
@@ -107,7 +107,7 @@ $totalProjects     = count($projects ?? []);
                     <?= $cntScopeReview ?>
                 </span>
                 <span class="font-size-12 text-muted">
-                    <?= lang('projects.projects_with_scope_ready_for_abs_review') ?>
+                    <?= t('projects.projects_with_scope_ready_for_abs_review') ?>
                 </span>
             </div>
 
@@ -121,7 +121,7 @@ $totalProjects     = count($projects ?? []);
                                 <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
-                                <?= lang('projects.abs_review_pending') ?>
+                                <?= t('projects.abs_review_pending') ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
@@ -134,14 +134,14 @@ $totalProjects     = count($projects ?? []);
                                 <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
-                                <?= lang('projects.waiting_for_scope_from_pi') ?>
+                                <?= t('projects.waiting_for_scope_from_pi') ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
                 <p class="text-muted font-size-12 mb-0">
-                    <?= lang('projects.no_open_scope_tasks_at_the_moment') ?>
+                    <?= t('projects.no_open_scope_tasks_at_the_moment') ?>
                 </p>
             <?php endif; ?>
         </div>
@@ -152,10 +152,10 @@ $totalProjects     = count($projects ?? []);
         <div class="box padded">
             <h3 class="title">
                 <i class="ph-duotone ph-file-text"></i>
-                <?= lang('common.permits') ?>
+                <?= t('common.permits') ?>
             </h3>
             <p class="text-muted font-size-12 mb-10">
-                <?= lang('projects.projects_with_open_permit_processes_and_permits_that_still_need_abs_validat') ?>
+                <?= t('projects.projects_with_open_permit_processes_and_permits_that_still_need_abs_validat') ?>
             </p>
 
             <div class="mb-5">
@@ -163,7 +163,7 @@ $totalProjects     = count($projects ?? []);
                     <?= $cntPermitsPending ?>
                 </span>
                 <span class="font-size-12 text-muted">
-                    <?= lang('projects.projects_with_permits_needed_requested') ?>
+                    <?= t('projects.projects_with_permits_needed_requested') ?>
                 </span>
             </div>
             <div class="mb-10">
@@ -171,7 +171,7 @@ $totalProjects     = count($projects ?? []);
                     <?= $cntPermitsValid ?>
                 </span>
                 <span class="font-size-12 text-muted">
-                    <?= lang('projects.projects_with_granted_permits_to_validate') ?>
+                    <?= t('projects.projects_with_granted_permits_to_validate') ?>
                 </span>
             </div>
 
@@ -185,7 +185,7 @@ $totalProjects     = count($projects ?? []);
                                 <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny warning">
-                                <?= lang('projects.permits_in_progress') ?>
+                                <?= t('projects.permits_in_progress') ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
@@ -198,14 +198,14 @@ $totalProjects     = count($projects ?? []);
                                 <strong><?= e(localized($p['name'] ?? '')) ?></strong>
                             </a><br>
                             <span class="badge tiny signal">
-                                <?= lang('projects.validation_by_abs_team_pending') ?>
+                                <?= t('projects.validation_by_abs_team_pending') ?>
                             </span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
                 <p class="text-muted font-size-12 mb-0">
-                    <?= lang('projects.no_open_permit_tasks_at_the_moment') ?>
+                    <?= t('projects.no_open_permit_tasks_at_the_moment') ?>
                 </p>
             <?php endif; ?>
         </div>
@@ -216,25 +216,25 @@ $totalProjects     = count($projects ?? []);
 
 <h2 class="title">
     <i class="ph-duotone ph-clipboard-text"></i>
-    <?= lang('projects.nagoya_relevant_projects') ?>
+    <?= t('projects.nagoya_relevant_projects') ?>
 </h2>
 <p class="text-muted font-size-12 mb-10">
-    <?= lang('projects.all_projects_with_nagoya_abs_tracking_enabled_including_a_b_c_labels_and_pe') ?>
+    <?= t('projects.all_projects_with_nagoya_abs_tracking_enabled_including_a_b_c_labels_and_pe') ?>
 </p>
 
 <?php if (!$totalProjects): ?>
     <div class="box padded text-muted">
-        <?= lang('projects.no_projects_with_nagoya_information_found') ?>
+        <?= t('projects.no_projects_with_nagoya_information_found') ?>
     </div>
 <?php else: ?>
     <table class="table small" id="nagoya-projects-overview-table">
         <thead>
             <tr>
-                <th><?= lang('common.project') ?></th>
-                <th><?= lang('common.nagoya_status') ?></th>
-                <th><?= lang('common.label_nagoya_dashboard_country') ?></th>
-                <th><?= lang('projects.countries_abs') ?></th>
-                <th><?= lang('common.permits') ?></th>
+                <th><?= t('common.project') ?></th>
+                <th><?= t('common.nagoya_status') ?></th>
+                <th><?= t('common.label_nagoya_dashboard_country') ?></th>
+                <th><?= t('projects.countries_abs') ?></th>
+                <th><?= t('common.permits') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -289,7 +289,7 @@ $totalProjects     = count($projects ?? []);
                             <span class="badge <?= $permitOpen ? 'signal' : 'success' ?>">
                                 <?= $permitTotal ?>
                                 <?php if ($permitOpen): ?>
-                                    (<?= $permitOpen ?> <?= lang('common.open') ?>)
+                                    (<?= $permitOpen ?> <?= t('common.open') ?>)
                                 <?php endif; ?>
                             </span>
                         <?php else: ?>
@@ -307,21 +307,21 @@ $totalProjects     = count($projects ?? []);
     <div class="col-md-4">
         <h2 class="title">
             <i class="ph-duotone ph-globe-stand"></i>
-            <?= lang('projects.countries_overview') ?>
+            <?= t('projects.countries_overview') ?>
         </h2>
         <p class="text-muted font-size-12 mb-10">
-            <?= lang('projects.quick_access_to_projects_per_country') ?>
+            <?= t('projects.quick_access_to_projects_per_country') ?>
         </p>
 
         <?php if (empty($countryStats)): ?>
             <div class="box padded text-muted">
-                <?= lang('projects.no_countries_with_abs_relevant_projects_yet') ?>
+                <?= t('projects.no_countries_with_abs_relevant_projects_yet') ?>
             </div>
         <?php else: ?>
             <table class="table small" id="country-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('common.country') ?></th>
+                        <th><?= t('common.country') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -336,7 +336,7 @@ $totalProjects     = count($projects ?? []);
                         $projectsN = $cs['projects'] ?? 0;
                         $labels    = $cs['labels'] ?? ['A' => 0, 'B' => 0, 'C' => 0];
                         $permOpen  = $cs['permits_pending'] ?? 0;
-                        $name      = $DB->getCountry($code, lang('common.field_name_language'));
+                        $name      = $DB->getCountry($code, t('common.field_name_language'));
                     ?>
                         <tr>
                             <td>
@@ -344,7 +344,7 @@ $totalProjects     = count($projects ?? []);
                                     <strong><?= e($name) ?></strong>
                                 </a><br>
                                 <small class="text-muted">
-                                    <?= $projectsN ?> <?= lang('common.projects') ?>
+                                    <?= $projectsN ?> <?= t('common.projects') ?>
                                     <?php if ($labels['A'] ?? 0): ?>
                                         · <span class="badge tiny danger">A: <?= $labels['A'] ?></span>
                                     <?php endif; ?>
@@ -356,7 +356,7 @@ $totalProjects     = count($projects ?? []);
                                     <?php endif; ?>
                                     <?php if ($permOpen): ?>
                                         · <span class="badge tiny signal">
-                                            <i class="ph ph-file-text"></i> <?= $permOpen ?> <?= lang('projects.permits_open') ?>
+                                            <i class="ph ph-file-text"></i> <?= $permOpen ?> <?= t('projects.permits_open') ?>
                                         </span>
                                     <?php endif; ?>
                                 </small>
@@ -372,10 +372,10 @@ $totalProjects     = count($projects ?? []);
     <div class="col-md-8">
         <h2 class="title">
             <i class="ph-duotone ph-certificate"></i>
-            <?= lang('projects.permits_overview') ?>
+            <?= t('projects.permits_overview') ?>
         </h2>
         <p class="text-muted font-size-12 mb-10">
-            <?= lang('projects.quick_access_to_all_permits_in_the_system') ?>
+            <?= t('projects.quick_access_to_all_permits_in_the_system') ?>
         </p>
         <?php
 
@@ -404,18 +404,18 @@ $totalProjects     = count($projects ?? []);
         if (empty($permits)):
         ?>
             <div class="box padded text-muted">
-                <?= lang('projects.no_permits_found_in_the_system') ?>
+                <?= t('projects.no_permits_found_in_the_system') ?>
             </div>
         <?php else: ?>
 
             <table class="table small" id="permits-overview-table">
                 <thead>
                     <tr>
-                        <th><?= lang('common.project') ?></th>
-                        <th><?= lang('common.country') ?></th>
-                        <th><?= lang('common.permit') ?></th>
-                        <th><?= lang('common.status') ?></th>
-                        <th><?= lang('projects.ircc') ?> / <?= lang('projects.identifier') ?></th>
+                        <th><?= t('common.project') ?></th>
+                        <th><?= t('common.country') ?></th>
+                        <th><?= t('common.permit') ?></th>
+                        <th><?= t('common.status') ?></th>
+                        <th><?= t('projects.ircc') ?> / <?= t('projects.identifier') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -431,7 +431,7 @@ $totalProjects     = count($projects ?? []);
                             </td>
                             <td class="font-size-12">
                                 <?php
-                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', lang('common.field_name_language'));
+                                $countryName = $DB->getCountry($perm['countryCode'] ?? '', t('common.field_name_language'));
                                 ?>
                                 <i class="ph ph-globe"></i>
                                 <?= e($countryName) ?>
@@ -441,11 +441,11 @@ $totalProjects     = count($projects ?? []);
                                     <?= e($perm['permitName'] ?? '–') ?>
                                 </a>
                                 <?php if (!empty($perm['checked'] ?? null)) { ?>
-                                    <span data-toggle="tooltip" data-title="<?= lang('projects.validated_by_abs_team_nagoya_dashboard') ?>">
+                                    <span data-toggle="tooltip" data-title="<?= t('projects.validated_by_abs_team_nagoya_dashboard') ?>">
                                         <i class="ph-duotone ph-check-circle text-success"></i>
                                     </span>
                                 <?php } else { ?>
-                                    <span data-toggle="tooltip" data-title="<?= lang('projects.not_yet_validated_by_abs_team') ?>">
+                                    <span data-toggle="tooltip" data-title="<?= t('projects.not_yet_validated_by_abs_team') ?>">
                                         <i class="ph-duotone ph-clock text-muted"></i>
                                     </span>
                                 <?php } ?>

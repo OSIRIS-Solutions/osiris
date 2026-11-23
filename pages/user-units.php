@@ -20,7 +20,7 @@
 <?php include_once BASEPATH . '/header-editor.php'; ?>
 
 <h1>
-    <small class="font-weight-normal"><?= lang('people.organisational_units_of') ?></small>
+    <small class="font-weight-normal"><?= t('people.organisational_units_of') ?></small>
     <br>
     <div class="text-primary"><?= $data['displayname'] ?></div>
 </h1>
@@ -33,19 +33,19 @@ $units = DB::doc2Arr($data['units'] ?? []);
     <thead>
         <tr>
             <th>
-                <?= lang('common.unit') ?>
+                <?= t('common.unit') ?>
             </th>
             <th>
-                <?= lang('common.start') ?>
+                <?= t('common.start') ?>
             </th>
             <th>
-                <?= lang('common.end') ?>
+                <?= t('common.end') ?>
             </th>
             <th>
-                <?= lang('common.scientific') ?>
+                <?= t('common.scientific') ?>
             </th>
             <th class="text-center">
-                <?= lang('common.actions') ?>
+                <?= t('common.actions') ?>
             </th>
         </tr>
     </thead>
@@ -86,7 +86,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     if (isset($unit['start'])) {
                         echo format_date($unit['start']);
                     } else {
-                        echo '<em class="text-danger">' . lang('common.unknown') . '</em>';
+                        echo '<em class="text-danger">' . t('common.unknown') . '</em>';
                     }
                     ?>
                 </td>
@@ -94,7 +94,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     if (isset($unit['end'])) {
                         echo format_date($unit['end']);
                     } else {
-                        echo '<b class="text-success">' . lang('common.current') . '</b>';
+                        echo '<b class="text-success">' . t('common.current') . '</b>';
                     }
                     ?>
                 </td>
@@ -102,12 +102,12 @@ $units = DB::doc2Arr($data['units'] ?? []);
                     <?php if ($unit['scientific']) { ?>
                         <span class="badge primary">
                             <i class="ph ph-lightning"></i>
-                            <?= lang('common.yes') ?>
+                            <?= t('common.yes') ?>
                         </span>
                     <?php } else { ?>
                         <span class="badge secondary">
                             <i class="ph ph-lightning-slash"></i>
-                            <?= lang('common.no') ?>
+                            <?= t('common.no') ?>
                         </span>
                     <?php } ?>
                 </td>
@@ -123,24 +123,24 @@ $units = DB::doc2Arr($data['units'] ?? []);
                                 <input type="hidden" name="values[unit]" value="<?= $unit['unit'] ?>">
 
                                 <div class="form-group">
-                                    <label for="start"><?= lang('common.start') ?></label>
+                                    <label for="start"><?= t('common.start') ?></label>
                                     <input type="date" class="form-control" id="start" name="values[start]" value="<?= $unit['start'] ?? '' ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="end"><?= lang('common.end') ?></label>
+                                    <label for="end"><?= t('common.end') ?></label>
                                     <input type="date" class="form-control" id="end" name="values[end]" value="<?= $unit['end'] ?? '' ?>">
                                     <small class="text-muted">
-                                        <?= lang('people.leave_empty_if_still_active') ?>
+                                        <?= t('people.leave_empty_if_still_active') ?>
                                     </small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="scientific"><?= lang('common.scientific') ?></label>
+                                    <label for="scientific"><?= t('common.scientific') ?></label>
                                     <select class="form-control" id="scientific" name="values[scientific]">
-                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= lang('common.yes') ?></option>
-                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= lang('common.no') ?></option>
+                                        <option value="1" <?= $unit['scientific'] ? 'selected' : '' ?>><?= t('common.yes') ?></option>
+                                        <option value="0" <?= !$unit['scientific'] ? 'selected' : '' ?>><?= t('common.no') ?></option>
                                     </select>
                                 </div>
-                                <button class="btn block primary" type="submit"><?= lang('action.save') ?></button>
+                                <button class="btn block primary" type="submit"><?= t('action.save') ?></button>
                             </form>
                         </div>
                     </div>
@@ -152,10 +152,10 @@ $units = DB::doc2Arr($data['units'] ?? []);
                         <div class="dropdown-menu dropdown-menu-right w-400 border-danger" aria-labelledby="remove-unit-<?= $unit['id'] ?>">
                             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                                 <i class="ph ph-warning text-danger"></i>
-                                <?= lang('people.you_are_in_the_process_of_deleting_the_unit_from_the_person_profile_if_the') ?>
+                                <?= t('people.you_are_in_the_process_of_deleting_the_unit_from_the_person_profile_if_the') ?>
                                 <input type="hidden" name="id" value="<?= $unit['id'] ?>">
                                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
-                                <button class="btn block danger" type="submit"><i class="ph ph-trash"></i> <?= lang('people.remove_unit') ?></button>
+                                <button class="btn block danger" type="submit"><i class="ph ph-trash"></i> <?= t('people.remove_unit') ?></button>
                             </form>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
             <td colspan="5">
                 <a href="#add-unit" class="btn primary">
                     <i class="ph ph-plus"></i>
-                    <?= lang('people.add_unit') ?>
+                    <?= t('people.add_unit') ?>
                 </a>
             </td>
         </tr>
@@ -178,7 +178,7 @@ $units = DB::doc2Arr($data['units'] ?? []);
 <!-- explain scientific -->
 <p class="font-size-12">
     <i class="ph ph-lightning text-primary"></i>
-    <?= lang('people.scientific_units_will_be_added_to_all_research_activities_that_have_happene') ?>
+    <?= t('people.scientific_units_will_be_added_to_all_research_activities_that_have_happene') ?>
 </p>
 
 
@@ -206,39 +206,39 @@ function printTree($tree, $level = 0)
                 <span aria-hidden="true">&times;</span>
             </a>
             <h5 class="title">
-                <?= lang('people.add_new_unit') ?>
+                <?= t('people.add_new_unit') ?>
             </h5>
             <p>
-                <?= lang('people.please_select_the_unit_you_want_to_add') ?>
+                <?= t('people.please_select_the_unit_you_want_to_add') ?>
             </p>
             <form action="<?= ROOTPATH ?>/crud/users/units/<?= $user ?>" method="POST" class="content">
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/user/units/<?= $user ?>">
                 <div class="form-group">
-                    <label for="unit"><?= lang('common.unit') ?></label>
+                    <label for="unit"><?= t('common.unit') ?></label>
                     <select class="form-control" id="unit" name="values[unit]">
-                        <option value=""><?= lang('people.select_unit') ?></option>
+                        <option value=""><?= t('people.select_unit') ?></option>
                         <?php printTree($tree) ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="start"><?= lang('common.start') ?></label>
+                    <label for="start"><?= t('common.start') ?></label>
                     <input type="date" class="form-control" id="start" name="values[start]">
                 </div>
                 <div class="form-group">
-                    <label for="end"><?= lang('common.end') ?></label>
+                    <label for="end"><?= t('common.end') ?></label>
                     <input type="date" class="form-control" id="end" name="values[end]">
                     <small class="text-muted">
-                        <?= lang('people.leave_empty_if_still_active') ?>
+                        <?= t('people.leave_empty_if_still_active') ?>
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="scientific"><?= lang('common.scientific') ?></label>
+                    <label for="scientific"><?= t('common.scientific') ?></label>
                     <select class="form-control" id="scientific" name="values[scientific]">
-                        <option value="1"><?= lang('common.yes') ?></option>
-                        <option value="0"><?= lang('common.no') ?></option>
+                        <option value="1"><?= t('common.yes') ?></option>
+                        <option value="0"><?= t('common.no') ?></option>
                     </select>
                 </div>
-                <button class="btn primary" type="submit"><?= lang('action.save') ?></button>
+                <button class="btn primary" type="submit"><?= t('action.save') ?></button>
             </form>
             <script>
 

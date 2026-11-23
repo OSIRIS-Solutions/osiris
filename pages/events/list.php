@@ -23,35 +23,35 @@ foreach ($eventTypes as $v) {
 <?php if ($deadlinesEnabled) { ?>
     <h1>
         <i class="ph-duotone ph-calendar"></i>
-        <?= lang('common.schedule') ?>
+        <?= t('common.schedule') ?>
     </h1>
 
     <div class="pills d-inline-block font-size-16">
         <a href="#" class="btn active font-weight-bold">
             <i class="ph-duotone ph-calendar-dots"></i>
-            <?= lang('common.events_home') ?>
+            <?= t('common.events_home') ?>
         </a>
         <a href="<?= ROOTPATH ?>/deadlines" class="btn">
             <i class="ph-duotone ph-flag-checkered"></i>
-            <?= lang('common.deadlines') ?>
+            <?= t('common.deadlines') ?>
         </a>
     </div>
     <?php if ($Settings->hasPermission('conferences.edit')) { ?>
         <a href="<?= ROOTPATH ?>/conferences/new" class="ml-20">
             <i class="ph ph-plus"></i>
-            <?= lang('events.new_event') ?>
+            <?= t('events.new_event') ?>
         </a>
     <?php } ?>
 <?php } else { ?>
     <h1>
         <i class="ph-duotone ph-calendar-dots"></i>
-        <?= lang('common.events_home') ?>
+        <?= t('common.events_home') ?>
     </h1>
     <div class="btn-toolbar">
         <?php if ($Settings->hasPermission('conferences.edit')) { ?>
             <a href="<?= ROOTPATH ?>/conferences/new" class="">
                 <i class="ph ph-plus"></i>
-                <?= lang('action.add_event') ?>
+                <?= t('action.add_event') ?>
             </a>
         <?php } ?>
     </div>
@@ -62,7 +62,7 @@ foreach ($eventTypes as $v) {
 
 <!-- 
 <p class="text-muted mt-0">
-    <small> <?= lang('events.events_were_added_by_users_of_the_osiris_system') ?></small>
+    <small> <?= t('events.events_were_added_by_users_of_the_osiris_system') ?></small>
 </p> -->
 
 <?php
@@ -82,7 +82,7 @@ $conferences = $osiris->conferences->find(
                     <div class="input-group-prepend">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) - 1).change()"><i class="ph ph-caret-left"></i></button>
                     </div>
-                    <input type="number" class="form-control" id="activity-year" placeholder="<?= lang('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
+                    <input type="number" class="form-control" id="activity-year" placeholder="<?= t('common.year') ?>" value="<?= date('Y') ?>" onchange="eventTimeline()">
                     <div class="input-group-append">
                         <button class="btn" onclick="$('#activity-year').val(parseInt($('#activity-year').val()) + 1).change()"><i class="ph ph-caret-right"></i></button>
                     </div>
@@ -98,15 +98,15 @@ $conferences = $osiris->conferences->find(
         <table class="table" id="result-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.title') ?></th>
-                    <th><?= lang('common.location') ?></th>
-                    <th><?= lang('common.start_edit') ?></th>
-                    <th><?= lang('common.end') ?></th>
-                    <th><?= lang('common.type') ?></th>
+                    <th><?= t('common.title') ?></th>
+                    <th><?= t('common.location') ?></th>
+                    <th><?= t('common.start_edit') ?></th>
+                    <th><?= t('common.end') ?></th>
+                    <th><?= t('common.type') ?></th>
                     <th><?= $Settings->topicLabel() ?></th>
                     <th><?= $Settings->tagLabel() ?></th>
-                    <th><?= lang('common.title') ?></th>
-                    <th><?= lang('events.full_title') ?></th>
+                    <th><?= t('common.title') ?></th>
+                    <th><?= t('events.full_title') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@ $conferences = $osiris->conferences->find(
 
 
             <h6>
-                <?= lang('common.by_type_list') ?>
+                <?= t('common.by_type_list') ?>
                 <a class="float-right" onclick="filterEvents('#filter-type .active', null, 4)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -196,7 +196,7 @@ $conferences = $osiris->conferences->find(
 
             <!-- filter by year -->
             <h6>
-                <?= lang('common.by_year') ?>
+                <?= t('common.by_year') ?>
                 <a class="float-right" onclick="filterEvents('#filter-year .active', null, 2)"><i class="ph ph-x"></i></a>
             </h6>
             <div class="filter">
@@ -250,7 +250,7 @@ $conferences = $osiris->conferences->find(
         },
         {
             'key': 'start',
-            'title': <?= json_encode(lang('common.start_edit'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+            'title': <?= json_encode(t('common.start_edit'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
         },
         {
             'key': 'end',
@@ -378,7 +378,7 @@ $conferences = $osiris->conferences->find(
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: '<?= lang('common.title') ?>',
+                    header: '<?= t('common.title') ?>',
                 },
                 {
                     target: 8,
@@ -386,7 +386,7 @@ $conferences = $osiris->conferences->find(
                     searchable: false,
                     visible: false,
                     defaultContent: '',
-                    header: '<?= lang('events.full_title') ?>',
+                    header: '<?= t('events.full_title') ?>',
                 }
             ],
             "order": [
@@ -513,7 +513,7 @@ $conferences = $osiris->conferences->find(
             success: function(response) {
                 let events = response.data.events;
                 if (events.length === 0) {
-                    $(selector).html('<div class="content text-muted text-center">' + <?= json_encode(lang('events.no_activities_found_for_this_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</div>');
+                    $(selector).html('<div class="content text-muted text-center">' + <?= json_encode(t('events.no_activities_found_for_this_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</div>');
                     return;
                 }
                 let typeInfo = JSON.parse(JSON.stringify(<?= json_encode($typeInfo) ?>));

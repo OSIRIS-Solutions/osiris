@@ -27,39 +27,39 @@ $selectedUser = $osiris->persons->findone(['user' => $scientist]);
 
     <h1>
         <i class="ph-duotone ph-graph" aria-hidden="true"></i>
-        <?= lang('search.visualisations') ?>
+        <?= t('search.visualisations') ?>
     </h1>
 
 
     <div class="tiles">
         <a href="<?= ROOTPATH ?>/visualize/coauthors" class="tile">
             <h5 class="title">
-                <?= lang('common.coauthor_network') ?>
+                <?= t('common.coauthor_network') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/chord.svg" alt="" class="w-full">
         </a>
         <a href="<?= ROOTPATH ?>/visualize/sunburst" class="tile">
             <h5 class="title">
-                <?= lang('common.department_overview') ?>
+                <?= t('common.department_overview') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/sunburst.svg" alt="" class="w-full">
         </a>
         <a href="<?= ROOTPATH ?>/visualize/departments" class="tile">
             <h5 class="title">
-                <?= lang('common.activity_network') ?>
+                <?= t('common.activity_network') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/departments.svg" alt="" class="w-full">
         </a>
         <a href="<?= ROOTPATH ?>/visualize/openaccess" class="tile">
             <h5 class="title">
-                <?= lang('journals.open_access') ?>
+                <?= t('journals.open_access') ?>
             </h5>
             <img src="<?= ROOTPATH ?>/img/charts/open-access.png" alt="" class="w-full">
         </a>
         <?php if ($Settings->featureEnabled('projects')) { ?>
             <a href="<?= ROOTPATH ?>/visualize/map" class="tile">
                 <h5 class="title">
-                    <?= lang('search.collaborator_map') ?>
+                    <?= t('search.collaborator_map') ?>
                 </h5>
                 <img src="<?= ROOTPATH ?>/img/charts/map.png" alt="" class="w-full">
             </a>

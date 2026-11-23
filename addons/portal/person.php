@@ -14,7 +14,7 @@
 
 <section class="container-lg">
     <?php if (!$data): ?>
-        <p><?= lang('portal.person_not_found') ?></p>
+        <p><?= t('portal.person_not_found') ?></p>
     <?php else: ?>
 
         <div class="profile-header" style="display: flex; align-items: center">
@@ -32,7 +32,7 @@
                 </h1>
                 <p class="my-0 lead text-secondary position">
                     <?php if (!empty($data['inactive'])): ?>
-                        <?= lang('people.former_employee') ?>
+                        <?= t('people.former_employee') ?>
                     <?php else: ?>
                         <?= e(localized($data['position'] ?? '')) ?>
                     <?php endif; ?>
@@ -44,7 +44,7 @@
             <div class="col-sm-8 order-sm-first order-last" id="research">
                 <?php if (!empty($data['research'])): ?>
                     <h2 class="title" id="research">
-                        <?= lang('common.research_interests') ?>
+                        <?= t('common.research_interests') ?>
                     </h2>
                     <ul class="list">
                         <?php foreach ($data['research'] as $item): ?>
@@ -55,7 +55,7 @@
 
                 <?php if (!empty($data['cv'])): ?>
                     <h2 class="title" id="cv">
-                        <?= lang('common.curriculum_vitae') ?>
+                        <?= t('common.curriculum_vitae') ?>
                     </h2>
                     <div class="biography">
                         <?php foreach ($data['cv'] as $entry): if (!empty($entry['hide'])) continue ?>
@@ -69,7 +69,7 @@
                 <?php endif; ?>
 
                 <?php if (!empty($data['highlighted'])): ?>
-                    <h2><?= lang('portal.highlighted_research') ?></h2>
+                    <h2><?= t('portal.highlighted_research') ?></h2>
                     <table class="table">
                         <?php foreach ($data['highlighted'] as $h): ?>
                             <tr>
@@ -83,17 +83,17 @@
 
                 <?php if (!empty($data['numbers']['publications'])): ?>
                     <div class="pb-10">
-                        <h2 id="publications"><?= lang('common.publications') ?></h2>
+                        <h2 id="publications"><?= t('common.publications') ?></h2>
 
                         <table class="table datatable"
                             id="publication-table"
                             data-table="publications"
                             data-source="./publications.json"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                                    <th data-col="html" data-search-col="search"><?=t('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -136,16 +136,16 @@
 
                 <?php if (!empty($data['numbers']['activities'])): ?>
                     <div class="pb-10">
-                        <h2 id="activities"><?= lang('portal.other_activities') ?></h2>
+                        <h2 id="activities"><?= t('portal.other_activities') ?></h2>
 
                         <table class="table datatable" id="activity-table"
                             data-table="activities"
                             data-source="./activities.json"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                                    <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                                    <th data-col="html" data-search-col="search"><?=t('common.activity')?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -188,16 +188,16 @@
 
                 <?php if (!empty($data['numbers']['teaching'])): ?>
                     <div class="pb-10">
-                        <h2 id="teaching"><?= lang('portal.teaching_activity') ?></h2>
-                        <table class="table" id="teaching-table" data-lang="<?= lang('common.this_language') ?>" data-table="teaching">
+                        <h2 id="teaching"><?= t('portal.teaching_activity') ?></h2>
+                        <table class="table" id="teaching-table" data-lang="<?= t('common.this_language') ?>" data-table="teaching">
                             <thead>
                                 <tr>
-                                    <th data-><?= lang('common.title') ?></th>
+                                    <th data-><?= t('common.title') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', lang('common.this_language'));
+                                $teaching = $Portfolio->fetch_entity('person', $id, 'teaching', t('common.this_language'));
                                 foreach (($teaching) as $t):
                                     $title = str_replace("href='/", "href='" . $base . "/",  $t['title']);
                                 ?>
@@ -224,7 +224,7 @@
                 ?>
                     <div id="infrastructures">
                         <h2 class="title">
-                            <?= lang('portal.involved_in') ?>
+                            <?= t('portal.involved_in') ?>
                             <?= $Settings->infrastructureLabel() ?>
                         </h2>
                         <div class="cards">
@@ -248,7 +248,7 @@
 
                 <div id="projects">
                     <?php if (!empty($data['projects']['current'])): ?>
-                        <h2><?= lang('portal.current_projects') ?></h2>
+                        <h2><?= t('portal.current_projects') ?></h2>
                         <div class="cards">
                             <?php foreach ($data['projects']['current'] as $project): ?>
                                 <div class="card">
@@ -271,7 +271,7 @@
                     <?php endif; ?>
 
                     <?php if (!empty($data['projects']['past'])): ?>
-                        <h2><?= lang('portal.past_projects') ?></h2>
+                        <h2><?= t('portal.past_projects') ?></h2>
                         <div class="cards">
                             <?php foreach ($data['projects']['past'] as $project): ?>
                                 <div class="card">
@@ -297,7 +297,7 @@
 
             <div class="col-sm-4 position-relative">
                 <?php if ((!empty($data['depts']) || !empty($data['topics'])) && empty($data['inactive'])): ?>
-                    <h2><?= lang('activities.affiliation') ?></h2>
+                    <h2><?= t('activities.affiliation') ?></h2>
                     <table class="table small unit-table w-full">
                         <tbody>
                             <!-- topics -->
@@ -334,7 +334,7 @@
 
                 <?php if (!empty($data['contact']) && (empty($data['inactive']))): ?>
                     <div id="contact">
-                        <h2 class="title"><?= lang('common.contact') ?></h2>
+                        <h2 class="title"><?= t('common.contact') ?></h2>
                         <table class="table small">
                             <tbody>
                                 <?php if (!empty($data['contact']['mail']) || !empty($data['contact']['mail_alternative'])): ?>
@@ -345,7 +345,7 @@
                                                 <span id="mail">
                                                     <a class="hidden"><?= e($data['contact']['mail']) ?></a>
                                                     <button class="btn small" onclick="document.getElementById('mail').querySelector('a').classList.remove('hidden'); this.style.display='none';">
-                                                        <?= lang('portal.show_mail') ?>
+                                                        <?= t('portal.show_mail') ?>
                                                     </button>
                                                 </span>
                                             <?php endif; ?>
@@ -358,7 +358,7 @@
                                                 <span id="mail-alt">
                                                     <a class="hidden"><?= e($data['contact']['mail_alternative']) ?></a>
                                                     <button class="btn small" onclick="document.getElementById('mail-alt').querySelector('a').classList.remove('hidden'); this.style.display='none';">
-                                                        <?= lang('portal.show_mail') ?>
+                                                        <?= t('portal.show_mail') ?>
                                                     </button>
                                                 </span>
                                             <?php endif; ?>
@@ -369,7 +369,7 @@
                                 <?php if (!empty($data['contact']['phone'])): ?>
                                     <tr>
                                         <td>
-                                            <span class="key"><?= lang('common.telephone') ?></span>
+                                            <span class="key"><?= t('common.telephone') ?></span>
                                             <?= e($data['contact']['phone']) ?>
                                         </td>
                                     </tr>
@@ -465,21 +465,21 @@
                 if (!empty($data['research']) || !empty($data['cv']) || !empty($numbers)) { ?>
                     <nav class="on-this-page-nav">
                         <div class="content">
-                            <div class="title"><?= lang('common.on_this_page') ?></div>
+                            <div class="title"><?= t('common.on_this_page') ?></div>
                             <?php if (!empty($data['research'])): ?>
-                                <a href="#research"><?= lang('common.research_interests') ?></a>
+                                <a href="#research"><?= t('common.research_interests') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['cv'])): ?>
-                                <a href="#cv"><?= lang('common.curriculum_vitae') ?></a>
+                                <a href="#cv"><?= t('common.curriculum_vitae') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['publications'])): ?>
-                                <a href="#publications"><?= lang('common.publications') ?></a>
+                                <a href="#publications"><?= t('common.publications') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['activities'])): ?>
-                                <a href="#activities"><?= lang('portal.other_activities') ?></a>
+                                <a href="#activities"><?= t('portal.other_activities') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['teaching'])): ?>
-                                <a href="#teaching"><?= lang('portal.teaching_activity') ?></a>
+                                <a href="#teaching"><?= t('portal.teaching_activity') ?></a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['infrastructures'])): ?>
                                 <a href="#infrastructures">
@@ -487,7 +487,7 @@
                                 </a>
                             <?php endif; ?>
                             <?php if (!empty($data['numbers']['projects'])): ?>
-                                <a href="#projects"><?= lang('common.projects') ?></a>
+                                <a href="#projects"><?= t('common.projects') ?></a>
                             <?php endif; ?>
                         </div>
                     </nav>
@@ -497,7 +497,7 @@
         </div>
 
         <p id="disclaimer">
-            <?= lang('portal.the_content_on_this_page_is_maintained_by_the_individual_and_is_not_officia') ?>
+            <?= t('portal.the_content_on_this_page_is_maintained_by_the_individual_and_is_not_officia') ?>
         </p>
     <?php endif; ?>
 </section>

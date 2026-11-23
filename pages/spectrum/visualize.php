@@ -139,11 +139,11 @@ foreach ($rows as $row) {
 
 <h1>
     <i class="ph-duotone ph-chart-donut" aria-hidden="true"></i>
-    <?= lang('spectrum.spectrum_visualization') ?>
+    <?= t('spectrum.spectrum_visualization') ?>
 </h1>
 
 <p class="text-muted">
-    <?= lang('spectrum.interactive_sunburst_visualization_of_the_thematic_structure_based_on_opena') ?>
+    <?= t('spectrum.interactive_sunburst_visualization_of_the_thematic_structure_based_on_opena') ?>
 </p>
 <style>
     .funnel {
@@ -159,27 +159,27 @@ foreach ($rows as $row) {
                 <span class="funnel"><i class="ph ph-funnel" aria-hidden="true"></i></span>
             </div>
             <div class="col">
-                <label class="form-label"><?= lang('common.from_year') ?></label>
+                <label class="form-label"><?= t('common.from_year') ?></label>
                 <input type="number" class="form-control" name="year_from" value="<?= e($yearFrom) ?>">
             </div>
             <div class="col">
-                <label class="form-label"><?= lang('common.to_year') ?></label>
+                <label class="form-label"><?= t('common.to_year') ?></label>
                 <input type="number" class="form-control" name="year_to" value="<?= e($yearTo) ?>">
             </div>
             <div class="col flex-grow-0">
-                <button class="btn primary block"><?= lang('common.apply_filter') ?></button>
+                <button class="btn primary block"><?= t('common.apply_filter') ?></button>
             </div>
         </div>
     </div>
 </form>
 
 <p class="text-muted mb-0">
-    <?= lang('spectrum.the_visualization_is_based_on_the_current_filter_selection_click_segments_t') ?>
+    <?= t('spectrum.the_visualization_is_based_on_the_current_filter_selection_click_segments_t') ?>
 </p>
 
 <div id="sunburst-chart"></div>
 <p class="text-muted mb-0">
-    <?= lang('spectrum.total_topic_assignments') ?>:
+    <?= t('spectrum.total_topic_assignments') ?>:
     <strong><?= number_format($totalPublications, 0, ',', '.') ?></strong>
 </p>
 
@@ -272,8 +272,8 @@ foreach ($rows as $row) {
                     .html(`
                     <strong>${d.data.name}</strong><br>
                     ${d.data.level ? '<span class="text-muted">' + d.data.level + '</span><br>' : ''}
-                    <?= lang('spectrum.assignments') ?>: ${d.value}<br>
-                    <?= lang('common.share_list') ?>: ${pct} %
+                    <?= t('spectrum.assignments') ?>: ${d.value}<br>
+                    <?= t('common.share_list') ?>: ${pct} %
                 `)
                     .style("left", (event.pageX + 12) + "px")
                     .style("top", (event.pageY + 12) + "px");

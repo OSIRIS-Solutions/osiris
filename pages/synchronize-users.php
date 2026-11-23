@@ -10,24 +10,24 @@ if ($action === 'view') {
 
     <h1>
         <i class="ph ph-users"></i>
-        <?= lang('people.user_management') ?>
+        <?= t('people.user_management') ?>
     </h1>
 
-    <?= lang('people.please_find_general_settings_on_user_data_fields_and_ldap_attribute_synchro') ?> <a href="<?= ROOTPATH ?>/admin/persons"><?= lang('people.person_settings') ?></a>.
+    <?= t('people.please_find_general_settings_on_user_data_fields_and_ldap_attribute_synchro') ?> <a href="<?= ROOTPATH ?>/admin/persons"><?= t('people.person_settings') ?></a>.
 
     <div class="box">
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-arrows-clockwise"></i>
-                <?= lang('admin.synchronize_users') ?>
+                <?= t('admin.synchronize_users') ?>
             </h2>
             <p>
-                <?= lang('people.here_you_can_synchronize_your_users_with_your_ldap_directory_you_can_choose') ?>
+                <?= t('people.here_you_can_synchronize_your_users_with_your_ldap_directory_you_can_choose') ?>
             </p>
 
             <a href="?action=synchronize" class="btn primary">
                 <i class="ph ph-arrows-clockwise"></i>
-                <?= lang('people.start_synchronization') ?>
+                <?= t('people.start_synchronization') ?>
             </a>
         </div>
     </div>
@@ -36,20 +36,20 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-list text-secondary"></i>
-                <?= lang('admin.attribute_synchronization') ?>
+                <?= t('admin.attribute_synchronization') ?>
             </h2>
             <p>
-                <?= lang('people.you_can_synchronize_user_attributes_from_your_ldap_directory_to_osiris_this') ?>
+                <?= t('people.you_can_synchronize_user_attributes_from_your_ldap_directory_to_osiris_this') ?>
             </p>
             <!-- <a href="<?= ROOTPATH ?>/admin/persons#section-auth" class="btn primary">
                 <i class="ph ph-user-list"></i>
-                <?= lang('people.attribute_preview') ?>
+                <?= t('people.attribute_preview') ?>
             </a> -->
             <form action="<?= ROOTPATH ?>/synchronize-attributes" method="post">
                 <input type="hidden" name="preview" value="1">
                 <button type="submit" class="btn primary">
                     <i class="ph ph-user-list"></i>
-                    <?= lang('people.attribute_preview') ?>
+                    <?= t('people.attribute_preview') ?>
                 </button>
             </form>
         </div>
@@ -59,14 +59,14 @@ if ($action === 'view') {
         <div class="content">
             <h2 class="title">
                 <i class="ph-duotone ph-user-plus text-secondary"></i>
-                <?= lang('people.guest_accounts') ?>
+                <?= t('people.guest_accounts') ?>
             </h2>
             <p>
-                <?= lang('people.you_can_add_a_guest_account_that_allows_temporary_access_to_osiris_for_user') ?>
+                <?= t('people.you_can_add_a_guest_account_that_allows_temporary_access_to_osiris_for_user') ?>
             </p>
             <a href="<?= ROOTPATH ?>/admin/guest-account" class="btn primary">
                 <i class="ph ph-user-plus"></i>
-                <?= lang('common.manage_guest_accounts') ?>
+                <?= t('common.manage_guest_accounts') ?>
             </a>
         </div>
     </div>
@@ -74,7 +74,7 @@ if ($action === 'view') {
 <?php
 } elseif ($action === 'synchronize') {
 
-    echo "<h1><i class='ph-duotone ph-arrows-clockwise'></i>" . lang('common.synchronize_users') . "</h1>";
+    echo "<h1><i class='ph-duotone ph-arrows-clockwise'></i>" . t('common.synchronize_users') . "</h1>";
 
     // get all users from LDAP
     $blacklist = [];
@@ -114,7 +114,7 @@ if ($action === 'view') {
     }
 
     if (empty($users)) {
-        echo "<p>" . lang('people.no_users_found') . "</p>";
+        echo "<p>" . t('people.no_users_found') . "</p>";
         return;
     }
 
@@ -190,7 +190,7 @@ if ($action === 'view') {
 
 
         <?php if (!empty($inactiveGuests) || !empty($activeGuests)) { ?>
-            <h2><?= lang('people.guest_accounts') ?></h2>
+            <h2><?= t('people.guest_accounts') ?></h2>
 
             <?php
             // inactive guest accounts
@@ -198,7 +198,7 @@ if ($action === 'view') {
             ?>
                 <!-- list of inactive guest accounts -->
                 <p>
-                    <?= lang('people.the_following_guest_accounts_are_inactive_valid_until_date_in_the_past_and') ?>
+                    <?= t('people.the_following_guest_accounts_are_inactive_valid_until_date_in_the_past_and') ?>
                 </p>
                 <ul>
                     <?php
@@ -215,7 +215,7 @@ if ($action === 'view') {
             ?>
                 <!-- list of active guest accounts -->
                 <p>
-                    <?= lang('people.the_following_guest_accounts_are_active_and_will_be_ignored_during_synchron') ?>
+                    <?= t('people.the_following_guest_accounts_are_active_and_will_be_ignored_during_synchron') ?>
                 </p>
                 <ul>
                     <?php
@@ -236,7 +236,7 @@ if ($action === 'view') {
         if (!empty($actions['inactivate'])) {
             // interface to inactivate users
         ?>
-            <h2><?= lang('people.inactivated_users') ?></h2>
+            <h2><?= t('people.inactivated_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $inactivate = $actions['inactivate'];
@@ -254,7 +254,7 @@ if ($action === 'view') {
         if (!empty($actions['reactivate'])) {
             // interface to reactivate users
         ?>
-            <h2><?= lang('people.reactivated_users') ?></h2>
+            <h2><?= t('people.reactivated_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $reactivate = $actions['reactivate'];
@@ -274,7 +274,7 @@ if ($action === 'view') {
         if (!empty($actions['add'])) {
             // interface to add users
         ?>
-            <h2><?= lang('people.new_users') ?></h2>
+            <h2><?= t('people.new_users') ?></h2>
             <!-- checkboxes -->
             <?php
             $add = $actions['add'];
@@ -286,7 +286,7 @@ if ($action === 'view') {
                     <label for="add-<?= $u ?>"><?= $n . ' (' . $u . ')' ?></label>
                     <!-- add option for blacklist -->
                     <input type="checkbox" name="blacklist[]" id="blacklist-<?= $u ?>" value="<?= $u ?>" onclick="$('#add-<?= $u ?>').attr('checked', !$('#add-<?= $u ?>').attr('checked'))">
-                    <label for="blacklist-<?= $u ?>"><?= lang('people.blacklist') ?></label>
+                    <label for="blacklist-<?= $u ?>"><?= t('people.blacklist') ?></label>
                 </div>
             <?php } ?>
         <?php
@@ -296,13 +296,13 @@ if ($action === 'view') {
         // unchanged users (as collapsed list)
         if (!empty($actions['unchanged'])) {
         ?>
-            <h2><?= lang('people.unchanged_users') ?></h2>
+            <h2><?= t('people.unchanged_users') ?></h2>
             <p>
-                <?= lang('people.the_following_users_are_unchanged_and_will_not_be_affected_by_the_synchroni') ?>
+                <?= t('people.the_following_users_are_unchanged_and_will_not_be_affected_by_the_synchroni') ?>
             </p>
             <details class="collapse-panel mb-20">
                 <summary class="collapse-header">
-                    <?= lang('people.click_here_to_view_unchanged_users') ?>
+                    <?= t('people.click_here_to_view_unchanged_users') ?>
                 </summary>
                 <div class="collapse-content">
                     <ul>
@@ -320,7 +320,7 @@ if ($action === 'view') {
         ?>
             <details class="collapse-panel">
                 <summary class="collapse-header">
-                    <?= lang('people.blacklisted_users') ?>
+                    <?= t('people.blacklisted_users') ?>
                 </summary>
                 <div class="collapse-content">
                     <ul>
@@ -332,7 +332,7 @@ if ($action === 'view') {
             </details>
         <?php } ?>
 
-        <button type="submit" class="btn secondary"><?= lang('people.synchronize') ?></button>
+        <button type="submit" class="btn secondary"><?= t('people.synchronize') ?></button>
     </form>
 <?php
 }

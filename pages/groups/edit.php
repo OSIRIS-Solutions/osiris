@@ -35,9 +35,9 @@ $form = $form ?? array();
 
 $formaction = ROOTPATH;
 $formaction .= "/crud/groups/update/" . $form['_id'];
-$btntext = '<i class="ph ph-check"></i> ' . lang('action.update');
+$btntext = '<i class="ph ph-check"></i> ' . t('action.update');
 $url = ROOTPATH . "/groups/edit/" . $form['_id'];
-$title = lang('common.edit_group') . $id;
+$title = t('common.edit_group') . $id;
 
 $level = $Groups->getLevel($id);
 
@@ -117,7 +117,7 @@ include_once BASEPATH . '/header-editor.php';
 <?php if ($form['inactive'] ?? false) { ?>
     <div>
         <span class="badge danger">
-            <?= lang('groups.inactive') ?>
+            <?= t('groups.inactive') ?>
         </span>
     </div>
 <?php } ?>
@@ -126,20 +126,20 @@ include_once BASEPATH . '/header-editor.php';
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('general')" id="btn-general" class="btn active">
         <i class="ph ph-gear" aria-hidden="true"></i>
-        <?= lang('common.general') ?>
+        <?= t('common.general') ?>
     </a>
     <a onclick="navigate('personnel')" id="btn-personnel" class="btn">
         <i class="ph ph-users" aria-hidden="true"></i>
-        <?= lang('groups.personnel') ?>
+        <?= t('groups.personnel') ?>
     </a>
 
     <a onclick="navigate('research-interest')" id="btn-research-interest" class="btn">
         <i class="ph ph-flask" aria-hidden="true"></i>
-        <?= lang('common.research') ?>
+        <?= t('common.research') ?>
     </a>
     <a onclick="navigate('settings')" id="btn-settings" class="btn">
         <i class="ph ph-trash" aria-hidden="true"></i>
-        <?= lang('action.delete') ?>
+        <?= t('action.delete') ?>
     </a>
 
 </nav>
@@ -150,24 +150,24 @@ include_once BASEPATH . '/header-editor.php';
 
     <section id="general">
 
-        <h3 class=""><?= lang('groups.name_and_description') ?></h3>
+        <h3 class=""><?= t('groups.name_and_description') ?></h3>
         <fieldset>
             <?php
-            localizedField($form, 'name', lang('forms.full_name'), [
+            localizedField($form, 'name', t('forms.full_name'), [
                 'required' => true,
                 'class' => 'large',
                 'group' => 'general'
             ]);
-            localizedField($form, 'description', lang('common.description'), ['type' => 'richtext', 'group' => 'general']);
+            localizedField($form, 'description', t('common.description'), ['type' => 'richtext', 'group' => 'general']);
             ?>
         </fieldset>
 
 
-        <h3 class="mt-0"><?= lang('common.general') ?></h3>
+        <h3 class="mt-0"><?= t('common.general') ?></h3>
         <fieldset>
             <?php if ($Settings->featureEnabled('portal') && $level != 0) { ?>
                 <h5 class="mt-0">
-                    <?= lang('common.visibility_on_website') ?>
+                    <?= t('common.visibility_on_website') ?>
                 </h5>
 
                 <div class="form-group">
@@ -175,7 +175,7 @@ include_once BASEPATH . '/header-editor.php';
                     <div class="custom-switch">
                         <input type="checkbox" id="hide-check" <?= val('hide') ? 'checked' : '' ?> name="values[hide]" value="1">
                         <label for="hide-check">
-                            <?= lang('groups.hide_group_from_public_view_edit') ?>
+                            <?= t('groups.hide_group_from_public_view_edit') ?>
                         </label>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ include_once BASEPATH . '/header-editor.php';
                 <div class="custom-switch">
                     <input type="checkbox" id="inactive-check" <?= val('inactive') ? 'checked' : '' ?> name="values[inactive]" value="1">
                     <label for="inactive-check">
-                        <?= lang('groups.mark_group_as_inactive') ?>
+                        <?= t('groups.mark_group_as_inactive') ?>
                     </label>
                 </div>
             </div>
@@ -196,17 +196,17 @@ include_once BASEPATH . '/header-editor.php';
             <div class="row row-eq-spacing mt-0">
                 <div class="col-md-2">
                     <label for="id" class="required">
-                        <?= lang('common.acronym') ?>
+                        <?= t('common.acronym') ?>
                     </label>
                     <input type="text" class="form-control" name="values[id]" id="id" required value="<?= val('id') ?>" maxlength="9">
                 </div>
 
                 <div class="col-sm-5">
                     <label for="parent">
-                        <?= lang('common.parent_group') ?>
+                        <?= t('common.parent_group') ?>
                     </label>
                     <select class="form-control" name="values[parent]" id="parent" onchange="deptSelect(this.value)">
-                        <option value="" data-level="99"><?= lang('common.attention_no_parent_group_chosen') ?></option>
+                        <option value="" data-level="99"><?= t('common.attention_no_parent_group_chosen') ?></option>
                         <?php foreach ($Groups->groups as $d => $dept) { ?>
                             <option value="<?= $d ?>" <?= sel('parent', $d) ?> data-level="<?= $dept['level'] ?? $Groups->getLevel($d) ?>">
                                 <?php $departmentName = localized($dept['name']); ?>
@@ -219,34 +219,34 @@ include_once BASEPATH . '/header-editor.php';
 
                 <div class="col-sm-5">
                     <label for="unit" class="required">
-                        <?= lang('common.type_of_group') ?>
+                        <?= t('common.type_of_group') ?>
                     </label>
-                    <input type="text" class="form-control" name="values[unit]" id="unit" required value="<?= val('unit') ?>" placeholder="<?= lang('common.double_click_to_see_suggestions') ?>" list="unit-list">
+                    <input type="text" class="form-control" name="values[unit]" id="unit" required value="<?= val('unit') ?>" placeholder="<?= t('common.double_click_to_see_suggestions') ?>" list="unit-list">
                 </div>
             </div>
             <div class="form-group" id="color-row" <?= $level != 1 ? 'style="display:none;"' : '' ?>>
-                <label for="color" class=""><?= lang('common.color') ?></label>
+                <label for="color" class=""><?= t('common.color') ?></label>
                 <input type="color" class="form-control w-100" name="values[color]" required value="<?= val('color') ?>">
-                <span><?= lang('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
+                <span><?= t('common.note_that_only_level_1_groups_can_have_a_color') ?></span>
             </div>
 
             <!-- synonyms -->
             <div class="form-group">
                 <label for="synonyms">
-                    <?= lang('common.synonyms') ?>
+                    <?= t('common.synonyms') ?>
                 </label>
                 <?php
                 $synonyms = DB::doc2Arr($form['synonyms'] ?? []);
                 ?>
 
                 <input type="text" class="form-control" name="values[synonyms]" id="synonyms" value="<?= e(is_array($synonyms) ? implode('; ', $synonyms) : $synonyms) ?>">
-                <small class="text-muted"><?= lang('groups.separate_multiple_synonyms_with_semi_colons') ?></small>
+                <small class="text-muted"><?= t('groups.separate_multiple_synonyms_with_semi_colons') ?></small>
             </div>
 
             <!-- cost center -->
             <div class="form-group">
                 <label for="costcenter">
-                    <?= lang('groups.cost_center') ?>
+                    <?= t('groups.cost_center') ?>
                 </label>
                 <input type="text" class="form-control" name="values[costcenter]" id="costcenter" value="<?= val('costcenter') ?>">
             </div>
@@ -260,7 +260,7 @@ include_once BASEPATH . '/header-editor.php';
         </fieldset>
 
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang('action.save') ?>
+            <i class="ph ph-check"></i> <?= t('action.save') ?>
         </button>
 
     </section>
@@ -268,7 +268,7 @@ include_once BASEPATH . '/header-editor.php';
 
     <section id="research-interest" style="display:none;">
 
-        <h3><?= lang('common.research_interests') ?></h3>
+        <h3><?= t('common.research_interests') ?></h3>
 
         <!-- ensure empty list gets still submitted -->
         <input type="hidden" name="values[research]" value="">
@@ -290,7 +290,7 @@ include_once BASEPATH . '/header-editor.php';
 
                     <div class="box">
                         <div class="header">
-                            <h4 class="m-0"><q><?= e(localized($con['title'] ?? lang('common.research_interest'))) ?></q></h4>
+                            <h4 class="m-0"><q><?= e(localized($con['title'] ?? t('common.research_interest'))) ?></q></h4>
                             <div class="btn-group ml-auto">
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
                                 <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>
@@ -302,15 +302,15 @@ include_once BASEPATH . '/header-editor.php';
 
                             <?php
                             $languageGroup = "research.$i";
-                            localizedField($form, "research.$i.title", lang('common.title'), [
+                            localizedField($form, "research.$i.title", t('common.title'), [
                                 'required' => true,
                                 'class' => 'large',
                                 'group' => $languageGroup,
                             ]);
-                            localizedField($form, "research.$i.subtitle", lang('common.subtitle'), [
+                            localizedField($form, "research.$i.subtitle", t('common.subtitle'), [
                                 'group' => $languageGroup,
                             ]);
-                            localizedField($form, "research.$i.info", lang('common.description'), [
+                            localizedField($form, "research.$i.info", t('common.description'), [
                                 'type' => 'richtext',
                                 'group' => $languageGroup,
                             ]);
@@ -318,7 +318,7 @@ include_once BASEPATH . '/header-editor.php';
                         </div>
                         <hr>
                         <div id="activities-<?= $i ?>" class="content">
-                            <h5><?= lang('common.connected_activities') ?></h5>
+                            <h5><?= t('common.connected_activities') ?></h5>
 
                             <table class="table simple small">
                                 <tbody class="activity-list">
@@ -343,9 +343,9 @@ include_once BASEPATH . '/header-editor.php';
                             </table>
 
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="<?= lang('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
+                                <input type="text" class="form-control" placeholder="<?= t('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $i ?>'); event.preventDefault(); }">
                                 <div class="input-group-append">
-                                    <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= lang('action.search') ?></button>
+                                    <button class="btn secondary" type="button" onclick="searchActivities('<?= $i ?>')"><?= t('action.search') ?></button>
                                 </div>
                             </div>
 
@@ -366,7 +366,7 @@ include_once BASEPATH . '/header-editor.php';
         <template id="research-row-template">
             <div class="box">
                 <div class="header">
-                    <h4 class="m-0"><q><?= lang('common.research_interest') ?></q></h4>
+                    <h4 class="m-0"><q><?= t('common.research_interest') ?></q></h4>
                     <div class="btn-group ml-auto">
                         <button class="btn" type="button" onclick="moveResearchrow(this, 'up')"><i class="ph ph-arrow-up"></i></button>
                         <button class="btn" type="button" onclick="moveResearchrow(this, 'down')"><i class="ph ph-arrow-down"></i></button>
@@ -376,15 +376,15 @@ include_once BASEPATH . '/header-editor.php';
 
                 <div class="content">
                     <?php
-                    localizedField($templateForm, "research.$templateIndex.title", lang('common.title'), [
+                    localizedField($templateForm, "research.$templateIndex.title", t('common.title'), [
                         'required' => true,
                         'class' => 'large',
                         'group' => $templateLanguageGroup,
                     ]);
-                    localizedField($templateForm, "research.$templateIndex.subtitle", lang('common.subtitle'), [
+                    localizedField($templateForm, "research.$templateIndex.subtitle", t('common.subtitle'), [
                         'group' => $templateLanguageGroup,
                     ]);
-                    localizedField($templateForm, "research.$templateIndex.info", lang('common.description'), [
+                    localizedField($templateForm, "research.$templateIndex.info", t('common.description'), [
                         'type' => 'richtext',
                         'group' => $templateLanguageGroup,
                     ]);
@@ -394,16 +394,16 @@ include_once BASEPATH . '/header-editor.php';
                 <hr>
 
                 <div id="activities-<?= $templateIndex ?>" class="content">
-                    <h5><?= lang('common.connected_activities') ?></h5>
+                    <h5><?= t('common.connected_activities') ?></h5>
 
                     <table class="table simple small">
                         <tbody class="activity-list"></tbody>
                     </table>
 
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="<?= lang('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $templateIndex ?>'); event.preventDefault(); }">
+                        <input type="text" class="form-control" placeholder="<?= t('action.search') ?>" onkeypress="if(event.key === 'Enter') { searchActivities('<?= $templateIndex ?>'); event.preventDefault(); }">
                         <div class="input-group-append">
-                            <button class="btn secondary" type="button" onclick="searchActivities('<?= $templateIndex ?>')"><?= lang('action.search') ?></button>
+                            <button class="btn secondary" type="button" onclick="searchActivities('<?= $templateIndex ?>')"><?= t('action.search') ?></button>
                         </div>
                     </div>
 
@@ -413,19 +413,19 @@ include_once BASEPATH . '/header-editor.php';
         </template>
 
         <button class="btn" type="button" onclick="addResearchrow(event)">
-            <i class="ph ph-plus text-success"></i> <?= lang('groups.add_research_interest') ?>
+            <i class="ph ph-plus text-success"></i> <?= t('groups.add_research_interest') ?>
         </button>
         <br>
 
         <h3>
-            <?= lang('groups.research_field_classification') ?>
+            <?= t('groups.research_field_classification') ?>
         </h3>
         <?php
         include_once BASEPATH . "/components/kdsf-ffk-select.php";
         ?>
 
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang('action.save') ?>
+            <i class="ph ph-check"></i> <?= t('action.save') ?>
         </button>
 
 
@@ -434,9 +434,9 @@ include_once BASEPATH . '/header-editor.php';
 
     <section id="personnel" style="display:none;">
 
-        <h3><?= lang('common.staff') ?></h3>
+        <h3><?= t('common.staff') ?></h3>
         <h5>
-            <?= lang('common.head_s') ?>
+            <?= t('common.head_s') ?>
         </h5>
         <div class="form-group">
             <!-- save empty -->
@@ -450,7 +450,7 @@ include_once BASEPATH . '/header-editor.php';
                         $name = $person['last'] . ', ' . $person['first'];
                         $active = $person['is_active'] ?? true;
                         if (!$active) {
-                            $name .= ' <small class="text-danger">(' . lang('groups.inactive') . ')</small>';
+                            $name .= ' <small class="text-danger">(' . t('groups.inactive') . ')</small>';
                         }
                     ?>
                         <div class='author'>
@@ -464,7 +464,7 @@ include_once BASEPATH . '/header-editor.php';
                 <div class="footer">
                     <div class="input-group d-inline-flex w-auto">
                         <select class="head-input form-control" id="head-select">
-                            <option value="" disabled selected><?= lang('common.add_head') ?></option>
+                            <option value="" disabled selected><?= t('common.add_head') ?></option>
                             <?php
                             $userlist = $osiris->persons->find(['username' => ['$ne' => null]], ['sort' => ['is_active' => -1, 'last' => 1]]);
                             foreach ($userlist as $j) {
@@ -486,7 +486,7 @@ include_once BASEPATH . '/header-editor.php';
             </div>
         </div>
         <button class="btn secondary" type="submit" id="submit-btn">
-            <i class="ph ph-check"></i> <?= lang('action.save') ?>
+            <i class="ph ph-check"></i> <?= t('action.save') ?>
         </button>
 
     </section>
@@ -498,8 +498,8 @@ include_once BASEPATH . '/header-editor.php';
     <div class="alert danger mt-20">
         <form action="<?= ROOTPATH ?>/crud/groups/delete/<?= $group['_id'] ?>" method="post">
             <input type="hidden" class="hidden" name="redirect" value="<?= ROOTPATH ?>/groups">
-            <button class="btn danger"><i class="ph ph-trash"></i> <?= lang('action.delete') ?></button>
-            <span class="ml-20"><?= lang('common.warning_cannot_be_undone') ?></span>
+            <button class="btn danger"><i class="ph ph-trash"></i> <?= t('action.delete') ?></button>
+            <span class="ml-20"><?= t('common.warning_cannot_be_undone') ?></span>
         </form>
     </div>
 
@@ -507,24 +507,24 @@ include_once BASEPATH . '/header-editor.php';
 
 <section id="personnel-2" style="display:none;">
     <h5>
-        <?= lang('groups.directly_associated_persons') ?>
+        <?= t('groups.directly_associated_persons') ?>
     </h5>
     <p>
-        <?= lang('groups.these_persons_are_directly_associated_with_this_group_persons_who_belong_to') ?>
+        <?= t('groups.these_persons_are_directly_associated_with_this_group_persons_who_belong_to') ?>
     </p>
 
     <a class="btn primary" href="#add-person-modal">
         <i class="ph ph-user-plus ph-fw"></i>
-        <?= lang('common.add_person') ?>
+        <?= t('common.add_person') ?>
     </a>
 
     <table class="table mt-20">
         <thead>
             <tr>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.position') ?></th>
-                <th><?= lang('groups.since') ?></th>
-                <th><?= lang('common.actions') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.position') ?></th>
+                <th><?= t('groups.since') ?></th>
+                <th><?= t('common.actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -573,29 +573,29 @@ include_once BASEPATH . '/header-editor.php';
                         <?php if ($unit['start'] ?? false) { ?>
                             <?= date('d.m.Y', strtotime($unit['start'])) ?>
                         <?php } else { ?>
-                            <em class="text-muted"><?= lang('groups.undefined') ?></em>
+                            <em class="text-muted"><?= t('groups.undefined') ?></em>
                         <?php } ?>
                     </td>
                     <td>
                         <a href="<?= ROOTPATH ?>/profile/<?= $p['username'] ?>" class="btn small">
-                            <i class="ph ph-eye"></i> <?= lang('groups.view') ?>
+                            <i class="ph ph-eye"></i> <?= t('groups.view') ?>
                         </a>
                         <form action="<?= ROOTPATH ?>/crud/groups/removeperson/<?= $id ?>" method="post" class="d-inline">
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
-                            <button class="btn danger small"><i class="ph ph-trash"></i> <?= lang('action.remove') ?></button>
+                            <button class="btn danger small"><i class="ph ph-trash"></i> <?= t('action.remove') ?></button>
                         </form>
                         <!-- delegate editing rights -->
                         <form action="<?= ROOTPATH ?>/crud/groups/editorperson/<?= $id ?>" method="post" class="d-inline">
                             <input type="hidden" name="username" value="<?= $p['username'] ?>">
                             <?php if ($has_editor_rights) { ?>
 
-                                <button class="btn muted small" disabled><i class="ph ph-shield-check"></i> <?= lang('groups.has_admin_rights') ?></button>
+                                <button class="btn muted small" disabled><i class="ph ph-shield-check"></i> <?= t('groups.has_admin_rights') ?></button>
                             <?php } elseif ($unit['editor'] ?? false) { ?>
                                 <input type="hidden" name="action" value="remove">
-                                <button class="btn secondary small"><i class="ph ph-minus"></i> <?= lang('groups.editor_rights') ?></button>
+                                <button class="btn secondary small"><i class="ph ph-minus"></i> <?= t('groups.editor_rights') ?></button>
                             <?php } else { ?>
                                 <input type="hidden" name="action" value="add">
-                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= lang('groups.editor_rights') ?>*</button>
+                                <button class="btn primary small"><i class="ph ph-plus"></i> <?= t('groups.editor_rights') ?>*</button>
                             <?php } ?>
                         </form>
                     </td>
@@ -605,7 +605,7 @@ include_once BASEPATH . '/header-editor.php';
     </table>
 
     <small class="text-muted">
-        * <?= lang('groups.persons_with_editor_rights_can_edit_the_group_details_and_add_remove_other') ?>
+        * <?= t('groups.persons_with_editor_rights_can_edit_the_group_details_and_add_remove_other') ?>
     </small>
 
 </section>
@@ -638,16 +638,16 @@ include_once BASEPATH . '/header-editor.php';
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2><?= lang('common.add_person') ?></h2>
+            <h2><?= t('common.add_person') ?></h2>
             <form action="<?= ROOTPATH ?>/crud/groups/addperson/<?= $id ?>" method="post">
 
                 <input type="hidden" name="redirect" value="<?= ROOTPATH ?>/groups/edit/<?= $id ?>#section-personnel">
 
                 <div class="form-group">
-                    <label for="person-username"><?= lang('common.person') ?></label>
+                    <label for="person-username"><?= t('common.person') ?></label>
                     <!-- select for distinct user names from DB -->
                     <select name="username" id="person-username" class="form-control" required>
-                        <option value="" disabled selected><?= lang('groups.select_person') ?></option>
+                        <option value="" disabled selected><?= t('groups.select_person') ?></option>
                         <?php foreach ($osiris->persons->find(['is_active' => ['$ne' => false], 'units.unit' => ['$ne' => $id]], ['sort' => ['last' => 1]]) as $person) { ?>
                             <option value="<?= $person['username'] ?>"><?= $person['last'] . ', ' . $person['first'] ?></option>
                         <?php } ?>
@@ -658,27 +658,27 @@ include_once BASEPATH . '/header-editor.php';
                 </div>
 
                 <div class="form-group">
-                    <label for="start"><?= lang('common.start_date') ?></label>
+                    <label for="start"><?= t('common.start_date') ?></label>
                     <input type="date" name="start" id="person-start" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="scientific"><?= lang('common.scientific') ?></label>
+                    <label for="scientific"><?= t('common.scientific') ?></label>
                     <select class="form-control" id="scientific" name="scientific">
-                        <option value="1"><?= lang('common.yes') ?></option>
-                        <option value="0"><?= lang('common.no') ?></option>
+                        <option value="1"><?= t('common.yes') ?></option>
+                        <option value="0"><?= t('common.no') ?></option>
                     </select>
                 </div>
 
                 <div id="person-affiliated" style="display: none;">
                     <p>
-                        <?= lang('groups.this_person_is_currently_affiliated_with_the_following_units_without_end_da') ?>
+                        <?= t('groups.this_person_is_currently_affiliated_with_the_following_units_without_end_da') ?>
                     </p>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><?= lang('common.unit') ?></th>
-                                <th><?= lang('groups.since') ?></th>
+                                <th><?= t('common.unit') ?></th>
+                                <th><?= t('groups.since') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -686,15 +686,15 @@ include_once BASEPATH . '/header-editor.php';
                     </table>
 
                     <p>
-                        <?= lang('groups.should_the_existing_unit_be_retained_or_terminated') ?>
+                        <?= t('groups.should_the_existing_unit_be_retained_or_terminated') ?>
                     </p>
 
                     <div class="form-group">
                         <div class="custom-radio">
                             <input type="radio" name="change-or-add" id="person-add" value="add" checked="checked">
                             <label for="person-add">
-                                <b><?= lang('action.add') ?>:</b>
-                                <?= lang('groups.add_this_unit_as_additional_unit_and_keep_other_units_unchanged') ?>
+                                <b><?= t('action.add') ?>:</b>
+                                <?= t('groups.add_this_unit_as_additional_unit_and_keep_other_units_unchanged') ?>
                             </label>
                         </div>
                     </div>
@@ -703,18 +703,18 @@ include_once BASEPATH . '/header-editor.php';
                         <div class="custom-radio">
                             <input type="radio" name="change-or-add" id="person-change" value="change">
                             <label for="person-change">
-                                <b><?= lang('groups.change') ?>:</b>
-                                <?= lang('groups.terminate_existing_units_and_add_this_unit_as_new') ?>
+                                <b><?= t('groups.change') ?>:</b>
+                                <?= t('groups.terminate_existing_units_and_add_this_unit_as_new') ?>
                             </label>
                             <br>
                             <small class="text-danger" id="person-change-warning">
-                                <?= lang('groups.only_possible_when_a_starting_date_is_set') ?>
+                                <?= t('groups.only_possible_when_a_starting_date_is_set') ?>
                             </small>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn"><?= lang('action.add') ?></button>
+                <button type="submit" class="btn"><?= t('action.add') ?></button>
             </form>
 
             <script>

@@ -77,48 +77,48 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('common.statistics') ?>
+    <?= t('common.statistics') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/infrastructures">
         <i class="ph ph-arrow-left"></i>
-        <?= lang('infrastructures.back_to_infrastructures') ?>
+        <?= t('infrastructures.back_to_infrastructures') ?>
     </a>
 </div>
 
 
 <div class="alert signal">
-    <?= lang('infrastructures.all_of_the_following_statistics_are_based_on_the_reporting_date') ?>
+    <?= t('infrastructures.all_of_the_following_statistics_are_based_on_the_reporting_date') ?>
 
     <form action="<?= ROOTPATH ?>/infrastructures/statistics" method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-        <h6 class="mb-0 mt-5"><?= lang('common.change_reporting_date') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= t('common.change_reporting_date') ?>:</h6>
         <input type="date" name="reportdate" value="<?= $reportdate ?>" class="form-control w-auto d-inline-block" />
-        <h6 class="mb-0 mt-5"><?= lang('infrastructures.change_year_for_statistics') ?>:</h6>
+        <h6 class="mb-0 mt-5"><?= t('infrastructures.change_year_for_statistics') ?>:</h6>
         <input type="number" name="year" value="<?= $year ?>" class="form-control w-100 d-inline-block" />
-        <button class="btn signal filled" type="submit"><?= lang('action.update') ?></button>
+        <button class="btn signal filled" type="submit"><?= t('action.update') ?></button>
     </form>
 </div>
 
 <br>
 <div id="statistics">
     <p class="lead">
-        <?= lang('infrastructures.number_of_infrastructures_on_the_reporting_date') ?>:
+        <?= t('infrastructures.number_of_infrastructures_on_the_reporting_date') ?>:
         <b class="badge signal"><?= count($infrastructures) ?></b>
-        <span class="text-muted">(<?= $all ?> <?= lang('common.total') ?>)</span>
+        <span class="text-muted">(<?= $all ?> <?= t('common.total') ?>)</span>
     </p>
 
     <h3>
-        <?= lang('infrastructures.list_of_research_infrastructures') ?>
+        <?= t('infrastructures.list_of_research_infrastructures') ?>
     </h3>
     <table class="table" id="infrastructures">
         <thead>
             <tr>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.category') ?></th>
-                <th><?= lang('infrastructures.access_type') ?></th>
-                <th><?= lang('common.type_statistics') ?></th>
-                <th><?= lang('common.description') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.category') ?></th>
+                <th><?= t('infrastructures.access_type') ?></th>
+                <th><?= t('common.type_statistics') ?></th>
+                <th><?= t('common.description') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -147,18 +147,18 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     </table>
 
     <h3>
-        <?= lang('infrastructures.users_in') ?> <?= $year ?>
+        <?= t('infrastructures.users_in') ?> <?= $year ?>
     </h3>
 
     <table class="table" id="user-stats">
         <thead>
             <tr>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.type') ?></th>
-                <th class="text-right"><?= lang('common.internal') ?></th>
-                <th class="text-right"><?= lang('infrastructures.national') ?></th>
-                <th class="text-right"><?= lang('infrastructures.international') ?></th>
-                <th class="text-right"><?= lang('common.total') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.type') ?></th>
+                <th class="text-right"><?= t('common.internal') ?></th>
+                <th class="text-right"><?= t('infrastructures.national') ?></th>
+                <th class="text-right"><?= t('infrastructures.international') ?></th>
+                <th class="text-right"><?= t('common.total') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -227,7 +227,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         </tbody>
         <tfoot>
             <tr>
-                <th><?= lang('common.total') ?></th>
+                <th><?= t('common.total') ?></th>
                 <th>-</th>
                 <th class="text-right">
                     <?= $stats['internal'] ?>
@@ -247,7 +247,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h3>
-        <?= lang('infrastructures.usage_statistics_in') ?> <?= $year ?>
+        <?= t('infrastructures.usage_statistics_in') ?> <?= $year ?>
     </h3>
 
 
@@ -308,7 +308,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         </tbody>
         <tfoot>
             <tr>
-                <th><?= lang('common.total') ?></th>
+                <th><?= t('common.total') ?></th>
                 <th>-</th>
                 <th class="text-right">
                     <?= $stats['hours'] ?>
@@ -327,8 +327,8 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h3>
-        <?= lang('infrastructures.personnel_statistics') ?>
-        <?= lang('common.on_the_reporting_date') ?>
+        <?= t('infrastructures.personnel_statistics') ?>
+        <?= t('common.on_the_reporting_date') ?>
     </h3>
 
     <table class="table" id="person-stats">
@@ -338,10 +338,10 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                 <th>Typ</th>
                 <th>Umfang (VZÄ)</th>
                 <th>
-                    <?= lang('infrastructures.contact_person') ?>
+                    <?= t('infrastructures.contact_person') ?>
                 </th>
                 <th>
-                    <?= lang('infrastructures.persons') ?>
+                    <?= t('infrastructures.persons') ?>
                 </th>
             </tr>
         </thead>
@@ -401,7 +401,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <tfoot>
             <tr>
                 <th>
-                    <?= lang('common.total') ?>
+                    <?= t('common.total') ?>
                     <?= $counts['total'] ?>
                 </th>
                 <th>-</th>
@@ -423,7 +423,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     <hr>
 
     <h2>
-        <?= lang('infrastructures.collaborative_research_infrastructures') ?>
+        <?= t('infrastructures.collaborative_research_infrastructures') ?>
     </h2>
 
     <?php
@@ -447,14 +447,14 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
         <tbody>
             <tr>
                 <td>
-                    <?= lang('infrastructures.number_of_collaborative_infrastructures_on_the_reporting_date') ?>
+                    <?= t('infrastructures.number_of_collaborative_infrastructures_on_the_reporting_date') ?>
                     <br>
                     <b class="text-secondary"><?= count($collaborations) ?></b>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <?= lang('infrastructures.number_of_collaborative_infrastructures_with_a_coordinator') ?>
+                    <?= t('infrastructures.number_of_collaborative_infrastructures_with_a_coordinator') ?>
                     <br>
                     <b class="text-secondary"><?= $coordinators ?></b>
                 </td>
@@ -464,15 +464,15 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
 
 
     <h5>
-        <?= lang('infrastructures.list_of_collaborative_research_infrastructures') ?>
+        <?= t('infrastructures.list_of_collaborative_research_infrastructures') ?>
     </h5>
 
     <table class="table" id="collaborations">
         <thead>
             <tr>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.type') ?></th>
-                <th><?= lang('common.coordinator') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.type') ?></th>
+                <th><?= t('common.coordinator') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -497,7 +497,7 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
                                     echo '<a href="' . ROOTPATH . '/organizations/view/' . $coordinator['_id'] . '">' . lang($coordinator['name'], $coordinator['name_de'] ?? null) . '</a>';
                                 }
                             } else {
-                                echo lang('infrastructures.no_coordinator');
+                                echo t('infrastructures.no_coordinator');
                             }
                         } ?>
                     </td>
@@ -537,17 +537,17 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     ?>
 
     <h5>
-        <?= lang('common.cooperation_partners') ?>
+        <?= t('common.cooperation_partners') ?>
         (<?= count($collaborations) ?>)
     </h5>
 
     <table class="table" id="collaborative-partners">
         <thead>
             <tr>
-                <th><?= lang('common.name') ?></th>
-                <th><?= lang('common.type') ?></th>
-                <th><?= lang('common.location_edit') ?></th>
-                <th><?= lang('infrastructures.number_of_infrastructures') ?></th>
+                <th><?= t('common.name') ?></th>
+                <th><?= t('common.type') ?></th>
+                <th><?= t('common.location_edit') ?></th>
+                <th><?= t('infrastructures.number_of_infrastructures') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -602,11 +602,11 @@ $year = intval($_GET['year'] ?? CURRENTYEAR - 1);
     }
 
     $(document).ready(function() {
-        initDownloadTable('#infrastructures', <?= json_encode(lang('infrastructures.infrastructures_overview'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
-        initDownloadTable('#user-stats', <?= json_encode(lang('infrastructures.infrastructures_user_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
-        initDownloadTable('#action-stats', <?= json_encode(lang('infrastructures.infrastructures_usage_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
-        initDownloadTable('#person-stats', <?= json_encode(lang('infrastructures.infrastructures_personnel_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
-        initDownloadTable('#collaborations', <?= json_encode(lang('infrastructures.infrastructures_collaborative_infrastructures'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
-        initDownloadTable('#collaborative-partners', <?= json_encode(lang('infrastructures.infrastructures_collaborative_partners'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#infrastructures', <?= json_encode(t('infrastructures.infrastructures_overview'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#user-stats', <?= json_encode(t('infrastructures.infrastructures_user_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
+        initDownloadTable('#action-stats', <?= json_encode(t('infrastructures.infrastructures_usage_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $year ?>');
+        initDownloadTable('#person-stats', <?= json_encode(t('infrastructures.infrastructures_personnel_statistics'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborations', <?= json_encode(t('infrastructures.infrastructures_collaborative_infrastructures'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
+        initDownloadTable('#collaborative-partners', <?= json_encode(t('infrastructures.infrastructures_collaborative_partners'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ' <?= $reportdate ?>');
     });
 </script>

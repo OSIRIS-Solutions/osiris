@@ -33,7 +33,7 @@ class ProjectFields extends Fields
         $DB = new DB();
         $osiris = $DB->db;
         $adminCategories = $osiris->adminProjects->find()->toArray();
-        $types = array_column($adminCategories, lang('common.field_name_language'), 'id');
+        $types = array_column($adminCategories, t('common.field_name_language'), 'id');
 
         $proposalTypes = [];
 
@@ -93,7 +93,7 @@ class ProjectFields extends Fields
             [
                 'id' => 'id',
                 'module_of' => ['general'],
-                'label' => lang('common.id'),
+                'label' => t('common.id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -103,7 +103,7 @@ class ProjectFields extends Fields
             [
                 'id' => 'acronym',
                 'module_of' => $typeModules['acronym'] ?? [],
-                'label' => lang('projects.acronym'),
+                'label' => t('projects.acronym'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -113,7 +113,7 @@ class ProjectFields extends Fields
             [
                 "id" => "type",
                 "module_of" => $typeModules["type"] ?? [],
-                "label" => lang('common.type'),
+                "label" => t('common.type'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -134,7 +134,7 @@ class ProjectFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('projects.project_staff_name'),
+                'label' => t('projects.project_staff_name'),
                 'type' => 'list'
             ],
             [
@@ -144,7 +144,7 @@ class ProjectFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('projects.project_staff_username'),
+                'label' => t('projects.project_staff_username'),
                 'type' => 'list'
             ],
             [
@@ -154,7 +154,7 @@ class ProjectFields extends Fields
                     'aggregate',
                     'filter'
                 ],
-                'label' => lang('projects.project_staff_role'),
+                'label' => t('projects.project_staff_role'),
                 'type' => 'list',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('project-person-role'),
@@ -162,7 +162,7 @@ class ProjectFields extends Fields
             [
                 "id" => "name",
                 "module_of" => $typeModules["name"] ?? [],
-                "label" => lang('projects.short_title'),
+                "label" => t('projects.short_title'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -177,7 +177,7 @@ class ProjectFields extends Fields
             [
                 "id" => "name_de",
                 "module_of" => $typeModules["name_de"] ?? [],
-                "label" => lang('projects.short_title_german'),
+                "label" => t('projects.short_title_german'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -192,7 +192,7 @@ class ProjectFields extends Fields
             [
                 "id" => "title",
                 "module_of" => $typeModules["title"] ?? [],
-                "label" => lang('events.full_title'),
+                "label" => t('events.full_title'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -207,7 +207,7 @@ class ProjectFields extends Fields
             [
                 "id" => "title_de",
                 "module_of" => $typeModules["title_de"] ?? [],
-                "label" => lang('projects.full_title_german'),
+                "label" => t('projects.full_title_german'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -222,14 +222,14 @@ class ProjectFields extends Fields
             [
                 "id" => "status",
                 "module_of" => $typeModules["status"] ?? [],
-                "label" => lang('common.status'),
+                "label" => t('common.status'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => [
-                    'proposed' => lang('projects.proposed'),
-                    'approved' => lang('projects.approved'),
-                    'rejected' => lang('projects.rejected'),
-                    'withdrawn' => lang('projects.withdrawn'),
+                    'proposed' => t('projects.proposed'),
+                    'approved' => t('projects.approved'),
+                    'rejected' => t('projects.rejected'),
+                    'withdrawn' => t('projects.withdrawn'),
                 ],
                 'usage' => [
                     'aggregate',
@@ -245,7 +245,7 @@ class ProjectFields extends Fields
             [
                 "id" => "applicants",
                 "module_of" => $typeModules["applicants"] ?? [],
-                "label" => lang('projects.applicants'),
+                "label" => t('projects.applicants'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -258,7 +258,7 @@ class ProjectFields extends Fields
             [
                 "id" => "submission_date",
                 "module_of" => $typeModules["submission_date"] ?? [],
-                "label" => lang('projects.submission_date'),
+                "label" => t('projects.submission_date'),
 
                 'type' => 'datetime',
                 'input' => 'date',
@@ -273,7 +273,7 @@ class ProjectFields extends Fields
             [
                 "id" => "approval_date",
                 "module_of" => $typeModules["approval_date"] ?? [],
-                "label" => lang('projects.approval_date'),
+                "label" => t('projects.approval_date'),
 
                 'type' => 'datetime',
                 'input' => 'date',
@@ -288,7 +288,7 @@ class ProjectFields extends Fields
             [
                 "id" => "rejection_date",
                 "module_of" => $typeModules["rejection_date"] ?? [],
-                "label" => lang('projects.rejection_date'),
+                "label" => t('projects.rejection_date'),
                 'type' => 'datetime',
                 'input' => 'date',
                 'usage' => [
@@ -302,7 +302,7 @@ class ProjectFields extends Fields
             [
                 "id" => "start_date",
                 "module_of" => $typeModules["start_date"] ?? [],
-                "label" => lang('projects.project_start_project_fields'),
+                "label" => t('projects.project_start_project_fields'),
                 'type' => 'datetime',
                 'input' => 'date',
                 'usage' => [
@@ -317,7 +317,7 @@ class ProjectFields extends Fields
             [
                 "id" => "end_date",
                 "module_of" => $typeModules["end_date"] ?? [],
-                "label" => lang('projects.project_end_project_fields'),
+                "label" => t('projects.project_end_project_fields'),
                 'type' => 'datetime',
                 'input' => 'date',
                 'usage' => [
@@ -332,7 +332,7 @@ class ProjectFields extends Fields
             [
                 "id" => "start_proposed",
                 "module_of" => $typeModules["start_proposed"] ?? [],
-                "label" => lang('projects.proposed_project_start'),
+                "label" => t('projects.proposed_project_start'),
                 'type' => 'datetime',
                 'input' => 'date',
                 'usage' => [
@@ -346,7 +346,7 @@ class ProjectFields extends Fields
             [
                 "id" => "end_proposed",
                 "module_of" => $typeModules["end_proposed"] ?? [],
-                "label" => lang('projects.proposed_project_end'),
+                "label" => t('projects.proposed_project_end'),
                 'type' => 'datetime',
                 'usage' => [
                     'filter',
@@ -359,7 +359,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funder",
                 "module_of" => $typeModules["funder"] ?? [],
-                "label" => lang('projects.funder_category'),
+                "label" => t('projects.funder_category'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('funder'),
@@ -376,7 +376,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_organization",
                 "module_of" => $typeModules["funding_organization"] ?? [],
-                "label" => lang('common.funding_organizations'),
+                "label" => t('common.funding_organizations'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -391,7 +391,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_program_select",
                 "module_of" => $typeModules["funding_program_select"] ?? [],
-                "label" => lang('projects.funding_program_category'),
+                "label" => t('projects.funding_program_category'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('funding-program'),
@@ -409,7 +409,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_program",
                 "module_of" => $typeModules["funding_program"] ?? [],
-                "label" => lang('projects.funding_program'),
+                "label" => t('projects.funding_program'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -424,7 +424,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_number",
                 "module_of" => $typeModules["funding_number"] ?? [],
-                "label" => lang('projects.funding_reference_number'),
+                "label" => t('projects.funding_reference_number'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -438,7 +438,7 @@ class ProjectFields extends Fields
             [
                 "id" => "funding_type",
                 "module_of" => $typeModules["funding_type"] ?? [],
-                "label" => lang('projects.funding_type_project_fields'),
+                "label" => t('projects.funding_type_project_fields'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('funding-type'),
@@ -456,7 +456,7 @@ class ProjectFields extends Fields
             [
                 "id" => "project_type",
                 "module_of" => $typeModules["project_type"] ?? [],
-                "label" => lang('projects.project_type_project_fields'),
+                "label" => t('projects.project_type_project_fields'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('project-type'),
@@ -474,7 +474,7 @@ class ProjectFields extends Fields
             [
                 "id" => "joint_project",
                 "module_of" => $typeModules["joint_project"] ?? [],
-                "label" => lang('projects.joint_project'),
+                "label" => t('projects.joint_project'),
                 'type' => 'boolean',
                 'usage' => [
                     'filter',
@@ -489,7 +489,7 @@ class ProjectFields extends Fields
             [
                 "id" => "joint_project_identifier",
                 "module_of" => $typeModules["joint_project"] ?? [],
-                "label" => lang('projects.joint_project_identifier'),
+                "label" => t('projects.joint_project_identifier'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -504,7 +504,7 @@ class ProjectFields extends Fields
             [
                 "id" => "joint_project_title",
                 "module_of" => $typeModules["joint_project"] ?? [],
-                "label" => lang('projects.joint_project_title'),
+                "label" => t('projects.joint_project_title'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -519,7 +519,7 @@ class ProjectFields extends Fields
             [
                 "id" => "joint_project_speaker",
                 "module_of" => $typeModules["joint_project"] ?? [],
-                "label" => lang('projects.joint_project_speaker'),
+                "label" => t('projects.joint_project_speaker'),
                 'type' => 'boolean',
                 'usage' => [
                     'filter',
@@ -534,7 +534,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_income",
                 "module_of" => $typeModules["grant_income"] ?? [],
-                "label" => lang('projects.grant_sum_institute_project_fields'),
+                "label" => t('projects.grant_sum_institute_project_fields'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -547,7 +547,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_income_proposed",
                 "module_of" => $typeModules["grant_income_proposed"] ?? [],
-                "label" => lang('projects.proposed_grant_sum_institute'),
+                "label" => t('projects.proposed_grant_sum_institute'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -560,7 +560,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_sum",
                 "module_of" => $typeModules["grant_sum"] ?? [],
-                "label" => lang('projects.grant_sum_total_project_fields'),
+                "label" => t('projects.grant_sum_total_project_fields'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -573,7 +573,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_sum_proposed",
                 "module_of" => $typeModules["grant_sum_proposed"] ?? [],
-                "label" => lang('projects.proposed_grant_sum_total'),
+                "label" => t('projects.proposed_grant_sum_total'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -586,7 +586,7 @@ class ProjectFields extends Fields
             [
                 "id" => "abstract",
                 "module_of" => $typeModules["abstract"] ?? [],
-                "label" => lang('projects.abstract'),
+                "label" => t('projects.abstract'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -601,7 +601,7 @@ class ProjectFields extends Fields
             [
                 "id" => "abstract_de",
                 "module_of" => $typeModules["abstract_de"] ?? [],
-                "label" => lang('projects.abstract_german_project_fields'),
+                "label" => t('projects.abstract_german_project_fields'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -616,7 +616,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_subproject",
                 "module_of" => $typeModules["grant_subproject"] ?? [],
-                "label" => lang('projects.grant_sum_subproject_project_fields'),
+                "label" => t('projects.grant_sum_subproject_project_fields'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -629,7 +629,7 @@ class ProjectFields extends Fields
             [
                 "id" => "grant_subproject_proposed",
                 "module_of" => $typeModules["grant_subproject_proposed"] ?? [],
-                "label" => lang('projects.proposed_grant_sum_subproject'),
+                "label" => t('projects.proposed_grant_sum_subproject'),
                 'type' => 'integer',
                 'usage' => [
                     'filter',
@@ -642,7 +642,7 @@ class ProjectFields extends Fields
             [
                 "id" => "internal_number",
                 "module_of" => $typeModules["internal_number"] ?? [],
-                "label" => lang('common.internal_id'),
+                "label" => t('common.internal_id'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -657,7 +657,7 @@ class ProjectFields extends Fields
             [
                 "id" => "role",
                 "module_of" => $typeModules["role"] ?? [],
-                "label" => lang('projects.role_of_the_institute'),
+                "label" => t('projects.role_of_the_institute'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('project-institute-role'),
@@ -675,7 +675,7 @@ class ProjectFields extends Fields
             [
                 "id" => "coordinator",
                 "module_of" => $typeModules["coordinator"] ?? [],
-                "label" => lang('projects.coordinator_facility'),
+                "label" => t('projects.coordinator_facility'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -689,7 +689,7 @@ class ProjectFields extends Fields
             [
                 "id" => "scholar",
                 "module_of" => $typeModules["scholar"] ?? [],
-                "label" => lang('projects.scholar'),
+                "label" => t('projects.scholar'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -704,7 +704,7 @@ class ProjectFields extends Fields
             [
                 "id" => "supervisor",
                 "module_of" => $typeModules["supervisor"] ?? [],
-                "label" => lang('projects.supervisor'),
+                "label" => t('projects.supervisor'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -719,7 +719,7 @@ class ProjectFields extends Fields
             [
                 "id" => "university",
                 "module_of" => $typeModules["university"] ?? [],
-                "label" => lang('organizations.university'),
+                "label" => t('organizations.university'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -735,7 +735,7 @@ class ProjectFields extends Fields
             [
                 "id" => "scholarship",
                 "module_of" => $typeModules["scholarship"] ?? [],
-                "label" => lang('projects.funding_organization_scholarship'),
+                "label" => t('projects.funding_organization_scholarship'),
                 'type' => 'string',
                 'usage' => [
                     'aggregate',
@@ -751,7 +751,7 @@ class ProjectFields extends Fields
             [
                 "id" => "countries",
                 "module_of" => $typeModules["countries"] ?? [],
-                "label" => lang('projects.countries_of_research_project_fields'),
+                "label" => t('projects.countries_of_research_project_fields'),
                 'type' => 'list',
                 'usage' => [
                     'aggregate',
@@ -767,7 +767,7 @@ class ProjectFields extends Fields
             [
                 "id" => "comment",
                 "module_of" => $typeModules["comment"] ?? [],
-                "label" => lang('common.comment'),
+                "label" => t('common.comment'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -783,7 +783,7 @@ class ProjectFields extends Fields
             [
                 "id" => "nagoya.enabled",
                 "module_of" => $typeModules["nagoya"] ?? [],
-                "label" => lang('projects.nagoya_protocol_compliance'),
+                "label" => t('projects.nagoya_protocol_compliance'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -797,7 +797,7 @@ class ProjectFields extends Fields
             [
                 "id" => "kdsf-ffk",
                 "module_of" => $typeModules["kdsf-ffk"] ?? [],
-                "label" => lang('projects.research_fields_kdsf'),
+                "label" => t('projects.research_fields_kdsf'),
                 'type' => 'list',
                 'usage' => [
                     'filter',
@@ -812,7 +812,7 @@ class ProjectFields extends Fields
             [
                 "id" => "public",
                 "module_of" => $typeModules["public"] ?? [],
-                "label" => lang('projects.public_presentation_consent'),
+                "label" => t('projects.public_presentation_consent'),
                 'type' => 'boolean',
                 'usage' => [
                     'aggregate',
@@ -826,7 +826,7 @@ class ProjectFields extends Fields
             [
                 "id" => "purpose",
                 "module_of" => $typeModules["purpose"] ?? [],
-                "label" => lang('projects.purpose'),
+                "label" => t('projects.purpose'),
                 'type' => 'string',
                 'input' => 'select',
                 'values' => $this->vocabularyValues('project-purpose'),
@@ -844,7 +844,7 @@ class ProjectFields extends Fields
             [
                 "id" => "website",
                 "module_of" => $typeModules["website"] ?? [],
-                "label" => lang('infrastructures.website'),
+                "label" => t('infrastructures.website'),
                 'type' => 'string',
                 'usage' => [
                     'filter',
@@ -863,7 +863,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_country'),
+                "label" => t('projects.collaborators_country'),
                 "type" => 'list',
                 "scope" => [
                     "project" => false,
@@ -877,7 +877,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_location'),
+                "label" => t('projects.collaborators_location'),
                 "type" => 'list',
                 "scope" => [
                     "project" => false,
@@ -891,7 +891,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_name'),
+                "label" => t('projects.collaborators_name'),
                 "type" => 'list',
                 "scope" => [
                     "project" => false,
@@ -905,7 +905,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_role'),
+                "label" => t('projects.collaborators_role'),
                 "type" => 'list',
                 "values" => ['gold', 'green', 'bronze', 'hybrid', 'open', 'closed'],
                 "input" => 'select',
@@ -921,7 +921,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_ror'),
+                "label" => t('projects.collaborators_ror'),
                 "type" => 'list',
                 "scope" => [
                     "project" => false,
@@ -935,7 +935,7 @@ class ProjectFields extends Fields
                     'columns',
                     'aggregate'
                 ],
-                "label" => lang('projects.collaborators_type'),
+                "label" => t('projects.collaborators_type'),
                 "type" => 'list',
                 "values" => ['Education', 'Healthcare', 'Company', 'Archive', 'Nonprofit', 'Government', 'Facility', 'Other'],
                 "input" => 'select',
@@ -979,7 +979,7 @@ class ProjectFields extends Fields
                 'filter',
                 'columns'
             ],
-            'label' => lang('common.organizational_unit'),
+            'label' => t('common.organizational_unit'),
             'type' => 'list',
             'input' => 'select',
             'values' => $units
@@ -1004,7 +1004,7 @@ class ProjectFields extends Fields
                     'id' => $id,
                     'module_of' => ['general'],
                     'usage' => ['filter', 'columns', 'aggregate'],
-                    'label' => translate($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
+                    'label' => t($id === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives'),
                     'type' => 'list',
                     'input' => 'select',
                     'operators' => ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null', 'exists', 'not_exists'],

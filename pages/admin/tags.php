@@ -20,11 +20,11 @@
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-        <?= lang('common.tags') ?>
+        <?= t('common.tags') ?>
     </h1>
 
     <p>
-        <?= lang('admin.define_tags_that_can_be_attached_to_activities_and_projects') ?>
+        <?= t('admin.define_tags_that_can_be_attached_to_activities_and_projects') ?>
     </p>
 
     <form action="<?= ROOTPATH ?>/crud/admin/general" method="post">
@@ -33,7 +33,7 @@
         <!-- input for name of this keyword -->
         <div class="form-group">
             <label for="position">
-                <h5><?= lang('common.label') ?></h5>
+                <h5><?= t('common.label') ?></h5>
             </label>
 
             <?php
@@ -57,17 +57,17 @@
         ?>
         <div class="form-group">
             <label for="tags" class="font-weight-bold">
-                <?= lang('admin.defined_list_of_tags') ?>:
+                <?= t('admin.defined_list_of_tags') ?>:
             </label>
             <small class="d-block text-muted">
-                <?= lang('admin.define_a_list_of_tags_each_tag_should_be_seperated_by_a_new_line') ?>
+                <?= t('admin.define_a_list_of_tags_each_tag_should_be_seperated_by_a_new_line') ?>
             </small>
             <textarea name="general[tags]" id="tags" class="form-control" rows="10"><?= implode(PHP_EOL, $keywords) ?></textarea>
         </div>
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('common.save_changes') ?>
+            <?= t('common.save_changes') ?>
         </button>
     </form>
 </div>

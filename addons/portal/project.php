@@ -80,7 +80,7 @@
         <div class="col-sm-8 order-sm-first order-last" id="about">
             <?php if (!empty($data['abstract'])) { ?>
                 <h2 class="title">
-                    <?= lang('portal.about_this_project') ?>
+                    <?= t('portal.about_this_project') ?>
                 </h2>
             <?php } ?>
 
@@ -93,13 +93,13 @@
             <?php if (!empty($data['website'] ?? null)) { ?>
                 <a href="<?= $data['website'] ?>" target="_blank" class="btn secondary">
                     <i class="ph ph-arrow-square-out"></i>
-                    <?= lang('portal.visit_website') ?>
+                    <?= t('portal.visit_website') ?>
                 </a>
             <?php } ?>
 
 
             <h2 class="title mb-0" id="team">
-                <?= lang('common.team') ?>
+                <?= t('common.team') ?>
             </h2>
             <?php if (!empty($data['persons'] ?? array())) { ?>
                 <div class="row row-eq-spacing mt-0">
@@ -141,18 +141,18 @@
             if ($data['activities'] > 0) { ?>
 
                 <h3 class="title mt-20" id="research-output">
-                    <?= lang('portal.research_output') ?>
+                    <?= t('portal.research_output') ?>
                 </h3>
 
                 <div class=" w-full">
                     <table class="table datatable responsive" id="activities-table"
                         data-table="activities"
                         data-source="./all-activities.json"
-                        data-lang="<?= lang('common.this_language') ?>">
+                        data-lang="<?= t('common.this_language') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=lang('common.type_statistics')?></th>
-                                <th data-col="html" data-search-col="search"><?=lang('common.activity')?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?=t('common.type_statistics')?></th>
+                                <th data-col="html" data-search-col="search"><?=t('common.activity')?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -207,7 +207,7 @@
                     <a class="btn primary float-right" href="#cooperation-partners">Zeige Liste</a>
 
                     <h2>
-                        <?= lang('common.collaborators') ?>
+                        <?= t('common.collaborators') ?>
                         (<?= count($data['collaborators']) ?>)
                     </h2>
 
@@ -218,18 +218,18 @@
                             class="portfolio-map map h-500 w-full"
                             data-source="./collaborators-map.json"
                             data-context="project"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                         </div>
                     </div>
                     <p>
                         <i class="ph ph-duotone ph-circle" style="color:#f78104"></i>
-                        <?= lang('common.coordinator') ?>
+                        <?= t('common.coordinator') ?>
                         <br>
                         <i class="ph ph-duotone ph-circle" style="color:#008083"></i>
                         Partner
                         <br>
                         <i class="ph ph-duotone ph-circle" style="color:#cccccc"></i>
-                        <?= lang('portal.accociated') ?>
+                        <?= t('portal.accociated') ?>
                     </p>
 
                     <div class="modal" id="cooperation-partners" tabindex="-1" role="dialog">
@@ -247,7 +247,7 @@
                                             ?>
                                                 <tr>
                                                     <td>
-                                                        <?= lang('common.no_collaborators_connected') ?>
+                                                        <?= t('common.no_collaborators_connected') ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -365,7 +365,7 @@
                                         data.lat.push(item.data.lat);
                                         var text = `<b>${item.data.name}</b>`;
                                         if (PROJECT && !item.data.current) {
-                                            text += `<br>${item.count} ${<?= json_encode(lang('common.projects'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}`;
+                                            text += `<br>${item.count} ${<?= json_encode(t('common.projects'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}`;
                                         }
                                         if (item.data.location) {
                                             text += `<br>${item.data.location}`;
@@ -409,7 +409,7 @@
 
         <div class="col-md-4 position-relative">
             <h2>
-                <?= lang('common.details') ?>
+                <?= t('common.details') ?>
             </h2>
             <table class="table ">
                 <tbody>
@@ -440,7 +440,7 @@
                                     <b><?= format_date($data['start_date']) ?></b>
                                 </div>
                                 <div>
-                                    <span class="key"><?= lang('common.end') ?></span>
+                                    <span class="key"><?= t('common.end') ?></span>
                                     <b><?= format_date($data['end_date']) ?></b>
                                 </div>
                             </div>
@@ -448,7 +448,7 @@
                                 <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
                             </div> <?php if ($progress == 100) { ?>
                                 <small class="text-secondary">
-                                    <?= lang('common.completed') ?>
+                                    <?= t('common.completed') ?>
                                 </small>
                             <?php } ?>
                         </td>
@@ -473,14 +473,14 @@
 
                     <tr>
                         <td>
-                            <span class="key"><?= lang('projects.project_type') ?></span>
+                            <span class="key"><?= t('projects.project_type') ?></span>
                             <b><?= lang($data['type'] ?? '-') ?></b>
                         </td>
                     </tr>
                     <?php if (isset($data['funder'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('portal.third_party_funder') ?></span>
+                                <span class="key"><?= t('portal.third_party_funder') ?></span>
                                 <b><?= $data['funder'] ?? '-' ?></b>
                             </td>
                         </tr>
@@ -488,7 +488,7 @@
                     <?php if (isset($data['funding_organization'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('common.funding_organizations') ?></span>
+                                <span class="key"><?= t('common.funding_organizations') ?></span>
                                 <b><?= $data['funding_organization'] ?? '-' ?></b>
                             </td>
                         </tr>
@@ -496,7 +496,7 @@
                     <?php if (isset($data['funding_number'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('portal.funding_reference_number_s') ?></span>
+                                <span class="key"><?= t('portal.funding_reference_number_s') ?></span>
                                 <b><?= is_iterable($data['funding_number'] ?? null) ? implode(', ', $data['funding_number']) : '-' ?></b>
                             </td>
                         </tr>
@@ -504,7 +504,7 @@
                     <?php if (isset($data['coordinator'])): ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('projects.coordinator_facility') ?></span>
+                                <span class="key"><?= t('projects.coordinator_facility') ?></span>
                                 <b><?= $data['coordinator'] ?? '-' ?></b>
                             </td>
                         </tr>
@@ -519,9 +519,9 @@
                     ?>
                         <tr>
                             <td>
-                                <span class="key"><?= lang('portal.project_logo') ?></span>
+                                <span class="key"><?= t('portal.project_logo') ?></span>
                                 <div>
-                                    <img src="<?= $img_path ?>" class="img-fluid" alt="<?= lang('projects.project_image') ?>">
+                                    <img src="<?= $img_path ?>" class="img-fluid" alt="<?= t('projects.project_image') ?>">
                                 </div>
                             </td>
                         </tr>
@@ -534,22 +534,22 @@
 
             <nav class="on-this-page-nav">
                 <div class="content">
-                    <div class="title"><?= lang('common.on_this_page') ?></div>
+                    <div class="title"><?= t('common.on_this_page') ?></div>
 
                     <a href="#about">
-                        <?= lang('portal.about_this_project') ?>
+                        <?= t('portal.about_this_project') ?>
                     </a>
                     <a href="#team">
-                        <?= lang('common.team') ?>
+                        <?= t('common.team') ?>
                     </a>
                     <?php if ($data['activities'] > 0) { ?>
                         <a href="#research-output">
-                            <?= lang('portal.research_output') ?>
+                            <?= t('portal.research_output') ?>
                         </a>
                     <?php } ?>
                     <?php if (!empty($data['collaborators'] ?? [])) { ?>
                         <a href="#collaborators">
-                            <?= lang('common.collaborators') ?>
+                            <?= t('common.collaborators') ?>
                         </a>
                     <?php } ?>
 

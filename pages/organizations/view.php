@@ -118,14 +118,14 @@ if ($edit_perm) { ?>
                 </a>
 
                 <h2 class="title">
-                    <?= lang('organizations.change_organization_logo') ?>
+                    <?= t('organizations.change_organization_logo') ?>
                 </h2>
 
                 <form action="<?= ROOTPATH ?>/crud/organizations/upload-picture/<?= $mongo_id ?>" method="post" enctype="multipart/form-data">
                     <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
                     <div class="custom-file mb-20" id="file-input-div">
-                        <input type="file" id="profile-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>" accept="image/*" required>
-                        <label for="profile-input"><?= lang('common.select_new_logo') ?></label>
+                        <input type="file" id="profile-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>" accept="image/*" required>
+                        <label for="profile-input"><?= t('common.select_new_logo') ?></label>
                         <br><small class="text-danger">Max. 2 MB.</small>
                     </div>
 
@@ -134,14 +134,14 @@ if ($edit_perm) { ?>
 
                         uploadField.onchange = function() {
                             if (this.files[0].size > 2097152) {
-                                toastError(<?= json_encode(lang('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                                toastError(<?= json_encode(t('common.file_is_too_large_max_2mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                                 this.value = "";
                             };
                         };
                     </script>
                     <button class="btn primary">
                         <i class="ph ph-upload"></i>
-                        <?= lang('action.upload') ?>
+                        <?= t('action.upload') ?>
                     </button>
                 </form>
 
@@ -150,7 +150,7 @@ if ($edit_perm) { ?>
                     <input type="hidden" name="delete" value="true">
                     <button class="btn danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('common.delete_current_picture') ?>
+                        <?= t('common.delete_current_picture') ?>
                     </button>
                 </form>
             </div>
@@ -164,7 +164,7 @@ if ($edit_perm) { ?>
     <div class="d-flex align-items-center mb-20">
         <div class="position-relative mr-20">
             <?php
-            Organization::printLogo($organization, 'org-logo', lang('common.logo_of') . ' ' . $organization['name'], $organization['type'] ?? '');
+            Organization::printLogo($organization, 'org-logo', t('common.logo_of') . ' ' . $organization['name'], $organization['type'] ?? '');
             ?>
 
             <?php if ($edit_perm) { ?>
@@ -179,7 +179,7 @@ if ($edit_perm) { ?>
         <?php if ($Settings->hasPermission('organizations.edit')) { ?>
             <a href="<?= ROOTPATH ?>/organizations/edit/<?= $mongo_id ?>" class="btn primary">
                 <i class="ph ph-edit"></i>
-                <?= lang('organizations.edit_organization') ?>
+                <?= t('organizations.edit_organization') ?>
             </a>
         <?php } ?>
     </div>
@@ -191,7 +191,7 @@ if ($edit_perm) { ?>
                 <tbody>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('common.type') ?></span>
+                            <span class="key"><?= t('common.type') ?></span>
                             <div class="d-flex justify-content-between align-items-center">
                                 <?= ucfirst($organization['type']) ?>
                                 <?= Organization::getIcon($organization['type'], 'ph-fw ph-2x m-0') ?>
@@ -200,25 +200,25 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('common.name') ?></span>
+                            <span class="key"><?= t('common.name') ?></span>
                             <?= $organization['name'] ?>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <span class="key"><?= lang('common.synonyms_alternative_names_acronyms') ?></span>
+                            <span class="key"><?= t('common.synonyms_alternative_names_acronyms') ?></span>
                             <?= !empty($organization['synonyms']) ? implode(', ', DB::doc2Arr($organization['synonyms'])) : '-' ?>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('common.location') ?></span>
+                            <span class="key"><?= t('common.location') ?></span>
                             <?= $organization['location'] ?? '-' ?>
                         </td>
                         <td>
-                            <span class="key"><?= lang('common.country') ?></span>
+                            <span class="key"><?= t('common.country') ?></span>
                             <?php if (!empty($organization['country'] ?? '')) { ?>
-                                <?= $DB->getCountry($organization['country'], lang('common.field_name_language')) ?>
+                                <?= $DB->getCountry($organization['country'], t('common.field_name_language')) ?>
                             <?php } else { ?>
                                 -
                             <?php } ?>
@@ -227,17 +227,17 @@ if ($edit_perm) { ?>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('common.latitude') ?></span>
+                            <span class="key"><?= t('common.latitude') ?></span>
                             <?= $organization['lat'] ?? '-' ?>
                         </td>
                         <td>
-                            <span class="key"><?= lang('common.longitude') ?></span>
+                            <span class="key"><?= t('common.longitude') ?></span>
                             <?= $organization['lng'] ?? '-' ?>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span class="key"><?= lang('organizations.ror') ?></span>
+                            <span class="key"><?= t('organizations.ror') ?></span>
                             <?php if (!empty($organization['ror'] ?? '')) { ?>
                                 <a href="<?= $organization['ror'] ?>" target="_blank" rel="noopener noreferrer">
                                     <i class="ph ph-arrow-square-out"></i>
@@ -249,7 +249,7 @@ if ($edit_perm) { ?>
                         </td>
 
                         <td>
-                            <span class="key"><?= lang('common.url') ?></span>
+                            <span class="key"><?= t('common.url') ?></span>
                             <?php if (!empty($organization['url'] ?? '')) {
                                 $url = $organization['url'];
                                 if (isset($url['value'])) {
@@ -271,11 +271,11 @@ if ($edit_perm) { ?>
                     <tr>
                         <!-- is_collaborator -->
                         <td>
-                            <span class="key"><?= lang('organizations.collaborator') ?></span>
-                            <?= isset($organization['is_collaborator']) && $organization['is_collaborator'] ? lang('common.yes') : lang('common.no') ?>
+                            <span class="key"><?= t('organizations.collaborator') ?></span>
+                            <?= isset($organization['is_collaborator']) && $organization['is_collaborator'] ? t('common.yes') : t('common.no') ?>
                         </td>
                         <td>
-                            <span class="key"><?= lang('organizations.collaboration_timeframe') ?></span>
+                            <span class="key"><?= t('organizations.collaboration_timeframe') ?></span>
                             <?= fromToYear($organization['collaboration_start_date'] ?? null, $organization['collaboration_end_date'] ?? null, true) ?>
                         </td>
                     </tr>
@@ -411,7 +411,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 ?>
     <div id="spectrum-container">
         <h2>
-            <?= lang('organizations.associated_research_spectrum') ?>
+            <?= t('organizations.associated_research_spectrum') ?>
         </h2>
         <?php
         if (!empty($spectrum)) :
@@ -419,7 +419,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
             Spectrum::render($spectrum, $count_spectrum);
         else : ?>
             <p>
-                <?= lang('organizations.no_research_spectrum_is_assigned_to_this_organization') ?>
+                <?= t('organizations.no_research_spectrum_is_assigned_to_this_organization') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -429,14 +429,14 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 <?php if (!empty($activities)) { ?>
 
     <h2>
-        <?= lang('common.connected_activities') ?>
+        <?= t('common.connected_activities') ?>
     </h2>
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="activities-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.type') ?></th>
-                    <th><?= lang('common.activity') ?></th>
+                    <th><?= t('common.type') ?></th>
+                    <th><?= t('common.activity') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -472,15 +472,15 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('projects') && !empty($projects)) { ?>
     <h2>
-        <?= lang('common.connected_projects') ?>
+        <?= t('common.connected_projects') ?>
     </h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="projects-table">
             <thead>
                 <tr>
-                    <th class="w-100"><?= lang('common.type') ?></th>
-                    <th><?= lang('common.project') ?></th>
+                    <th class="w-100"><?= t('common.type') ?></th>
+                    <th><?= t('common.project') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -509,7 +509,7 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('infrastructures') && !empty($infrastructures)) { ?>
     <h2>
-        <?= lang('organizations.connected_infrastructures') ?>
+        <?= t('organizations.connected_infrastructures') ?>
     </h2>
 
     <div class="mt-20 w-full">
@@ -555,15 +555,15 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 
 <?php if ($Settings->featureEnabled('teaching-modules', true) && !empty($teaching_modules)) { ?>
     <h2>
-        <?= lang('organizations.connected_teaching_modules') ?>
+        <?= t('organizations.connected_teaching_modules') ?>
     </h2>
 
     <div class="mt-20 w-full">
         <table class="table dataTable responsive" id="teaching-modules-table">
             <thead>
                 <tr>
-                    <th><?= lang('common.module_no') ?></th>
-                    <th><?= lang('common.title') ?></th>
+                    <th><?= t('common.module_no') ?></th>
+                    <th><?= t('common.title') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -594,19 +594,19 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
 <?php if ($Settings->hasPermission('organizations.delete')) { ?>
     <button type="button" class="btn danger mt-20" id="delete-organization" onclick="$('#delete-organization-confirm').toggle();$(this).toggle();">
         <i class="ph ph-trash"></i>
-        <?= lang('organizations.delete_organization') ?>
+        <?= t('organizations.delete_organization') ?>
     </button>
 
     <div class="mt-20 alert danger" style="display: none;" id="delete-organization-confirm">
         <form action="<?= ROOTPATH ?>/crud/organizations/delete/<?= $str_id ?>" method="post">
             <h4 class="title">
-                <?= lang('organizations.delete_organization') ?>
+                <?= t('organizations.delete_organization') ?>
             </h4>
             <p>
-                <?= lang('organizations.are_you_sure_you_want_to_delete_this_organization') ?>
+                <?= t('organizations.are_you_sure_you_want_to_delete_this_organization') ?>
             </p>
             <button type="submit" class="btn danger">
-                <?= lang('action.delete') ?>
+                <?= t('action.delete') ?>
             </button>
         </form>
     </div>

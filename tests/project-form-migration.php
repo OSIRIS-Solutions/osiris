@@ -18,7 +18,7 @@ function check(bool $condition, string $message): void {
     if (!$condition) throw new RuntimeException($message);
 }
 function lang($en, $de = null) { return $en; }
-function translate($key) { global $language, $testLanguage; return $language->resolve($key, $testLanguage ?? 'en', 'en'); }
+function t($key) { global $language, $testLanguage; return $language->resolve($key, $testLanguage ?? 'en', 'en'); }
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function migrationCard(...$args) {}
 class DB {

@@ -38,11 +38,11 @@ $renderRow = function ($index, $person = []) use ($roles, $accounts, $showDates,
     <?php if ($showDates): ?>
         <div class="project-person-dates mt-10" id="project-person-dates-<?= e($index) ?>" <?= $customDates ? '' : 'hidden' ?>>
             <div class="form-group">
-                <label for="project-person-start-<?= e($index) ?>"><?= lang('common.start') ?></label>
+                <label for="project-person-start-<?= e($index) ?>"><?= t('common.start') ?></label>
                 <input type="date" class="form-control" id="project-person-start-<?= e($index) ?>" data-person-date="start" data-inherited="<?= empty($person['start']) || $person['start'] === $projectDates['start'] ? 'true' : 'false' ?>" name="values[persons][<?= e($index) ?>][start]" value="<?= e($customDates ? ($person['start'] ?? $projectDates['start']) : '') ?>">
             </div>
             <div class="form-group">
-                <label for="project-person-end-<?= e($index) ?>"><?= lang('common.end') ?></label>
+                <label for="project-person-end-<?= e($index) ?>"><?= t('common.end') ?></label>
                 <input type="date" class="form-control" id="project-person-end-<?= e($index) ?>" data-person-date="end" data-inherited="<?= empty($person['end']) || $person['end'] === $projectDates['end'] ? 'true' : 'false' ?>" name="values[persons][<?= e($index) ?>][end]" value="<?= e($customDates ? ($person['end'] ?? $projectDates['end']) : '') ?>">
             </div>
         </div>
@@ -70,17 +70,17 @@ $renderRow = function ($index, $person = []) use ($roles, $accounts, $showDates,
         <?php if ($showDates): ?>
             <button type="button" class="btn toggle-project-person-dates <?= $customDates ? 'secondary' : '' ?>" aria-expanded="<?= $customDates ? 'true' : 'false' ?>" aria-controls="project-person-dates-<?= e($index) ?>" title="<?= e(lang('Individual membership dates (toggle to use project dates)', 'Individuelle Laufzeit (erneut klicken für Projektlaufzeit)')) ?>" aria-label="<?= e(lang('Individual membership dates', 'Individuelle Laufzeit')) ?>"><i class="ph ph-clock"></i></button>
         <?php endif; ?>
-        <button type="button" class="btn text-danger remove-project-person" aria-label="<?= e(lang('action.delete')) ?>"><i class="ph ph-trash"></i></button></td>
+        <button type="button" class="btn text-danger remove-project-person" aria-label="<?= e(t('action.delete')) ?>"><i class="ph ph-trash"></i></button></td>
 </tr>
 <?php }; ?>
 <div class="data-module col-sm-<?= $width ?>" data-module="persons-project" id="module-persons-project">
     <label class="floating-title <?= $labelClass ?>"><?= e($label) ?></label>
     <input type="hidden" name="values[persons]" value="">
     <div class="table-responsive"><table class="table simple small">
-        <thead><tr><th><?= lang('common.persons') ?></th><th><?= lang('common.role') ?></th><th><?= lang('common.units') ?></th><th></th></tr></thead>
+        <thead><tr><th><?= t('common.persons') ?></th><th><?= t('common.role') ?></th><th><?= t('common.units') ?></th><th></th></tr></thead>
         <tbody><?php foreach ($persons as $index => $person) $renderRow($index, $person); ?></tbody>
     </table></div>
-    <button type="button" class="btn add-project-person"><i class="ph ph-plus"></i> <?= lang('activities.add_person') ?></button>
+    <button type="button" class="btn add-project-person"><i class="ph ph-plus"></i> <?= t('activities.add_person') ?></button>
     <?php if ($showDates): ?><p class="text-muted small"><?= lang('Membership covers the project duration. Use the clock to specify a different period.', 'Die Mitgliedschaft gilt für die gesamte Projektlaufzeit. Über die Uhr lässt sich ein abweichender Zeitraum festlegen.') ?></p><?php endif; ?>
     <?= $this->render_help($help) ?>
     <template><?php $renderRow('__INDEX__'); ?></template>

@@ -64,7 +64,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
     }
 
     .row.row-eq-spacing.droparea::after {
-        content: "<?= lang('admin.select_fields_on_the_left_and_place_them_here') ?>";
+        content: "<?= t('admin.select_fields_on_the_left_and_place_them_here') ?>";
         position: absolute;
         bottom: 10px;
         left: 50%;
@@ -269,7 +269,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
             </button>
             <div id="field-preview"></div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= t('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -282,29 +282,29 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('admin.field_properties') ?>
+                <?= t('admin.field_properties') ?>
             </h2>
 
             <!-- required: cannot be saved without a value -->
             <!-- recommended: influences the quality score of the entry -->
             <p>
-                <?= lang('admin.required_fields_must_be_filled_in_by_the_user_otherwise_the_form_cannot_be') ?>
+                <?= t('admin.required_fields_must_be_filled_in_by_the_user_otherwise_the_form_cannot_be') ?>
             </p>
 
             <p>
-                <?= lang('admin.recommended_fields_are_highlighted_but_not_mandatory_they_will_in_the_futur') ?>
+                <?= t('admin.recommended_fields_are_highlighted_but_not_mandatory_they_will_in_the_futur') ?>
             </p>
 
             <div class="alert signal my-20">
-                <?=lang('admin.recommended_fields_have_currently_no_impact_but_are_here_in_preparation_for')?>
+                <?=t('admin.recommended_fields_have_currently_no_impact_but_are_here_in_preparation_for')?>
             </div>
 
             <p>
-                <?= lang('admin.please_be_aware_that_the_portfolio_setting_only_affects_the_visibility_in_t') ?>
+                <?= t('admin.please_be_aware_that_the_portfolio_setting_only_affects_the_visibility_in_t') ?>
             </p>
 
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= t('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -317,12 +317,12 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('admin.form_preview') ?>: <?= lang($type['name'] ?? $type['id'], $type['name_de'] ?? null) ?>
+                <?= t('admin.form_preview') ?>: <?= lang($type['name'] ?? $type['id'], $type['name_de'] ?? null) ?>
             </h2>
             <div id="data-modules" class="row row-eq-spacing">
             </div>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= t('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -337,18 +337,18 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2 class="title">
-                <?= lang('admin.load_form') ?>
+                <?= t('admin.load_form') ?>
             </h2>
 
             <p class="text-muted">
-                <?= lang('admin.select_a_form_to_load_its_fields_into_the_builder') ?>
+                <?= t('admin.select_a_form_to_load_its_fields_into_the_builder') ?>
             </p>
 
             <form action="#" method="GET">
                 <div class="form-group">
-                    <label for="load-form-select"><?= lang('admin.select_form') ?></label>
+                    <label for="load-form-select"><?= t('admin.select_form') ?></label>
                     <select id="load-form-select" class="form-control" name="copy" required>
-                        <option value="" disabled selected><?= lang('admin.select_a_form') ?></option>
+                        <option value="" disabled selected><?= t('admin.select_a_form') ?></option>
                         <?php 
                         $formTypes = $osiris->adminTypes->find(['id' => ['$ne' => $type['id']]])->toArray();
                         $currentParent = $type['parent'] ?? null;
@@ -369,16 +369,16 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                 <p class="text-signal">
                     <i class="ph ph-info"></i>
-                    <?= lang('admin.this_will_load_the_select_form_into_the_builder_however_as_long_as_you_do_n') ?>
+                    <?= t('admin.this_will_load_the_select_form_into_the_builder_however_as_long_as_you_do_n') ?>
                 </p>
 
                 <button class="btn signal">
                     <i class="ph ph-download-simple"></i>
-                    <?= lang('admin.load_form') ?>
+                    <?= t('admin.load_form') ?>
                 </button>
             </form>
             <div class="text-right mt-20">
-                <button class="btn mr-5" type="button" data-dismiss="modal"><?= lang('action.close') ?></button>
+                <button class="btn mr-5" type="button" data-dismiss="modal"><?= t('action.close') ?></button>
             </div>
         </div>
     </div>
@@ -390,22 +390,22 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
     <?php if ($config->canBeCopied): ?>
     <a class="btn" href="#load-form">
         <i class="ph ph-download-simple"></i>
-        <?= lang('admin.load_form') ?>
+        <?= t('admin.load_form') ?>
     </a>
     <?php endif; ?>
     <a class="btn" href="<?= $config->backUrl ?>">
         <i class="ph ph-x"></i>
-        <?= lang('action.cancel') ?>
+        <?= t('action.cancel') ?>
     </a>
 </div>
 
 <a href="<?= $config->backUrl ?>">
     <i class="ph ph-arrow-left"></i>
-    <?= lang('admin.back_to_configuration') ?>
+    <?= t('admin.back_to_configuration') ?>
 </a>
 
 <h1 class="m-0">
-    <?= lang('admin.form_builder') ?>
+    <?= t('admin.form_builder') ?>
 </h1>
 
 <ul class="breadcrumb category" style="--highlight-color:<?= $parent['color'] ?? '' ?>">
@@ -425,9 +425,9 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
 <?php if ($copy && $config->canBeCopied) { ?>
     <div class="alert info">
-        <?= lang('admin.you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp') ?>: <strong><?= lang($copy['name'], $copy['name_de'] ?? null) ?></strong>.
+        <?= t('admin.you_have_loaded_the_fields_from_the_following_activity_into_your_working_sp') ?>: <strong><?= lang($copy['name'], $copy['name_de'] ?? null) ?></strong>.
         <br>
-        <?= lang('admin.once_you_save_the_form_it_will_overwrite_the_fields_of_this_activity') ?>
+        <?= t('admin.once_you_save_the_form_it_will_overwrite_the_fields_of_this_activity') ?>
     </div>
 <?php } ?>
 
@@ -441,11 +441,11 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
         <div class="col-4" id="catalog-panel">
             <div class="panel card catalog sticky-panel pt-0">
                 <div class="card-header" id="catalog-search-header">
-                    <input id="catalog-search" type="search" class="form-control" placeholder="<?= lang('admin.search_in_fields') ?>">
+                    <input id="catalog-search" type="search" class="form-control" placeholder="<?= t('admin.search_in_fields') ?>">
 
                     <!-- Layout-Sektion -->
                     <div class="pillbar">
-                        <a class="badge tag" data-tag="all"><?= lang('common.all') ?></a>
+                        <a class="badge tag" data-tag="all"><?= t('common.all') ?></a>
                         <!-- <a class="badge tag" data-tag="layout">Layout</a> -->
                         <?php foreach ($config->tags as $tag): ?>
                             <a class="badge tag" data-tag="<?= $tag ?>"><?= localized(FormBuilder::$tagLabels[$tag]?? ucfirst($tag)) ?></a>
@@ -460,22 +460,22 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-heading" data-label="Überschrift">
-                            <span><?= lang('common.heading') ?></span>
+                            <span><?= t('common.heading') ?></span>
                             <!-- <span class="badge bg-light ">H2–H4</span> -->
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-hr" data-label="Trennlinie">
-                            <span><?= lang('admin.horizontal_line') ?></span>
+                            <span><?= t('admin.horizontal_line') ?></span>
                         </li>
                         <li class="drag-item"
                             data-tag="layout"
                             data-type="layout-paragraph" data-label="Absatz">
-                            <span><?= lang('common.paragraph') ?></span>
+                            <span><?= t('common.paragraph') ?></span>
                         </li>
                     </ul>
 
-                    <div class="font-size-12 text-muted"><?= lang('common.custom_fields') ?></div>
+                    <div class="font-size-12 text-muted"><?= t('common.custom_fields') ?></div>
                     <ul id="catalog-custom" class="list-group mb-10">
                         <?php foreach ($config->modules as $id => $field) {
                             if ($field['type'] !== 'custom' || in_array($id, array_column($fields, 'id'))) {
@@ -497,7 +497,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                     </ul>
 
-                    <div class="font-size-12 text-muted mt-10"><?= lang('common.data_fields') ?></div>
+                    <div class="font-size-12 text-muted mt-10"><?= t('common.data_fields') ?></div>
                     <ul id="catalog-list" class="list-group mb-10">
                         <?php foreach ($config->modules as $id => $def):
                             // skip elements that are in the form already
@@ -534,25 +534,25 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 <button type="button" class="close" role="button" aria-label="Close" id="close-properties-btn">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <!-- <b><?= lang('admin.properties_of') ?></b><br> -->
+                <!-- <b><?= t('admin.properties_of') ?></b><br> -->
                 <div class="title text-monospace" id="prop-id">
                 </div>
                 <div class="card-body">
 
                     <div class="action mb-20">
                         <button class="btn small danger" type="button" id="deleteSelection">
-                            <i class="ph ph-trash"></i> <?= lang('admin.delete_element') ?>
+                            <i class="ph ph-trash"></i> <?= t('admin.delete_element') ?>
                         </button>
                     </div>
 
                     <p id="system-field-note" class="text-muted" hidden>
                         <i class="ph ph-lock-simple"></i>
-                        <?= lang('admin.system_field_can_be_moved_but_cannot_be_removed_or_hidden') ?>
+                        <?= t('admin.system_field_can_be_moved_but_cannot_be_removed_or_hidden') ?>
                     </p>
 
                     <div id="props-field" style="display:none;">
                         <b>
-                            <?= lang('admin.overwrite_the_default_label') ?>
+                            <?= t('admin.overwrite_the_default_label') ?>
                         </b>
                         <div class="form-group">
                             <div class="input-group">
@@ -571,34 +571,34 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                         <div class="form-group">
                             <b>
-                                <?= lang('admin.field_properties') ?>
+                                <?= t('admin.field_properties') ?>
                                 <a href="#field-props-modal">
                                     <i class="ph ph-info"></i> 
                                 </a>
                             </b>
                             <div class="custom-checkbox radio mt-10">
                                 <input type="checkbox" id="prop-required" value="">
-                                <label for="prop-required"><?= lang('admin.required_field') ?></label>
+                                <label for="prop-required"><?= t('admin.required_field') ?></label>
                             </div>
 
                             <div class="custom-checkbox radio mt-10">
                                 <input type="checkbox" id="prop-recommended" value="">
-                                <label for="prop-recommended"><?= lang('admin.recommended_field') ?></label>
+                                <label for="prop-recommended"><?= t('admin.recommended_field') ?></label>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="custom-switch">
                                 <input type="checkbox" id="prop-portfolio" value="">
-                                <label for="prop-portfolio"><?= lang('admin.deliver_in_portfolio') ?></label>
+                                <label for="prop-portfolio"><?= t('admin.deliver_in_portfolio') ?></label>
                             </div>
                         </div>
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0"><?= lang('admin.visible_for') ?></label>
+                            <label class="font-weight-bold d-block mb-0"><?= t('admin.visible_for') ?></label>
                             <select id="prop-roles" class="form-control">
-                                <option value="" selected><?= lang('admin.all_roles') ?></option>
+                                <option value="" selected><?= t('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -611,7 +611,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
 
                         <b>
-                            <?= lang('admin.help_text') ?>
+                            <?= t('admin.help_text') ?>
                         </b>
                         <div class="form-group">
                             <div class="input-group">
@@ -629,10 +629,10 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                         </div>
 
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0"><?= lang('admin.width') ?></label>
+                            <label class="font-weight-bold d-block mb-0"><?= t('admin.width') ?></label>
                             <select class="form-control w-auto d-inline" id="prop-width">
                                 <option value="" selected>Default</option>
-                                <option value="12"><?= lang('admin.full_width') ?></option>
+                                <option value="12"><?= t('admin.full_width') ?></option>
                                 <option value="9">3/4</option>
                                 <option value="8">2/3</option>
                                 <option value="6">1/2</option>
@@ -664,9 +664,9 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0" for="prop-heading-roles"><?= lang('admin.visible_for') ?></label>
+                            <label class="font-weight-bold d-block mb-0" for="prop-heading-roles"><?= t('admin.visible_for') ?></label>
                             <select id="prop-heading-roles" class="form-control">
-                                <option value="" selected><?= lang('admin.all_roles') ?></option>
+                                <option value="" selected><?= t('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -688,9 +688,9 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
                         <!-- role visibility -->
                         <div class="form-group">
-                            <label class="font-weight-bold d-block mb-0" for="prop-paragraph-roles"><?= lang('admin.visible_for') ?></label>
+                            <label class="font-weight-bold d-block mb-0" for="prop-paragraph-roles"><?= t('admin.visible_for') ?></label>
                             <select id="prop-paragraph-roles" class="form-control">
-                                <option value="" selected><?= lang('admin.all_roles') ?></option>
+                                <option value="" selected><?= t('admin.all_roles') ?></option>
                                 <?php foreach ($Settings->getRoles() as $role) {
                                     if ($role === 'user') continue; // skip user role since it basically means everyone
                                 ?>
@@ -711,7 +711,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
         <div class="col-8">
             <div class="panel card">
                 <div class="card-header d-flex align-items-center">
-                    <div class="title"><?= lang('admin.this_form') ?></div>
+                    <div class="title"><?= t('admin.this_form') ?></div>
                     <div class="ml-auto">
                         <span class="badge" id="field-count">Felder: 0</span>
                     </div>
@@ -744,7 +744,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                         <div class="flex-fill">
                                             <div class="title">
                                                 <?php if (isset($systemFields[$it['id']])): ?>
-                                                    <i class="ph ph-lock-simple" title="<?= lang('admin.system_field') ?>"></i>
+                                                    <i class="ph ph-lock-simple" title="<?= t('admin.system_field') ?>"></i>
                                                 <?php endif; ?>
                                                 <?= e($label) ?>
                                             </div>
@@ -784,7 +784,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                             <i class="ph ph-text-h"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('admin.header_form_builder') ?></div>
+                                            <div class="title"><?= t('admin.header_form_builder') ?></div>
                                             <div class="subtitle">
                                                 <?= (e($it['props']['text'] ?? 'Platzhaltertext')) ?>
                                                 <?php if (!empty($it['props']['roles'])): ?>
@@ -801,7 +801,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                             <i class="ph ph-paragraph"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('common.paragraph') ?></div>
+                                            <div class="title"><?= t('common.paragraph') ?></div>
                                             <div class="subtitle">
                                                 <?= e(($it['props']['text'] ?? 'Placeholder')) ?>
                                                 <?php if (!empty($it['props']['roles'])): ?>
@@ -817,7 +817,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                                             <i class="ph ph-minus"></i>
                                         </div>
                                         <div class="flex-fill">
-                                            <div class="title"><?= lang('admin.horizontal_line_form_builder') ?></div>
+                                            <div class="title"><?= t('admin.horizontal_line_form_builder') ?></div>
                                         </div>
                                     </li>
                                 <?php endif; ?>
@@ -835,11 +835,11 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                 <div class="sticky-footer text-end">
                     <button class="btn primary" type="submit" id="saveBtn">
                         <i class="ph ph-floppy-disk"></i>
-                        <?= lang('action.save') ?>
+                        <?= t('action.save') ?>
                     </button>
                     <button class="btn" type="button" id="preview-button">
                         <i class="ph ph-eye"></i>
-                        <?= lang('common.preview') ?>
+                        <?= t('common.preview') ?>
                     </button>
                 </div>
             </div>
@@ -1140,7 +1140,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
                     props.portfolio = false;
                 }
                 $selected.data('props', props);
-                const ownLabel = <?= json_encode(lang('common.this_language')) ?> === 'de' && props.label_de ? props.label_de : props.label;
+                const ownLabel = <?= json_encode(t('common.this_language')) ?> === 'de' && props.label_de ? props.label_de : props.label;
                 if (ownLabel) $selected.find('.title').text(ownLabel);
                 else $selected.find('.title').html(defaults.label || '—');
 
@@ -1288,7 +1288,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
             console.log(schema);
             // check if schema is empty
             if (schema.items.length === 0) {
-                toastError(<?= json_encode(lang('admin.the_form_does_not_contain_any_fields_please_add_at_least_one_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                toastError(<?= json_encode(t('admin.the_form_does_not_contain_any_fields_please_add_at_least_one_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                 return;
             }
 
@@ -1297,17 +1297,17 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
             ids = ids.filter(id => id); // remove empty IDs
             var duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
             if (duplicates.length > 0) {
-                toastError(<?= json_encode(lang('admin.the_form_contains_duplicate_ids'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + duplicates.join(', '));
+                toastError(<?= json_encode(t('admin.the_form_contains_duplicate_ids'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + duplicates.join(', '));
                 return;
             }
 
             if (ids.some(id => id.endsWith('-loc') && ids.includes(id.slice(0, -4)))) {
-                toastError(<?= json_encode(lang('admin.use_only_one_version_of_each_field')) ?>);
+                toastError(<?= json_encode(t('admin.use_only_one_version_of_each_field')) ?>);
                 return;
             }
             const personModules = schema.items.filter(item => item.type === 'field' && ['persons', 'persons-role'].includes(item.id));
             if (personModules.length > 1) {
-                toastError(<?= json_encode(lang('admin.use_either_persons_or_persons_with_roles')) ?>);
+                toastError(<?= json_encode(t('admin.use_either_persons_or_persons_with_roles')) ?>);
                 return;
             }
 
@@ -1316,7 +1316,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
             let authorFields = ["authors", "author-table", "scientist", "supervisor", "supervisor-thesis", "editor", "persons", "persons-role"];
             let hasAuthorField = schema.items.some(item => item.type === 'field' && authorFields.includes(item.id));
             if (!hasAuthorField) {
-                toastError(<?= json_encode(lang('admin.the_form_must_contain_at_least_one_person_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+                toastError(<?= json_encode(t('admin.the_form_must_contain_at_least_one_person_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
                 // filter by authors tag
                 $('.pillbar .tag').removeClass('active');
                 searchByTag('authors');
@@ -1466,7 +1466,7 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
         function updateFieldCount() {
             var count = $('#canvas-list .canvas-item').length;
-            $('#field-count').text(<?= json_encode(lang('admin.fields_form_builder'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + count);
+            $('#field-count').text(<?= json_encode(t('admin.fields_form_builder'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + count);
         }
 
         // init count (falls serverseitig Items vorhanden)
@@ -1475,6 +1475,6 @@ $fields = FormBuilder::prepareFields($fields, $systemFields);
 
     $('#properties-panel').on('click', '.disabled', function(e) {
         e.preventDefault();
-        toastError(<?= json_encode(lang('admin.this_option_is_not_available_for_this_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+        toastError(<?= json_encode(t('admin.this_option_is_not_available_for_this_field'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
     });
 </script>

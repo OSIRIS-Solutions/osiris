@@ -335,16 +335,16 @@ function printMsg($msg = '', $type = 'info', $header = '')
     $class = "blue";
     if ($type == 'success') {
         $class = "success";
-        $header = lang('common.success_config');
+        $header = t('common.success_config');
     } elseif ($type == 'error') {
         $class = "danger";
         if ($header == "") {
-            $header = lang('common.error');
+            $header = t('common.error');
         }
     } elseif ($type == 'warning') {
         $class = "signal";
         if ($header == "") {
-            $header = lang('common.warning_config');
+            $header = t('common.warning_config');
         }
     }
 
@@ -507,7 +507,7 @@ function fromToDate($from, $to, $continuous = false)
         if (!$continuous) {
             return format_date($from);
         } else {
-            return format_date($from) . ' - ' . lang('common.today');
+            return format_date($from) . ' - ' . t('common.today');
         }
     }
     // $to = date_create($to);
@@ -542,7 +542,7 @@ function fromToYear($from, $to, $continuous = false)
         if (!$continuous) {
             return $from;
         } else {
-            return $from . ' - ' . lang('common.today');
+            return $from . ' - ' . t('common.today');
         }
     }
 
@@ -724,22 +724,22 @@ function time_elapsed_string(string $date): string
     $days = (int) $diff->format('%r%a');
 
     if ($days === 0) {
-        return lang('common.today');
+        return t('common.today');
     }
 
     if ($days === -1) {
-        return lang('common.yesterday');
+        return t('common.yesterday');
     }
 
     if ($days === 1) {
-        return lang('common.tomorrow');
+        return t('common.tomorrow');
     }
 
     $units = [
-        'y' => [lang('common.year'), lang('common.years')],
-        'm' => [lang('common.month'), lang('common.months')],
-        'w' => [lang('common.week'), lang('common.weeks')],
-        'd' => [lang('common.day'), lang('common.days_view')],
+        'y' => [t('common.year'), t('common.years')],
+        'm' => [t('common.month'), t('common.months')],
+        'w' => [t('common.week'), t('common.weeks')],
+        'd' => [t('common.day'), t('common.days_view')],
     ];
 
     $value = null;
@@ -760,10 +760,10 @@ function time_elapsed_string(string $date): string
     }
 
     if ($days > 0) {
-        return lang('common.in') . $value . ' ' . $label;
+        return t('common.in') . $value . ' ' . $label;
     }
 
-    return lang('common.text_826bb269e2') . $value . ' ' . $label . lang('common.ago');
+    return t('common.text_826bb269e2') . $value . ' ' . $label . t('common.ago');
 }
 
 // function time_until($datetime, $full = false, $type = 'str'){
@@ -1115,18 +1115,18 @@ function format_month($month)
     if (empty($month)) return '';
     $month = intval($month);
     $array = [
-        1 => lang('common.january'),
-        2 => lang('common.february'),
-        3 => lang('common.march'),
-        4 => lang('common.april'),
-        5 => lang('common.may'),
-        6 => lang('common.june'),
-        7 => lang('common.july'),
-        8 => lang('common.august'),
-        9 => lang('common.september'),
-        10 => lang('common.october'),
-        11 => lang('common.november'),
-        12 => lang('common.december')
+        1 => t('common.january'),
+        2 => t('common.february'),
+        3 => t('common.march'),
+        4 => t('common.april'),
+        5 => t('common.may'),
+        6 => t('common.june'),
+        7 => t('common.july'),
+        8 => t('common.august'),
+        9 => t('common.september'),
+        10 => t('common.october'),
+        11 => t('common.november'),
+        12 => t('common.december')
     ];
     return $array[$month];
 }
@@ -1144,10 +1144,10 @@ function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-nothing-here.png" alt="Nothing here">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('common.entity_not_found', replace: ['entity' => $entity]);
+    $html .= t('common.entity_not_found', replace: ['entity' => $entity]);
     $html .= '</h1>';
     $html .= '<p>';
-    $html .= lang('common.the_entity_you_are_looking_for_does_not_exist_or_has_been_deleted', replace: ['entity' => $entity]);
+    $html .= t('common.the_entity_you_are_looking_for_does_not_exist_or_has_been_deleted', replace: ['entity' => $entity]);
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . $link . '" class="btn cta">';
     $html .= lang($linkMsg ?: 'Go back to overview', $linkMsg ?: 'Zur Übersicht zurück');
@@ -1161,14 +1161,14 @@ function notFoundPage($entity = "item", $link = '/activities', $linkMsg = '')
 function noPermissionPage($message = "", $link = '', $linkMsg = '')
 {
     if ($message == '') {
-        $message = lang('common.you_do_not_have_permission_to_access_this_page');
+        $message = t('common.you_do_not_have_permission_to_access_this_page');
     }
     // if no link is provided, link to last page
     $html = '<div class="not-found">';
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-no-permission.png" alt="No permission">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('common.no_permission');
+    $html .= t('common.no_permission');
     $html .= '</h1>';
     $html .= '<p>';
     $html .= $message;
@@ -1187,13 +1187,13 @@ function lockedPage($id)
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-locked.png" alt="Locked">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('common.this_activity_is_locked');
+    $html .= t('common.this_activity_is_locked');
     $html .= '</h1>';
     $html .= '<p>';
-    $html .= lang('common.this_activity_is_locked_and_cannot_be_edited_or_deleted_due_to_our_reportin');
+    $html .= t('common.this_activity_is_locked_and_cannot_be_edited_or_deleted_due_to_our_reportin');
     $html .= '</p>';
     $html .= '<a href="' . ROOTPATH . '/activities/view/' . $id . '" class="btn cta">';
-    $html .= lang('navigation.go_back_to_activity');
+    $html .= t('navigation.go_back_to_activity');
     $html .= '</a>';
     $html .= '</div>';
     $html .= '</div>';
@@ -1206,7 +1206,7 @@ function errorPage($message, $link = '/', $linkMsg = '')
     $html .= '<img src="' . ROOTPATH . '/img/sophie/sophie-error.png" alt="Error">';
     $html .= '<div class="">';
     $html .= '<h1>';
-    $html .= lang('common.an_error_occurred');
+    $html .= t('common.an_error_occurred');
     $html .= '</h1>';
     $html .= '<p>';
     $html .= lang($message, $message);
@@ -1225,7 +1225,7 @@ function abortwith($code, $item = '', $link = '', $linkMsg = '')
     include BASEPATH . "/header.php";
     if ($link == '') {
         $link = $_SERVER['HTTP_REFERER'] ?? '/activities';
-        $linkMsg = lang('navigation.go_back');
+        $linkMsg = t('navigation.go_back');
     }
     switch ($code) {
         case 403:
@@ -1263,18 +1263,18 @@ function get_contrast_color($hexcolor)
 
 function badgeDeprecated()
 { ?>
-    <span class="badge danger" data-toggle="tooltip" data-title="<?= lang('admin.this_feature_is_deprecated_and_is_currently_not_maintained') ?>">
+    <span class="badge danger" data-toggle="tooltip" data-title="<?= t('admin.this_feature_is_deprecated_and_is_currently_not_maintained') ?>">
         <i class="ph ph-warning"></i>
-        <?= lang('admin.deprecated') ?>
+        <?= t('admin.deprecated') ?>
     </span>
 <?php
 }
 
 function badgeBeta()
 { ?>
-    <span class="badge signal" data-toggle="tooltip" data-title="<?= lang('admin.this_is_a_beta_feature_and_may_not_work_as_expected_use_at_your_own_risk') ?>">
+    <span class="badge signal" data-toggle="tooltip" data-title="<?= t('admin.this_is_a_beta_feature_and_may_not_work_as_expected_use_at_your_own_risk') ?>">
         <i class="ph ph-flask"></i>
-        <?= lang('admin.beta') ?>
+        <?= t('admin.beta') ?>
     </span>
 <?php
 }

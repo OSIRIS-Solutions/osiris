@@ -10,10 +10,10 @@ Route::get('/auth/new-user', function () {
     $authToken = $Settings->get('auth-token');
     if (!empty($authToken) && !empty($token)) {
         if (!hash_equals((string) $authToken, (string) $token)) {
-            $_SESSION['msg'] = lang('auth.the_provided_auth_token_is_not_valid');
+            $_SESSION['msg'] = t('auth.the_provided_auth_token_is_not_valid');
             $_SESSION['msg_type'] = 'error';
         } else {
-            $_SESSION['msg'] = lang('auth.the_provided_auth_token_is_valid_you_can_now_register');
+            $_SESSION['msg'] = t('auth.the_provided_auth_token_is_valid_you_can_now_register');
             $_SESSION['msg_type'] = 'success';
         }
     }
@@ -46,7 +46,7 @@ Route::post('/auth/forgot-password', function () {
     if (!empty($_POST['mail'])) {
         $user = $osiris->persons->findOne(['mail' => $_POST['mail']]);
         if (empty($user)) {
-            $_SESSION['msg'] = lang('auth.password_forgot_if_mail_correct');
+            $_SESSION['msg'] = t('auth.password_forgot_if_mail_correct');
             $_SESSION['msg_type'] = 'success';
             header("Location: " . ROOTPATH . "/auth/forgot-password");
             die;
@@ -55,7 +55,7 @@ Route::post('/auth/forgot-password', function () {
         // check if user has recently requested a password reset
         $account = $osiris->accounts->findOne(['username' => $user['username']]);
         if (!empty($account) && isset($account['reset']) && $account['reset'] > time() - 10 * 60) {
-            $_SESSION['msg'] = lang('auth.password_forgot_if_mail_correct');
+            $_SESSION['msg'] = t('auth.password_forgot_if_mail_correct');
             $_SESSION['msg_type'] = 'success';
             header("Location: " . ROOTPATH . "/auth/forgot-password");
             die;
@@ -76,19 +76,19 @@ Route::post('/auth/forgot-password', function () {
         // send mail
         sendMail(
             $user['mail'],
-            lang('auth.password_reset_index'),
-            lang('auth.you_have_requested_a_password_reset_from_osiris_please_click_the_following') .
+            t('auth.password_reset_index'),
+            t('auth.you_have_requested_a_password_reset_from_osiris_please_click_the_following') .
                 "<br><a href='" . $link . "'>$link</a><br>" .
-                lang('auth.password_reset_if_not_requested')
+                t('auth.password_reset_if_not_requested')
         );
 
-        $_SESSION['msg'] = lang('auth.password_forgot_if_mail_correct');
+        $_SESSION['msg'] = t('auth.password_forgot_if_mail_correct');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
     }
 
-    $_SESSION['msg'] = lang('auth.please_enter_your_email_address');
+    $_SESSION['msg'] = t('auth.please_enter_your_email_address');
     $_SESSION['msg_type'] = 'error';
     header("Location: " . ROOTPATH . "/auth/forgot-password");
     die;
@@ -98,7 +98,7 @@ Route::post('/auth/forgot-password', function () {
 Route::get('/user/password-reset/(.*)', function ($user_id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        abortwith(403, lang('error.password_no_permission'), '/profile/' . $user_id);
+        abortwith(403, t('error.password_no_permission'), '/profile/' . $user_id);
     }
     $person = $osiris->persons->findOne(['_id' => DB::to_ObjectID($user_id)]);
     $person = DB::doc2Arr($person);
@@ -107,9 +107,9 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
         die;
     }
     $breadcrumb = [
-        ['name' => lang('common.users'), 'path' => "/user/browse"],
+        ['name' => t('common.users'), 'path' => "/user/browse"],
         ['name' => $person['displayname'], 'path' => "/profile/$person[_id]"],
-        ['name' => lang('auth.password_reset')]
+        ['name' => t('auth.password_reset')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/addons/auth/admin-reset-password.php";
@@ -120,7 +120,7 @@ Route::get('/user/password-reset/(.*)', function ($user_id) {
 Route::post('/auth/admin-reset-password', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('user.password-reset')) {
-        abortwith(403, lang('error.password_no_permission'), '/profile/' . $user_id);
+        abortwith(403, t('error.password_no_permission'), '/profile/' . $user_id);
     }
     if (!isset($_POST['id'])) {
         header("Location: " . ROOTPATH . "/user/browse");
@@ -142,16 +142,16 @@ Route::post('/auth/admin-reset-password', function () {
     include BASEPATH . "/header.php";
 ?>
     <div class="msg success">
-        <?= lang('auth.password_reset_link_share') ?>
+        <?= t('auth.password_reset_link_share') ?>
         <br>
         <pre class="code box p-20"><?= $link ?></pre>
         <button class="btn primary">
-            <span onclick="navigator.clipboard.writeText('<?= $link ?>')"><?= lang('common.copy_to_clipboard') ?></span>
+            <span onclick="navigator.clipboard.writeText('<?= $link ?>')"><?= t('common.copy_to_clipboard') ?></span>
         </button>
     </div>
 
     <p class="text-muted">
-        <?= lang('auth.password_reset_link_reminder') ?>
+        <?= t('auth.password_reset_link_reminder') ?>
     </p>
 
 <?php
@@ -171,7 +171,7 @@ Route::get('/auth/reset-password', function () {
     $hash = $_GET['hash'] ?? '';
     $account = is_string($hash) && $hash !== '' ? $osiris->accounts->findOne(['hash' => $hash]) : null;
     if (empty($account)) {
-        $_SESSION['msg'] = lang('auth.password_reset_link_invalid');
+        $_SESSION['msg'] = t('auth.password_reset_link_invalid');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
@@ -184,7 +184,7 @@ Route::get('/auth/reset-password', function () {
             ['hash' => $hash],
             ['$unset' => ['hash' => '']]
         );
-        $_SESSION['msg'] = lang('auth.password_reset_link_expired');
+        $_SESSION['msg'] = t('auth.password_reset_link_expired');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
@@ -205,7 +205,7 @@ Route::post('/auth/reset-password', function () {
 
     // check if hash and password are set
     if (!isset($_POST['hash']) || !isset($_POST['password'])) {
-        $_SESSION['msg'] = lang('auth.password_reset_link_invalid');
+        $_SESSION['msg'] = t('auth.password_reset_link_invalid');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
@@ -215,7 +215,7 @@ Route::post('/auth/reset-password', function () {
     $hash = $_POST['hash'];
     $account = is_string($hash) && $hash !== '' ? $osiris->accounts->findOne(['hash' => $hash]) : null;
     if (empty($account)) {
-        $_SESSION['msg'] = lang('auth.password_reset_link_invalid');
+        $_SESSION['msg'] = t('auth.password_reset_link_invalid');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
@@ -228,7 +228,7 @@ Route::post('/auth/reset-password', function () {
             ['hash' => $hash],
             ['$unset' => ['hash' => '']]
         );
-        $_SESSION['msg'] = lang('auth.password_reset_link_expired');
+        $_SESSION['msg'] = t('auth.password_reset_link_expired');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/forgot-password");
         die;
@@ -241,7 +241,7 @@ Route::post('/auth/reset-password', function () {
         ['$set' => ['password' => $password], '$unset' => ['hash' => '', 'reset' => '']]
     );
     $osiris->rememberTokens->deleteMany(['username' => $account['username']]);
-    $_SESSION['msg'] = lang('auth.password_reset_success');
+    $_SESSION['msg'] = t('auth.password_reset_success');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/user/login");
     die;
@@ -258,7 +258,7 @@ Route::post('/auth/new-user', function () {
     $registrationToken = (string) ($_POST['token'] ?? $_GET['token'] ?? '');
     $authToken = $Settings->get('auth-token');
     if (!empty($authToken) && !hash_equals((string) $authToken, $registrationToken)) {
-        $_SESSION['msg'] = lang('auth.the_provided_auth_token_is_not_valid');
+        $_SESSION['msg'] = t('auth.the_provided_auth_token_is_not_valid');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/auth/new-user");
         die;
@@ -297,7 +297,7 @@ Route::post('/auth/new-user', function () {
         $page = 'register';
         $registrationRequiresToken = false;
         $authMessages = [[
-            'text' => lang('error.username_already_taken'),
+            'text' => t('error.username_already_taken'),
             'type' => 'error',
         ]];
         include BASEPATH . "/pages/user/auth-page.php";
@@ -325,7 +325,7 @@ Route::post('/auth/new-user', function () {
     $person['is_active'] = true;
     $osiris->persons->insertOne($person);
 
-    $_SESSION['msg'] = lang('auth.account_created_success');
+    $_SESSION['msg'] = t('auth.account_created_success');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/user/login");
     die;

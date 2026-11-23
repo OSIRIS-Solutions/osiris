@@ -14,7 +14,7 @@ final class InfrastructureForms
     public static function builder(): FormBuilder
     {
         return new FormBuilder(
-            entityLabel: translate('common.infrastructures'),
+            entityLabel: t('common.infrastructures'),
             redirectUrl: ROOTPATH . '/crud/admin/infrastructuresFields',
             entity: 'infrastructures',
             backUrl: ROOTPATH . '/data-model#infrastructures',
@@ -93,7 +93,7 @@ final class InfrastructureForms
         foreach (['name', 'subtitle', 'description'] as $key) {
             if (!array_key_exists($key, $values)) continue;
             $value = $values[$key];
-            if (!is_array($value) && !is_string($value) && $value !== null) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!is_array($value) && !is_string($value) && $value !== null) throw new InvalidArgumentException(t('error.no_values'));
             $values[$key] = normalizeLocalizedValues(is_array($value) ? $value : ['en' => $value ?? ''], false, $key === 'description');
         }
         foreach ($fields as $field) {
@@ -102,19 +102,19 @@ final class InfrastructureForms
                 if ($key === 'end_date' || ($field['id'] === 'infrastructure-collaborative' && $key !== 'collaborative')) continue;
                 $value = $values[$key] ?? null;
                 if (is_array($value) && (str_ends_with($field['id'], '-loc') || !empty($config->modules[$field['id']]['localized']))) $value = $value[OSIRIS_BASE_LANGUAGE] ?? '';
-                if ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === '')) throw new InvalidArgumentException(translate('initiatives.required_field') . ': ' . $config->modules[$field['id']]['label']);
+                if ($value === null || $value === [] || (is_string($value) && trim(strip_tags($value)) === '')) throw new InvalidArgumentException(t('initiatives.required_field') . ': ' . $config->modules[$field['id']]['label']);
             }
         }
         foreach (['id', 'link', 'contact_email', 'type', 'infrastructure_type', 'access'] as $key) {
-            if (isset($values[$key]) && !is_string($values[$key])) throw new InvalidArgumentException(translate('error.no_values'));
+            if (isset($values[$key]) && !is_string($values[$key])) throw new InvalidArgumentException(t('error.no_values'));
         }
         $start = Initiatives::dateInput($values['start_date'] ?? null);
         $end = Initiatives::dateInput($values['end_date'] ?? null);
-        if ($start === null || ($end !== null && $end < $start)) throw new InvalidArgumentException(translate('initiatives.invalid_date_range'));
+        if ($start === null || ($end !== null && $end < $start)) throw new InvalidArgumentException(t('initiatives.invalid_date_range'));
         $vocabulary = new Vocabulary();
         foreach (['type' => 'infrastructure-category', 'infrastructure_type' => 'infrastructure-type', 'access' => 'infrastructure-access'] as $key => $vocab) {
             if (!isset($values[$key]) || $values[$key] === '') continue;
-            if (!in_array($values[$key], array_column($vocabulary->getValues($vocab), 'id'), true) && $values[$key] !== ($previous[$key] ?? null)) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!in_array($values[$key], array_column($vocabulary->getValues($vocab), 'id'), true) && $values[$key] !== ($previous[$key] ?? null)) throw new InvalidArgumentException(t('error.no_values'));
         }
         $plainKeys = ['id', 'name', 'subtitle', 'description', 'link', 'contact_email', 'type', 'infrastructure_type', 'access', 'start_date', 'end_date', 'collaborative', 'collaborators', 'coordinator'];
         $plain = array_intersect_key($values, array_flip($plainKeys));
@@ -125,20 +125,20 @@ final class InfrastructureForms
             $values['collaborative'] = in_array($values['collaborative'], [true, 'true', 'yes', '1'], true);
             $values['collaborators'] = array_map([DB::class, 'to_ObjectID'], Initiatives::normalizeLinks($values['collaborators'] ?? []));
             $coordinator = $values['coordinator'] ?? '';
-            if (!is_string($coordinator)) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!is_string($coordinator)) throw new InvalidArgumentException(t('error.no_values'));
             $organization = DB::is_ObjectID($coordinator) ? DB::to_ObjectID($coordinator) : null;
-            if ($organization !== null && !in_array((string) $organization, array_map('strval', $values['collaborators']), true)) throw new InvalidArgumentException(translate('error.no_values'));
+            if ($organization !== null && !in_array((string) $organization, array_map('strval', $values['collaborators']), true)) throw new InvalidArgumentException(t('error.no_values'));
             $values['coordinator_organization'] = $organization;
             $values['coordinator_institute'] = $organization === null;
             unset($values['coordinator']);
         }
         // These operational settings deliberately remain outside the Form Builder.
         if (isset($input['statistic_frequency'])) {
-            if (!in_array($input['statistic_frequency'], ['annual', 'quarterly', 'monthly', 'irregularly'], true)) throw new InvalidArgumentException(translate('error.no_values'));
+            if (!in_array($input['statistic_frequency'], ['annual', 'quarterly', 'monthly', 'irregularly'], true)) throw new InvalidArgumentException(t('error.no_values'));
             $values['statistic_frequency'] = $input['statistic_frequency'];
         }
         $stats = $input['statistic_fields'] ?? [];
-        if (!is_array($stats) || count(array_filter($stats, 'is_string')) !== count($stats)) throw new InvalidArgumentException(translate('error.no_values'));
+        if (!is_array($stats) || count(array_filter($stats, 'is_string')) !== count($stats)) throw new InvalidArgumentException(t('error.no_values'));
         $values['statistic_fields'] = array_values(array_unique($stats));
         if ($settings->featureEnabled('portal') && isset($input['public'])) $values['public'] = filter_var($input['public'], FILTER_VALIDATE_BOOLEAN);
         return $values;

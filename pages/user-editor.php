@@ -27,7 +27,7 @@ if (strtoupper(USER_MANAGEMENT) == 'LDAP') {
     $ldap_fields = array_keys(array_filter($ldap_fields));
 }
 
-$ldap_msg = '<small class="text-muted">' . lang('people.this_field_is_centrally_managed_by_your_organisation') . '</small>';
+$ldap_msg = '<small class="text-muted">' . t('people.this_field_is_centrally_managed_by_your_organisation') . '</small>';
 
 $data_fields = $Settings->get('person-data');
 if (!is_null($data_fields)) {
@@ -106,11 +106,11 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 <?php if ($data['is_active'] ?? true) { ?>
     <div class="text-success">
-        <?= lang('people.this_user_account_is_active') ?>
+        <?= t('people.this_user_account_is_active') ?>
     </div>
 <?php } else { ?>
     <div class="text-danger">
-        <?= lang('people.this_user_account_is_inactive') ?>
+        <?= t('people.this_user_account_is_inactive') ?>
     </div>
 <?php } ?>
 
@@ -118,43 +118,43 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 <nav class="pills mt-20 mb-0">
     <a onclick="navigate('personal')" id="btn-personal" class="btn active">
         <i class="ph ph-user" aria-hidden="true"></i>
-        <?= lang('people.personal') ?>
+        <?= t('people.personal') ?>
     </a>
 
     <a onclick="navigate('contact')" id="btn-contact" class="btn">
         <i class="ph ph-identification-card" aria-hidden="true"></i>
-        <?= lang('people.contact_amp_profile') ?>
+        <?= t('people.contact_amp_profile') ?>
     </a>
 
     <a onclick="navigate('organization')" id="btn-organization" class="btn">
         <i class="ph ph-building" aria-hidden="true"></i>
-        <?= lang('common.organization') ?>
+        <?= t('common.organization') ?>
     </a>
 
     <a onclick="navigate('research')" id="btn-research" class="btn">
         <i class="ph ph-flask" aria-hidden="true"></i>
-        <?= lang('common.research') ?>
+        <?= t('common.research') ?>
     </a>
 
     <a onclick="navigate('biography')" id="btn-biography" class="btn">
         <i class="ph ph-book-open-text" aria-hidden="true"></i>
-        <?= lang('common.biography') ?>
+        <?= t('common.biography') ?>
     </a>
 
     <?php if ($Settings->featureEnabled('portal')) { ?>
         <a onclick="navigate('portfolio')" id="btn-portfolio" class="btn">
             <i class="ph ph-eye" aria-hidden="true"></i>
-            <?= lang('admin.portfolio') ?>
+            <?= t('admin.portfolio') ?>
         </a>
     <?php } ?>
     <a onclick="navigate('account')" id="btn-account" class="btn">
         <i class="ph ph-key" aria-hidden="true"></i>
-        <?= lang('people.account') ?>
+        <?= t('people.account') ?>
     </a>
     <?php if ($data['username'] == $_SESSION['username'] || $Settings->hasPermission('user.settings')) { ?>
         <a onclick="navigate('preferences')" id="btn-preferences" class="btn">
             <i class="ph ph-gear" aria-hidden="true"></i>
-            <?= lang('people.preferences') ?>
+            <?= t('people.preferences') ?>
         </a>
     <?php } ?>
 </nav>
@@ -163,7 +163,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
     <input type="hidden" class="hidden" name="redirect" value="<?= $url ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
 
     <section id="personal">
-        <h2 class="title"><?= lang('people.name_and_personal_information') ?></h2>
+        <h2 class="title"><?= t('people.name_and_personal_information') ?></h2>
 
         <div class="form-row row-eq-spacing">
             <div class="col-sm-2">
@@ -182,14 +182,14 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 } ?>
             </div>
             <div class="col-sm">
-                <label for="first"><?= lang('common.name_first') ?></label>
+                <label for="first"><?= t('common.name_first') ?></label>
                 <input type="text" name="values[first]" id="first" class="form-control" value="<?= $data['first'] ?? '' ?>" <?= in_array('first', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('first', $ldap_fields)) {
                     echo $ldap_msg;
                 } ?>
             </div>
             <div class="col-sm">
-                <label for="last"><?= lang('common.name_last') ?></label>
+                <label for="last"><?= t('common.name_last') ?></label>
                 <input type="text" name="values[last]" id="last" class="form-control" value="<?= $data['last'] ?? '' ?>" <?= in_array('last', $ldap_fields) ? 'disabled' : 'required' ?>>
                 <?php if (in_array('last', $ldap_fields)) {
                     echo $ldap_msg;
@@ -211,7 +211,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 
         <div class="form-group">
-            <label for="names" class=""><?= lang('people.names_for_author_matching') ?></label>
+            <label for="names" class=""><?= t('people.names_for_author_matching') ?></label>
 
             <div class="box m-0 p-5">
                 <?php foreach ($names as $n) { ?>
@@ -224,33 +224,33 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <?php } ?>
 
                 <button class="btn secondary m-5" type="button" onclick="addName(event, this);">
-                    <i class="ph ph-plus"></i> <?= lang('people.add_name') ?>
+                    <i class="ph ph-plus"></i> <?= t('people.add_name') ?>
                 </button>
             </div>
         </div>
 
         <?php if ($active('gender')) { ?>
             <div class="form-group">
-                <span><?= lang('common.gender') ?>:</span><br>
+                <span><?= t('common.gender') ?>:</span><br>
                 <?php
                 $gender = $data['gender'] ?? 'n';
                 ?>
 
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-m" value="m" <?= $gender == 'm' ? 'checked' : '' ?>>
-                    <label for="gender-m"><?= lang('common.gender_male') ?></label>
+                    <label for="gender-m"><?= t('common.gender_male') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-f" value="f" <?= $gender == 'f' ? 'checked' : '' ?>>
-                    <label for="gender-f"><?= lang('common.gender_female') ?></label>
+                    <label for="gender-f"><?= t('common.gender_female') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-d" value="d" <?= $gender == 'd' ? 'checked' : '' ?>>
-                    <label for="gender-d"><?= lang('common.gender_non_binary') ?></label>
+                    <label for="gender-d"><?= t('common.gender_non_binary') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block mr-10">
                     <input type="radio" name="values[gender]" id="gender-n" value="n" <?= $gender == 'n' ? 'checked' : '' ?>>
-                    <label for="gender-n"><?= lang('common.gender_not_specified') ?></label>
+                    <label for="gender-n"><?= t('common.gender_not_specified') ?></label>
                 </div>
 
             </div>
@@ -262,21 +262,21 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
     <section id="organization" style="display:none;">
 
         <h2 class="title mb-0">
-            <?= lang('people.organisational_information') ?>
+            <?= t('people.organisational_information') ?>
         </h2>
 
         <p>
-            <strong><?= lang('common.username') ?>:</strong> <code class="code"><?= $data['username'] ?></code>
+            <strong><?= t('common.username') ?>:</strong> <code class="code"><?= $data['username'] ?></code>
             <br>
             <small class="text-muted">
-                <?= lang('people.the_username_cannot_be_changed') ?>
+                <?= t('people.the_username_cannot_be_changed') ?>
             </small>
         </p>
 
         <!-- internal_id -->
         <?php if ($active('internal_id')) { ?>
             <div class="form-group">
-                <label for="internal_id"><?= lang('common.internal_id') ?></label>
+                <label for="internal_id"><?= t('common.internal_id') ?></label>
                 <input type="text" name="values[internal_id]" id="internal_id" class="form-control w-auto" value="<?= $data['internal_id'] ?? '' ?>" <?= in_array('internal_id', $ldap_fields) ? 'disabled' : '' ?>>
                 <?php if (in_array('internal_id', $ldap_fields)) {
                     echo $ldap_msg;
@@ -309,7 +309,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         <!-- room -->
         <?php if ($active('room')) { ?>
             <div class="form-group">
-                <label for="room"><?= lang('common.room') ?></label>
+                <label for="room"><?= t('common.room') ?></label>
                 <input type="text" name="values[room]" id="room" class="form-control w-auto" value="<?= $data['room'] ?? '' ?>" <?= in_array('room', $ldap_fields) ? 'disabled' : '' ?>>
                 <?php if (in_array('room', $ldap_fields)) {
                     echo $ldap_msg;
@@ -339,7 +339,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     $staffFree = $staff['free'] ?? true;
                     ?>
                     <?php if ($staffFree) { ?>
-                        <?php localizedField($data, 'position', lang('common.current_position'), [
+                        <?php localizedField($data, 'position', t('common.current_position'), [
                             'disabled' => in_array('position', $ldap_fields),
                         ]); ?>
                         <?php if (in_array('position', $ldap_fields)) echo $ldap_msg; ?>
@@ -352,10 +352,10 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         }
                         $hasCurrentPosition = localized($currentPosition) !== '';
                         ?>
-                        <label for="position"><h5><?= lang('common.current_position') ?></h5></label>
+                        <label for="position"><h5><?= t('common.current_position') ?></h5></label>
                         <select name="position_vocabulary" id="position" class="form-control"
                                 <?= in_array('position', $ldap_fields) ? 'disabled' : '' ?>>
-                            <option value=""> -- <?= lang('common.no_position_selected') ?> --- </option>
+                            <option value=""> -- <?= t('common.no_position_selected') ?> --- </option>
                             <?php if ($selectedPosition === null && $hasCurrentPosition) { ?>
                                 <option value="current" selected><?= e(localized($currentPosition)) ?></option>
                             <?php } ?>
@@ -372,7 +372,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             <?php } ?>
 
             <h5>
-                <?= lang('people.organisational_units') ?>
+                <?= t('people.organisational_units') ?>
             </h5>
 
             <?php
@@ -381,20 +381,20 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
             <a href="<?= ROOTPATH ?>/user/units/<?= $user ?>" target="_blank" rel="noopener noreferrer">
                 <i class="ph ph-edit"></i>
-                <?= lang('people.edit_units') ?>
+                <?= t('people.edit_units') ?>
             </a>
 
             <table class="table w-auto mt-10">
                 <thead>
                     <tr>
                         <th>
-                            <?= lang('common.unit') ?>
+                            <?= t('common.unit') ?>
                         </th>
                         <th>
-                            <?= lang('common.start') ?>
+                            <?= t('common.start') ?>
                         </th>
                         <th>
-                            <?= lang('common.end') ?>
+                            <?= t('common.end') ?>
                         </th>
                     </tr>
                 </thead>
@@ -404,8 +404,8 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     ?>
                         <tr data-id="<?= $dept['id'] ?>">
                             <td><?= $d ?></td>
-                            <td><?= $dept['start'] ?? '<em class="text-danger">' . lang('common.unknown') . '</em>' ?></td>
-                            <td><?= $dept['end'] ?? '<em class="text-success">' . lang('common.current') . '</em>' ?></td>
+                            <td><?= $dept['start'] ?? '<em class="text-danger">' . t('common.unknown') . '</em>' ?></td>
+                            <td><?= $dept['end'] ?? '<em class="text-success">' . t('common.current') . '</em>' ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -420,29 +420,29 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
     <?php if ($Settings->featureEnabled('portal')) { ?>
 
         <section id="portfolio" style="display:none;">
-            <h2 class="title"><?= lang('people.public_visibility') ?> (Portfolio)</h2>
+            <h2 class="title"><?= t('people.public_visibility') ?> (Portfolio)</h2>
 
 
             <?php if ($active('hide')) { ?>
                 <div class="alert danger">
                     <div class="custom-checkbox">
                         <input type="checkbox" id="hide" value="1" name="values[hide]" <?= ($data['hide'] ?? false) ? 'checked' : '' ?>>
-                        <label for="hide"><?= lang('people.hide_profile_in_portfolio') ?></label>
+                        <label for="hide"><?= t('people.hide_profile_in_portfolio') ?></label>
                     </div>
                     <small class="text-danger">
-                        <?= lang('people.by_hiding_your_profile_you_prevent_osiris_portfolio_from_displaying_your_pr') ?>
+                        <?= t('people.by_hiding_your_profile_you_prevent_osiris_portfolio_from_displaying_your_pr') ?>
                     </small>
                 </div>
             <?php } ?>
 
             <p class="text-danger">
-                <?= lang('people.by_setting_the_image_mail_or_phone_number_to_publicly_visible_you_allow_osi') ?>
+                <?= t('people.by_setting_the_image_mail_or_phone_number_to_publicly_visible_you_allow_osi') ?>
             </p>
             <?php if ($active('public_image')) { ?>
                 <!-- show profile picture -->
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_image" value="1" name="values[public_image]" <?= ($data['public_image'] ?? false) ? 'checked' : '' ?>>
-                    <label for="public_image"><?= lang('people.show_profile_picture') ?></label>
+                    <label for="public_image"><?= t('people.show_profile_picture') ?></label>
                 </div>
             <?php } ?>
 
@@ -451,7 +451,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <input type="hidden" name="values[public_other_activities]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_other_activities" value="true" name="values[public_other_activities]" <?= ($data['public_other_activities'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_other_activities"><?= lang('people.show_other_activities_not_publications_as_a_separate_section_in_the_profile') ?></label>
+                    <label for="public_other_activities"><?= t('people.show_other_activities_not_publications_as_a_separate_section_in_the_profile') ?></label>
                 </div>
             <?php } ?>
 
@@ -460,30 +460,30 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <input type="hidden" name="values[public_teaching]" value="false">
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_teaching" value="true" name="values[public_teaching]" <?= ($data['public_teaching'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_teaching"><?= lang('people.show_teaching_activities_as_a_separate_section_in_the_profile') ?></label>
+                    <label for="public_teaching"><?= t('people.show_teaching_activities_as_a_separate_section_in_the_profile') ?></label>
                 </div>
             <?php } ?>
 
             <?php if ($active('public_email')) { ?>
                 <div class="custom-checkbox mb-20">
                     <input type="checkbox" id="public_email" value="1" name="values[public_email]" <?= ($data['public_email'] ?? true) ? 'checked' : '' ?>>
-                    <label for="public_email"><?= lang('people.show_email_address') ?></label>
+                    <label for="public_email"><?= t('people.show_email_address') ?></label>
                 </div>
             <?php } ?>
 
             <div class="custom-checkbox mb-20">
                 <input type="checkbox" id="public_phone" value="1" name="values[public_phone]" <?= ($data['public_phone'] ?? false) ? 'checked' : '' ?>>
-                <label for="public_phone"><?= lang('people.show_telephone_number') ?></label>
+                <label for="public_phone"><?= t('people.show_telephone_number') ?></label>
             </div>
 
             <!-- alternative mail -->
             <div class="form-group">
-                <label for="mail_alternative"><?= lang('people.alternative_mail') ?></label>
+                <label for="mail_alternative"><?= t('people.alternative_mail') ?></label>
                 <input type="text" name="values[mail_alternative]" id="mail_alternative" class="form-control" value="<?= $data['mail_alternative'] ?? '' ?>">
             </div>
             <!-- comment for mail -->
             <div class="form-group">
-                <label for="mail_alternative_comment"><?= lang('people.explanation_for_alternative_mail') ?></label>
+                <label for="mail_alternative_comment"><?= t('people.explanation_for_alternative_mail') ?></label>
                 <input type="text" name="values[mail_alternative_comment]" id="mail_alternative_comment" class="form-control" value="<?= $data['mail_alternative_comment'] ?? '' ?>">
             </div>
 
@@ -492,7 +492,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 
     <section id="contact" style="display:none;">
-        <h4 class="title"><?= lang('common.contact') ?></h4>
+        <h4 class="title"><?= t('common.contact') ?></h4>
         <div class="form-group">
             <label for="mail">Mail</label>
             <input type="text" name="values[mail]" id="mail" class="form-control need-validation" data-validator="email" value="<?= $data['mail'] ?? '' ?>" <?= in_array('mail', $ldap_fields) || osirisOAuthLinked($data) ? 'disabled' : '' ?> onblur="validateEmail(this)">
@@ -511,17 +511,17 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             }
         ?>
             <div class="form-group">
-                <label for="mail_digest"><?= lang('people.mail_digest') ?></label>
+                <label for="mail_digest"><?= t('people.mail_digest') ?></label>
                 <select name="values[mail_digest]" id="mail_digest" class="form-control w-auto">
-                    <option value="default" <?= $user_digest == 'default' ? 'selected' : '' ?>>--- <?= lang('people.use_default_setting') ?> (<?= ucfirst($digest) ?>)</option>
-                    <option value="none" <?= $user_digest == 'none' ? 'selected' : '' ?>><?= lang('people.no_mail_digest') ?></option>
-                    <option value="daily" <?= $user_digest == 'daily' ? 'selected' : '' ?>><?= lang('people.daily_mail_digest') ?></option>
-                    <option value="weekly" <?= $user_digest == 'weekly' ? 'selected' : '' ?>><?= lang('people.weekly_mail_digest') ?></option>
-                    <option value="monthly" <?= $user_digest == 'monthly' ? 'selected' : '' ?>><?= lang('people.monthly_mail_digest') ?></option>
+                    <option value="default" <?= $user_digest == 'default' ? 'selected' : '' ?>>--- <?= t('people.use_default_setting') ?> (<?= ucfirst($digest) ?>)</option>
+                    <option value="none" <?= $user_digest == 'none' ? 'selected' : '' ?>><?= t('people.no_mail_digest') ?></option>
+                    <option value="daily" <?= $user_digest == 'daily' ? 'selected' : '' ?>><?= t('people.daily_mail_digest') ?></option>
+                    <option value="weekly" <?= $user_digest == 'weekly' ? 'selected' : '' ?>><?= t('people.weekly_mail_digest') ?></option>
+                    <option value="monthly" <?= $user_digest == 'monthly' ? 'selected' : '' ?>><?= t('people.monthly_mail_digest') ?></option>
                 </select>
                 <small class="text-muted">
-                    <?= lang('people.you_can_choose_to_receive_a_summary_of_your_activities_by_email_at_regular') ?>
-                    <?= lang('people.preferred_language_based_on_interface') ?>
+                    <?= t('people.you_can_choose_to_receive_a_summary_of_your_activities_by_email_at_regular') ?>
+                    <?= t('people.preferred_language_based_on_interface') ?>
                     <strong><?= strtoupper($data['lang'] ?? 'de') ?></strong>
                 </small>
             </div>
@@ -530,7 +530,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         <div class="form-row row-eq-spacing">
             <?php if ($active('telephone')) { ?>
                 <div class="col-sm-6">
-                    <label for="telephone"><?= lang('common.telephone') ?></label>
+                    <label for="telephone"><?= t('common.telephone') ?></label>
                     <input type="tel" name="values[telephone]" id="telephone" class="form-control need-validation" data-validator="telephone" value="<?= $data['telephone'] ?? '' ?>" <?= in_array('telephone', $ldap_fields) ? 'disabled' : '' ?> onblur="validateTelephone(this)">
                     <?php if (in_array('telephone', $ldap_fields)) {
                         echo $ldap_msg;
@@ -540,7 +540,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
             <?php if ($active('mobile')) { ?>
                 <div class="col-sm-6">
-                    <label for="mobile"><?= lang('common.mobile') ?></label>
+                    <label for="mobile"><?= t('common.mobile') ?></label>
                     <input type="tel" name="values[mobile]" id="mobile" class="form-control need-validation" data-validator="telephone" value="<?= $data['mobile'] ?? '' ?>" <?= in_array('mobile', $ldap_fields) ? 'disabled' : '' ?> onblur="validateTelephone(this)">
                     <?php if (in_array('mobile', $ldap_fields)) {
                         echo $ldap_msg;
@@ -550,7 +550,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
         </div>
 
-        <h4 class="title"><?= lang('people.researcher_ids') ?></h4>
+        <h4 class="title"><?= t('people.researcher_ids') ?></h4>
 
         <div class="form-row row-eq-spacing">
             <div class="col-sm-6">
@@ -561,7 +561,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 if (!isset($data['orcid_validated']) || !$data['orcid_validated'] || !$Settings->featureEnabled('orcid')) { ?>
                     <input type="text" name="values[orcid]" id="orcid" class="form-control need-validation" data-validator="orcid" value="<?= $data['orcid'] ?? '' ?>" oninput="validateORCID(this);">
                     <small class="text-danger" id="orcid-wrong" style="display: none;">
-                        <?= lang('people.the_orcid_should_be_in_the_format_0000_0000_0000_0000') ?>
+                        <?= t('people.the_orcid_should_be_in_the_format_0000_0000_0000_0000') ?>
                     </small>
                 <?php } else { ?>
                     <div class="input-group">
@@ -571,12 +571,12 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         </div>
                     </div>
                     <small class="text-muted">
-                        <?= lang('people.orcid_is_already_connected') ?>
+                        <?= t('people.orcid_is_already_connected') ?>
                     </small>
                     <br>
                     <script>
                         function disconnectORCID() {
-                            if (confirm('<?= lang('people.are_you_sure_you_want_to_disconnect_your_orcid') ?>')) {
+                            if (confirm('<?= t('people.are_you_sure_you_want_to_disconnect_your_orcid') ?>')) {
                                 // /crud/orcid/disconnect
                                 fetch('<?= ROOTPATH ?>/crud/orcid/disconnect', {
                                         method: 'POST',
@@ -589,15 +589,15 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                                     }).then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
-                                            alert('<?= lang('people.orcid_disconnected_successfully') ?>');
+                                            alert('<?= t('people.orcid_disconnected_successfully') ?>');
                                             location.reload();
                                         } else {
-                                            alert('<?= lang('people.error_disconnecting_orcid') ?>');
+                                            alert('<?= t('people.error_disconnecting_orcid') ?>');
                                         }
                                     })
                                     .catch(error => {
                                         console.error('Error:', error);
-                                        alert('<?= lang('people.error_disconnecting_orcid') ?>');
+                                        alert('<?= t('people.error_disconnecting_orcid') ?>');
                                     });
                             }
                         }
@@ -608,12 +608,12 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 if ($data['username'] == $_SESSION['username'] && $Settings->featureEnabled('orcid')) {
                 ?>
                     <small class="text-muted">
-                        <?= lang('common.or_auth_page') ?>
+                        <?= t('common.or_auth_page') ?>
                     </small>
                     <br>
                     <a href="<?= $orcid_settings->api_auth_url ?>oauth/authorize?client_id=<?= $orcid_settings->client_id ?>&response_type=code&scope=/authenticate&redirect_uri=<?= BASE_URL . ROOTPATH ?>/orcid/validate" id="orcid-validation" class="btn">
                         <i class="ph ph-user-circle-check" aria-hidden="true"></i>
-                        <?= lang('common.connect_orcid') ?>
+                        <?= t('common.connect_orcid') ?>
                     </a>
                 <?php } ?>
             </div>
@@ -623,10 +623,10 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <label for="google_scholar">Google Scholar ID</label>
                 <input type="text" name="values[google_scholar]" id="google_scholar" class="form-control need-validation" data-validator="googleScholar" value="<?= $data['google_scholar'] ?? '' ?>" oninput="validateGoogleScholar(this)">
                 <small class="text-muted">
-                    <?= lang('people.not_the_url_only_the_bold_part_https_scholar_google_com_citations_user_2g1y') ?>
+                    <?= t('people.not_the_url_only_the_bold_part_https_scholar_google_com_citations_user_2g1y') ?>
                 </small>
                 <div class="text-danger" id="google-scholar-wrong" style="display: none;">
-                    <?= lang('people.please_enter_a_valid_google_scholar_id') ?>
+                    <?= t('people.please_enter_a_valid_google_scholar_id') ?>
                 </div>
             </div>
         </div>
@@ -635,12 +635,12 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         <?php if ($active('socials')) { ?>
             <?php if ($Settings->featureEnabled('portal')) { ?>
                 <p class="text-danger">
-                    <?= lang('people.please_note_that_the_following_information_is_optional_if_you_do_not_wish_t') ?>
+                    <?= t('people.please_note_that_the_following_information_is_optional_if_you_do_not_wish_t') ?>
                 </p>
             <?php } ?>
 
             <h4>
-                <?= lang('people.social_media') ?>
+                <?= t('people.social_media') ?>
             </h4>
             <div id="socials">
                 <input type="hidden" name="values[socials]" value="">
@@ -674,7 +674,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             <div class="dropdown">
                 <button class="btn" data-toggle="dropdown" type="button" id="socials-dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ph ph-plus"></i>
-                    <?= lang('people.add_new_social') ?>
+                    <?= t('people.add_new_social') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="socials-dropdown">
                     <?php 
@@ -727,27 +727,27 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             $preferredContact = $data['contact-button-type'] ?? 'mail';
             if (!isset($contactMethods[$preferredContact])) $preferredContact = array_key_first($contactMethods);
         ?>
-            <h4><?= lang('people.contact_button') ?></h4>
+            <h4><?= t('people.contact_button') ?></h4>
             <div class="form-group">
                 <div>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-true" value="1" name="values[contact-button]" <?= $contact_button ? 'checked' : '' ?>>
-                        <label for="contact-button-true"><?= lang('common.enabled_features') ?></label>
+                        <label for="contact-button-true"><?= t('common.enabled_features') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block ml-10">
                         <input type="radio" id="contact-button-false" value="0" name="values[contact-button]" <?= $contact_button ? '' : 'checked' ?>>
-                        <label for="contact-button-false"><?= lang('common.disabled_features') ?></label>
+                        <label for="contact-button-false"><?= t('common.disabled_features') ?></label>
                     </div>
                 </div>
-                <small class="d-block text-muted"><?= lang('people.the_button_uses_the_contact_details_in_your_profile_that_your_organisation_allows_oth') ?></small>
+                <small class="d-block text-muted"><?= t('people.the_button_uses_the_contact_details_in_your_profile_that_your_organisation_allows_oth') ?></small>
                 <div id="contact-button-settings" class="mt-10" <?= $contact_button ? '' : 'hidden' ?>>
-                    <label for="contact-button-type"><?= lang('people.preferred_contact_method') ?></label>
+                    <label for="contact-button-type"><?= t('people.preferred_contact_method') ?></label>
                     <select id="contact-button-type" name="values[contact-button-type]" class="form-control" <?= $contactMethods ? '' : 'disabled' ?>>
                         <?php foreach ($contactMethods as $type => $url) { ?>
                             <option value="<?= $type ?>" <?= $preferredContact === $type ? 'selected' : '' ?>><?= e($contactLabels[$type]) ?></option>
                         <?php } ?>
                     </select>
-                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= lang('people.no_permitted_contact_details_are_available_add_an_email_address_or_a_slack_teams_or_m') ?></small>
+                    <small id="contact-methods-empty" class="text-muted" <?= $contactMethods ? 'hidden' : '' ?>><?= t('people.no_permitted_contact_details_are_available_add_an_email_address_or_a_slack_teams_or_m') ?></small>
                 </div>
             </div>
             <script>
@@ -766,24 +766,24 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             && ($_SESSION['realuser'] ?? $_SESSION['username']) === $_SESSION['username']) { ?>
             <h5><?= e(osirisOAuthLabel()) ?></h5>
             <?php if (osirisOAuthLinked($data)) { ?>
-                <p><?= lang('people.this_profile_is_linked_to_single_sign_on_you_can_also_log_in_with_your_osiris_usernam') ?></p>
+                <p><?= t('people.this_profile_is_linked_to_single_sign_on_you_can_also_log_in_with_your_osiris_usernam') ?></p>
             <?php } else { ?>
-                <p><?= lang('people.link_your_existing_profile_to_use_single_sign_on_as_an_additional_login_option') ?></p>
-                <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= lang('people.link_single_sign_on') ?></a>
+                <p><?= t('people.link_your_existing_profile_to_use_single_sign_on_as_an_additional_login_option') ?></p>
+                <a class="btn primary" href="<?= ROOTPATH ?>/user/oauth-link"><?= t('people.link_single_sign_on') ?></a>
             <?php } ?>
         <?php } ?>
 
         <h2 class="title">
-            <?= lang('people.account_settings') ?>
+            <?= t('people.account_settings') ?>
         </h2>
 
         <?php if (!($data['is_active'] ?? true)) { ?>
             <h5>
-                <?= lang('people.reactivate_inactive_user_account') ?>
+                <?= t('people.reactivate_inactive_user_account') ?>
             </h5>
             <div class="custom-checkbox mb-10">
                 <input type="checkbox" id="is_active" value="1" name="values[is_active]">
-                <label for="is_active"><?= lang('people.reactivate') ?></label>
+                <label for="is_active"><?= t('people.reactivate') ?></label>
             </div>
         <?php } ?>
 
@@ -797,41 +797,41 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         ?>
 
             <h5>
-                <?= $hasLocalPassword ? lang('people.change_password') : lang('people.set_osiris_password') ?>
+                <?= $hasLocalPassword ? t('people.change_password') : t('people.set_osiris_password') ?>
             </h5>
 
             <?php if ($hasLocalPassword) { ?>
             <div class="form-group">
-                <label for="old_password"><?= lang('people.old_password') ?></label>
+                <label for="old_password"><?= t('people.old_password') ?></label>
                 <input type="password" name="old_password" id="old_password" class="form-control" autocomplete="current-password">
             </div>
             <?php } else { ?>
-                <p><?= lang('people.set_a_local_password_to_log_in_even_when_single_sign_on_is_unavailable_your_osiris_us') ?> <strong><?= e($data['username']) ?></strong></p>
+                <p><?= t('people.set_a_local_password_to_log_in_even_when_single_sign_on_is_unavailable_your_osiris_us') ?> <strong><?= e($data['username']) ?></strong></p>
             <?php } ?>
 
             <div class="form-row row-eq-spacing">
                 <div class="col-sm-6">
-                    <label for="password"><?= lang('auth.password_new') ?></label>
+                    <label for="password"><?= t('auth.password_new') ?></label>
                     <input type="password" name="password" id="password" class="form-control need-validation" data-validator="password" oninput="validatePassword(this);">
                     <small id="password-wrong-length">
-                        <?= lang('people.the_password_should_be_at_least_8_characters_long') ?>
+                        <?= t('people.the_password_should_be_at_least_8_characters_long') ?>
                     </small>
                     <br>
                     <small id="password-wrong-uppercase">
-                        <?= lang('people.the_password_must_contain_at_least_one_uppercase_letter') ?>
+                        <?= t('people.the_password_must_contain_at_least_one_uppercase_letter') ?>
                     </small>
                     <br>
                     <small id="password-wrong-lowercase">
-                        <?= lang('people.the_password_must_contain_at_least_one_lowercase_letter') ?>
+                        <?= t('people.the_password_must_contain_at_least_one_lowercase_letter') ?>
                     </small>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="password2"><?= lang('people.repeat_password') ?></label>
+                    <label for="password2"><?= t('people.repeat_password') ?></label>
                     <input type="password" name="password2" id="password2" class="form-control need-validation" data-validator="password2" oninput="validatePassword2(this)">
                     <br>
                     <small class="text-danger" id="password2-wrong" style="display: none;">
-                        <?= lang('people.passwords_do_not_match') ?>
+                        <?= t('people.passwords_do_not_match') ?>
                     </small>
                 </div>
             </div>
@@ -839,7 +839,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
         <?php if ($Settings->hasPermission('user.roles')) { ?>
 
-            <h5><?= lang('common.roles') ?></h5>
+            <h5><?= t('common.roles') ?></h5>
             <!-- ensure that empty roles are saved too -->
             <input type="hidden" name="values[roles][]" value="">
             <?php
@@ -862,7 +862,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
         <?php } ?>
 
         <h5>
-            <?= lang('people.transfer_the_maintenance_of_your_profile') ?>
+            <?= t('people.transfer_the_maintenance_of_your_profile') ?>
         </h5>
         <?php
         if (is_string($data['maintenance'] ?? null)) $data['maintenance'] = [$data['maintenance']];
@@ -874,13 +874,13 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
             <style>
                 #maintenance-list:empty::before {
-                    content: "<?= lang('people.this_profile_is_not_shared_with_someone') ?>";
+                    content: "<?= t('people.this_profile_is_not_shared_with_someone') ?>";
                     color: var(--muted-color);
                     font-style: italic;
                 }
 
                 #maintenance-list:not(:empty)::before {
-                    content: "<?= lang('people.this_profile_was_shared_with') ?>";
+                    content: "<?= t('people.this_profile_was_shared_with') ?>";
                 }
             </style>
             <div class="author-widget">
@@ -896,7 +896,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="maintenance-select">
-                            <option value="" disabled selected><?= lang('people.select_a_person_to_share_with') ?></option>
+                            <option value="" disabled selected><?= t('people.select_a_person_to_share_with') ?></option>
                             <?php
                             $all_users = $osiris->persons->find(['is_active' => ['$ne' => false]], ['sort' => ['last' => 1, 'first' => 1]]);
                             foreach ($all_users as $s) { ?>
@@ -921,7 +921,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     if (user.length === 0) return;
                     // check if already exists
                     if ($('#maintenance-list').find(`input[value="${user}"]`).length > 0) {
-                        toastError('<?= lang('people.person_already_exists') ?>');
+                        toastError('<?= t('people.person_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'>${name} <input type='hidden' name='values[maintenance][]' value='${user}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -933,7 +933,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             <!-- 
             <select name="values[maintenance]" id="maintenance" class="form-control">
                 <option value="">
-                    <?= lang('people.profile_is_not_shared_with_someone') ?>
+                    <?= t('people.profile_is_not_shared_with_someone') ?>
                 </option>
 
                 <?php
@@ -947,7 +947,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
         <p class=" text-danger">
             <i class="ph ph-warning"></i>
-            <?= lang('people.warning_this_person_gets_full_access_to_your_osiris_profile_and_can_edit_in') ?>
+            <?= t('people.warning_this_person_gets_full_access_to_your_osiris_profile_and_can_edit_in') ?>
         </p>
 
     </section>
@@ -955,13 +955,13 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
     <?php if ($data['username'] == $_SESSION['username'] || $Settings->hasPermission('user.settings')) { ?>
 
         <section id="preferences" style="display:none;">
-            <h2 class="title"><?= lang('people.profile_preferences') ?></h2>
+            <h2 class="title"><?= t('people.profile_preferences') ?></h2>
 
 
-            <h5><?= lang('people.sidebar_favourites') ?></h5>
+            <h5><?= t('people.sidebar_favourites') ?></h5>
 
             <p>
-                <?= lang('people.you_can_add_your_favourite_pages_to_the_sidebar_for_quick_access') ?>
+                <?= t('people.you_can_add_your_favourite_pages_to_the_sidebar_for_quick_access') ?>
             </p>
 
             <?php
@@ -990,7 +990,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="sidebar-select">
-                            <option value="" disabled selected><?= lang('people.add_favorite') ?></option>
+                            <option value="" disabled selected><?= t('people.add_favorite') ?></option>
                             <?php
                             foreach ($options as $option) {
                                 $id = $option['id'];
@@ -1014,7 +1014,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     var label = $('#sidebar-select option:selected').text();
                     // check if already exists
                     if ($('#sidebar_favorites-list').find(`input[value="${sidebar}"]`).length > 0) {
-                        toastError('<?= lang('people.sidebar_favorite_already_exists') ?>');
+                        toastError('<?= t('people.sidebar_favorite_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'><i class="ph ph-dots-six-vertical text-muted"></i> ${label} <input type='hidden' name='values[sidebar_favorites][]' value='${sidebar}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -1031,14 +1031,14 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     ? ($data['home_screen'] ?? 'home')
                     : 'home';
             ?>
-                <h5><?= lang('people.start_screen') ?></h5>
+                <h5><?= t('people.start_screen') ?></h5>
                 <p class="text-muted">
-                    <?= lang('people.choose_which_page_opens_when_you_start_osiris') ?>
+                    <?= t('people.choose_which_page_opens_when_you_start_osiris') ?>
                 </p>
                 <div class="form-group">
                     <div class="custom-radio d-inline-block mr-20">
                         <input type="radio" name="values[home_screen]" id="home-screen-home" value="home" <?= $homeScreen === 'home' ? 'checked' : '' ?>>
-                        <label for="home-screen-home"><?= lang('people.osiris_home') ?></label>
+                        <label for="home-screen-home"><?= t('people.osiris_home') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-20">
                         <input type="radio" name="values[home_screen]" id="home-screen-resource-hub" value="resource-hub" <?= $homeScreen === 'resource-hub' ? 'checked' : '' ?>>
@@ -1049,7 +1049,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 
             <h5>
-                <?= lang('people.display_of_activities') ?>
+                <?= t('people.display_of_activities') ?>
                 <a href="#" onclick="$('#display_activities-info').toggleClass('hidden'); return false;">
                     <i class="ph ph-info text-muted"></i>
                 </a>
@@ -1058,26 +1058,26 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             $display_activities = $data['display_activities'] ?? 'web';
             ?>
             <p class="hidden" id="display_activities-info">
-                <?= lang('people.you_can_choose_how_activities_are_displayed_for_you_when_you_use_osiris') ?>
+                <?= t('people.you_can_choose_how_activities_are_displayed_for_you_when_you_use_osiris') ?>
             </p>
 
 
             <div class="form-group">
                 <div class="custom-radio">
                     <input type="radio" name="values[display_activities]" id="display_activities-web" value="web" <?= $display_activities == 'web' ? 'checked' : '' ?>>
-                    <label for="display_activities-web"><?= lang('people.web_display') ?></label>
+                    <label for="display_activities-web"><?= t('people.web_display') ?></label>
                 </div>
                 <small class="text-muted">
-                    <?= lang('people.display_type_optimized_for_the_web') ?>
+                    <?= t('people.display_type_optimized_for_the_web') ?>
                 </small>
             </div>
             <div class="form-group">
                 <div class="custom-radio">
                     <input type="radio" name="values[display_activities]" id="display_activities-print" value="print" <?= $display_activities != 'web' ? 'checked' : '' ?>>
-                    <label for="display_activities-print"><?= lang('people.print_display') ?></label>
+                    <label for="display_activities-print"><?= t('people.print_display') ?></label>
                 </div>
                 <small class="text-muted">
-                    <?= lang('people.display_type_optimized_for_printing_and_exporting_activities') ?>
+                    <?= t('people.display_type_optimized_for_printing_and_exporting_activities') ?>
                 </small>
             </div>
 
@@ -1088,7 +1088,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
                 <div class="mt-10">
                     <h5>
-                        <?= lang('people.coin_visibility') ?>
+                        <?= t('people.coin_visibility') ?>
                         <a href="#" onclick="$('#coins-info').toggleClass('hidden'); return false;">
                             <i class="ph ph-info text-muted"></i>
                         </a>
@@ -1099,19 +1099,19 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
                     <p class="hidden" id="coins-info">
                         <i class="ph ph-coins text-signal"></i>
-                        <?= lang('people.coins_are_a_gamification_element_in_osiris_and_represent_points_you_earn_fo') ?>
+                        <?= t('people.coins_are_a_gamification_element_in_osiris_and_represent_points_you_earn_fo') ?>
                     </p>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-true" value="none" <?= $show_coins == 'none' ? 'checked' : '' ?>>
-                        <label for="show_coins-true"><?= lang('people.for_nobody') ?></label>
+                        <label for="show_coins-true"><?= t('people.for_nobody') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-myself" value="myself" <?= $show_coins == 'myself' ? 'checked' : '' ?>>
-                        <label for="show_coins-myself"><?= lang('people.for_myself') ?></label>
+                        <label for="show_coins-myself"><?= t('people.for_myself') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[show_coins]" id="show_coins-all" value="all" <?= $show_coins == 'all' ? 'checked' : '' ?>>
-                        <label for="show_coins-all"><?= lang('people.for_everyone') ?></label>
+                        <label for="show_coins-all"><?= t('people.for_everyone') ?></label>
                     </div>
 
                 </div>
@@ -1125,7 +1125,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
             ?>
                 <div class="mb-20">
                     <h5>
-                        <?= lang('people.achievement_visibility') ?>
+                        <?= t('people.achievement_visibility') ?>
                         <a href="#" onclick="$('#achievements-info').toggleClass('hidden'); return false;">
                             <i class="ph ph-info text-muted"></i>
                         </a>
@@ -1135,16 +1135,16 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     ?>
                     <p class="hidden" id="achievements-info">
                         <i class="ph ph-trophy text-signal"></i>
-                        <?= lang('people.achievements_are_a_gamification_element_in_osiris_and_represent_badges_you') ?>
+                        <?= t('people.achievements_are_a_gamification_element_in_osiris_and_represent_badges_you') ?>
                     </p>
 
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[hide_achievements]" id="hide_achievements-true" value="true" <?= $hide_achievements ? 'checked' : '' ?>>
-                        <label for="hide_achievements-true"><?= lang('people.for_nobody') ?></label>
+                        <label for="hide_achievements-true"><?= t('people.for_nobody') ?></label>
                     </div>
                     <div class="custom-radio d-inline-block mr-10">
                         <input type="radio" name="values[hide_achievements]" id="hide_achievements-false" value="false" <?= $hide_achievements ? '' : 'checked' ?>>
-                        <label for="hide_achievements-false"><?= lang('people.for_everyone') ?></label>
+                        <label for="hide_achievements-false"><?= t('people.for_everyone') ?></label>
                     </div>
                 </div>
             <?php
@@ -1187,7 +1187,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                 <div class="footer">
                     <div class="input-group small d-inline-flex w-auto">
                         <select class="form-control" id="keyword-select">
-                            <option value="" disabled selected><?= lang('people.add_kw_name', replace: ['kw_name' => $kw_name]) ?></option>
+                            <option value="" disabled selected><?= t('people.add_kw_name', replace: ['kw_name' => $kw_name]) ?></option>
                             <?php
                             foreach ($all_kw as $kw) {
                                 // if (in_array($kw, $selected_kw)) continue;
@@ -1210,7 +1210,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     if (kw.length === 0) return;
                     // check if already exists
                     if ($('#keyword-list').find(`input[value="${kw}"]`).length > 0) {
-                        toastError('<?= lang('people.keyword_already_exists') ?>');
+                        toastError('<?= t('people.keyword_already_exists') ?>');
                         return;
                     }
                     var html = `<div class='author'>${kw} <input type='hidden' name='values[keywords][]' value='${kw}'> <a onclick='$(this).parent().remove()'>&times;</a></div>`;
@@ -1226,7 +1226,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
         <?php if ($active('expertise')) { ?>
             <h2 class="title">
-                <?= lang('common.expertise') ?>
+                <?= t('common.expertise') ?>
             </h2>
             <!-- ensure to save empty expertise -->
             <input type="hidden" name="values[expertise]" value="">
@@ -1276,7 +1276,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
         <?php if ($active('research')) { ?>
             <h2 class="title">
-                <?= lang('common.research_interests') ?> <small class="text-muted">Max. 5</small>
+                <?= t('common.research_interests') ?> <small class="text-muted">Max. 5</small>
             </h2>
 
             <input type="hidden" name="research_submitted" value="1">
@@ -1292,7 +1292,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         <?php localizedField(
                             $researchForm,
                             "research.$i",
-                            lang('common.research_interests'),
+                            t('common.research_interests'),
                             [
                                 'required' => true,
                                 'group' => 'person-research',
@@ -1302,8 +1302,8 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                             ]
                         ); ?>
                         <button type="button" class="btn text-danger research-interest-remove"
-                            title="<?= e(lang('action.delete')) ?>"
-                            aria-label="<?= e(lang('action.delete')) ?>"
+                            title="<?= e(t('action.delete')) ?>"
+                            aria-label="<?= e(t('action.delete')) ?>"
                             onclick="removeResearchInterest(this)">
                             <i class="ph ph-trash" aria-hidden="true"></i>
                         </button>
@@ -1316,7 +1316,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                     <?php localizedField(
                         ['research' => ['__INDEX__' => []]],
                         'research.__INDEX__',
-                        lang('common.research_interests'),
+                        t('common.research_interests'),
                         [
                             'required' => true,
                             'group' => 'person-research',
@@ -1326,8 +1326,8 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         ]
                     ); ?>
                     <button type="button" class="btn text-danger research-interest-remove"
-                        title="<?= e(lang('action.delete')) ?>"
-                        aria-label="<?= e(lang('action.delete')) ?>"
+                        title="<?= e(t('action.delete')) ?>"
+                        aria-label="<?= e(t('action.delete')) ?>"
                         onclick="removeResearchInterest(this)">
                         <i class="ph ph-trash" aria-hidden="true"></i>
                     </button>
@@ -1358,7 +1358,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 
         <?php if ($active('research_profile')) { ?>
-            <?php localizedField($data, 'research_profile', lang('people.research_profile_user_editor'), ['type' => 'richtext']); ?>
+            <?php localizedField($data, 'research_profile', t('people.research_profile_user_editor'), ['type' => 'richtext']); ?>
         <?php } ?>
 
     </section>
@@ -1368,14 +1368,14 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
     <section id="biography" style="display:none">
 
         <?php if ($active('cv')) { ?>
-            <h2 class="title"><?= lang('common.curriculum_vitae') ?></h2>
+            <h2 class="title"><?= t('common.curriculum_vitae') ?></h2>
 
             <!-- ensure to save empty cv -->
             <input type="hidden" name="values[cv]" value="">
 
-            <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= lang('common.add_entry') ?></button>
+            <button class="btn" type="button" onclick="addCVrow(event, '#cv-list')"><i class="ph ph-plus text-success"></i> <?= t('common.add_entry') ?></button>
             <br>
-            <small class="text-muted float-right"><?= lang('people.sorting_will_be_done_automatically') ?></small>
+            <small class="text-muted float-right"><?= t('people.sorting_will_be_done_automatically') ?></small>
             <br>
             <div id="cv-list" class="w-800 mw-full">
                 <?php
@@ -1401,13 +1401,13 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         <div class="alert mb-10">
                             <div class="input-group my-10">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('common.from') ?>*</span>
+                                    <span class="input-group-text"><?= t('common.from') ?>*</span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('people.yyyy_mm') ?> *" required>
+                                <input type="month" name="values[cv][<?= $i ?>][from]" id="from-<?= $i ?>" value="<?= $con['from'] ?? '' ?>" class="form-control month-field" placeholder="<?= t('people.yyyy_mm') ?> *" required>
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><?= lang('common.to') ?></span>
+                                    <span class="input-group-text"><?= t('common.to') ?></span>
                                 </div>
-                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="<?= lang('people.yyyy_mm') ?>">
+                                <input type="month" name="values[cv][<?= $i ?>][to]" id="to-<?= $i ?>" value="<?= $con['to'] ?? '' ?>" class="form-control month-field" placeholder="<?= t('people.yyyy_mm') ?>">
                             </div>
 
                             <div class="form-group mb-10">
@@ -1417,7 +1417,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                                 <input name="values[cv][<?= $i ?>][affiliation]" type="text" class="form-control" value="<?= $con['affiliation'] ?? '' ?>" placeholder="Affiliation *" list="affiliation-list" required>
                             </div>
 
-                            <small class="text-muted">* <?= lang('people.required') ?></small><br>
+                            <small class="text-muted">* <?= t('people.required') ?></small><br>
 
                             <!-- checkbox to hide from portfolio -->
 
@@ -1425,7 +1425,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                                 <div class="custom-checkbox ml-10">
                                     <input type="checkbox" id="hide-<?= $i ?>" <?= ($con['hide'] ?? false) ? 'checked' : '' ?> name="values[cv][<?= $i ?>][hide]">
                                     <label for="hide-<?= $i ?>">
-                                        <?= lang('people.hide_in_portfolio') ?>
+                                        <?= t('people.hide_in_portfolio') ?>
                                     </label>
                                 </div>
                             <?php } ?>
@@ -1449,11 +1449,11 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         <div class="input-group-prepend">
                             <span class="input-group-text">${lang('common.from')}*</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= lang('people.yyyy_mm') ?> *" required>
+                        <input type="month" name="values[cv][${i}][from]" class="form-control" placeholder="<?= t('people.yyyy_mm') ?> *" required>
                         <div class="input-group-prepend">
-                            <span class="input-group-text">${<?= json_encode(lang('common.to'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>
+                            <span class="input-group-text">${<?= json_encode(t('common.to'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</span>
                         </div>
-                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="<?= lang('people.yyyy_mm') ?>">
+                        <input type="month" name="values[cv][${i}][to]" class="form-control" placeholder="<?= t('people.yyyy_mm') ?>">
                     </div>
 
                     <div class="form-group mb-10">
@@ -1464,7 +1464,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                         <input name="values[cv][${i}][affiliation]" type="text" class="form-control" placeholder="Affiliation *" list="affiliation-list" required>
                     </div>
 
-                    <small class="text-muted">* <?= lang('people.required') ?></small><br>
+                    <small class="text-muted">* <?= t('people.required') ?></small><br>
 
                     <button class="btn danger my-10" type="button" onclick="$(this).closest('.alert').remove()"><i class="ph ph-trash"></i></button>
                 </div>
@@ -1515,7 +1515,7 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
                             return;
                         }
                         validateFeedback(this, false);
-                        toastError('<?= lang('people.please_enter_a_valid_month_in_the_format_yyyy_mm') ?>');
+                        toastError('<?= t('people.please_enter_a_valid_month_in_the_format_yyyy_mm') ?>');
                     } else {
                         validateFeedback(this, true);
                     }
@@ -1534,13 +1534,13 @@ $contactSettings = DB::doc2Arr($Settings->get('contact-button', []));
 
 
         <?php if ($active('biography')) { ?>
-            <?php localizedField($data, 'biography', lang('common.biography'), ['type' => 'richtext']); ?>
+            <?php localizedField($data, 'biography', t('common.biography'), ['type' => 'richtext']); ?>
         <?php } ?>
 
 
 
         <?php if ($active('education')) { ?>
-            <?php localizedField($data, 'education', lang('common.education_profile'), ['type' => 'richtext']); ?>
+            <?php localizedField($data, 'education', t('common.education_profile'), ['type' => 'richtext']); ?>
         <?php } ?>
 
     </section>

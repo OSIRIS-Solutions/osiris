@@ -7,7 +7,7 @@ $result = $google->getAllUserEntries();
 
 if (empty($result) || empty($result['publications'])) { ?>
     <p class="text-danger">
-        <?= lang('import.we_could_not_find_any_articles_from_your_google_scholar_account_sorry') ?>
+        <?= t('import.we_could_not_find_any_articles_from_your_google_scholar_account_sorry') ?>
     </p>
 <?php
 } else {
@@ -28,7 +28,7 @@ if (empty($result) || empty($result['publications'])) { ?>
     sort($pubs);
 ?>
     <p class="text-success">
-        <?= lang('import.we_found_the_following_articles_from_your_google_scholar_account') ?>
+        <?= t('import.we_found_the_following_articles_from_your_google_scholar_account') ?>
     </p>
 
     <table class="table">
@@ -64,9 +64,9 @@ if (empty($result) || empty($result['publications'])) { ?>
                             <div class="alert <?= $alert ?>">
                                 <p class="mt-0">
                                     <?php if ($sim >= 98) { ?>
-                                        <?= lang('import.this_is_a_100_duplicate_of_the_follwing_publication') ?>
+                                        <?= t('import.this_is_a_100_duplicate_of_the_follwing_publication') ?>
                                     <?php } else { ?>
-                                        <?= lang('import.this_might_be_a_duplicate_of_the_follwing_publication') ?>
+                                        <?= t('import.this_might_be_a_duplicate_of_the_follwing_publication') ?>
                                         (<b><?= $sim ?>&nbsp;%</b>):
                                     <?php } ?>
                                 </p>
@@ -77,7 +77,7 @@ if (empty($result) || empty($result['publications'])) { ?>
                         <?php if ($sim < 98) { ?>
                             <button class="btn mt-5" onclick='addGoogleActivity("<?= $scholar_id ?>", "<?= $pub_id ?>")'>
                                 <i class="ph ph-plus"></i>
-                                <?= lang('import.add_to_database') ?>
+                                <?= t('import.add_to_database') ?>
                             </button>
                         <?php } ?>
 
@@ -176,7 +176,7 @@ if (empty($result) || empty($result['publications'])) { ?>
                     var td = $('tr#' + doc).find('td:first')
                     td.find('.alert,.btn').remove()
                     var alert = $('<div class="alert success">')
-                    alert.append('<p class="my-0">' + <?= json_encode(lang('import.publication_successfully_added_please_review_the_result_carefully'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</p>')
+                    alert.append('<p class="my-0">' + <?= json_encode(t('import.publication_successfully_added_please_review_the_result_carefully'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + '</p>')
                     alert.append(response.formatted)
                     alert.append('<br><a class="btn mt-5" href="' + ROOTPATH + '/activities/view/' + response.id + '" target="_blank">Review</a>')
                     td.append(alert)

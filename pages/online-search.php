@@ -19,10 +19,10 @@
 
 <h1 class="my-0">
     <i class="ph-duotone ph-plus-circle"></i>
-    <?= lang('search.search_online') ?>
+    <?= t('search.search_online') ?>
 </h1>
 
-<a href="<?= ROOTPATH ?>/add-activity" class="link mb-10 d-block"><?= lang('common.add_manually') ?></a>
+<a href="<?= ROOTPATH ?>/add-activity" class="link mb-10 d-block"><?= t('common.add_manually') ?></a>
 
 <!-- pills -->
 
@@ -377,18 +377,18 @@
                     p.addClass('text-danger')
 
                     p.html(
-                        <?= json_encode(lang('common.duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
+                        <?= json_encode(t('common.duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
                         ` <a href="${ROOTPATH}/activities/view/${result.id}" class="colorless">${result.title}</a>`
                     )
                     btn.remove()
                 } else if (result.similarity > 50) {
                     p.addClass('text-signal')
                     p.html(
-                        <?= json_encode(lang('common.might_be_duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
+                        <?= json_encode(t('common.might_be_duplicate_of'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> +
                         ` (<b>${result.similarity}&nbsp;%</b>):</p>
                      <a href="${ROOTPATH}/activities/view/${result.id}" class="colorless">${result.title}</a>`
                     )
-                    // p.append('<p class="text-signal">'+<?= json_encode(lang('import.this_might_be_a_duplicate_of_the_follwing_publication'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
+                    // p.append('<p class="text-signal">'+<?= json_encode(t('import.this_might_be_a_duplicate_of_the_follwing_publication'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)
                 }
                 content.append(p)
 

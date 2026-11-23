@@ -34,16 +34,16 @@
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-lock"></i>
-        <?= lang('activities.lock_a_period') ?>
+        <?= t('activities.lock_a_period') ?>
     </h1>
     <p>
-        <?= lang('activities.you_can_lock_a_period_once_a_report_has_been_generated_all_activities_that') ?>
+        <?= t('activities.you_can_lock_a_period_once_a_report_has_been_generated_all_activities_that') ?>
     </p>
 
     <p>
-        <?=lang('activities.the_following_roles_can_still_edit_or_delete_locked_activities')?>
+        <?=t('activities.the_following_roles_can_still_edit_or_delete_locked_activities')?>
         <br>
-        <b><?=lang('action.edit')?>:</b>
+        <b><?=t('action.edit')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.edit-locked',
@@ -52,7 +52,7 @@
             echo implode(', ', array_column($roles, 'role'));
         ?>
         <br>
-        <b><?=lang('action.delete')?>:</b>
+        <b><?=t('action.delete')?>:</b>
         <?php
             $roles = $osiris->adminRights->find([
                 'right' => 'activities.delete-locked',
@@ -65,7 +65,7 @@
 
 
     <p>
-        <?= lang('activities.activities_that_are_not_report_worthy_e_g_online_ahead_of_print_activities') ?>
+        <?= t('activities.activities_that_are_not_report_worthy_e_g_online_ahead_of_print_activities') ?>
     </p>
 
     <div class="box padded">
@@ -74,30 +74,30 @@
             <div class="form-row row-eq-spacing">
                 <div class="col-sm">
                     <label class="required" for="start">
-                        <?= lang('activities.beginning') ?>
+                        <?= t('activities.beginning') ?>
                     </label>
                     <input type="date" class="form-control" name="start" id="start" value="<?= CURRENTYEAR ?>-01-01" required>
                 </div>
                 <div class="col-sm">
                     <label class="required" for="end">
-                        <?= lang('common.end') ?>
+                        <?= t('common.end') ?>
                     </label>
                     <input type="date" class="form-control" name="end" id="end" value="<?= CURRENTYEAR ?>-06-30" required>
                 </div>
             </div>
             <div class="my-20">
-                <span><?= lang('common.action') ?>:</span>
+                <span><?= t('common.action') ?>:</span>
 
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--danger-color);">
                     <input type="radio" name="action" id="action-lock" value="lock" checked="">
-                    <label for="action-lock"><i class="ph ph-duotone ph-lock text-danger"></i> <?= lang('common.lock') ?></label>
+                    <label for="action-lock"><i class="ph ph-duotone ph-lock text-danger"></i> <?= t('common.lock') ?></label>
                 </div>
                 <div class="custom-radio d-inline-block ml-10" style="--secondary-color: var(--success-color);">
                     <input type="radio" name="action" id="action-unlock" value="unlock">
-                    <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= lang('common.unlock') ?></label>
+                    <label for="action-unlock"><i class="ph ph-duotone ph-lock-open text-success"></i> <?= t('common.unlock') ?></label>
                 </div>
             </div>
-            <button class="btn" type="submit"><?= lang('action.submit') ?></button>
+            <button class="btn" type="submit"><?= t('action.submit') ?></button>
 
         </form>
     </div>

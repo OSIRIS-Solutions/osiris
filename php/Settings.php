@@ -782,7 +782,7 @@ class Settings
         // $settings = $this->get('infrastructures_label');
         // if (empty($settings) || !isset($settings['en'])) return lang('common.infrastructures');
         // return lang($settings['en'], $settings['de'] ?? null);
-        return translate('common.infrastructures');
+        return t('common.infrastructures');
     }
 
     function topicLabel()
@@ -791,7 +791,7 @@ class Settings
         // $settings = $this->get('topics_label');
         // if (empty($settings) || !isset($settings['en'])) return lang('Research Topics', 'Forschungsbereiche');
         // return lang($settings['en'], $settings['de'] ?? null);
-        return translate('common.research_topics');
+        return t('common.research_topics');
     }
 
     function tagLabel()
@@ -800,7 +800,7 @@ class Settings
         // $settings = $this->get('tags_label');
         // if (empty($settings) || !isset($settings['en'])) return lang('common.tags');
         // return lang($settings['en'], $settings['de'] ?? null);
-        return translate('common.tags');
+        return t('common.tags');
     }
 
     function journalLabel()
@@ -808,7 +808,7 @@ class Settings
         // $settings = $this->get('journals_label');
         // if (empty($settings) || !isset($settings['en'])) return lang('Journals', 'Journale');
         // return lang($settings['en'], $settings['de'] ?? null);
-        return translate('common.journals');
+        return t('common.journals');
     }
 
     function impactLabel()
@@ -816,7 +816,7 @@ class Settings
         // $settings = $this->get('impact_label');
         // if (empty($settings) || !isset($settings['en'])) return lang('Cite factor', 'Cite Factor');
         // return lang($settings['en'], $settings['de'] ?? null);
-        return translate('common.cite_factor');
+        return t('common.cite_factor');
     }
 
     function resourceHubLabel(){
@@ -825,14 +825,14 @@ class Settings
         $label = $rh['label'] ?? [];
         if (empty($label) || !isset($label['en'])) return lang('Resource Hub', 'Ressourcen-Hub');
         return lang($label['en'], $label['de'] ?? null);
-        return translate('common.resource_hub');
+        return t('common.resource_hub');
     }
 
     function tripLabel()
     {
         if (!$this->featureEnabled('trips')) return '';
         $arr = $this->osiris->adminTypes->findOne(['id' => 'travel']);
-        if (empty($arr) || !isset($arr['name'])) return translate('common.research_trips');
+        if (empty($arr) || !isset($arr['name'])) return t('common.research_trips');
         return lang($arr['name'], $arr['name_de'] ?? null);
     }
 

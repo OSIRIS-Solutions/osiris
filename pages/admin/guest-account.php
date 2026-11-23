@@ -17,11 +17,11 @@
 
 <h1>
     <i class="ph-duotone ph-user-plus"></i>
-    <?= lang('common.manage_guest_accounts') ?>
+    <?= t('common.manage_guest_accounts') ?>
 </h1>
 <a href="<?= ROOTPATH ?>/admin/guest-account/add" class="btn primary">
     <i class="ph ph-user-plus"></i>
-    <?= lang('admin.add_guest_account') ?>
+    <?= t('admin.add_guest_account') ?>
 </a>
 
 <?php
@@ -50,19 +50,19 @@ $accounts = $osiris->guestAccounts->aggregate([
 
 ])->toArray();
 if (empty($accounts)) {
-    echo "<p>" . lang('admin.no_guest_accounts_found') . "</p>";
+    echo "<p>" . t('admin.no_guest_accounts_found') . "</p>";
 } else {
 ?>
 
     <table class="table" id="guest-accounts-table">
         <thead>
             <tr>
-                <th><?= lang('common.username') ?></th>
-                <th><?= lang('common.name_first') ?></th>
-                <th><?= lang('common.name_last') ?></th>
-                <th><?= lang('common.mail_guest_account_add') ?></th>
-                <th><?= lang('common.valid_until') ?></th>
-                <th class="w-100"><?= lang('common.actions') ?></th>
+                <th><?= t('common.username') ?></th>
+                <th><?= t('common.name_first') ?></th>
+                <th><?= t('common.name_last') ?></th>
+                <th><?= t('common.mail_guest_account_add') ?></th>
+                <th><?= t('common.valid_until') ?></th>
+                <th class="w-100"><?= t('common.actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -80,7 +80,7 @@ if (empty($accounts)) {
                     <td><?= e($account['mail'] ?? '') ?></td>
                     <td>
                         <?php if (empty($account['valid_until'] ?? '')) { ?>
-                            <em><?= lang('common.unlimited') ?></em>
+                            <em><?= t('common.unlimited') ?></em>
                         <?php } else { ?>
                             <span <?= $in_past ? 'class="text-danger"' : '' ?>><?= e($account['valid_until']) ?></span>
                         <?php } ?>
@@ -94,12 +94,12 @@ if (empty($accounts)) {
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/update" method="post">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <div class="form-group">
-                                        <label for="valid_until_<?= e($account['username']) ?>"><?= lang('common.valid_until') ?></label>
+                                        <label for="valid_until_<?= e($account['username']) ?>"><?= t('common.valid_until') ?></label>
                                         <input type="date" id="valid_until_<?= e($account['username']) ?>" name="valid_until" class="form-control" value="<?= isset($account['valid_until']) ? e($account['valid_until']) : '' ?>">
                                     </div>
                                     <button type="submit" class="btn primary mt-10">
                                         <i class="ph ph-check"></i>
-                                        <?= lang('action.save') ?>
+                                        <?= t('action.save') ?>
                                     </button>
                                 </form>
                             </div>
@@ -111,12 +111,12 @@ if (empty($accounts)) {
                                     <i class="ph ph-link"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right p-10 w-400" aria-labelledby="dropdown-link-<?= e($account['username']) ?>">
-                                    <?= lang('admin.generate_a_link_to_set_a_new_password_for_this_guest_account_the_link_will') ?>
+                                    <?= t('admin.generate_a_link_to_set_a_new_password_for_this_guest_account_the_link_will') ?>
                                     <form action="<?= ROOTPATH ?>/crud/admin/guest-account/generate-link" method="post" class="mt-10">
                                         <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                         <button type="submit" class="btn primary">
                                             <i class="ph ph-link"></i>
-                                            <?= lang('admin.generate_link') ?>
+                                            <?= t('admin.generate_link') ?>
                                         </button>
                                     </form>
                                 </div>
@@ -131,12 +131,12 @@ if (empty($accounts)) {
                                 <form action="<?= ROOTPATH ?>/crud/admin/guest-account/delete" method="post" class="d-inline">
                                     <input type="hidden" name="username" value="<?= e($account['username']) ?>">
                                     <small>
-                                        <b><?= lang('common.note') ?></b>
-                                        <?= lang('admin.only_the_user_account_will_be_deleted_the_corresponding_profile_will_remain') ?>
+                                        <b><?= t('common.note') ?></b>
+                                        <?= t('admin.only_the_user_account_will_be_deleted_the_corresponding_profile_will_remain') ?>
                                     </small><br>
-                                    <button type="submit" class="btn danger" title="<?= lang('action.delete') ?>">
+                                    <button type="submit" class="btn danger" title="<?= t('action.delete') ?>">
                                         <i class="ph ph-trash"></i>
-                                        <?= lang('admin.delete_account') ?>
+                                        <?= t('admin.delete_account') ?>
                                     </button>
                                 </form>
                             </div>

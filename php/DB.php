@@ -162,16 +162,16 @@ class DB
     {
         $Settings = new Settings;
         $notifications = [
-            'approval' => lang('common.approval_of_activities'),
-            'epub' => '<em>Online ahead of print</em>-' . lang('common.publications'),
-            'status' => lang('common.expired_status'),
-            'openend' => lang('people.ongoing_activities_profile'),
-            'project-open' => lang('common.open_project_applications'),
-            'project-end' => lang('common.expired_projects'),
-            'infrastructure' => lang('common.updating_infrastructures'),
-            'rejected' => lang('common.rejected_activities'),
-            'nagoya' => lang('common.nagoya_protocol_compliance'),
-            'news-editorial' => lang('common.news_editorial'),
+            'approval' => t('common.approval_of_activities'),
+            'epub' => '<em>Online ahead of print</em>-' . t('common.publications'),
+            'status' => t('common.expired_status'),
+            'openend' => t('people.ongoing_activities_profile'),
+            'project-open' => t('common.open_project_applications'),
+            'project-end' => t('common.expired_projects'),
+            'infrastructure' => t('common.updating_infrastructures'),
+            'rejected' => t('common.rejected_activities'),
+            'nagoya' => t('common.nagoya_protocol_compliance'),
+            'news-editorial' => t('common.news_editorial'),
         ];
 
         $now = time();
@@ -204,7 +204,7 @@ class DB
             $issues_raw = $this->getUserIssues($user);
             if (!empty($issues_raw)) {
                 $issues['activity'] = [
-                    'name' => lang('common.activities'),
+                    'name' => t('common.activities'),
                     'count' => 0,
                     'key' => 'activity',
                     'values' => []
@@ -226,7 +226,7 @@ class DB
             $queue = $this->db->queue->count(['authors.user' => $user, 'duplicate' => ['$exists' => false]]);
             if ($queue !== 0) {
                 $issues['queue'] = [
-                    'name' => lang('import.queue'),
+                    'name' => t('import.queue'),
                     'count' => $queue,
                     'key' => 'queue',
                 ];
@@ -259,7 +259,7 @@ class DB
                 ]);
                 if ($count > 0) {
                     $issues['news-editorial'] = [
-                        'name' => lang('common.news_editorial'),
+                        'name' => t('common.news_editorial'),
                         'count' => $count,
                         'key' => 'news-editorial'
                     ];
@@ -274,7 +274,7 @@ class DB
                 $lastquarter = $this->getLastQuarter();
                 if (in_array('scientist', $roles) && !in_array($lastquarter, $approvedQ)) {
                     $issues['approval'] = [
-                        'name' => lang('common.approval_of_the_quarter'),
+                        'name' => t('common.approval_of_the_quarter'),
                         'count' => 1,
                         'key' => $lastquarter,
                     ];

@@ -30,7 +30,7 @@ $user_in_project = false;
 
     <h1>
         <i class="ph-duotone ph-users-three"></i>
-        <?= lang('projects.manage_project_staff') ?>
+        <?= t('projects.manage_project_staff') ?>
     </h1>
 
     <form action="<?= ROOTPATH ?>/crud/<?= $collection ?>/update-persons/<?= $id ?>" method="post">
@@ -40,33 +40,33 @@ $user_in_project = false;
                 <tr>
                     <th></th>
                     <th>
-                        <?= lang('common.person') ?><br>
+                        <?= t('common.person') ?><br>
                         <span class="badge kdsf m-0">
                             KDSF-B-2-15-A
                         </span>
                     </th>
                     <th>
-                        <?= lang('common.role') ?><br>
+                        <?= t('common.role') ?><br>
                         <span class="badge kdsf m-0">
                             KDSF-B-2-15-B
                         </span>
                     </th>
                     <?php if ($collection == 'projects') { ?>
                         <th>
-                            <?= lang('common.start') ?><br>
+                            <?= t('common.start') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-C
                             </span>
                         </th>
                         <th>
-                            <?= lang('common.end') ?><br>
+                            <?= t('common.end') ?><br>
                             <span class="badge kdsf m-0">
                                 KDSF-B-2-15-D
                             </span>
                         </th>
                     <?php } ?>
                     <th>
-                        <?= lang('common.units') ?>
+                        <?= t('common.units') ?>
                     </th>
                     <th></th>
                 </tr>
@@ -155,11 +155,11 @@ $user_in_project = false;
                                     <?php } ?>
                                 </select>
                                 <div class="input-group-append">
-                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-user-plus"></i> <?= lang('common.add_person') ?></button>
+                                    <button class="btn" type="button" onclick="addProjectRow()"><i class="ph ph-user-plus"></i> <?= t('common.add_person') ?></button>
                                 </div>
                             </div>
                             <?php if (!$user_in_project) { ?>
-                                <button class="btn primary" id="self-add-btn" type="button" onclick="addProjectRow(true)"><i class="ph ph-user-plus"></i> <?= lang('projects.add_yourself_to_the_project') ?></button>
+                                <button class="btn primary" id="self-add-btn" type="button" onclick="addProjectRow(true)"><i class="ph ph-user-plus"></i> <?= t('projects.add_yourself_to_the_project') ?></button>
                             <?php } ?>
                         </div>
                     </td>
@@ -170,7 +170,7 @@ $user_in_project = false;
 
         <button class="btn primary mt-20">
             <i class="ph ph-check"></i>
-            <?= lang('action.submit') ?>
+            <?= t('action.submit') ?>
         </button>
     </form>
 </div>
@@ -191,7 +191,7 @@ $user_in_project = false;
         const personSelect = $('#person-select');
         const username = self_add ? '<?= $_SESSION['username'] ?>' : personSelect.val();
         if (!username) {
-            toastError('<?= lang('common.please_select_a_person') ?>');
+            toastError('<?= t('common.please_select_a_person') ?>');
             return;
         }
 
@@ -246,7 +246,7 @@ $user_in_project = false;
                 personSelect.find(`option[value="${username}"]`).remove();
             }
         }).fail(function() {
-            toastError('<?= lang('projects.failed_to_fetch_user_data') ?>');
+            toastError('<?= t('projects.failed_to_fetch_user_data') ?>');
         });
     }
 

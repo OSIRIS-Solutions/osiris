@@ -223,9 +223,9 @@ $pageactive = function ($p) use ($page) {
                 <div class="maintenance-msg">
                     <div class="title">
                         <i class="ph ph-barricade"></i>
-                        <?= lang('header.maintenance') ?>.
+                        <?= t('header.maintenance') ?>.
                     </div>
-                    <?= lang('header.maintenance_message') ?>
+                    <?= t('header.maintenance_message') ?>
                 </div>
             <?php } else { ?>
                 <a href="<?= ROOTPATH ?>/" class="navbar-brand ml-20">
@@ -273,16 +273,16 @@ $pageactive = function ($p) use ($page) {
                 <div class="dropdown modal-sm">
                     <button class="btn primary outline mr-10" data-toggle="dropdown" type="button" id="change-language" aria-haspopup="true" aria-expanded="false">
                         <i class="ph ph-translate"></i>
-                        <span class="sr-only"><?= lang('header.change_language') ?></span>
+                        <span class="sr-only"><?= t('header.change_language') ?></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-center w-200" aria-labelledby="change-language">
-                        <h6 class="header text-primary"><?= lang('header.change_language') ?></h6>
+                        <h6 class="header text-primary"><?= t('header.change_language') ?></h6>
                         <form action="<?= ROOTPATH ?>/set-preferences" method="get" class="content pt-0">
                             <?php foreach ($Settings->languages() as $settings_lang) {
                                 $selected_lang = $settings_lang == $currentLanguage;
                                 $lang_name = $LANGUAGES[$settings_lang] ?? $settings_lang;
                                 if ($lang_name == 'keys') {
-                                    $lang_name = '<i class="ph ph-code"></i> ' . translate('common.lang_keys');
+                                    $lang_name = '<i class="ph ph-code"></i> ' . t('common.lang_keys');
                                 }
                             ?>
                                 <button type="submit" class="btn block mt-5 <?= $selected_lang ? 'primary' : '' ?>" name="language" value="<?= htmlspecialchars($settings_lang, ENT_QUOTES, 'UTF-8') ?>" <?= $selected_lang ? 'disabled' : '' ?>><?= $lang_name ?></button>
@@ -298,18 +298,18 @@ $pageactive = function ($p) use ($page) {
             <?php if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['username'])) { ?>
                 <a href="<?= ROOTPATH ?>/" class="btn primary-5">
                     <i class="ph ph-sign-in" aria-hidden="true"></i>
-                    <?= lang('header.login') ?>
+                    <?= t('header.login') ?>
                 </a>
             <?php } else { ?>
                 <!-- fake search input for command palette -->
                 <div id="navbar-cp-trigger" class="d-none d-md-block">
-                    <button type="button" class="cp-trigger" aria-label="<?= lang('action.open_search') ?>">
+                    <button type="button" class="cp-trigger" aria-label="<?= t('action.open_search') ?>">
                         <i class="ph ph-magnifying-glass cp-trigger__icon" aria-hidden="true"></i>
                         <span class="cp-trigger__placeholder">
-                            <?= lang('action.search_in_osiris') ?>
+                            <?= t('action.search_in_osiris') ?>
                         </span>
                         <span class="cp-trigger__kbd" aria-hidden="true">
-                            <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('common.ctrl') ?></span>
+                            <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : t('common.ctrl') ?></span>
                             <span class="os-kbd">K</span>
                         </span>
                     </button>

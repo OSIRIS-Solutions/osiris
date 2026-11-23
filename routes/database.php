@@ -18,24 +18,24 @@ Route::get('/uploads/(.*)', function ($requestedPath) {
     include_once BASEPATH . '/php/init.php';
 
     if ($requestedPath === '') {
-        return abortwith(404, lang('common.file'));
+        return abortwith(404, t('common.file'));
     }
 
     // Resolve the requested file and make sure it really is inside /uploads.
     $uploadsDirectory = realpath(BASEPATH . '/uploads');
     $filePath = realpath(BASEPATH . '/uploads/' . $requestedPath);
     if ($uploadsDirectory === false || $filePath === false) {
-        return abortwith(404, lang('common.file'));
+        return abortwith(404, t('common.file'));
     }
     if ($filePath !== $uploadsDirectory && !str_starts_with($filePath, $uploadsDirectory . DIRECTORY_SEPARATOR)) {
-        return abortwith(403, lang('people.access_denied'));
+        return abortwith(403, t('people.access_denied'));
     }
 
     if (!is_file($filePath)) {
-        return abortwith(404, lang('common.file'));
+        return abortwith(404, t('common.file'));
     }
     if (!is_readable($filePath)) {
-        return abortwith(403, lang('common.file_is_not_readable'));
+        return abortwith(403, t('common.file_is_not_readable'));
     }
     $downloadFilename = basename($filePath);
 
@@ -44,7 +44,7 @@ Route::get('/uploads/(.*)', function ($requestedPath) {
     if (preg_match('/^([a-f0-9]{24})\.[a-z0-9]+$/i', $requestedPath, $matches)) {
         $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($matches[1])]);
         if (empty($document)) {
-            return abortwith(404, lang('common.file'));
+            return abortwith(404, t('common.file'));
         }
         $downloadFilename = basename((string) ($document['filename'] ?? $downloadFilename));
 
@@ -76,7 +76,7 @@ Route::get('/uploads/(.*)', function ($requestedPath) {
         }
 
         if (!$allowed) {
-            return abortwith(403, lang('common.you_do_not_have_permission_to_view_this_file'));
+            return abortwith(403, t('common.you_do_not_have_permission_to_view_this_file'));
         }
     } else {
         // Legacy guest documents are stored in /uploads/{guest-id}/{filename}.
@@ -93,7 +93,7 @@ Route::get('/uploads/(.*)', function ($requestedPath) {
                 && !$Settings->hasPermission('guests.see.documents')
                 && !$Settings->hasPermission('guests.edit.documents')
             ) {
-                return abortwith(403, lang('common.you_do_not_have_permission_to_view_this_file'));
+                return abortwith(403, t('common.you_do_not_have_permission_to_view_this_file'));
             }
         }
     }
@@ -127,9 +127,9 @@ Route::get('/rerender', function () {
     <?php if (!$Settings->hasPermission('admin.see')) { ?>
         <div class="alert danger">
             <h4 class="title">
-                <?= lang('people.access_denied') ?>
+                <?= t('people.access_denied') ?>
             </h4>
-            <?= lang('common.you_do_not_have_permission_to_access_this_page') ?>
+            <?= t('common.you_do_not_have_permission_to_access_this_page') ?>
         </div>
     <?php
         include BASEPATH . "/footer.php";
@@ -138,7 +138,7 @@ Route::get('/rerender', function () {
 
     <p class="text-danger">
         <i class="ph ph-warning"></i>
-        <?= lang('common.start_to_render_all_activities_this_might_take_a_while_please_be_patient_an') ?>
+        <?= t('common.start_to_render_all_activities_this_might_take_a_while_please_be_patient_an') ?>
     </p>
     <?php
     // flush the output buffer
@@ -165,9 +165,9 @@ Route::get('/rerender', function () {
 
     <div class="alert success">
         <h4 class="title">
-            <?= lang('common.success') ?>
+            <?= t('common.success') ?>
         </h4>
-        <?= lang('common.the_rendering_has_finished_all_activities_should_now_be_displayed_correctly') ?>
+        <?= t('common.the_rendering_has_finished_all_activities_should_now_be_displayed_correctly') ?>
     </div>
 
     <?php
@@ -181,9 +181,9 @@ Route::get('/rerender-projects', function () {
     if (!$Settings->hasPermission('admin.see')) { ?>
         <div class="alert danger">
             <h4 class="title">
-                <?= lang('people.access_denied') ?>
+                <?= t('people.access_denied') ?>
             </h4>
-            <?= lang('common.you_do_not_have_permission_to_access_this_page') ?>
+            <?= t('common.you_do_not_have_permission_to_access_this_page') ?>
         </div>
     <?php
         include BASEPATH . "/footer.php";
@@ -204,9 +204,9 @@ Route::get('/rerender-units/?(.*)', function ($username) {
     if (!$Settings->hasPermission('admin.see')) { ?>
         <div class="alert danger">
             <h4 class="title">
-                <?= lang('people.access_denied') ?>
+                <?= t('people.access_denied') ?>
             </h4>
-            <?= lang('common.you_do_not_have_permission_to_access_this_page') ?>
+            <?= t('common.you_do_not_have_permission_to_access_this_page') ?>
         </div>
 <?php
         include BASEPATH . "/footer.php";
@@ -283,7 +283,7 @@ Route::get('/settings', function () {
 Route::get('/documents/?(central|connected)?', function ($type = null) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('documents') && !$Settings->hasPermission('documents.manage') && !$Settings->hasPermission('documents.central')) {
-        return abortwith(403, lang('common.you_do_not_have_permission_to_view_documents'), '/');
+        return abortwith(403, t('common.you_do_not_have_permission_to_view_documents'), '/');
     }
     $centralPerm = $Settings->hasPermission('documents.central');
     $connectPerm = $Settings->hasPermission('documents');
@@ -303,11 +303,11 @@ Route::get('/documents/?(central|connected)?', function ($type = null) {
             'type' => ['$ne' => 'central']
         ];
     } else {
-        return abortwith(403, lang('common.you_do_not_have_permission_to_view_this_type_of_documents'), '/');
+        return abortwith(403, t('common.you_do_not_have_permission_to_view_this_type_of_documents'), '/');
     }
     $documents = $osiris->uploads->find($filter, ['sort' => ['uploaded' => -1]])->toArray();
     $breadcrumb = [
-        ['name' => lang('common.documents')]
+        ['name' => t('common.documents')]
     ];
     include BASEPATH . "/header.php";
     if ($type === 'central') {
@@ -333,9 +333,9 @@ function requireCentralDocumentManagement($Settings): void
     if (!$Settings->hasPermission('documents.manage')) {
         abortwith(
             403,
-            lang('common.you_do_not_have_permission_to_manage_central_documents'),
+            t('common.you_do_not_have_permission_to_manage_central_documents'),
             '/documents',
-            lang('common.back_to_documents')
+            t('common.back_to_documents')
         );
     }
 }
@@ -363,7 +363,7 @@ function centralDocumentMetadata(array $values): array
 {
     $name = trim(strip_tags((string) ($values['name'] ?? '')));
     if ($name === '') {
-        redirectFromCentralDocuments(lang('common.please_enter_a_title'));
+        redirectFromCentralDocuments(t('common.please_enter_a_title'));
     }
 
     return [
@@ -380,28 +380,28 @@ function centralDocumentUpload(): array
     $postSizeLimit = Settings::convertToBytes(ini_get('post_max_size'));
     $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
     if ($postSizeLimit > 0 && $contentLength > $postSizeLimit) {
-        redirectFromCentralDocuments(lang('common.files_may_be_up_to_filesizelimit_in_size', replace: ['fileSizeLimit' => $fileSizeLimit['human']]));
+        redirectFromCentralDocuments(t('common.files_may_be_up_to_filesizelimit_in_size', replace: ['fileSizeLimit' => $fileSizeLimit['human']]));
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
-        redirectFromCentralDocuments(lang('common.please_select_a_file'));
+        redirectFromCentralDocuments(t('common.please_select_a_file'));
     }
 
     $file = $_FILES['file'];
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $message = match ($file['error']) {
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('common.the_file_is_too_large'),
-            UPLOAD_ERR_PARTIAL => lang('common.the_file_was_only_partially_uploaded'),
-            UPLOAD_ERR_NO_TMP_DIR => lang('common.the_temporary_upload_directory_is_missing'),
-            UPLOAD_ERR_CANT_WRITE => lang('common.the_file_could_not_be_written_to_disk'),
-            UPLOAD_ERR_EXTENSION => lang('common.a_php_extension_stopped_the_upload'),
-            default => lang('common.the_file_could_not_be_uploaded'),
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => t('common.the_file_is_too_large'),
+            UPLOAD_ERR_PARTIAL => t('common.the_file_was_only_partially_uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => t('common.the_temporary_upload_directory_is_missing'),
+            UPLOAD_ERR_CANT_WRITE => t('common.the_file_could_not_be_written_to_disk'),
+            UPLOAD_ERR_EXTENSION => t('common.a_php_extension_stopped_the_upload'),
+            default => t('common.the_file_could_not_be_uploaded'),
         };
         redirectFromCentralDocuments($message);
     }
 
     if ((int) $file['size'] <= 0 || ($fileSizeLimit['bytes'] > 0 && (int) $file['size'] > $fileSizeLimit['bytes'])) {
-        redirectFromCentralDocuments(lang('common.files_may_be_up_to_filesizelimit_in_size', replace: ['fileSizeLimit' => $fileSizeLimit['human']]));
+        redirectFromCentralDocuments(t('common.files_may_be_up_to_filesizelimit_in_size', replace: ['fileSizeLimit' => $fileSizeLimit['human']]));
     }
 
     $filename = trim(basename((string) $file['name']));
@@ -427,20 +427,20 @@ function centralDocumentUpload(): array
         'svg',
     ];
     if ($filename === '' || !in_array($extension, $allowedExtensions, true)) {
-        redirectFromCentralDocuments(lang('common.this_file_type_is_not_supported_please_upload_a_common_document_spreadsheet'));
+        redirectFromCentralDocuments(t('common.this_file_type_is_not_supported_please_upload_a_common_document_spreadsheet'));
     }
 
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']) ?: 'application/octet-stream';
     $blockedMimes = ['text/html', 'application/x-httpd-php', 'application/x-php', 'application/x-executable'];
     if (in_array($mime, $blockedMimes, true)) {
-        redirectFromCentralDocuments(lang('common.this_file_type_is_not_supported'));
+        redirectFromCentralDocuments(t('common.this_file_type_is_not_supported'));
     }
 
     if (in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
         $expectedMime = $extension === 'png' ? 'image/png' : 'image/jpeg';
         $image = @getimagesize($file['tmp_name']);
         if ($image === false || $mime !== $expectedMime || ($image['mime'] ?? null) !== $expectedMime) {
-            redirectFromCentralDocuments(lang('common.the_selected_image_is_invalid_or_does_not_match_its_file_extension'));
+            redirectFromCentralDocuments(t('common.the_selected_image_is_invalid_or_does_not_match_its_file_extension'));
         }
     }
 
@@ -494,8 +494,8 @@ Route::get('/documents/manage', function () {
         ['sort' => ['updated' => -1, 'uploaded' => -1]]
     )->toArray();
     $breadcrumb = [
-        ['name' => lang('common.documents'), 'path' => '/documents'],
-        ['name' => lang('common.manage_central_documents')],
+        ['name' => t('common.documents'), 'path' => '/documents'],
+        ['name' => t('common.manage_central_documents')],
     ];
 
     include BASEPATH . "/header.php";
@@ -507,15 +507,15 @@ Route::get('/documents/manage', function () {
 Route::get('/documents/central/file/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('documents.central') && !$Settings->hasPermission('documents.manage')) {
-        abortwith(403, lang('common.you_do_not_have_permission_to_view_central_documents'), '/documents');
+        abortwith(403, t('common.you_do_not_have_permission_to_view_central_documents'), '/documents');
     }
 
     $document = centralDocumentById($osiris, $id);
-    if (empty($document)) abortwith(404, lang('common.document_not_found'), '/documents');
+    if (empty($document)) abortwith(404, t('common.document_not_found'), '/documents');
 
     $extension = strtolower((string) ($document['extension'] ?? ''));
     $path = BASEPATH . '/uploads/' . $id . '.' . $extension;
-    if (!is_file($path)) abortwith(404, lang('common.file_not_found'), '/documents');
+    if (!is_file($path)) abortwith(404, t('common.file_not_found'), '/documents');
 
     $filename = basename((string) ($document['filename'] ?? ('document.' . $extension)));
     $isSvg = $extension === 'svg';
@@ -559,13 +559,13 @@ Route::post('/crud/documents/central/upload', function () {
         $target = BASEPATH . '/uploads/' . $documentId . '.' . $extension;
         if (!move_uploaded_file($file['tmp_name'], $target)) {
             $osiris->uploads->deleteOne(['_id' => $documentId]);
-            redirectFromCentralDocuments(lang('common.the_file_could_not_be_saved'));
+            redirectFromCentralDocuments(t('common.the_file_could_not_be_saved'));
         }
     } catch (Throwable $exception) {
-        redirectFromCentralDocuments(lang('common.the_document_could_not_be_saved'));
+        redirectFromCentralDocuments(t('common.the_document_could_not_be_saved'));
     }
 
-    redirectFromCentralDocuments(lang('common.the_document_was_uploaded_successfully'), 'success');
+    redirectFromCentralDocuments(t('common.the_document_was_uploaded_successfully'), 'success');
 }, 'login');
 
 
@@ -573,7 +573,7 @@ Route::post('/crud/documents/central/update/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
     requireCentralDocumentManagement($Settings);
     if (empty(centralDocumentById($osiris, $id))) {
-        abortwith(404, lang('common.document_not_found'), '/documents/manage');
+        abortwith(404, t('common.document_not_found'), '/documents/manage');
     }
 
     $values = $_POST['values'] ?? [];
@@ -586,10 +586,10 @@ Route::post('/crud/documents/central/update/([a-f0-9]{24})', function ($id) {
             ['$set' => $metadata]
         );
     } catch (Throwable $exception) {
-        redirectFromCentralDocuments(lang('common.the_document_could_not_be_updated'));
+        redirectFromCentralDocuments(t('common.the_document_could_not_be_updated'));
     }
 
-    redirectFromCentralDocuments(lang('common.the_document_was_updated_successfully'), 'success');
+    redirectFromCentralDocuments(t('common.the_document_was_updated_successfully'), 'success');
 }, 'login');
 
 
@@ -597,7 +597,7 @@ Route::post('/crud/documents/central/replace/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
     requireCentralDocumentManagement($Settings);
     $document = centralDocumentById($osiris, $id);
-    if (empty($document)) abortwith(404, lang('common.document_not_found'), '/documents/manage');
+    if (empty($document)) abortwith(404, t('common.document_not_found'), '/documents/manage');
 
     [$file, $filename, $extension, $mime] = centralDocumentUpload();
     $oldExtension = strtolower((string) ($document['extension'] ?? ''));
@@ -607,19 +607,19 @@ Route::post('/crud/documents/central/replace/([a-f0-9]{24})', function ($id) {
     $backupPath = $oldPath . '.backup-' . bin2hex(random_bytes(6));
 
     if (!move_uploaded_file($file['tmp_name'], $temporaryPath)) {
-        redirectFromCentralDocuments(lang('common.the_replacement_file_could_not_be_saved'));
+        redirectFromCentralDocuments(t('common.the_replacement_file_could_not_be_saved'));
     }
 
     $hadOldFile = is_file($oldPath);
     $hasBackup = $hadOldFile && rename($oldPath, $backupPath);
     if ($hadOldFile && !$hasBackup) {
         @unlink($temporaryPath);
-        redirectFromCentralDocuments(lang('common.the_existing_file_could_not_be_prepared_for_replacement'));
+        redirectFromCentralDocuments(t('common.the_existing_file_could_not_be_prepared_for_replacement'));
     }
     if (!rename($temporaryPath, $targetPath)) {
         @unlink($temporaryPath);
         if ($hasBackup) @rename($backupPath, $oldPath);
-        redirectFromCentralDocuments(lang('common.the_replacement_file_could_not_be_saved'));
+        redirectFromCentralDocuments(t('common.the_replacement_file_could_not_be_saved'));
     }
 
     $now = date('Y-m-d H:i:s');
@@ -640,12 +640,12 @@ Route::post('/crud/documents/central/replace/([a-f0-9]{24})', function ($id) {
     } catch (Throwable $exception) {
         @unlink($targetPath);
         if ($hasBackup) @rename($backupPath, $oldPath);
-        redirectFromCentralDocuments(lang('common.the_document_could_not_be_replaced'));
+        redirectFromCentralDocuments(t('common.the_document_could_not_be_replaced'));
     }
 
     if ($hasBackup) @unlink($backupPath);
     if ($oldPath !== $targetPath && is_file($oldPath)) @unlink($oldPath);
-    redirectFromCentralDocuments(lang('common.the_file_was_replaced_successfully_existing_links_remain_valid'), 'success');
+    redirectFromCentralDocuments(t('common.the_file_was_replaced_successfully_existing_links_remain_valid'), 'success');
 }, 'login');
 
 
@@ -653,14 +653,14 @@ Route::post('/crud/documents/central/delete/([a-f0-9]{24})', function ($id) {
     include_once BASEPATH . "/php/init.php";
     requireCentralDocumentManagement($Settings);
     $document = centralDocumentById($osiris, $id);
-    if (empty($document)) abortwith(404, lang('common.document_not_found'), '/documents/manage');
+    if (empty($document)) abortwith(404, t('common.document_not_found'), '/documents/manage');
 
     $path = BASEPATH . '/uploads/' . $id . '.' . strtolower((string) ($document['extension'] ?? ''));
     $temporaryPath = $path . '.deleting-' . bin2hex(random_bytes(6));
     $hadFile = is_file($path);
     $fileMoved = $hadFile && rename($path, $temporaryPath);
     if ($hadFile && !$fileMoved) {
-        redirectFromCentralDocuments(lang('common.the_file_could_not_be_prepared_for_deletion'));
+        redirectFromCentralDocuments(t('common.the_file_could_not_be_prepared_for_deletion'));
     }
 
     try {
@@ -668,11 +668,11 @@ Route::post('/crud/documents/central/delete/([a-f0-9]{24})', function ($id) {
         if ($result->getDeletedCount() !== 1) throw new RuntimeException('Document was not deleted.');
     } catch (Throwable $exception) {
         if ($fileMoved) @rename($temporaryPath, $path);
-        redirectFromCentralDocuments(lang('common.the_document_could_not_be_deleted'));
+        redirectFromCentralDocuments(t('common.the_document_could_not_be_deleted'));
     }
 
     if ($fileMoved) @unlink($temporaryPath);
-    redirectFromCentralDocuments(lang('common.the_document_was_deleted_successfully'), 'success');
+    redirectFromCentralDocuments(t('common.the_document_was_deleted_successfully'), 'success');
 }, 'login');
 
 
@@ -683,7 +683,7 @@ Route::post('/data/upload', function () {
     $values = $_POST['values'] ?? [];
 
     if (!isset($values['type']) || !isset($values['id'])) {
-        die(lang('common.invalid_request_missing_type_or_id'));
+        die(t('common.invalid_request_missing_type_or_id'));
     }
 
     if (!empty($values['redirect'])) {
@@ -693,31 +693,31 @@ Route::post('/data/upload', function () {
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        $msg = lang('common.file_upload_failed_with_the_following_error') . '<br>';
+        $msg = t('common.file_upload_failed_with_the_following_error') . '<br>';
         switch ($_FILES['file']['error']) {
             case UPLOAD_ERR_INI_SIZE:
-                $msg .= lang('common.the_uploaded_file_exceeds_the_upload_max_filesize_directive_in_php_ini_plea');
+                $msg .= t('common.the_uploaded_file_exceeds_the_upload_max_filesize_directive_in_php_ini_plea');
                 break;
             case UPLOAD_ERR_FORM_SIZE:
-                $msg .= lang('common.the_uploaded_file_exceeds_the_maximum_allowed_size');
+                $msg .= t('common.the_uploaded_file_exceeds_the_maximum_allowed_size');
                 break;
             case UPLOAD_ERR_PARTIAL:
-                $msg .= lang('error.file_partially_uploaded');
+                $msg .= t('error.file_partially_uploaded');
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $msg .= lang('error.no_file_uploaded');
+                $msg .= t('error.no_file_uploaded');
                 break;
             case UPLOAD_ERR_NO_TMP_DIR:
-                $msg .= lang('common.missing_a_temporary_folder');
+                $msg .= t('common.missing_a_temporary_folder');
                 break;
             case UPLOAD_ERR_CANT_WRITE:
-                $msg .= lang('common.failed_to_write_file_to_disk');
+                $msg .= t('common.failed_to_write_file_to_disk');
                 break;
             case UPLOAD_ERR_EXTENSION:
-                $msg .= lang('error.file_upload_stopped');
+                $msg .= t('error.file_upload_stopped');
                 break;
             default:
-                $msg .= lang('common.unknown_upload_error');
+                $msg .= t('common.unknown_upload_error');
                 break;
         }
         $_SESSION['msg'] = $msg;
@@ -757,7 +757,7 @@ Route::post('/data/upload', function () {
     // Save the document to MongoDB
     $result = $osiris->uploads->insertOne($document);
     if ($result->getInsertedCount() === 0) {
-        $msg = lang('common.failed_to_save_document_information_to_the_database_please_try_again');
+        $msg = t('common.failed_to_save_document_information_to_the_database_please_try_again');
         $_SESSION['msg'] = $msg;
         $_SESSION['msg_type'] = 'error';
         header("Location: " . $redirectUrl);
@@ -771,7 +771,7 @@ Route::post('/data/upload', function () {
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
         // Wenn der Upload fehlschlägt, entferne den Eintrag aus der Datenbank
         $osiris->uploads->deleteOne(['_id' => $doc_id]);
-        $msg = lang('common.failed_to_move_uploaded_file_please_try_again');
+        $msg = t('common.failed_to_move_uploaded_file_please_try_again');
         $_SESSION['msg'] = $msg;
         $_SESSION['msg_type'] = 'error';
         header("Location: " . $redirectUrl);
@@ -779,7 +779,7 @@ Route::post('/data/upload', function () {
     }
 
     // redirect
-    $_SESSION['msg'] = lang('common.document_uploaded_successfully');
+    $_SESSION['msg'] = t('common.document_uploaded_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: $redirectUrl");
 });
@@ -812,7 +812,7 @@ Route::post('/data/delete', function () {
     }
 
     // redirect
-    $_SESSION['msg'] = lang('common.document_deleted_successfully');
+    $_SESSION['msg'] = t('common.document_deleted_successfully');
     $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "?tab=documents";
     header("Location: $redirectUrl");
 });
@@ -837,7 +837,7 @@ Route::post('/data/document/update', function () {
         $update['description'] = $_POST['description'];
     }
     if (empty($update)) {
-        $_SESSION['msg'] = lang('common.no_changes_made_to_the_document');
+        $_SESSION['msg'] = t('common.no_changes_made_to_the_document');
         $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
         header("Location: $redirectUrl");
     }
@@ -848,13 +848,13 @@ Route::post('/data/document/update', function () {
         ['$set' => $update]
     );
     if ($result->getModifiedCount() === 0) {
-        $_SESSION['msg'] = lang('common.no_changes_made_to_the_document');
+        $_SESSION['msg'] = t('common.no_changes_made_to_the_document');
         $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
         header("Location: $redirectUrl");
     }
 
     // redirect
-    $_SESSION['msg'] = lang('common.document_updated_successfully');
+    $_SESSION['msg'] = t('common.document_updated_successfully');
     $document = $osiris->uploads->findOne(['_id' => DB::to_ObjectID($id)]);
     $redirectUrl = ROOTPATH . "/" . $document['type'] . "/view/" . $document['id'] . "#section-files";
     header("Location: $redirectUrl");

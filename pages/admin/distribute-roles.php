@@ -23,13 +23,13 @@
 
         <h1>
             <i class="ph-duotone ph-shield-check" aria-hidden="true"></i>
-            <?= lang('common.distribute_roles') ?>
+            <?= t('common.distribute_roles') ?>
         </h1>
 
         <p>
             <i class="ph ph-warning text-signal"></i>
-            <?= lang('admin.you_cannot_assign_the_admin_role_here_this_can_only_be_done_directly_in_the') ?>
-            <?= lang('admin.all_logged_in_users_have_the_role_user') ?>
+            <?= t('admin.you_cannot_assign_the_admin_role_here_this_can_only_be_done_directly_in_the') ?>
+            <?= t('admin.all_logged_in_users_have_the_role_user') ?>
         </p>
 
     </div>
@@ -63,8 +63,8 @@
     <table class="table hover small w-auto mx-auto sticky-head">
         <thead>
             <tr>
-                <th><?= lang('admin.user_distribute_roles') ?></th>
-                <th><?= lang('common.units') ?></th>
+                <th><?= t('admin.user_distribute_roles') ?></th>
+                <th><?= t('common.units') ?></th>
                 <?php foreach ($roles as $role) { ?>
                     <th><?= ucfirst($role) ?></th>
                 <?php } ?>
@@ -106,7 +106,7 @@
     <div class="container w-800 mw-full">
         <button class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('admin.save_roles') ?>
+            <?= t('admin.save_roles') ?>
         </button>
     </div>
 </form>

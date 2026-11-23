@@ -8,7 +8,7 @@ if (is_array($uploadId) || $uploadId instanceof Traversable) $uploadId = $upload
     <input type="hidden" name="values[image]" value="<?= e($image) ?>">
     <img class="project-image-preview w-400 mw-full" alt="<?= e($label) ?>" <?= $image === '' ? 'hidden' : 'src="' . e(ROOTPATH . '/uploads/' . $image) . '"' ?>>
     <input type="file" class="form-control" id="project-image-file" accept="image/jpeg,image/png,image/gif" <?= $required && $image === '' ? 'required' : '' ?>>
-    <button type="button" class="btn remove-image"><?= lang('action.remove') ?></button>
+    <button type="button" class="btn remove-image"><?= t('action.remove') ?></button>
     <p class="image-status" role="status"></p>
     <?= $this->render_help($help) ?>
 </div>

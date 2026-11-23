@@ -18,7 +18,7 @@ $data_fields['activities']['sort'] = array_filter($FIELDS->fields, $sort_filter)
 $data_fields['activities']['add'] = array_filter($FIELDS->fields, $additional_filter);
 $data_fields['activities']['sort'][] = [
     'id' => 'rendered.plain',
-    'label' => lang('reports.alphabetically'),
+    'label' => t('reports.alphabetically'),
     'type' => 'string'
 ];
 
@@ -61,15 +61,15 @@ $report_id = $report['_id'] ?? null;
 
 
 $collections = [
-    'activities' => lang('common.activities'),
+    'activities' => t('common.activities'),
     // 'persons' => lang('common.persons')
 ];
 if ($Settings->featureEnabled('events')) {
-    $collections['conferences'] = lang('reports.events');
+    $collections['conferences'] = t('reports.events');
 }
 if ($Settings->featureEnabled('projects')) {
-    $collections['projects'] = lang('common.projects');
-    $collections['proposals'] = lang('common.proposals');
+    $collections['projects'] = t('common.projects');
+    $collections['proposals'] = t('common.proposals');
 }
 ?>
 
@@ -291,7 +291,7 @@ if ($Settings->featureEnabled('projects')) {
         <!-- Help -->
         <a href="https://wiki.osiris-app.de/users/reporting/" class="btn tour" target="_blank">
             <i class="ph ph-question"></i>
-            <?= lang('reports.help') ?>
+            <?= t('reports.help') ?>
         </a>
     </div>
 <?php } ?>
@@ -299,11 +299,11 @@ if ($Settings->featureEnabled('projects')) {
 <div style="margin-left: 2.5rem;">
 
     <div class="eyebrow">
-        <?= lang('reports.report_builder') ?>
+        <?= t('reports.report_builder') ?>
     </div>
     <h1>
         <i class="ph-duotone ph-clipboard-text"></i>
-        <?= $report['title'] ?? lang('common.untitled_report') ?>
+        <?= $report['title'] ?? t('common.untitled_report') ?>
     </h1>
 
 </div>
@@ -319,47 +319,47 @@ if ($Settings->featureEnabled('projects')) {
             <?php if (isset($report['title'])) { ?>
                 <button type="button" class="btn" onclick="$('#report-settings').slideToggle()">
                     <i class="ph ph-edit"></i>
-                    <?= lang('reports.edit_report_settings') ?>
+                    <?= t('reports.edit_report_settings') ?>
                 </button>
             <?php } ?>
             <a href="#variables" class="btn" data-toggle="modal">
                 <i class="ph ph-code-block"></i>
-                <?= lang('reports.variables') ?>
+                <?= t('reports.variables') ?>
             </a>
 
             <!-- collapse all -->
             <button type="button" class="btn ml-auto" onclick="$('#report .step').addClass('is-collapsed')">
                 <i class="ph ph-arrows-in-line-vertical"></i>
-                <?= lang('reports.collapse_all') ?>
+                <?= t('reports.collapse_all') ?>
             </button>
             <button type="button" class="btn" onclick="$('#report .step').removeClass('is-collapsed')">
                 <i class="ph ph-arrows-out-line-vertical"></i>
-                <?= lang('reports.expand_all') ?>
+                <?= t('reports.expand_all') ?>
             </button>
         </div>
 
 
         <div style="<?= isset($report['title']) ? 'display:none;' : '' ?>" id="report-settings" class="box padded mt-0">
             <h2 class="title">
-                <?= lang('reports.report_settings') ?>
+                <?= t('reports.report_settings') ?>
             </h2>
             <div class="form-group">
-                <label for="title" class="required"><?= lang('reports.name_of_the_report') ?></label>
+                <label for="title" class="required"><?= t('reports.name_of_the_report') ?></label>
                 <input type="text" class="form-control" name="title" value="<?= $report['title'] ?? '' ?>" required>
             </div>
             <div class="form-group">
-                <label for="description"><?= lang('common.description') ?></label>
+                <label for="description"><?= t('common.description') ?></label>
                 <textarea type="text" class="form-control" name="description"><?= $report['description'] ?? '' ?></textarea>
             </div>
 
             <!-- start month and duration -->
             <div class="form-row row-eq-spacing">
                 <div class="col-sm">
-                    <label for="start" class="required"><?= lang('common.start_month') ?></label>
+                    <label for="start" class="required"><?= t('common.start_month') ?></label>
                     <input type="number" class="form-control" name="start" id="start" value="<?= $report['start'] ?? '' ?>" required>
                 </div>
                 <div class="col-sm">
-                    <label for="duration" class="required"><?= lang('reports.duration_in_months') ?></label>
+                    <label for="duration" class="required"><?= t('reports.duration_in_months') ?></label>
                     <input type="number" class="form-control" name="duration" id="duration" value="<?= $report['duration'] ?? '' ?>" required>
                 </div>
             </div>
@@ -373,10 +373,10 @@ if ($Settings->featureEnabled('projects')) {
                     <a href="#close-modal" class="close" role="button" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
-                    <h5 class="title"><?= lang('reports.parameters_variables') ?></h5>
+                    <h5 class="title"><?= t('reports.parameters_variables') ?></h5>
 
                     <div id="vars-help" class="text-muted small mb-10">
-                        <?= lang('reports.define_variables_here_and_use_them_anywhere_in_your_template_using_vars_key') ?>
+                        <?= t('reports.define_variables_here_and_use_them_anywhere_in_your_template_using_vars_key') ?>
                         <button type="button" class="btn link small" onclick="$('#vars-cheatsheet').toggle();">Cheatsheet</button>
                     </div>
 
@@ -392,10 +392,10 @@ if ($Settings->featureEnabled('projects')) {
                     <table class="table mb-20" id="vars-table">
                         <thead>
                             <tr>
-                                <th style="width:18%"><?= lang('reports.key') ?></th>
-                                <th style="width:18%"><?= lang('common.type') ?></th>
-                                <th><?= lang('common.label') ?></th>
-                                <th style="width:22%"><?= lang('reports.default_value') ?></th>
+                                <th style="width:18%"><?= t('reports.key') ?></th>
+                                <th style="width:18%"><?= t('common.type') ?></th>
+                                <th><?= t('common.label') ?></th>
+                                <th style="width:22%"><?= t('reports.default_value') ?></th>
                                 <th style="width:10%"></th>
                             </tr>
                         </thead>
@@ -404,7 +404,7 @@ if ($Settings->featureEnabled('projects')) {
                             <tr>
                                 <td colspan="5">
                                     <button type="button" class="btn" onclick="addVarRow();">
-                                        <i class="ph ph-plus"></i> <?= lang('reports.add_variable') ?>
+                                        <i class="ph ph-plus"></i> <?= t('reports.add_variable') ?>
                                     </button>
                                 </td>
                             </tr>
@@ -423,30 +423,30 @@ if ($Settings->featureEnabled('projects')) {
                     </style>
 
                     <p class="font-size-12">
-                        <b><?= lang('reports.tip') ?>:</b>
-                        <?= lang('reports.you_can_use_the_following_built_in_variables_for_the_reporting_period') ?><br>
-                        <span class="copy-to-clipboard">{{vars.startyear}}</span>: <?= lang('reports.start_year_of_the_reporting_period') ?><br>
-                        <span class="copy-to-clipboard">{{vars.endyear}}</span>: <?= lang('reports.end_year_of_the_reporting_period') ?><br>
-                        <span class="copy-to-clipboard">{{vars.startmonth}}</span>: <?= lang('reports.start_month_of_the_reporting_period_1_12') ?><br>
-                        <span class="copy-to-clipboard">{{vars.endmonth}}</span>: <?= lang('reports.end_month_of_the_reporting_period_1_12') ?><br>
+                        <b><?= t('reports.tip') ?>:</b>
+                        <?= t('reports.you_can_use_the_following_built_in_variables_for_the_reporting_period') ?><br>
+                        <span class="copy-to-clipboard">{{vars.startyear}}</span>: <?= t('reports.start_year_of_the_reporting_period') ?><br>
+                        <span class="copy-to-clipboard">{{vars.endyear}}</span>: <?= t('reports.end_year_of_the_reporting_period') ?><br>
+                        <span class="copy-to-clipboard">{{vars.startmonth}}</span>: <?= t('reports.start_month_of_the_reporting_period_1_12') ?><br>
+                        <span class="copy-to-clipboard">{{vars.endmonth}}</span>: <?= t('reports.end_month_of_the_reporting_period_1_12') ?><br>
                     </p>
 
                     <script>
                         $('.copy-to-clipboard').on('click', function() {
                             const text = $(this).text();
                             navigator.clipboard.writeText(text).then(function() {
-                                toastSuccess('<?= lang('reports.copied_to_clipboard') ?>: ' + text);
+                                toastSuccess('<?= t('reports.copied_to_clipboard') ?>: ' + text);
                             }, function(err) {
-                                toastError('<?= lang('reports.could_not_copy_text') ?>' + err);
+                                toastError('<?= t('reports.could_not_copy_text') ?>' + err);
                             });
                         });
                     </script>
 
                     <div class="modal-footer">
                         <!-- save -->
-                        <button type="submit" class="btn success"><?= lang('action.save') ?></button>
+                        <button type="submit" class="btn success"><?= t('action.save') ?></button>
 
-                        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
+                        <a href="#close-modal" class="btn mr-5" role="button"><?= t('action.close') ?></a>
                     </div>
                 </div>
             </div>
@@ -465,40 +465,40 @@ if ($Settings->featureEnabled('projects')) {
         <div class="dropdown dropup">
             <button class="btn primary dropdown-toggle mr-20" type="button" id="addNewRowButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ph ph-plus"></i>
-                <?= lang('reports.add_new_block') ?>
+                <?= t('reports.add_new_block') ?>
             </button>
             <div class="dropdown-menu" aria-labelledby="addNewRowButton">
                 <a class="item" onclick="addRow('text')">
-                    <b class="text-primary d-block"><?= lang('reports.text') ?></b>
-                    <small class="text-muted"><?= lang('reports.a_block_that_contains_headings_or_paragraphs') ?></small>
+                    <b class="text-primary d-block"><?= t('reports.text') ?></b>
+                    <small class="text-muted"><?= t('reports.a_block_that_contains_headings_or_paragraphs') ?></small>
                 </a>
                 <a class="item" onclick="addRow('list')">
-                    <b class="text-primary d-block"><?= lang('reports.list') ?></b>
-                    <small class="text-muted"><?= lang('reports.a_block_that_contains_a_list_of_items_of_different_types') ?></small>
+                    <b class="text-primary d-block"><?= t('reports.list') ?></b>
+                    <small class="text-muted"><?= t('reports.a_block_that_contains_a_list_of_items_of_different_types') ?></small>
                 </a>
                 <a class="item" onclick="addRow('table')">
-                    <b class="text-primary d-block"><?= lang('reports.table') ?></b>
-                    <small class="text-muted"><?= lang('reports.aggregate_information_as_a_table_containing_number_of_items') ?></small>
+                    <b class="text-primary d-block"><?= t('reports.table') ?></b>
+                    <small class="text-muted"><?= t('reports.aggregate_information_as_a_table_containing_number_of_items') ?></small>
                 </a>
                 <a class="item" onclick="addRow('toc')">
-                    <b class="text-primary d-block"><?= lang('reports.table_of_contents') ?></b>
-                    <small class="text-muted"><?= lang('reports.a_block_that_automatically_generates_a_table_of_contents_based_on_the_headi') ?></small>
+                    <b class="text-primary d-block"><?= t('reports.table_of_contents') ?></b>
+                    <small class="text-muted"><?= t('reports.a_block_that_automatically_generates_a_table_of_contents_based_on_the_headi') ?></small>
                 </a>
                 <a class="item" onclick="addRow('line')">
-                    <b class="text-primary d-block"><?= lang('reports.line') ?></b>
-                    <small class="text-muted"><?= lang('reports.a_simple_line_to_divide_content') ?></small>
+                    <b class="text-primary d-block"><?= t('reports.line') ?></b>
+                    <small class="text-muted"><?= t('reports.a_simple_line_to_divide_content') ?></small>
                 </a>
             </div>
         </div>
 
         <button class="btn success" type="submit">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
 
         <a href="<?= ROOTPATH ?>/admin/reports/preview/<?= $report_id ?>" class="btn" target="_blank">
             <i class="ph ph-eye"></i>
-            <?= lang('common.preview') ?>
+            <?= t('common.preview') ?>
         </a>
     </div>
 </form>
@@ -533,7 +533,7 @@ if ($Settings->featureEnabled('projects')) {
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
 
             <div class="preview-content" onclick="openTextEditor(this)">
-                <p><?= lang('reports.text_block_without_content') ?></p>
+                <p><?= t('reports.text_block_without_content') ?></p>
             </div>
             <a data-toggle="modal" onclick="openTextEditor(this)">
                 <i class="ph ph-pencil-simple-line"></i>
@@ -545,11 +545,11 @@ if ($Settings->featureEnabled('projects')) {
                 <i class="ph ph-text-t ph-fw text-secondary"></i>
 
                 <select name="values[*][level]" class="form-control small w-auto step-level" required>
-                    <option value="h1"><?= lang('reports.heading_1') ?></option>
-                    <option value="h2"><?= lang('reports.heading_2') ?></option>
-                    <option value="h3"><?= lang('reports.heading_3') ?></option>
-                    <option value="h4"><?= lang('reports.heading_4') ?></option>
-                    <option value="p"><?= lang('common.paragraph') ?></option>
+                    <option value="h1"><?= t('reports.heading_1') ?></option>
+                    <option value="h2"><?= t('reports.heading_2') ?></option>
+                    <option value="h3"><?= t('reports.heading_3') ?></option>
+                    <option value="h4"><?= t('reports.heading_4') ?></option>
+                    <option value="p"><?= t('common.paragraph') ?></option>
                 </select>
 
                 <button type="button" class="btn small link text-danger ml-auto" onclick="$(this).closest('.step-container').remove()" title="Delete">
@@ -560,7 +560,7 @@ if ($Settings->featureEnabled('projects')) {
                 <input type="hidden" class="hidden" name="values[*][type]" value="text">
 
 
-                <div class="form-group lang-<?= lang('common.this_language') ?> mb-0">
+                <div class="form-group lang-<?= t('common.this_language') ?> mb-0">
                     <div class="title-editor form-group"></div>
                     <input type="text" class="form-control step-text hidden" name="values[*][text]" id="title" required value="">
                 </div>
@@ -573,7 +573,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
-            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= lang('reports.list_of_items') ?>">
+            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= t('reports.list_of_items') ?>">
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -601,24 +601,24 @@ if ($Settings->featureEnabled('projects')) {
             <input type="hidden" class="hidden" name="values[*][type]" value="list">
             <label for="filter" class="label">Filter <a onclick="$(this).parent().next().toggle()" class="btn link small"><i class="ph ph-question"></i></a></label>
             <small style="display:none;">
-                <?= lang('reports.find_filters_in_the_advanced_search_and_copy_from_show_filter', replace: ['rootpath' => ROOTPATH]) ?>
+                <?= t('reports.find_filters_in_the_advanced_search_and_copy_from_show_filter', replace: ['rootpath' => ROOTPATH]) ?>
             </small>
             <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
 
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
-                <label for="timelimit"><?= lang('reports.limit_to_reporting_time') ?></label>
+                <label for="timelimit"><?= t('reports.limit_to_reporting_time') ?></label>
             </div>
             <div class="row row-eq-spacing my-0">
                 <div class="col-sm">
-                    <label class="label"><?= lang('reports.additional_fields') ?></label>
+                    <label class="label"><?= t('reports.additional_fields') ?></label>
                     <div class="additional-fields" data-name="values[*][field]"><!-- rows injected by JS --></div>
-                    <button type="button" class="btn small" onclick="addAdditionalField(this)"><?= lang('reports.add_field') ?></button>
+                    <button type="button" class="btn small" onclick="addAdditionalField(this)"><?= t('reports.add_field') ?></button>
                 </div>
                 <div class="col-sm">
-                    <label class="label"><?= lang('reports.sorting') ?></label>
+                    <label class="label"><?= t('reports.sorting') ?></label>
                     <div class="sort-rows" data-name="values[*][sort]"><!-- rows injected by JS --></div>
-                    <button type="button" class="btn small" onclick="addSortRow(this)"><?= lang('reports.add_criterion') ?></button>
+                    <button type="button" class="btn small" onclick="addSortRow(this)"><?= t('reports.add_criterion') ?></button>
                 </div>
             </div>
         </div>
@@ -629,7 +629,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-article ph-fw text-secondary"></i></a>
-            <span class="step-title"><?= lang('common.activities') ?></span>
+            <span class="step-title"><?= t('common.activities') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -644,16 +644,16 @@ if ($Settings->featureEnabled('projects')) {
             <input type="hidden" class="hidden" name="values[*][type]" value="activities">
             <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
-                <?= lang('reports.find_filters_in_the_advanced_search_and_copy_from_show_filte_report_builder', replace: ['rootpath' => ROOTPATH]) ?>
+                <?= t('reports.find_filters_in_the_advanced_search_and_copy_from_show_filte_report_builder', replace: ['rootpath' => ROOTPATH]) ?>
             </small>
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
-                <label for="timelimit"><?= lang('reports.limit_to_reporting_time') ?></label>
+                <label for="timelimit"><?= t('reports.limit_to_reporting_time') ?></label>
             </div>
             <div class="mt-10">
-                <label class="d-block mb-5"><?= lang('reports.sorting') ?></label>
+                <label class="d-block mb-5"><?= t('reports.sorting') ?></label>
                 <div class="sort-rows" data-name="values[*][sort]"><!-- rows injected by JS --></div>
-                <button type="button" class="btn small" onclick="addSortRow(this)"><?= lang('reports.add_criterion') ?></button>
+                <button type="button" class="btn small" onclick="addSortRow(this)"><?= t('reports.add_criterion') ?></button>
             </div>
         </div>
     </div>
@@ -662,7 +662,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-columns-plus-right ph-fw text-secondary"></i></a>
-            <span class="step-title"><?= lang('reports.activities_incl_additional_field') ?></span>
+            <span class="step-title"><?= t('reports.activities_incl_additional_field') ?></span>
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -677,10 +677,10 @@ if ($Settings->featureEnabled('projects')) {
             <input type="hidden" class="hidden" name="values[*][type]" value="activities-field">
             <textarea type="text" class="form-control step-filter" name="values[*][filter]" placeholder="Filter" required>{}</textarea>
             <small>
-                <?= lang('reports.find_filters_in_the_advanced_search_and_copy_from_show_filte_report_builder', replace: ['rootpath' => ROOTPATH]) ?>
+                <?= t('reports.find_filters_in_the_advanced_search_and_copy_from_show_filte_report_builder', replace: ['rootpath' => ROOTPATH]) ?>
             </small>
             <div class="form-group">
-                <label for="field"><?= lang('reports.additional_field') ?></label>
+                <label for="field"><?= t('reports.additional_field') ?></label>
                 <select name="values[*][field]" required class="form-control step-field">
                     <?php
                     foreach ($data_fields['activities']['add'] as $f) { ?>
@@ -690,12 +690,12 @@ if ($Settings->featureEnabled('projects')) {
             </div>
             <div class="mt-10">
                 <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
-                <label for="timelimit"><?= lang('reports.limit_to_reporting_time') ?></label>
+                <label for="timelimit"><?= t('reports.limit_to_reporting_time') ?></label>
             </div>
             <div class="mt-10">
-                <label class="d-block mb-5"><?= lang('reports.sorting') ?></label>
+                <label class="d-block mb-5"><?= t('reports.sorting') ?></label>
                 <div class="sort-rows" data-name="values[*][sort]"><!-- rows injected by JS --></div>
-                <button type="button" class="btn small" onclick="addSortRow(this)"><?= lang('reports.add_criterion') ?></button>
+                <button type="button" class="btn small" onclick="addSortRow(this)"><?= t('reports.add_criterion') ?></button>
             </div>
         </div>
     </div>
@@ -705,7 +705,7 @@ if ($Settings->featureEnabled('projects')) {
         <div class="step-header">
             <i class="ph ph-dots-six-vertical text-muted handle"></i>
             <a onclick="toggleStep(this)"><i class="ph ph-table ph-fw text-secondary"></i></a>
-            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= lang('reports.table') ?>">
+            <input type="text" name="values[*][title]" class="form-control small step-name" value="" placeholder="<?= t('reports.table') ?>">
             <button type="button" class="btn link btn-icon collapse-btn" onclick="toggleStep(this)" title="Collapse/Expand">
                 <i class="ph ph-arrows-in-line-vertical"></i>
             </button>
@@ -734,16 +734,16 @@ if ($Settings->featureEnabled('projects')) {
 
             <div class="form-row row-eq-spacing mt-10">
                 <div class="col">
-                    <label for="aggregate" class="label"><i class="ph ph-columns-plus-left"></i> <?= lang('reports.rows') ?></label>
+                    <label for="aggregate" class="label"><i class="ph ph-columns-plus-left"></i> <?= t('reports.rows') ?></label>
                     <select name="values[*][aggregate]" required class="form-control step-aggregate">
-                        <option value=""><?= lang('reports.select_field_for_the_left_column') ?></option>
+                        <option value=""><?= t('reports.select_field_for_the_left_column') ?></option>
                         <!-- options injected by JS -->
                     </select>
                 </div>
                 <div class="col">
-                    <label for="aggregate2" class="label"><i class="ph ph-rows-plus-top"></i> <?= lang('reports.columns') ?></label>
+                    <label for="aggregate2" class="label"><i class="ph ph-rows-plus-top"></i> <?= t('reports.columns') ?></label>
                     <select name="values[*][aggregate2]" class="form-control step-aggregate2">
-                        <option value=""><?= lang('reports.choose_field_for_the_column_header_optional') ?></option>
+                        <option value=""><?= t('reports.choose_field_for_the_column_header_optional') ?></option>
                         <!-- options injected by JS -->
                     </select>
                 </div>
@@ -751,16 +751,16 @@ if ($Settings->featureEnabled('projects')) {
             <div class="form-row row-eq-spacing mt-10">
                 <div class="col">
                     <input type="checkbox" name="values[*][timelimit]" value="1" checked class="step-timelimit">
-                    <label for="timelimit"><?= lang('reports.limit_to_reporting_time') ?></label>
+                    <label for="timelimit"><?= t('reports.limit_to_reporting_time') ?></label>
                 </div>
                 <div class="col">
                     <!-- table_sort -->
-                    <label for="field" class="d-inline-block"><?= lang('common.sort_by') ?>: </label>
+                    <label for="field" class="d-inline-block"><?= t('common.sort_by') ?>: </label>
                     <select name="values[*][table_sort]" required class="form-control step-select small d-inline-block w-auto">
-                        <option value="count-desc"><?= lang('reports.count_descending') ?></option>
-                        <option value="count-asc"><?= lang('reports.count_ascending') ?></option>
-                        <option value="aggregation-asc"><?= lang('reports.name_of_aggregation_asc') ?></option>
-                        <option value="aggregation-desc"><?= lang('reports.name_of_aggregation_desc') ?></option>
+                        <option value="count-desc"><?= t('reports.count_descending') ?></option>
+                        <option value="count-asc"><?= t('reports.count_ascending') ?></option>
+                        <option value="aggregation-asc"><?= t('reports.name_of_aggregation_asc') ?></option>
+                        <option value="aggregation-desc"><?= t('reports.name_of_aggregation_desc') ?></option>
                     </select>
                 </div>
             </div>
@@ -783,14 +783,14 @@ if ($Settings->featureEnabled('projects')) {
         <i class="ph ph-dots-six-vertical text-muted handle"></i>
         <div class="d-flex d-align-center gap-10">
         <i class="ph ph-list ph-fw text-secondary"></i>
-        <span class="step-title"><?= lang('reports.table_of_contents') ?></span>
+        <span class="step-title"><?= t('reports.table_of_contents') ?></span>
 
         <button type="button" class="btn small link text-danger" onclick="$(this).closest('.step').remove()" title="Delete">
             <i class="ph ph-trash" aria-label="Delete"></i>
         </button>
     </div>
     <small class="text-muted">
-    <?= lang('reports.automatically_generates_a_table_of_contents_based_on_the_headings_in_the_re') ?>
+    <?= t('reports.automatically_generates_a_table_of_contents_based_on_the_headings_in_the_re') ?>
     </small>
         <input type="hidden" class="hidden" name="values[*][type]" value="toc">
     </div>
@@ -812,11 +812,11 @@ if ($Settings->featureEnabled('projects')) {
                 </select>
             </td>
             <td>
-                <input class="form-control" name="variables[*][label]" placeholder="<?= lang('reports.department_id') ?>">
+                <input class="form-control" name="variables[*][label]" placeholder="<?= t('reports.department_id') ?>">
             </td>
             <td>
                 <input class="form-control var-default" name="variables[*][default]" placeholder="">
-                <small class="text-muted copy-token" style="cursor:pointer" title="<?= lang('reports.copy_token') ?>">
+                <small class="text-muted copy-token" style="cursor:pointer" title="<?= t('reports.copy_token') ?>">
                     <i class="ph ph-copy"></i> <span class="token-text">{{vars.*}}</span>
                 </small>
             </td>
@@ -1019,11 +1019,11 @@ if ($Settings->featureEnabled('projects')) {
         const row = $(`
     <div class="sort-row d-flex align-items-center gap-5 mb-5">
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}][field]" required>
-        <option value="" disabled selected><?= lang('reports.select_field') ?></option>
+        <option value="" disabled selected><?= t('reports.select_field') ?></option>
         ${options}
       </select>
       <select class="form-control small w-150 flex-grow-0" name="${namePrefix}[${idx}][dir]" required>
-        <option value="asc">${<?= json_encode(lang('reports.ascending'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</option><option value="desc">${<?= json_encode(lang('reports.descending'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</option>
+        <option value="asc">${<?= json_encode(t('reports.ascending'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</option><option value="desc">${<?= json_encode(t('reports.descending'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>}</option>
       </select>
       <button type="button" class="btn small link text-danger" title="Remove" onclick="$(this).closest('.sort-row').remove()">
         <i class="ph ph-x"></i>
@@ -1054,7 +1054,7 @@ if ($Settings->featureEnabled('projects')) {
         const row = $(`
     <div class="additional-field-row d-flex align-items-center gap-5 mb-5">
       <select class="form-control small w-200 flex-grow-0" placeholder="field" name="${namePrefix}[${idx}]" required>
-        <option value="" disabled selected><?= lang('reports.select_field') ?></option>
+        <option value="" disabled selected><?= t('reports.select_field') ?></option>
         ${options}
       </select>
       <button type="button" class="btn small link text-danger" title="Remove" onclick="$(this).closest('.additional-field-row').remove()">
@@ -1176,7 +1176,7 @@ if ($Settings->featureEnabled('projects')) {
         const hasAggregations = $step.find('.step-aggregate').val() || $step.find('.step-aggregate2').val();
         console.log(hasAggregations);
         if (hasSort || hasFields || hasAggregations) {
-            if (!confirm(<?= json_encode(lang('reports.changing_the_collection_will_remove_any_additional_fields_sorting_criteria'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)) {
+            if (!confirm(<?= json_encode(t('reports.changing_the_collection_will_remove_any_additional_fields_sorting_criteria'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)) {
                 // make sure radio button does not change
                 event.preventDefault();
                 return;

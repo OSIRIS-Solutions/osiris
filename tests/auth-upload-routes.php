@@ -41,6 +41,7 @@ file_put_contents($fixture . '/outside.txt', 'outside uploads');
 $_SESSION = ['username' => 'member']; $_POST = ['mail' => 'person@example.test'];
 $mailCount = 0; $errorCode = null;
 function lang($en, $de = null) { return $en; }
+function t($key, array $replace = []) { return $key; }
 function sendMail(...$arguments) { $GLOBALS['mailCount']++; }
 function abortwith($code, ...$arguments) { throw new RuntimeException('Access denied', $code); }
 class DB {

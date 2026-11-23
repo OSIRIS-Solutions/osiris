@@ -37,16 +37,16 @@ if (str_ends_with($_SERVER['REQUEST_URI'], '/install')) {
     <div class="align-items-center container d-flex h-full">
         <div class="alert danger mb-20 w-full">
             <h3 class="title">
-                <?= lang('common.osiris_has_not_been_installed_yet') ?>
+                <?= t('common.osiris_has_not_been_installed_yet') ?>
             </h3>
 
             <p>
-                <b><?= lang('common.warning') ?>:</b>
-                <?= lang('common.osiris_will_be_installed_and_set_up_automatically_this_won_t_take_long_but') ?>
+                <b><?= t('common.warning') ?>:</b>
+                <?= t('common.osiris_will_be_installed_and_set_up_automatically_this_won_t_take_long_but') ?>
             </p>
 
             <a href="<?= ROOTPATH ?>/install" class="btn danger">
-                <?= lang('common.install_osiris') ?>
+                <?= t('common.install_osiris') ?>
             </a>
         </div>
     </div>
@@ -91,7 +91,7 @@ $USER = $DB->initUser();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && (empty($USER) || !isset($USER['username']))) {
     $_SESSION['username'] = null;
     $_SESSION['loggedin'] = false;
-    $_SESSION['msg'] = lang('common.your_session_has_expired_please_log_in_again');
+    $_SESSION['msg'] = t('common.your_session_has_expired_please_log_in_again');
     $_SESSION['msg_type'] = "error";
     header("Location: " . ROOTPATH . '/user/login');
     die();

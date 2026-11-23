@@ -35,13 +35,13 @@
 
         <h1>
             <i class="ph-duotone ph-download"></i>
-            <?= lang('documents.export_activities') ?>
+            <?= t('documents.export_activities') ?>
         </h1>
 
         <div class="form-group">
-            <label for="filter-type"><?= lang('documents.filter_by_type') ?></label>
+            <label for="filter-type"><?= t('documents.filter_by_type') ?></label>
             <select name="filter[type]" id="filter-type" class="form-control">
-                <option value=""><?= lang('documents.all_type_of_activities') ?></option>
+                <option value=""><?= t('documents.all_type_of_activities') ?></option>
                 <?php foreach ($Settings->getActivities() as $a) { ?>
                     <option value="<?= $a['id'] ?>"><?= lang($a['name'], $a['name_de'] ?? null) ?></option>
                 <?php } ?>
@@ -55,21 +55,21 @@
                 <div class="col">
                     <div class="mr-20">
 
-                        <label for="filter-user"><?= lang('documents.filter_by_user') ?></label>
+                        <label for="filter-user"><?= t('documents.filter_by_user') ?></label>
                         <select name="filter[user]" id="filter-user" class="form-control">
                             <option value="">Alle Nutzer</option>
-                            <option value="<?= $_SESSION['username'] ?>"><?= lang('documents.only_my_own_activities') ?></option>
+                            <option value="<?= $_SESSION['username'] ?>"><?= t('documents.only_my_own_activities') ?></option>
                         </select>
                     </div>
                 </div>
 
-                <div class="text-divider"><?= lang('common.or') ?></div>
+                <div class="text-divider"><?= t('common.or') ?></div>
 
                 <div class="col">
                     <div class="ml-20">
-                        <label for="dept"><?= lang('common.department') ?></label>
+                        <label for="dept"><?= t('common.department') ?></label>
                         <select name="filter[dept]" id="dept" class="form-control">
-                            <option value=""><?= lang('documents.all_departments') ?></option>
+                            <option value=""><?= t('documents.all_departments') ?></option>
                             <?php
                             foreach ($Departments as $d => $dept) { ?>
                                 <option value="<?= $d ?>"><?= $dept ?></option>
@@ -82,19 +82,19 @@
             <input type="hidden" name="filter[user]" value="<?= $_SESSION['username'] ?>" class="hidden">
             <p>
                 <i class="ph-duotone ph-warning text-primary"></i>
-                <?= lang('documents.you_can_only_download_your_own_activities') ?>
+                <?= t('documents.you_can_only_download_your_own_activities') ?>
             </p>
         <?php } ?>
 
         <?php if ($Settings->featureEnabled('quality-workflow') && $Settings->hasPermission('workflows.view')) { ?>
             <div class="form-group">
-                <label for="filter-workflow"><?= lang('documents.filter_by_workflow_status') ?></label>
+                <label for="filter-workflow"><?= t('documents.filter_by_workflow_status') ?></label>
                 <select name="filter[workflow]" id="filter-workflow" class="form-control">
-                    <option value=""><?= lang('documents.do_not_filter') ?></option>
-                    <option value="in_progress"><?= lang('documents.in_progress') ?></option>
-                    <option value="verified"><?= lang('common.completed') ?></option>
-                    <option value="verified-or-empty"><?= lang('documents.completed_or_no_workflow') ?></option>
-                    <option value="rejected"><?= lang('common.rejected') ?></option>
+                    <option value=""><?= t('documents.do_not_filter') ?></option>
+                    <option value="in_progress"><?= t('documents.in_progress') ?></option>
+                    <option value="verified"><?= t('common.completed') ?></option>
+                    <option value="verified-or-empty"><?= t('documents.completed_or_no_workflow') ?></option>
+                    <option value="rejected"><?= t('common.rejected') ?></option>
                 </select>
             </div>
         <?php } ?>
@@ -103,9 +103,9 @@
             $topics = $osiris->topics->find();
             if (!empty($topics)) { ?>
                 <div class="form-group">
-                    <label for="filter-topic"><?= lang('documents.filter_by_topic') ?></label>
+                    <label for="filter-topic"><?= t('documents.filter_by_topic') ?></label>
                     <select name="filter[topic]" id="filter-topic" class="form-control">
-                        <option value=""><?= lang('documents.all_topics') ?></option>
+                        <option value=""><?= t('documents.all_topics') ?></option>
                         <?php foreach ($topics as $topic) { ?>
                             <option value="<?= $topic['id'] ?>"><?= lang($topic['name'], $topic['name_de'] ?? null) ?></option>
                         <?php } ?>
@@ -120,9 +120,9 @@
             foreach ($osiris->initiatives->find() as $initiative) $initiativeNames[(string) $initiative['_id']] = strip_tags(localized($initiative['name'] ?? ''));
             foreach (['initiative' => 'initiatives', 'objective' => 'objectives'] as $parameter => $collection) { ?>
                 <div class="form-group">
-                    <label for="filter-<?= $parameter ?>"><?= translate($collection === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives') ?></label>
+                    <label for="filter-<?= $parameter ?>"><?= t($collection === 'initiatives' ? 'common.initiatives' : 'initiatives.objectives') ?></label>
                     <select name="filter[<?= $parameter ?>]" id="filter-<?= $parameter ?>" class="form-control">
-                        <option value=""><?= lang('documents.do_not_filter') ?></option>
+                        <option value=""><?= t('documents.do_not_filter') ?></option>
                         <?php foreach ($osiris->$collection->find([], ['sort' => ['inactive' => 1, 'name' => 1]]) as $entry) {
                             $name = strip_tags(localized($entry['name'] ?? ''));
                             if ($collection === 'objectives') {
@@ -138,15 +138,15 @@
         <?php } ?>
 
         <div class="form-group">
-            <label for="filter-year"><?= lang('documents.filter_by_time_frame') ?></label>
+            <label for="filter-year"><?= t('documents.filter_by_time_frame') ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><?= lang('common.from') ?></span>
+                    <span class="input-group-text"><?= t('common.from') ?></span>
                 </div>
                 <input type="number" name="filter[time][from][month]" class="form-control" placeholder="month" min="1" max="12" step="1" id="from-month" onchange="filtertime()">
                 <input type="number" name="filter[time][from][year]" class="form-control" placeholder="year" min="1900" max="<?= CURRENTYEAR+1 ?>" step="1" id="from-year" onchange="filtertime()">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><?= lang('common.to') ?></span>
+                    <span class="input-group-text"><?= t('common.to') ?></span>
                 </div>
                 <input type="number" name="filter[time][to][month]" class="form-control" placeholder="month" min="1" max="12" step="1" id="to-month" onchange="filtertime()">
                 <input type="number" name="filter[time][to][year]" class="form-control" placeholder="year" min="1900" max="<?= CURRENTYEAR+1 ?>" step="1" id="to-year" onchange="filtertime()">
@@ -160,37 +160,37 @@
 
         <!-- sort -->
         <div class="form-group">
-            <label for="sort-by"><?= lang('common.sort_by') ?></label>
+            <label for="sort-by"><?= t('common.sort_by') ?></label>
             <select name="sortby" id="sort-by" class="form-control w-auto">
-                <option value="date_desc"><?= lang('documents.date_newest_first') ?></option>
-                <option value="date_asc"><?= lang('documents.date_oldest_first') ?></option>
-                <option value="type_asc"><?= lang('documents.type_a_z') ?></option>
-                <option value="type_desc"><?= lang('documents.type_z_a') ?></option>
-                <option value="title_asc"><?= lang('documents.title_a_z') ?></option>
-                <option value="title_desc"><?= lang('documents.title_z_a') ?></option>
-                <option value="print_asc"><?= lang('documents.formatted_output_a_z') ?></option>
-                <option value="print_desc"><?= lang('documents.formatted_output_z_a') ?></option>
+                <option value="date_desc"><?= t('documents.date_newest_first') ?></option>
+                <option value="date_asc"><?= t('documents.date_oldest_first') ?></option>
+                <option value="type_asc"><?= t('documents.type_a_z') ?></option>
+                <option value="type_desc"><?= t('documents.type_z_a') ?></option>
+                <option value="title_asc"><?= t('documents.title_a_z') ?></option>
+                <option value="title_desc"><?= t('documents.title_z_a') ?></option>
+                <option value="print_asc"><?= t('documents.formatted_output_a_z') ?></option>
+                <option value="print_desc"><?= t('documents.formatted_output_z_a') ?></option>
             </select>
         </div>
 
 
         <div class="form-group">
 
-            <?= lang('common.highlight') ?>
+            <?= t('common.highlight') ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-user" value="user" checked="checked">
-                <label for="highlight-user"><?= lang('common.me') ?></label>
+                <label for="highlight-user"><?= t('common.me') ?></label>
             </div>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-aoi" value="aoi">
-                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= lang('common.authors') ?></label>
+                <label for="highlight-aoi"><?= $Settings->get('affiliation') ?><?= t('common.authors') ?></label>
             </div>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="highlight" id="highlight-none" value="">
-                <label for="highlight-none"><?= lang('common.none_download') ?></label>
+                <label for="highlight-none"><?= t('common.none_download') ?></label>
             </div>
 
         </div>
@@ -198,7 +198,7 @@
 
         <div class="form-group">
 
-            <?= lang('common.file_format') ?>
+            <?= t('common.file_format') ?>
 
             <div class="custom-radio d-inline-block ml-10">
                 <input type="radio" name="format" id="format-word" value="word" checked="checked">

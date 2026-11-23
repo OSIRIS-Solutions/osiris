@@ -1,10 +1,10 @@
 <?php /** The same event form in an isolated document, so activity widget IDs cannot collide. */ ?>
 <!DOCTYPE html>
-<html lang="<?= e(lang('common.this_language')) ?>">
+<html lang="<?= e(t('common.this_language')) ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e(translate('action.add_event')) ?></title>
+    <title><?= e(t('action.add_event')) ?></title>
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/main.css?v=<?= OSIRIS_BUILD ?>">
     <link rel="stylesheet" href="<?= ROOTPATH ?>/css/phosphoricons/regular/style.css?v=<?= OSIRIS_BUILD ?>">
     <?= $Settings->renderAdditionalStylesheetLinks() ?>

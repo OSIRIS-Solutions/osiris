@@ -34,7 +34,7 @@
      <div class="btn-toolbar">
          <a href="<?= ROOTPATH ?>/teaching/edit/<?= $module['_id'] ?>" class="btn">
              <i class="ph ph-edit"></i>
-             <?= lang('common.edit_teaching_module') ?>
+             <?= t('common.edit_teaching_module') ?>
          </a>
      </div>
  <?php } ?>
@@ -43,15 +43,15 @@
  <table class="table">
      <tbody>
          <tr>
-             <th><?= lang('common.module_no') ?></th>
+             <th><?= t('common.module_no') ?></th>
              <td><?= $module['module'] ?></td>
          </tr>
          <tr>
-             <th><?= lang('common.title') ?></th>
+             <th><?= t('common.title') ?></th>
              <td><?= $module['title'] ?></td>
          </tr>
          <tr>
-             <th><?= lang('common.teaching_venue_university') ?></th>
+             <th><?= t('common.teaching_venue_university') ?></th>
              <td>
                  <?php
                     $affiliation = '';
@@ -76,25 +76,25 @@
 
  <div class="">
      <h2>
-         <?= lang('common.connected_activities') ?>
+         <?= t('common.connected_activities') ?>
      </h2>
      <?php
         if (count($activities) != 0) {
         ?>
          <h6>
-             <?= lang('teaching.activities_with_supervisors') ?>
+             <?= t('teaching.activities_with_supervisors') ?>
          </h6>
          <table class="table" id="supervisor-table">
              <thead>
                  <tr>
                      <th></th>
-                     <th><?= lang('teaching.supervisors') ?></th>
-                     <th><?= lang('common.category') ?></th>
-                     <th><?= lang('common.start_date') ?></th>
-                     <th><?= lang('common.end_date') ?></th>
-                     <th><?= lang('teaching.affiliated') ?></th>
-                     <th><?= lang('teaching.total_sws') ?></th>
-                     <th><?= lang('teaching.affiliated_sws') ?></th>
+                     <th><?= t('teaching.supervisors') ?></th>
+                     <th><?= t('common.category') ?></th>
+                     <th><?= t('common.start_date') ?></th>
+                     <th><?= t('common.end_date') ?></th>
+                     <th><?= t('teaching.affiliated') ?></th>
+                     <th><?= t('teaching.total_sws') ?></th>
+                     <th><?= t('teaching.affiliated_sws') ?></th>
                  </tr>
              </thead>
              <tbody>
@@ -153,15 +153,15 @@
          </table>
 
          <h6>
-             <?= lang('teaching.all_other_activities') ?>
+             <?= t('teaching.all_other_activities') ?>
          </h6>
 
          <table class="table" id="activities-table">
              <thead>
                  <tr>
                      <th></th>
-                     <th><?= lang('common.type') ?></th>
-                     <th><?= lang('common.activity') ?></th>
+                     <th><?= t('common.type') ?></th>
+                     <th><?= t('common.activity') ?></th>
                  </tr>
              </thead>
              <tbody>
@@ -187,7 +187,7 @@
 
      <?php } else { ?>
 
-         <?= lang('common.no_activities_connected') ?>
+         <?= t('common.no_activities_connected') ?>
 
      <?php } ?>
  </div>
@@ -200,12 +200,12 @@
                  <input type="hidden" name="redirect" value="<?= $_SERVER['REQUEST_URI'] ?>">
                  <button class="btn danger small">
                      <i class="ph ph-trash"></i>
-                     <?= lang('action.delete') ?>
+                     <?= t('action.delete') ?>
                  </button>
              </form>
          <?php } else { ?>
              <div class="alert warning">
-                 <?= lang('teaching.teaching_module_cannot_be_deleted_because_there_are_activities_connected_to') ?>
+                 <?= t('teaching.teaching_module_cannot_be_deleted_because_there_are_activities_connected_to') ?>
              </div>
          <?php } ?>
      </div>

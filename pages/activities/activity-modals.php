@@ -11,7 +11,7 @@ $filesize = Settings::getMaxFileSize('16M');
         <span aria-hidden="true">&times;</span>
       </a>
       <h5 class="title">
-        <?= lang('activities.upload_and_edit_files') ?>
+        <?= t('activities.upload_and_edit_files') ?>
       </h5>
 
       <table class="table" id="files-table">
@@ -40,14 +40,14 @@ $filesize = Settings::getMaxFileSize('16M');
                                 <option value="<?= $v['id'] ?>" <?= ($file['name'] == $v['id'] ? 'selected' : '') ?>><?= lang($v['en'], $v['de'] ?? null) ?></option>
                               <?php } ?>
                             </select>
-                            <label for="name" class="required"><?= lang('common.doc_type') ?></label>
+                            <label for="name" class="required"><?= t('common.doc_type') ?></label>
                           </div>
                           <div class="form-group">
-                            <label for="description"><?= lang('common.description') ?></label>
-                            <textarea class="form-control" name="description" placeholder="<?= lang('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
+                            <label for="description"><?= t('common.description') ?></label>
+                            <textarea class="form-control" name="description" placeholder="<?= t('common.description') ?>"><?= $file['description'] ?? '' ?></textarea>
                           </div>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block primary" type="submit"><?= lang('common.save_changes') ?></button>
+                          <button class="btn btn-block primary" type="submit"><?= t('common.save_changes') ?></button>
                         </form>
                       </div>
                     </div>
@@ -59,9 +59,9 @@ $filesize = Settings::getMaxFileSize('16M');
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="delete-doc-<?= $file['_id'] ?>">
                       <div class="content">
                         <form action="<?= ROOTPATH ?>/data/delete" method="post">
-                          <span class="text-danger"><?= lang('common.do_you_want_to_delete_this_document') ?></span>
+                          <span class="text-danger"><?= t('common.do_you_want_to_delete_this_document') ?></span>
                           <input type="hidden" name="id" value="<?= $file['_id'] ?>">
-                          <button class="btn btn-block danger" type="submit"><?= lang('action.delete') ?></button>
+                          <button class="btn btn-block danger" type="submit"><?= t('action.delete') ?></button>
                         </form>
                       </div>
                     </div>
@@ -69,7 +69,7 @@ $filesize = Settings::getMaxFileSize('16M');
                 </div>
                 <h6 class="m-0">
                   <a href="<?= $file_url ?>" target="_blank" rel="noopener">
-                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', lang('common.other')); ?>
+                    <?= $Vocabulary->getValue('activity-document-types', $file['name'] ?? '', t('common.other')); ?>
                     <i class="ph ph-download"></i>
                   </a>
                 </h6>
@@ -79,8 +79,8 @@ $filesize = Settings::getMaxFileSize('16M');
                   <div>
                     <?= $file['filename'] ?> (<?= $file['size'] ?> Bytes)
                     <br>
-                    <?= lang('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
-                    <?= lang('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
+                    <?= t('common.uploaded_by') ?> <?= $DB->getNameFromId($file['uploaded_by']) ?>
+                    <?= t('common.on') ?> <?= date('d.m.Y', strtotime($file['uploaded'])) ?>
                   </div>
                 </div>
               </td>
@@ -91,13 +91,13 @@ $filesize = Settings::getMaxFileSize('16M');
 
       <form action="<?= ROOTPATH ?>/data/upload" method="post" enctype="multipart/form-data" class="box padded">
         <h5 class="title font-size-16">
-          <?= lang('common.upload_document') ?>
+          <?= t('common.upload_document') ?>
         </h5>
         <div class="form-group">
           <div class="custom-file">
             <input type="file" id="upload-file" name="file" class="custom-file-input" maxsize="<?= $filesize['bytes'] ?>" required>
-            <label for="upload-file" class="custom-file-label"><?= lang('common.choose_a_file') ?></label>
-            <br><small class="text-danger"><?= lang('common.maximum_file_size_filesize', replace: ['filesize' => $filesize['human']]) ?></small>
+            <label for="upload-file" class="custom-file-label"><?= t('common.choose_a_file') ?></label>
+            <br><small class="text-danger"><?= t('common.maximum_file_size_filesize', replace: ['filesize' => $filesize['human']]) ?></small>
           </div>
         </div>
         <input type="hidden" name="values[type]" value="activities">
@@ -110,13 +110,13 @@ $filesize = Settings::getMaxFileSize('16M');
               <option value="<?= $v['id'] ?>"><?= lang($v['en'], $v['de'] ?? null) ?></option>
             <?php } ?>
           </select>
-          <label for="name" class="required"><?= lang('common.doc_type') ?></label>
+          <label for="name" class="required"><?= t('common.doc_type') ?></label>
         </div>
         <div class="form-group floating-form">
-          <input type="text" class="form-control" name="values[description]" placeholder="<?= lang('common.description') ?>" value="">
-          <label for="description"><?= lang('common.description') ?></label>
+          <input type="text" class="form-control" name="values[description]" placeholder="<?= t('common.description') ?>" value="">
+          <label for="description"><?= t('common.description') ?></label>
         </div>
-        <button class="btn primary" type="submit"><?= lang('action.upload') ?></button>
+        <button class="btn primary" type="submit"><?= t('action.upload') ?></button>
       </form>
 
       <script>
@@ -124,14 +124,14 @@ $filesize = Settings::getMaxFileSize('16M');
 
         uploadField.onchange = function() {
           if (this.files[0].size > 16777216) {
-            toastError(<?= json_encode(lang('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+            toastError(<?= json_encode(t('common.file_is_too_large_max_16mb_is_supported'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
             this.value = "";
           };
         };
       </script>
 
       <div class="text-right mt-20">
-        <a href="#close-modal" class="btn mr-5" role="button"><?= lang('action.close') ?></a>
+        <a href="#close-modal" class="btn mr-5" role="button"><?= t('action.close') ?></a>
       </div>
     </div>
   </div>
@@ -144,16 +144,16 @@ $filesize = Settings::getMaxFileSize('16M');
         <span aria-hidden="true">&times;</span>
       </a>
       <h5 class="title">
-        <?= lang('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
+        <?= t('common.connect_taglabel', replace: ['tagLabel' => $tagLabel]) ?>
       </h5>
       <p>
-        <?= lang('common.currently_connected') . $tagLabel ?>:
+        <?= t('common.currently_connected') . $tagLabel ?>:
         <?php
         $tags = $doc['tags'] ?? [];
         if (count($tags)) {
           echo $Settings->printTags($tags, 'all-activities');
         } else {
-          echo lang('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
+          echo t('common.no_taglabel_assigned_yet', replace: ['tagLabel' => $tagLabel]);
         }
         ?>
       </p>
@@ -166,7 +166,7 @@ $filesize = Settings::getMaxFileSize('16M');
 
           <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
           </button>
         </form>
       <?php } ?>
@@ -190,26 +190,26 @@ $filesize = Settings::getMaxFileSize('16M');
         <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mb-20">
           <div class="modal-header">
             <h3 class="modal-title">
-              <?= lang('activities.edit_research_spectrum') ?>
+              <?= t('activities.edit_research_spectrum') ?>
             </h3>
           </div>
 
           <div class="modal-body">
             <p class="text-muted">
-              <?= lang('activities.the_selected_topics_affect_the_research_profiles_of_the_associated_research') ?><br>
-              <?= lang('activities.you_can_add_up_to_5_topics') ?>
+              <?= t('activities.the_selected_topics_affect_the_research_profiles_of_the_associated_research') ?><br>
+              <?= t('activities.you_can_add_up_to_5_topics') ?>
             </p>
 
             <style>
               #spectrum-editor-list:empty::before {
-                content: "<?= lang('activities.no_topics_selected_yet') ?>";
+                content: "<?= t('activities.no_topics_selected_yet') ?>";
                 color: var(--muted-color);
                 font-style: italic;
               }
             </style>
 
             <h4>
-              <?= lang('activities.currently_selected_topics') ?>
+              <?= t('activities.currently_selected_topics') ?>
             </h4>
             <input type="hidden" name="topics" value="">
             <div id="spectrum-editor-list"><?php foreach (($openalex['topics'] ?? []) as $topic) : ?>
@@ -225,7 +225,7 @@ $filesize = Settings::getMaxFileSize('16M');
                         <li>
                           <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                             <i class="ph ph-trash"></i>
-                            <?= lang('action.remove') ?>
+                            <?= t('action.remove') ?>
                           </button>
                         </li>
                       </ul>
@@ -238,10 +238,10 @@ $filesize = Settings::getMaxFileSize('16M');
           </div>
 
           <h4>
-            <?= lang('activities.add_new_topics') ?>
+            <?= t('activities.add_new_topics') ?>
           </h4>
           <div id="add-new-spectrum" class="nav-search mb-20">
-            <input type="text" id="spectrum-topics" placeholder="<?= lang('activities.search_for_topics') ?>" class="form-control large" />
+            <input type="text" id="spectrum-topics" placeholder="<?= t('activities.search_for_topics') ?>" class="form-control large" />
             <div class="suggestions on-focus"></div>
           </div>
 
@@ -249,9 +249,9 @@ $filesize = Settings::getMaxFileSize('16M');
           <div class="modal-footer">
             <button type="submit" class="btn success">
               <i class="ph ph-floppy-disk"></i>
-              <?= lang('action.save') ?>
+              <?= t('action.save') ?>
             </button>
-            <a href="#close-modal" class="btn" role="button"><?= lang('action.cancel') ?></a>
+            <a href="#close-modal" class="btn" role="button"><?= t('action.cancel') ?></a>
           </div>
         </form>
 
@@ -259,9 +259,9 @@ $filesize = Settings::getMaxFileSize('16M');
           <hr>
           <form action="<?= ROOTPATH ?>/crud/activities/update-spectrum/<?= $id ?>" method="post" class="mt-20">
             <input type="hidden" name="restore" value="1">
-            <button type="submit" class="btn danger small" onclick="return confirm('<?= lang('activities.are_you_sure_you_want_to_restore_the_automatic_topics_this_will_remove_all') ?>')">
+            <button type="submit" class="btn danger small" onclick="return confirm('<?= t('activities.are_you_sure_you_want_to_restore_the_automatic_topics_this_will_remove_all') ?>')">
               <i class="ph ph-arrow-counter-clockwise"></i>
-              <?= lang('activities.restore_automatic_topics') ?>
+              <?= t('activities.restore_automatic_topics') ?>
             </button>
           </form>
         <?php } ?>
@@ -284,7 +284,7 @@ $filesize = Settings::getMaxFileSize('16M');
     $('#spectrum-topics').on('input', function() {
       var query = $(this).val();
       if (query.length < 3) {
-        $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang('activities.please_enter_at_least_3_characters_to_search_for_topics') ?></div>');
+        $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= t('activities.please_enter_at_least_3_characters_to_search_for_topics') ?></div>');
         return;
       }
 
@@ -296,7 +296,7 @@ $filesize = Settings::getMaxFileSize('16M');
         },
         success: function(response) {
           if (response.count === 0) {
-            $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= lang('activities.no_topics_found') ?></div>');
+            $('#add-new-spectrum .suggestions').html('<div class="no-results"><?= t('activities.no_topics_found') ?></div>');
             return;
           }
 
@@ -313,7 +313,7 @@ $filesize = Settings::getMaxFileSize('16M');
       var currentTopics = $('#spectrum-editor-list .spectrum-topic').length;
       // maximum of 5 topics allowed
       if (currentTopics >= 5) {
-        toastError('<?= lang('activities.you_can_only_add_up_to_5_topics') ?>');
+        toastError('<?= t('activities.you_can_only_add_up_to_5_topics') ?>');
         return;
       }
       var topicId = $(this).data('id');
@@ -329,7 +329,7 @@ $filesize = Settings::getMaxFileSize('16M');
               <h5 class="mt-0">${topicName}</h5>
               <button type="button" class="btn danger small" onclick="this.closest('.spectrum-topic').remove()">
                 <i class="ph ph-trash"></i>
-                <?= lang('action.remove') ?>
+                <?= t('action.remove') ?>
               </button>
             </div>
           </div>

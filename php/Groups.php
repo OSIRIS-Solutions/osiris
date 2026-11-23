@@ -273,7 +273,7 @@ class Groups
     public function getName($id)
     {
         $group = $this->getGroup($id);
-        if (empty($group)) return lang('people.unknown_unit');
+        if (empty($group)) return t('people.unknown_unit');
         return localized($group['name']);
     }
 

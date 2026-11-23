@@ -38,13 +38,13 @@ use \LibRIS\RISReader;
 <div class="box box-signal">
     <div class="content">
         <h2 class="title">
-            <?= lang('common.import_activities_from_file') ?>
+            <?= t('common.import_activities_from_file') ?>
         </h2>
         <form action="<?= ROOTPATH ?>/crud/import/file" method="post" enctype="multipart/form-data">
             <input type="hidden" class="hidden" name="redirect" value="<?= $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?>">
             <div class="custom-file mb-20" id="file-input-div" >
-                <input type="file" id="file-input" name="file" data-default-value="<?= lang('common.no_file_chosen') ?>">
-                <label for="file-input"><?= lang('common.upload_a_bibtex_file') ?></label>
+                <input type="file" id="file-input" name="file" data-default-value="<?= t('common.no_file_chosen') ?>">
+                <label for="file-input"><?= t('common.upload_a_bibtex_file') ?></label>
                 <br><small class="text-danger">Max. 16 MB.</small>
             </div>
 
@@ -102,14 +102,14 @@ if (isset($_FILES["file"])) {
 
     if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
         $errorMsg = match ($_FILES['file']['error']) {
-            1 => lang('error.file_upload_exceeds_limit'),
-            2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
-            3 => lang('error.file_partially_uploaded'),
-            4 => lang('error.no_file_uploaded'),
-            6 => lang('error.file_upload_missing_temp'),
-            7 => lang('error.file_upload_write_failed'),
-            8 => lang('error.file_upload_stopped'),
-            default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+            1 => t('error.file_upload_exceeds_limit'),
+            2 => t('error.file_upload_too_large', replace:['max' => '16 MB']),
+            3 => t('error.file_partially_uploaded'),
+            4 => t('error.no_file_uploaded'),
+            6 => t('error.file_upload_missing_temp'),
+            7 => t('error.file_upload_write_failed'),
+            8 => t('error.file_upload_stopped'),
+            default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
         };
         printMsg($errorMsg, "error");
     }

@@ -17,7 +17,7 @@
  */
 ?>
 
-<h2><?= lang('dashboard.overview_on_the_past_four_quarters') ?></h2>
+<h2><?= t('dashboard.overview_on_the_past_four_quarters') ?></h2>
 
 
 <div class="row row-eq-spacing mb-0">
@@ -49,7 +49,7 @@
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
-                                // labels: ['<?= lang('common.approved') ?>', '<?= lang('dashboard.approval_missing') ?>'],
+                                // labels: ['<?= t('common.approved') ?>', '<?= t('dashboard.approval_missing') ?>'],
                                 labels: <?= json_encode($d_labels) ?>,
                                 datasets: [{
                                     data: Object.values(raw_data),
@@ -110,7 +110,7 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
                     <canvas id="approved-<?= $q ?>"></canvas>
                     <div class="text-right mt-5">
                         <button class="btn small" onclick="loadModal('components/controlling-approved', {q: '<?= $d['quarter'] ?>', y: '<?= $d['year'] ?>'})">
-                            <i class="ph ph-magnifying-glass-plus"></i> <?= lang('common.details') ?>
+                            <i class="ph ph-magnifying-glass-plus"></i> <?= t('common.details') ?>
                         </button>
                     </div>
 
@@ -119,7 +119,7 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
                         var myChart = new Chart(ctx, {
                             type: 'doughnut',
                             data: {
-                                labels: ['<?= lang('common.approved') ?>', '<?= lang('dashboard.approval_missing') ?>'],
+                                labels: ['<?= t('common.approved') ?>', '<?= t('dashboard.approval_missing') ?>'],
                                 datasets: [{
                                     label: '# of Scientists',
                                     data: [<?= $n_approved ?>, <?= $n_scientists - $n_approved ?>],
@@ -170,16 +170,16 @@ if ($Settings->featureEnabled('quarterly-reporting', true))
 $Format = new Document(true);
 ?>
 
-<h2><?= lang('dashboard.newly_added_activities') ?></h2>
+<h2><?= t('dashboard.newly_added_activities') ?></h2>
 <div class="mt-20">
 
     <table class="table dataTable" id="activity-table">
         <thead>
             <tr>
-                <th><?= lang('dashboard.added') ?></th>
-                <th><?= lang('dashboard.by') ?></th>
-                <th><?= lang('common.type') ?></th>
-                <th><?= lang('common.activity') ?></th>
+                <th><?= t('dashboard.added') ?></th>
+                <th><?= t('dashboard.by') ?></th>
+                <th><?= t('common.type') ?></th>
+                <th><?= t('common.activity') ?></th>
                 <th></th>
             </tr>
         </thead>
@@ -190,7 +190,7 @@ $Format = new Document(true);
             $cursor = $osiris->activities->find($filter, $options);
 
             if (empty($cursor)) {
-                echo "<tr class='row-danger'><td colspan='3'>" . lang('dashboard.no_activities_found') . "</td></tr>";
+                echo "<tr class='row-danger'><td colspan='3'>" . t('dashboard.no_activities_found') . "</td></tr>";
             } else foreach ($cursor as $i => $doc) {
                 $id = $doc['_id'];
                 if ($i >= 30) break;

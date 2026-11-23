@@ -17,21 +17,21 @@
 
 <h1>
     <i class="ph ph-user-plus" aria-hidden="true"></i>
-    <?= lang('common.register') ?>
+    <?= t('common.register') ?>
 </h1>
 
 <p>
-    <?= lang('auth.register_contact_admin') ?>
+    <?= t('auth.register_contact_admin') ?>
 </p>
 
 
 <form action="#" method="get">
     <div class="form-group">
-        <label for="token"><?= lang('auth.auth_token') ?></label>
+        <label for="token"><?= t('auth.auth_token') ?></label>
         <input type="text" class="form-control" name="token" id="token" value="<?= $_GET['token'] ?? '' ?>" required>
     </div>
 
     <button type="submit" class="btn primary">
-        <?= lang('action.continue') ?>
+        <?= t('action.continue') ?>
     </button>
 </form>

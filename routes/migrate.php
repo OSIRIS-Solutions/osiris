@@ -40,7 +40,7 @@ Route::get('/migration-needed', function () {
     if (empty($version) || version_compare($version['value'], OSIRIS_VERSION, '<')) {
         // migration needed
     } else {
-        $_SESSION['msg'] = lang('admin.your_osiris_installation_is_up_to_date');
+        $_SESSION['msg'] = t('admin.your_osiris_installation_is_up_to_date');
         header('Location: ' . ROOTPATH . '/');
     }
     include_once BASEPATH . "/header.php";
@@ -50,16 +50,16 @@ Route::get('/migration-needed', function () {
         <div class="container text-center" style="max-width: 70rem;">
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
             <h1 class="mt-0">
-                <?= lang('admin.a_new_osiris_version_has_been_found') ?>!
+                <?= t('admin.a_new_osiris_version_has_been_found') ?>!
             </h1>
             <p>
-                <?= lang('admin.osiris_will_be_updated_and_set_up_automatically_depending_on_the_version_th') ?>
+                <?= t('admin.osiris_will_be_updated_and_set_up_automatically_depending_on_the_version_th') ?>
             </p>
             <p class="text-muted">
-                <span><?= lang('admin.installed') ?>: <?= $version['value'] ?></span> | <b><?= lang('admin.latest') ?>: <?= OSIRIS_VERSION ?></b>
+                <span><?= t('admin.installed') ?>: <?= $version['value'] ?></span> | <b><?= t('admin.latest') ?>: <?= OSIRIS_VERSION ?></b>
             </p>
             <a href="<?= ROOTPATH ?>/migrate" class="btn cta large">
-                <?= lang('admin.update_osiris') ?>
+                <?= t('admin.update_osiris') ?>
             </a>
         </div>
     <?php
@@ -68,16 +68,16 @@ Route::get('/migration-needed', function () {
         <div class="container text-center">
             <img src="<?= ROOTPATH ?>/img/sophie/sophie-maintenance.png" alt="Maintenance" style="width: 100%; max-width: 50rem; margin: 0 auto; display: block;">
             <h1 class="mt-0">
-                <?= lang('admin.osiris_is_being_updated') ?>...
+                <?= t('admin.osiris_is_being_updated') ?>...
             </h1>
 
             <p>
-                <?= lang('admin.osiris_is_currently_being_updated_to_the_latest_version_please_check_back_l') ?>
+                <?= t('admin.osiris_is_currently_being_updated_to_the_latest_version_please_check_back_l') ?>
             </p>
 
             <div class="spacer h-100"></div>
             <small class="text-muted">
-                <?= lang('admin.in_case_you_are_seeing_this_message_for_a_long_time_please_contact_your_adm') ?>
+                <?= t('admin.in_case_you_are_seeing_this_message_for_a_long_time_please_contact_your_adm') ?>
             </small>
         </div>
     <?php
@@ -111,7 +111,7 @@ Route::get('/migrate/languages', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+        return abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     set_time_limit(6000);
@@ -125,7 +125,7 @@ Route::get('/migrate/project-forms', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+        return abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     set_time_limit(6000);
@@ -136,7 +136,7 @@ Route::get('/migrate/project-forms', function () {
 
 Route::get('/migrate/event-forms', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     include BASEPATH . '/header.php';
     include BASEPATH . '/routes/migration/event-forms.php';
     include BASEPATH . '/footer.php';
@@ -144,7 +144,7 @@ Route::get('/migrate/event-forms', function () {
 
 Route::get('/migrate/deadline-forms', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     include BASEPATH . '/header.php';
     include BASEPATH . '/routes/migration/deadline-forms.php';
     include BASEPATH . '/footer.php';
@@ -152,7 +152,7 @@ Route::get('/migrate/deadline-forms', function () {
 
 Route::get('/migrate/infrastructure-forms', function () {
     include_once BASEPATH . '/php/init.php';
-    if (!$Settings->hasPermission('admin.see')) return abortwith(403, translate('error.admin_no_permission'));
+    if (!$Settings->hasPermission('admin.see')) return abortwith(403, t('error.admin_no_permission'));
     include BASEPATH . '/header.php';
     include BASEPATH . '/routes/migration/infrastructure-forms.php';
     include BASEPATH . '/footer.php';
@@ -162,7 +162,7 @@ Route::get('/migrate/localization', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('admin.see')) {
-        return abortwith(403, translate('error.admin_no_permission'), "/", translate('navigation.go_back_home'));
+        return abortwith(403, t('error.admin_no_permission'), "/", t('navigation.go_back_home'));
     }
 
     set_time_limit(6000);
@@ -215,7 +215,7 @@ Route::get('/migrate/cv', function () {
             ['$set' => ['cv' => $cv]]
         );
     }
-    echo lang('admin.cv_dates_migrated_successfully');
+    echo t('admin.cv_dates_migrated_successfully');
 
     include BASEPATH . "/footer.php";
 });
@@ -232,7 +232,7 @@ Route::get('/migrate/(.*)', function ($v) {
 
     echo '<div class="migration-report">';
 
-    echo "<h1>" . lang('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
+    echo "<h1>" . t('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
     flush();
     ob_flush();
 
@@ -420,14 +420,14 @@ Route::get('/migrate', function () {
 
     // check if user is logged in and has admin rights
     if (!$Settings->hasPermission('admin.see')) {
-        echo "<p class='alert danger'>" . lang('common.you_do_not_have_permission_to_access_this_page') . "</p>";
+        echo "<p class='alert danger'>" . t('common.you_do_not_have_permission_to_access_this_page') . "</p>";
         include BASEPATH . "/footer.php";
         die;
     }
 
     echo '<div class="migration-report">';
 
-    echo "<h1>" . lang('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
+    echo "<h1>" . t('admin.migrating_osiris_to_version_osiris_version', replace: ['osiris_version' => OSIRIS_VERSION]) . "</h1>";
     flush();
     ob_flush();
 
@@ -438,9 +438,9 @@ Route::get('/migrate', function () {
         echo '
         <div class="migration-report">
             <div class="migration-card">
-                <h3 class="migration-ok">✓ ' . lang('admin.everything_is_up_to_date') . '</h3>
+                <h3 class="migration-ok">✓ ' . t('admin.everything_is_up_to_date') . '</h3>
 
-                <p>' . lang('admin.no_migration_steps_were_required_osiris_is_already_using_the_latest_databas') . '</p>
+                <p>' . t('admin.no_migration_steps_were_required_osiris_is_already_using_the_latest_databas') . '</p>
             </div>
         </div>
         </div>';
@@ -449,9 +449,9 @@ Route::get('/migrate', function () {
     }
 
     ?>
-    <h2><?= lang('admin.database_migration_report') ?></h2>
+    <h2><?= t('admin.database_migration_report') ?></h2>
     <p class="migration-muted">
-        <?= lang('admin.osiris_is_updating_required_database_structures_for_the_current_version_exi') ?>
+        <?= t('admin.osiris_is_updating_required_database_structures_for_the_current_version_exi') ?>
     </p>
 <?php
 
@@ -616,7 +616,7 @@ Route::get('/migrate', function () {
     }
 
 
-    echo "<p>" . lang('admin.migration_completed_successfully') . "</p>";
+    echo "<p>" . t('admin.migration_completed_successfully') . "</p>";
     $osiris->system->updateOne(
         ['key' => 'version'],
         ['$set' => ['value' => OSIRIS_VERSION]],

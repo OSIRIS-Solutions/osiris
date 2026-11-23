@@ -3380,7 +3380,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'activity' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('news.research_activity');
+                $featuredCard['type_label'] = t('news.research_activity');
                 $featuredCard['icon'] = 'ph-article';
                 $featuredCard['title'] = ($doc['title'] ?? '');
                 $featuredCard['subtitle'] = ($doc['subtitle'] ?? '');
@@ -3404,7 +3404,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'person' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('common.person');
+                $featuredCard['type_label'] = t('common.person');
                 $featuredCard['icon'] = 'ph-user';
                 $featuredCard['title'] = ($doc['displayname'] ?? '');
                 $featuredCard['subtitle'] = apiLocalized($doc['position'] ?? '');
@@ -3433,7 +3433,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'project' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('common.project');
+                $featuredCard['type_label'] = t('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
                 $featuredCard['title'] = (!empty($doc['acronym']) ? $doc['acronym'] . ' – ' : '') . localized($doc['name'] ?? '');
                 $featuredCard['subtitle'] = localized($doc['title'] ?? '');
@@ -3484,7 +3484,7 @@ Route::get('/portfolio/news/([^/]*)', function ($id) {
             ]);
             if (empty($doc)) continue;
             if ($featured && $featuredType == 'event' && $doc['id'] == $featuredId) {
-                $featuredCard['type_label'] = lang('common.event');
+                $featuredCard['type_label'] = t('common.event');
                 $featuredCard['icon'] = 'ph-calendar-blank';
                 $featuredCard['title'] = ($doc['title'] ?? '');
                 $eventDetails = [];

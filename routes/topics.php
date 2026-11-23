@@ -28,11 +28,11 @@ Route::get('/topics', function () {
 Route::get('/topics/new', function () {
     include_once BASEPATH . "/php/init.php";
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", lang('topics.go_back_to_topics'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", t('topics.go_back_to_topics'));
     }
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
-        ['name' => lang('common.new')]
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/topics/edit.php";
@@ -69,7 +69,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", t('topics.go_back_to_topic'));
     }
 
     global $form;
@@ -87,7 +87,7 @@ Route::get('/topics/edit/(.*)', function ($id) {
     $breadcrumb = [
         ['name' => $Settings->topicLabel(), 'path' => "/topics"],
         ['name' => $form['name'], 'path' => "/topics/view/$id"],
-        ['name' => lang('action.edit')]
+        ['name' => t('action.edit')]
     ];
 
     include BASEPATH . "/header.php";
@@ -103,10 +103,10 @@ Route::post('/crud/topics/create', function () {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", lang('topics.go_back_to_topics'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_create_a_new_topics'), "/topics", t('topics.go_back_to_topics'));
     }
 
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);
@@ -116,7 +116,7 @@ Route::post('/crud/topics/create', function () {
     // check if topic id already exists:
     $topic_exist = $collection->findOne(['id' => $id]);
     if (!empty($topic_exist)) {
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.with_this_id_already_exists');
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . t('topics.with_this_id_already_exists');
         $_SESSION['msg_type'] = "error";
         header("Location: " . ROOTPATH . "/topics/new");
         die();
@@ -131,7 +131,7 @@ Route::post('/crud/topics/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.has_been_created_successfully');
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . t('topics.has_been_created_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $red);
         die();
@@ -148,7 +148,7 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", t('topics.go_back_to_topic'));
     }
 
     $target_dir = BASEPATH . "/uploads/";
@@ -170,29 +170,29 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
 
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             $errorMsg = match ($_FILES['file']['error']) {
-                1 => lang('error.file_upload_exceeds_limit'),
-                2 => lang('error.file_upload_too_large', replace:['max' => '16 MB']),
-                3 => lang('error.file_partially_uploaded'),
-                4 => lang('error.no_file_uploaded'),
-                6 => lang('error.file_upload_missing_temp'),
-                7 => lang('error.file_upload_write_failed'),
-                8 => lang('error.file_upload_stopped'),
-                default => lang('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
+                1 => t('error.file_upload_exceeds_limit'),
+                2 => t('error.file_upload_too_large', replace:['max' => '16 MB']),
+                3 => t('error.file_partially_uploaded'),
+                4 => t('error.no_file_uploaded'),
+                6 => t('error.file_upload_missing_temp'),
+                7 => t('error.file_upload_write_failed'),
+                8 => t('error.file_upload_stopped'),
+                default => t('error.something_went_wrong') . " (" . $_FILES['file']['error'] . ")"
             };
             $_SESSION['msg'] = $errorMsg;
             $_SESSION['msg_type'] = "error";
         } else if ($filesize > 2000000) {
-            $_SESSION['msg'] = lang('error.file_too_big_max_2MB');
+            $_SESSION['msg'] = t('error.file_too_big_max_2MB');
             $_SESSION['msg_type'] = "error";
         } else if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . $filename)) {
             $osiris->topics->updateOne(
                 ['_id' => $DB->to_ObjectID($id)],
                 ['$set' => $values]
             );
-            $_SESSION['msg'] = lang('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]);
+            $_SESSION['msg'] = t('common.the_file_filename_has_been_uploaded', replace: ['filename' => $filename]);
             $_SESSION['msg_type'] = "success";
         } else {
-            $_SESSION['msg'] = lang('error.file_upload_generic');
+            $_SESSION['msg'] = t('error.file_upload_generic');
             $_SESSION['msg_type'] = "error";
         }
     } else if (isset($_POST['delete'])) {
@@ -200,10 +200,10 @@ Route::post('/crud/topics/upload/([A-Za-z0-9]*)', function ($id) {
         if (file_exists($target_dir . $filename)) {
             // Use unlink() function to delete a file
             if (!unlink($target_dir . $filename)) {
-                $_SESSION['msg'] = lang('common.filename_cannot_be_deleted_due_to_an_error', replace: ['filename' => $filename]);
+                $_SESSION['msg'] = t('common.filename_cannot_be_deleted_due_to_an_error', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "error";
             } else {
-                $_SESSION['msg'] = lang('common.filename_has_been_deleted', replace: ['filename' => $filename]);
+                $_SESSION['msg'] = t('common.filename_has_been_deleted', replace: ['filename' => $filename]);
                 $_SESSION['msg_type'] = "success";
             }
         }
@@ -216,9 +216,9 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.edit')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", lang('topics.go_back_to_topic'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_edit_topics'), "/topics/view/$id", t('topics.go_back_to_topic'));
     }
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->topics;
 
     $values = validateValues($_POST['values'], $DB);
@@ -233,7 +233,7 @@ Route::post('/crud/topics/update/([A-Za-z0-9]*)', function ($id) {
     );
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = $Settings->topicLabel() . " " . lang('topics.has_been_updated_successfully');
+        $_SESSION['msg'] = $Settings->topicLabel() . " " . t('topics.has_been_updated_successfully');
         $_SESSION['msg_type'] = "success";
         header("Location: " . $_POST['redirect']);
         die();
@@ -250,7 +250,7 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
 
     if (!$Settings->hasPermission('topics.delete')) {
-        abortwith(403, lang('topics.you_do_not_have_permission_to_delete_topics'), "/topics", lang('topics.go_back_to_topics'));
+        abortwith(403, t('topics.you_do_not_have_permission_to_delete_topics'), "/topics", t('topics.go_back_to_topics'));
     }
 
     $topic = $osiris->topics->findOne(['_id' => $DB->to_ObjectID($id)]);
@@ -285,7 +285,7 @@ Route::post('/crud/topics/delete/([A-Za-z0-9]*)', function ($id) {
         ['_id' => $DB::to_ObjectID($id)]
     );
 
-    $_SESSION['msg'] = lang('topics.research_topic_has_been_deleted_successfully');
+    $_SESSION['msg'] = t('topics.research_topic_has_been_deleted_successfully');
     $_SESSION['msg_type'] = "success";
     header("Location: " . ROOTPATH . "/topics");
 });

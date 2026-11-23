@@ -19,12 +19,12 @@
 
 <h1>
     <i class="ph-duotone ph-sliders"></i>
-    <?= lang('common.settings') ?>
+    <?= t('common.settings') ?>
 </h1>
 
 <!-- search -->
 <div id="search">
-    <input type="text" class="form-control" id="search-input" placeholder="<?= lang('admin.search_settings') ?>">
+    <input type="text" class="form-control" id="search-input" placeholder="<?= t('admin.search_settings') ?>">
 </div>
 
 <script>
@@ -53,85 +53,85 @@
             <h2><i class="ph-duotone ph-faders"></i> System</h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/general">
                 <i class="ph-duotone ph-gear"></i>
-                <b><?= lang('admin.general_settings') ?></b>
-                <p><?= lang('admin.general_setting_description') ?></p>
+                <b><?= t('admin.general_settings') ?></b>
+                <p><?= t('admin.general_setting_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/features">
                 <i class="ph-duotone ph-wrench"></i>
-                <b><?= lang('admin.features') ?></b>
-                <p><?= lang('admin.features_description') ?></p>
+                <b><?= t('admin.features') ?></b>
+                <p><?= t('admin.features_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/languages">
                 <i class="ph-duotone ph-translate"></i>
-                <b><?= lang('admin.languages') ?></b>
-                <p><?= lang('admin.language_description') ?></p>
+                <b><?= t('admin.languages') ?></b>
+                <p><?= t('admin.language_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/api-clients">
                 <i class="ph-duotone ph-key"></i>
-                <b><?= lang('common.api_clients') ?></b>
-                <p><?= lang('admin.manage_api_clients_and_their_access') ?></p>
+                <b><?= t('common.api_clients') ?></b>
+                <p><?= t('admin.manage_api_clients_and_their_access') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/announcements">
                 <i class="ph-duotone ph-megaphone"></i>
-                <b><?= lang('admin.announcements') ?></b>
-                <p><?= lang('admin.announcements_description') ?></p>
+                <b><?= t('admin.announcements') ?></b>
+                <p><?= t('admin.announcements_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/mail">
                 <i class="ph-duotone ph-envelope"></i>
-                <b><?= lang('admin.email_settings') ?></b>
-                <p><?= lang('admin.email_settings_description') ?></p>
+                <b><?= t('admin.email_settings') ?></b>
+                <p><?= t('admin.email_settings_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('portal')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/portfolio">
                     <i class="ph-duotone ph-globe"></i>
-                    <b><?= lang('admin.portfolio') ?></b>
-                    <p><?= lang('admin.portfolio_description') ?></p>
+                    <b><?= t('admin.portfolio') ?></b>
+                    <p><?= t('admin.portfolio_description') ?></p>
                 </a>
             <?php } ?>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="design-settings">
-            <h2><i class="ph-duotone ph-palette"></i> <?= lang('admin.design_and_branding') ?></h2>
+            <h2><i class="ph-duotone ph-palette"></i> <?= t('admin.design_and_branding') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/logo">
                 <i class="ph-duotone ph-image"></i>
-                <b><?= lang('admin.logo') ?></b>
-                <p><?= lang('admin.logo_description') ?></p>
+                <b><?= t('admin.logo') ?></b>
+                <p><?= t('admin.logo_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/institute">
                 <i class="ph-duotone ph-building" aria-hidden="true"></i>
-                <b><?= lang('admin.institution') ?></b>
-                <p><?= lang('admin.institution_description') ?></p>
+                <b><?= t('admin.institution') ?></b>
+                <p><?= t('admin.institution_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/design">
                 <i class="ph-duotone ph-palette"></i>
-                <b><?= lang('admin.design') ?></b>
-                <p><?= lang('admin.design_description') ?></p>
+                <b><?= t('admin.design') ?></b>
+                <p><?= t('admin.design_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/footer">
                 <i class="ph-duotone ph-scales"></i>
-                <b><?= lang('admin.footer') ?></b>
-                <p><?= lang('admin.footer_description') ?></p>
+                <b><?= t('admin.footer') ?></b>
+                <p><?= t('admin.footer_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
     <?php if ($userSyncPerm) : ?>
         <div class="col-md-6 col-lg-4" id="user-settings">
-            <h2><i class="ph-duotone ph-users"></i> <?= lang('admin.users_and_roles') ?></h2>
+            <h2><i class="ph-duotone ph-users"></i> <?= t('admin.users_and_roles') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/persons">
                 <i class="ph-duotone ph-user" aria-hidden="true"></i>
-                <b><?= lang('admin.person_data') ?></b>
-                <p><?= lang('admin.person_data_description') ?></p>
+                <b><?= t('admin.person_data') ?></b>
+                <p><?= t('admin.person_data_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/roles">
                 <i class="ph-duotone ph-shield"></i>
-                <b><?= lang('admin.roles_permissions') ?></b>
-                <p><?= lang('admin.roles_permissions_description') ?></p>
+                <b><?= t('admin.roles_permissions') ?></b>
+                <p><?= t('admin.roles_permissions_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/roles/distribute">
                 <i class="ph-duotone ph-shield-check"></i>
-                <b><?= lang('admin.distribute_roles') ?></b>
-                <p><?= lang('admin.distribute_roles_description') ?></p>
+                <b><?= t('admin.distribute_roles') ?></b>
+                <p><?= t('admin.distribute_roles_description') ?></p>
             </a>
             <?php
             switch (strtoupper(USER_MANAGEMENT)) {
@@ -140,8 +140,8 @@
             ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/authentication">
                         <i class="ph-duotone ph-users"></i>
-                        <b><?= lang('admin.manage_authentication') ?></b>
-                        <p><?= lang('admin.manage_authentication_description') ?></p>
+                        <b><?= t('admin.manage_authentication') ?></b>
+                        <p><?= t('admin.manage_authentication_description') ?></p>
                     </a>
 
                 <?php
@@ -150,18 +150,18 @@
                 ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/ldap-users">
                         <i class="ph-duotone ph-arrows-clockwise"></i>
-                        <b><?= lang('admin.synchronize_users') ?></b>
-                        <p><?= lang('admin.synchronize_users_description') ?></p>
+                        <b><?= t('admin.synchronize_users') ?></b>
+                        <p><?= t('admin.synchronize_users_description') ?></p>
                     </a>
                     <a class="card" href="<?= ROOTPATH ?>/admin/ldap-attributes">
                         <i class="ph-duotone ph-user-switch"></i>
-                        <b><?= lang('admin.attribute_synchronization') ?></b>
-                        <p><?= lang('admin.attribute_synchronization_description') ?></p>
+                        <b><?= t('admin.attribute_synchronization') ?></b>
+                        <p><?= t('admin.attribute_synchronization_description') ?></p>
                     </a>
                     <a class="card" href="<?= ROOTPATH ?>/admin/guest-account">
                         <i class="ph-duotone ph-user-circle"></i>
-                        <b><?= lang('admin.guest_accounts') ?></b>
-                        <p><?= lang('admin.guest_accounts_description') ?></p>
+                        <b><?= t('admin.guest_accounts') ?></b>
+                        <p><?= t('admin.guest_accounts_description') ?></p>
                     </a>
             <?php
                     break;
@@ -171,45 +171,45 @@
             ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/users">
                 <i class="ph-duotone ph-users"></i>
-                <b><?= lang('admin.add_users') ?></b>
-                <p><?= lang('admin.add_users_description') ?></p>
+                <b><?= t('admin.add_users') ?></b>
+                <p><?= t('admin.add_users_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
     <?php if ($adminPerm || $newsOutletsPerm) : ?>
         <div class="col-md-6 col-lg-4" id="content-settings">
-            <h2><i class="ph-duotone ph-treasure-chest"></i> <?= lang('admin.data_model_and_content') ?></h2>
+            <h2><i class="ph-duotone ph-treasure-chest"></i> <?= t('admin.data_model_and_content') ?></h2>
             <?php if ($adminPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/categories">
                     <i class="ph-duotone ph-bookmarks" aria-hidden="true"></i>
-                    <b><?= lang('common.activities') ?></b>
-                    <p><?= lang('admin.activities_description') ?></p>
+                    <b><?= t('common.activities') ?></b>
+                    <p><?= t('admin.activities_description') ?></p>
                 </a>
 
                 <?php if ($Settings->featureEnabled('projects')) { ?>
                     <a class="card" href="<?= ROOTPATH ?>/admin/projects">
                         <i class="ph-duotone ph-tree-structure" aria-hidden="true"></i>
-                        <b><?= lang('common.projects') ?></b>
-                        <p><?= lang('admin.projects_description') ?></p>
+                        <b><?= t('common.projects') ?></b>
+                        <p><?= t('admin.projects_description') ?></p>
                     </a>
                 <?php } ?>
 
                 <a class="card" href="<?= ROOTPATH ?>/admin/journals">
                     <i class="ph-duotone ph-stack" aria-hidden="true"></i>
-                    <b><?= lang('common.journals') ?></b>
-                    <p><?= lang('admin.journals_description') ?></p>
+                    <b><?= t('common.journals') ?></b>
+                    <p><?= t('admin.journals_description') ?></p>
                 </a>
 
                 <a class="card" href="<?= ROOTPATH ?>/admin/resource-hub">
                     <i class="ph-duotone ph-<?= e($Settings->resourceHubIcon()) ?>"></i>
-                    <b><?= lang('common.resource_hub') ?></b>
-                    <p><?= lang('admin.settings_for_the_resource_hub') ?></p>
+                    <b><?= t('common.resource_hub') ?></b>
+                    <p><?= t('admin.settings_for_the_resource_hub') ?></p>
                 </a>
 
                 <a class="card" href="<?= ROOTPATH ?>/admin/data-model">
                     <i class="ph-duotone ph-gear-six" aria-hidden="true"></i>
-                    <b><?= lang('common.data_model') ?></b>
-                    <p><?= lang('admin.manage_other_data_model_settings') ?></p>
+                    <b><?= t('common.data_model') ?></b>
+                    <p><?= t('admin.manage_other_data_model_settings') ?></p>
                 </a>
 
             <?php } ?>
@@ -217,86 +217,86 @@
             <?php if ($newsOutletsPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/news">
                     <i class="ph-duotone ph-newspaper" aria-hidden="true"></i>
-                    <b><?= lang('admin.news_outlets') ?></b>
-                    <p><?= lang('admin.manage_editorial_outlets_and_their_portfolio_output') ?></p>
+                    <b><?= t('admin.news_outlets') ?></b>
+                    <p><?= t('admin.manage_editorial_outlets_and_their_portfolio_output') ?></p>
                 </a>
             <?php } ?>
         </div><?php endif; ?>
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="custom-data-settings">
-            <h2><i class="ph-duotone ph-database"></i> <?= lang('admin.custom_data') ?></h2>
+            <h2><i class="ph-duotone ph-database"></i> <?= t('admin.custom_data') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/fields">
                 <i class="ph-duotone ph-textbox" aria-hidden="true"></i>
-                <b><?= lang('common.custom_fields') ?></b>
-                <p><?= lang('admin.custom_fields_description') ?></p>
+                <b><?= t('common.custom_fields') ?></b>
+                <p><?= t('admin.custom_fields_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/vocabulary">
                 <i class="ph-duotone ph-book-bookmark" aria-hidden="true"></i>
-                <b><?= lang('admin.vocabularies') ?></b>
-                <p><?= lang('admin.vocabularies_description') ?></p>
+                <b><?= t('admin.vocabularies') ?></b>
+                <p><?= t('admin.vocabularies_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('tags')) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/tags">
                     <i class="ph-duotone ph-tag" aria-hidden="true"></i>
-                    <b><?= lang('common.tags') ?></b>
-                    <p><?= lang('admin.tags_description') ?></p>
+                    <b><?= t('common.tags') ?></b>
+                    <p><?= t('admin.tags_description') ?></p>
                 </a>
             <?php } ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/countries">
                 <i class="ph-duotone ph-globe-hemisphere-west"></i>
-                <b><?= lang('admin.country_settings') ?></b>
-                <p><?= lang('admin.country_settings_description') ?></p>
+                <b><?= t('admin.country_settings') ?></b>
+                <p><?= t('admin.country_settings_description') ?></p>
             </a>
 
         </div>
     <?php endif; ?>
     <?php if ($adminPerm || $reportPerm) : ?>
         <div class="col-md-6 col-lg-4" id="reporting-settings">
-            <h2><i class="ph-duotone ph-chart-bar"></i> <?= lang('admin.reports_and_tools') ?></h2>
+            <h2><i class="ph-duotone ph-chart-bar"></i> <?= t('admin.reports_and_tools') ?></h2>
             <a class="card" href="<?= ROOTPATH ?>/admin/reports">
                 <i class="ph-duotone ph-clipboard"></i>
-                <b><?= lang('admin.report_templates') ?></b>
-                <p><?= lang('admin.report_templates_description') ?></p>
+                <b><?= t('admin.report_templates') ?></b>
+                <p><?= t('admin.report_templates_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/export-design">
                 <i class="ph-duotone ph-file-doc"></i>
-                <b><?= lang('admin.export_design') ?></b>
-                <p><?= lang('admin.export_design_description') ?></p>
+                <b><?= t('admin.export_design') ?></b>
+                <p><?= t('admin.export_design_description') ?></p>
             </a>
             <?php if ($Settings->featureEnabled('quality-workflow') && $adminPerm) { ?>
                 <a class="card" href="<?= ROOTPATH ?>/admin/workflows">
                     <i class="ph-duotone ph-seal-check" aria-hidden="true"></i>
-                    <b><?= lang('admin.quality_workflows') ?></b>
-                    <p><?= lang('admin.quality_workflows_description') ?></p>
+                    <b><?= t('admin.quality_workflows') ?></b>
+                    <p><?= t('admin.quality_workflows_description') ?></p>
                 </a>
             <?php } ?>
             <a class="card" href="<?= ROOTPATH ?>/admin/module-helper">
                 <i class="ph-duotone ph-textbox" aria-hidden="true"></i>
-                <b><?= lang('admin.field_overview') ?></b>
-                <p><?= lang('admin.field_overview_description') ?></p>
+                <b><?= t('admin.field_overview') ?></b>
+                <p><?= t('admin.field_overview_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/templates">
                 <i class="ph-duotone ph-text-aa" aria-hidden="true"></i>
-                <b><?= lang('admin.template_builder') ?></b>
-                <p><?= lang('admin.template_builder_description') ?></p>
+                <b><?= t('admin.template_builder') ?></b>
+                <p><?= t('admin.template_builder_description') ?></p>
             </a>
         </div>
     <?php endif; ?>
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="integrations-settings">
-            <h2><i class="ph-duotone ph-link"></i> <?= lang('admin.integrations') ?></h2>
+            <h2><i class="ph-duotone ph-link"></i> <?= t('admin.integrations') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/orcid">
                 <i class="ph-duotone ph-student" aria-hidden="true"></i>
-                <b><?= lang('common.orcid') ?></b>
-                <p><?= lang('admin.orcid_setting_description') ?></p>
+                <b><?= t('common.orcid') ?></b>
+                <p><?= t('admin.orcid_setting_description') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/admin/doi-mappings">
                 <i class="ph-duotone ph-link"></i>
-                <b><?= lang('admin.doi_mappings') ?></b>
-                <p><?= lang('admin.doi_mappings_description') ?></p>
+                <b><?= t('admin.doi_mappings') ?></b>
+                <p><?= t('admin.doi_mappings_description') ?></p>
             </a>
 
         </div>
@@ -305,17 +305,17 @@
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="database-settings">
-            <h2><i class="ph-duotone ph-database"></i> <?= lang('admin.database') ?></h2>
+            <h2><i class="ph-duotone ph-database"></i> <?= t('admin.database') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/rerender">
                 <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
-                <b><?= lang('admin.re_render') ?></b>
-                <p><?= lang('admin.re_render_all_activities_may_take_some_time') ?></p>
+                <b><?= t('admin.re_render') ?></b>
+                <p><?= t('admin.re_render_all_activities_may_take_some_time') ?></p>
             </a>
             <a class="card" href="<?= ROOTPATH ?>/rerender-units">
                 <i class="ph-duotone ph-arrows-clockwise" aria-hidden="true"></i>
-                <b><?= lang('admin.re_render_units') ?></b>
-                <p><?= lang('admin.re_render_all_units') ?></p>
+                <b><?= t('admin.re_render_units') ?></b>
+                <p><?= t('admin.re_render_all_units') ?></p>
             </a>
 
         </div>
@@ -324,24 +324,24 @@
 
     <?php if ($adminPerm) : ?>
         <div class="col-md-6 col-lg-4" id="info-settings">
-            <h2><i class="ph-duotone ph-info"></i> <?= lang('admin.information') ?></h2>
+            <h2><i class="ph-duotone ph-info"></i> <?= t('admin.information') ?></h2>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/osiris-info">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
-                <b><?= lang('common.osiris_info') ?></b>
-                <p><?= lang('admin.view_osiris_configuration_information') ?></p>
+                <b><?= t('common.osiris_info') ?></b>
+                <p><?= t('admin.view_osiris_configuration_information') ?></p>
             </a>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/phpinfo">
                 <i class="ph-duotone ph-info" aria-hidden="true"></i>
-                <b><?= lang('admin.php_info') ?></b>
-                <p><?= lang('admin.view_php_configuration_information') ?></p>
+                <b><?= t('admin.php_info') ?></b>
+                <p><?= t('admin.view_php_configuration_information') ?></p>
             </a>
 
             <a class="card" href="<?= ROOTPATH ?>/admin/logs">
                 <i class="ph-duotone ph-file-text" aria-hidden="true"></i>
-                <b><?= lang('admin.import_logs') ?></b>
-                <p><?= lang('admin.view_import_logs') ?></p>
+                <b><?= t('admin.import_logs') ?></b>
+                <p><?= t('admin.view_import_logs') ?></p>
             </a>
         </div>
     <?php endif; ?>

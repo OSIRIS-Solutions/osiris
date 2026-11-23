@@ -54,7 +54,7 @@ function currentLanguage(): string
     $default = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2) === 'de' ? 'de' : 'en';
     $language = $_GET['lang'] ?? $_COOKIE['osiris-language'] ?? ($USER['lang'] ?? $default);
 
-    $supported = $Settings !== null ? $Settings->languages() : ['en'];
+    $supported = $Settings !== null ? $Settings->languages() : ['en', 'de'];
     return in_array($language, $supported, true) ? $language : OSIRIS_BASE_LANGUAGE;
 }
 
@@ -71,7 +71,7 @@ function replaceTranslationPlaceholders(string $translation, array $replace): st
 /**
  * Translate a versioned interface key.
  */
-function translate(string $key, array $replace = []): string
+function t(string $key, array $replace = []): string
 {
     global $Translations;
     if (!isset($Translations) || !$Translations instanceof Language) {
@@ -80,6 +80,11 @@ function translate(string $key, array $replace = []): string
 
     $result = $Translations->resolve($key, currentLanguage(), OSIRIS_BASE_LANGUAGE);
     return replaceTranslationPlaceholders($result, $replace);
+}
+
+function translate(string $key, array $replace = []): string
+{
+    return t($key, $replace);
 }
 
 /**
@@ -213,7 +218,7 @@ function lang($en, ?string $de = null, array $replace = []): string
         return $en;
     }
 
-    return translate($en, $replace);
+    return t($en, $replace);
 }
 
 include_once BASEPATH . "/php/Route.php";

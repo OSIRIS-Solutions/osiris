@@ -1,6 +1,6 @@
 <?php
 if (!$Settings->hasPermission('proposals.finance')) {
-    echo lang('projects.you_do_not_have_permission_to_view_financial_statistics');
+    echo t('projects.you_do_not_have_permission_to_view_financial_statistics');
     exit;
 }
 
@@ -17,7 +17,7 @@ function fmt_pct($v)
 
 
 <h1>
-    <?= lang('common.finance') ?>
+    <?= t('common.finance') ?>
 </h1>
 
 <?php
@@ -51,11 +51,11 @@ $totals = $fundingTotals[0] ?? null;
 ?>
 
 <h2>
-    <?= lang('projects.approved_third_party_funding') ?>
+    <?= t('projects.approved_third_party_funding') ?>
 </h2>
 
 <?php if (empty($totals)) { ?>
-    <p class="text-muted"><?= lang('projects.no_approved_projects_found') ?></p>
+    <p class="text-muted"><?= t('projects.no_approved_projects_found') ?></p>
 <?php } else {
 
     $incomeDelta = $totals['income_approved'] - $totals['income_proposed'];
@@ -68,16 +68,16 @@ $totals = $fundingTotals[0] ?? null;
     <table class="table w-auto">
         <thead>
             <tr>
-                <th><?= lang('projects.metric') ?></th>
-                <th class="text-right"><?= lang('projects.proposed') ?> (EUR)</th>
-                <th class="text-right"><?= lang('projects.approved') ?> (EUR)</th>
-                <th class="text-right"><?= lang('common.delta') ?> (EUR)</th>
+                <th><?= t('projects.metric') ?></th>
+                <th class="text-right"><?= t('projects.proposed') ?> (EUR)</th>
+                <th class="text-right"><?= t('projects.approved') ?> (EUR)</th>
+                <th class="text-right"><?= t('common.delta') ?> (EUR)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td class="font-weight-bold">
-                    <?= lang('projects.third_party_income') ?>
+                    <?= t('projects.third_party_income') ?>
                 </td>
                 <td class="text-right"><?= fmt_eur($totals['income_proposed']) ?></td>
                 <td class="text-right"><?= fmt_eur($totals['income_approved']) ?></td>
@@ -88,7 +88,7 @@ $totals = $fundingTotals[0] ?? null;
 
             <tr>
                 <td class="font-weight-bold">
-                    <?= lang('projects.total_project_volume') ?>
+                    <?= t('projects.total_project_volume') ?>
                 </td>
                 <td class="text-right"><?= fmt_eur($totals['sum_proposed']) ?></td>
                 <td class="text-right"><?= fmt_eur($totals['sum_approved']) ?></td>
@@ -100,7 +100,7 @@ $totals = $fundingTotals[0] ?? null;
         <tfoot>
             <tr>
                 <td colspan="4" class="text-muted">
-                    <?= lang('projects.based_on_approved_projects_only') ?>
+                    <?= t('projects.based_on_approved_projects_only') ?>
                     (<?= $totals['projects'] ?>)
                 </td>
             </tr>
@@ -200,27 +200,27 @@ krsort($rows);
 ?>
 
 <h2>
-    <?= lang('projects.funding_by_approval_year') ?>
+    <?= t('projects.funding_by_approval_year') ?>
 </h2>
 
 <?php if (empty($rows)) { ?>
-    <p class="text-muted"><?= lang('projects.no_approved_projects_found') ?></p>
+    <p class="text-muted"><?= t('projects.no_approved_projects_found') ?></p>
 <?php } else { ?>
 
     <table class="table" id="funding-by-approval-year">
         <thead>
             <tr>
                 <th></th>
-                <th style="width:90px;"><?= lang('common.year') ?></th>
-                <th class="text-right"><?= lang('common.projects') ?></th>
+                <th style="width:90px;"><?= t('common.year') ?></th>
+                <th class="text-right"><?= t('common.projects') ?></th>
 
-                <th class="text-right"><?= lang('projects.income_proposed') ?> (EUR)</th>
-                <th class="text-right"><?= lang('projects.income_approved') ?> (EUR)</th>
-                <th class="text-right"><?= lang('projects.approval_rate') ?></th>
+                <th class="text-right"><?= t('projects.income_proposed') ?> (EUR)</th>
+                <th class="text-right"><?= t('projects.income_approved') ?> (EUR)</th>
+                <th class="text-right"><?= t('projects.approval_rate') ?></th>
 
-                <th class="text-right"><?= lang('projects.volume_proposed') ?> (EUR)</th>
-                <th class="text-right"><?= lang('projects.volume_approved') ?> (EUR)</th>
-                <th class="text-right"><?= lang('projects.approval_rate') ?></th>
+                <th class="text-right"><?= t('projects.volume_proposed') ?> (EUR)</th>
+                <th class="text-right"><?= t('projects.volume_approved') ?> (EUR)</th>
+                <th class="text-right"><?= t('projects.approval_rate') ?></th>
             </tr>
         </thead>
 
@@ -256,9 +256,9 @@ krsort($rows);
                         <table class="table small simple">
                             <thead>
                                 <tr>
-                                    <th><?= lang('common.project') ?></th>
-                                    <th class="text-right"><?= lang('projects.income_proposed_approved') ?></th>
-                                    <th class="text-right"><?= lang('projects.volume_proposed_approved') ?></th>
+                                    <th><?= t('common.project') ?></th>
+                                    <th class="text-right"><?= t('projects.income_proposed_approved') ?></th>
+                                    <th class="text-right"><?= t('projects.volume_proposed_approved') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -292,7 +292,7 @@ krsort($rows);
 <?php if (!empty($rows)) { ?>
     <div class="box padded">
         <h3 class="title text-center">
-            <?= lang('projects.approved_volume_approval_rate_by_year') ?>
+            <?= t('projects.approved_volume_approval_rate_by_year') ?>
         </h3>
         <div id="approval-kpi-plot" style="height:380px;"></div>
     </div>
@@ -334,37 +334,37 @@ krsort($rows);
                     x: years,
                     y: volumeApproved,
                     type: 'bar',
-                    name: <?= json_encode(lang('projects.approved_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    name: <?= json_encode(t('projects.approved_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     marker: {
                         color: OSIRIS_PRIMARY + 'CC'
                     },
                     hovertemplate: lang('common.year') + ' %{x}<br>' +
-                        <?= json_encode(lang('projects.approved_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:,.0f} €<extra></extra>'
+                        <?= json_encode(t('projects.approved_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:,.0f} €<extra></extra>'
                 },
                 {
                     x: years,
                     y: incomeApproved,
                     type: 'bar',
-                    name: <?= json_encode(lang('projects.approved_income'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    name: <?= json_encode(t('projects.approved_income'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     marker: {
                         color: OSIRIS_SUCCESS + 'CC'
                     },
                     hovertemplate: lang('common.year') + ' %{x}<br>' +
-                        <?= json_encode(lang('projects.approved_income'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:,.0f} €<extra></extra>'
+                        <?= json_encode(t('projects.approved_income'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:,.0f} €<extra></extra>'
                 },
                 {
                     x: years,
                     y: rate,
                     type: 'scatter',
                     mode: 'lines+markers',
-                    name: <?= json_encode(lang('projects.approval_rate_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    name: <?= json_encode(t('projects.approval_rate_volume'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     yaxis: 'y2',
                     marker: {
                         size: 7,
                         color: OSIRIS_ACCENT
                     },
                     hovertemplate: lang('common.year') + ' %{x}<br>' +
-                        <?= json_encode(lang('projects.approval_rate'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:.1f}%<extra></extra>'
+                        <?= json_encode(t('projects.approval_rate'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + ': %{y:.1f}%<extra></extra>'
                 },
                 {
                     x: years,
@@ -414,7 +414,7 @@ krsort($rows);
                     ticksuffix: '%'
                 },
                 xaxis: {
-                    title: <?= json_encode(lang('projects.approval_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                    title: <?= json_encode(t('projects.approval_year'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
                     // no decimals
                     tickformat: 'd',
                     dtick: 1
@@ -471,22 +471,22 @@ $fundingByYear = $osiris->proposals->aggregate([
 ])->toArray();
 ?>
 <h2>
-    <?= lang('projects.third_party_funding_summary') ?>
+    <?= t('projects.third_party_funding_summary') ?>
 </h2>
 
 <?php if (empty($fundingByYear)) { ?>
-    <p class="text-muted"><?= lang('common.no_funding_information_available') ?></p>
+    <p class="text-muted"><?= t('common.no_funding_information_available') ?></p>
 <?php } else { ?>
 
     <table class="table" id="funding-by-year">
         <thead>
             <tr>
-                <th style="width:90px;"><?= lang('common.year') ?></th>
-                <th class="text-right"><?= lang('common.planned') ?> (EUR)</th>
-                <th class="text-right"><?= lang('common.actual') ?> (EUR)</th>
-                <th class="text-right"><?= lang('common.delta') ?> (EUR)</th>
-                <th class="text-right"><?= lang('common.fulfillment') ?></th>
-                <th class="text-right"><?= lang('projects.number_of_projects_finance_statistics') ?></th>
+                <th style="width:90px;"><?= t('common.year') ?></th>
+                <th class="text-right"><?= t('common.planned') ?> (EUR)</th>
+                <th class="text-right"><?= t('common.actual') ?> (EUR)</th>
+                <th class="text-right"><?= t('common.delta') ?> (EUR)</th>
+                <th class="text-right"><?= t('common.fulfillment') ?></th>
+                <th class="text-right"><?= t('projects.number_of_projects_finance_statistics') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -538,13 +538,13 @@ $fundingByYear = $osiris->proposals->aggregate([
 <?php if (!empty($fundingByYear)) { ?>
     <div class="box padded">
         <h3 class="title text-center">
-            <?= lang('projects.planned_vs_actual_funding') ?>
+            <?= t('projects.planned_vs_actual_funding') ?>
         </h3>
         <div id="funding-plot" style="height:340px;"></div>
     </div>
     <div class="box padded">
         <h3 class="title text-center">
-            <?= lang('projects.funding_delta_by_year') ?>
+            <?= t('projects.funding_delta_by_year') ?>
         </h3>
         <div id="delta-plot" style="height:340px;"></div>
     </div>
@@ -574,7 +574,7 @@ $fundingByYear = $osiris->proposals->aggregate([
                 marker: {
                     color: OSIRIS_PRIMARY + 'CC'
                 },
-                name: <?= json_encode(lang('common.planned'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                name: <?= json_encode(t('common.planned'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
             },
             {
                 x: years,
@@ -583,7 +583,7 @@ $fundingByYear = $osiris->proposals->aggregate([
                 marker: {
                     color: OSIRIS_ACCENT + 'CC'
                 },
-                name: <?= json_encode(lang('common.actual'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                name: <?= json_encode(t('common.actual'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
             }
         ];
 
@@ -625,7 +625,7 @@ $fundingByYear = $osiris->proposals->aggregate([
             marker: {
                 color: delta.map(v => v < 0 ? OSIRIS_DANGER : OSIRIS_SUCCESS)
             },
-            name: <?= json_encode(lang('common.delta'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+            name: <?= json_encode(t('common.delta'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
         }];
         const deltaLayout = {
             margin: {

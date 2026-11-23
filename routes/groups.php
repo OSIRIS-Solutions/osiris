@@ -69,7 +69,7 @@ Route::get('/groups', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('common.units')]
+        ['name' => t('common.units')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/groups.php";
@@ -80,8 +80,8 @@ Route::get('/groups/new', function () {
     include_once BASEPATH . "/php/init.php";
     $user = $_SESSION['username'];
     $breadcrumb = [
-        ['name' => lang('common.units'), 'path' => "/groups"],
-        ['name' => lang('common.new')]
+        ['name' => t('common.units'), 'path' => "/groups"],
+        ['name' => t('common.new')]
     ];
     include BASEPATH . "/header.php";
     include BASEPATH . "/pages/groups/add.php";
@@ -103,10 +103,10 @@ Route::get('/groups/view/(.*)', function ($id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang('common.unit'), '/groups');
+        abortwith(404, t('common.unit'), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang('common.units'), 'path' => "/groups"],
+        ['name' => t('common.units'), 'path' => "/groups"],
         ['name' => $group['id']]
     ];
 
@@ -129,14 +129,14 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
         // $id = strval($group['_id'] ?? '');
     }
     if (empty($group)) {
-        abortwith(404, lang('common.unit'), '/groups');
+        abortwith(404, t('common.unit'), '/groups');
     }
     $breadcrumb = [
-        ['name' => lang('common.units'), 'path' => "/groups"],
+        ['name' => t('common.units'), 'path' => "/groups"],
         ['name' =>  $group['id'], 'path' => "/groups/view/$id"],
     ];
     if ($page == 'edit') {
-        $breadcrumb[] = ['name' => lang('action.edit')];
+        $breadcrumb[] = ['name' => t('action.edit')];
     }
 
     global $form;
@@ -151,7 +151,7 @@ Route::get('/groups/(edit|public)/(.*)', function ($page, $id) {
 
 Route::post('/crud/groups/create', function () {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
     $collection = $osiris->groups;
 
     $values = validateValues($_POST['values'], $DB);
@@ -159,7 +159,7 @@ Route::post('/crud/groups/create', function () {
     // check if group name already exists:
     $group_exist = $collection->findOne(['id' => $values['id']]);
     if (!empty($group_exist)) {
-        $_SESSION['msg'] = lang('people.group_id_does_already_exist');
+        $_SESSION['msg'] = t('people.group_id_does_already_exist');
         $_SESSION['msg_type'] = 'error';
         header("Location: " . ROOTPATH . "/groups/new");
         die();
@@ -202,7 +202,7 @@ Route::post('/crud/groups/create', function () {
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
         $red = str_replace("*", $id, $_POST['redirect']);
-        $_SESSION['msg'] = lang('people.group_created_successfully');
+        $_SESSION['msg'] = t('people.group_created_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $red);
         die();
@@ -216,7 +216,7 @@ Route::post('/crud/groups/create', function () {
 
 Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     include_once BASEPATH . "/php/init.php";
-    if (!isset($_POST['values'])) abortwith(500, lang('error.no_values'));
+    if (!isset($_POST['values'])) abortwith(500, t('error.no_values'));
 
     $id = $DB->to_ObjectID($id);
 
@@ -343,7 +343,7 @@ Route::post('/crud/groups/update/([A-Za-z0-9]*)', function ($id) {
     }
 
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('common.unit_updated_successfully');
+        $_SESSION['msg'] = t('common.unit_updated_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -360,32 +360,32 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
+    if (empty($group)) abortwith(404, t('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
+        abortwith(403, t('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] === UPLOAD_ERR_NO_FILE) {
-        redirectFromGroupImage($group['id'], lang('people.no_image_was_uploaded'), 'info');
+        redirectFromGroupImage($group['id'], t('people.no_image_was_uploaded'), 'info');
     }
 
     if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $errorMessage = match ($_FILES['file']['error']) {
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => lang('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'),
-            UPLOAD_ERR_PARTIAL => lang('common.the_image_was_only_partially_uploaded'),
-            UPLOAD_ERR_NO_TMP_DIR => lang('common.the_temporary_upload_directory_is_missing'),
-            UPLOAD_ERR_CANT_WRITE => lang('common.the_image_could_not_be_written_to_disk'),
-            UPLOAD_ERR_EXTENSION => lang('common.a_php_extension_stopped_the_upload'),
-            default => lang('people.the_image_could_not_be_uploaded'),
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => t('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'),
+            UPLOAD_ERR_PARTIAL => t('common.the_image_was_only_partially_uploaded'),
+            UPLOAD_ERR_NO_TMP_DIR => t('common.the_temporary_upload_directory_is_missing'),
+            UPLOAD_ERR_CANT_WRITE => t('common.the_image_could_not_be_written_to_disk'),
+            UPLOAD_ERR_EXTENSION => t('common.a_php_extension_stopped_the_upload'),
+            default => t('people.the_image_could_not_be_uploaded'),
         };
         redirectFromGroupImage($group['id'], $errorMessage, 'error');
     }
 
     $file = $_FILES['file'];
     if ($file['size'] > 16000000) {
-        redirectFromGroupImage($group['id'], lang('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'), 'error');
+        redirectFromGroupImage($group['id'], t('people.the_image_is_too_large_a_maximum_of_16_mb_is_allowed'), 'error');
     }
 
     $allowedMimeTypes = [
@@ -396,23 +396,23 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
     $dimensions = @getimagesize($file['tmp_name']);
     if ($dimensions === false || !isset($allowedMimeTypes[$mime])) {
-        redirectFromGroupImage($group['id'], lang('common.only_jpeg_png_and_webp_images_are_allowed'), 'error');
+        redirectFromGroupImage($group['id'], t('common.only_jpeg_png_and_webp_images_are_allowed'), 'error');
     }
 
     [$width, $height] = $dimensions;
     if ($width * $height > 25000000) {
-        redirectFromGroupImage($group['id'], lang('people.the_image_resolution_is_too_large_a_maximum_of_25_megapixels_is_allowed'), 'error');
+        redirectFromGroupImage($group['id'], t('people.the_image_resolution_is_too_large_a_maximum_of_25_megapixels_is_allowed'), 'error');
     }
 
     if (!extension_loaded('gd') || !function_exists('imagewebp')) {
-        redirectFromGroupImage($group['id'], lang('people.image_processing_is_not_available_on_this_server_please_contact_an_administ'), 'error');
+        redirectFromGroupImage($group['id'], t('people.image_processing_is_not_available_on_this_server_please_contact_an_administ'), 'error');
     }
 
     $takenAt = trim($_POST['taken_at'] ?? '');
     if ($takenAt !== '') {
         $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
         if ($date === false || $date->format('Y-m-d') !== $takenAt) {
-            redirectFromGroupImage($group['id'], lang('people.the_date_is_invalid'), 'error');
+            redirectFromGroupImage($group['id'], t('people.the_date_is_invalid'), 'error');
         }
     } else {
         $takenAt = null;
@@ -421,19 +421,19 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     $imageId = bin2hex(random_bytes(12));
     $targetDirectory = BASEPATH . "/uploads/groups/$id";
     if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0775, true)) {
-        redirectFromGroupImage($group['id'], lang('common.the_upload_directory_could_not_be_created'), 'error');
+        redirectFromGroupImage($group['id'], t('common.the_upload_directory_could_not_be_created'), 'error');
     }
 
     $extension = $allowedMimeTypes[$mime];
     $originalPath = "$targetDirectory/$imageId.$extension";
     $thumbnailPath = "$targetDirectory/$imageId-thumb.webp";
     if (!move_uploaded_file($file['tmp_name'], $originalPath)) {
-        redirectFromGroupImage($group['id'], lang('common.the_image_could_not_be_saved'), 'error');
+        redirectFromGroupImage($group['id'], t('common.the_image_could_not_be_saved'), 'error');
     }
 
     if (!createGroupImageThumbnail($originalPath, $thumbnailPath, $mime)) {
         @unlink($originalPath);
-        redirectFromGroupImage($group['id'], lang('people.the_image_preview_could_not_be_created'), 'error');
+        redirectFromGroupImage($group['id'], t('people.the_image_preview_could_not_be_created'), 'error');
     }
 
     $images = DB::doc2Arr($group['images'] ?? []);
@@ -463,10 +463,10 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})', function ($id) {
     } catch (Throwable $exception) {
         @unlink($originalPath);
         @unlink($thumbnailPath);
-        redirectFromGroupImage($group['id'], lang('people.the_image_metadata_could_not_be_saved'), 'error');
+        redirectFromGroupImage($group['id'], t('people.the_image_metadata_could_not_be_saved'), 'error');
     }
 
-    redirectFromGroupImage($group['id'], lang('people.the_image_has_been_uploaded'), 'success');
+    redirectFromGroupImage($group['id'], t('people.the_image_has_been_uploaded'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', function ($id, $imageId) {
@@ -474,11 +474,11 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
+    if (empty($group)) abortwith(404, t('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
+        abortwith(403, t('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     $imageExists = false;
@@ -488,13 +488,13 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
             break;
         }
     }
-    if (!$imageExists) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
+    if (!$imageExists) abortwith(404, t('common.image'), "/groups/view/{$group['id']}");
 
     $takenAt = trim($_POST['taken_at'] ?? '');
     if ($takenAt !== '') {
         $date = DateTime::createFromFormat('!Y-m-d', $takenAt);
         if ($date === false || $date->format('Y-m-d') !== $takenAt) {
-            redirectFromGroupImage($group['id'], lang('people.the_date_is_invalid'), 'error');
+            redirectFromGroupImage($group['id'], t('people.the_date_is_invalid'), 'error');
         }
     } else {
         $takenAt = null;
@@ -511,7 +511,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/update', fu
         ]]
     );
 
-    redirectFromGroupImage($group['id'], lang('people.the_image_information_has_been_updated'), 'success');
+    redirectFromGroupImage($group['id'], t('people.the_image_information_has_been_updated'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', function ($id, $imageId) {
@@ -519,11 +519,11 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
 
     $groupId = $DB->to_ObjectID($id);
     $group = $osiris->groups->findOne(['_id' => $groupId]);
-    if (empty($group)) abortwith(404, lang('common.unit'), '/groups');
+    if (empty($group)) abortwith(404, t('common.unit'), '/groups');
 
     $editPerm = $Settings->hasPermission('units.add') || $Groups->editPermission($group['id']);
     if (!$editPerm) {
-        abortwith(403, lang('people.you_are_not_allowed_to_edit_this_unit'));
+        abortwith(403, t('people.you_are_not_allowed_to_edit_this_unit'));
     }
 
     $selectedImage = null;
@@ -533,7 +533,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
             break;
         }
     }
-    if ($selectedImage === null) abortwith(404, lang('common.image'), "/groups/view/{$group['id']}");
+    if ($selectedImage === null) abortwith(404, t('common.image'), "/groups/view/{$group['id']}");
 
     $allowedMimeTypes = [
         'image/jpeg' => 'jpg',
@@ -555,7 +555,7 @@ Route::post('/crud/groups/images/([A-Fa-f0-9]{24})/([A-Fa-f0-9]{24})/delete', fu
         if (is_file($thumbnailPath)) @unlink($thumbnailPath);
     }
 
-    redirectFromGroupImage($group['id'], lang('people.the_image_has_been_deleted'), 'success');
+    redirectFromGroupImage($group['id'], t('people.the_image_has_been_deleted'), 'success');
 }, 'login');
 
 Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
@@ -583,7 +583,7 @@ Route::post('/crud/groups/delete/([A-Za-z0-9]*)', function ($id) {
 
     // addUserActivity('delete');
     if (isset($_POST['redirect']) && !str_contains($_POST['redirect'], "//")) {
-        $_SESSION['msg'] = lang('common.unit_deleted_successfully');
+        $_SESSION['msg'] = t('common.unit_deleted_successfully');
         $_SESSION['msg_type'] = 'success';
         header("Location: " . $_POST['redirect']);
         die();
@@ -632,7 +632,7 @@ Route::post('/crud/groups/addperson/(.*)', function ($id) {
         renderAuthorUnitsMany(['rendered.users' => $user]);
     }
 
-    $_SESSION['msg'] = lang('people.person_added_successfully');
+    $_SESSION['msg'] = t('people.person_added_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -649,7 +649,7 @@ Route::post('/crud/groups/removeperson/(.*)', function ($id) {
     include_once BASEPATH . "/php/Render.php";
     renderAuthorUnitsMany(['rendered.users' => $_POST['username']]);
 
-    $_SESSION['msg'] = lang('people.person_removed_successfully');
+    $_SESSION['msg'] = t('people.person_removed_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -670,7 +670,7 @@ Route::post('/crud/groups/editorperson/(.*)', function ($id) {
         ]
     );
 
-    $_SESSION['msg'] = lang('people.editor_rights_updated_successfully');
+    $_SESSION['msg'] = t('people.editor_rights_updated_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/edit/$id#section-personnel");
 });
@@ -689,7 +689,7 @@ Route::post('/crud/groups/reorder/(.*)', function ($id) {
         $i++;
     }
 
-    $_SESSION['msg'] = lang('people.group_reordered_successfully');
+    $_SESSION['msg'] = t('people.group_reordered_successfully');
     $_SESSION['msg_type'] = 'success';
     header("Location: " . ROOTPATH . "/groups/view/$id");
 });

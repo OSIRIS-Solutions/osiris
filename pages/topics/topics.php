@@ -27,12 +27,12 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
 <div class="btn-toolbar">
     <a href="<?= ROOTPATH ?>/visualize/departments?entity=topics" class="btn">
         <i class="ph ph-graph"></i>
-        <?= lang('topics.visualize_topic_network') ?>
+        <?= t('topics.visualize_topic_network') ?>
     </a>
 <?php if ($Settings->hasPermission('topics.edit')) { ?>
     <a href="<?= ROOTPATH ?>/topics/new">
         <i class="ph ph-plus"></i>
-        <?= lang('topics.add_new_topic') ?>
+        <?= t('topics.add_new_topic') ?>
     </a>
 <?php } ?>
 </div>
@@ -47,7 +47,7 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
                 </a>
             </h4>
             <?php if ($topic['inactive'] ?? false) { ?>
-                <span class="badge danger"><?= lang('common.inactive') ?></span>
+                <span class="badge danger"><?= t('common.inactive') ?></span>
             <?php } ?>
             
             <p class="text-muted">
@@ -58,7 +58,7 @@ $topics  = $osiris->topics->find([], ['sort' => ['inactive' => 1]]);
                 <?php } ?>
             </p>
             <a href="<?= ROOTPATH ?>/topics/view/<?= $topic['_id'] ?>" class="link">
-                <?= lang('topics.view_details') ?>
+                <?= t('topics.view_details') ?>
             </a>
         </div>
     <?php } ?>

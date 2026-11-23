@@ -45,13 +45,13 @@ foreach ($countries as $c) {
 
 <h1 class="title">
     <i class="ph-duotone ph-scales"></i>
-    <?= lang('projects.abs_evaluation_per_country_a_b_c') ?>
+    <?= t('projects.abs_evaluation_per_country_a_b_c') ?>
 </h1>
 <p class="text-muted">
-    <?= lang('projects.please_review_the_scope_and_abs_information_for_each_abs_relevant_country_a') ?>
+    <?= t('projects.please_review_the_scope_and_abs_information_for_each_abs_relevant_country_a') ?>
 </p>
 <div class="mb-20">
-    <b><?= lang('projects.current_nagoya_status') ?>:</b><br>
+    <b><?= t('projects.current_nagoya_status') ?>:</b><br>
     <?= Nagoya::badge(DB::doc2Arr($project), true) ?>
 </div>
 
@@ -59,7 +59,7 @@ foreach ($countries as $c) {
 
     <?php if (empty($absCountries)): ?>
         <div class="alert info">
-            <?= lang('projects.there_are_currently_no_abs_relevant_countries_for_this_project') ?>
+            <?= t('projects.there_are_currently_no_abs_relevant_countries_for_this_project') ?>
         </div>
     <?php else: ?>
 
@@ -82,43 +82,43 @@ foreach ($countries as $c) {
                 <div class="header" onclick="$(this).toggleClass('open').next('.content').toggleClass('hidden');">
                     <h2>
                         <i class="ph-duotone ph-globe-stand"></i>
-                        <?= $DB->getCountry($code, lang('common.field_name_language')) ?>
+                        <?= $DB->getCountry($code, t('common.field_name_language')) ?>
                     </h2>
                 </div>
 
                 <div class="content">
-                    <h4><?= lang('projects.country_review_nagoya_evaluation') ?></h4>
+                    <h4><?= t('projects.country_review_nagoya_evaluation') ?></h4>
 
                     <?php if (isset($review['reviewed_by'])) { ?>
                         <small class="text-muted">
-                            <?= lang('projects.review_of_countries_as_part_of_the_abs_evaluation_process_was_conducted_by') ?>
+                            <?= t('projects.review_of_countries_as_part_of_the_abs_evaluation_process_was_conducted_by') ?>
                             <strong><?= e($DB->getNameFromId($review['reviewed_by'] ?? null)) ?></strong>
-                            <?= lang('common.on') ?> <?= format_date($review['reviewed'] ?? '') ?>
+                            <?= t('common.on') ?> <?= format_date($review['reviewed'] ?? '') ?>
                         </small>
                     <?php } ?>
                     <div class="mb-10">
-                        <strong><?= lang('projects.nagoya_party') ?>:</strong>
+                        <strong><?= t('projects.nagoya_party') ?>:</strong>
                         <?php
                         $nagoyaParty = $review['nagoyaParty'] ?? 'unknown';
                         if ($nagoyaParty === 'yes') {
-                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
+                            echo '<span class="badge success">' . t('common.yes') . '</span>';
                         } elseif ($nagoyaParty === 'no') {
-                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
+                            echo '<span class="badge danger">' . t('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
+                            echo '<span class="badge muted">' . t('common.unknown') . '</span>';
                         }
                         ?>
                     </div>
                     <div class="mb-10">
-                        <strong><?= lang('projects.own_abs_measures_nagoya_evaluation') ?>:</strong>
+                        <strong><?= t('projects.own_abs_measures_nagoya_evaluation') ?>:</strong>
                         <?php
                         $ownABSMeasures = $review['ownABSMeasures'] ?? 'unknown';
                         if ($ownABSMeasures === 'yes') {
-                            echo '<span class="badge success">' . lang('common.yes') . '</span>';
+                            echo '<span class="badge success">' . t('common.yes') . '</span>';
                         } elseif ($ownABSMeasures === 'no') {
-                            echo '<span class="badge danger">' . lang('common.no') . '</span>';
+                            echo '<span class="badge danger">' . t('common.no') . '</span>';
                         } else {
-                            echo '<span class="badge muted">' . lang('common.unknown') . '</span>';
+                            echo '<span class="badge muted">' . t('common.unknown') . '</span>';
                         }
                         ?>
                     </div>
@@ -126,8 +126,8 @@ foreach ($countries as $c) {
                         <?= Nagoya::countryBadge(DB::doc2Arr($c)) ?>
                     </div>
                     <div>
-                        <strong><?= lang('common.comment') ?>:</strong><br>
-                        <span><?= nl2br(e($review['comment'] ?? lang('projects.no_comment_provided'))) ?></span>
+                        <strong><?= t('common.comment') ?>:</strong><br>
+                        <span><?= nl2br(e($review['comment'] ?? t('projects.no_comment_provided'))) ?></span>
                     </div>
                 </div>
 
@@ -137,18 +137,18 @@ foreach ($countries as $c) {
                     <!-- Scope overview (read-only) -->
                     <?php if (empty($scope)): ?>
                         <p class="text-muted small">
-                            <?= lang('projects.no_scope_information_provided_yet_for_this_country') ?>
+                            <?= t('projects.no_scope_information_provided_yet_for_this_country') ?>
                         </p>
                     <?php else: ?>
                         <div class="mb-10">
-                            <h4 class="mb-5"><?= lang('projects.scope_overview') ?></h4>
+                            <h4 class="mb-5"><?= t('projects.scope_overview') ?></h4>
 
                             <?php if (!empty($review['reviewed_by'])): ?>
                                 <p class="font-size-12 text-muted">
-                                    <?= lang('projects.country_review_by') ?>
+                                    <?= t('projects.country_review_by') ?>
                                     <?= e($DB->getNameFromId($review['reviewed_by']) ?? $review['reviewed_by']) ?>
                                     <?php if (!empty($review['reviewed'])): ?>
-                                        <?= lang('common.on') ?> <?= format_date($review['reviewed']) ?>
+                                        <?= t('common.on') ?> <?= format_date($review['reviewed']) ?>
                                     <?php endif; ?>
                                 </p>
                             <?php endif; ?>
@@ -158,7 +158,7 @@ foreach ($countries as $c) {
                                     <thead>
                                         <tr>
                                             <th colspan="2" class="text-primary">
-                                                <?= lang('common.sample_collection') ?> <?= $i + 1 ?>
+                                                <?= t('common.sample_collection') ?> <?= $i + 1 ?>
                                             </th>
                                         </tr>
                                     </thead>
@@ -166,20 +166,20 @@ foreach ($countries as $c) {
 
                                         <?php if (!empty($g['geo'])): ?>
                                             <tr class="mb-2">
-                                                <th><?= lang('common.geographical_scope') ?>:</th>
+                                                <th><?= t('common.geographical_scope') ?>:</th>
                                                 <td><?= nl2br(e($g['geo'])) ?></td>
                                             </tr>
                                         <?php endif; ?>
 
                                         <?php if (!empty($g['temporal']) || !empty($g['temporal_ongoing'])): ?>
                                             <tr class="mb-2">
-                                                <th><?= lang('common.temporal_scope') ?>:</th>
+                                                <th><?= t('common.temporal_scope') ?>:</th>
                                                 <td>
                                                     <?php if (!empty($g['temporal'])): ?>
                                                         <?= e($g['temporal']) ?>
                                                     <?php endif; ?>
                                                     <?php if (!empty($g['temporal_ongoing'])): ?>
-                                                        <em><?= lang('projects.ongoing_planned') ?></em>
+                                                        <em><?= t('projects.ongoing_planned') ?></em>
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
@@ -191,7 +191,7 @@ foreach ($countries as $c) {
                                         ?>
                                         <?php if (!empty($mat)): ?>
                                             <tr class="mb-2">
-                                                <th><?= lang('common.material_scope') ?>:</th>
+                                                <th><?= t('common.material_scope') ?>:</th>
                                                 <td>
                                                     <?= e(implode(', ', $mat)) ?>
                                                 </td>
@@ -200,7 +200,7 @@ foreach ($countries as $c) {
 
                                         <?php if (!empty($util)): ?>
                                             <tr class="mb-2">
-                                                <th><?= lang('projects.utilization_scope_nagoya_evaluation') ?>:</th>
+                                                <th><?= t('projects.utilization_scope_nagoya_evaluation') ?>:</th>
                                                 <td>
                                                     <?= e(implode(', ', $util)) ?>
                                                 </td>
@@ -217,10 +217,10 @@ foreach ($countries as $c) {
                             ?>
                             <?php if ($atk_used || $atk_details): ?>
                                 <div class="mb-5">
-                                    <strong><?= lang('common.associated_traditional_knowledge_atk') ?>:</strong><br>
+                                    <strong><?= t('common.associated_traditional_knowledge_atk') ?>:</strong><br>
                                     <?php if ($atk_used): ?>
                                         <span class="badge signal">
-                                            <?= lang('projects.atk_involved') ?>
+                                            <?= t('projects.atk_involved') ?>
                                         </span><br>
                                     <?php endif; ?>
                                     <?php if ($atk_details): ?>
@@ -233,7 +233,7 @@ foreach ($countries as $c) {
 
                             <?php if ($notes): ?>
                                 <div>
-                                    <strong><?= lang('projects.additional_notes') ?>:</strong><br>
+                                    <strong><?= t('projects.additional_notes') ?>:</strong><br>
                                     <?= nl2br(e($notes)) ?>
                                 </div>
                             <?php endif; ?>
@@ -246,30 +246,30 @@ foreach ($countries as $c) {
 
                         <div class="form-group mb-10">
                             <label class="font-weight-bold required">
-                                <?= lang('projects.classification_for_this_country_a_b_c') ?>
+                                <?= t('projects.classification_for_this_country_a_b_c') ?>
                             </label>
                             <div class="mt-5 small">
                                 <label class="d-block">
                                     <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="A" <?= $label === 'A' ? 'checked' : '' ?>>
-                                    <strong>A</strong> – <?= lang('projects.in_scope_of_eu_regulation_nagoya_protocol') ?>
+                                    <strong>A</strong> – <?= t('projects.in_scope_of_eu_regulation_nagoya_protocol') ?>
                                 </label>
                                 <label class="d-block mt-5">
                                     <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="B" <?= $label === 'B' ? 'checked' : '' ?>>
-                                    <strong>B</strong> – <?= lang('projects.in_scope_of_national_abs_measures_only') ?>
+                                    <strong>B</strong> – <?= t('projects.in_scope_of_national_abs_measures_only') ?>
                                 </label>
                                 <label class="d-block mt-5">
                                     <input type="radio" name="evaluation[<?= e($cid) ?>][label]" value="C" <?= $label === 'C' ? 'checked' : '' ?>>
-                                    <strong>C</strong> – <?= lang('projects.out_of_scope') ?>
+                                    <strong>C</strong> – <?= t('projects.out_of_scope') ?>
                                 </label>
                             </div>
                         </div>
 
                         <div class="form-group mb-10">
                             <label class="font-weight-bold required">
-                                <?= lang('projects.rationale_for_this_country') ?>
+                                <?= t('projects.rationale_for_this_country') ?>
                             </label>
                             <small class="d-block text-muted mb-5">
-                                <?= lang('projects.please_briefly_justify_the_a_b_c_classification_for_this_country_e_g_type_o') ?>
+                                <?= t('projects.please_briefly_justify_the_a_b_c_classification_for_this_country_e_g_type_o') ?>
                             </small>
                             <textarea
                                 name="evaluation[<?= e($cid) ?>][rationale]"
@@ -279,18 +279,18 @@ foreach ($countries as $c) {
 
                         <div class="form-group">
                             <label class="font-weight-bold">
-                                <?= lang('projects.abs_permits_for_this_country') ?>
+                                <?= t('projects.abs_permits_for_this_country') ?>
                             </label>
                             <small class="d-block text-muted mb-5">
-                                <?= lang('projects.list_any_required_or_already_obtained_abs_permits_you_can_use_free_text_nam') ?>
+                                <?= t('projects.list_any_required_or_already_obtained_abs_permits_you_can_use_free_text_nam') ?>
                             </small>
 
                             <table class="table table-sm mb-5 nagoya-permits-table" data-country="<?= e($cid) ?>">
                                 <thead>
                                     <tr>
-                                        <th><?= lang('projects.permit_name_nagoya_evaluation') ?></th>
-                                        <th><?= lang('common.status') ?></th>
-                                        <th><?= lang('common.comment') ?></th>
+                                        <th><?= t('projects.permit_name_nagoya_evaluation') ?></th>
+                                        <th><?= t('common.status') ?></th>
+                                        <th><?= t('common.comment') ?></th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -309,11 +309,11 @@ foreach ($countries as $c) {
                                                 <select
                                                     name="evaluation[<?= e($cid) ?>][permits][<?= $pi ?>][status]"
                                                     class="form-control form-control-sm">
-                                                    <option value=""><?= lang('projects.select') ?></option>
-                                                    <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= lang('common.needed') ?></option>
-                                                    <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= lang('common.requested') ?></option>
-                                                    <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= lang('common.granted') ?></option>
-                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= lang('common.not_applicable') ?></option>
+                                                    <option value=""><?= t('projects.select') ?></option>
+                                                    <option value="needed" <?= $status === 'needed'   ? 'selected' : '' ?>><?= t('common.needed') ?></option>
+                                                    <option value="requested" <?= $status === 'requested' ? 'selected' : '' ?>><?= t('common.requested') ?></option>
+                                                    <option value="granted" <?= $status === 'granted'  ? 'selected' : '' ?>><?= t('common.granted') ?></option>
+                                                    <option value="not-applicable" <?= $status === 'not-applicable' ? 'selected' : '' ?>><?= t('common.not_applicable') ?></option>
                                                 </select>
                                             </td>
                                             <td>
@@ -336,15 +336,15 @@ foreach ($countries as $c) {
                                 class="btn small outline add-permit-row"
                                 data-country="<?= e($cid) ?>">
                                 <i class="ph ph-plus"></i>
-                                <?= lang('common.add_permit') ?>
+                                <?= t('common.add_permit') ?>
                             </button>
                         </div>
 
                         <?php if (!empty($eval['by']) && !empty($eval['at'])): ?>
                             <div class="small text-muted mt-5">
-                                <?= lang('projects.last_evaluation_for_this_country_by') ?>
+                                <?= t('projects.last_evaluation_for_this_country_by') ?>
                                 <?= e($DB->getNameFromId($eval['by']) ?? $eval['by']) ?>
-                                <?= lang('common.on') ?> <?= format_date($eval['at']) ?>
+                                <?= t('common.on') ?> <?= format_date($eval['at']) ?>
                             </div>
                         <?php endif; ?>
                         </div>
@@ -357,7 +357,7 @@ foreach ($countries as $c) {
     <div class="mt-20">
         <button type="submit" class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('projects.save_abs_evaluation') ?>
+            <?= t('projects.save_abs_evaluation') ?>
         </button>
     </div>
 </form>

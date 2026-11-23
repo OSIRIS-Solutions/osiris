@@ -26,7 +26,7 @@
             </a>
             <h5 class="title">
                 <i class="ph ph-list-numbers"></i>
-                <?= lang('common.change_order') ?>
+                <?= t('common.change_order') ?>
             </h5>
 
             <style>
@@ -58,7 +58,7 @@
                 </table>
                 <button class="btn secondary mt-20">
                     <i class="ph ph-check"></i>
-                    <?= lang('action.submit') ?>
+                    <?= t('action.submit') ?>
                 </button>
             </form>
             <?php include_once BASEPATH . '/header-editor.php'; ?>
@@ -78,17 +78,17 @@
 
 <h1>
     <i class="ph-duotone ph-gear"></i>
-    <?= lang('admin.activity_categories') ?>
+    <?= t('admin.activity_categories') ?>
 </h1>
 
 <div class="btn-toolbar">
     <a class="btn primary" href="<?= ROOTPATH ?>/admin/categories/new">
         <i class="ph ph-plus-circle"></i>
-        <?= lang('common.add_category') ?>
+        <?= t('common.add_category') ?>
     </a>
     <a href="<?= ROOTPATH ?>/admin/doi-mappings" class="btn primary">
         <i class="ph ph-link-simple"></i>
-        <?= lang('admin.doi_mappings') ?>
+        <?= t('admin.doi_mappings') ?>
     </a>
     <div class="dropdown">
         <button class="btn" data-toggle="dropdown" type="button" id="rerender" aria-haspopup="true" aria-expanded="false">
@@ -97,18 +97,18 @@
         </button>
         <div class="dropdown-menu w-400" aria-labelledby="rerender">
             <div class="content">
-                <?= lang('admin.in_case_some_activities_are_not_looking_right_or_if_you_changed_something_y') ?>
+                <?= t('admin.in_case_some_activities_are_not_looking_right_or_if_you_changed_something_y') ?>
                 <a class="btn block primary" href="<?= ROOTPATH ?>/rerender">Rerender now!</a>
 
                 <small class="text-muted">
-                    <?= lang('admin.this_won_t_change_any_data_it_will_only_fix_the_displaying_of_data') ?>
+                    <?= t('admin.this_won_t_change_any_data_it_will_only_fix_the_displaying_of_data') ?>
                 </small>
             </div>
         </div>
     </div>
     <a class="btn ml-auto" href="#order">
         <i class="ph ph-list-numbers"></i>
-        <?= lang('common.change_order') ?>
+        <?= t('common.change_order') ?>
     </a>
 </div>
 
@@ -122,10 +122,10 @@ foreach ($Categories->categories as $type) {
         </h3>
         <a href="<?= ROOTPATH ?>/admin/categories/<?= $type['id'] ?>" class="btn filled primary">
             <i class="ph ph-edit"></i>
-            <?= lang('action.edit') ?>
+            <?= t('action.edit') ?>
         </a>
         <div class="d-flex align-items-baseline flex-wrap">
-            <h5><?= lang('common.types') ?>:</h5>
+            <h5><?= t('common.types') ?>:</h5>
             <?php
             $children = $osiris->adminTypes->find(['parent' => $type['id']], ['sort' => ['order' => 1]]);
             foreach ($children as $subtype) { ?>
@@ -137,7 +137,7 @@ foreach ($Categories->categories as $type) {
             <a class="btn small ml-10" href="<?= ROOTPATH ?>/admin/types/new?parent=<?= $type['id'] ?>">
                 <i class="ph ph-plus-circle"></i>
                 <span class="sr-only">
-                    <?= lang('common.add_subtype') ?>
+                    <?= t('common.add_subtype') ?>
                 </span>
             </a>
         </div>

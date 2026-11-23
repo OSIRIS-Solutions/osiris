@@ -186,18 +186,18 @@ foreach ($chartData as $row) {
 
 <h1>
     <i class="ph-duotone ph-chart-line-up" aria-hidden="true"></i>
-    <?= lang('spectrum.spectrum_evolution') ?>
+    <?= t('spectrum.spectrum_evolution') ?>
 </h1>
 
 <p class="text-muted">
-    <?= lang('spectrum.shows_how_the_thematic_structure_of_publications_changes_over_time_only_the') ?>
+    <?= t('spectrum.shows_how_the_thematic_structure_of_publications_changes_over_time_only_the') ?>
 </p>
 
 <form method="get" class="box mb-4">
     <div class="px-20">
         <div class="row row-eq-spacing align-items-end">
             <div class="col-md-3">
-                <label class="form-label"><?= lang('spectrum.level') ?></label>
+                <label class="form-label"><?= t('spectrum.level') ?></label>
                 <select class="form-control" name="level">
                     <option value="domain" <?= $level === 'domain' ? 'selected' : '' ?>>Domain</option>
                     <option value="field" <?= $level === 'field' ? 'selected' : '' ?>>Field</option>
@@ -207,25 +207,25 @@ foreach ($chartData as $row) {
             </div>
 
             <div class="col-md-3">
-                <label class="form-label"><?= lang('common.mode') ?></label>
+                <label class="form-label"><?= t('common.mode') ?></label>
                 <select class="form-control" name="mode">
-                    <option value="relative" <?= $mode === 'relative' ? 'selected' : '' ?>><?= lang('spectrum.relative_share') ?></option>
-                    <option value="absolute" <?= $mode === 'absolute' ? 'selected' : '' ?>><?= lang('spectrum.absolute_counts') ?></option>
+                    <option value="relative" <?= $mode === 'relative' ? 'selected' : '' ?>><?= t('spectrum.relative_share') ?></option>
+                    <option value="absolute" <?= $mode === 'absolute' ? 'selected' : '' ?>><?= t('spectrum.absolute_counts') ?></option>
                 </select>
             </div>
 
             <div class="col-md-2">
-                <label class="form-label"><?= lang('common.from_year') ?></label>
+                <label class="form-label"><?= t('common.from_year') ?></label>
                 <input type="number" class="form-control" name="year_from" value="<?= e($yearFrom) ?>">
             </div>
 
             <div class="col-md-2">
-                <label class="form-label"><?= lang('common.to_year') ?></label>
+                <label class="form-label"><?= t('common.to_year') ?></label>
                 <input type="number" class="form-control" name="year_to" value="<?= e($yearTo) ?>">
             </div>
 
             <div class="col-md-2">
-                <button class="btn primary block"><?= lang('common.apply_filter') ?></button>
+                <button class="btn primary block"><?= t('common.apply_filter') ?></button>
             </div>
         </div>
     </div>
@@ -238,7 +238,7 @@ foreach ($chartData as $row) {
         <div id="spectrum-evolution-chart"></div>
 
         <small class="text-muted">
-            <?= lang('spectrum.in_relative_mode_the_chart_shows_the_share_of_each_element_in_the_annual_re') ?>
+            <?= t('spectrum.in_relative_mode_the_chart_shows_the_share_of_each_element_in_the_annual_re') ?>
         </small>
     </div>
 </div>
@@ -246,26 +246,26 @@ foreach ($chartData as $row) {
 
 <div class="box mb-4">
     <div class="content">
-        <h3><?= lang('spectrum.heatmap') ?></h3>
+        <h3><?= t('spectrum.heatmap') ?></h3>
         <div id="spectrum-evolution-heatmap"></div>
     </div>
 </div>
 
 
 
-<h3><?= lang('spectrum.trend_overview') ?></h3>
+<h3><?= t('spectrum.trend_overview') ?></h3>
 <small class="text-muted">
-    <?= lang('spectrum.the_table_summarizes_the_change_between_the_first_and_last_year_of_the_sele') ?>
+    <?= t('spectrum.the_table_summarizes_the_change_between_the_first_and_last_year_of_the_sele') ?>
 </small>
 
 <table class="table dataTable" id="spectrum-trend-table">
     <thead>
         <tr>
-            <th><?= lang('spectrum.element') ?></th>
-            <th><?= lang('common.start') ?></th>
-            <th><?= lang('common.end') ?></th>
-            <th><?= lang('spectrum.change') ?></th>
-            <th><?= lang('common.total') ?></th>
+            <th><?= t('spectrum.element') ?></th>
+            <th><?= t('common.start') ?></th>
+            <th><?= t('common.end') ?></th>
+            <th><?= t('spectrum.change') ?></th>
+            <th><?= t('common.total') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -534,7 +534,7 @@ foreach ($chartData as $row) {
                     .html(`
                     <strong>${d.name}</strong><br>
                     ${d.year}<br>
-                    <?= lang('common.value') ?>: ${valueText}
+                    <?= t('common.value') ?>: ${valueText}
                 `)
                     .style("left", (event.pageX + 12) + "px")
                     .style("top", (event.pageY + 12) + "px");

@@ -10,17 +10,17 @@
                     class="cp-input"
                     id="osCpInput"
                     type="text"
-                    placeholder="<?= lang('navigation.search') ?>"
+                    placeholder="<?= t('navigation.search') ?>"
                     value="" />
                 <div class="cp-kbd" aria-hidden="true">
-                    <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : lang('common.ctrl') ?></span><span class="os-kbd">K</span>
+                    <span class="os-kbd"><?= (stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Mac') !== false) ? '⌘' : t('common.ctrl') ?></span><span class="os-kbd">K</span>
                 </div>
             </div>
 
             <div class="cp-hint">
-                <span class="os-kbd">↑↓</span> <?= lang('navigation.navigate') ?>
-                <span class="os-kbd">↵</span> <?= lang('navigation.go') ?>
-                <span class="os-kbd">Esc</span> <?= lang('action.close') ?>
+                <span class="os-kbd">↑↓</span> <?= t('navigation.navigate') ?>
+                <span class="os-kbd">↵</span> <?= t('navigation.go') ?>
+                <span class="os-kbd">Esc</span> <?= t('action.close') ?>
             </div>
         </div>
 
@@ -28,8 +28,8 @@
         </div>
 
         <div class="cp-footer">
-            <span class="cp-footerLeft"><?= lang('navigation.osiris_search') ?></span>
-            <span class="cp-footerRight"><?= lang('navigation.type_to_search_for_users_groups_organizations_and_more') ?></span>
+            <span class="cp-footerLeft"><?= t('navigation.osiris_search') ?></span>
+            <span class="cp-footerRight"><?= t('navigation.type_to_search_for_users_groups_organizations_and_more') ?></span>
         </div>
     </div>
 </div>

@@ -79,18 +79,18 @@ $Vocabulary = new Vocabulary();
 <div class="container w-800 mw-full news-workflow">
     <h1>
         <i class="ph-duotone ph-megaphone"></i>
-        <?= lang('common.news'); ?>
+        <?= t('common.news'); ?>
     </h1>
 
     <div class="btn-toolbar mb-20">
         <?php if (NewsEditorial::canCreate($Settings)) { ?>
-            <a href="<?= ROOTPATH ?>/news/add" class="btn primary"><i class="ph ph-plus"></i> <?= lang('common.create_news_item') ?></a>
+            <a href="<?= ROOTPATH ?>/news/add" class="btn primary"><i class="ph ph-plus"></i> <?= t('common.create_news_item') ?></a>
         <?php } ?>
         <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.editorial')) { ?>
-            <a href="<?= ROOTPATH ?>/news/editorial" class="btn"><i class="ph ph-highlighter"></i> <?= lang('news.editorial_overview') ?></a>
+            <a href="<?= ROOTPATH ?>/news/editorial" class="btn"><i class="ph ph-highlighter"></i> <?= t('news.editorial_overview') ?></a>
         <?php } ?>
         <?php if ($Settings->featureEnabled('news-editorial') && $Settings->hasPermission('news.export')) { ?>
-            <a href="<?= ROOTPATH ?>/news/export" class="btn"><i class="ph ph-export"></i> <?= lang('news.export_report') ?></a>
+            <a href="<?= ROOTPATH ?>/news/export" class="btn"><i class="ph ph-export"></i> <?= t('news.export_report') ?></a>
         <?php } ?>
     </div>
 
@@ -129,28 +129,28 @@ $Vocabulary = new Vocabulary();
                         // if in the future
                         if (strtotime($news['date']) > time()) { ?>
                             <span class="badge signal">
-                                <?= lang('news.scheduled') ?>
+                                <?= t('news.scheduled') ?>
                             </span>
                         <?php } else { ?>
-                            <?= lang('news.published'); ?>
+                            <?= t('news.published'); ?>
                         <?php } ?>
-                        <?= lang('common.on') ?>
+                        <?= t('common.on') ?>
                         <?= date('d.m.Y', strtotime($news['date'])) ?>
 
                     </span>
                     <?php if (isset($news['created_by'])) { ?>
                         &#x2219;
                         <span>
-                            <?= lang('common.by_documents_manage'); ?>
+                            <?= t('common.by_documents_manage'); ?>
                             <a href="<?= ROOTPATH ?>/profile/<?= e($news['created_by']) ?>"><?= e($DB->getNameFromId($news['created_by'])) ?></a>
                         </span>
                     <?php } ?>
                     <?php if (!NewsEditorial::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'public') { ?>
                         &#x2219;
-                        <?= lang('common.public') ?>
+                        <?= t('common.public') ?>
                     <?php } elseif (!NewsEditorial::workflowAvailable($newsOutletConfiguration, DB::doc2Arr($news)) && ($news['visibility'] ?? '') === 'internal') { ?>
                         &#x2219;
-                        <?= lang('common.internal') ?>
+                        <?= t('common.internal') ?>
                     <?php } else { ?>
                     <?php } ?>
                 </p>

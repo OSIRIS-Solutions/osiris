@@ -48,12 +48,12 @@ $filesize = Settings::getMaxFileSize('10M');
 
     <h1>
         <i class="ph-duotone ph-<?= e($hubIcon) ?>"></i>
-        <?= lang('admin.resource_hub_settings') ?>
+        <?= t('admin.resource_hub_settings') ?>
     </h1>
 
     <?php if (!$Settings->featureEnabled('resource-hub')) { ?>
         <div class="alert signal">
-            <?= lang('admin.the_resource_hub_feature_is_not_enabled_please_enable_it_in_the_features_se', replace: ['rootpath' => ROOTPATH]) ?>
+            <?= t('admin.the_resource_hub_feature_is_not_enabled_please_enable_it_in_the_features_se', replace: ['rootpath' => ROOTPATH]) ?>
         </div>
     <?php } ?>
 
@@ -67,10 +67,10 @@ $filesize = Settings::getMaxFileSize('10M');
         ?>
         <div class="box padded">
             <h2 class="title">
-                <?= lang('admin.title_and_description') ?>
+                <?= t('admin.title_and_description') ?>
             </h2>
             <div class="form-group">
-                <label for="resource_hub_icon"><?= lang('admin.resource_hub_icon') ?></label>
+                <label for="resource_hub_icon"><?= t('admin.resource_hub_icon') ?></label>
                 <div class="input-group" style="max-width: 40rem;">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="ph ph-<?= e($hubIcon) ?> resource-hub-icon-preview"></i></span>
@@ -78,47 +78,47 @@ $filesize = Settings::getMaxFileSize('10M');
                     <input name="general[resource-hub][icon]" id="resource_hub_icon" type="text" class="form-control resource-hub-icon-input" value="<?= e($hubIcon) ?>" pattern="[a-z0-9-]+" list="resource-hub-icons" placeholder="link">
                 </div>
                 <small class="text-muted">
-                    <?= lang('admin.enter_the_phosphor_icon_name_without_the_ph_prefix') ?>
-                    <a href="https://phosphoricons.com/" target="_blank" rel="noopener noreferrer"><?= lang('admin.browse_icons') ?></a>
+                    <?= t('admin.enter_the_phosphor_icon_name_without_the_ph_prefix') ?>
+                    <a href="https://phosphoricons.com/" target="_blank" rel="noopener noreferrer"><?= t('admin.browse_icons') ?></a>
                 </small>
             </div>
             <div class="row row-eq-spacing">
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="resource_hub_label" class="d-flex"><?= lang('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
+                    <label for="resource_hub_label" class="d-flex"><?= t('common.label') ?> (English) <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
                     <input name="general[resource-hub][label][en]" id="resource_hub_label" type="text" class="form-control" value="<?= e($label['en'] ?? 'Resource Hub') ?>">
-                    <label for="resource_hub_description" class="mt-15"><?= lang('common.short_description') ?></label>
+                    <label for="resource_hub_description" class="mt-15"><?= t('common.short_description') ?></label>
                     <textarea name="general[resource-hub][description][en]" id="resource_hub_description" class="form-control resource-hub-description" rows="3" maxlength="200" placeholder="Briefly describe the purpose of the Resource Hub."><?= e($description['en'] ?? '') ?></textarea>
                     <small class="resource-hub-character-count"><span>0</span>/200</small>
                 </div>
                 <div class="col-md-6 mt-10 mt-md-0">
-                    <label for="resource_hub_label_de" class="d-flex"><?= lang('common.label') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
+                    <label for="resource_hub_label_de" class="d-flex"><?= t('common.label') ?> (Deutsch) <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
                     <input name="general[resource-hub][label][de]" id="resource_hub_label_de" type="text" class="form-control" value="<?= e($label['de'] ?? 'Ressourcen-Hub') ?>">
-                    <label for="resource_hub_description_de" class="mt-15"><?= lang('common.short_description') ?></label>
+                    <label for="resource_hub_description_de" class="mt-15"><?= t('common.short_description') ?></label>
                     <textarea name="general[resource-hub][description][de]" id="resource_hub_description_de" class="form-control resource-hub-description" rows="3" maxlength="200" placeholder="Beschreibe kurz den Zweck des Ressourcen-Hubs."><?= e($description['de'] ?? '') ?></textarea>
                     <small class="resource-hub-character-count"><span>0</span>/200</small>
                 </div>
             </div>
             <small class="text-muted">
-                <?= lang('admin.plain_text_only_maximum_200_characters_per_language') ?>
+                <?= t('admin.plain_text_only_maximum_200_characters_per_language') ?>
             </small>
         </div>
 
         <div id="card-configuration" class="box padded">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-10 mb-20">
                 <div>
-                    <h2 class="title mt-0 mb-5"><?= lang('common.cards') ?></h2>
+                    <h2 class="title mt-0 mb-5"><?= t('common.cards') ?></h2>
                     <p class="text-muted m-0">
-                        <?= lang('admin.create_the_content_blocks_for_the_resource_hub_drag_the_cards_into_the_desi') ?>
+                        <?= t('admin.create_the_content_blocks_for_the_resource_hub_drag_the_cards_into_the_desi') ?>
                     </p>
                 </div>
                 <button type="button" class="btn primary flex-shrink-0" id="add-resource-hub-card">
-                    <i class="ph ph-plus"></i> <?= lang('admin.add_card') ?>
+                    <i class="ph ph-plus"></i> <?= t('admin.add_card') ?>
                 </button>
             </div>
 
             <div id="resource-hub-empty" class="alert signal <?= $cardCount ? 'd-none' : '' ?>">
-                <div class="title"><?= lang('admin.no_cards_yet') ?></div>
-                <?= lang('admin.add_the_first_card_to_start_building_your_resource_hub') ?>
+                <div class="title"><?= t('admin.no_cards_yet') ?></div>
+                <?= t('admin.add_the_first_card_to_start_building_your_resource_hub') ?>
             </div>
 
             <div id="resource-hub-cards">
@@ -130,28 +130,28 @@ $filesize = Settings::getMaxFileSize('10M');
                     $cardId = $card['id'] ?? bin2hex(random_bytes(8));
                     $icon = $card['icon'] ?? 'link';
                     $summaryTitle = lang($title['en'] ?? '', $title['de'] ?? null);
-                    if (trim($summaryTitle) === '') $summaryTitle = lang('common.untitled_card');
+                    if (trim($summaryTitle) === '') $summaryTitle = t('common.untitled_card');
                 ?>
                     <details class="collapse-panel resource-hub-card" data-card-id="<?= e($cardId) ?>">
                         <summary class="collapse-header">
-                            <i class="ph ph-dots-six-vertical text-muted card-handle" title="<?= lang('admin.drag_to_reorder') ?>"></i>
+                            <i class="ph ph-dots-six-vertical text-muted card-handle" title="<?= t('admin.drag_to_reorder') ?>"></i>
                             <i class="ph ph-<?= e($icon) ?> card-summary-icon"></i>
                             <strong class="card-summary-title"><?= e($summaryTitle) ?></strong>
-                            <span class="text-muted card-summary-meta"><span class="card-link-count"><?= count($links) ?></span> <?= lang('admin.links') ?></span>
+                            <span class="text-muted card-summary-meta"><span class="card-link-count"><?= count($links) ?></span> <?= t('admin.links') ?></span>
                         </summary>
 
                         <div class="collapse-content">
                             <input type="hidden" value="<?= e($cardId) ?>" data-card-field="id">
 
                             <div class="form-group">
-                                <label for="resource-hub-icon-<?= $i ?>"><?= lang('admin.card_icon') ?></label>
+                                <label for="resource-hub-icon-<?= $i ?>"><?= t('admin.card_icon') ?></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend"><span class="input-group-text"><i class="ph ph-<?= e($icon) ?> card-icon-preview"></i></span></div>
                                     <input type="text" class="form-control card-icon-input" id="resource-hub-icon-<?= $i ?>" value="<?= e($icon) ?>" pattern="[a-z0-9-]+" list="resource-hub-icons" placeholder="link" data-card-field="icon">
                                 </div>
                                 <small class="text-muted">
-                                    <?= lang('admin.enter_the_phosphor_icon_name_without_the_ph_prefix') ?>
-                                    <a href="https://phosphoricons.com/" target="_blank" rel="noopener noreferrer"><?= lang('admin.browse_icons') ?></a>
+                                    <?= t('admin.enter_the_phosphor_icon_name_without_the_ph_prefix') ?>
+                                    <a href="https://phosphoricons.com/" target="_blank" rel="noopener noreferrer"><?= t('admin.browse_icons') ?></a>
                                 </small>
                             </div>
 
@@ -159,11 +159,11 @@ $filesize = Settings::getMaxFileSize('10M');
                                 <div class="col-md-6">
                                     <h5 class="mt-0">English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></h5>
                                     <div class="form-group">
-                                        <label for="resource-hub-title-en-<?= $i ?>"><?= lang('common.title') ?></label>
+                                        <label for="resource-hub-title-en-<?= $i ?>"><?= t('common.title') ?></label>
                                         <input type="text" class="form-control card-title-input" id="resource-hub-title-en-<?= $i ?>" value="<?= e($title['en'] ?? '') ?>" data-card-field="title.en">
                                     </div>
                                     <div class="form-group resource-hub-editor mb-0">
-                                        <label><?= lang('common.content') ?></label>
+                                        <label><?= t('common.content') ?></label>
                                         <div id="resource-hub-content-en-<?= $i ?>-quill"><?= $content['en'] ?? '' ?></div>
                                         <textarea id="resource-hub-content-en-<?= $i ?>" class="d-none" readonly data-card-field="content.en"><?= e($content['en'] ?? '') ?></textarea>
                                     </div>
@@ -171,11 +171,11 @@ $filesize = Settings::getMaxFileSize('10M');
                                 <div class="col-md-6">
                                     <h5 class="mt-0">Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></h5>
                                     <div class="form-group">
-                                        <label for="resource-hub-title-de-<?= $i ?>"><?= lang('common.title') ?></label>
+                                        <label for="resource-hub-title-de-<?= $i ?>"><?= t('common.title') ?></label>
                                         <input type="text" class="form-control card-title-input" id="resource-hub-title-de-<?= $i ?>" value="<?= e($title['de'] ?? '') ?>" data-card-field="title.de">
                                     </div>
                                     <div class="form-group resource-hub-editor mb-0">
-                                        <label><?= lang('common.content') ?></label>
+                                        <label><?= t('common.content') ?></label>
                                         <div id="resource-hub-content-de-<?= $i ?>-quill"><?= $content['de'] ?? '' ?></div>
                                         <textarea id="resource-hub-content-de-<?= $i ?>" class="d-none" readonly data-card-field="content.de"><?= e($content['de'] ?? '') ?></textarea>
                                     </div>
@@ -185,10 +185,10 @@ $filesize = Settings::getMaxFileSize('10M');
                             <div class="mt-20">
                                 <div class="d-flex align-items-center justify-content-between gap-10 mb-10">
                                     <div>
-                                        <h4 class="m-0"><?= lang('common.links') ?></h4>
-                                        <small class="text-muted"><?= lang('admin.optional_links_displayed_on_this_card') ?></small>
+                                        <h4 class="m-0"><?= t('common.links') ?></h4>
+                                        <small class="text-muted"><?= t('admin.optional_links_displayed_on_this_card') ?></small>
                                     </div>
-                                    <button type="button" class="btn small add-resource-hub-link"><i class="ph ph-plus"></i> <?= lang('admin.add_link') ?></button>
+                                    <button type="button" class="btn small add-resource-hub-link"><i class="ph ph-plus"></i> <?= t('admin.add_link') ?></button>
                                 </div>
 
                                 <div class="resource-hub-links">
@@ -199,26 +199,26 @@ $filesize = Settings::getMaxFileSize('10M');
                                     ?>
                                         <div class="resource-hub-link">
                                             <div class="link-head">
-                                                <strong><i class="ph ph-<?= e($linkIcon) ?> link-icon-preview"></i> <?= lang('common.link') ?></strong>
-                                                <button type="button" class="btn link danger small remove-resource-hub-link" title="<?= lang('admin.remove_link') ?>"><i class="ph ph-trash"></i></button>
+                                                <strong><i class="ph ph-<?= e($linkIcon) ?> link-icon-preview"></i> <?= t('common.link') ?></strong>
+                                                <button type="button" class="btn link danger small remove-resource-hub-link" title="<?= t('admin.remove_link') ?>"><i class="ph ph-trash"></i></button>
                                             </div>
                                             <div class="row row-eq-spacing my-0">
                                                 <div class="col-md-6">
                                                     <label>English <img src="<?= ROOTPATH ?>/img/gb.svg" alt="EN" class="flag"></label>
-                                                    <input type="text" class="form-control" value="<?= e($linkTitle['en'] ?? '') ?>" placeholder="<?= lang('admin.link_title') ?>" data-link-field="title.en">
+                                                    <input type="text" class="form-control" value="<?= e($linkTitle['en'] ?? '') ?>" placeholder="<?= t('admin.link_title') ?>" data-link-field="title.en">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Deutsch <img src="<?= ROOTPATH ?>/img/de.svg" alt="DE" class="flag"></label>
-                                                    <input type="text" class="form-control" value="<?= e($linkTitle['de'] ?? '') ?>" placeholder="<?= lang('admin.link_title') ?>" data-link-field="title.de">
+                                                    <input type="text" class="form-control" value="<?= e($linkTitle['de'] ?? '') ?>" placeholder="<?= t('admin.link_title') ?>" data-link-field="title.de">
                                                 </div>
                                             </div>
                                             <div class="row row-eq-spacing mb-0">
                                                 <div class="col-md-4">
-                                                    <label><?= lang('admin.icon') ?></label>
+                                                    <label><?= t('admin.icon') ?></label>
                                                     <input type="text" class="form-control link-icon-input" value="<?= e($linkIcon) ?>" pattern="[a-z0-9-]+" list="resource-hub-icons" placeholder="arrow-square-out" data-link-field="icon">
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <label><?= lang('admin.target') ?></label>
+                                                    <label><?= t('admin.target') ?></label>
                                                     <input type="text" class="form-control link-url-input" value="<?= e($link['url'] ?? '') ?>" placeholder="https://example.org or /documents" data-link-field="url">
                                                 </div>
                                             </div>
@@ -228,7 +228,7 @@ $filesize = Settings::getMaxFileSize('10M');
                             </div>
 
                             <div class="text-right mt-20 border-top pt-10">
-                                <button type="button" class="btn link danger remove-resource-hub-card"><i class="ph ph-trash"></i> <?= lang('admin.delete_card') ?></button>
+                                <button type="button" class="btn link danger remove-resource-hub-card"><i class="ph ph-trash"></i> <?= t('admin.delete_card') ?></button>
                             </div>
                         </div>
                     </details>
@@ -245,21 +245,21 @@ $filesize = Settings::getMaxFileSize('10M');
         <div id="image-map-configuration" class="box padded">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-10 mb-20">
                 <div>
-                    <h2 class="title mt-0 mb-5"><?= lang('common.image_map_background') ?></h2>
+                    <h2 class="title mt-0 mb-5"><?= t('common.image_map_background') ?></h2>
                     <p class="text-muted m-0">
-                        <?= lang('admin.upload_the_background_image_independently_from_the_card_configuration_then') ?>
+                        <?= t('admin.upload_the_background_image_independently_from_the_card_configuration_then') ?>
                     </p>
                 </div>
                 <div class="d-flex gap-10 flex-shrink-0">
                     <?php if ($hasBackgroundImage && $cardCount > 0) { ?>
                         <a href="<?= ROOTPATH ?>/admin/resource-hub-image-map" class="btn">
                             <i class="ph ph-map-pin"></i>
-                            <?= lang('admin.arrange_cards') ?>
+                            <?= t('admin.arrange_cards') ?>
                         </a>
                     <?php } ?>
                     <a href="#resource-hub-image-upload" class="btn primary">
                         <i class="ph ph-<?= $hasBackgroundImage ? 'arrows-clockwise' : 'upload-simple' ?>"></i>
-                        <?= $hasBackgroundImage ? lang('admin.replace_image') : lang('common.upload_image') ?>
+                        <?= $hasBackgroundImage ? t('admin.replace_image') : t('common.upload_image') ?>
                     </a>
                 </div>
             </div>
@@ -267,7 +267,7 @@ $filesize = Settings::getMaxFileSize('10M');
             <?php if ($hasBackgroundImage) { ?>
                 <img
                     src="<?= ROOTPATH ?>/uploads/<?= e($backgroundFile) ?>?v=<?= strtotime((string) ($backgroundImage['uploaded'] ?? 'now')) ?>"
-                    alt="<?= lang('admin.current_image_map_background') ?>"
+                    alt="<?= t('admin.current_image_map_background') ?>"
                     class="resource-hub-image-preview">
                 <div class="resource-hub-image-meta">
                     <span class="badge">
@@ -284,8 +284,8 @@ $filesize = Settings::getMaxFileSize('10M');
                 </div>
             <?php } else { ?>
                 <div class="alert signal mb-0">
-                    <div class="title"><?= lang('admin.no_background_image_uploaded') ?></div>
-                    <?= lang('admin.the_cards_view_can_already_be_used_an_image_is_only_required_for_the_option') ?>
+                    <div class="title"><?= t('admin.no_background_image_uploaded') ?></div>
+                    <?= t('admin.the_cards_view_can_already_be_used_an_image_is_only_required_for_the_option') ?>
                 </div>
             <?php } ?>
         </div>
@@ -293,7 +293,7 @@ $filesize = Settings::getMaxFileSize('10M');
 
         <button type="submit" class="btn success">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
     </form>
 </div>
@@ -301,24 +301,24 @@ $filesize = Settings::getMaxFileSize('10M');
 <div class="modal" id="resource-hub-image-upload" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="resource-hub-image-upload-title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <a href="#close-modal" class="close" role="button" aria-label="<?= lang('action.close') ?>">
+            <a href="#close-modal" class="close" role="button" aria-label="<?= t('action.close') ?>">
                 <span aria-hidden="true">&times;</span>
             </a>
             <h2 id="resource-hub-image-upload-title" class="title">
-                <?= $hasBackgroundImage ? lang('admin.replace_background_image') : lang('admin.upload_background_image') ?>
+                <?= $hasBackgroundImage ? t('admin.replace_background_image') : t('admin.upload_background_image') ?>
             </h2>
 
             <p class="text-muted">
-                <?= lang('admin.a_wide_landscape_image_works_best_we_recommend_an_aspect_ratio_close_to_16') ?>
+                <?= t('admin.a_wide_landscape_image_works_best_we_recommend_an_aspect_ratio_close_to_16') ?>
             </p>
 
             <blockquote>
-                <b><?= lang('admin.image_requirements') ?></b>
+                <b><?= t('admin.image_requirements') ?></b>
                 <ul class="mb-0">
-                    <li><?= lang('admin.jpeg_png_or_webp') ?></li>
-                    <li><?= lang('admin.landscape_format') ?></li>
-                    <li><?= lang('admin.between_1200_x_600_and_5000_x_3000_pixels') ?></li>
-                    <li><?= lang('admin.maximum_15_megapixels_and_10_mb') ?></li>
+                    <li><?= t('admin.jpeg_png_or_webp') ?></li>
+                    <li><?= t('admin.landscape_format') ?></li>
+                    <li><?= t('admin.between_1200_x_600_and_5000_x_3000_pixels') ?></li>
+                    <li><?= t('admin.maximum_15_megapixels_and_10_mb') ?></li>
                 </ul>
             </blockquote>
 
@@ -333,26 +333,26 @@ $filesize = Settings::getMaxFileSize('10M');
                         maxsize="<?= $filesize['bytes'] ?>"
                         onchange="previewResourceHubImage(this)"
                         required>
-                    <label for="resource-hub-background-file"><?= lang('common.select_image') ?></label>
+                    <label for="resource-hub-background-file"><?= t('common.select_image') ?></label>
                 </div>
 
                 <div id="resource-hub-upload-preview" class="mt-20 d-none">
-                    <img src="" alt="<?= lang('admin.preview_of_the_selected_image') ?>" class="resource-hub-image-preview">
+                    <img src="" alt="<?= t('admin.preview_of_the_selected_image') ?>" class="resource-hub-image-preview">
                     <p class="text-muted mb-0 mt-5" id="resource-hub-upload-preview-meta"></p>
                 </div>
 
                 <button type="submit" class="btn primary mt-20">
                     <i class="ph ph-upload-simple"></i>
-                    <?= $hasBackgroundImage ? lang('admin.replace_image') : lang('common.upload_image') ?>
+                    <?= $hasBackgroundImage ? t('admin.replace_image') : t('common.upload_image') ?>
                 </button>
             </form>
 
             <?php if ($hasBackgroundImage) { ?>
                 <hr>
-                <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image/delete" method="post" onsubmit="return confirm('<?= e(lang('admin.remove_the_current_background_image')) ?>')">
+                <form action="<?= ROOTPATH ?>/crud/admin/resource-hub/image/delete" method="post" onsubmit="return confirm('<?= e(t('admin.remove_the_current_background_image')) ?>')">
                     <button type="submit" class="btn link danger">
                         <i class="ph ph-trash"></i>
-                        <?= lang('admin.remove_current_image') ?>
+                        <?= t('admin.remove_current_image') ?>
                     </button>
                 </form>
             <?php } ?>
@@ -388,25 +388,25 @@ $filesize = Settings::getMaxFileSize('10M');
     (function() {
         let nextCardIndex = <?= max($cardCount, 1) ?>;
         const labels = <?= json_encode([
-            'untitled' => lang('common.untitled_card'),
-            'links' => lang('admin.links'),
-            'link' => lang('common.link'),
-            'linkTitle' => lang('admin.link_title'),
-            'icon' => lang('admin.icon'),
-            'target' => lang('admin.target'),
-            'removeLink' => lang('admin.remove_link'),
-            'removeCard' => lang('admin.delete_card'),
-            'confirmCardRemoval' => lang('admin.delete_this_card_and_all_of_its_links'),
-            'titleRequired' => lang('admin.please_give_each_card_a_title_in_at_least_one_language'),
-            'linkIncomplete' => lang('admin.each_link_needs_a_target_and_a_title_in_at_least_one_language'),
-            'drag' => lang('admin.drag_to_reorder'),
-            'cardIcon' => lang('admin.card_icon'),
-            'iconHint' => lang('admin.enter_the_phosphor_icon_name_without_the_ph_prefix'),
-            'browseIcons' => lang('admin.browse_icons'),
-            'title' => lang('common.title'),
-            'content' => lang('common.content'),
-            'optionalLinks' => lang('admin.optional_links_displayed_on_this_card'),
-            'addLink' => lang('admin.add_link')
+            'untitled' => t('common.untitled_card'),
+            'links' => t('admin.links'),
+            'link' => t('common.link'),
+            'linkTitle' => t('admin.link_title'),
+            'icon' => t('admin.icon'),
+            'target' => t('admin.target'),
+            'removeLink' => t('admin.remove_link'),
+            'removeCard' => t('admin.delete_card'),
+            'confirmCardRemoval' => t('admin.delete_this_card_and_all_of_its_links'),
+            'titleRequired' => t('admin.please_give_each_card_a_title_in_at_least_one_language'),
+            'linkIncomplete' => t('admin.each_link_needs_a_target_and_a_title_in_at_least_one_language'),
+            'drag' => t('admin.drag_to_reorder'),
+            'cardIcon' => t('admin.card_icon'),
+            'iconHint' => t('admin.enter_the_phosphor_icon_name_without_the_ph_prefix'),
+            'browseIcons' => t('admin.browse_icons'),
+            'title' => t('common.title'),
+            'content' => t('common.content'),
+            'optionalLinks' => t('admin.optional_links_displayed_on_this_card'),
+            'addLink' => t('admin.add_link')
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 
         function createId() {
@@ -498,7 +498,7 @@ $filesize = Settings::getMaxFileSize('10M');
         }
 
         function updateCardSummary(card) {
-            const currentLanguage = <?= json_encode(lang('common.this_language')) ?>;
+            const currentLanguage = <?= json_encode(t('common.this_language')) ?>;
             const preferred = card.querySelector(`[data-card-field="title.${currentLanguage}"]`).value.trim();
             const fallbackLanguage = currentLanguage === 'de' ? 'en' : 'de';
             const fallback = card.querySelector(`[data-card-field="title.${fallbackLanguage}"]`).value.trim();

@@ -180,7 +180,7 @@ Route::get('/get-module/(.*)', function ($key) {
             <?php if ($custom) { ?>
                 <b>
                     <i class="ph ph-textbox"></i>
-                    <?= lang('common.custom_field') ?>
+                    <?= t('common.custom_field') ?>
                 </b>
             <?php } ?>
 
@@ -188,7 +188,7 @@ Route::get('/get-module/(.*)', function ($key) {
                 <?= lang($vals['description'] ?? '', $vals['description_de'] ?? null) ?>
             </p>
             <p>
-                <?= lang('admin.saved_fields') ?>:
+                <?= t('admin.saved_fields') ?>:
                 <?php foreach ($vals['fields'] as $f => $_) { ?>
                     <code class="badge primary"><?= $f ?></code>
                 <?php } ?>

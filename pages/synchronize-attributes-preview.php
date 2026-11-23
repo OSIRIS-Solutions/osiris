@@ -19,7 +19,7 @@ $ldap_fields = array_filter($fields);
 
 if (empty($ldap_fields)) {
     echo '<div class="alert warning">';
-    echo lang('people.no_ldap_attributes_have_been_configured_for_synchronization_please_configur', replace: ['rootpath' => ROOTPATH]);
+    echo t('people.no_ldap_attributes_have_been_configured_for_synchronization_please_configur', replace: ['rootpath' => ROOTPATH]);
     echo '</div>';
     exit;
 }
@@ -39,16 +39,16 @@ if (is_string($result)) {
 ?>
 
 <div class="alert success">
-    <?= lang('people.the_attributes_have_been_saved') ?>
+    <?= t('people.the_attributes_have_been_saved') ?>
 </div>
 
 <h1>
     <i class="ph-duotone ph-arrow-clockwise"></i>
-    <?= lang('people.synchronized_attributes_from_ldap') ?>
+    <?= t('people.synchronized_attributes_from_ldap') ?>
 </h1>
 
 <p>
-    <?= lang('people.the_following_attributes_are_synchronized_from_ldap_to_osiris_every_time_a') ?>
+    <?= t('people.the_following_attributes_are_synchronized_from_ldap_to_osiris_every_time_a') ?>
 </p>
 
 <style>
@@ -114,12 +114,12 @@ if (is_string($result)) {
 </table>
 
 <p>
-    <?= lang('people.you_are_now_ready_to_synchronize_attributes_from_ldap_to_osiris_by_setting') ?>
+    <?= t('people.you_are_now_ready_to_synchronize_attributes_from_ldap_to_osiris_by_setting') ?>
 </p>
 
 <form action="<?= ROOTPATH ?>/synchronize-attributes-now" method="post">
     <button class="btn primary">
         <i class="ph ph-check"></i>
-        <?= lang('people.synchronize_now') ?>
+        <?= t('people.synchronize_now') ?>
     </button>
 </form>

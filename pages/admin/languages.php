@@ -21,11 +21,11 @@
 
     <h1>
         <i class="ph-duotone ph-translate"></i>
-        <?= lang('admin.languages') ?>
+        <?= t('admin.languages') ?>
     </h1>
 
     <span class="text-muted">
-        <?= lang('admin.language_description') ?>
+        <?= t('admin.language_description') ?>
     </span>
 
 
@@ -51,16 +51,16 @@
                     </h2>
                     <div class="custom-checkbox mb-10">
                         <input type="checkbox" id="lang-select-<?= $lang ?>" name="general[languages][]" value="<?= $lang ?>" <?= in_array($lang, $langs) ? 'checked' : '' ?>>
-                        <label for="lang-select-<?= $lang ?>"><?= translate('common.active') ?></label>
+                        <label for="lang-select-<?= $lang ?>"><?= t('common.active') ?></label>
                     </div>
 
                     <div class="text-muted">
-                        <?= translate('admin.language_override_count', ['count' => count($overrides)]) ?>
+                        <?= t('admin.language_override_count', ['count' => count($overrides)]) ?>
                     </div>
                 </div>
 
                 <a href="<?= ROOTPATH ?>/admin/language-override/<?= $lang ?>" class="btn primary">
-                    <?= lang('admin.language_override') ?>
+                    <?= t('admin.language_override') ?>
                 </a>
             </div>
         <?php } ?>
@@ -68,7 +68,7 @@
 
         <button class="btn primary">
             <i class="ph ph-floppy-disk"></i>
-            <?= lang('action.save') ?>
+            <?= t('action.save') ?>
         </button>
 
     </form>

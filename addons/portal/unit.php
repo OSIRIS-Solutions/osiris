@@ -80,11 +80,11 @@ $numbers = $data['numbers'] ?? [
                 <i class="ph ph-caret-left" aria-hidden="true"></i>
                 <span>
                     <?php if ($topics_and_groups) { ?>
-                        <?= lang('common.explore_by_topic_unit') ?>
+                        <?= t('common.explore_by_topic_unit') ?>
                     <?php } else if (!empty($topics)) { ?>
-                        <?= lang('common.explore_by_topic') ?>
+                        <?= t('common.explore_by_topic') ?>
                     <?php } else if (!empty($hierarchy)) { ?>
-                        <?= lang('common.explore_by_unit') ?>
+                        <?= t('common.explore_by_unit') ?>
                     <?php } ?>
                 </span>
             </div>
@@ -168,19 +168,19 @@ $numbers = $data['numbers'] ?? [
             <nav id="group-pills">
                 <a onclick="navigate('general')" id="btn-general" class="<?= empty($preselect) || $preselect === 'info' ? 'active' : '' ?>">
                     <i class="ph ph-info" aria-hidden="true"></i>
-                    <?= lang('common.info') ?>
+                    <?= t('common.info') ?>
                 </a>
 
                 <?php if (!empty($data['research'] ?? null)) { ?>
                     <a onclick="navigate('research')" id="btn-research">
                         <i class="ph ph-lightbulb" aria-hidden="true"></i>
-                        <?= lang('common.research') ?>
+                        <?= t('common.research') ?>
                     </a>
                 <?php } ?>
 
                 <a onclick="navigate('persons')" id="btn-persons" class="<?= $preselect === 'persons' ? 'active' : '' ?>">
                     <i class="ph ph-users" aria-hidden="true"></i>
-                    <?= lang('common.team') ?>
+                    <?= t('common.team') ?>
                     <span class="index"><?= $numbers['persons'] ?></span>
                 </a>
 
@@ -188,7 +188,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['publications'] > 0) { ?>
                     <a onclick="navigate('publications')" id="btn-publications" class="<?= $preselect === 'publications' ? 'active' : '' ?>">
                         <i class="ph ph-books" aria-hidden="true"></i>
-                        <?= lang('common.publications')  ?>
+                        <?= t('common.publications')  ?>
                         <span class="index"><?= $numbers['publications'] ?></span>
                     </a>
                 <?php } ?>
@@ -197,7 +197,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['activities'] > 0) { ?>
                     <a onclick="navigate('activities')" id="btn-activities" class="<?= $preselect === 'activities' ? 'active' : '' ?>">
                         <i class="ph ph-briefcase" aria-hidden="true"></i>
-                        <?= lang('common.activities')  ?>
+                        <?= t('common.activities')  ?>
                         <span class="index"><?= $numbers['activities'] ?></span>
                     </a>
                 <?php } ?>
@@ -206,7 +206,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['projects'] > 0) { ?>
                     <a onclick="navigate('projects')" id="btn-projects" class="<?= $preselect === 'projects' ? 'active' : '' ?>">
                         <i class="ph ph-tree-structure" aria-hidden="true"></i>
-                        <?= lang('common.projects')  ?>
+                        <?= t('common.projects')  ?>
                         <span class="index"><?= $numbers['projects'] ?></span>
                     </a>
                 <?php } ?>
@@ -216,7 +216,7 @@ $numbers = $data['numbers'] ?? [
                 if ($numbers['collaborators'] > 0) { ?>
                     <a onclick="navigate('collaborators')" id="btn-collaborators" class="<?= $preselect === 'collaborators' ? 'active' : '' ?>">
                         <i class="ph ph-handshake" aria-hidden="true"></i>
-                        <?= lang('common.collaborators')  ?>
+                        <?= t('common.collaborators')  ?>
                     </a>
                 <?php } ?>
 
@@ -231,7 +231,7 @@ $numbers = $data['numbers'] ?? [
             </nav>
 
 
-            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= lang('projects.general_information') ?>">
+            <section id="general" <?= empty($preselect) || $preselect === 'info' ? '' : 'style="display:none"' ?> data-title="<?= t('projects.general_information') ?>">
                 <!-- head -->
                 <?php
                 $head = $data['heads'] ?? [];
@@ -288,9 +288,9 @@ $numbers = $data['numbers'] ?? [
 
             </section>
 
-            <section id="research" style="display:none;" data-title="<?= lang('portal.research_topics') ?>">
+            <section id="research" style="display:none;" data-title="<?= t('portal.research_topics') ?>">
 
-                <!-- <h3><?= lang('portal.research_topics') ?></h3> -->
+                <!-- <h3><?= t('portal.research_topics') ?></h3> -->
 
                 <?php if (isset($data['research']) && !empty($data['research'])) {
                 ?>
@@ -308,7 +308,7 @@ $numbers = $data['numbers'] ?? [
                             </div>
                             <?php if (!empty($r['activities'] ?? null)) { ?>
                                 <hr>
-                                <h6 class="m-0"><?= lang('portal.related_activities') ?>:</h6>
+                                <h6 class="m-0"><?= t('portal.related_activities') ?>:</h6>
                                 <table class="table simple">
                                     <tbody>
                                         <?php foreach ($r['activities'] as $a) { ?>
@@ -334,7 +334,7 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.employees') ?>">
+            <section id="persons" <?= $preselect === 'persons' ? '' : 'style="display:none"' ?> data-title="<?= t('common.employees') ?>">
 
                 <table class="table cards w-full datatable" id="users-table" data-page-length="18">
                     <thead>
@@ -368,9 +368,9 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.publications') ?>">
+            <section id="publications" <?= $preselect === 'publications' ? '' : 'style="display:none"' ?> data-title="<?= t('common.publications') ?>">
 
-                <!-- <h2><?= lang('common.publications') ?></h2> -->
+                <!-- <h2><?= t('common.publications') ?></h2> -->
 
                 <div class="row row-eq-spacing">
                     <div class="col-md">
@@ -379,11 +379,11 @@ $numbers = $data['numbers'] ?? [
                             data-tab="publications"
                             data-source="./publications.json"
                             data-page-length="20"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('common.type_statistics') ?></th>
-                                    <th data-col="html" data-search-col="search"><?= lang('common.publication') ?></th>
+                                    <th data-col="icon" data-orderable="false" data-searchable="false"><?= t('common.type_statistics') ?></th>
+                                    <th data-col="html" data-search-col="search"><?= t('common.publication') ?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -392,7 +392,7 @@ $numbers = $data['numbers'] ?? [
                     <div class="col w-200 flex-grow-0 flex-reset">
                         <div id="publication-filters">
                             <div id="publication-filter-types">
-                                <h6 class="m-0 mb-5"><?= lang('portal.filter_by_type') ?></h6>
+                                <h6 class="m-0 mb-5"><?= t('portal.filter_by_type') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
                                     $pubTypes = $osiris->adminTypes->find(['parent' => 'publication', 'portfolio' => ['$in' => [1, true]]], ['sort' => ['order' => 1]])->toArray();
@@ -404,7 +404,7 @@ $numbers = $data['numbers'] ?? [
                                 </div>
                             </div>
                             <div id="publication-filter-years">
-                                <h6 class="m-0 mb-5"><?= lang('portal.filter_by_year') ?></h6>
+                                <h6 class="m-0 mb-5"><?= t('portal.filter_by_year') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
                                     $currentYear = (int)date('Y');
@@ -421,10 +421,10 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.other_activities') ?>">
+            <section id="activities" <?= $preselect === 'activities' ? '' : 'style="display:none"' ?> data-title="<?= t('common.other_activities') ?>">
 
 
-                <!-- <h2><?= lang('common.other_activities') ?></h2> -->
+                <!-- <h2><?= t('common.other_activities') ?></h2> -->
 
                 <div class="row row-eq-spacing">
 
@@ -434,11 +434,11 @@ $numbers = $data['numbers'] ?? [
                         data-tab="activities"
                         data-source="./activities.json"
                         data-page-length="20"
-                        data-lang="<?= lang('common.this_language') ?>">
+                        data-lang="<?= t('common.this_language') ?>">
                         <thead>
                             <tr>
-                                <th data-col="icon" data-orderable="false" data-searchable="false"><?= lang('common.type_statistics') ?></th>
-                                <th data-col="html" data-search-col="search"><?= lang('common.activity') ?></th>
+                                <th data-col="icon" data-orderable="false" data-searchable="false"><?= t('common.type_statistics') ?></th>
+                                <th data-col="html" data-search-col="search"><?= t('common.activity') ?></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -448,7 +448,7 @@ $numbers = $data['numbers'] ?? [
                     <div class="col w-200 flex-grow-0 flex-reset">
                         <div id="publication-filters">
                             <div id="publication-filter-types">
-                                <h6 class="m-0 mb-5"><?= lang('portal.filter_by_type') ?></h6>
+                                <h6 class="m-0 mb-5"><?= t('portal.filter_by_type') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
                                     $portfolioCats = $osiris->adminTypes->distinct('parent', ['portfolio' => ['$in' => [true, 1]], 'parent' => ['$ne' => 'publication']]);
@@ -461,7 +461,7 @@ $numbers = $data['numbers'] ?? [
                                 </div>
                             </div>
                             <div id="publication-filter-years">
-                                <h6 class="m-0 mb-5"><?= lang('portal.filter_by_year') ?></h6>
+                                <h6 class="m-0 mb-5"><?= t('portal.filter_by_year') ?></h6>
                                 <div class="datatable-filter mb-20">
                                     <?php
                                     $currentYear = (int)date('Y');
@@ -481,7 +481,7 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.projects') ?>">
+            <section id="projects" <?= $preselect === 'projects' ? '' : 'style="display:none"' ?> data-title="<?= t('common.projects') ?>">
 
 
                 <?php if ($numbers['projects'] > 0) { ?>
@@ -492,10 +492,10 @@ $numbers = $data['numbers'] ?? [
                             data-tab="projects"
                             data-source="./projects.json"
                             data-page-length="8"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead>
                                 <tr>
-                                    <th data><?= lang('common.project') ?></th>
+                                    <th data><?= t('common.project') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -508,7 +508,7 @@ $numbers = $data['numbers'] ?? [
             </section>
 
 
-            <section id="collaborators" <?= $preselect === 'collaborators' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.collaborators') ?>">
+            <section id="collaborators" <?= $preselect === 'collaborators' ? '' : 'style="display:none"' ?> data-title="<?= t('common.collaborators') ?>">
 
                 <?php if ($numbers['collaborators'] > 0) {
                 ?>
@@ -519,12 +519,12 @@ $numbers = $data['numbers'] ?? [
                                 data-source="./collaborators-map.json"
                                 data-tab="projects"
                                 data-context="unit"
-                                data-lang="<?= lang('common.this_language') ?>">
+                                data-lang="<?= t('common.this_language') ?>">
                             </div>
                         </div>
                         <p>
-                            <span style="color:var(--secondary-color)">&#9673;</span> <?= lang('common.this_institution') ?><br>
-                            <span style="color:var(--primary-color)">&#9673;</span> <?= lang('common.cooperation_partner') ?>
+                            <span style="color:var(--secondary-color)">&#9673;</span> <?= t('common.this_institution') ?><br>
+                            <span style="color:var(--primary-color)">&#9673;</span> <?= t('common.cooperation_partner') ?>
                         </p>
                     </div>
                 <?php } ?>
@@ -533,7 +533,7 @@ $numbers = $data['numbers'] ?? [
 
 
 
-            <section id="infrastructures" <?= $preselect === 'infrastructures' ? '' : 'style="display:none"' ?> data-title="<?= lang('common.infrastructures') ?>">
+            <section id="infrastructures" <?= $preselect === 'infrastructures' ? '' : 'style="display:none"' ?> data-title="<?= t('common.infrastructures') ?>">
 
                 <?php if ($numbers['infrastructures'] > 0) {
                     $infrastructures = $Portfolio->fetch_entity('infrastructures');
@@ -541,10 +541,10 @@ $numbers = $data['numbers'] ?? [
                     <!-- infrastructures -->
                     <div class="w-full">
                         <table class="table datatable responsive" id="infrastructures-table"
-                            data-lang="<?= lang('common.this_language') ?>">
+                            data-lang="<?= t('common.this_language') ?>">
                             <thead class="hidden">
                                 <tr>
-                                    <th data><?= lang('common.infrastructure') ?></th>
+                                    <th data><?= t('common.infrastructure') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -576,7 +576,7 @@ $numbers = $data['numbers'] ?? [
                                                             <?= get_preview($descr, 300) ?>
                                                             <?php if (strlen($descr) > 300) { ?>
                                                                 <a href="<?= $base ?>/infrastructure/<?= $infra['id'] ?>" class="link">
-                                                                    <?= lang('portal.read_more') ?>
+                                                                    <?= t('portal.read_more') ?>
                                                                 </a>
                                                             <?php } ?>
                                                         <?php } ?>
