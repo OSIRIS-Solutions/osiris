@@ -372,7 +372,7 @@
                         $trips = $Settings->featureEnabled('trips');
 
                         $travel_available = $osiris->adminTypes->count(['id' => 'travel']);
-                        $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+                        $modules_available = $osiris->adminTypes->count(['$and' => [['id' => 'travel'], ['modules' => ['$in' => ['status', 'status*']]], ['modules' => ['$in' => ['countries', 'country', 'countries*', 'country*']]]]]);
 
                         if ($travel_available == 0) { ?>
                             <p>
@@ -413,20 +413,20 @@
                         </label>
 
                         <p class="text-muted">
-                            <?= lang('The add-on requires an activity type called <kbd>patents</kbd> that has the following data fields: <code class="code">status</code> and either <code class="code">countries</code> or <code class="code">country</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>patents</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">status</code> und <code class="code">countries</code> oder <code class="code">country</code>.') ?>
+                            <?= lang('The add-on requires an activity type called <kbd>patents</kbd> that has the following data fields: <code class="code">patent-status</code>, <code class="code">patent-published</code>, <code class="code">patent-number</code> and <code class="code">patent-ipc</code>.', 'Dieses Add-on benötigt einen Aktivitätstypen, dessen ID <kbd>patents</kbd> ist und der mindestens die folgenden Datenfelder hat: <code class="code">patent-status</code>, <code class="code">patent-published</code>, <code class="code">patent-number</code> und <code class="code">patent-ipc</code>.') ?>
                         </p>
                         <?php
                         $patent = $Settings->featureEnabled('patents');
 
                         $patent_available = $osiris->adminTypes->count(['id' => 'patents']);
-                        $modules_available = $osiris->adminTypes->count(['modules' => ['$in' => ['status', 'countries', 'country', 'status*',  'countries*', 'country*']]]);
+                        $patent_modules_available = $osiris->adminTypes->count(['$and' => [['id' => 'patents'], ['modules' => ['$in' => ['patent-status', 'patent-ipc', 'patent-number', 'patent-published']]]]]);
 
                         if ($patent_available == 0) { ?>
                             <p>
                                 <i class="ph ph-warning text-danger"></i>
                                 <?= lang('The activity type <kbd>patents</kbd> is not available. Please create it first.', 'Der Aktivitätstyp <kbd>patents</kbd> ist nicht verfügbar. Bitte erstelle ihn zuerst.') ?>
                             </p>
-                        <?php } else if ($modules_available == 0) { ?>
+                        <?php } else if ($patent_modules_available == 0) { ?>
                             <p>
                                 <i class="ph ph-warning text-danger"></i>
                                 <?= lang('The activity type <kbd>patents</kbd> does not have the required data fields. Please add them first.', 'Der Aktivitätstyp <kbd>patents</kbd> hat nicht die erforderlichen Datenfelder. Bitte füge sie zuerst hinzu.') ?>

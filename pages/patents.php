@@ -37,22 +37,7 @@ $filter = [
     'year' => $year
 ];
 
-$patents = $osiris->activities->find(
-    $filter,
-    [
-        'projection' => [
-            'id' => 1,
-            'title' => 1,
-            'start_date' => 1,
-            'end_date' => 1,
-            'status' => 1,
-            'countries' => 1,
-            'country' => 1,
-            'authors' => 1,
-            'topics' => 1
-        ]
-    ]
-)->toArray();
+$patents = $osiris->activities->find($filter)->toArray();
 
 $all = $osiris->activities->count(
     [
@@ -61,14 +46,13 @@ $all = $osiris->activities->count(
 );
 
 $statuses = [
-    'preparation' => lang('In Preparation', 'In Vorbereitung'),
-    'in-progress' => lang('In Progress', 'Laufend'),
-    'completed' => lang('Completed', 'Abgeschlossen'),
-    'aborted' => lang('Cancelled', 'Abgebrochen'),
+    'preparation' => lang('Preparation', 'Vorbereitung'),
+    'in-progress' => lang('Filed', 'Eingereicht'),
+    'completed' => lang('Granted', 'Erteilt'),
+    'aborted' => lang('Expired', 'Abgelaufen'),
 ];
 
 
-$countries = [];
 $people = [];
 $topics = [];
 $timelineData = [];
@@ -85,34 +69,17 @@ foreach ($statuses as $key => $label) {
 
 // Unwind countries and authors
 foreach ($patents as $patent) {
-    // compatible with the country field
-    if (!isset($patent['countries']) && isset($patent['country'])) {
-        $patent['countries'] = [$patent['country']];
-    }
 
-    $status = str_replace(' ', '-', $patent['status']);
+    $status = $patent['patent-status'];
 
     $startDate = new DateTime($patent['start_date']);
     $endDate = new DateTime($patent['end_date']);
-    $status = str_replace(' ', '-', $patent['status']);
     // Differenz berechnen
     $duration = $startDate->diff($endDate);
     // Tage holen
     $days = $duration->days + 1; // +1, wenn Start- und Endtag beide zählen sollen
 
     $authors = DB::doc2Arr($patent['authors']);
-    $current_countries = [];
-    foreach ($patent['countries'] as $country) {
-        // $country = lang($country['name'], $country['name_de'] ?? null);
-        $current_countries[] = $country;
-
-        if (!isset($countries[$country])) {
-            $countries[$country] = $template;
-        }
-        $countries[$country][$status]['days'] += $days;
-        $countries[$country][$status]['patents'] += 1;
-        $countries[$country][$status]['people'] += count($authors);
-    }
 
     if (isset($patent['topics']) && !empty($patent['topics']))
         foreach ($patent['topics'] as $topic) {
@@ -127,7 +94,7 @@ foreach ($patents as $patent) {
         $person = $DB->getNameFromId($author['user']);
         $timelineData[] = [
             'title' => $author['user'],
-            'name' => implode(', ', $current_countries),
+            'name' => implode(', ', $patent['countries'] ?? []),
             'start' => $patent['start_date'],
             'end'   => $patent['end_date'],
             'person' => $person,
@@ -143,15 +110,17 @@ foreach ($patents as $patent) {
 }
 
 // map data sums up the patents per country regardless of the status
-foreach ($countries as $iso => $data) {
-    $country = $DB->getCountry($iso);
-    $mapData[] = [
-        'iso3' => $country['iso3'],
-        'days' => array_sum(array_column($data, 'days')),
-        'people' => array_sum(array_column($data, 'people')),
-        'patents' => array_sum(array_column($data, 'patents')),
-        'name' => lang($country['name'], $country['name_de'] ?? null),
-    ];
+foreach ($patents as $patent) {
+    foreach ($patent['countries'] ?? [] as $iso) {
+        $country = $DB->getCountry($iso);
+        $mapData[] = [
+            'iso3' => $country['iso3'],
+            'days' => $days,
+            'people' => count($authors),
+            'patents' => 1,
+            'name' => lang($country['name'], $country['name_de'] ?? null),
+        ];
+    }
 }
 
 
@@ -269,117 +238,6 @@ foreach ($countries as $iso => $data) {
             <button class="btn" onclick="showData(this,'people')"><?= lang('People', 'Personen') ?></button>
         </div>
 
-        <h4><?= lang('Patents by region', 'Regionale Patente') ?></h4>
-
-        <div class="row row-eq-spacing">
-            <div class="col-md">
-                <?php
-                $numbers = [];
-                ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th><?= lang('Country', 'Land') ?></th>
-                            <?php foreach ($statuses as $key => $name) {
-                                $numbers[$key] = [
-                                    'days' => 0,
-                                    'people' => 0,
-                                    'patents' => 0
-                                ];
-                                echo "<th>$name</th>";
-                            } ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($countries as $iso => $days):
-                            $country = $DB->getCountry($iso);
-                            $country = lang($country['name'], $country['name_de'] ?? null);
-
-                        ?>
-                            <tr>
-                                <td><?= $country ?></td>
-                                <?php foreach ($statuses as $key => $name) {
-                                    $numbers[$key]['days'] += $days[$key]['days'] ?? 0;
-                                    $numbers[$key]['people'] += $days[$key]['people'] ?? 0;
-                                    $numbers[$key]['patents'] += $days[$key]['patents'] ?? 0;
-                                    echo "<td class='$key'>";
-                                    echo "<span class='days'>" . ($days[$key]['days'] ?? 0) . "</span>";
-                                    echo "<span class='people'>" . ($days[$key]['people'] ?? 0) . "</span>";
-                                    echo "<span class='patents'>" . ($days[$key]['patents'] ?? 0) . "</span>";
-                                    echo "</td>";
-                                } ?>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td><?= lang('Sum', 'Summe') ?></td>
-                            <?php foreach ($statuses as $key => $name) {
-                                echo "<td class='$key'>";
-                                echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
-                                echo "<span class='people'>" . ($numbers[$key]['people'] ?? 0) . "</span>";
-                                echo "<span class='patents'>" . ($numbers[$key]['patents'] ?? 0) . "</span>";
-                                echo "</td>";
-                            } ?>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <div class="col-md">
-                <div class="box p-5 m-0">
-                    <div id="map"></div>
-                </div>
-            </div>
-        </div>
-
-
-        <h4><?= lang('People', 'Personen') ?></h4>
-        <?php
-        $numbers = [];
-        ?>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><?= lang('Person', 'Person') ?></th>
-                    <?php foreach ($statuses as $key => $name) {
-                        $numbers[$key] = [
-                            'days' => 0,
-                            'people' => '-',
-                            'patents' => 0
-                        ];
-                        echo "<th>$name</th>";
-                    } ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($people as $person => $days): ?>
-                    <tr>
-                        <td><?= $person ?></td>
-                        <?php foreach ($statuses as $key => $name) {
-                            $numbers[$key]['days'] += $days[$key]['days'] ?? 0;
-                            $numbers[$key]['patents'] += $days[$key]['patents'] ?? 0;
-                            echo "<td class='$key'>";
-                            echo "<span class='days'>" . ($days[$key]['days'] ?? 0) . "</span>";
-                            echo "<span class='people'>-</span>";
-                            echo "<span class='patents'>" . ($days[$key]['patents'] ?? 0) . "</span>";
-                            echo "</td>";
-                        } ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td><?= lang('Sum', 'Summe') ?></td>
-                    <?php foreach ($statuses as $key => $name) {
-                        echo "<td class='$key'>";
-                        echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
-                        echo "<span class='people'>-</span>";
-                        echo "<span class='patents'>" . ($numbers[$key]['patents'] ?? 0) . "</span>";
-                        echo "</td>";
-                    } ?>
-                </tr>
-            </tfoot>
-        </table>
 
 
         <h4><?= $Settings->topicLabel() ?></h4>
@@ -647,89 +505,7 @@ $unique_number = count($uniques);
 </script>
 
 
-<script src="<?= ROOTPATH ?>/js/plotly-3.0.1.min.js" charset="utf-8"></script>
 <script>
-    function unpack(rows, key) {
-        return rows.map(function(row) {
-            return row[key];
-        });
-    }
-
-    var layout = {
-        geo: {
-            projection: {
-                type: 'robinson'
-            }
-        },
-        margin: {
-            t: 50,
-            b: 10,
-            l: 10,
-            r: 10
-        },
-        // height: 400,
-        // width: '100%',
-    };
-    var collaboratorRows = <?= json_encode($mapData) ?>;
-    $(document).ready(function() {
-        var z = unpack(collaboratorRows, 'days');
-        var data = [{
-            type: 'choropleth',
-            locationmode: 'ISO-3',
-            locations: unpack(collaboratorRows, 'iso3'),
-            z: z,
-            text: unpack(collaboratorRows, 'country'),
-            autocolorscale: false,
-            colorscale: [
-                ['0.0', 'rgb(253.4, 229.8, 204.8)'],
-                ['1.0', '#008084']
-            ],
-            colorbar: {
-                len: 0.5,
-                title: lang('Days', 'Tage'),
-                autotic: false,
-            },
-            zmin: 0,
-            zmax: Math.max(...z),
-        }];
-        var config = {
-            responsive: true,
-            showLink: false
-        }
-
-        Plotly.newPlot("map", data, layout, config);
-    });
-
-
-
-    function updateMap(mode) {
-        var z = unpack(collaboratorRows, mode);
-        var label = '';
-        switch (mode) {
-            case 'days':
-                label = lang('Days', 'Tage');
-                break;
-            case 'people':
-                label = lang('People', 'Personen');
-                break;
-            case 'patents':
-                label = lang('patents', 'Reisen');
-                break;
-            default:
-                label = lang('Unknown', 'Unbekannt');
-        }
-        console.log(mode);
-        Plotly.update("map", {
-            z: [z],
-            colorbar: {
-                title: label,
-                len: 0.5
-            },
-            zmin: 0,
-            zmax: Math.max(...z),
-        });
-
-    }
 
     function filterByYear(year, table) {
         var rows = document.querySelectorAll(table + ' tbody tr');

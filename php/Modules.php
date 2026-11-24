@@ -599,7 +599,7 @@ class Modules
             "tags" => ['publication', 'journal'],
             "section" => "bibliography",
         ],
-        "ipc" => [
+        "patent-ipc" => [
             "fields" => ["ipc" => ["A01B", "C07D 13/01"]],
             "name" => "Patent IPC",
             "name_de" => "Patent IPC",
@@ -607,10 +607,49 @@ class Modules
             "label_de" => "Patent IPC",
             "description" => "A field for the International Patent Classification (IPC) of a patent. This field is used to categorize patents according to their technical content. May contain multiple IPC codes, separated by comma.",
             "description_de" => "Ein Feld für die Internationale Patentklassifikation (IPC) eines Patents. Dieses Feld wird verwendet, um Patente nach ihrem technischen Inhalt zu kategorisieren. Kann mehrere IPC-Codes enthalten, die durch Komma getrennt sind.",
-            "width" => 12,
+            "width" => 6,
             "portfolio" => true,
             "tags" => ['patent'],
             "section" => "bibliography",
+        ],
+        "patent-number" => [
+            "fields" => ["patent-number" => ["DE102004001234B4"]],
+            "name" => "Patent Number",
+            "name_de" => "Patentnummer",
+            "label" => "Patent Number",
+            "label_de" => "Patentnummer",
+            "description" => "A field for the patent number of a patent.",
+            "description_de" => "Ein Feld für die Patentnummer eines Patents.",
+            "width" => 6,
+            "portfolio" => true,
+            "tags" => ['patent'],
+            "section" => "key",
+        ],
+        "patent-status" => [
+            "fields" => ["patent-status" => ["granted", "withdrawn"]],
+            "name" => "Patent Status",
+            "name_de" => "Patentstatus",
+            "label" => "Patent Status",
+            "label_de" => "Patentstatus",
+            "description" => "A field for the status of a patent.",
+            "description_de" => "Ein Feld für den Status eines Patents.",
+            "width" => 6,
+            "portfolio" => true,
+            "tags" => ['patent'],
+            "section" => "key",
+        ],
+        "patent-published" => [
+            "fields" => ["patent-publication" => ["2024-01-01", "2024-12-31"]],
+            "name" => "Patent Publication Date",
+            "name_de" => "Patentveröffentlichungsdatum",
+            "label" => "Patent Publication Date",
+            "label_de" => "Patentveröffentlichungsdatum",
+            "description" => "Field for the publication date of a patent.",
+            "description_de" => "Feld für das Veröffentlichungsdatum eines Patents.",
+            "width" => 6,
+            "portfolio" => true,
+            "tags" => ['patent'],
+            "section" => "key",
         ],
         "peer-reviewed" => [
             "fields" => ["peer-reviewed" => true],
@@ -3199,13 +3238,13 @@ class Modules
             <?php
                 break;
 
-            case "ipc":
+            case "patent-ipc":
             ?>
-                <div class="data-module col-sm-<?= $width ?>" data-module="ipc">
-                    <label for="ipc-input" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
-                    <div id="ipc" class="list-widget" data-name="values[ipc][]">
+                <div class="data-module col-sm-<?= $width ?>" data-module="patent-ipc">
+                    <label for="patent-ipc-input" class="<?= $labelClass ?> floating-title"><?= $label ?></label>
+                    <div id="patent-ipc" class="list-widget" data-name="values[patent-ipc][]">
                         <input
-                            id="ipc-input"
+                            id="patent-ipc-input"
                             class="list-widget-input"
                             type="text"
                             autocomplete="off"
@@ -3214,12 +3253,47 @@ class Modules
                     <?= $this->render_help($help) ?>
                 </div>
                 <script>
-                    function validate_ipc(ipc){
+                    function validate_ipc(patentipc){
                         const regex = /^[A-H]\d{2}[A-Z]\s*\d{1,3}\/\d{2,4}$/i;
                         return regex.test(event.target.value);
                     }
-                    initListWidget($("#ipc"), <?= json_encode($this->val('ipc', [])) ?>, validate_ipc);
+                    initListWidget($("#patent-ipc"), <?= json_encode($this->val('patent-ipc', [])) ?>, validate_ipc);
                 </script>
+            <?php
+                break;
+            
+            case "patent-published":
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-published">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[patent-published]" value="<?= $this->val('patent-published') ?>" id="patent-published" placeholder="patent-published">
+                    <label for="patent-published" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
+            case "patent-number":
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-number">
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[patent-number]" value="<?= $this->val('patent-number') ?>" id="patent-number" placeholder="patent-number">
+                    <label for="patent-number" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
+            <?php
+                break;
+
+            case "patent-status":
+            ?>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-status">
+                    <select name="values[patent-status]" class="form-control" <?= $labelClass ?> id="patent-status" placeholder="patent-status">
+                        <option value="preparation" <?= $this->val('patent-status') == 'preparation' ? 'selected' : '' ?>><?= lang('Preparation', 'Vorbereitung') ?></option>
+                        <option value="filed" <?= $this->val('patent-status') == 'filed' ? 'selected' : '' ?>><?= lang('Filed', 'Eingereicht') ?></option>
+                        <option value="granted" <?= $this->val('patent-status') == 'granted' ? 'selected' : '' ?>><?= lang('Granted', 'Erteilt') ?></option>
+                        <option value="expired" <?= $this->val('patent-status') == 'expired' ? 'selected' : '' ?>><?= lang('Expired', 'Abgelaufen') ?></option>
+                    </select>
+                    <label for="patent-status" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <?= $this->render_help($help) ?>
+                </div>
             <?php
                 break;
 
