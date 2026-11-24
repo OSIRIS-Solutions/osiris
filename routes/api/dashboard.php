@@ -843,6 +843,7 @@ Route::get('/api/dashboard/department-network', function () {
     $entity        = $_GET['entity'] ?? 'units'; // 'units' | 'topics'
     $startyear     = intval($_GET['year'] ?? (CURRENTYEAR - 4));
     $level         = $_GET['level'] ?? 1; // 1 || 2
+    $hideSoloActivities = $_GET['hideSoloActivities'] ?? 0;
 
     if ($activity_type === 'all') {
         $activity_type = ['$exists' => true];
@@ -1084,6 +1085,12 @@ Route::get('/api/dashboard/department-network', function () {
 
         $matrix[$ia][$ib] += $c;
         $matrix[$ib][$ia] += $c;
+    }
+
+    if ($hideSoloActivities){
+       for ($i = 0; $i < min(count($matrix), count($matrix[0])); $i++) {
+            $matrix[$i][$i] = 0;
+        }
     }
 
     echo return_rest([
