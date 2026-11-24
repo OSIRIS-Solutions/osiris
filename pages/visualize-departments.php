@@ -20,6 +20,8 @@ $year = $_GET['year'] ?? CURRENTYEAR - 4;
 $entity = $_GET['entity'] ?? 'units';
 $level = $_GET['level'] ?? 1;
 $type = $_GET['type'] ?? 'publication';
+$hideSoloActivities = $_GET['hideSoloActivities'] ?? 0;
+
 ?>
 <style>
     .popover h6 {
@@ -76,6 +78,10 @@ $type = $_GET['type'] ?? 'publication';
                     ?>
                 </select>
             </div>
+            <div class="form-group">
+                <input type="checkbox" id="hideSoloActivities" name="hideSoloActivities" <?= ($hideSoloActivities) ? 'checked' : '' ?>>
+                <label for="hideSoloActivities"> <?= lang("Hide solo activities ", "Solo-Aktivitäten ausblenden") ?> </label>
+            </div>
             <button type="submit" class="btn primary">
                 <?= lang('Update', 'Aktualisieren') ?>
             </button>
@@ -105,6 +111,10 @@ $type = $_GET['type'] ?? 'publication';
                     <?php }
                     ?>
                 </select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="hideSoloActivities" name="hideSoloActivities" <?= ($hideSoloActivities) ? 'checked' : '' ?>>
+                <label for="hideSoloActivities"> <?= lang("Hide solo activities", "Solo-Aktivitäten ausblenden") ?> </label>
             </div>
             <button type="submit" class="btn primary">
                 <?= lang('Update', 'Aktualisieren') ?>
@@ -145,7 +155,8 @@ $type = $_GET['type'] ?? 'publication';
             level: <?= $level ?>,
             type: '<?= $type ?>',
             entity: '<?= $entity ?>',
-            year: <?= $year ?>
+            year: <?= $year ?>,
+            hideSoloActivities: $('#hideSoloActivities').is(':checked') ? 1 : 0
         },
         dataType: "json",
         success: function(response) {
