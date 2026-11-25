@@ -35,7 +35,7 @@ function e($value): string
 }
 
 // helper functions for all CRUD methods
-function validateValues($values, $DB)
+function validateValues($values, $DB, $numericAllowed = true)
 {
     if (!is_array($values)) return $values;
     $first = max(intval($values['first_authors'] ?? 1), 1);
@@ -131,7 +131,7 @@ function validateValues($values, $DB)
             }
             $values[$key] = $countries;
         } else if (is_array($value)) {
-            $values[$key] = validateValues($value, $DB);
+            $values[$key] = validateValues($value, $DB, $numericAllowed);
         } else if ($key == 'issn') {
             if (empty($value)) {
                 $values[$key] = array();
@@ -187,7 +187,7 @@ function validateValues($values, $DB)
             $values[$key] = intval($value);
         } else if ($key == 'room') {
             // do not connvert room numbers to integers
-        } else if (is_numeric($value)) {
+        } else if (is_numeric($value) && $numericAllowed) {
             if (str_starts_with($value, "0")) {
                 $values[$key] = trim($value);
             } elseif (is_float($value + 0)) {

@@ -81,7 +81,12 @@ Route::post('/crud/fields/create', function () {
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
-    $values = validateValues($_POST['values'], $DB);
+    $input = $_POST['values'];
+    if ($input['format'] === 'list') {
+        $values = validateValues($input, $DB, numericAllowed:false);
+    } else {
+        $values = validateValues($input, $DB);
+    }
 
     if (isset($values['values']) && !empty($values['values'])) {
         $en = $values['values'];
@@ -91,7 +96,7 @@ Route::post('/crud/fields/create', function () {
         foreach ($en as $i => $e) {
             $values['values'][] = [
                 $e,
-                $de[$i] ?? $e
+                ($de[$i] ?? $e)
             ];
         }
     }
@@ -118,7 +123,12 @@ Route::post('/crud/fields/update/(.*)', function ($id) {
 
     if (!isset($_POST['values'])) abortwith(500, lang('No values provided.', 'Keine Werte angegeben.'));
 
-    $values = validateValues($_POST['values'], $DB);
+    $input = $_POST['values'];
+    if ($input['format'] === 'list') {
+        $values = validateValues($input, $DB, numericAllowed:false);
+    } else {
+        $values = validateValues($input, $DB);
+    }
     $values['id'] = $id;
 
     
