@@ -16,6 +16,7 @@ $Modules = new Modules($form, false);
 // Apply configured labels and other properties, including in module helper methods.
 $Modules->setFields($fields);
 ?>
+<script src="<?= ROOTPATH ?>/js/organizations.js?v=<?= OSIRIS_BUILD ?>"></script>
 <div class="container w-800 mw-full">
     <h1>
         <i class="ph-duotone ph-compass"></i>
