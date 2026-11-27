@@ -9,7 +9,7 @@
  * @link /patents
  *
  * @package OSIRIS
- * @since 1.5.0
+ * @since 2.x.x
  * 
  * @copyright	Copyright (c) 2026 Julia Koblitz, OSIRIS Solutions GmbH
  * @author		Julia Koblitz <julia.koblitz@osiris-solutions.de>
@@ -18,11 +18,6 @@
 
 $user = $user ?? $_SESSION['username'];
 
-// - Wer (Gantt von Teaching), farbig markiert nach status
-// - Anzahl der Tage/der Reisen/personen pro Land, filterbar nach status
-// - Anzahl Tage pro Topic, filterbar nach status
-
-
 $year = CURRENTYEAR;
 if (isset($_GET['year'])) {
     $year = intval($_GET['year']);
@@ -30,8 +25,6 @@ if (isset($_GET['year'])) {
 $start = $year . "-01-01";
 $end   = $year . "-12-31";
 
-
-// Filter Lehrveranstaltungen im Semester
 $filter = [
     'subtype' => 'patents',
     'year' => $year
@@ -52,136 +45,7 @@ $statuses = [
     'aborted' => lang('Expired', 'Abgelaufen'),
 ];
 
-
-$people = [];
-$topics = [];
-$timelineData = [];
-$mapData = [];
-
-$template = [];
-foreach ($statuses as $key => $label) {
-    $template[$key] = [
-        'days' => 0,
-        'people' => 0,
-        'patents' => 0
-    ];
-}
-
-// Unwind countries and authors
-foreach ($patents as $patent) {
-
-    $status = $patent['patent-status'];
-
-    $startDate = new DateTime($patent['start_date']);
-    $endDate = new DateTime($patent['end_date']);
-    // Differenz berechnen
-    $duration = $startDate->diff($endDate);
-    // Tage holen
-    $days = $duration->days + 1; // +1, wenn Start- und Endtag beide zählen sollen
-
-    $authors = DB::doc2Arr($patent['authors']);
-
-    if (isset($patent['topics']) && !empty($patent['topics']))
-        foreach ($patent['topics'] as $topic) {
-            if (!isset($topics[$topic])) $topics[$topic] = $template;
-            $topics[$topic][$status]['days'] += $days;
-            $topics[$topic][$status]['people'] += count($authors);
-            $topics[$topic][$status]['patents'] += 1;
-        }
-
-    foreach ($authors as $author) {
-        if (empty($author['user'] ?? null)) continue;
-        $person = $DB->getNameFromId($author['user']);
-        $timelineData[] = [
-            'title' => $author['user'],
-            'name' => implode(', ', $patent['countries'] ?? []),
-            'start' => $patent['start_date'],
-            'end'   => $patent['end_date'],
-            'person' => $person,
-            'cat' => $status,
-            'days' => $days
-        ];
-        if (!isset($people[$person])) {
-            $people[$person] = $template;
-        }
-        $people[$person][$status]['days'] += $days;
-        $people[$person][$status]['patents'] += 1;
-    }
-}
-
-// map data sums up the patents per country regardless of the status
-foreach ($patents as $patent) {
-    foreach ($patent['countries'] ?? [] as $iso) {
-        $country = $DB->getCountry($iso);
-        $mapData[] = [
-            'iso3' => $country['iso3'],
-            'days' => $days,
-            'people' => count($authors),
-            'patents' => 1,
-            'name' => lang($country['name'], $country['name_de'] ?? null),
-        ];
-    }
-}
-
-
 ?>
-
-<style>
-    .preparation {
-        color: var(--signal-color);
-        width: 15rem;
-    }
-
-    .in-progress {
-        color: var(--osiris-color);
-        width: 15rem;
-    }
-
-    .completed {
-        color: var(--success-color);
-        width: 15rem;
-    }
-
-    .aborted {
-        color: var(--danger-color);
-        width: 15rem;
-    }
-
-    #legend span {
-        color: white;
-        padding: 0.25rem 0.8rem;
-        border-radius: var(--border-radius);
-        font-weight: bold;
-    }
-
-    #legend span.preparation {
-        background-color: var(--signal-color-60);
-    }
-
-    #legend span.in-progress {
-        background-color: rgba(247, 129, 4, 0.7);
-    }
-
-    #legend span.completed {
-        background-color: var(--success-color-60);
-    }
-
-    #legend span.aborted {
-        background-color: var(--danger-color-60);
-    }
-
-    #statistics span.people,
-    #statistics span.patents,
-    #statistics span.days {
-        display: none;
-    }
-
-    #statistics.people span.people,
-    #statistics.patents span.patents,
-    #statistics.days span.days {
-        display: inline-block;
-    }
-</style>
 
 <div class="container">
     <h1>
@@ -196,332 +60,35 @@ foreach ($patents as $patent) {
         </a>
     </div>
 
-
-    <!-- UI-Änderung -->
-    <div class="alert signal">
-        <i class="ph ph-warning text-signal"></i>
-        <?= lang('Select a year to see all research patents.', 'Wähle ein Jahr, um alle Patente anzuzeigen.') ?>
-
-
-        <form method="get" class="d-flex align-items-baseline mt-10" style="grid-gap: 1rem;">
-            <h6 class="mb-0 mt-5 w-200"><?= lang('Select year', 'Jahr auswählen') ?>:</h6>
-            <input type="number" name="year" class="form-control" value="<?= $year ?>" min="2000" max="<?= CURRENTYEAR + 1 ?>" step="1" required>
-            <button class="btn signal filled" type="submit"><?= lang('Update', 'Ändern') ?></button>
-        </form>
-    </div>
-
-    <h3>
-        <?= lang('Patents in', 'Patente in') ?> <?= $year ?>
-        <span class="badge signal ml-10">
-            <?= count($patents) ?>
-            <?= lang('patents', 'Patente') ?>
-        </span>
-    </h3>
-
-    <div id="gantt-container" style="width: 100%; height: auto;">
-        <div id="legend" class="text-center">
-            <b><?= lang('Legend', 'Legende') ?>:</b>
-            <?php foreach ($statuses as $key => $label) { ?>
-                <span class="<?= $key ?>"><?= $label ?></span>
-            <?php } ?>
-        </div>
-
-        <svg id="gantt-chart" viewBox="0 0 1000 500" preserveAspectRatio="xMinYMin meet" style="width: 100%; height: auto;"></svg>
-
-    </div>
-
-    <div id="statistics" class="days">
-
-        <div class="pills">
-            <button class="btn active" onclick="showData(this,'days')"><?= lang('Days', 'Tage') ?></button>
-            <button class="btn" onclick="showData(this,'patents')"><?= lang('Patents', 'Patente') ?></button>
-            <button class="btn" onclick="showData(this,'people')"><?= lang('People', 'Personen') ?></button>
-        </div>
-
-
-
-        <h4><?= $Settings->topicLabel() ?></h4>
+    <div id="statistics">
+        <h2><?= lang('Overview', 'Übersicht') ?> <?= $year ?></h2>
         <?php
         $numbers = [];
         ?>
         <table class="table">
             <thead>
                 <tr>
-                    <th><?= $Settings->topicLabel() ?></th>
-                    <?php foreach ($statuses as $key => $name) {
-                        $numbers[$key] = [
-                            'days' => 0,
-                            'people' => 0,
-                            'patents' => 0
-                        ];
-                        echo "<th>$name</th>";
-                    } ?>
+                    <th><?= lang('Patent Number', 'Patentnummer') ?></th>
+                    <th><?= lang('Title', 'Titel') ?></th>
+                    <th><?= lang('File date', 'Anmeldedatum') ?></th>
+                    <th><?= lang('Publication date', 'Veröffentlichungsdatum') ?></th>
+                    <th><?= lang('End date', 'Enddatum') ?></th>
+                    <th><?= lang('Status', 'Status') ?></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($topics as $topic => $days):
-                    $topic = $osiris->topics->findOne(['id' => $topic]);
+                <?php foreach ($patents as $patent):
                 ?>
                     <tr>
-                        <td><?= lang($topic['name'], $topic['name_de'] ?? null) ?></td>
-                        <?php foreach ($statuses as $key => $name) {
-                            $numbers[$key]['days'] += $days[$key]['days'] ?? 0;
-                            $numbers[$key]['people'] += $days[$key]['people'] ?? 0;
-                            $numbers[$key]['patents'] += $days[$key]['patents'] ?? 0;
-                            echo "<td class='$key'>";
-                            echo "<span class='days'>" . ($days[$key]['days'] ?? 0) . "</span>";
-                            echo "<span class='people'>" . ($days[$key]['people'] ?? 0) . "</span>";
-                            echo "<span class='patents'>" . ($days[$key]['patents'] ?? 0) . "</span>";
-                            echo "</td>";
-                        } ?>
+                        <td><?= $patent['patent-number'] ?></td>
+                        <td><?= $patent['title'] ?></td>
+                        <td><?= $patent['start_date'] ?></td>
+                        <td><?= $patent['patent-published'] ?></td>
+                        <td><?= $patent['end_date'] ?></td>
+                        <td><?= $patent['patent-status'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
-            <tfoot>
-                <tr>
-                    <td><?= lang('Sum', 'Summe') ?></td>
-                    <?php foreach ($statuses as $key => $name) {
-                        echo "<td class='$key'>";
-                        echo "<span class='days'>" . ($numbers[$key]['days'] ?? 0) . "</span>";
-                        echo "<span class='people'>" . ($numbers[$key]['people'] ?? 0) . "</span>";
-                        echo "<span class='patents'>" . ($numbers[$key]['patents'] ?? 0) . "</span>";
-                        echo "</td>";
-                    } ?>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>
-
-<script>
-    function showData(el, type) {
-        // hide all spans
-        $('#statistics span').hide();
-        // show the selected type
-        $('#statistics span.' + type).show();
-        // remove active class from all buttons
-        $('#statistics .btn').removeClass('active');
-        // add active class to the selected button
-        $(el).addClass('active');
-
-        updateMap(type);
-    }
-</script>
-
-
-
-<?php
-usort($timelineData, function ($a, $b) {
-    // sort by person alphabetically
-    return strcmp($a['person'], $b['person']);
-});
-
-$uniques = array_unique(array_column($timelineData, 'title'));
-$unique_number = count($uniques);
-
-?>
-
-<script src="<?= ROOTPATH ?>/js/d3.v4.min.js"></script>
-<script src="<?= ROOTPATH ?>/js/popover.js"></script>
-
-<script>
-    // Color scale
-    function color(status) {
-        switch (status) {
-            case 'preparation':
-                return 'var(--signal-color)';
-            case 'in-progress':
-                return 'var(--osiris-color)';
-            case 'completed':
-                return 'var(--success-color)';
-            case 'aborted':
-                return 'var(--danger-color)';
-            default:
-                return 'var(--muted-color)';
-        }
-    }
-
-    function cat(status) {
-        switch (status) {
-            case 'preparation':
-                return lang('In Preparation', 'In Vorbereitung');
-            case 'in-progress':
-                return lang('In Progress', 'Laufend');
-            case 'completed':
-                return lang('Completed', 'Abgeschlossen');
-            case 'aborted':
-                return lang('Cancelled', 'Abgebrochen');
-            default:
-                return lang('Unknown', 'Unbekannt');
-        }
-    }
-
-    const data = <?= json_encode($timelineData) ?>;
-    const unique_number = <?= $unique_number ?? 1 ?>;
-    const divSelector = '#gantt-container';
-
-    const margin = {
-        top: 40,
-        right: 10,
-        bottom: 40,
-        left: 100
-    };
-    const width = 1000;
-    const height = (20 * unique_number) + margin.top + margin.bottom;
-
-    const container = d3.select(divSelector);
-    const svg = d3.select('#gantt-chart');
-
-    svg.attr('width', width)
-        .attr('height', height)
-        .attr('viewBox', `0 0 ${width} ${height}`)
-
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    const x = d3.scaleTime()
-        .domain([new Date("<?= $year - 1 ?>-12-31"), new Date("<?= $end ?>")])
-        .range([margin.left, innerWidth + margin.left]);
-
-    const y = d3.scaleBand()
-        .domain(data.map(d => d.title))
-        .range([margin.top, innerHeight + margin.top])
-        .padding(0.1);
-
-    let x_bandwidth = innerWidth / 11
-    // Achsen
-    svg.append('g')
-        .attr('transform', `translate(0,${innerHeight + margin.top})`)
-        .call(
-            d3.axisBottom(x)
-            .tickFormat(d3.timeFormat("%B")) // Monatsname
-        )
-        .selectAll("text")
-        .attr("text-anchor", "middle")
-        .attr("dx", x_bandwidth / 2);
-
-    let idToLabel = {};
-    data.forEach(d => {
-        idToLabel[d.title] = d.person;
-    });
-
-    svg.append('g')
-        .attr('transform', `translate(${margin.left},0)`)
-        // .call(d3.axisLeft(y));
-        .call(d3.axisLeft(y)
-            .tickFormat(d => idToLabel[d] || d) // Mapping anwenden
-        );
-
-    // Balken
-    const rect = svg.selectAll('rect')
-        .data(data)
-        .enter()
-        .append('rect')
-        .attr('x', d => x(new Date(d.start)))
-        .attr('y', d => y(d.title))
-        .attr('rx', 5)
-        .attr('ry', 5)
-        .attr('width', d => x(new Date(d.end)) - x(new Date(d.start)))
-        .attr('height', y.bandwidth())
-        .attr('fill', d => color(d.cat))
-        .attr('opacity', 0.6)
-
-    // Circles for data point less than 1 week
-    const circle = svg.selectAll('circle')
-        .data(data.filter(d => (new Date(d.end) - new Date(d.start)) < 7 * 24 * 60 * 60 * 1000))
-        .enter()
-        .append('circle')
-        .attr('cx', d => x(new Date(d.start)) + (x(new Date(d.end)) - x(new Date(d.start))) / 2)
-        .attr('cy', d => y(d.title) + y.bandwidth() / 2)
-        .attr('r', 5)
-        // .attr('fill', d => d.hasAoi ? 'var(--success-color)' : 'var(--osiris-color)')
-        .attr('opacity', 0.6)
-    // Tooltip
-
-    // mark today with a vertical line
-    const today = new Date();
-    const todayLine = svg.append('line')
-        .attr('x1', x(today))
-        .attr('y1', margin.top)
-        .attr('x2', x(today))
-        .attr('y2', innerHeight + margin.top)
-        .attr('stroke', 'var(--danger-color)')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '5,5');
-    const todayLabel = svg.append('text')
-        .attr('x', x(today))
-        .attr('y', margin.top - 8)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "1rem")
-        .attr("fill", "var(--danger-color)")
-        .text(lang('today', 'heute'))
-
-    function mouseover(d, i) {
-        d3.select(this)
-            .select('circle,rect')
-            .transition()
-            .duration(300)
-            .style('opacity', 1)
-
-        //Define and show the tooltip over the mouse location
-        $(this).popover({
-            placement: 'auto top',
-            container: divSelector,
-            mouseOffset: 10,
-            followMouse: true,
-            trigger: 'hover',
-            html: true,
-            content: function() {
-                let start = new Date(d.start);
-                let end = new Date(d.end);
-                return `
-                <h5 class="m-0 text-primary">${d.name ?? 'No country available'}</h5>
-                <b>${d.person ?? d.title}</b><br>
-                <b>${lang('Status', 'Status')}: </b>${cat(d.cat)}<br>
-                <b>${lang('Start date', 'Beginn')}: </b>${start.toLocaleDateString()}<br>
-                <b>${lang('End date', 'Ende')}: </b>${end.toLocaleDateString()}<br>
-                <b>${lang('Duration', 'Dauer')}: </b>${d.days} ${lang('days', 'Tage')}<br>
-                `
-            }
-        });
-        $(this).popover('show');
-    } //mouseoverChord
-
-    //Bring all chords back to default opacity
-    function mouseout(event, d) {
-        d3.select(this).select('circle,rect')
-            .transition()
-            .duration(300)
-            .style('opacity', .5)
-        //Hide the tooltip
-        $('.popover').each(function() {
-            $(this).remove();
-        });
-    }
-    circle.on("mouseover", mouseover)
-        .on("mouseout", mouseout)
-    rect.on("mouseover", mouseover)
-        .on("mouseout", mouseout)
-</script>
-
-
-<script>
-
-    function filterByYear(year, table) {
-        var rows = document.querySelectorAll(table + ' tbody tr');
-        if (year == '') {
-            rows.forEach(function(row) {
-                row.style.display = 'table-row';
-            });
-            return;
-        }
-        rows.forEach(function(row) {
-            var cells = row.querySelectorAll('td');
-            if (cells[2].innerText == year) {
-                row.style.display = 'table-row';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
-</script>

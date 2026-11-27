@@ -269,12 +269,12 @@ class SidebarNav
                         'hasSearch' => false
                     ],
                     [
-                        'id' => 'patent',
+                        'id' => 'patents',
                         'label' => lang('Patents', 'Patente'),
                         'icon' => 'vault',
                         'url' => '/patents',
                         'active' => ['^/patents($|/)'],
-                        'feature' => 'patent',
+                        'feature' => 'patents',
                         'default' => false,
                         'permission' => null,
                         'favoritable' => true,

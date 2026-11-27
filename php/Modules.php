@@ -3262,23 +3262,48 @@ class Modules
             <?php
                 break;
             
-            case "patent-published":
+
+            case "patent-number":
             ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-published">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[patent-published]" value="<?= $this->val('patent-published') ?>" id="patent-published" placeholder="patent-published">
-                    <label for="patent-published" class="<?= $labelClass ?>"><?= $label ?></label>
+                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-number">
+                    <label for="patent-number" class="<?= $labelClass ?>"><?= $label ?></label>
+                    <input type="text" class="form-control" <?= $labelClass ?> name="values[patent-number]" value="<?= $this->val('patent-number') ?>" id="patent-number" placeholder="patent-number">
                     <?= $this->render_help($help) ?>
                 </div>
             <?php
                 break;
 
-            case "patent-number":
+            case "patent-published":
             ?>
-                <div class="data-module floating-form col-sm-<?= $width ?>" data-module="patent-number">
-                    <input type="text" class="form-control" <?= $labelClass ?> name="values[patent-number]" value="<?= $this->val('patent-number') ?>" id="patent-number" placeholder="patent-number">
-                    <label for="patent-number" class="<?= $labelClass ?>"><?= $label ?></label>
-                    <?= $this->render_help($help) ?>
+                <div class="data-module floating-form col-sm-<?= $width ?> row" data-module="date">
+                    <div class="col-sm floating-form">
+                        <input type="number" min="1901" max="2155" step="1" class="form-control" name="values[year]" id="patent-year" <?= $labelClass ?> value="<?= $this->val('year') ?>" placeholder="2024">
+                        <label for="patent-year" class="<?= $labelClass ?> element-time"><?= lang('Year', 'Jahr') ?></label>
+                    </div>
+                    <div class="col-sm floating-form">
+                        <input type="number" min="1" max="12" step="1" class="form-control" name="values[month]" id="patent-month" <?= $labelClass ?> value="<?= $this->val('month') ?>" placeholder="12">
+                        <label for="patent-month" class="<?= $labelClass ?> element-time"><?= lang('Month', 'Monat') ?></label>
+                    </div>
+                    <div class="col-sm floating-form">
+                        <input type="number" min="1" max="31" step="1" class="form-control" name="values[day]" id="patent-day" value="<?= $this->val('day') ?>" placeholder="24">
+                        <label for="patent-day" class="element-time"><?= lang('Day', 'Tag') ?></label>
+                        <?= $this->render_help($help) ?>
+                    </div>
+                    <div class="col flex-grow-0">
+                        <button class="btn primary" type="button" onclick="dateTodayPatent()" style="height: calc(4rem + 1px); font-size:small; line-height:0">
+                            <i class="ph ph-calendar-dot"></i>
+                            <?= lang('Today', 'Heute') ?>
+                        </button>
+                    </div>
                 </div>
+                <script>
+                    function dateTodayPatent() {
+                        var today = new Date();
+                        $('#patent-year').val(today.getFullYear());
+                        $('#patent-month').val(today.getMonth() + 1);
+                        $('#patent-day').val(today.getDate());
+                    }
+                </script>
             <?php
                 break;
 
