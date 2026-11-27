@@ -709,7 +709,7 @@
                                                 <h5>
                                                     <a href="<?= ROOTPATH ?>/infrastructures/view/<?= $infrastructure['_id']; ?>"> <?= e(localized($infrastructure['name'])); ?> </a>
                                                 </h5>
-                                                <p><?= $infrastructure['subtitle'] ?? '' ?></p>
+                                                <p><?= e(localized($infrastructure['subtitle'] ?? '')) ?></p>
                                             </div>
                                         <?php endforeach; ?>
                                     <?php endif; ?>

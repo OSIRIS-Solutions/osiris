@@ -1730,7 +1730,7 @@ function portfolio_activity_detail($doc, array $portfolio_types): array
             $result['infrastructures'][] = [
                 'id' => $infrastructure['id'],
                 'name' => apiLocalized($infrastructure['name']),
-                'subtitle' => $infrastructure['subtitle'] ?? null,
+                'subtitle' => apiLocalized($infrastructure['subtitle'] ?? ''),
                 'start' => $infrastructure['start_date'] ?? null,
                 'end' => $infrastructure['end_date'] ?? null,
             ];

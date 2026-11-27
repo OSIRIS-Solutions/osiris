@@ -119,10 +119,10 @@ $topicsEnabled = $Settings->featureEnabled('topics') && $osiris->topics->count()
                                 </h6>
 
                                 <div class="text-muted mb-5">
-                                    <?php if (!empty($infra['subtitle'])) { ?>
+                                    <?php if (!empty(localized($infra['subtitle'] ?? ''))) { ?>
                                         <?= e(localized($infra['subtitle'])) ?>
                                     <?php } else { ?>
-                                        <?= get_preview(localized($infra['description']), 300) ?>
+                                        <?= get_preview(localized($infra['description'] ?? ''), 300) ?>
                                     <?php } ?>
                                 </div>
                                 <div>

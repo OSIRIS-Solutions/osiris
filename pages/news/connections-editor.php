@@ -375,7 +375,7 @@ $news_lang = $Settings->get('news-language', 'one');
                             <option value=""><?= t('forms.select_infrastructure') ?></option>
                             <?php
                             foreach ($all_infrastructures as $s) { ?>
-                                <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                <option value="<?= $s['id'] ?>"><?= e(localized($s['name'] ?? '')) ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addInfrastructureRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>
@@ -393,13 +393,13 @@ $news_lang = $Settings->get('news-language', 'one');
                         </thead>
                         <tbody id="infrastructure-list"><?php
                                                         foreach ($infrastructures as $infra) { ?>
-                                <tr id="infrastructure-<?= e($infra['id']) ?>" data-feature-type="infrastructure" data-feature-id="<?= e($infra['id']) ?>" data-feature-label="<?= e($infra['name']) ?>">
+                                <tr id="infrastructure-<?= e($infra['id']) ?>" data-feature-type="infrastructure" data-feature-id="<?= e($infra['id']) ?>" data-feature-label="<?= e(localized($infra['name'] ?? '')) ?>">
                                     <td class="w-full">
                                         <input type="hidden" name="news[infrastructures][]" value="<?= $infra['id'] ?>">
-                                        <b><?= $infra['name'] ?></b>
+                                        <b><?= e(localized($infra['name'] ?? '')) ?></b>
                                         <br>
                                         <span class="text-muted">
-                                            <?= $infra['subtitle'] ?? '' ?>
+                                            <?= e(localized($infra['subtitle'] ?? '')) ?>
                                         </span>
                                     </td>
 

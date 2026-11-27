@@ -1662,10 +1662,10 @@ if ($edit_perm) {
                                     </h6>
 
                                     <div class="text-muted mb-5">
-                                        <?php if (!empty($infra['subtitle'])) { ?>
-                                            <?= lang($infra['subtitle'], $infra['subtitle_de'] ?? null) ?>
+                                        <?php if (!empty(localized($infra['subtitle'] ?? ''))) { ?>
+                                            <?= e(localized($infra['subtitle'] ?? '')) ?>
                                         <?php } else { ?>
-                                            <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                            <?= get_preview(localized($infra['description'] ?? ''), 300) ?>
                                         <?php } ?>
                                     </div>
                                     <div>

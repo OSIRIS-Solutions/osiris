@@ -533,10 +533,10 @@ if ($Settings->featureEnabled('spectrum') && $count_spectrum > 0) {
                             </h6>
 
                             <div class="text-muted mb-5">
-                                <?php if (!empty($infra['subtitle'])) { ?>
+                                <?php if (!empty(localized($infra['subtitle'] ?? ''))) { ?>
                                     <?= e(localized($infra['subtitle'])) ?>
                                 <?php } else { ?>
-                                    <?= get_preview(lang($infra['description'], $infra['description_de'] ?? null), 300) ?>
+                                    <?= get_preview(localized($infra['description'] ?? ''), 300) ?>
                                 <?php } ?>
                             </div>
                             <div>
