@@ -37,6 +37,12 @@ $collections = [
 
 ?>
 
+<h1>
+    <i class="ph-duotone ph-table"></i>
+    <?= lang('Pivot tables and charts', 'Pivot-Tabellen und Diagramme') ?>
+    <small class="badge danger float-right"><i class="ph ph-warning"></i> BETA</small>
+</h1>
+
 <link rel="stylesheet" href="<?= ROOTPATH ?>/css/usertable.css?v=<?= OSIRIS_BUILD ?>">
 
 <style> .table tbody tr:last-child td,.table tbody tr:last-child th{border-bottom:1px solid var(--border-color) !important}</style>

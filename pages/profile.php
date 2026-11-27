@@ -993,11 +993,10 @@ if ($currentuser || $Settings->hasPermission('user.image')) { ?>
                                 DB::doc2Arr($scientist['research_de'] ?? $scientist['research']),
                                 DB::doc2Arr($scientist['research'])
                             );
-                            $research = lang($scientist['research'], $scientist['research_de'] ?? null);
                         ?>
                             <ul class="list">
-                                <?php foreach ($research as $key) { ?>
-                                    <li><?= $key ?></li>
+                                <?php foreach ($scientist['research'] as $key => $val) { ?>
+                                    <li><?= lang($val, $scientist['research_de'][$key] ?? null) ?></li>
                                 <?php } ?>
                             </ul>
                         <?php } else { ?>

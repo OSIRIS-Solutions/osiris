@@ -191,6 +191,32 @@ Route::post('/download', function () {
     $categories = $Categories->categories;
     $order = array_column($categories, 'id');
 
+    // topics translation table
+    $topicNamesTable = [];
+    $topics = $osiris->topics->find([], [
+        'projection' => [
+            'id' => 1,
+            'name' => 1,
+            '_id' => 0
+        ]
+    ]);
+    foreach ($topics as $topic) {
+        $topicNamesTable[$topic['id']] = $topic['name'];
+    }
+
+    // unit name table
+    $unitNamesTable = [];
+    $units = $osiris->groups->find([], [
+        'projection' => [
+            'id' => 1,
+            'name' => 1,
+            '_id' => 0
+        ]
+    ]);
+    foreach ($units as $unit) {
+        $unitNamesTable[$unit['id']] = $unit['name'];
+    }
+
     // select data
     $collection = $osiris->activities;
     $options = ['sort' => ["type" => 1, "year" => 1, "month" => 1]];
@@ -552,6 +578,16 @@ Route::post('/download', function () {
                 echo '  Keywords = {';
                 foreach ($doc['keywords'] as $keyword) echo $keyword . PHP_EOL;
                 echo '},' . PHP_EOL;
+            }
+            if (isset($doc['topics']) and ($doc['topics'] != '')){
+                $tranlatedTopics = [];
+                foreach ($doc['topics'] as $top) $translatedTopics[] = $topicNamesTable[$top];
+                echo '  ResearchTopics = {' . implode('; ', $translatedTopics) . '},' . PHP_EOL;
+            }
+            if (isset($doc['units']) and ($doc['units'] != '')){
+                $unitNames = [];
+                foreach ($doc['units'] as $unit) $unitNames[] = $unitNamesTable[$unit];
+                echo '  Department = {' . implode('; ', $unitNames ) . '},' . PHP_EOL;
             }
 
             echo '}' . PHP_EOL . PHP_EOL;
