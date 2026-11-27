@@ -18,16 +18,8 @@
 
 $user = $user ?? $_SESSION['username'];
 
-$year = CURRENTYEAR;
-if (isset($_GET['year'])) {
-    $year = intval($_GET['year']);
-}
-$start = $year . "-01-01";
-$end   = $year . "-12-31";
-
 $filter = [
     'subtype' => 'patents',
-    'year' => $year
 ];
 
 $patents = $osiris->activities->find($filter)->toArray();
@@ -40,10 +32,27 @@ $all = $osiris->activities->count(
 
 $statuses = [
     'preparation' => lang('Preparation', 'Vorbereitung'),
-    'in-progress' => lang('Filed', 'Eingereicht'),
-    'completed' => lang('Granted', 'Erteilt'),
-    'aborted' => lang('Expired', 'Abgelaufen'),
+    'filed' => lang('Filed', 'Eingereicht'),
+    'granted' => lang('Granted', 'Erteilt'),
+    'expired' => lang('Expired', 'Abgelaufen'),
 ];
+
+$patent_count_table = [];
+foreach ($patents as $patent) {
+    $status = $patent['patent-status'] ?? 'unknown';
+    $year = $patent['year'] ?? null;
+    if ($year) {
+        if (!isset($patent_count_table[$year])) {
+            $patent_count_table[$year] = [];
+        }
+        if (!isset($patent_count_table[$year][$status])) {
+            $patent_count_table[$year][$status] = 0;
+        }
+        $patent_count_table[$year][$status]++;
+        $years[$year] = $year;
+    }
+}
+ksort($years);
 
 ?>
 
@@ -61,34 +70,39 @@ $statuses = [
     </div>
 
     <div id="statistics">
-        <h2><?= lang('Overview', 'Übersicht') ?> <?= $year ?></h2>
+        <h2><?= lang('Overview', 'Übersicht') ?></h2>
+
         <?php
         $numbers = [];
         ?>
         <table class="table">
             <thead>
-                <tr>
-                    <th><?= lang('Patent Number', 'Patentnummer') ?></th>
-                    <th><?= lang('Title', 'Titel') ?></th>
-                    <th><?= lang('File date', 'Anmeldedatum') ?></th>
-                    <th><?= lang('Publication date', 'Veröffentlichungsdatum') ?></th>
-                    <th><?= lang('End date', 'Enddatum') ?></th>
-                    <th><?= lang('Status', 'Status') ?></th>
-                </tr>
+                <th><?= lang('Year', 'Jahr') ?></th>
+                <? foreach ($statuses as $status => $label): ?>
+                    <th><a href='<?= ROOTPATH ?>/activities/search?expert#?query={"$and":[{"subtype":"patents"},{"patent-status":"<?= $status ?>"}]}'><?= $label ?></a></th>
+                <? endforeach; ?>
+                <th><?= lang('Total', 'Gesamt') ?></th>
             </thead>
             <tbody>
-                <?php foreach ($patents as $patent):
-                ?>
-                    <tr>
-                        <td><?= $patent['patent-number'] ?></td>
-                        <td><?= $patent['title'] ?></td>
-                        <td><?= $patent['start_date'] ?></td>
-                        <td><?= $patent['patent-published'] ?></td>
-                        <td><?= $patent['end_date'] ?></td>
-                        <td><?= $patent['patent-status'] ?></td>
-                    </tr>
+                <?php foreach ($years as $year): ?>
+                <tr>
+                    <td><?= $year ?></td>
+                    <?php foreach ($statuses as $status => $label): ?>
+                        <td><a href='<?= ROOTPATH ?>/activities/search?expert#?query={"$and":[{"subtype":"patents"},{"patent-status":"<?= $status ?>"},{"year":"<?= $year ?>"}]}'><?= $patent_count_table[$year][$status] ?? 0 ?></a></td>
+                    <?php endforeach; ?>
+                    <td><a href='<?= ROOTPATH ?>/activities/search?expert#?query={"$and":[{"subtype":"patents"},{"year":"<?= $year ?>"}]}'><?= array_sum($patent_count_table[$year] ?? []) ?></a></td>
+                </tr>
                 <?php endforeach; ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td> <?= lang('Total', 'Gesamt') ?></td>
+                    <?php foreach ($statuses as $status => $label): ?>
+                        <td><a href='<?= ROOTPATH ?>/activities/search?expert#?query={"$and":[{"subtype":"patents"},{"patent-status":"<?= $status ?>"}]}'><?= array_sum(array_column($patent_count_table, $status)) ?></a></td>
+                    <?php endforeach; ?>
+                    <td><a href='<?= ROOTPATH ?>/activities/search?expert#?query={"$and":[{"subtype":"patents"}]}'><?= $all ?></a></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
