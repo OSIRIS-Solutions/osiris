@@ -512,7 +512,7 @@ if (array_sum($a) === 0) { ?>
                     <tr id="tr-<?= $id ?>">
                         <td>
                             <?= t('error.the_project') ?>
-                            <b><?= $doc['name'] ?></b>
+                            <b><?= e(localized($doc['name'] ?? '')) ?></b>
                             <?= t('error.still_has_the_status_applied_is_this_correct') ?>
                             <div class='' id="approve-<?= $id ?>">
 
@@ -543,7 +543,7 @@ if (array_sum($a) === 0) { ?>
                     <tr id="tr-<?= $id ?>">
                         <td>
                             <?= t('error.the_project') ?>
-                            <b><?= $doc['name'] ?></b>
+                            <b><?= e(localized($doc['name'] ?? '')) ?></b>
                             <?= t('error.has_ended_you_can_either_prolong_it_or_end_it') ?>
                             <div class='' id="approve-<?= $id ?>">
 

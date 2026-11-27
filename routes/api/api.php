@@ -1525,6 +1525,7 @@ Route::get('/api/projects-by-funding-number', function () {
         $filter,
         ['projection' => ['name' => 1, 'title' => 1, '_id' => 1]]
     )->toArray();
+    $result = array_map(fn($project) => apiLocalizedFields(DB::doc2Arr($project), ['name', 'title']), $result);
     echo return_rest($result, count($result));
 });
 

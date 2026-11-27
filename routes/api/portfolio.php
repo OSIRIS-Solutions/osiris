@@ -2437,7 +2437,7 @@ Route::get('/portfolio/(unit|project|topic)/([^/]*)/collaborators-map', function
             $mongo_id = $DB->to_ObjectID($id);
             $filter = ['_id' => $mongo_id];
         } else {
-            $filter = ['name' => $id];
+            $filter = ['name.en' => $id];
             $id = strval($project['_id'] ?? '');
         }
         $project = $osiris->projects->findOne($filter);
@@ -3159,6 +3159,7 @@ Route::get('/portfolio/projects', function () {
         $options
     )->toArray();
 
+    $result = array_map(fn($project) => portfolio_localized_fields($project, ['name', 'title']), $result);
     echo rest($result);
 });
 

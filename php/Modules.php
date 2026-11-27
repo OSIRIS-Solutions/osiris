@@ -4492,7 +4492,7 @@ class Modules
                                             <option value=""><?= t('forms.project_select') ?></option>
                                             <?php
                                             foreach ($project_list as $s) { ?>
-                                                <option value="<?= $s['_id'] ?>"><?= $s['name'] ?>: <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                                                <option value="<?= $s['_id'] ?>"><?= e(localized($s['name'] ?? '')) ?>: <?= e(localized($s['title'] ?? '')) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

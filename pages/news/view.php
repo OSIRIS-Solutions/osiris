@@ -65,8 +65,8 @@ if (!empty($featured['type']) && !empty($featured['id'])) {
             if ($entity) {
                 $featuredCard['type_label'] = t('common.project');
                 $featuredCard['icon'] = 'ph-briefcase';
-                $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . ($entity['name'] ?? '');
-                $featuredCard['subtitle'] = lang($entity['title'] ?? null, $entity['title_de'] ?? null);
+                $featuredCard['title'] = (!empty($entity['acronym']) ? $entity['acronym'] . ' – ' : '') . localized($entity['name'] ?? '');
+                $featuredCard['subtitle'] = localized($entity['title'] ?? '');
                 $featuredCard['url'] = ROOTPATH . '/projects/view/' . $featuredId;
             }
             break;

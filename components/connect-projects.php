@@ -24,7 +24,7 @@ if (!$full_permission) {
 }
 $project_list = $osiris->projects->find($filter, [
     'projection' => ['_id' => 1, 'name' => 1, 'acronym' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
-    'sort' => ['name' => 1]
+    'sort' => ['name.en' => 1]
 ])->toArray();
 ?>
 
@@ -47,10 +47,10 @@ $project_list = $osiris->projects->find($filter, [
                 <tr id="project-<?= $con ?>">
                     <td class="w-full">
                         <input type="hidden" name="projects[]" value="<?= $p['_id'] ?>">
-                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= $p['name'] ?></b>
+                        <b><?= isset($p['acronym']) ? $p['acronym'] . ' – ' : '' ?><?= e(localized($p['name'] ?? '')) ?></b>
                         <br>
                         <span class="text-muted">
-                            <?= $p['title'] ?? '' ?>
+                            <?= localized($p['title'] ?? '') ?>
                         </span>
                     </td>
                     <td>
@@ -67,7 +67,7 @@ $project_list = $osiris->projects->find($filter, [
             <option value=""><?= t('forms.project_select') ?></option>
             <?php
             foreach ($project_list as $s) { ?>
-                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= $s['name'] ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= e(localized($s['name'] ?? '')) ?> <?= e(localized($s['title'] ?? '')) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
             <?php } ?>
         </select>
         <div class="input-group-append">

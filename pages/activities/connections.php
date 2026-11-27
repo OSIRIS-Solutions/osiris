@@ -116,7 +116,7 @@
                     }
                     $project_list = $osiris->projects->find($filter, [
                         'projection' => ['_id' => 1, 'name' => 1, 'acronym' => 1, 'title' => 1, 'title_de' => 1, 'internal_number' => 1],
-                        'sort' => ['name' => 1]
+                        'sort' => ['name.en' => 1]
                     ])->toArray();
                     ?>
                     <div class="d-flex gap-10 mb-20">
@@ -124,7 +124,7 @@
                             <option value=""><?= t('forms.project_select') ?></option>
                             <?php
                             foreach ($project_list as $s) { ?>
-                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= e(localized($s['name'])) ?> <?= lang($s['title'], $s['title_de'] ?? null) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
+                                <option value="<?= $s['_id'] ?>"><?= isset($s['acronym']) ? $s['acronym'] . ' – ' : '' ?><?= e(localized($s['name'])) ?> <?= e(localized($s['title'] ?? '')) ?> <?= isset($s['internal_number']) ? ('(ID ' . $s['internal_number'] . ')') : '' ?></option>
                             <?php } ?>
                         </select>
                         <button class="btn primary" type="button" onclick="addProjectRow()"><i class="ph ph-plus-circle"></i> <?= t('action.add') ?></button>

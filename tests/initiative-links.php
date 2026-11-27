@@ -114,6 +114,32 @@ check($config->modules['initiatives']['label'] === 'Missions' && $config->module
 $rights = json_decode(file_get_contents(BASEPATH . '/roles.json'), true, 512, JSON_THROW_ON_ERROR);
 $initiativeRights = array_values(array_filter($rights, fn($group) => ($group['label'] ?? '') === 'common.initiatives'))[0];
 check(t($initiativeRights['label']) === 'Missions' && t($initiativeRights['fields'][2]['label'], ['initiatives' => t('common.initiatives'), 'objectives' => t('initiatives.objectives')]) === 'Assign Missions and Goals outside their period', 'Permission labels reuse the renamed entities instead of hard-coded names.');
+// A localized project option must not abort rendering of the following association field.
+$projectDocuments = $osiris->projects->documents;
+$projectPermissions = $Settings->permissions;
+$Settings->permissions[] = 'projects.connect';
+$osiris->projects->documents = [];
+foreach ([
+    ['name' => new MongoDB\Model\BSONDocument(['en' => 'BSON project']), 'title' => new MongoDB\Model\BSONDocument(['en' => 'BSON title'])],
+    ['name' => ['en' => 'Array & project'], 'title' => ['en' => 'Array <title>']],
+    ['name' => 'Plain project', 'title' => 'Plain title'],
+] as $project) $osiris->projects->insertOne($project);
+foreach (['initiatives', 'objectives'] as $association) {
+    ob_start();
+    (new Modules())->render_form([
+        ['id' => 'projects', 'type' => 'field'],
+        ['id' => $association, 'type' => 'field'],
+    ]);
+    $projectHtml = ob_get_clean();
+    $dom = new DOMDocument(); @$dom->loadHTML($projectHtml); $xpath = new DOMXPath($dom);
+    check(str_contains($projectHtml, 'BSON project: BSON title')
+        && str_contains($projectHtml, 'Array &amp; project: Array &lt;title&gt;')
+        && str_contains($projectHtml, 'Plain project: Plain title')
+        && $xpath->query('//*[@data-module="' . $association . '"]')->length === 1,
+        "Project options support BSON language maps, arrays and plain text without dropping the trailing $association module.");
+}
+$osiris->projects->documents = $projectDocuments;
+$Settings->permissions = $projectPermissions;
 $language = $originalLanguage;
 $Translations = $originalTranslations;
 ob_end_clean();
